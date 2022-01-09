@@ -195,8 +195,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   }
 
   private uploadFile(fileAttachment: FileAttachment, file: File) {
-    this.fileApiService.uploadFileWithProgress(fileAttachment.presignedUrl, file.type, file).subscribe(
-      (event: HttpEvent<any>) => {
+    this.fileApiService.uploadFileWithProgress(fileAttachment.presignedUrl, file.type, file).subscribe({
+      next: (event: HttpEvent<any>) => {
         switch (event.type) {
           case HttpEventType.Response:
             this.uploadProgress$.next(null);
@@ -207,8 +207,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
             return;
         }
       },
-      () => this.onUploadFailure(fileAttachment.id)
-    );
+      error: () => this.onUploadFailure(fileAttachment.id),
+    });
   }
 
   private onSuccess(fileAttachment: FileAttachment) {

@@ -24,6 +24,8 @@ import {select, Store} from '@ngrx/store';
 import {View} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {selectViewsByRead} from '../../../../../core/store/common/permissions.selectors';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {selectViewQuery} from '../../../../../core/store/views/views.state';
 
 @Component({
   selector: 'dashboard-tab-content',
@@ -36,11 +38,13 @@ export class DashboardTabContentComponent implements OnInit {
   public dashboardTab: DashboardTab;
 
   public views$: Observable<View[]>;
+  public query$: Observable<Query>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.views$ = this.store$.pipe(select(selectViewsByRead));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
   }
 
   public trackByRow(index: number, row: DashboardRow): string {

@@ -21,6 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} fro
 import {DashboardCell, DashboardRow} from '../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../core/store/views/view';
 import {filterValidDashboardCells} from '../../../../../../shared/utils/dashboard.utils';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'dashboard-tab-row-content',
@@ -34,6 +35,9 @@ export class DashboardTabRowContentComponent implements OnChanges {
 
   @Input()
   public views: View[];
+
+  @Input()
+  public query: Query;
 
   public templateColumns: string;
 

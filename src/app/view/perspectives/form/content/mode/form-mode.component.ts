@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormMode} from '../../../../../core/store/form/form-model';
 
 @Component({
   selector: 'form-mode',
@@ -27,21 +26,17 @@ import {FormMode} from '../../../../../core/store/form/form-model';
 })
 export class FormModeComponent {
   @Input()
-  public modes: FormMode[];
+  public builderModeActive: boolean;
 
   @Input()
-  public selectedMode: FormMode;
+  public canManageConfig: boolean;
+
+  @Input()
+  public canManipulateData: boolean;
 
   @Output()
-  public modeChange = new EventEmitter<FormMode>();
+  public modeToggle = new EventEmitter();
 
-  public readonly mode = FormMode;
-
-  public onCheckedModeChange(checked: boolean) {
-    if (checked) {
-      this.modeChange.emit(FormMode.Build);
-    } else {
-      this.modeChange.emit(FormMode.CreateUpdate);
-    }
-  }
+  @Output()
+  public createOnlyChange = new EventEmitter();
 }

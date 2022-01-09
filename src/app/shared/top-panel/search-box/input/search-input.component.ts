@@ -162,6 +162,7 @@ export class SearchInputComponent {
       this.searchSuggestions?.useSelection(this.text);
     } else {
       this.search.emit();
+      this.searchInput.nativeElement.blur();
     }
   }
 }

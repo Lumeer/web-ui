@@ -34,7 +34,8 @@
       <tr *cdkVirtualFor="let dataResource of dataResources; trackBy:trackByDataResource"
           class="clickable-row"
           [class.active]="(dataResource.id || dataResource.correlationId) === selectedId"
-          (click)="activate(dataResource)">
+          (click)="activate(dataResource)"
+          (dblclick)="detail(dataResource)">
         <td *ngFor="let column of columns"
             [style.width.px]="hasData ? (columnWidth$ | async) || column.width : null">
           <data-input-preview [constraint]="column.constraint"

@@ -275,3 +275,28 @@ export function createSearchPerspectiveTabs(config?: SearchConfig, defaultTabs: 
 export function canChangeViewQuery(view: View, permissions: Record<string, AllowedPermissions>) {
   return !view || permissions?.[view.id]?.roles.QueryConfig;
 }
+
+export function addQueryFiltersToView(view: View, query: Query): View {
+  if (!view || !query) {
+    return view;
+  }
+  const newStems = [...(view.query?.stems || [])];
+  const newFulltexts = [...(view.query?.fulltexts || [])];
+  if (query.fulltexts?.length) {
+    newFulltexts.push(...query.fulltexts);
+  }
+
+  for (let i = 0; i < newStems.length; i++) {
+    const newStem = {...newStems[i]};
+    for (const stem of query.stems || []) {
+      if (stem.collectionId === newStem.collectionId) {
+        const collectionFilters = (stem.filters || []).filter(filter => filter.collectionId === newStem.collectionId);
+        newStem.filters = [...(newStem.filters || []), ...collectionFilters];
+      }
+    }
+
+    newStems[i] = newStem;
+  }
+
+  return {...view, query: {...view.query, stems: newStems, fulltexts: newFulltexts}};
+}

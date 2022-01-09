@@ -1,6 +1,7 @@
 <div class="form-group mb-0 px-lg-5 px-md-3 px-0">
   <label for="titleElement" class="font-weight-bold">{{buttonLabel}}</label>
   <input class="form-control"
+         [disabled]="createOnly"
          [(ngModel)]="title" #titleElement
          i18n-placeholder="@@constraint.action.title.placeholder"
          placeholder="Enter button label..."
@@ -14,7 +15,9 @@
 
   <span class="small mb-1 text-muted" i18n="@@constraint.action.color.label">Click on the button to set its icon and color</span>
 
-  <button class="btn text-truncate text-nowrap mw-100" [style.background]="color"
+  <button class="btn text-truncate text-nowrap mw-100"
+          [disabled]="createOnly"
+          [style.background]="color"
           #buttonElement (click)="pickerComponent.toggle()"
           [style.color]="color | contrastColor">
     <i *ngIf="icon" [ngClass]="icon"></i>

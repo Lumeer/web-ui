@@ -24,7 +24,6 @@ import {
   FormCellType,
   FormConfig,
   FormLinkCellConfig,
-  FormMode,
   FormRow,
   FormSection,
 } from '../../../core/store/form/form-model';
@@ -53,7 +52,7 @@ export function checkOrTransformFormConfig(
 
   return {
     collectionId,
-    mode: currentConfig?.mode || FormMode.Build,
+    createOnly: currentConfig?.createOnly,
     sections: formSectionsDefaultConfig(currentConfig?.sections, query, collections),
     buttons: formButtonsDefaultConfig(currentConfig?.buttons),
     tableHeight: currentConfig?.tableHeight || 200,

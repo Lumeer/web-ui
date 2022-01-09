@@ -1577,7 +1577,7 @@
 			<trans-unit datatype="html" id="constraint.action.color.label">
 				<source>Click on the button to set its icon and color</source>
 				<target>Kattints a gombra, hogy beállítsd az ikont és a színt</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint-config-form.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/button/form-editor-button.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint-config-form.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/button/form-editor-button.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
 			
 			
 			<trans-unit datatype="html" id="constraint.action.description">
@@ -1615,7 +1615,7 @@
 			<trans-unit datatype="html" id="constraint.action.title.placeholder">
 				<source>Enter button label...</source>
 				<target>Gombcímke beírása...</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint-config-form.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/button/form-editor-button.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="constraint.action.title.error" datatype="html">
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint-config-form.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/button/form-editor-button.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="constraint.action.title.error" datatype="html">
         <source> Either icon or button title is required. </source><target> Vagy ikonra, vagy gomb címre van szükség. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint-config-form.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit>
@@ -1967,17 +1967,23 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.buttons.update.label" datatype="html">
         <source>Update Button</source><target state="new">Update Button</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.editor.createOnly.label" datatype="html">
+        <source>Only allow creation of new records</source><target state="new">Only allow creation of new records</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.form.editor.createOnly.hint" datatype="html">
+        <source>When you switch off the designer mode, a table with existing records is shown here. This allows you to select and update the records. You can hide this table and allow only adding new records.</source><target state="new">When you switch off the designer mode, a table with existing records is shown here. This allows you to select and update the records. You can hide this table and allow only adding new records.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.section.action.add" datatype="html">
         <source>Add a Section</source><target state="new">Add a Section</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.mandatory" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.mandatory" datatype="html">
         <source>This input is mandatory</source><target state="new">This input is mandatory</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/attribute/form-editor-cell-attribute-actions.component.html</context>
@@ -2095,43 +2101,37 @@
           <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.form.view.mode.designer.label" datatype="html">
+        <source>Designer Mode</source><target state="new">Designer Mode</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.form.view.mode.designer.tooltip" datatype="html">
         <source>Active designer mode allows you to change the form fields and layout</source><target state="new">Active designer mode allows you to change the form fields and layout</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.mode.empty" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="perspective.form.view.mode.empty" datatype="html">
         <source>I am sorry, but you could not create/update records or build the form.</source><target state="new">I am sorry, but you could not create/update records or build the form.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.documents.new" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="perspective.form.view.documents.new" datatype="html">
         <source>Add a new row</source><target state="new">Add a new row</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.documents.new.adding" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.view.documents.new.adding" datatype="html">
         <source>Adding a new row</source><target state="new">Adding a new row</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.submit.warning.data.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.title" datatype="html">
         <source>Unconfirmed changes</source><target state="new">Unconfirmed changes</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">432</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">448</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
         <source>There are some changes in form that was not saved. Are you sure to select another record?</source><target state="new">There are some changes in form that was not saved. Are you sure to select document?</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">433</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">449</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
         <source>Yes, Select Record</source><target state="new">Select</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">434</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">450</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
         <source>No, Keep Editing</source><target state="new">Do nothing</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">435</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.delete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">451</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.delete" datatype="html">
         <source>Delete This Record</source><target state="new">Delete This Record</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/view/submit/form-view-submit.component.html</context>
@@ -2257,17 +2257,11 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.buttons.create.title.default" datatype="html">
         <source>Create Record</source><target state="new">Create Record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context>
-          <context context-type="linenumber">92</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.buttons.update.title.default" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="perspective.form.editor.buttons.update.title.default" datatype="html">
         <source>Update Record</source><target state="new">Update Record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context>
-          <context context-type="linenumber">97</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context><context context-type="linenumber">96</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="create.new.link">
 				<source>Create new link </source>
 				<target>Új hivatkozás létrehozása</target>
@@ -4160,7 +4154,7 @@
 				<trans-unit datatype="html" id="perspective.workflow.table.resize">
 					<source>Resize table</source>
 					<target>Táblázat átméretezése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.workflow.toolbar.groupBy">
 					<source>Group By</source>
 					<target>Csoportosítás szerint</target>

@@ -39,6 +39,8 @@ import {Observable} from 'rxjs';
 import {selectDashboardDataByType} from '../../../../../../../core/store/dashboard-data/dashboard-data.state';
 import * as DashboardDataActions from './../../../../../../../core/store/dashboard-data/dashboard-data.actions';
 import {objectChanged} from '../../../../../../../shared/utils/common.utils';
+import {Query} from '../../../../../../../core/store/navigation/query/query';
+import {addQueryFiltersToView} from '../../../../../../../core/store/views/view.utils';
 
 @Component({
   selector: 'dashboard-tab-cell-content',
@@ -53,6 +55,9 @@ export class DashboardTabCellContentComponent implements OnChanges {
   @Input()
   public views: View[];
 
+  @Input()
+  public query: Query;
+
   public readonly cellType = DashboardCellType;
   public readonly configuration: PerspectiveConfiguration = {
     pivot: {},
@@ -63,7 +68,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
     gantt: {},
     workflow: {showSidebar: true},
     detail: {},
-    form: {},
+    form: {showSidebar: false},
   };
 
   public computedType: DashboardCellType;
@@ -76,7 +81,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.dashboardCell || changes.views) {
+    if (changes.dashboardCell || changes.views || changes.query) {
       this.setupData();
     }
     if (objectChanged(changes.dashboardCell)) {
@@ -99,6 +104,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
       case DashboardCellType.View:
         const viewId = (<DashboardViewCellConfig>this.dashboardCell?.config)?.viewId;
         this.view = viewId && (this.views || []).find(view => view.id === viewId);
+        this.view = addQueryFiltersToView(this.view, this.query);
         if (this.view) {
           this.computedType = DashboardCellType.View;
         } else {

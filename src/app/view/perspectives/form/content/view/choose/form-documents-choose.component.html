@@ -6,7 +6,8 @@
                        [constraintData]="constraintData"
                        [tableHeight]="config?.tableHeight"
                        (tableHeightChange)="onTableHeightChange($event)"
-                       (selectDataResource)="setActiveDocument($event)">
+                       (selectDataResource)="setActiveDocument($event)"
+                       (detailDataResource)="showDetailDocument($event)">
   <div class="d-flex align-items-center h-100" *ngIf="permissions?.rolesWithView?.DataContribute">
     <button class="btn btn-link px-0 small h-100" [disabled]="addingNewRow" (click)="onAddNewRow.emit()"><i
       class="fas fa-plus-circle"></i>&nbsp;<span *ngIf="!addingNewRow" i18n="@@perspective.form.view.documents.new"

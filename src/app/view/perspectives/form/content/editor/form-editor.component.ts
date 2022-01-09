@@ -99,4 +99,8 @@ export class FormEditorComponent implements OnChanges {
   public onButtonsChange(buttons: FormButtonsConfig) {
     this.configChange.emit({...this.config, buttons});
   }
+
+  public createOnlyModeChanged(createOnly: boolean) {
+    this.configChange.emit({...this.config, createOnly});
+  }
 }

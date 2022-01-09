@@ -31,9 +31,10 @@ import {DirectivesModule} from '../directives/directives.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {FilterUsedSuggestionsPipe} from './tags/filter-used-suggestions.pipe';
 import {ToggleCheckboxComponent} from './toggle-checkbox/toggle-checkbox.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, DirectivesModule, DropdownModule],
+  imports: [CommonModule, ReactiveFormsModule, DirectivesModule, DropdownModule, TooltipModule],
   declarations: [
     InputBoxComponent,
     InvitationTypeSelectComponent,

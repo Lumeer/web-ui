@@ -32,6 +32,9 @@ export class FormEditorButtonComponent implements OnChanges {
   @Input()
   public button: FormButtonConfig;
 
+  @Input()
+  public createOnly: boolean;
+
   @Output()
   public buttonChange = new EventEmitter<FormButtonConfig>();
 

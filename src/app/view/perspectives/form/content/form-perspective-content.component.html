@@ -1,29 +1,28 @@
-<form-mode [modes]="modes"
-           [selectedMode]="currentMode"
-           (modeChange)="onModeChange($event)">
+<form-mode *ngIf="configuration?.showSidebar"
+           class="d-block mb-3"
+           [canManageConfig]="canManageConfig"
+           [canManipulateData]="canManipulateData"
+           [builderModeActive]="builderMode"
+           (modeToggle)="modeToggle.emit()">
 </form-mode>
 
-<ng-container [ngSwitch]="currentMode">
-
-  <form-editor *ngSwitchCase="mode.Build"
-               class="d-block mt-3 mb-6"
-               [config]="config"
-               [collection]="collection"
-               [collectionLinkTypes]="collectionLinkTypes"
-               [attributesSettings]="attributesSettings"
-               (configChange)="configChange.emit($event)">
-  </form-editor>
-
-  <form-view *ngSwitchCase="mode.CreateUpdate"
-             class="d-block mt-3 mb-6"
+<form-editor *ngIf="builderMode"
+             class="d-block mb-6"
              [config]="config"
              [collection]="collection"
-             [query]="query"
-             [view]="view"
-             [attributesSettings]="attributesSettings"
-             [resourcesPermissions]="permissions"
              [collectionLinkTypes]="collectionLinkTypes"
+             [attributesSettings]="attributesSettings"
              (configChange)="configChange.emit($event)">
-  </form-view>
+</form-editor>
 
-</ng-container>
+<form-view *ngIf="!builderMode"
+           class="d-block mt-3 mb-6"
+           [config]="config"
+           [collection]="collection"
+           [query]="query"
+           [view]="view"
+           [attributesSettings]="attributesSettings"
+           [resourcesPermissions]="permissions"
+           [collectionLinkTypes]="collectionLinkTypes"
+           (configChange)="configChange.emit($event)">
+</form-view>

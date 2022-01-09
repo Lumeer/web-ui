@@ -51,7 +51,7 @@ export class SentryHttpInterceptor implements HttpInterceptor {
 
       Sentry.captureMessage(`${error.status}: ${error.error}`, Severity.Error);
     } else {
-      Sentry.captureException(error);
+      Sentry.captureException(error?.originalError || error?.error || error);
     }
   }
 }

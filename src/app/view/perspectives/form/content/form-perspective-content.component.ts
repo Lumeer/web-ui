@@ -18,13 +18,14 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {FormConfig, FormMode} from '../../../../core/store/form/form-model';
+import {FormConfig} from '../../../../core/store/form/form-model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AttributesSettings, View} from '../../../../core/store/views/view';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {objectChanged} from '../../../../shared/utils/common.utils';
+import {FormPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Component({
   selector: 'form-perspective-content',
@@ -56,56 +57,32 @@ export class FormPerspectiveContentComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public builderMode: boolean;
+
+  @Input()
+  public configuration: FormPerspectiveConfiguration;
+
   @Output()
   public configChange = new EventEmitter<FormConfig>();
 
-  public readonly mode = FormMode;
+  @Output()
+  public modeToggle = new EventEmitter();
 
-  private selectedMode: FormMode; // user selected mode
-
-  public currentMode: FormMode;
-  public modes: FormMode[] = [];
+  public canManipulateData: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
-    let modesChanged = false;
     if (objectChanged(changes.collection) || changes.permissions || changes.canManageConfig) {
-      this.checkModes();
-      modesChanged = true;
-    }
-    if (modesChanged || changes.config) {
-      this.checkSelectedMode();
+      this.checkPermissions();
     }
   }
 
-  private checkModes() {
-    const newModes = [];
-    if (this.canManageConfig) {
-      newModes.push(FormMode.Build);
-    }
+  private checkPermissions() {
     const permissions = this.permissions?.collections?.[this.collection?.id];
-    if (
+    this.canManipulateData =
       permissions?.rolesWithView?.DataContribute ||
       permissions?.rolesWithView?.DataWrite ||
       permissions?.rolesWithView?.DataRead ||
-      this.canManageConfig
-    ) {
-      newModes.push(FormMode.CreateUpdate);
-    }
-    this.modes = newModes;
-  }
-
-  private checkSelectedMode() {
-    if (this.modes.includes(this.currentMode || this.config?.mode)) {
-      this.currentMode = this.currentMode || this.config?.mode;
-    } else if (this.modes.length > 0) {
-      this.currentMode = this.modes[0];
-    } else {
-      this.currentMode = null;
-    }
-  }
-
-  public onModeChange(mode: FormMode) {
-    this.currentMode = mode;
-    this.configChange.next({...this.config, mode});
+      this.canManageConfig;
   }
 }

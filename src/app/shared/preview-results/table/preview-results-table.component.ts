@@ -84,6 +84,9 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   public tableHeight: number;
 
   @Output()
+  public detailDataResource = new EventEmitter<DataResource>();
+
+  @Output()
   public selectDataResource = new EventEmitter<DataResource>();
 
   @ViewChild(CdkVirtualScrollViewport, {static: false})
@@ -184,6 +187,10 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
 
   public activate(dataResource: DataResource) {
     this.selectDataResource.emit(dataResource);
+  }
+
+  public detail(dataResource: DataResource) {
+    this.detailDataResource.emit(dataResource);
   }
 
   public trackByAttribute(index: number, column: PreviewResultsColumn): string {

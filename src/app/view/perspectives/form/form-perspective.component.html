@@ -10,7 +10,10 @@
                               [attributesSettings]="(viewSettings$ | async)?.attributes"
                               [canManageConfig]="canManageConfig$ | async"
                               [permissions]="permissions$ | async"
-                              (configChange)="onConfigChanged($event)">
+                              [builderMode]="sidebarOpened$ | async"
+                              [configuration]="perspectiveConfiguration"
+                              (configChange)="onConfigChanged($event)"
+                              (modeToggle)="onSidebarToggle()">
     </form-perspective-content>
   </div>
 </ng-container>
