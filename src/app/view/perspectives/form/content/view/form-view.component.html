@@ -39,7 +39,7 @@
 
     <form-view-submit class="mt-4"
                       [editable]="data.originalDocument | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
-                      [deletable]="!data.document.id || (data.originalDocument | dataResourceIsDeletable:data.collection:collectionPermissions:data.currentUser:data.constraintData)"
+                      [deletable]="(!data.document.id || (data.originalDocument | dataResourceIsDeletable:data.collection:collectionPermissions:data.currentUser:data.constraintData)) && !config?.createOnly"
                       [document]="data.document"
                       [buttons]="config?.buttons"
                       [loading]="performingAction$ | async"

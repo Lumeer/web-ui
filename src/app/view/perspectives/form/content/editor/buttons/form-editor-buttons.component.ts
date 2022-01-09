@@ -30,6 +30,9 @@ export class FormEditorButtonsComponent {
   @Input()
   public buttons: FormButtonsConfig;
 
+  @Input()
+  public createOnly: boolean;
+
   @Output()
   public buttonsChange = new EventEmitter<FormButtonsConfig>();
 

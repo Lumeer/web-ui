@@ -4773,7 +4773,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/button/form-editor-button.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.action.title.error" datatype="html">
@@ -4791,7 +4791,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/button/form-editor-button.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.action.title.default" datatype="html">
@@ -6658,7 +6658,7 @@
         <source>Resize table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context>
@@ -8895,14 +8895,28 @@
         <source>Update Button</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.form.editor.createOnly.label" datatype="html">
+        <source>Only allow creation of new records</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.form.editor.createOnly.hint" datatype="html">
+        <source>When you switch off the designer mode, a table with existing records is shown here. This allows you to select and update the records. You can hide this table and allow only adding new records.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.editor.section.action.add" datatype="html">
         <source>Add a Section</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.editor.row.cell.actions.mandatory" datatype="html">
@@ -9045,60 +9059,67 @@
           <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="perspective.form.view.mode.designer.label" datatype="html">
+        <source>Designer Mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="perspective.form.view.mode.designer.tooltip" datatype="html">
         <source>Active designer mode allows you to change the form fields and layout</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.view.mode.empty" datatype="html">
         <source>I am sorry, but you could not create/update records or build the form.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.view.documents.new" datatype="html">
         <source>Add a new row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.view.documents.new.adding" datatype="html">
         <source>Adding a new row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.view.submit.warning.data.title" datatype="html">
         <source>Unconfirmed changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
-          <context context-type="linenumber">432</context>
+          <context context-type="linenumber">448</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
         <source>There are some changes in form that was not saved. Are you sure to select another record?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
-          <context context-type="linenumber">433</context>
+          <context context-type="linenumber">449</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
         <source>Yes, Select Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
-          <context context-type="linenumber">434</context>
+          <context context-type="linenumber">450</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
         <source>No, Keep Editing</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
-          <context context-type="linenumber">435</context>
+          <context context-type="linenumber">451</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.view.submit.delete" datatype="html">
@@ -9247,14 +9268,14 @@
         <source>Create Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.form.editor.buttons.update.title.default" datatype="html">
         <source>Update Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.config.position.save" datatype="html">

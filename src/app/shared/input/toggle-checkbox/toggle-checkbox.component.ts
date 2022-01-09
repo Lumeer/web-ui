@@ -38,6 +38,9 @@ export class ToggleCheckboxComponent {
   @Input()
   public icon: string;
 
+  @Input()
+  public hint: string;
+
   @Output()
   public checkedChange = new EventEmitter<boolean>();
 

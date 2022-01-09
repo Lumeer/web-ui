@@ -7,8 +7,9 @@
     <span class="slider round" (click)="$event.stopPropagation()"></span>
   </label>
   <i *ngIf="icon" class="pl-3 cursor-pointer" [ngClass]="icon" (click)="!disabled && toggleElement.click()"></i>
-  <span class=" cursor-pointer user-select-none"
+  <span class="cursor-pointer user-select-none"
         [class.pl-1]="icon"
         [class.pl-2]="!icon"
         (click)="!disabled && toggleElement.click()">{{label}}</span>
+  <span *ngIf="hint" class="ml-1 far fa-question-circle" tooltip="{{hint}}"></span>
 </div>
