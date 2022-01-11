@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {FormConfig} from '../../../../core/store/form/form-model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -26,13 +35,18 @@ import {AttributesSettings, View} from '../../../../core/store/views/view';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {objectChanged} from '../../../../shared/utils/common.utils';
 import {FormPerspectiveConfiguration} from '../../perspective-configuration';
+import {AppState} from '../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {Observable} from 'rxjs';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'form-perspective-content',
   templateUrl: './form-perspective-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormPerspectiveContentComponent implements OnChanges {
+export class FormPerspectiveContentComponent implements OnInit, OnChanges {
   @Input()
   public config: FormConfig;
 
@@ -69,7 +83,15 @@ export class FormPerspectiveContentComponent implements OnChanges {
   @Output()
   public modeToggle = new EventEmitter();
 
+  public constraintData$: Observable<ConstraintData>;
+
   public canManipulateData: boolean;
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (objectChanged(changes.collection) || changes.permissions || changes.canManageConfig) {

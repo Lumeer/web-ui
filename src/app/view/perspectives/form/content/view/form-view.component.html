@@ -1,11 +1,11 @@
-<ng-container *ngIf="{document: document$ | async, originalDocument: originalDocument$ | async, collection: collection$ | async, currentUser: currentUser$ | async, constraintData: constraintData$ | async} as data">
+<ng-container *ngIf="{document: document$ | async, originalDocument: originalDocument$ | async, collection: collection$ | async, currentUser: currentUser$ | async} as data">
 
   <form-documents-choose *ngIf="!config?.createOnly"
                          class="mb-4 d-block"
                          [collection]="data.collection"
                          [document]="data.document"
                          [attributesSettings]="attributesSettings"
-                         [constraintData]="data.constraintData"
+                         [constraintData]="constraintData"
                          [permissions]="collectionPermissions"
                          [query]="query"
                          [view]="view"
@@ -27,8 +27,8 @@
                        [collection]="data.collection"
                        [documentId]="data.document?.id"
                        [originalDocument]="data.originalDocument"
-                       [constraintData]="data.constraintData"
-                       [documentEditable]="data.originalDocument | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
+                       [constraintData]="constraintData"
+                       [documentEditable]="data.originalDocument | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:constraintData"
                        [formErrors]="(validation$ | async)?.errors | formErrorsBySection:section.id"
                        (attributeValueChange)="onAttributeValueChange($event, section.id)"
                        (editCancel)="onEditCancel($event, section.id)"
@@ -38,8 +38,8 @@
     </form-view-section>
 
     <form-view-submit class="mt-4"
-                      [editable]="data.originalDocument | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
-                      [deletable]="(!data.document.id || (data.originalDocument | dataResourceIsDeletable:data.collection:collectionPermissions:data.currentUser:data.constraintData)) && !config?.createOnly"
+                      [editable]="data.originalDocument | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:constraintData"
+                      [deletable]="(!data.document.id || (data.originalDocument | dataResourceIsDeletable:data.collection:collectionPermissions:data.currentUser:constraintData)) && !config?.createOnly"
                       [document]="data.document"
                       [buttons]="config?.buttons"
                       [loading]="performingAction$ | async"

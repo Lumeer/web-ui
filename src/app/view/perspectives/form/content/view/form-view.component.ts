@@ -35,7 +35,6 @@ import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters
 import {AppState} from '../../../../../core/store/app.state';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription, switchMap} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {DocumentModel, DocumentAdditionalDataRequest} from '../../../../../core/store/documents/document.model';
 import {DataResourceData} from '../../../../../core/model/resource';
 import {distinctUntilChanged, map, take, tap} from 'rxjs/operators';
@@ -91,6 +90,9 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   public view: View;
 
   @Input()
+  public constraintData: ConstraintData;
+
+  @Input()
   public attributesSettings: AttributesSettings;
 
   @Input()
@@ -105,11 +107,11 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   public validation$: Observable<FormValidation>;
   public linkData$: Observable<Record<string, FormLinkData>>;
   public currentUser$: Observable<User>;
-  public constraintData$: Observable<ConstraintData>;
   public editedCell$: Observable<FormCoordinates>;
 
   public view$ = new BehaviorSubject<View>(null);
   public config$ = new BehaviorSubject<FormConfig>(null);
+  public constraintData$ = new BehaviorSubject<ConstraintData>(null);
   public collection$ = new BehaviorSubject<Collection>(null);
   public linkTypes$ = new BehaviorSubject<LinkType[]>([]);
   public createdDocuments$ = new BehaviorSubject<string[]>([]);
@@ -122,7 +124,6 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
 
   public collectionPermissions: AllowedPermissions;
 
-  private constraintData: ConstraintData;
   private subscriptions = new Subscription();
 
   constructor(
@@ -132,10 +133,6 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.constraintData$ = this.store$.pipe(
-      select(selectConstraintData),
-      tap(constraintData => (this.constraintData = constraintData))
-    );
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.validation$ = this.formValidation.validation$;
     this.editedCell$ = this.formState.editedCell$;
@@ -166,7 +163,10 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.collectionLinkTypes) {
       this.linkTypes$.next(this.collectionLinkTypes || []);
     }
-    if (changes.config || changes.query) {
+    if (changes.constraintData) {
+      this.constraintData$.next(this.constraintData);
+    }
+    if (changes.config || changes.query || changes.constraintData) {
       this.checkCreateOnlyMode();
     }
   }
