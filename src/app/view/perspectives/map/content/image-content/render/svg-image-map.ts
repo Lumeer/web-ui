@@ -303,7 +303,7 @@ export class SvgImageMap {
 
   private onMarkerMove(id: string, x: number, y: number) {
     const marker = this.markers?.[id];
-    if (marker) {
+    if (marker && (marker.coordinates.lat != y || marker.coordinates.lng !== x)) {
       this.markerMove$.emit({marker, x, y});
     }
   }
