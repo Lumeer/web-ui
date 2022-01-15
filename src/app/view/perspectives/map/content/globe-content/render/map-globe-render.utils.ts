@@ -118,7 +118,7 @@ export function createMapPopupMarker(coordinates: MapCoordinates): Marker {
 
 export function createMapPopup(coordinates: MapCoordinates): Popup {
   const title = $localize`:@@map.popup.title.create:Create Record`;
-  const html = `<div class="card"><div class="dropdown-item cursor-pointer user-select-none">${title}</div></div>`;
+  const html = `<div class="dropdown-item cursor-pointer user-select-none border-radius-small">${title}</div>`;
 
   return new Popup({
     anchor: 'top',

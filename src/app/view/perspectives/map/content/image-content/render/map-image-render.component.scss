@@ -1,3 +1,5 @@
+@import '~src/styles/variables';
+
 .controls {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -15,9 +17,24 @@
   background: white;
   padding: 0.5rem;
   max-height: 20rem;
+  border-radius: 0.2rem;
   max-width: 14rem;
-  overflow: hidden;
   transform: translateX(-50%);
+  box-shadow: $shadow-default;
 
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  .popup-content {
+    overflow: hidden;
+  }
+
+  &:after {
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: -20px;
+    left: calc(50% - 10px);
+    border-top: none;
+    border: 10px solid transparent;
+    border-bottom-color: $gray-400;
+  }
 }

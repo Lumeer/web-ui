@@ -30,11 +30,17 @@ import {
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {Collection} from '../../../../core/store/collections/collection';
-import {MapConfig, MapMarkerData, MapMarkerProperties, MapPosition} from '../../../../core/store/maps/map.model';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {
+  MapConfig,
+  MapCoordinates,
+  MapMarkerData,
+  MapMarkerProperties,
+  MapPosition,
+} from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {ModalService} from '../../../../shared/modal/modal.service';
-import {AttributesResourceType} from '../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
@@ -45,11 +51,19 @@ import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {MapGlobeContentComponent} from './globe-content/map-globe-content.component';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {
+  ConstraintData,
+  CoordinatesConstraint,
+  CoordinatesConstraintConfig,
+  DocumentsAndLinksData,
+} from '@lumeer/data-filters';
 import {AppState} from '../../../../core/store/app.state';
 import {User} from '../../../../core/store/users/user';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {View} from '../../../../core/store/views/view';
+import {generateDocumentDataByResourceQuery} from '../../../../core/store/documents/document.utils';
+import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
 
 interface Data {
   collections: Collection[];
@@ -225,5 +239,43 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   private currentWorkspace(): Workspace {
     return {viewId: this.view?.id};
+  }
+
+  public onNewMarker(coordinates: MapCoordinates) {
+    const attributeConfig = this.config?.stemsConfigs?.find(stemConfig => stemConfig?.attributes?.length > 0)
+      ?.attributes[0];
+    const resource = this.findResourceByProperty(attributeConfig?.resourceType, attributeConfig?.resourceId);
+    const attribute = findAttribute(resource?.attributes, attributeConfig.attributeId);
+    if (resource && attribute) {
+      const value = new CoordinatesConstraint({} as CoordinatesConstraintConfig)
+        .createDataValue(coordinates)
+        .serialize();
+      this.createNewMarker(value, attribute, resource, attributeConfig.resourceType);
+    }
+  }
+
+  private findResourceByProperty(type: AttributesResourceType, id: string): AttributesResource {
+    if (type === AttributesResourceType.Collection) {
+      return (this.collections || []).find(collection => collection.id === id);
+    } else if (type === AttributesResourceType.LinkType) {
+      return (this.linkTypes || []).find(linkType => linkType.id === id);
+    }
+    return null;
+  }
+
+  private createNewMarker(
+    value: any,
+    attribute: Attribute,
+    resource: AttributesResource,
+    type: AttributesResourceType
+  ) {
+    const data = generateDocumentDataByResourceQuery(resource, this.query, this.constraintData);
+    data[attribute.id] = value;
+
+    const dataResource =
+      type === AttributesResourceType.Collection
+        ? {collectionId: resource.id, correlationId: generateCorrelationId(), data}
+        : {linkTypeId: resource.id, correlationId: generateCorrelationId(), data, documentIds: []};
+    this.modalService.showDataResourceDetail(dataResource, resource, this.view?.id);
   }
 }

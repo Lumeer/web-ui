@@ -34,6 +34,8 @@ import {
 import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectCollectionsLoaded} from '../../core/store/collections/collections.state';
+import {selectLinkTypesLoaded} from '../../core/store/link-types/link-types.state';
 
 @Injectable()
 export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDestroy {
@@ -136,8 +138,13 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
           this.store$.pipe(select(selectLinkTypesInCustomViewAndQuery(view, query))),
         ]).pipe(map(([collections, linkTypes]) => ({query, collections, linkTypes})))
       ),
-      withLatestFrom(this.subscribeConfig$(perspectiveId)),
-      map(([{query, collections, linkTypes}, config], index) => {
+      withLatestFrom(
+        this.subscribeConfig$(perspectiveId),
+        this.store$.pipe(select(selectCollectionsLoaded)),
+        this.store$.pipe(select(selectLinkTypesLoaded))
+      ),
+      filter(([, , collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
+      map(([{query, collections, linkTypes}, config, ,], index) => {
         const perspectiveConfig = index > 0 ? config || viewConfig : viewConfig || config;
         return this.checkOrTransformConfig(perspectiveConfig || defaultConfig, query, collections, linkTypes);
       })

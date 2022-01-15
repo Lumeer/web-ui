@@ -61,6 +61,7 @@ import {WorkflowsAction} from '../workflows/workflows.action';
 import {DataResourcesAction} from '../data-resources/data-resources.action';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import * as DetailActions from './../details/detail.actions';
+import * as FormActions from './../form/form.actions';
 import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
 
 @Injectable()
@@ -567,6 +568,7 @@ export class ProjectsEffects {
           new WorkflowsAction.Clear(),
           new SearchesAction.Clear(),
           DashboardDataActions.clear(),
+          FormActions.clear(),
         ];
 
         if (nextAction) {

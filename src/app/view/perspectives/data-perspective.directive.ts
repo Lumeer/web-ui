@@ -30,7 +30,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectCurrentView, selectSidebarOpened, selectViewAdditionalQueries} from '../../core/store/views/views.state';
-import {distinctUntilChanged, map, switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, map, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {View, ViewSettings} from '../../core/store/views/view';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {
@@ -49,6 +49,7 @@ import {ViewConfigPerspectiveComponent} from './view-config-perspective.componen
 import {User} from '../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 import {Workspace} from '../../core/store/navigation/workspace';
+import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
 
 @Directive()
 export abstract class DataPerspectiveDirective<T>
@@ -74,6 +75,7 @@ export abstract class DataPerspectiveDirective<T>
   public currentViewId$: Observable<string>;
   public query$: Observable<Query>;
   public workspace$: Observable<Workspace>;
+  public navigating$: Observable<boolean>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public overrideView$ = new BehaviorSubject<View>(null);
@@ -118,6 +120,7 @@ export abstract class DataPerspectiveDirective<T>
   }
 
   private initSubscriptions() {
+    this.navigating$ = this.store$.pipe(select(selectNavigatingToOtherWorkspace), distinctUntilChanged());
     this.currentView$ = this.overrideView$.pipe(
       switchMap(view => {
         if (view) {
@@ -143,7 +146,12 @@ export abstract class DataPerspectiveDirective<T>
 
   private subscribeToQuery() {
     this.subscriptions.add(
-      combineLatest([this.currentViewId$, this.query$]).subscribe(([viewId, query]) => this.fetchData(query, viewId))
+      combineLatest([this.currentViewId$, this.query$, this.navigating$])
+        .pipe(
+          debounceTime(100),
+          filter(([, , navigating]) => !navigating)
+        )
+        .subscribe(([viewId, query]) => this.fetchData(query, viewId))
     );
 
     const viewAdditionalQueries$ = this.overrideView$.pipe(
@@ -155,9 +163,12 @@ export abstract class DataPerspectiveDirective<T>
       })
     );
     this.subscriptions.add(
-      combineLatest([this.currentViewId$, viewAdditionalQueries$]).subscribe(([viewId, queries]) =>
-        queries.forEach(query => this.fetchData(query, viewId))
-      )
+      combineLatest([this.currentViewId$, viewAdditionalQueries$, this.navigating$])
+        .pipe(
+          debounceTime(100),
+          filter(([, , navigating]) => !navigating)
+        )
+        .subscribe(([viewId, queries]) => queries.forEach(query => this.fetchData(query, viewId)))
     );
   }
 

@@ -5,7 +5,8 @@
                     [markers]="markers"
                     (detail)="detail.emit($event)"
                     (mapMove)="mapMove.emit($event)"
-                    (markerMove)="onMarkerMove($event)">
+                    (markerMove)="onMarkerMove($event)"
+                    (newMarker)="onNewMarker($event.x, $event.y)">
   </map-image-render>
 
   <ng-template #empty>
