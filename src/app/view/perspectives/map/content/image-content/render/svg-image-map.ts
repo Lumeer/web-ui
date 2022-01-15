@@ -244,17 +244,18 @@ export class SvgImageMap {
       const width = rectangle.width * translate.scale;
       const height = rectangle.height * translate.scale;
 
-      const positionX = x - translate.x - defaultMarkerSize.width / 2;
-      const positionY = y - translate.y - defaultMarkerSize.height;
-      const coordinates = computeMarkerCoordinates(
-        {x: positionX, y: positionY},
-        translate.scale,
-        translate.pixelScale,
-        this.getElementSize()
-      );
-
       if (x >= rectangleX && x <= rectangleX + width && y >= rectangleY && y <= rectangleY + height) {
         event.preventDefault();
+
+        const positionX = x - translate.x - defaultMarkerSize.width / 2;
+        const positionY = y - translate.y - defaultMarkerSize.height;
+        const coordinates = computeMarkerCoordinates(
+          {x: positionX, y: positionY},
+          translate.scale,
+          translate.pixelScale,
+          this.getElementSize()
+        );
+
         this.addMenu(event, coordinates.x, coordinates.y);
       }
     });
