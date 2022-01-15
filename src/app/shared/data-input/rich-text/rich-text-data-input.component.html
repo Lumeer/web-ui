@@ -26,6 +26,7 @@
               [minLength]="value.config.minLength"
               [placeholder]="''"
               theme="bubble"
+              (onBlur)="onBlur()"
               (onEditorCreated)="onEditorCreated($event)"
               (onContentChanged)="contentChanged($event)">
 </quill-editor>

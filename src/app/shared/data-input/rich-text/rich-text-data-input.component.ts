@@ -42,6 +42,7 @@ import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {DataInputModalService} from '../data-input-modal.service';
 import {ConstraintType, DataValue, TextDataValue} from '@lumeer/data-filters';
+import {clickedInsideElement} from '../../utils/html-modifier';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -98,6 +99,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private modalSubscription = new Subscription();
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private mouseDownListener: (event: MouseEvent) => void;
   private pasteValueAfterEditorCreation: boolean;
 
   public readonly modules = {
@@ -108,10 +110,14 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges) {
     let valueSet = false;
-    if (changes.readonly && !this.readonly && this.focus) {
-      this.addKeyDownListener();
-      this.initValue();
-      valueSet = true;
+    if (changes.readonly) {
+      if (!this.readonly && this.focus) {
+        this.addKeyDownListener();
+        this.initValue();
+        valueSet = true;
+      } else {
+        this.removeListeners();
+      }
     }
     if (!valueSet && changes.value && this.value) {
       this.initValue();
@@ -120,17 +126,24 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private addKeyDownListener() {
-    this.removeKeyDownListener();
+    this.removeListeners();
 
     this.keyDownListener = event => this.onKeyDown(event);
     this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+
+    this.mouseDownListener = event => this.onMouseDown(event);
+    document.addEventListener('mouseup', this.mouseDownListener);
   }
 
-  private removeKeyDownListener() {
+  private removeListeners() {
     if (this.keyDownListener) {
       this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
     }
     this.keyDownListener = null;
+    if (this.mouseDownListener) {
+      document.removeEventListener('mouseup', this.mouseDownListener);
+    }
+    this.mouseDownListener = null;
   }
 
   private initValue() {
@@ -191,7 +204,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public onEditorCreated(editor: any) {
     this.checkPasteValue();
     // we need to handle blur this way because method from quill api is not triggered on button or href click
-    editor.root.addEventListener('blur', () => this.onBlur());
+    // editor.root.addEventListener('blur', () => this.onBlur();
     editor.setSelection(Number.MAX_SAFE_INTEGER, 1);
 
     const isMultiLine = editor.root.childElementCount > 1;
@@ -205,6 +218,13 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     }
 
     this.preventEnterInEditor(editor);
+  }
+
+  public onMouseDown(event: MouseEvent) {
+    if (!clickedInsideElement(event, 'rich-text-data-input') && !this.readonly) {
+      this.saveValue(this.text, DataInputSaveAction.Blur);
+      this.cancel.emit();
+    }
   }
 
   private checkPasteValue() {
@@ -270,7 +290,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onBlur() {
-    this.removeKeyDownListener();
+    this.removeListeners();
     if (this.preventSave) {
       this.preventSave = false;
     } else {
