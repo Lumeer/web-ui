@@ -64,6 +64,9 @@ export class MapImageContentComponent implements OnChanges {
   @Output()
   public mapMove = new EventEmitter<MapPosition>();
 
+  @Output()
+  public newMarker = new EventEmitter<MapCoordinates>();
+
   public loading$: Observable<boolean>;
   public loaded$: Observable<MapImageLoadResult>;
   public imageData$: Observable<MapImageData>;
@@ -97,6 +100,11 @@ export class MapImageContentComponent implements OnChanges {
     const coordinates: MapCoordinates = {lng: event.x, lat: event.y};
     const value = new CoordinatesConstraint({} as CoordinatesConstraintConfig).createDataValue(coordinates).serialize();
     this.saveAttributeValue(event.marker, value);
+  }
+
+  public onNewMarker(x: number, y: number) {
+    const coordinates: MapCoordinates = {lng: x, lat: y};
+    this.newMarker.next(coordinates);
   }
 
   private saveAttributeValue(properties: MapMarkerProperties, value: string) {

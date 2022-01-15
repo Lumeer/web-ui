@@ -34,7 +34,7 @@ export interface Position {
   y: number;
 }
 
-const defaultMarkerSize: Rectangle = {height: 40, width: 30};
+export const defaultMarkerSize: Rectangle = {height: 40, width: 30};
 
 export function addMarkerToSvgContainer(
   container: SVGContainer,

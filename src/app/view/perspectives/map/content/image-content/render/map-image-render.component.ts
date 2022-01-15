@@ -30,7 +30,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {MapImageData, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
+import {
+  MapCoordinates,
+  MapImageData,
+  MapMarkerProperties,
+  MapPosition,
+} from '../../../../../../core/store/maps/map.model';
 import {BehaviorSubject, fromEvent, Subscription} from 'rxjs';
 import {Rectangle} from './map-image-render-utils';
 import {ResizeObserver} from '../../../../../../shared/resize-observer';
@@ -63,6 +68,9 @@ export class MapImageRenderComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   public mapMove = new EventEmitter<MapPosition>();
+
+  @Output()
+  public newMarker = new EventEmitter<{x: number; y: number}>();
 
   @ViewChild('svgWrapper')
   set content(content: ElementRef<SVGElement>) {
@@ -112,6 +120,7 @@ export class MapImageRenderComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(this.svgImageMap.detail$.subscribe(event => this.detail.emit(event)));
     this.subscriptions.add(this.svgImageMap.mapMove$.subscribe(event => this.mapMove.emit(event)));
     this.subscriptions.add(this.svgImageMap.markerMove$.subscribe(event => this.markerMove.emit(event)));
+    this.subscriptions.add(this.svgImageMap.markerCreate$.subscribe(event => this.newMarker.emit(event)));
   }
 
   public zoomIn() {

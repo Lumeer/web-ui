@@ -6,7 +6,7 @@
                       [markers]="data.markers"
                       (mapMove)="mapMove.emit($event)"
                       (markerMove)="onMarkerMove($event)"
-                      (newMarker)="onNewMarker($event)"
+                      (newMarker)="newMarker.emit($event)"
                       (detail)="detail.emit($event)"
                       class="w-100">
     </map-globe-render>

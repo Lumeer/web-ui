@@ -4,7 +4,8 @@
                      [markerData]="data.data"
                      (detail)="onMarkerDetail($event)"
                      (mapMove)="onMapMove($event)"
-                     (valueSave)="onSaveValue($event)">
+                     (valueSave)="onSaveValue($event)"
+                     (newMarker)="onNewMarker($event)">
   </map-image-content>
   <map-globe-content *ngIf="!config?.imageUrl"
                      [config]="config"
@@ -16,6 +17,7 @@
                      [view]="view"
                      (detail)="onMarkerDetail($event)"
                      (mapMove)="onMapMove($event)"
-                     (valueSave)="onSaveValue($event)">
+                     (valueSave)="onSaveValue($event)"
+                     (newMarker)="onNewMarker($event)">
   </map-globe-content>
 </ng-container>

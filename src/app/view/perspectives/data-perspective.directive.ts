@@ -75,6 +75,7 @@ export abstract class DataPerspectiveDirective<T>
   public currentViewId$: Observable<string>;
   public query$: Observable<Query>;
   public workspace$: Observable<Workspace>;
+  public navigating$: Observable<boolean>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public overrideView$ = new BehaviorSubject<View>(null);
@@ -119,6 +120,7 @@ export abstract class DataPerspectiveDirective<T>
   }
 
   private initSubscriptions() {
+    this.navigating$ = this.store$.pipe(select(selectNavigatingToOtherWorkspace), distinctUntilChanged());
     this.currentView$ = this.overrideView$.pipe(
       switchMap(view => {
         if (view) {
@@ -143,9 +145,8 @@ export abstract class DataPerspectiveDirective<T>
   }
 
   private subscribeToQuery() {
-    const navigating$ = this.store$.pipe(select(selectNavigatingToOtherWorkspace), distinctUntilChanged());
     this.subscriptions.add(
-      combineLatest([this.currentViewId$, this.query$, navigating$])
+      combineLatest([this.currentViewId$, this.query$, this.navigating$])
         .pipe(
           debounceTime(100),
           filter(([, , navigating]) => !navigating)
@@ -162,7 +163,7 @@ export abstract class DataPerspectiveDirective<T>
       })
     );
     this.subscriptions.add(
-      combineLatest([this.currentViewId$, viewAdditionalQueries$, navigating$])
+      combineLatest([this.currentViewId$, viewAdditionalQueries$, this.navigating$])
         .pipe(
           debounceTime(100),
           filter(([, , navigating]) => !navigating)

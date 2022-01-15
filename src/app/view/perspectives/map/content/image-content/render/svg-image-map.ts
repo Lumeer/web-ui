@@ -27,6 +27,7 @@ import {
   computeMarkerInitialX,
   computeMarkerInitialY,
   computeMarkerPosition,
+  defaultMarkerSize,
   Position,
   Rectangle,
   scaleImagePoint,
@@ -41,6 +42,7 @@ export class SvgImageMap {
   public detail$ = new EventEmitter<MapMarkerProperties>();
   public markerMove$ = new EventEmitter<{marker: MapMarkerProperties; x: number; y: number}>();
   public mapMove$ = new EventEmitter<MapPosition>();
+  public markerCreate$ = new EventEmitter<{x: number; y: number}>();
 
   private svgImage: SVGElement;
   private svgImageWrapper: SVGElement;
@@ -48,10 +50,12 @@ export class SvgImageMap {
   private zoom: d3Zoom.ZoomBehavior<Element, any>;
   private mapDragging: boolean;
   private popupWrapper: HTMLElement;
+  private menuWrapper: HTMLElement;
 
   private currentPosition: MapPosition;
   private currentData: MapImageData;
   private markers: Record<string, MapMarkerProperties> = {};
+  private menuListeners: Record<number, EventListenerOrEventListenerObject> = {};
 
   constructor(
     private element: ElementRef,
@@ -88,6 +92,7 @@ export class SvgImageMap {
       d3Select.select(this.svgImageWrapper),
       d3Select.select(this.svgMarkersWrapper)
     );
+    this.initMenu();
     this.drawMarkers(markers);
   }
 
@@ -208,7 +213,7 @@ export class SvgImageMap {
     const popupWrapper = document.createElement('div');
     popupWrapper.classList.add('popup-wrapper');
     popupWrapper.innerHTML = html;
-    popupWrapper.style.top = `${+markerContainer.attr('y') + translate.y + +markerContainer.attr('height')}px`;
+    popupWrapper.style.top = `${+markerContainer.attr('y') + translate.y + +markerContainer.attr('height') + 10}px`;
     popupWrapper.style.left = `${+markerContainer.attr('x') + translate.x + +markerContainer.attr('width') / 2}px`;
     this.element.nativeElement.appendChild(popupWrapper);
 
@@ -217,6 +222,69 @@ export class SvgImageMap {
 
   private hideMarkerPopup() {
     this.popupWrapper?.parentNode?.removeChild(this.popupWrapper);
+  }
+
+  private initMenu() {
+    this.hideMenu();
+
+    const title = $localize`:@@map.popup.title.create:Create Record`;
+    const html = `<div class="popup-content"><div class="dropdown-item cursor-pointer user-select-none border-radius-small">${title}</div></div>`;
+
+    this.menuWrapper = document.createElement('div');
+    this.menuWrapper.classList.add('popup-wrapper', 'p-0');
+    this.menuWrapper.innerHTML = html;
+
+    this.svgWrapper.addEventListener('contextmenu', event => {
+      const rectangle = this.computeImageRectangle();
+      const translate = this.getCurrentTranslate();
+      const rectangleX = rectangle.x * translate.scale + translate.x;
+      const rectangleY = rectangle.y * translate.scale + translate.y;
+      const x = event.offsetX;
+      const y = event.offsetY;
+      const width = rectangle.width * translate.scale;
+      const height = rectangle.height * translate.scale;
+
+      const positionX = x - translate.x - defaultMarkerSize.width / 2;
+      const positionY = y - translate.y - defaultMarkerSize.height;
+      const coordinates = computeMarkerCoordinates(
+        {x: positionX, y: positionY},
+        translate.scale,
+        translate.pixelScale,
+        this.getElementSize()
+      );
+
+      if (x >= rectangleX && x <= rectangleX + width && y >= rectangleY && y <= rectangleY + height) {
+        event.preventDefault();
+        this.addMenu(event, coordinates.x, coordinates.y);
+      }
+    });
+
+    this.element.nativeElement.addEventListener('click', () => this.hideMenu());
+  }
+
+  private addMenu(event: MouseEvent, mapX: number, mapY: number) {
+    this.menuWrapper.style.top = `${event.offsetY + 10}px`; // 10px offset for arrow
+    this.menuWrapper.style.left = `${event.offsetX}px`;
+
+    this.element.nativeElement.appendChild(this.menuWrapper);
+
+    const clickableElements = this.menuWrapper?.getElementsByClassName('dropdown-item');
+    if (clickableElements?.length) {
+      this.menuListeners[0] = () => {
+        this.hideMenu();
+        this.markerCreate$.next({x: mapX, y: mapY});
+      };
+      clickableElements.item(0).addEventListener('click', this.menuListeners[0]);
+    }
+  }
+
+  private hideMenu() {
+    const clickableElements = this.menuWrapper?.getElementsByClassName('dropdown-item');
+    for (let i = 0; i < clickableElements?.length; i++) {
+      clickableElements.item(0).removeEventListener('click', this.menuListeners[i]);
+    }
+
+    this.menuWrapper?.parentNode?.removeChild(this.menuWrapper);
   }
 
   private mapMarkerPositionChanged(container: SVGContainer, newX: number, newY: number): boolean {
@@ -303,6 +371,7 @@ export class SvgImageMap {
 
   private initZoom(selection: SVGContainer, svgImageContainer: SVGContainer, svgMarkersContainer: SVGContainer) {
     selection.on('.zoom', null);
+    const _this = this;
 
     this.zoom = d3Zoom
       .zoom()
@@ -321,6 +390,7 @@ export class SvgImageMap {
         this.mapDragging = true;
       })
       .on('zoom', event => {
+        _this.hideMenu();
         const transform = event.transform;
         const x = scaleImagePoint(transform.x);
         const y = scaleImagePoint(transform.y);

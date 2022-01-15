@@ -42,7 +42,7 @@ import {selectGeocodingQueryCoordinates} from '../../../../../core/store/geocodi
 import {areMapMarkerListsEqual, createMarkerPropertyFromData, populateCoordinateProperties} from '../map-content.utils';
 import {GeocodingAction} from '../../../../../core/store/geocoding/geocoding.action';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
-import {Attribute, Collection} from '../../../../../core/store/collections/collection';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {GeoLocation} from '../../../../../core/store/geocoding/geo-location';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -58,11 +58,7 @@ import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {AppState} from '../../../../../core/store/app.state';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import {addressDefaultFields} from '../../../../../shared/modal/attribute/type/form/constraint-config/address/address-constraint.constants';
-import {ModalService} from '../../../../../shared/modal/modal.service';
-import {findAttribute} from '../../../../../core/store/collections/collection.util';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {generateDocumentDataByResourceQuery} from '../../../../../core/store/documents/document.utils';
-import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
 import {View} from '../../../../../core/store/views/view';
 
 @Component({
@@ -97,6 +93,9 @@ export class MapGlobeContentComponent implements OnChanges {
   public mapMove = new EventEmitter<MapPosition>();
 
   @Output()
+  public newMarker = new EventEmitter<MapCoordinates>();
+
+  @Output()
   public detail = new EventEmitter<MapMarkerProperties>();
 
   @Output()
@@ -114,8 +113,7 @@ export class MapGlobeContentComponent implements OnChanges {
   constructor(
     private store$: Store<AppState>,
     private notificationService: NotificationService,
-    private configurationService: ConfigurationService,
-    private modalService: ModalService
+    private configurationService: ConfigurationService
   ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -244,35 +242,6 @@ export class MapGlobeContentComponent implements OnChanges {
 
   public refreshContent() {
     this.mapGlobeRenderComponent?.refreshMapSize();
-  }
-
-  public onNewMarker(coordinates: MapCoordinates) {
-    const attributeConfig = this.config?.stemsConfigs?.find(stemConfig => stemConfig?.attributes?.length > 0)
-      ?.attributes[0];
-    const resource = this.findResourceByProperty(attributeConfig?.resourceType, attributeConfig?.resourceId);
-    const attribute = findAttribute(resource?.attributes, attributeConfig.attributeId);
-    if (resource && attribute) {
-      const value = new CoordinatesConstraint({} as CoordinatesConstraintConfig)
-        .createDataValue(coordinates)
-        .serialize();
-      this.createNewMarker(value, attribute, resource, attributeConfig.resourceType);
-    }
-  }
-
-  private createNewMarker(
-    value: any,
-    attribute: Attribute,
-    resource: AttributesResource,
-    type: AttributesResourceType
-  ) {
-    const data = generateDocumentDataByResourceQuery(resource, this.query, this.constraintData);
-    data[attribute.id] = value;
-
-    const dataResource =
-      type === AttributesResourceType.Collection
-        ? {collectionId: resource.id, correlationId: generateCorrelationId(), data}
-        : {linkTypeId: resource.id, correlationId: generateCorrelationId(), data, documentIds: []};
-    this.modalService.showDataResourceDetail(dataResource, resource, this.view?.id);
   }
 }
 
