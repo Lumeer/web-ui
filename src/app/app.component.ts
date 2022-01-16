@@ -29,7 +29,6 @@ import {combineLatest, Observable, of} from 'rxjs';
 import {catchError, filter, first, map, timeout, withLatestFrom} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
 import {AuthService} from './auth/auth.service';
-import {superUserEmails} from './auth/super-user-emails';
 import {ServiceLevelType} from './core/dto/service-level-type';
 import {PusherService} from './core/pusher/pusher.service';
 import {AppState} from './core/store/app.state';
@@ -203,10 +202,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private initSmartlook() {
     if (this.configurationService.getConfiguration().smartlookKey) {
+      const adminUserEmails = this.configurationService.getConfiguration().adminUserEmails || [];
       this.store$
         .pipe(
           select(selectCurrentUser),
-          filter(user => user && !superUserEmails.includes(user.email)),
+          filter(user => user && !adminUserEmails.includes(user.email)),
           timeout(10000),
           first(),
           catchError(() => of(null))

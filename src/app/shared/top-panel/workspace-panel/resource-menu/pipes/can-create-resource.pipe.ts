@@ -22,22 +22,24 @@ import {ResourceType} from '../../../../../core/model/resource-type';
 import {Resource} from '../../../../../core/model/resource';
 import {RoleType} from '../../../../../core/model/role-type';
 import {Project} from '../../../../../core/store/projects/project';
-import {superUserEmails} from '../../../../../auth/super-user-emails';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {User} from '../../../../../core/store/users/user';
 import {userHasRoleInOrganization} from '../../../../utils/permission.utils';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Pipe({
   name: 'canCreateResource',
 })
 export class CanCreateResourcePipe implements PipeTransform {
+  constructor(private configurationService: ConfigurationService) {}
   public transform(resource: Resource, type: ResourceType, organizations: Organization[], currentUser: User): boolean {
     if (!resource) {
       return false;
     }
 
+    const adminUserEmails = this.configurationService.getConfiguration().adminUserEmails || [];
     if (type === ResourceType.Organization) {
-      if (superUserEmails.includes(currentUser?.email)) {
+      if (adminUserEmails.includes(currentUser?.email)) {
         return true;
       }
       const hasManagedOrganization = organizations.some(organization =>
