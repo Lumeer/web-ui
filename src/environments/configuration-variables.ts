@@ -46,4 +46,5 @@ export interface ConfigurationVariables {
   smartlookKey: string;
   mixpanelKey: string;
   contactUrl: string;
+  adminUserEmails: string[];
 }

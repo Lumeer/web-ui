@@ -83,6 +83,7 @@ export class ConfigurationService {
     const mixpanelKey = env['MIXPANEL_KEY'] || '';
     const contactUrl =
       locale === LanguageCode.CZ ? 'https://www.lumeer.io/cs/kontakt/' : 'https://www.lumeer.io/contact/';
+    const adminUserEmails = (env['ADMIN_USER_EMAILS'] || '').split(',');
 
     return {
       apiUrl,
@@ -111,6 +112,7 @@ export class ConfigurationService {
       smartlookKey,
       mixpanelKey,
       contactUrl,
+      adminUserEmails,
     };
   }
 }
