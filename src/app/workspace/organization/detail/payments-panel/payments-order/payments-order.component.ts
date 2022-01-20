@@ -35,12 +35,12 @@ import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
   styleUrls: ['./payments-order.component.scss'],
 })
 export class PaymentsOrderComponent implements OnInit, OnDestroy {
-  private static CZK_FULL = 219;
-  private static CZK_SALE = 189;
-  private static EUR_FULL = 8.39;
-  private static EUR_SALE = 6.99;
-  private static USD_FULL = 9.59;
-  private static USD_SALE = 7.99;
+  private static CZK_FULL = 290;
+  private static CZK_SALE = 220;
+  private static EUR_FULL = 11.5;
+  private static EUR_SALE = 9.0;
+  private static USD_FULL = 13.0;
+  private static USD_SALE = 10.0;
 
   public discountAmount = 0;
   public discountDescription: string;
