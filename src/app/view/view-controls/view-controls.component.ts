@@ -348,7 +348,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private resetViewSettings(view: View) {
-    this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: view.settings}));
+    this.store$.dispatch(new ViewSettingsAction.SetSettings({settingsId: view.code, settings: view.settings}));
   }
 
   private resetViewConfig(view: View) {

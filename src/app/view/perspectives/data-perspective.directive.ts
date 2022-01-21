@@ -42,7 +42,7 @@ import {
   selectResourcesPermissionsByView,
 } from '../../core/store/common/permissions.selectors';
 import {DataResourcesAction} from '../../core/store/data-resources/data-resources.action';
-import {selectViewDataQuery, selectViewSettings} from '../../core/store/view-settings/view-settings.state';
+import {selectViewDataQuery, selectViewSettingsByView} from '../../core/store/view-settings/view-settings.state';
 import {selectQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 import {ViewConfigPerspectiveComponent} from './view-config-perspective.component';
@@ -198,7 +198,7 @@ export abstract class DataPerspectiveDirective<T>
     );
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.viewSettings$ = this.currentView$.pipe(
-      switchMap(view => (this.isEmbedded ? of(view?.settings) : this.store$.pipe(select(selectViewSettings))))
+      switchMap(view => this.store$.pipe(select(selectViewSettingsByView(view))))
     );
   }
 

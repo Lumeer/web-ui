@@ -73,6 +73,8 @@ import {TeamService} from '../../data-service/team/team.service';
 import {Team} from '../teams/team';
 import {convertTeamModelToDto} from '../teams/teams.converter';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
+import {viewSettingsIdByView} from '../view-settings/view-settings.util';
+import {ViewSettingsAction} from '../view-settings/view-settings.action';
 
 @Injectable()
 export class ViewsEffects {
@@ -230,13 +232,18 @@ export class ViewsEffects {
       ofType<ViewsAction.UpdateSuccess>(ViewsActionType.UPDATE_SUCCESS),
       withLatestFrom(this.store$.pipe(select(selectNavigation)), this.store$.pipe(select(selectViewsPermissions))),
       mergeMap(([action, navigation, viewsPermissions]) => {
-        const viewCodeInUrl = navigation && navigation.workspace && navigation.workspace.viewCode;
+        const viewCodeInUrl = navigation?.workspace?.viewCode;
         const {id, code, query, settings} = action.payload.view;
         const cleanedView = cleanQueryFromHiddenAttributes(query, settings?.attributes, viewsPermissions?.[id]);
+        const actions = [];
         if (viewCodeInUrl && viewCodeInUrl === code && !areQueriesEqual(cleanedView, navigation.query)) {
-          return [new NavigationAction.SetQuery({query: cleanedView})];
+          actions.push(new NavigationAction.SetQuery({query: cleanedView}));
         }
-        return [];
+
+        const settingsId = viewSettingsIdByView(action.payload.view);
+        actions.push(new ViewSettingsAction.SetSettings({settingsId, settings}));
+
+        return actions;
       })
     )
   );

@@ -25,6 +25,7 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {generateCorrelationId} from '../../../../../../shared/utils/resource.utils';
 import {COLOR_GRAY700} from '../../../../../../core/constants';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'form-editor-section',
@@ -50,6 +51,9 @@ export class FormEditorSectionComponent {
 
   @Input()
   public usedLinkTypeIds: string[];
+
+  @Input()
+  public view: View;
 
   @Output()
   public sectionChange = new EventEmitter<FormSection>();

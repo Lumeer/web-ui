@@ -26,6 +26,7 @@ import {
   setAttributeToAttributeSettings,
 } from '../../../shared/settings/settings.util';
 import {AttributesResource, AttributesResourceType} from '../../model/resource';
+import {ViewSettings} from '../views/view';
 
 export function viewSettingsReducer(
   state: ViewSettingsState = initialViewSettingsState,
@@ -43,9 +44,11 @@ export function viewSettingsReducer(
     case ViewSettingsActionType.SET_ATTRIBUTE:
       return setAttribute(state, action);
     case ViewSettingsActionType.SET_SETTINGS:
-      return {...action.payload.settings};
+      return {...state, [action.payload.settingsId]: action.payload.settings};
     case ViewSettingsActionType.RESET_SETTINGS:
-      return {};
+      return {...state, [action.payload.settingsId]: {}};
+    case ViewSettingsActionType.CLEAR:
+      return initialViewSettingsState;
     default:
       return state;
   }
@@ -74,7 +77,8 @@ function hideOrShowAttributes(
     });
   }
 
-  return resources.reduce((currentState, resource) => {
+  const currentSettings = getViewSettings(state, action.payload.settingsId);
+  const newSettings = resources.reduce((currentState, resource) => {
     return createAndModifyViewSettings(currentState, resource.resource, resource.type, settingsAttributes => {
       for (const attributeId of resource.attributeIds) {
         const attributeIndex = settingsAttributes.findIndex(setting => setting.attributeId === attributeId);
@@ -87,23 +91,41 @@ function hideOrShowAttributes(
       }
       return settingsAttributes;
     });
-  }, state);
+  }, currentSettings);
+  return setViewSettings(state, action.payload.settingsId, newSettings);
 }
 
 function moveAttribute(state: ViewSettingsState, action: ViewSettingsAction.MoveAttribute): ViewSettingsState {
   const {from, to, collection, linkType} = action.payload;
-  return moveAttributeInSettings(state, from, to, collection, linkType);
+  const currentSettings = getViewSettings(state, action.payload.settingsId);
+  const newSettings = moveAttributeInSettings(currentSettings, from, to, collection, linkType);
+  return setViewSettings(state, action.payload.settingsId, newSettings);
 }
 
 function addAttribute(state: ViewSettingsState, action: ViewSettingsAction.AddAttribute): ViewSettingsState {
   const {attributeId, position, collection, linkType} = action.payload;
-  return addAttributeToSettings(state, attributeId, position, collection, linkType);
+  const currentSettings = getViewSettings(state, action.payload.settingsId);
+  const newSettings = addAttributeToSettings(currentSettings, attributeId, position, collection, linkType);
+  return setViewSettings(state, action.payload.settingsId, newSettings);
 }
 
 function setAttribute(state: ViewSettingsState, action: ViewSettingsAction.SetAttribute): ViewSettingsState {
   const {attributeId, settings, collection, linkType} = action.payload;
   const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
-  return createAndModifyViewSettings(state, linkType || collection, resourceType, settingAttributes =>
-    setAttributeToAttributeSettings(attributeId, settingAttributes, settings)
+  const currentSettings = getViewSettings(state, action.payload.settingsId);
+  const newSettings = createAndModifyViewSettings(
+    currentSettings,
+    linkType || collection,
+    resourceType,
+    settingAttributes => setAttributeToAttributeSettings(attributeId, settingAttributes, settings)
   );
+  return setViewSettings(state, action.payload.settingsId, newSettings);
+}
+
+function getViewSettings(state: ViewSettingsState, settingsId: string): ViewSettings {
+  return state[settingsId];
+}
+
+function setViewSettings(state: ViewSettingsState, settingsId: string, settings: ViewSettings): ViewSettingsState {
+  return {...state, [settingsId]: settings};
 }

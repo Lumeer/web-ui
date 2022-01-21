@@ -138,6 +138,7 @@ import {dataResourcePermissions} from '../../../../../../shared/utils/permission
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
+import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -190,6 +191,10 @@ export class WorkflowTablesDataService {
 
   private get perspectiveId(): string {
     return this.currentView?.code || DEFAULT_PERSPECTIVE_ID;
+  }
+
+  private get settingsId(): string {
+    return viewSettingsIdByView(this.currentView);
   }
 
   private formatWorkflowValue(
@@ -677,6 +682,7 @@ export class WorkflowTablesDataService {
             this.stateService.addColumn(mappedColumn, i);
             syncActions.push(
               new ViewSettingsAction.AddAttribute({
+                settingsId: this.settingsId,
                 attributeId: mappedColumn.attribute.id,
                 position: i,
                 collection: isCollection && resource,
@@ -900,6 +906,7 @@ export class WorkflowTablesDataService {
       const {collection, linkType} = this.stateService.findColumnResourcesByColumn(column);
       this.store$.dispatch(
         new ViewSettingsAction.MoveAttribute({
+          settingsId: this.settingsId,
           from: fromWithoutOther,
           to: toWithoutOther,
           collection,
@@ -925,6 +932,7 @@ export class WorkflowTablesDataService {
     const {collection, linkType} = this.stateService.findColumnResourcesByColumn(column);
     this.store$.dispatch(
       new ViewSettingsAction.SetAttribute({
+        settingsId: this.settingsId,
         attributeId: column.attribute.id,
         settings: {sort},
         collection,
@@ -1040,6 +1048,7 @@ export class WorkflowTablesDataService {
     const {collection, linkType} = this.stateService.findColumnResourcesByColumn(column);
     this.store$.dispatch(
       new ViewSettingsAction.HideAttributes({
+        settingsId: this.settingsId,
         collectionAttributeIds: collection ? [column.attribute.id] : [],
         linkTypeAttributeIds: linkType ? [column.attribute.id] : [],
         collection,
@@ -1052,6 +1061,7 @@ export class WorkflowTablesDataService {
     const {collection, linkType} = this.stateService.findColumnResourcesByColumns(columns);
     this.store$.dispatch(
       new ViewSettingsAction.ShowAttributes({
+        settingsId: this.settingsId,
         collectionAttributeIds: columns.filter(column => column.collectionId).map(column => column.attribute.id),
         linkTypeAttributeIds: columns.filter(column => column.linkTypeId).map(column => column.attribute.id),
         collection,

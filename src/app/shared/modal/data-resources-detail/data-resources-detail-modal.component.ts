@@ -40,7 +40,8 @@ import {enterLeftAnimation, enterRightAnimation} from '../../animations';
 import {Query} from '../../../core/store/navigation/query/query';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {ViewSettings} from '../../../core/store/views/view';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
+import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
+import {selectViewById} from '../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './data-resources-detail-modal.component.html',
@@ -82,9 +83,10 @@ export class DataResourcesDetailModalComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
+    const view$ = this.store$.pipe(select(selectViewById(this.viewId)));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.initialModalsCount = this.bsModalService.getModalsCount();
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.viewSettings$ = view$.pipe(switchMap(view => this.store$.pipe(select(selectViewSettingsByView(view)))));
 
     const {documentIds: allDocumentIds, linkInstanceIds: allLinkInstanceIds} = getDataResourcesDataIds(
       this.dataResources

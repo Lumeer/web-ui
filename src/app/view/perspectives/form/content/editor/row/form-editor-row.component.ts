@@ -23,6 +23,7 @@ import {filterValidFormCells} from '../../../form-utils';
 import {generateCorrelationId} from '../../../../../../shared/utils/resource.utils';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'form-editor-row',
@@ -45,6 +46,9 @@ export class FormEditorRowComponent implements OnChanges {
 
   @Input()
   public usedLinkTypeIds: string[];
+
+  @Input()
+  public view: View;
 
   @Output()
   public delete = new EventEmitter();

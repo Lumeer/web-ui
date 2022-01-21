@@ -65,7 +65,7 @@ import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {
   selectDataSettingsIncludeSubItems,
   selectViewSettings,
-  ViewSettingsState,
+  selectViewSettingsByView,
 } from '../view-settings/view-settings.state';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
@@ -373,7 +373,7 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (view: View, query: Qu
     selectReadableCollectionsByView(view),
     selectReadableLinkTypesByView(view),
     selectLinksByViewAndReadPermission(view),
-    selectViewSettings,
+    selectViewSettingsByView(view),
     selectResourcesPermissionsByView(view),
     selectConstraintData,
     (
@@ -403,7 +403,7 @@ function filterDocumentsAndLinksByQuerySorted(
   linkTypes: LinkType[],
   linkInstances: LinkInstance[],
   query: Query,
-  viewSettings: ViewSettingsState,
+  viewSettings: ViewSettings,
   permissions: ResourcesPermissions,
   constraintData: ConstraintData
 ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
@@ -510,9 +510,9 @@ export const selectDocumentsByCollectionAndQuery = (collectionId: string, query:
     selectDocumentsByCollectionAndReadPermission(collectionId, view),
     selectCollectionById(collectionId),
     selectCollectionsPermissionsByView(view),
+    selectViewSettingsByView(view),
     selectConstraintData,
-    selectViewSettings,
-    (documents, collection, permissions, constraintData, viewSettings) => {
+    (documents, collection, permissions, viewSettings, constraintData) => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
         [collection],

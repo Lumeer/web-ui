@@ -34,6 +34,7 @@ import {AttributesResourceType} from '../../../../../../../core/model/resource';
 import {COLOR_GRAY700} from '../../../../../../../core/constants';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {getOtherLinkedCollectionId} from '../../../../../../../shared/utils/link-type.utils';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'form-editor-cell',
@@ -56,6 +57,9 @@ export class FormEditorCellComponent implements OnChanges {
 
   @Input()
   public usedLinkTypeIds: string[];
+
+  @Input()
+  public view: View;
 
   @Output()
   public cellChange = new EventEmitter<FormCell>();

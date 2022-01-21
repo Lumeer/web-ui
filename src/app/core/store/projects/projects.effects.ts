@@ -63,6 +63,7 @@ import {selectWorkspaceWithIds} from '../common/common.selectors';
 import * as DetailActions from './../details/detail.actions';
 import * as FormActions from './../form/form.actions';
 import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
+import {ViewSettingsAction} from '../view-settings/view-settings.action';
 
 @Injectable()
 export class ProjectsEffects {
@@ -557,6 +558,7 @@ export class ProjectsEffects {
           new LinkInstancesAction.Clear(),
           new LinkTypesAction.Clear(),
           new ViewsAction.Clear(),
+          new ViewSettingsAction.Clear(),
           new KanbansAction.Clear(),
           DetailActions.clear(),
           new MapsAction.Clear(),
