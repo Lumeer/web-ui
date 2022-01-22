@@ -57,7 +57,7 @@ import {
 } from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor, viewCursorsAreSame} from '../../../core/store/navigation/view-cursor/view-cursor';
-import {selectViewDataQuery, selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
+import {selectViewDataQuery, selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
@@ -130,7 +130,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
   private subscribeData() {
     this.viewSettings$ = this.currentView$.pipe(
-      switchMap(view => (this.isEmbedded ? of(view?.settings) : this.store$.pipe(select(selectViewSettings))))
+      switchMap(view => this.store$.pipe(select(selectViewSettingsByView(view))))
     );
     this.viewCursor$ = this.overrideView$.pipe(
       switchMap(view => {

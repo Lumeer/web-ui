@@ -58,7 +58,8 @@ import {DataResourcePermissions} from '../../../../../../../../core/model/data-r
 import {View} from '../../../../../../../../core/store/views/view';
 import {selectLinkTypesPermissionsByView} from '../../../../../../../../core/store/common/permissions.selectors';
 import {Workspace} from '../../../../../../../../core/store/navigation/workspace';
-import {selectViewSettings} from '../../../../../../../../core/store/view-settings/view-settings.state';
+import {selectViewSettingsById} from '../../../../../../../../core/store/view-settings/view-settings.state';
+import {viewSettingsIdByView} from '../../../../../../../../core/store/view-settings/view-settings.util';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -309,7 +310,7 @@ export class TableDataCellMenuComponent implements OnChanges {
     if (this.document && linkTypeId) {
       this.store$
         .pipe(
-          select(selectViewSettings),
+          select(selectViewSettingsById(viewSettingsIdByView(this.view))),
           map(settings => settings?.attributes),
           take(1)
         )

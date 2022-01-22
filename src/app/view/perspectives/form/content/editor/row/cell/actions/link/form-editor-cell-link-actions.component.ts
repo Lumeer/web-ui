@@ -17,22 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  OnChanges,
-  Input,
-  SimpleChanges,
-  OnInit,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, OnChanges, Input, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {AppState} from '../../../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {FormLinkCellConfig} from '../../../../../../../../../core/store/form/form-model';
-import {AttributesSettings, ViewSettings} from '../../../../../../../../../core/store/views/view';
+import {AttributesSettings, View, ViewSettings} from '../../../../../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
-import {selectViewSettings} from '../../../../../../../../../core/store/view-settings/view-settings.state';
+import {selectViewSettingsByView} from '../../../../../../../../../core/store/view-settings/view-settings.state';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {ViewSettingsAction} from '../../../../../../../../../core/store/view-settings/view-settings.action';
 import {LinkType} from '../../../../../../../../../core/store/link-types/link.type';
@@ -43,6 +34,7 @@ import {selectCollectionById} from '../../../../../../../../../core/store/collec
 import {CollectionAttributeFilter} from '../../../../../../../../../core/store/navigation/query/query';
 import {AttributesResourceType} from '../../../../../../../../../core/model/resource';
 import {DropdownOption} from '../../../../../../../../../shared/dropdown/options/dropdown-option';
+import {viewSettingsIdByView} from '../../../../../../../../../core/store/view-settings/view-settings.util';
 
 @Component({
   selector: 'form-editor-cell-link-actions',
@@ -50,12 +42,15 @@ import {DropdownOption} from '../../../../../../../../../shared/dropdown/options
   styleUrls: ['./form-editor-cell-link-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormEditorCellLinkActionsComponent implements OnInit, OnChanges {
+export class FormEditorCellLinkActionsComponent implements OnChanges {
   @Input()
   public config: FormLinkCellConfig;
 
   @Input()
   public collectionId: string;
+
+  @Input()
+  public view: View;
 
   @Output()
   public configChange = new EventEmitter<FormLinkCellConfig>();
@@ -70,14 +65,6 @@ export class FormEditorCellLinkActionsComponent implements OnInit, OnChanges {
 
   constructor(private store$: Store<AppState>) {}
 
-  public ngOnInit() {
-    this.attributeSettings$ = this.store$.pipe(
-      select(selectViewSettings),
-      tap(settings => (this.viewSettings = settings)),
-      map(settings => settings?.attributes)
-    );
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.config?.linkTypeId)));
@@ -88,11 +75,20 @@ export class FormEditorCellLinkActionsComponent implements OnInit, OnChanges {
         switchMap(collectionId => this.store$.pipe(select(selectCollectionById(collectionId))))
       );
     }
+    if (changes.view) {
+      this.attributeSettings$ = this.store$.pipe(
+        select(selectViewSettingsByView(this.view)),
+        tap(settings => (this.viewSettings = settings)),
+        map(settings => settings?.attributes)
+      );
+    }
   }
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
     const changedSettings: ViewSettings = {...this.viewSettings, attributes: attributesSettings};
-    this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: changedSettings}));
+    this.store$.dispatch(
+      new ViewSettingsAction.SetSettings({settingsId: viewSettingsIdByView(this.view), settings: changedSettings})
+    );
   }
 
   public onFiltersChanged(filters: CollectionAttributeFilter[]) {

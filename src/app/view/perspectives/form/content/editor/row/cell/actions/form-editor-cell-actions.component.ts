@@ -20,6 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {FormCellConfig, FormCellType} from '../../../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../../../core/store/collections/collection';
+import {View} from '../../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'form-editor-cell-actions',
@@ -35,6 +36,9 @@ export class FormEditorCellActionsComponent {
 
   @Input()
   public collectionId: string;
+
+  @Input()
+  public view: View;
 
   @Output()
   public configChange = new EventEmitter<FormCellConfig>();

@@ -24,12 +24,37 @@ import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {createSaveViewSettings, viewSettingsChanged} from '../views/view.utils';
 import {selectCurrentView, selectViewQuery} from '../views/views.state';
 import {AppState} from '../app.state';
+import {selectWorkspace} from '../navigation/navigation.state';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
+import {viewSettingsIdByView, viewSettingsIdByWorkspace} from './view-settings.util';
 
-export interface ViewSettingsState extends ViewSettings {}
+export interface ViewSettingsState extends Record<string, ViewSettings> {}
 
 export const initialViewSettingsState: ViewSettingsState = {};
 
-export const selectViewSettings = (state: AppState) => state.viewSettings;
+export const selectViewSettingsState = (state: AppState) => state.viewSettings;
+
+export const selectViewSettingsId = createSelector(selectWorkspace, workspace => viewSettingsIdByWorkspace(workspace));
+
+export const selectViewSettings = createSelector(
+  selectViewSettingsState,
+  selectViewSettingsId,
+  (state, id) => state[id]
+);
+
+export const selectViewSettingsById = id => createSelector(selectViewSettingsState, state => state[id]);
+
+export const selectViewSettingsByView = view =>
+  createSelector(selectViewSettingsState, state => state[viewSettingsIdByView(view)]);
+
+export const selectSaveViewSettings = createSelector(
+  selectViewSettings,
+  selectCollectionsDictionary,
+  selectLinkTypesDictionary,
+  selectViewQuery,
+  (settings, collectionsMap, linkTypesMap, query) =>
+    createSaveViewSettings(settings, query, collectionsMap, linkTypesMap)
+);
 
 export const selectViewSettingsChanged = createSelector(
   selectCurrentView,
@@ -49,13 +74,4 @@ export const selectViewDataQuery = createSelector(
   selectDataSettingsIncludeSubItems,
   selectViewQuery,
   (includeSubItems, viewQuery) => viewQuery && {...viewQuery, includeSubItems}
-);
-
-export const selectSaveViewSettings = createSelector(
-  selectViewSettings,
-  selectCollectionsDictionary,
-  selectLinkTypesDictionary,
-  selectViewQuery,
-  (settings, collectionsMap, linkTypesMap, query) =>
-    createSaveViewSettings(settings, query, collectionsMap, linkTypesMap)
 );

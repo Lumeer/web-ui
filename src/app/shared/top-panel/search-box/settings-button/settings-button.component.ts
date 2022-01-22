@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, ElementRef, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ElementRef, Input, OnDestroy} from '@angular/core';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {AttributesSettings, DataSettings, ViewSettings} from '../../../../core/store/views/view';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {selectViewSettings} from '../../../../core/store/view-settings/view-settings.state';
+import {selectViewSettings, selectViewSettingsId} from '../../../../core/store/view-settings/view-settings.state';
 import {ViewSettingsAction} from '../../../../core/store/view-settings/view-settings.action';
 
 @Component({
@@ -31,12 +31,14 @@ import {ViewSettingsAction} from '../../../../core/store/view-settings/view-sett
   templateUrl: './settings-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsButtonComponent implements OnInit {
+export class SettingsButtonComponent implements OnInit, OnDestroy {
   @Input()
   public showAttributes: boolean;
 
   public viewSettings$: Observable<ViewSettings>;
   private viewSettings: ViewSettings;
+  private subscriptions = new Subscription();
+  private settingsId: string;
 
   constructor(public element: ElementRef, private store$: Store<AppState>) {}
 
@@ -45,15 +47,20 @@ export class SettingsButtonComponent implements OnInit {
       select(selectViewSettings),
       tap(settings => (this.viewSettings = settings))
     );
+    this.subscriptions.add(this.store$.pipe(select(selectViewSettingsId)).subscribe(id => (this.settingsId = id)));
   }
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
     const changedSettings: ViewSettings = {...this.viewSettings, attributes: attributesSettings};
-    this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: changedSettings}));
+    this.store$.dispatch(new ViewSettingsAction.SetSettings({settingsId: this.settingsId, settings: changedSettings}));
   }
 
   public onDataSettingsChanged(dataSettings: DataSettings) {
     const changedSettings: ViewSettings = {...this.viewSettings, data: dataSettings};
-    this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: changedSettings}));
+    this.store$.dispatch(new ViewSettingsAction.SetSettings({settingsId: this.settingsId, settings: changedSettings}));
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

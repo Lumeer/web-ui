@@ -24,7 +24,7 @@ import {generateId} from '../../../../../shared/utils/resource.utils';
 import {collectAttributesIdsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {transferArrayItem} from '@angular/cdk/drag-drop';
-import {AttributesSettings} from '../../../../../core/store/views/view';
+import {AttributesSettings, View} from '../../../../../core/store/views/view';
 import {filterVisibleAttributesBySettings} from '../../../../../shared/utils/attribute.utils';
 
 @Component({
@@ -44,6 +44,9 @@ export class FormEditorComponent implements OnChanges {
 
   @Input()
   public attributesSettings: AttributesSettings;
+
+  @Input()
+  public view: View;
 
   @Output()
   public configChange = new EventEmitter<FormConfig>();

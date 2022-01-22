@@ -31,6 +31,7 @@ import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 import {QueryItemType} from '../query-item/model/query-item-type';
+import {Direction} from '../../../direction';
 
 @Component({
   selector: 'search-input',
@@ -142,7 +143,7 @@ export class SearchInputComponent {
 
   public onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     event.preventDefault();
-    const direction = keyboardEventCode(event) === KeyCode.ArrowUp ? -1 : 1;
+    const direction = keyboardEventCode(event) === KeyCode.ArrowUp ? Direction.Up : Direction.Down;
     this.searchSuggestions?.moveSelection(direction);
   }
 

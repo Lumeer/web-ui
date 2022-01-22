@@ -31,23 +31,29 @@ export enum ViewSettingsActionType {
   MOVE_ATTRIBUTE = '[View Settings] Move Attribute',
   ADD_ATTRIBUTE = '[View Settings] Add Attribute',
   SET_ATTRIBUTE = '[View Settings] Set Attribute',
+
+  CLEAR = '[View Settings] Clear',
 }
 
 export namespace ViewSettingsAction {
   export class SetSettings implements Action {
     public readonly type = ViewSettingsActionType.SET_SETTINGS;
 
-    public constructor(public payload: {settings: ViewSettings}) {}
+    public constructor(public payload: {settingsId: string; settings: ViewSettings}) {}
   }
 
   export class ResetSettings implements Action {
     public readonly type = ViewSettingsActionType.RESET_SETTINGS;
+
+    public constructor(public payload: {settingsId: string}) {}
   }
 
   export class MoveAttribute implements Action {
     public readonly type = ViewSettingsActionType.MOVE_ATTRIBUTE;
 
-    public constructor(public payload: {from: number; to: number; collection: Collection; linkType?: LinkType}) {}
+    public constructor(
+      public payload: {settingsId: string; from: number; to: number; collection: Collection; linkType?: LinkType}
+    ) {}
   }
 
   export class HideAttributes implements Action {
@@ -55,6 +61,7 @@ export namespace ViewSettingsAction {
 
     public constructor(
       public payload: {
+        settingsId: string;
         collectionAttributeIds: string[];
         collection: Collection;
         linkTypeAttributeIds?: string[];
@@ -68,6 +75,7 @@ export namespace ViewSettingsAction {
 
     public constructor(
       public payload: {
+        settingsId: string;
         collectionAttributeIds: string[];
         collection: Collection;
         linkTypeAttributeIds?: string[];
@@ -81,6 +89,7 @@ export namespace ViewSettingsAction {
 
     public constructor(
       public payload: {
+        settingsId: string;
         attributeId: string;
         settings: Partial<ResourceAttributeSettings>;
         collection: Collection;
@@ -93,8 +102,18 @@ export namespace ViewSettingsAction {
     public readonly type = ViewSettingsActionType.ADD_ATTRIBUTE;
 
     public constructor(
-      public payload: {attributeId: string; position: number; collection: Collection; linkType?: LinkType}
+      public payload: {
+        settingsId: string;
+        attributeId: string;
+        position: number;
+        collection: Collection;
+        linkType?: LinkType;
+      }
     ) {}
+  }
+
+  export class Clear implements Action {
+    public readonly type = ViewSettingsActionType.CLEAR;
   }
 
   export type All =
@@ -104,5 +123,6 @@ export namespace ViewSettingsAction {
     | ShowAttributes
     | MoveAttribute
     | AddAttribute
-    | SetAttribute;
+    | SetAttribute
+    | Clear;
 }

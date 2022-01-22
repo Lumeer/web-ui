@@ -33,6 +33,7 @@ import {QueryItem} from '../model/query-item';
 import {SearchSuggestionsComponent} from '../../input/suggestions/search-suggestions.component';
 import {keyboardEventCode, KeyCode} from '../../../../key-code';
 import {QueryItemType} from '../model/query-item-type';
+import {Direction} from '../../../../direction';
 
 @Component({
   selector: 'query-stem-input-query-item',
@@ -115,7 +116,7 @@ export class QueryStemInputQueryItemComponent implements OnChanges {
 
   public onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     event.preventDefault();
-    const direction = keyboardEventCode(event) === KeyCode.ArrowUp ? -1 : 1;
+    const direction = keyboardEventCode(event) === KeyCode.ArrowUp ? Direction.Up : Direction.Down;
     this.searchSuggestions?.moveSelection(direction);
   }
 

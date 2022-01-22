@@ -39,7 +39,7 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {DataResource} from '../../../core/model/resource';
 import {selectViewById} from '../../../core/store/views/views.state';
 import {View, ViewSettings} from '../../../core/store/views/view';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
+import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
@@ -76,7 +76,7 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
   public ngOnInit() {
     this.view$ = this.store$.pipe(select(selectViewById(this.viewId)));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.viewSettings$ = this.view$.pipe(switchMap(view => this.store$.pipe(select(selectViewSettingsByView(view)))));
 
     if (this.collectionId) {
       const query: Query = {stems: [{collectionId: this.collectionId}]};

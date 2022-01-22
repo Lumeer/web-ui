@@ -32,12 +32,13 @@ import {AttributesResource, AttributesResourceType} from '../../../../../../core
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {SelectItem2Model} from '../../../../../../shared/select/select-item2/select-item2.model';
-import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
+import {AttributeSortType, View, ViewSettings} from '../../../../../../core/store/views/view';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 import {Constraint} from '@lumeer/data-filters';
+import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 
 @Component({
   selector: 'workflow-toolbar',
@@ -60,6 +61,9 @@ export class WorkflowToolbarComponent implements OnChanges {
 
   @Input()
   public viewSettings: ViewSettings;
+
+  @Input()
+  public currentView: View;
 
   @Output()
   public configChange = new EventEmitter<WorkflowStemConfig>();
@@ -131,6 +135,7 @@ export class WorkflowToolbarComponent implements OnChanges {
     if ((!sort && attributeSettings?.sort) || (sort && !attributeSettings?.sort)) {
       this.store$.dispatch(
         new ViewSettingsAction.SetAttribute({
+          settingsId: viewSettingsIdByView(this.currentView),
           attributeId,
           collection: resourceType === AttributesResourceType.Collection ? resource : undefined,
           linkType: resourceType === AttributesResourceType.LinkType ? <LinkType>resource : undefined,
