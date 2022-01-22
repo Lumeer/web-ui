@@ -37,6 +37,7 @@ import {QueryItemType} from '../../query-item/model/query-item-type';
 import {SuggestionsService} from '../../../../../core/service/suggestions-service';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DropdownComponent} from '../../../../dropdown/dropdown.component';
+import {Direction} from '../../../../direction';
 
 @Component({
   selector: 'search-suggestions',
@@ -140,10 +141,15 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     return of(null);
   }
 
-  public moveSelection(direction: number) {
-    const selectedIndex = this.selectedIndex$.getValue() + direction;
-    if (0 <= selectedIndex && selectedIndex < this.suggestions$.getValue().length) {
-      this.selectedIndex$.next(selectedIndex);
+  public moveSelection(direction: Direction) {
+    const index = this.selectedIndex$.getValue();
+    const count = this.suggestions$.value.length;
+
+    if (direction === Direction.Up) {
+      this.selectedIndex$.next(index <= 0 ? count - 1 : index - 1);
+    }
+    if (direction === Direction.Down) {
+      this.selectedIndex$.next(index === count - 1 ? 0 : index + 1);
     }
   }
 

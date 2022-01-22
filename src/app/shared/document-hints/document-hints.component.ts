@@ -228,22 +228,12 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   public moveSelection(direction: Direction) {
     const index = this.selectedIndex$.getValue();
-    const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
 
-    if (isTopPosition) {
-      if (direction === Direction.Up && (index > 0 || index === -1)) {
-        this.selectedIndex$.next(index === -1 ? this.hintsCount - 1 : index - 1);
-      }
-      if (direction === Direction.Down && index < this.hintsCount) {
-        this.selectedIndex$.next(index === this.hintsCount - 1 ? -1 : index + 1);
-      }
-    } else {
-      if (direction === Direction.Up && index > -1) {
-        this.selectedIndex$.next(index - 1);
-      }
-      if (direction === Direction.Down && index < this.hintsCount - 1) {
-        this.selectedIndex$.next(index + 1);
-      }
+    if (direction === Direction.Up) {
+      this.selectedIndex$.next(index <= 0 ? this.hintsCount - 1 : index - 1);
+    }
+    if (direction === Direction.Down) {
+      this.selectedIndex$.next(index === this.hintsCount - 1 ? 0 : index + 1);
     }
   }
 

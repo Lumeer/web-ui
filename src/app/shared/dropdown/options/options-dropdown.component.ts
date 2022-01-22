@@ -218,20 +218,10 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   private moveSelectionDown() {
-    const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
     const selectedIndex = this.selectedIndex(this.activeValue$.value);
+    const newIndex = selectedIndex === this.options.length - 1 ? 0 : selectedIndex + 1;
 
-    let newIndex = -1;
-    if (isTopPosition && selectedIndex > 0) {
-      newIndex = selectedIndex - 1;
-    }
-    if (!isTopPosition) {
-      newIndex = Math.min(this.options.length - 1, selectedIndex + 1);
-    }
-
-    if (newIndex >= 0) {
-      this.activeValue$.next(this.optionValue(newIndex));
-    }
+    this.activeValue$.next(this.optionValue(newIndex));
   }
 
   private selectedIndex(value: any): number {
@@ -239,21 +229,10 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   private moveSelectionUp() {
-    const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
     const selectedIndex = this.selectedIndex(this.activeValue$.value);
+    const newIndex = selectedIndex <= 0 ? this.options.length - 1 : selectedIndex - 1;
 
-    let newIndex: number;
-    if (isTopPosition && selectedIndex < this.options.length - 1) {
-      newIndex = selectedIndex + 1;
-    }
-
-    if (!isTopPosition) {
-      newIndex = Math.max(0, selectedIndex - 1);
-    }
-
-    if (newIndex >= 0) {
-      this.activeValue$.next(this.optionValue(newIndex));
-    }
+    this.activeValue$.next(this.optionValue(newIndex));
   }
 
   public getActiveOption(): DropdownOption {
