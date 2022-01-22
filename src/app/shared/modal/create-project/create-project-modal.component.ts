@@ -31,7 +31,7 @@ import {
 } from '../../../core/store/projects/projects.state';
 import {CreateProjectTemplatesComponent} from './templates/create-project-templates.component';
 import {FormBuilder, Validators} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
+import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 import {ProjectsAction} from '../../../core/store/projects/projects.action';
 import {NavigationExtras} from '@angular/router';
 import {Organization} from '../../../core/store/organizations/organization';
@@ -68,8 +68,9 @@ export class CreateProjectModalComponent implements OnInit {
     templateSelected: [false, Validators.requiredTrue],
   });
   public formDisabled$ = this.form.statusChanges.pipe(
-    startWith(this.form.invalid),
-    map(() => this.form.invalid)
+    startWith('INVALID'),
+    distinctUntilChanged(),
+    map(status => status === 'INVALID')
   );
 
   constructor(
