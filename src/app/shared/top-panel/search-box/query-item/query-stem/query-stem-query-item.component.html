@@ -6,35 +6,35 @@
   </icons-presenter>
 
   <span [title]="queryItem | queryItemText"
-        class="mx-1 font-weight-bold text-truncate">
+        class="mx-1 fw-bold text-truncate">
     {{queryItem | queryItemText | truncate:30}}
   </span>
 
-  <span *ngIf="queryItem.linksCount" class="small ml-2 icon-wrapper" title="Number of links" i18n-title="@@links.count">
+  <span *ngIf="queryItem.linksCount" class="small ms-2 icon-wrapper" title="Number of links" i18n-title="@@links.count">
     <i class="fal fa-link icon"></i>
     <span class="count" [style.background-color]="queryItem | queryItemForeground">{{queryItem.linksCount}}</span>
   </span>
 
-  <span *ngIf="queryItem.filtersCount" class="small ml-2-5 icon-wrapper" title="Number of filters" i18n-title="@@filters.count">
+  <span *ngIf="queryItem.filtersCount" class="small ms-2-5 icon-wrapper" title="Number of filters" i18n-title="@@filters.count">
     <i class="fal fa-filter icon"></i>
     <span class="count" [style.background-color]="queryItem | queryItemForeground">{{queryItem.filtersCount}}</span>
   </span>
 
   <i *ngIf="!readonly && queryItem.linksCount === 0 && queryItem.filtersCount === 0"
      (click)="remove.emit()"
-     class="ml-2 fas fa-times remove"
+     class="ms-2 fas fa-times remove"
      title="Delete query item" i18n-title="@@query.item.button.remove">
   </i>
 
   <i *ngIf="queryItem.linksCount > 0 || queryItem.filtersCount > 0"
      (click)="onExpand()"
-     class="ml-3 mr-1 fas fa-chevron-down cursor-pointer"
+     class="ms-3 me-1 fas fa-chevron-down cursor-pointer"
      title="Expand links and filters" i18n-title="@@query.item.stem.expand">
   </i>
 
   <i *ngIf="queryItem.linksCount === 0 && queryItem.filtersCount === 0"
      (click)="onCollapse()"
-     class="ml-2 mr-1 fas fa-chevron-right cursor-pointer"
+     class="ms-2 me-1 fas fa-chevron-right cursor-pointer"
      title="Collapse links and filters" i18n-title="@@query.item.stem.collapse">
   </i>
 

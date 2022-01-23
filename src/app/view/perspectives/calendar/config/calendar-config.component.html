@@ -1,16 +1,16 @@
-<div class="custom-control custom-checkbox mt-2">
+<div class="form-check mt-2">
   <input [id]="savePositionId"
          [attr.checked]="config?.positionSaved"
          [checked]="config?.positionSaved"
          (change)="onSavePositionChange($event.target.checked)"
          type="checkbox"
          #savePositionCheckbox
-         class="custom-control-input">
+         class="form-check-input">
   <label [for]="savePositionId"
-         class="custom-control-label">
-  </label>
+         class="form-check-label">
   <span i18n="@@perspective.calendar.config.position.save" class="user-select-none cursor-pointer"
         (click)="savePositionCheckbox.click()">Save position to view</span>
+  </label>
 </div>
 
 <select-item *ngIf="config?.mode !== configModeMonth"

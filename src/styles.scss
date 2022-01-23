@@ -11,12 +11,12 @@
 @import 'styles/overrides/toastr';
 @import 'styles/overrides/quill';
 @import 'styles/overrides/mapbox';
+@import 'styles/overrides/bootstrap';
+@import 'styles/overrides/full-calendar';
 
 $flag-icon-css-path: '~flag-icon-css/flags' !default;
 $include: cz, gb, hu !default;
 @import '~flag-icon-css/sass/flag-icons';
-
-@import 'styles/overrides/full-calendar';
 
 *[contenteditable] {
   -webkit-user-select: auto !important;
@@ -34,6 +34,7 @@ body {
 }
 
 a {
+  text-decoration: none;
   cursor: pointer;
   transition: color $animation-color-duration;
 }
@@ -107,6 +108,10 @@ ul {
 
 .pointer-events-none {
   pointer-events: none;
+}
+
+.table.table-without-padding > :not(caption) > * > * {
+  padding: 0;
 }
 
 .table-border {
@@ -391,11 +396,11 @@ modal-container {
   }
 }
 
-.ml-2-5 {
+.ms-2-5 {
   margin-left: 0.75rem !important;
 }
 
-.mr-2-5 {
+.me-2-5 {
   margin-right: 0.75rem !important;
 }
 
@@ -417,35 +422,17 @@ modal-container {
   margin-bottom: 0.75rem !important;
 }
 
+.py-2-5 {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
 .m-2-5 {
   margin: 0.75rem !important;
 }
 
 .font-capitalize {
   text-transform: uppercase;
-}
-
-.bs-tooltip-bottom .tooltip-arrow.arrow:before {
-  border-bottom-color: $gray-500;
-}
-
-.bs-tooltip-left .tooltip-arrow.arrow:before {
-  border-left-color: $gray-500;
-}
-
-.bs-tooltip-right .tooltip-arrow.arrow:before {
-  border-right-color: $gray-500;
-}
-
-.bs-tooltip-top .tooltip-arrow.arrow:before {
-  border-top-color: $gray-500;
-}
-
-.tooltip-inner {
-  border: 1px solid $border-color;
-  background-color: $white;
-  color: $primary;
-  box-shadow: $shadow-default;
 }
 
 .team-tag {
@@ -468,4 +455,8 @@ modal-container {
 
 .shadow-light {
   box-shadow: $shadow-light;
+}
+
+.border-right {
+  border-right: 1px solid $gray-300 !important;
 }

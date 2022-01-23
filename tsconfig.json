@@ -16,7 +16,8 @@
     "typeRoots": ["node_modules/@types"],
     "types": ["node"],
     "paths": {
-      "assert": ["./node_modules/assert"]
+      "assert": ["./node_modules/assert"],
+      "stream": ["./node_modules/stream-browserify"]
     }
   }
 }

@@ -1,6 +1,6 @@
 <top-panel-wrapper>
   <div *ngIf="{project: project$ | async, permissions: permissions$ | async } as data"
-       class="col-12 col-lg-11 col-xl-10 mx-auto content">
+       class="col-12 col-lg-11 col-xl-10 container-fluid mx-auto content">
     <resource-header
       [resource]="data.project"
       [resourceType]="projectType"
@@ -13,18 +13,18 @@
       (nameChange)="onNewName($event)"
       (codeChange)="onNewCode($event)">
 
-      <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
+      <div class="d-flex flex-row flex-nowrap align-items-center me-3"
            title="Number of users" i18n-title="@@project.settings.users.count">
         <i class="far fa-user" aria-hidden="true"></i>&nbsp;<span>{{ userCount$ | async }}</span>
       </div>
 
-      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success mr-3"
+      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success me-3"
            (click)="onCollectionsClick()"
            title="Number of tables" i18n-title="@@project.settings.collections.count">
         <i class="far fa-edit" aria-hidden="true"></i>&nbsp;<span>{{data.project.collectionsCount}}</span>
       </div>
 
-      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success mr-3"
+      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success me-3"
            *ngIf="data.permissions?.roles?.Manage"
            (click)="onDownloadRawContent()"
            title="Download project content" i18n-title="@@project.settings.collections.downloadContent">
@@ -37,7 +37,7 @@
         (add)="uploadRawProjectContent($event)">
       </project-upload>
 
-      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger mr-3"
+      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger me-3"
            *ngIf="data.permissions?.roles?.Manage"
            (click)="onSampleDataEraseClick()"
            title="Delete sample data from the project" i18n-title="@@project.settings.collections.deleteSampleData">

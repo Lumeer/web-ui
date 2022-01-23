@@ -1,6 +1,6 @@
 <ng-container *ngIf="{attributesResources: stem | queryStemAttributesResources:collections:linkTypes} as data">
 
-  <h6 class="font-weight-bold" i18n="@@perspective.pivot.config.row.header">
+  <h6 class="fw-bold" i18n="@@perspective.pivot.config.row.header">
     Rows
   </h6>
 
@@ -27,7 +27,7 @@
           </i>
         </div>
 
-        <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
+        <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute ps-2"
                                        [pivotAttribute]="attribute"
                                        [attributesResources]="data.attributesResources"
                                        [selectedAttributes]="config.rowAttributes || []"
@@ -54,7 +54,7 @@
   </pivot-header-attribute-config>
 
 
-  <h6 class="font-weight-bold mt-4" i18n="@@perspective.pivot.config.column.header">
+  <h6 class="fw-bold mt-4" i18n="@@perspective.pivot.config.column.header">
     Columns
   </h6>
 
@@ -81,7 +81,7 @@
           </i>
         </div>
 
-        <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
+        <pivot-header-attribute-config class="flex-grow-1 d-block draggable-attribute ps-2"
                                        [pivotAttribute]="attribute"
                                        [attributesResources]="data.attributesResources"
                                        [selectedAttributes]="config.columnAttributes || []"
@@ -106,7 +106,7 @@
   </pivot-header-attribute-config>
 
 
-  <h6 class="font-weight-bold mt-4" i18n="@@perspective.pivot.config.value.header">
+  <h6 class="fw-bold mt-4" i18n="@@perspective.pivot.config.value.header">
     Values
   </h6>
 
@@ -132,7 +132,7 @@
           </i>
         </div>
 
-        <pivot-value-attribute-config class="flex-grow-1 d-block draggable-attribute pl-2"
+        <pivot-value-attribute-config class="flex-grow-1 d-block draggable-attribute ps-2"
                                       [pivotAttribute]="attribute"
                                       [attributesResources]="data.attributesResources"
                                       (attributeSelect)="onValueAttributeSelect($event, attribute)"

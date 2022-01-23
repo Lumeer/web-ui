@@ -1,6 +1,6 @@
 <ng-content></ng-content>
-<span class="pr-2 cursor-pointer user-select-none text-truncate"
-      [class.font-weight-bold]="isDefault"
+<span class="pe-2 cursor-pointer user-select-none text-truncate"
+      [class.fw-bold]="isDefault"
       [title]="attribute.name"
       (click)="checkbox.click()">{{attribute.name}}</span>
 <label class="switch">
@@ -9,7 +9,7 @@
 </label>
 
 <div *ngIf="sortable"
-     class="ml-1 position-relative cursor-pointer sort-wrapper d-flex align-items-center justify-content-center"
+     class="ms-1 position-relative cursor-pointer sort-wrapper d-flex align-items-center justify-content-center"
      title="Toggle sort"
      i18n-title="@@attribute.settings.sort.toggle"
      (click)="onSortToggle()">

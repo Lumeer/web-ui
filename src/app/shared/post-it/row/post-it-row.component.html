@@ -6,7 +6,7 @@
 </div>
 
 <div *ngIf="editableKey && postItLayoutType.Zero !== layoutType"
-     class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+     class="p-0 pe-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
   <data-input class="h-100 w-100 p-1 data-input key"
               [cursor]="cursor"
               [focus]="true"
@@ -30,13 +30,13 @@
   </data-input>
 </div>
 
-<div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center data-input-wrapper"
+<div class="p-0 ps-1 d-flex flex-row flex-nowrap align-items-center justify-content-center data-input-wrapper"
      *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async):lockStats as dataInputInfo"
      (click)="onValueFocus()"
      (clickOutside)="onDataInputCancel()"
      [clickOutsideEnabled]="(valueFocused$ | async) || (editing$ | async)"
      (dblclick)="onDataInputDblClick($event)"
-     [ngClass]="!dataInputInfo.showDataInput && !dataInputInfo.hasValue ? 'data-input-readonly m-1 ml-2' : ''"
+     [ngClass]="!dataInputInfo.showDataInput && !dataInputInfo.hasValue ? 'data-input-readonly m-1 ms-2' : ''"
      [class.value-focused]="valueFocused$ | async">
   <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
        [innerHTML]="dataValue | previewDataValue | safeHtml"
@@ -66,7 +66,7 @@
 
   <div *ngIf="(mouseEntered$ | async) && dataInputInfo.showLockStats && !(row.attribute | isAttributeEnabledByLockStats:lockStats)"
        @enterAnimation
-       class="lock-icon cursor-pointer mr-1"
+       class="lock-icon cursor-pointer me-1"
        [tooltip]="statsTooltip" containerClass="bigger-tooltip">
     <i class="fas fa-sm fa-lock"></i>
 
@@ -81,7 +81,7 @@
   </div>
 </div>
 
-<div class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center">
+<div class="d-flex flex-row flex-nowrap align-items-center ms-1 justify-content-center">
   <ng-container *ngIf="{iconName: (row.attribute?.constraint | constraintTypeIcon)} as typeData">
     <i *ngIf="typeData.iconName"
        [ngClass]="typeData.iconName"

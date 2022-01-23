@@ -7,13 +7,9 @@
       [resourceType]="resourceType">
     </create-resource-dialog-parent>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
 
-      <label class="col-form-label col-2 mb-2">
-          <span i18n="@@resource.new.dialog.icon.label">
-            Icon:
-          </span>
-      </label>
+      <label class="col-form-label col-2 mb-2" i18n="@@resource.new.dialog.icon.label">Icon:</label>
 
       <div class="col-8 d-block mb-3 text-center cursor-pointer" (click)="togglePicker()">
         <div class="text-muted small my-2" i18n="@@resource.new.dialog.icon.label.hint">(click the icon to change it)</div>
@@ -31,14 +27,14 @@
       <div class="col-2"></div>
     </div>
 
-    <resource-code-input
-      [form]="form"
-      (keydown.enter)="onEnter($event)">
+    <resource-code-input class="d-block mb-3"
+                         [form]="form"
+                         (keydown.enter)="onEnter($event)">
     </resource-code-input>
 
-    <resource-name-input
-      [form]="form"
-      (keydown.enter)="onEnter($event)">
+    <resource-name-input class="d-block mb-3"
+                         [form]="form"
+                         (keydown.enter)="onEnter($event)">
     </resource-name-input>
 
     <div class="small text-muted"><sup>*</sup>&nbsp;<span i18n="@@resource.new.dialog.required">Required</span></div>

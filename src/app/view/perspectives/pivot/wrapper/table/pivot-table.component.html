@@ -1,6 +1,6 @@
 <ng-container *ngIf="pivotTables?.length && !(pivotData | pivotDataEmpty); else emptyCells">
   <table *ngFor="let pivotTable of pivotTables; let first"
-         class="table table-md"
+         class="table table-without-padding table-borderless table-md"
          [class.mt-4]="!first">
     <tr *ngFor="let rowCells of pivotTable.cells; let rowIndex = index">
 
@@ -21,7 +21,7 @@
             <div class="d-flex align-items-center h-100">
               <span class="summary">{{cell.summary}}</span>
               <data-input-preview *ngIf="cellData.hasValue"
-                                  class="ml-2 flex-grow-1 h-100 text-truncate"
+                                  class="ms-2 flex-grow-1 h-100 text-truncate d-inline-block"
                                   [class.clickable-cell]="cell | pivotCellClickable"
                                   [constraint]="cell.constraint"
                                   [configuration]="cell | pivotCellConfiguration"
@@ -32,6 +32,7 @@
           </ng-container>
           <ng-container *ngIf="!cell.summary">
             <data-input-preview *ngIf="cellData.hasValue"
+                                class="d-inline-block"
                                 [class.clickable-cell]="cell | pivotCellClickable"
                                 [constraint]="cell.constraint"
                                 [configuration]="cell | pivotCellConfiguration"

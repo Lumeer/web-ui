@@ -13,7 +13,7 @@
   </form-link-range-dropdown>
 
   <ng-container *ngIf="data.otherCollection?.attributes?.length">
-    <span class="ml-2 text-primary clickable" #displayedElement (click)="displayedDropdown.toggle()"
+    <span class="ms-2 text-primary clickable" #displayedElement (click)="displayedDropdown.toggle()"
           tooltip="Attribute used to represent the linked record"
           i18n-tooltip="@@perspective.form.editor.row.cell.actions.displayed.tooltip">
       <i class="fas fa-check-circle"></i>
@@ -32,7 +32,7 @@
   </ng-container>
 
   <ng-container *ngIf="false">
-    <span class="ml-2 text-primary clickable" #settingsElement (click)="settings.toggle()">
+    <span class="ms-2 text-primary clickable" #settingsElement (click)="settings.toggle()">
       <i class="far fa-line-columns"></i>
     </span>
 
@@ -45,7 +45,7 @@
     </form-link-attributes-settings-dropdown>
   </ng-container>
 
-  <div class="ml-2 cursor-pointer filters-icon" #filtersElement (click)="filters.toggle()"
+  <div class="ms-2 cursor-pointer filters-icon" #filtersElement (click)="filters.toggle()"
        tooltip="Configure filtering of records that are possible to link"
        i18n-tooltip="@@perspective.form.editor.row.cell.actions.filter">
     <span class="text-primary clickable">

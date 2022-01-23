@@ -2,7 +2,7 @@
   <div *ngFor="let column of columns; trackBy:trackByColumn"
        class="header-cell table-cell text-truncate"
        [style.background]="column.color"
-       [class.font-weight-bold]="column.bold"
+       [class.fw-bold]="column.bold"
        [style.height.px]="columnHeight"
        [style.width.px]="columnWidth || column.width"
        [style.min-width.px]="columnWidth || column.width">

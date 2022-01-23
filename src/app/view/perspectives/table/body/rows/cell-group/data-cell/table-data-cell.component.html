@@ -41,8 +41,8 @@
                   (enterInvalid)="onEnterInvalid()"
                   class="d-block h-100 data-input"
                   [ngClass]="data.attribute?.constraint?.type | lowercase"
-                  [class.mr-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
-                  [class.ml-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"
+                  [class.me-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
+                  [class.ms-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"
                   [class.cursor-default]="!dataInputInfo.editable"
                   data-test="table-data-input">
       </data-input>

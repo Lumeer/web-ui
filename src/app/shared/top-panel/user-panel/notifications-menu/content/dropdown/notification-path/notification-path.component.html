@@ -1,46 +1,46 @@
 <ng-container [ngSwitch]="notification.type">
   <ng-container *ngSwitchCase="notificationType.OrganizationShared">
     <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
+      <i [class]="organization.icon" class="me-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
     </ng-container>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.ProjectShared">
     <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
+      <i [class]="organization.icon" class="me-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
       <i class="fas fa-chevron-right separator mx-1"></i>
     </ng-container>
-    <i [class]="projectSharedNotification.projectIcon" class="mr-1" [style.color]="projectSharedNotification.projectColor" [title]="projectSharedNotification.projectName"></i>{{projectSharedNotification.projectCode}}
+    <i [class]="projectSharedNotification.projectIcon" class="me-1" [style.color]="projectSharedNotification.projectColor" [title]="projectSharedNotification.projectName"></i>{{projectSharedNotification.projectCode}}
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.CollectionShared">
     <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
+      <i [class]="organization.icon" class="me-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
       <i class="fas fa-chevron-right separator mx-1"></i>
     </ng-container>
-    <i [class]="collectionSharedNotification.projectIcon" class="mr-1" [style.color]="collectionSharedNotification.projectColor" [title]="collectionSharedNotification.projectName"></i>{{collectionSharedNotification.projectCode}}<!-- -->
+    <i [class]="collectionSharedNotification.projectIcon" class="me-1" [style.color]="collectionSharedNotification.projectColor" [title]="collectionSharedNotification.projectName"></i>{{collectionSharedNotification.projectCode}}<!-- -->
     <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="collectionSharedNotification.collectionIcon" class="mr-1" [style.color]="collectionSharedNotification.collectionColor" [title]="collectionSharedNotification.collectionName"></i>{{collectionSharedNotification.collectionName}}<!-- -->
+    <i [class]="collectionSharedNotification.collectionIcon" class="me-1" [style.color]="collectionSharedNotification.collectionColor" [title]="collectionSharedNotification.collectionName"></i>{{collectionSharedNotification.collectionName}}<!-- -->
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.ViewShared">
     <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
+      <i [class]="organization.icon" class="me-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
       <i class="fas fa-chevron-right separator mx-1"></i>
     </ng-container>
-    <i [class]="viewSharedNotification.projectIcon" class="mr-1" [style.color]="viewSharedNotification.projectColor" [title]="viewSharedNotification.projectName"></i>{{viewSharedNotification.projectCode}}<!-- -->
+    <i [class]="viewSharedNotification.projectIcon" class="me-1" [style.color]="viewSharedNotification.projectColor" [title]="viewSharedNotification.projectName"></i>{{viewSharedNotification.projectCode}}<!-- -->
     <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="perspectiveIcons[viewSharedNotification.viewPerspective]" class="mr-1" [title]="viewSharedNotification.viewName"></i>{{viewSharedNotification.viewName}}<!-- -->
+    <i [class]="perspectiveIcons[viewSharedNotification.viewPerspective]" class="me-1" [title]="viewSharedNotification.viewName"></i>{{viewSharedNotification.viewName}}<!-- -->
   </ng-container>
 
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
+      <i [class]="organization.icon" class="me-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
       <i class="fas fa-chevron-right separator mx-1"></i>
     </ng-container>
-    <i [class]="taskNotification.projectIcon" class="mr-1" [style.color]="taskNotification.projectColor" [title]="taskNotification.projectName"></i>{{taskNotification.projectCode}}<!-- -->
+    <i [class]="taskNotification.projectIcon" class="me-1" [style.color]="taskNotification.projectColor" [title]="taskNotification.projectName"></i>{{taskNotification.projectCode}}<!-- -->
     <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="taskNotification.collectionIcon" class="mr-1" [style.color]="taskNotification.collectionColor" [title]="taskNotification.collectionName"></i>{{taskNotification.collectionName}}<!-- -->
+    <i [class]="taskNotification.collectionIcon" class="me-1" [style.color]="taskNotification.collectionColor" [title]="taskNotification.collectionName"></i>{{taskNotification.collectionName}}<!-- -->
   </ng-container>
 
 </ng-container>

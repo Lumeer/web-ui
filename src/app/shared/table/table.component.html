@@ -14,7 +14,7 @@
                                (scroll)="onScroll()"
                                [disabled]="scrollDisabled$ | async"
                                [columns]="tableModel.columns">
-    <table #table class="table lmr-table position-relative">
+    <table #table class="table table-without-padding table-borderless lmr-table position-relative">
       <thead table-header [columnGroups]="data.columnGroups"
              [selectedCell]="selectedCell"
              [editedCell]="editedCell"

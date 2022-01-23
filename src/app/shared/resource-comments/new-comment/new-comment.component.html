@@ -19,7 +19,7 @@
       (onContentChanged)="contentChanged($event)">
     </quill-editor>
 
-    <div *ngIf="data.editing" class="float-right text-muted small font-italic p-1">
+    <div *ngIf="data.editing" class="float-end text-muted small font-italic p-1">
       <progress-circle [tooltip]="(progress | number:'1.0-0') + '%'" [progress]="progress" [radius]="10" [stroke]="2"></progress-circle>
     </div>
   </div>
@@ -27,23 +27,23 @@
   <div class="controls" *ngIf="data.editing">
     <div class="author">
       <ng-container *ngIf="!initialComment || startEditing">
-        <span i18n="@@document.detail.comments.posting.user.title" class="mr-2 text-muted">Posting as</span>
+        <span i18n="@@document.detail.comments.posting.user.title" class="me-2 text-muted">Posting as</span>
         <user-avatar [email]="currentUser.email" [tooltipText]="currentUser.name" [avatarSize]="15"></user-avatar>
       </ng-container>
     </div>
     <div class="button">
       <button (click)="cancelEditComment()"
               type="button"
-              class="btn btn-sm btn-outline-secondary text-nowrap mr-2">
+              class="btn btn-sm btn-outline-secondary text-nowrap me-2">
         <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
       </button>
       <button (click)="sendComment()"
               [attr.aria-disabled]="data.editing && !progress"
               [disabled]="data.editing && !progress"
               type="button"
-              class="btn btn-sm btn-success text-nowrap font-weight-bold">
-        <i class="fal fa-check mr-1"></i><span i18n="@@button.save">Save</span>
-        <small class="small ml-1">{{macOS ? '⌘ ⏎' : 'Ctrl + ⏎'}}</small>
+              class="btn btn-sm btn-success text-nowrap fw-bold">
+        <i class="fal fa-check me-1"></i><span i18n="@@button.save">Save</span>
+        <small class="small ms-1">{{macOS ? '⌘ ⏎' : 'Ctrl + ⏎'}}</small>
       </button>
     </div>
   </div>

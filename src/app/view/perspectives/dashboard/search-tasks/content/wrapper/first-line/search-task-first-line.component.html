@@ -1,9 +1,9 @@
 <div class="collection-name order-1">
-  <span *ngIf="collection && large" class="mr-3"
+  <span *ngIf="collection && large" class="me-3"
         [style.color]="collection?.color">{{collection?.name}}</span>
 </div>
 <ng-container *ngIf="document | dataValueByAttribute:attributes?.title: constraintData as titleDataValue">
-  <data-input-preview class="data-input-preview text-truncate font-weight-bold flex-grow-1 order-2 title"
+  <data-input-preview class="data-input-preview text-truncate fw-bold flex-grow-1 order-2 title"
                       *ngIf="titleDataValue | formatDataValue; else emptyTitle"
                       [constraint]="attributes.title.constraint"
                       [cursor]="document | dataCursor:attributes.title.id:view?.id"
@@ -16,7 +16,7 @@
   class="task-info order-4 order-md-3 d-flex align-items-center flex-row flex-md-nowrap flex-wrap justify-content-start justify-content-md-end"
   [class.from-start]="collection && large">
   <ng-container *ngIf="document | dataValueByAttribute:attributes?.assignee: constraintData as assigneeDataValue">
-    <data-input-preview class="data-input-preview text-truncate ml-0 ml-md-3 py-1"
+    <data-input-preview class="data-input-preview text-truncate ml-0 ms-md-3 py-1"
                         *ngIf="assigneeDataValue | formatDataValue; else emptyTitle"
                         [constraint]="attributes.assignee.constraint"
                         [cursor]="document | dataCursor:attributes?.assignee?.id:view?.id"
@@ -26,7 +26,7 @@
   </ng-container>
 
   <ng-container *ngIf="document | dataValueByAttribute:attributes?.dueDate: constraintData as dueDateDataValue">
-    <data-input-preview class="data-input-preview text-truncate ml-3 py-1"
+    <data-input-preview class="data-input-preview text-truncate ms-3 py-1"
                         *ngIf="dueDateDataValue | formatDataValue"
                         [constraint]="attributes.dueDate.constraint"
                         [cursor]="document | dataCursor:attributes.dueDate.id:view?.id"
@@ -36,7 +36,7 @@
   </ng-container>
 
   <ng-container *ngIf="document | dataValueByAttribute:attributes?.state: constraintData as stateDataValue">
-    <data-input-preview class="data-input-preview text-truncate ml-3 py-1"
+    <data-input-preview class="data-input-preview text-truncate ms-3 py-1"
                         *ngIf="stateDataValue | formatDataValue"
                         [constraint]="attributes.state.constraint"
                         [cursor]="document | dataCursor:attributes.state.id:view?.id"
@@ -47,7 +47,7 @@
 
   <ng-container
     *ngIf="document | dataValueByAttribute:attributes?.priority: constraintData as priorityDataValue">
-    <data-input-preview class="data-input-preview text-truncate ml-3"
+    <data-input-preview class="data-input-preview text-truncate ms-3"
                         *ngIf="priorityDataValue | formatDataValue"
                         [constraint]="attributes.priority.constraint"
                         [cursor]="document | dataCursor:attributes.priority.id:view?.id"
@@ -59,7 +59,7 @@
 </div>
 
 <div class="order-3 order-md-4 d-flex justify-content-end">
-  <span *ngIf="dataPermissions?.read" class="clickable ml-3"
+  <span *ngIf="dataPermissions?.read" class="clickable ms-3"
         (click)="$event.stopPropagation(); toggleFavorite.emit()"
         title="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"
         i18n-title="@@task.pinned">

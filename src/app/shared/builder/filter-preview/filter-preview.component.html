@@ -3,12 +3,12 @@
 <ng-container *ngFor="let conditionValue of conditionValues; let index = index">
   <ng-container *ngIf="index < (condition | conditionNumValues)">
     <span *ngIf="index > 0">,&nbsp;</span>
-    <data-input-preview *ngIf="!conditionValue.type" [class.ml-1]="index === 0"
+    <data-input-preview *ngIf="!conditionValue.type" [class.ms-1]="index === 0"
                         [dataValue]="conditionValue.value | dataValue:conditionAttribute.constraint:constraintData"
                         [configuration]="configuration"
                         [constraint]="conditionAttribute.constraint">
     </data-input-preview>
-    <span class="ml-1" [class.ml-1]="index === 0"
+    <span class="ms-1" [class.ml-1]="index === 0"
           *ngIf="conditionValue.type">{{conditionValue.type | translateConditionValue:conditionAttribute}}</span>
   </ng-container>
 </ng-container>

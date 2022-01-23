@@ -1,9 +1,9 @@
 <div [formGroup]="form" class="config-form">
-  <div class="form-group text-muted small form-message" i18n="@@collection.config.tab.rules.autoLink.info">
+  <div class="mb-3 text-muted small form-message" i18n="@@collection.config.tab.rules.autoLink.info">
     Automatically link records from two tables based on matching column values.
   </div>
 
-  <label i18n="@@collection.config.tab.rules.autoLink.linkType">Link record via</label>
+  <label class="form-label" i18n="@@collection.config.tab.rules.autoLink.linkType">Link record via</label>
   <select-item
     class="link-select"
     emptyValue="Select a link type"
@@ -13,17 +13,17 @@
     [selectedId]="linkTypeId"
     (selected)="onSelectLinkType($event)">
   </select-item>
-  <label i18n="@@collection.config.tab.rules.autoLink.where">Where</label>
+  <label class="form-label" i18n="@@collection.config.tab.rules.autoLink.where">Where</label>
   <div class="d-flex align-items-center flex-wrap">
     <select-item
-      class="mr-3"
+      class="me-3"
       (selected)="onSelectAttribute1($event)"
       [emptyValue]="attribute1Empty"
       [placeholderIcon]="collection.icon"
       [items]="collection | attributesSelectItems"
       [selectedId]="attribute1Id">
     </select-item>
-    <div class="text-nowrap mr-3 py-2" i18n="@@collection.config.tab.rules.autoLink.equals">
+    <div class="text-nowrap me-3 py-2" i18n="@@collection.config.tab.rules.autoLink.equals">
       equals
     </div>
     <select-item

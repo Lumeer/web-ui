@@ -1,12 +1,10 @@
 <div class="header" [style.background-color]="resource?.color | lightenColor:.5">
-  <div class="p-2 font-weight-bold" i18n="@@resource.variables.header.name">Name</div>
+  <div class="p-2 fw-bold" i18n="@@resource.variables.header.name">Name</div>
   <div class="value">
-    <div class="font-weight-bold p-2 text-nowrap" i18n="@@resource.variables.header.value">Value</div>
+    <div class="fw-bold p-2 text-nowrap" i18n="@@resource.variables.header.value">Value</div>
     <div class="input-group input-group-sm">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="search-variable"><i class="fas fa-search"></i></span>
-      </div>
-      <input id="variableSearch" class="form-control mr-1" type="search"
+      <span class="input-group-text" id="search-variable"><i class="fas fa-search"></i></span>
+      <input id="variableSearch" class="form-control me-1" type="search"
              placeholder="Search variable..."
              inputmode="search"
              i18n-placeholder="@@resource.variables.header.search.placeholder"
@@ -16,8 +14,8 @@
     </div>
   </div>
   <div>
-    <i class="fa fa-fw fa-none ml-1"></i>
-    <i class="fa fa-fw fa-none ml-1"></i>
+    <i class="fa fa-fw fa-none ms-1"></i>
+    <i class="fa fa-fw fa-none ms-1"></i>
   </div>
 </div>
 

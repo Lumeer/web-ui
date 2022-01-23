@@ -1,5 +1,5 @@
 <div class="d-inline-flex align-items-center px-2 py-1">
-  <i class="fas fa-lock-open mr-2" [ngClass]="lock?.locked ? 'fa-lock color-danger' : 'fa-lock-open color-success'"></i>
+  <i class="fas fa-lock-open me-2" [ngClass]="lock?.locked ? 'fa-lock color-danger' : 'fa-lock-open color-success'"></i>
   <span *ngIf="lock?.locked" i18n="@@constraint.action.lock.disabled.short">Always locked</span>&nbsp;<span *ngIf="lock?.locked && stats.filtersStats?.length" i18n="@@constraint.action.lock.disabled.short.until">until</span>
   <span *ngIf="!lock?.locked" i18n="@@constraint.action.lock.enabled.short">Always editable</span>&nbsp;<span *ngIf="!lock?.locked && stats.filtersStats?.length" i18n="@@constraint.action.lock.enabled.short.unless">unless</span>
 </div>
@@ -7,15 +7,15 @@
   <div class="content-grid mt-2" *ngIf="{attributesMap: attributesMap$ | async} as data">
     <ng-container *ngFor="let stat of stats.filtersStats">
       <ng-container *ngIf="data.attributesMap && data.attributesMap[stat.filter.attributeId] as attribute">
-        <div class="text-left pr-2 text-truncate">{{attribute.name}}</div>
-        <div class="text-left text-truncate">
+        <div class="text-start pe-2 text-truncate">{{attribute.name}}</div>
+        <div class="text-start text-truncate">
           <attribute-filter-lock-preview [constraintData]="constraintData"
                                          [attribute]="attribute"
                                          [condition]="stat.filter.condition"
                                          [conditionValues]="stat.filter.conditionValues">
           </attribute-filter-lock-preview>
         </div>
-        <div class="text-left pl-2">
+        <div class="text-start ps-2">
           <i class="fas"
              [ngClass]="stat.satisfy !== !lock?.locked ? 'text-success fa-check-circle' : 'text-danger fa-times-circle'"></i>
         </div>

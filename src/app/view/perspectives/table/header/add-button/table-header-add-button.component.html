@@ -18,7 +18,7 @@
               (click)="onClick($event); onAddColumn()">
         <icons-presenter [colors]="['#000']"
                          [icons]="['fas fa-plus-circle']"
-                         class="mr-1">
+                         class="me-1">
         </icons-presenter>
         <span i18n="@@table.header.menu.add.column">
       Add a new column
@@ -38,7 +38,7 @@
             (click)="onClick($event); onUseLinkType(linkType)">
       <icons-presenter [colors]="[linkType.collections[0]?.color, linkType.collections[1]?.color]"
                        [icons]="[linkType.collections[0]?.icon, linkType.collections[1]?.icon]"
-                       class="mr-1">
+                       class="me-1">
       </icons-presenter>
       <span [title]="linkType?.name"
             data-test="table-header-add-linktype-option">

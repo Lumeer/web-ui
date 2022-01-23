@@ -12,7 +12,7 @@
           {{ message }}
         </div>
       </div>
-      <div *ngIf="data.icon" class="ml-2">
+      <div *ngIf="data.icon" class="ms-2">
         <img [style.height.px]="36"
              [ngClass]="iconClass$ | async"
              [src]="data.icon">
@@ -24,7 +24,7 @@
     <div *ngIf="data.buttons?.length" class="btn-group w-100" role="group">
       <button *ngFor="let button of data.buttons; let first = first; let last = last" type="button"
               class="btn btn-outline-secondary border-bottom-0"
-              [class.font-weight-bold]="button.bold"
+              [class.fw-bold]="button.bold"
               [class.border-left-0]="first"
               [class.border-right-0]="last"
               (click)="onButtonClick($event, button)">

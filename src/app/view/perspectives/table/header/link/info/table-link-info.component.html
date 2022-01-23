@@ -17,7 +17,7 @@
     <button (click)="addLinkColumn.emit()"
             [disabled]="!allowedPermissions?.roles.AttributeEdit"
             mat-menu-item>
-      <i class="fa fa-fw fa-plus-circle mr-1"></i>&nbsp;
+      <i class="fa fa-fw fa-plus-circle me-1"></i>&nbsp;
       <span i18n="@@table.header.add.link.column">Add link column</span>
     </button>
     <hr class="my-2">
@@ -25,13 +25,13 @@
             (click)="switchParts.emit()"
             [disabled]="!canManageView"
             mat-menu-item>
-      <i class="fa fa-fw fa-exchange mr-1"></i>&nbsp;
+      <i class="fa fa-fw fa-exchange me-1"></i>&nbsp;
       <span i18n="@@table.header.switch.parts">Switch tables order</span>
     </button>
     <button (click)="removePart.emit()"
             [disabled]="!canManageView"
             mat-menu-item>
-      <i class="fa fa-fw fa-plug mr-1"></i>&nbsp;
+      <i class="fa fa-fw fa-plug me-1"></i>&nbsp;
       <span i18n="@@table.header.remove.part">Disconnect table</span>
     </button>
   </ng-template>

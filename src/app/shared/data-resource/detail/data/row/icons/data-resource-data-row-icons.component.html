@@ -1,5 +1,5 @@
 <ng-container *ngIf="showLockStats && !(row?.attribute | isAttributeEnabledByLockStats:lockStats); else emptyIcon">
-  <i class="fas fa-fw fa-lock mr-2 row-hover-button cursor-pointer"
+  <i class="fas fa-fw fa-lock me-2 row-hover-button cursor-pointer"
      [tooltip]="statsTooltip" containerClass="bigger-tooltip"></i>
 
   <ng-template #statsTooltip>
@@ -11,7 +11,7 @@
     </attribute-lock-filters-stats>
   </ng-template>
 </ng-container>
-<i class="fa fa-fw fa-shapes mr-2 clickable text-success row-hover-button"
+<i class="fa fa-fw fa-shapes me-2 clickable text-success row-hover-button"
    aria-hidden="true"
    *ngIf="row?.attribute?.id && canEditType; else emptyIcon"
    title="Attribute settings..."
@@ -21,7 +21,7 @@
    (click)="onAttributeType()">
 </i>
 
-<i class="fa fa-fw fa-function mr-2 clickable text-success row-hover-button"
+<i class="fa fa-fw fa-function me-2 clickable text-success row-hover-button"
    aria-hidden="true"
    *ngIf="row?.attribute?.constraint?.type !== type.Action && canEditAutomation"
    title="Edit function..."
@@ -30,7 +30,7 @@
    i18n-tooltip="@@table.header.menu.editFunction"
    (click)="onAttributeFunction()">
 </i>
-<i class="fa fa-fw fa-function mr-2 clickable text-success row-hover-button"
+<i class="fa fa-fw fa-function me-2 clickable text-success row-hover-button"
    aria-hidden="true"
    *ngIf="row?.attribute?.constraint?.type === type.Action && canEditAutomation"
    title="Edit automation..."
@@ -39,7 +39,7 @@
    i18n-tooltip="@@table.header.menu.editAutomation"
    (click)="onAttributeFunction()">
 </i>
-<i *ngIf="!canEditAutomation" class="fa-fw fa fa-icon-none mr-2"
+<i *ngIf="!canEditAutomation" class="fa-fw fa fa-icon-none me-2"
    aria-hidden="true">
 </i>
 
@@ -47,14 +47,14 @@
   <i *ngIf="typeData.iconName"
      [ngClass]="typeData.iconName"
      [title]="row.attribute?.constraint | constraintTypeIconTitle"
-     class="mr-2 text-muted small fa-fw"></i>
-  <i *ngIf="!typeData.iconName" class="mr-2 fa-fw fa fa-icon-none small"
+     class="me-2 text-muted small fa-fw"></i>
+  <i *ngIf="!typeData.iconName" class="me-2 fa-fw fa fa-icon-none small"
      aria-hidden="true">
   </i>
 </ng-container>
 
 <ng-template #emptyIcon>
-  <i class="fa-fw fa fa-icon-none mr-2"
+  <i class="fa-fw fa fa-icon-none me-2"
      aria-hidden="true">
   </i>
 </ng-template>

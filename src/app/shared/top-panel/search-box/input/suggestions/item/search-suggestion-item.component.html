@@ -1,12 +1,12 @@
-<div class="d-inline-flex" [class.font-weight-bold]="isCollectionItem">
+<div class="d-inline-flex" [class.fw-bold]="isCollectionItem">
   <icons-presenter [colors]="suggestion.colors"
                    [icons]="suggestion.icons">
   </icons-presenter>
   <span [innerHTML]="!isFulltextItem ? (suggestion.text | truncate:40 | highlightText:text) : (suggestion.text | truncate:40)"
         [title]="suggestion.text"
-        class="ml-2"></span>
+        class="ms-2"></span>
 </div>
-<span class="font-weight-light font-italic ml-3 text-muted"
+<span class="fw-light font-italic ms-3 text-muted"
       i18n="@@query.suggestion.type">
   {suggestion.type, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}
 </span>

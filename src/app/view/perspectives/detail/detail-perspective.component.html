@@ -18,9 +18,9 @@
               [attr.aria-disabled]="data.creatingDocument"
               [disabled]="data.creatingDocument"
               (click)="addDocument()">
-        <i *ngIf="!data.creatingDocument" class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
-        <span *ngIf="data.creatingDocument" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
-        <span class="font-weight-bold" i18n="@@create.new.document">Create New Record</span>
+        <i *ngIf="!data.creatingDocument" class="fa fa-plus-circle me-1" aria-hidden="true"></i>
+        <span *ngIf="data.creatingDocument" class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
+        <span class="fw-bold" i18n="@@create.new.document">Create New Record</span>
       </button>
     </div>
 

@@ -2,16 +2,16 @@
         class="btn btn-sm btn-primary"
         (click)="add()"
         data-tour="collection-add">
-  <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
-  <span class="font-weight-bold" i18n="@@create.new.collection">Create New Table</span>
+  <i class="fa fa-plus-circle me-1" aria-hidden="true"></i>
+  <span class="fw-bold" i18n="@@create.new.collection">Create New Table</span>
 </button>
 
 <button type="button"
         *ngIf="showAddTaskTable"
-        class="btn btn-sm btn-primary ml-2"
+        class="btn btn-sm btn-primary ms-2"
         (click)="onCreate()"
         data-tour="collection-add">
-  <i *ngIf="!(creatingData$ | async)" class="fa fa-tasks mr-1" aria-hidden="true"></i>
-  <span *ngIf="creatingData$ | async" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
-  <span class="font-weight-bold" i18n="@@tasks.empty.collections.button">Create Tasks Table</span>
+  <i *ngIf="!(creatingData$ | async)" class="fa fa-tasks me-1" aria-hidden="true"></i>
+  <span *ngIf="creatingData$ | async" class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
+  <span class="fw-bold" i18n="@@tasks.empty.collections.button">Create Tasks Table</span>
 </button>

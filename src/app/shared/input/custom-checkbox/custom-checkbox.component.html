@@ -4,8 +4,8 @@
        type="checkbox"
        #checkbox
        (change)="checkedChange.emit($event.target.checked)"
-       class="custom-control-input">
+       class="form-check-input">
 <label [for]="checkboxId"
-       class="custom-control-label">
+       class="form-check-label">
 </label>
 <span *ngIf="checkboxTitle" class="user-select-none cursor-pointer" (click)="checkbox.click()">{{checkboxTitle}}</span>

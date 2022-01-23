@@ -1,4 +1,4 @@
-<div class="text-right" *ngIf="{index : scrolledIndex$ | async} as data">
+<div class="text-end" *ngIf="{index : scrolledIndex$ | async} as data">
   <strong>{{data.index | previewRangeString:(numVisibleRows$ | async):dataResources.length}}</strong>
   &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{dataResources.length}}
 </div>
@@ -13,7 +13,7 @@
                                [headerHeight]="rowHeight"
                                [baseOffset]="-1"
                                [columns]="columns">
-    <table class="table lmr-table table-sm" [class.table-fixed]="hasData" id="preview-results-table">
+    <table class="table table-borderless lmr-table table-sm" [class.table-fixed]="hasData" id="preview-results-table">
       <thead>
       <tr>
         <th class="sticky-header"
@@ -27,7 +27,7 @@
       </thead>
       <tbody>
       <tr *ngIf="!hasData">
-        <td [attr.colspan]="resource.attributes.length" class="text-center font-weight-bold">
+        <td [attr.colspan]="resource.attributes.length" class="text-center fw-bold">
           <h4 class="pt-3" i18n="@@shared.preview.results.noResults">No records found.</h4>
         </td>
       </tr>

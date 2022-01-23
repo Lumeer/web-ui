@@ -16,21 +16,21 @@
 
       <hr class="d-block d-md-none"/>
 
-      <icon-choose class="d-block w-100 bg-white p-3 pl-md-0" [icon]="selectedIcon$ | async"
+      <icon-choose class="d-block w-100 bg-white p-3 ps-md-0" [icon]="selectedIcon$ | async"
                    (selected)="onIconSelected($event)"
                    (preview)="onIconPreview($event)">
       </icon-choose>
 
     </div>
 
-    <div class="card-footer text-right p-3 d-flex">
+    <div class="card-footer text-end p-3 d-flex">
       <button *ngIf="showClearIcon" class="btn btn-outline-secondary btn-sm" (click)="onClear()">
         <span i18n="@@button.clear">Clear</span>
       </button>
-      <button class="btn btn-outline-secondary btn-sm" (click)="onCancel()" [class.ml-auto]="showClearIcon">
+      <button class="btn btn-outline-secondary btn-sm" (click)="onCancel()" [class.ms-auto]="showClearIcon">
         <span i18n="@@button.cancel">Cancel</span>
       </button>
-      <button class="btn btn-primary btn-sm ml-2" (click)="onSave()"
+      <button class="btn btn-primary btn-sm ms-2" (click)="onSave()"
               data-test="icon-picker-select-button">
         <span i18n="@@button.select">Select</span>
       </button>

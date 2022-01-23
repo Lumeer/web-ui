@@ -5,11 +5,11 @@
       <input type="checkbox" [formControlName]="formControlName.ForceSign" [id]="formControlName.ForceSign" #forceSign>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.sign.label"
+    <span class="ps-2 cursor-pointer user-select-none" i18n="@@constraint.number.sign.label"
           (click)="forceSign.click()">Force sign</span>
-    <i class="fas fa-question-circle ml-1 cursor-help"
-       title="If turned on, there is always the plus or minus sign in front of the number."
-       i18n-title="@@constraint.number.sign.help">
+    <i class="fas fa-question-circle ms-1 cursor-help"
+       tooltip="If turned on, there is always the plus or minus sign in front of the number."
+       i18n-tooltip="@@constraint.number.sign.help">
     </i>
   </div>
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
@@ -17,11 +17,11 @@
       <input type="checkbox" [formControlName]="formControlName.Negative" [id]="formControlName.Negative" #negative>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.negative.label"
+    <span class="ps-2 cursor-pointer user-select-none" i18n="@@constraint.number.negative.label"
           (click)="negative.click()">Accounting negative numbers</span>
-    <i class="fas fa-question-circle ml-1 cursor-help"
-       title="If turned on, the negative numbers are in brackets instead of having the minus sign."
-       i18n-title="@@constraint.number.negative.help">
+    <i class="fas fa-question-circle ms-1 cursor-help"
+       tooltip="If turned on, the negative numbers are in brackets instead of having the minus sign."
+       i18n-tooltip="@@constraint.number.negative.help">
     </i>
   </div>
 
@@ -30,11 +30,11 @@
       <input type="checkbox" [formControlName]="formControlName.Compact" [id]="formControlName.Compact" #compact>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.compact.label"
+    <span class="ps-2 cursor-pointer user-select-none" i18n="@@constraint.number.compact.label"
           (click)="compact.click()">Compact mode</span>
-    <i class="fas fa-question-circle ml-1 cursor-help"
-       title="If turned on, the large numbers are abbreviated with corresponding suffixes like 10k, 12m etc."
-       i18n-title="@@constraint.number.compact.help">
+    <i class="fas fa-question-circle ms-1 cursor-help"
+       tooltip="If turned on, the large numbers are abbreviated with corresponding suffixes like 10k, 12m etc."
+       i18n-tooltip="@@constraint.number.compact.help">
     </i>
   </div>
 
@@ -43,21 +43,21 @@
       <input type="checkbox" [formControlName]="formControlName.Separated" [id]="formControlName.Separated" #separated>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.space.label"
+    <span class="ps-2 cursor-pointer user-select-none" i18n="@@constraint.number.space.label"
           (click)="separated.click()">Thousands separated</span>
-    <i class="fas fa-question-circle ml-1 cursor-help"
-       title="If turned on, uses default thousands currency separator, or a space if currency is not set. E.g. 11 234."
-       i18n-title="@@constraint.number.space.help">
+    <i class="fas fa-question-circle ms-1 cursor-help"
+       tooltip="If turned on, uses default thousands currency separator, or a space if currency is not set. E.g. 11 234."
+       i18n-tooltip="@@constraint.number.space.help">
     </i>
   </div>
 
   <div class="d-flex flex-column pt-3">
-    <label [for]="formControlName.Decimals">
+    <label class="form-label" [for]="formControlName.Decimals">
         <span class="d-inline-block"
               i18n="@@constraint.number.decimals.label">
           Round to no. of decimal digits (0-10):
         </span>
-      <i class="fas fa-question-circle ml-1 cursor-help"
+      <i class="fas fa-question-circle ms-1 cursor-help"
          title="Leave empty for no rounding. Set to 0 for whole numbers. Otherwise specifies the mantissa length."
          i18n-title="@@constraint.number.decimals.help">
       </i>
@@ -72,14 +72,14 @@
            max="10"
            inputmode="numeric"
            type="number">
-    <span class="d-inline-block text-muted small"
+    <span class="d-inline-block text-muted small mt-1"
           i18n="@@constraint.number.decimals.description">
           Leave empty for no rounding.
     </span>
   </div>
 
-  <div class="form-group mt-2">
-    <label i18n="@@constraint.number.currency.label">
+  <div class="mt-2">
+    <label class="form-label" i18n="@@constraint.number.currency.label">
       Currency
     </label>
     <select-item class="w-100 d-block"
@@ -95,14 +95,14 @@
     </select-item>
   </div>
 
-  <p class="text-secondary m-0 mt-2">
+  <p class="text-muted m-0 mt-2">
     <span i18n="@@constraint.example">Example:</span>&nbsp;
     <span>{{ exampleValue$ | async | formatDataValue }}</span>
   </p>
 
   <div class="d-flex mt-3">
-    <div class="form-group flex-grow-1">
-      <label [for]="formControlName.MinValue"
+    <div class="flex-grow-1">
+      <label class="form-label" [for]="formControlName.MinValue"
              i18n="@@constraint.number.minValue.label">
         Minimum value
       </label>
@@ -113,8 +113,8 @@
              type="number">
     </div>
 
-    <div class="form-group ml-3 flex-grow-1">
-      <label [for]="formControlName.MaxValue"
+    <div class="ms-3 flex-grow-1">
+      <label class="form-label" [for]="formControlName.MaxValue"
              i18n="@@constraint.number.maxValue.label">
         Maximum value
       </label>
@@ -128,7 +128,7 @@
 
   <div
     *ngIf="form.errors && form.errors['minMaxInvalid'] && form.controls['maxValue'].touched && form.controls['minValue'].touched"
-    class="text-danger"
+    class="text-danger form-text mt-3"
     i18n="@@form.errors.minMaxInvalid">
     Minimum must be less or equal than maximum.
   </div>

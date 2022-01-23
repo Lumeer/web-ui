@@ -12,31 +12,31 @@
                              (remove)="onRemoved()">
 </select-item-with-constraint>
 
-<div class="custom-control custom-checkbox mt-1" *ngIf="pivotAttribute">
+<div class="form-check mt-1" *ngIf="pivotAttribute">
   <input [id]="showSumsId"
          [attr.checked]="pivotAttribute.showSums"
          [checked]="pivotAttribute.showSums"
          (change)="onShowSumsChange($event.target.checked)"
          type="checkbox"
-         class="custom-control-input">
+         class="form-check-input">
   <label [for]="showSumsId"
-         class="custom-control-label">
+         class="form-check-label">
+    <span i18n="@@perspective.pivot.config.attribute.sums">Show summary</span>
   </label>
-  <span i18n="@@perspective.pivot.config.attribute.sums">Show summary</span>
 </div>
 
-<div class="custom-control custom-checkbox mt-1" *ngIf="canSetSticky && pivotAttribute">
+<div class="form-check mt-1" *ngIf="canSetSticky && pivotAttribute">
   <input [id]="showStickyId"
          [attr.checked]="pivotAttribute.sticky"
          [checked]="pivotAttribute.sticky"
          (change)="onStickyChange($event.target.checked)"
          type="checkbox"
-         class="custom-control-input">
+         class="form-check-input">
   <label [for]="showStickyId"
-         class="custom-control-label">
+         class="form-check-label">
+    <span i18n="@@perspective.pivot.config.attribute.sticky.row" *ngIf="isRow">Fixed column</span>
+    <span i18n="@@perspective.pivot.config.attribute.sticky.column" *ngIf="!isRow">Fixed row</span>
   </label>
-  <span i18n="@@perspective.pivot.config.attribute.sticky.row" *ngIf="isRow">Fixed column</span>
-  <span i18n="@@perspective.pivot.config.attribute.sticky.column" *ngIf="!isRow">Fixed row</span>
 </div>
 
 <pivot-attribute-sort

@@ -1,5 +1,5 @@
 <div class="d-flex flex-row justify-content-start align-items-center" *ngIf="resource" id="dropdown-header">
-  <i class="fas fa-chevron-left chevron mr-2 cursor-pointer clickable"
+  <i class="fas fa-chevron-left chevron me-2 cursor-pointer clickable"
      title="Back to App" i18n-title="@@resource.settings.back"
      (click)="onBack()"></i>
   <i class="fa-fw {{ resource.icon }} cursor-pointer"
@@ -34,7 +34,7 @@
     [filter]="firstLineFilter">
   </input-box>
 
-  <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
+  <div class="d-flex flex-row flex-nowrap align-items-center ms-auto">
     <ng-content></ng-content>
     <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger">
       <i *ngIf="!resource.nonRemovable && permissions?.roles?.Manage" class="far fa-fw fa-trash-alt"
@@ -51,7 +51,7 @@
   This {resourceType, select, organization {code} project {code} collection {name}} is already taken. Try another one!
 </small>
 
-<div class="col mr-auto py-2 px-0" *ngIf="codeVisible">
+<div class="col me-auto py-2 px-0" *ngIf="codeVisible">
   <input-box
     [initialValue]="secondLineValue"
     [color]="resource.color"
@@ -69,7 +69,7 @@
 </div>
 
 <div class="pt-3 px-3 d-flex">
-  <i class="fas fa-2x fa-quote-right pr-2 mt-2"></i>
+  <i class="fas fa-2x fa-quote-right pe-2 mt-2"></i>
   <input-box
     class="d-flex pb-3 pt-1"
     [initialValue]="resource.description"

@@ -6,8 +6,8 @@
     </span>
   </div>
 
-  <div class="form-group mt-4 mb-0">
-    <label i18n="@@constraint.action.automation.label">Automation</label>
+  <div class=" mt-4 mb-0">
+    <label class="form-label" i18n="@@constraint.action.automation.label">Automation</label>
     <select-item class="w-100 d-block"
                  [selectedId]="ruleControl.value"
                  [removable]="false"
@@ -21,8 +21,8 @@
 
   <div class="mt-3 mb-0 btn btn-link px-0" i18n="@@constraint.action.lock.label" (click)="configureLock()">Set when this button can be clicked...</div>
 
-  <div class="form-group mt-3 mb-0">
-    <label [for]="formControlName.TitleUser"
+  <div class="mt-3 mb-0">
+    <label class="form-label" [for]="formControlName.TitleUser"
            i18n="@@constraint.action.title.label">Button Design</label>
     <input class="form-control"
            [formControlName]="formControlName.TitleUser"
@@ -31,7 +31,7 @@
            [id]="formControlName.TitleUser" type="text">
   </div>
   <div *ngIf="form.errors && form.errors.iconOrTitleEmpty"
-       class="small text-danger mt-1" i18n="@@constraint.action.title.error">
+       class="small text-danger mt-1 form-text" i18n="@@constraint.action.title.error">
     Either icon or button title is required.
   </div>
 

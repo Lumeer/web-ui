@@ -2,7 +2,7 @@
   <div class="d-flex">
     <ng-container *ngIf="resources?.length">
       <button type="button" class="btn btn-link p-0" (click)="onButtonClick()">
-        <i class="fa fa-plus mr-2"></i><span i18n="@@create.new.document">Create New Record</span>
+        <i class="fa fa-plus me-2"></i><span i18n="@@create.new.document">Create New Record</span>
       </button>
 
       <options-dropdown [fitParent]="false"
@@ -14,7 +14,7 @@
       </options-dropdown>
     </ng-container>
 
-    <div class="align-self-center flex-fill text-right small text-muted">
+    <div class="align-self-center flex-fill text-end small text-muted">
       <span
         i18n="@@kanban.perspective.footer.cards">{count, plural, =0 {no cards} one {1 card} few {{{count}} cards} other {{{count}} cards}}</span>
     </div>

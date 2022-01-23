@@ -1,12 +1,12 @@
-<div class="panel-item invite ml-2 mr-1 position-relative"
+<div class="panel-item invite ms-2 me-1 position-relative"
      *ngIf="(projectPermissions$ | async)?.roles?.UserConfig">
   <button *ngIf="!mobile; else mobileIcon"
-          class="btn btn-success btn-sm align-baseline font-weight-bold"
+          class="btn btn-success btn-sm align-baseline fw-bold"
           tooltip="Invite a colleague"
           i18n-tooltip="@@inviteUser.button.title"
           placement="bottom"
           (click)="onInviteUser()">
-    <i class="fas fa-user-plus mr-2"></i>
+    <i class="fas fa-user-plus me-2"></i>
     <span i18n="@@inviteUser.button.text">Invite</span>
   </button>
   <hint *ngIf="!((projectUsers$ | async) > 1)" title="You are all alone here" i18n-title="@inviteUser.hint.title">
@@ -15,7 +15,7 @@
 </div>
 
 <ng-template #mobileIcon>
-  <i class="fas fa-user-plus mr-2 text-success align-baseline cursor-pointer"
+  <i class="fas fa-user-plus me-2 text-success align-baseline cursor-pointer"
      tooltip="Invite a colleague"
      i18n-tooltip="@@inviteUser.button.title"
      placement="bottom"

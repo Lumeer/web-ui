@@ -114,6 +114,7 @@ export class FilesDropdownComponent implements AfterViewInit {
     this.fileSizeError$.next(
       $localize`:@@file.upload.max.size.error:Cannot process files bigger than ${size}:size: MB. Please upload smaller file.`
     );
+    setTimeout(() => this.dropdown?.updatePosition());
   }
 
   public onRemoveFileAttachment(fileId: string) {
@@ -129,9 +130,7 @@ export class FilesDropdownComponent implements AfterViewInit {
   }
 
   public close() {
-    if (this.dropdown) {
-      this.dropdown.close();
-    }
+    this.dropdown?.close();
   }
 
   public onAttachmentClick(file: FileAttachment) {

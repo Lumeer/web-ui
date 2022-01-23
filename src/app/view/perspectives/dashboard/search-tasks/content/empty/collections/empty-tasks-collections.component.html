@@ -5,7 +5,7 @@
   <button type="button"
           class="btn btn-sm btn-primary mt-3"
           (click)="onCreate()">
-    <span *ngIf="creatingData$ | async" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
-    <span class="font-weight-bold" i18n="@@tasks.empty.collections.button">Create Tasks Table</span>
+    <span *ngIf="creatingData$ | async" class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
+    <span class="fw-bold" i18n="@@tasks.empty.collections.button">Create Tasks Table</span>
   </button>
 </empty-state>

@@ -19,6 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {keyboardEventCode, KeyCode} from '../../../../../key-code';
+import {isEmailValid} from '../../../../../utils/email.utils';
 
 @Component({
   selector: 'new-user',
@@ -40,8 +41,9 @@ export class NewUserComponent {
   public userCreated = new EventEmitter<string>();
 
   public email: string;
-  public isDuplicate: boolean = false;
-  public isAllowed: boolean = true;
+  public isDuplicate = false;
+  public isAllowed = true;
+  public isValid = false;
 
   public onAddUser() {
     if (this.allowedUsers && this.allowedUsers.length) {
@@ -54,12 +56,15 @@ export class NewUserComponent {
   }
 
   private addUser() {
-    this.userCreated.emit(this.email);
-    this.clearInputs();
+    if (!this.isDuplicate && this.isValid) {
+      this.userCreated.emit(this.email);
+      this.clearInputs();
+    }
   }
 
   public onInputChanged(value: string) {
     this.email = value;
+    this.isValid = isEmailValid(value);
     this.checkDuplicates();
     this.checkAllowed();
   }
@@ -84,7 +89,7 @@ export class NewUserComponent {
   }
 
   public onKeyPress(event: KeyboardEvent) {
-    if (!this.isDuplicate && keyboardEventCode(event) === KeyCode.Enter) {
+    if (keyboardEventCode(event) === KeyCode.Enter) {
       this.addUser();
       event.stopImmediatePropagation();
       event.preventDefault();

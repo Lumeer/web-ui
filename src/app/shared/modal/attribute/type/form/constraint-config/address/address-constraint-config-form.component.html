@@ -17,7 +17,7 @@
       <div *ngFor="let option of options"
            cdkDrag
            class="cursor-move m-1">
-        <ng-container *ngTemplateOutlet="addressField; context: {$implicit: option, badgeClass: 'badge-secondary'}"></ng-container>
+        <ng-container *ngTemplateOutlet="addressField; context: {$implicit: option, badgeClass: 'bg-secondary'}"></ng-container>
       </div>
     </div>
 
@@ -32,7 +32,7 @@
       <div *ngFor="let option of fieldsControl.value"
            cdkDrag
            class="cursor-move m-1">
-        <ng-container *ngTemplateOutlet="addressField; context: {$implicit: option, badgeClass: 'badge-primary'}"></ng-container>
+        <ng-container *ngTemplateOutlet="addressField; context: {$implicit: option, badgeClass: 'bg-primary'}"></ng-container>
       </div>
     </div>
   </div>

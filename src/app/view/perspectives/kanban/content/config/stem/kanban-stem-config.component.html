@@ -50,7 +50,7 @@
 <ng-container *ngIf="config?.dueDate && attribute && attributeResource">
   <ng-container
     *ngIf="attributeResource?.attributes | stateListConstraint:attribute.id:(dataResources$ | async):constraintData as stateConstraintData">
-    <div class="mt-2 font-weight-bold" i18n="@@kanban.config.collection.doneAttribute">
+    <div class="mt-2 fw-bold" i18n="@@kanban.config.collection.doneAttribute">
       Done state
     </div>
     <data-input class="py-0 px-1 form-control multiline d-flex align-items-center cursor-pointer"

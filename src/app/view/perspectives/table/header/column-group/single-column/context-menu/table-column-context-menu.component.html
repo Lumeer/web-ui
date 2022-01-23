@@ -9,7 +9,7 @@
             [disabled]="!allowedPermissions?.roles?.AttributeEdit"
             (click)="onClick($event); edit.emit()"
             data-test="table-column-menu-edit-name">
-      <i class="fa fa-fw fa-edit mr-1"
+      <i class="fa fa-fw fa-edit me-1"
          aria-hidden="true">
       </i>
       <span i18n="@@table.header.menu.edit">Edit name</span>
@@ -19,7 +19,7 @@
               [disabled]="!allowedPermissions?.roles?.AttributeEdit"
               (click)="onClick($event); configure.emit()"
               data-test="table-column-menu-change-constraint">
-        <i class="fa fa-fw fa-shapes mr-1"
+        <i class="fa fa-fw fa-shapes me-1"
            aria-hidden="true">
         </i>
         <span i18n="@@table.header.menu.changeType">Attribute settings...</span>
@@ -27,7 +27,7 @@
       <button mat-menu-item
               [disabled]="!allowedPermissions?.roles?.TechConfig"
               (click)="onClick($event); functionEdit.emit()">
-        <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>
+        <i class="fa fa-fw fa-function me-1" aria-hidden="true"></i>
         <span *ngIf="attribute?.constraint?.type !== type.Action"
               i18n="@@table.header.menu.editFunction">Edit function...</span>
         <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editAutomation">Edit automation...</span>
@@ -35,7 +35,7 @@
       <button mat-menu-item
               [disabled]="!allowedPermissions?.roles?.AttributeEdit"
               (click)="onClick($event); lockSettings.emit()">
-        <i class="fa fa-fw fa-lock-open mr-1"
+        <i class="fa fa-fw fa-lock-open me-1"
            aria-hidden="true">
         </i>
         <span i18n="@@table.header.menu.lockSettings">Locking...</span>
@@ -44,14 +44,14 @@
       <button mat-menu-item
               [disabled]="!allowedPermissions?.roles?.AttributeEdit"
               (click)="onClick($event); descriptionEdit.emit()">
-        <i class="fa fa-fw fa-file-edit mr-1" aria-hidden="true"></i>
+        <i class="fa fa-fw fa-file-edit me-1" aria-hidden="true"></i>
         <span i18n="@@table.header.menu.editDescription">Edit description...</span>
       </button>
       <button *ngIf="!defaultAttribute"
               mat-menu-item
               [disabled]="!allowedPermissions?.roles?.AttributeEdit"
               (click)="onClick($event); setDefaultAttribute.emit()">
-        <i class="fa fa-fw fa-check-square mr-1"
+        <i class="fa fa-fw fa-check-square me-1"
            aria-hidden="true">
         </i>
         <span i18n="@@table.header.menu.defaultAttribute">Set as displayed attribute</span>
@@ -60,7 +60,7 @@
     <hr class="my-2">
     <button mat-menu-item class="prevent-click" [matMenuTriggerFor]="copyMenu">
       <div class="d-flex align-items-baseline">
-        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <i class="far fa-fw fa-copy me-1" aria-hidden="true"></i>
         <span class="flex-grow-1" i18n="@@copy">Copy</span>
       </div>
     </button>
@@ -69,7 +69,7 @@
             [disabled]="!allowedPermissions?.roles?.AttributeEdit"
             mat-menu-item
             data-test="table-column-menu-add-right">
-      <i class="fa fa-fw fa-arrow-alt-circle-right mr-1"
+      <i class="fa fa-fw fa-arrow-alt-circle-right me-1"
          aria-hidden="true">
       </i>
       <span i18n="@@table.header.menu.add.column.next">Add column right</span>
@@ -78,7 +78,7 @@
             [disabled]="!allowedPermissions?.roles?.AttributeEdit"
             mat-menu-item
             data-test="table-column-menu-add-left">
-      <i class="fa fa-fw fa-arrow-alt-circle-left mr-1"
+      <i class="fa fa-fw fa-arrow-alt-circle-left me-1"
          aria-hidden="true">
       </i>
       <span i18n="@@table.header.menu.add.column.previous">Add column left</span>
@@ -88,7 +88,7 @@
             [disabled]="!allowedPermissions?.roles?.AttributeEdit"
             (click)="onClick($event); split.emit()"
             mat-menu-item>
-      <i class="fa fa-fw fa-columns text-warning mr-1"
+      <i class="fa fa-fw fa-columns text-warning me-1"
          aria-hidden="true">
       </i>
       <span i18n="@@table.header.menu.split">Split column</span>
@@ -97,7 +97,7 @@
             [disabled]="!canManageConfig"
             mat-menu-item
             (click)="onClick($event); hide.emit()">
-      <i class="fa fa-fw fa-eye-slash mr-1"
+      <i class="fa fa-fw fa-eye-slash me-1"
          aria-hidden="true">
       </i>
       <span i18n="@@table.header.menu.hide">Hide column</span>
@@ -105,7 +105,7 @@
     <button (click)="onClick($event); remove.emit()"
             [disabled]="!allowedPermissions?.roles?.AttributeEdit"
             mat-menu-item>
-      <i class="far fa-fw fa-trash-alt text-danger mr-1"
+      <i class="far fa-fw fa-trash-alt text-danger me-1"
          aria-hidden="true">
       </i>
       <span i18n="@@table.header.menu.remove">Delete column</span>
@@ -117,20 +117,20 @@
   <ng-template matMenuContent>
     <button mat-menu-item (click)="onClick($event); onCopyName()">
       <div class="d-flex align-items-baseline">
-        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <i class="far fa-fw fa-copy me-1" aria-hidden="true"></i>
         <span class="flex-grow-1" i18n="@@resource.attribute.name">Copy column name</span>
-        <small class="text-secondary ml-3">{{macOS ? '⌘ C' : 'Ctrl + C'}}</small>
+        <small class="text-secondary ms-3">{{macOS ? '⌘ C' : 'Ctrl + C'}}</small>
       </div>
     </button>
     <button mat-menu-item (click)="onClick($event); onCopyValues()">
       <div class="d-flex align-items-baseline">
-        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <i class="far fa-fw fa-copy me-1" aria-hidden="true"></i>
         <span class="flex-grow-1" i18n="@@table.header.menu.copy.values">Copy all column values</span>
       </div>
     </button>
     <button mat-menu-item (click)="onClick($event); onCopyValues(true)">
       <div class="d-flex align-items-baseline">
-        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <i class="far fa-fw fa-copy me-1" aria-hidden="true"></i>
         <span class="flex-grow-1" i18n="@@table.header.menu.copy.values.unique">Copy unique column values</span>
       </div>
     </button>

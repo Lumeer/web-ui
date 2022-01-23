@@ -1,7 +1,7 @@
 <div class="d-flex flex-row flex-wrap justify-content-center">
 
   <div *ngFor="let collection of collections; let index = index"
-       class="card post-it cursor-pointer mr-4 mb-4" (click)="select(collection, index)">
+       class="card post-it cursor-pointer me-4 mb-4" (click)="select(collection, index)">
 
     <div class="card-body text-center">
       <div [style.color]="collection.color"

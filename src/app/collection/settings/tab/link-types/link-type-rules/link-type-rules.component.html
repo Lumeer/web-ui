@@ -1,5 +1,5 @@
 <div class="d-flex pb-3">
-  <ul class="list-group pl-5 flex-fill"
+  <ul class="list-group ps-5 flex-fill"
       *ngIf="{rulesLimit: rulesCountLimit$ | async, ruleNames: ruleNames$ | async, editingRules: editingRules$ | async} as data">
     <li
       *ngIf="!(linkType?.rules)"
@@ -59,7 +59,7 @@
       You can have only a single automation in the Free Plan.
     </span>
     <button
-      class="btn btn-sm btn-success ml-3"
+      class="btn btn-sm btn-success ms-3"
       (click)="openServiceOrder()">
       <span i18n="@@collection.config.tab.rules.upgradePlan">Upgrade to Business Plan!</span>
     </button>

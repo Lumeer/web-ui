@@ -20,10 +20,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DataSettingsComponent} from './data-settings.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [DataSettingsComponent],
   exports: [DataSettingsComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, TooltipModule],
 })
 export class DataSettingsModule {}

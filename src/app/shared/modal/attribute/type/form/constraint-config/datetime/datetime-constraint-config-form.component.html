@@ -4,12 +4,12 @@
       <input type="checkbox" [formControlName]="formControlName.Utc" [id]="formControlName.Utc" #utc>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.dateTime.config.utc"
+    <span class="ps-2 cursor-pointer user-select-none" i18n="@@constraint.dateTime.config.utc"
           (click)="utc.click()">Time is always in UTC</span>
   </div>
 
-  <div class="form-group mt-3">
-    <label i18n="@@constraint.dateTime.format.label">
+  <div class="mt-3">
+    <label class="form-label" i18n="@@constraint.dateTime.format.label">
       Format
     </label>
     <select-item class="w-100 d-block"
@@ -21,9 +21,8 @@
                  data-test="datetime-constraint-format-select">
     </select-item>
   </div>
-  <div *ngIf="!formatControl?.value"
-       class="d-flex">
-    <div class="form-group flex-fill">
+  <div *ngIf="!formatControl?.value" class="d-flex">
+    <div class="flex-fill mt-3">
       <input class="form-control"
              formControlName="customFormat"
              spellcheck="false"
@@ -31,17 +30,17 @@
     </div>
     <div class="align-baseline">
       <a [href]="helpUrl" target="_blank" class="text-primary">
-        <i class="help fa-fw far fa-question-circle ml-1"></i>
+        <i class="help fa-fw far fa-question-circle ms-1"></i>
       </a>
     </div>
   </div>
-  <div class="mb-3">
+  <div class="mt-3 text-muted">
     <em><span i18n="@@constraint.example">Example:</span> {{ exampleValue$ | async | formatDataValue }}</em>
   </div>
 
-  <div class="d-flex">
-    <div class="form-group flex-grow-1">
-      <label for="dateTimeMinValue"
+  <div class="d-flex mt-3">
+    <div class=" flex-grow-1">
+      <label class="form-label" for="dateTimeMinValue"
              i18n="@@constraint.dateTime.minValue.label">
         Minimum value
       </label>
@@ -53,8 +52,8 @@
       </date-time-input>
     </div>
 
-    <div class="form-group ml-3 flex-grow-1">
-      <label for="dateTimeMaxValue"
+    <div class="ms-3 flex-grow-1">
+      <label class="form-label" for="dateTimeMaxValue"
              i18n="@@constraint.dateTime.maxValue.label">
         Maximum value
       </label>
@@ -68,19 +67,19 @@
   </div>
 
   <div *ngIf="form.errors && form.errors['minMaxInvalid']"
-       class="text-danger"
+       class="text-danger form-text"
        i18n="@@form.errors.minMaxInvalid">
     Minimum must be less or equal than maximum.
   </div>
 
   <div *ngIf="form.errors && form.errors['customEmpty']"
-       class="text-danger"
+       class="text-danger form-text"
        i18n="@@form.date.errors.customEmpty">
     Format can not be empty.
   </div>
 
   <div *ngIf="form.errors && form.errors['customInvalid']"
-       class="text-danger"
+       class="text-danger form-text"
        i18n="@@form.date.errors.customInvalid">
     I am sorry, but this format is not supported. Please enter valid format.
   </div>

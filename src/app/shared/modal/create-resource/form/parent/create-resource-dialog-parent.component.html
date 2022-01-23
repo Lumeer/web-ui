@@ -1,6 +1,6 @@
 <ng-container *ngIf="{parent: parent$ | async, isFirst: first$ | async} as data">
   <div *ngIf="data.parent" class="border-top pt-2">
-    <span class="mr-2"
+    <span class="me-2"
           i18n="@@resource.new.dialog.project.subtitle">Create a new project in organization:</span><br/>
 
     <div class="m-2">
@@ -8,7 +8,7 @@
       <span [style.color]="data.parent.color">[{{data.parent.code}}] {{data.parent.name}}</span>
     </div>
 
-    <div *ngIf="data.isFirst" class="mr-2 alert alert-danger"
+    <div *ngIf="data.isFirst" class="me-2 alert alert-danger"
           i18n="@@resource.new.dialog.project.subtitle.first">Your organization is missing a project. To continue, please create one.</div>
   </div>
 

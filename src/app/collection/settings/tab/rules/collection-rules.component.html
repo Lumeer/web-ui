@@ -10,7 +10,7 @@
 
       <li
         *ngFor="let rule of data.collection?.rules; let idx = index; trackBy:trackByRuleName"
-        class="list-group-item flex-column align-items-center">
+        class="list-group-item py-2-5 flex-column align-items-center">
         <add-rule-form
           *ngIf="data.editingRules[rule.id]"
           [collection]="data.collection"
@@ -34,7 +34,7 @@
 
       <li
         *ngFor="let newRule of addingRules; let idx = index;"
-        class="list-group-item flex-column align-items-center">
+        class="list-group-item py-2-5 flex-column align-items-center">
         <add-rule-form
           [collection]="data.collection"
           [rule]="newRule"
@@ -49,7 +49,7 @@
         *ngIf="data.collection && (data.rulesLimit === -1 || data.rulesLimit > data.collection.rules.length); else freePlan"
         add-rule
         (click)="onNewRule()"
-        class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">
+        class="list-group-item py-2-5 list-group-item-action flex-column align-items-center cursor-pointer">
       </li>
     </ul>
   </div>
@@ -61,7 +61,7 @@
       You can have only a single automation in the Free Plan.
     </span>
     <button
-      class="btn btn-sm btn-success ml-3"
+      class="btn btn-sm btn-success ms-3"
       (click)="openServiceOrder()">
       <span i18n="@@collection.config.tab.rules.upgradePlan">Upgrade to Business Plan!</span>
     </button>

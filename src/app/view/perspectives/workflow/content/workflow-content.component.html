@@ -6,8 +6,8 @@
                    (widthChanged)="sidebarResize.emit($event)">
 
   <workflow-tables class="d-block content"
-                   [class.mr-3]="perspectiveConfiguration?.additionalSpace && (!selectedDocument || !selectedCollection)"
-                   [class.ml-3]="perspectiveConfiguration?.additionalSpace"
+                   [class.me-3]="perspectiveConfiguration?.additionalSpace && (!selectedDocument || !selectedCollection)"
+                   [class.ms-3]="perspectiveConfiguration?.additionalSpace"
                    [class.pb-3]="perspectiveConfiguration?.additionalSpace"
                    [collections]="collections"
                    [data]="data"
@@ -26,7 +26,7 @@
                    (configChange)="configChange.emit($event)">
   </workflow-tables>
 
-  <workflow-sidebar class="d-block sidebar mr-1"
+  <workflow-sidebar class="d-block sidebar me-1"
                     *ngIf="selectedDocument && selectedCollection"
                     [query]="query"
                     [isEmbedded]="isEmbedded"

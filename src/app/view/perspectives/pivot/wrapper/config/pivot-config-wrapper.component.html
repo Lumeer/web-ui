@@ -1,4 +1,4 @@
-<div class="custom-control custom-checkbox" *ngIf="config?.stemsConfigs?.length > 1"
+<div class="form-check" *ngIf="config?.stemsConfigs?.length > 1"
      [class.mb-4]="!pivotData || pivotData.ableToMerge || !pivotData.mergeTables">
   <input id="mergeTablesCheckbox"
          [attr.checked]="config.mergeTables"
@@ -6,9 +6,9 @@
          (change)="onMergeTablesChange($event.target.checked)"
          type="checkbox"
          #checkbox
-         class="custom-control-input">
+         class="form-check-input">
   <label for="mergeTablesCheckbox"
-         class="custom-control-label">
+         class="form-check-label">
   </label>
   <span i18n="@@perspective.pivot.config.merge" class="user-select-none cursor-pointer" (click)="checkbox.click()">Merge tables</span>
 </div>

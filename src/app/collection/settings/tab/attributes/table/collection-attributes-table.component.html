@@ -1,5 +1,5 @@
 <h4 i18n="@@collections.tab.attributes.header">Existing attributes</h4>
-<table class="table table-striped table-sm">
+<table class="table table-borderless table-striped table-sm">
   <thead [style.background-color]="collection.color | lightenColor:.5">
   <tr>
     <th class="text-center" style="width: 3rem;">
@@ -9,12 +9,10 @@
     </th>
     <th i18n="@@collections.tab.attributes.attribute">Attribute</th>
     <th i18n="@@collections.tab.attributes.usage">Usage Count</th>
-    <th style="width: 30%;" class="text-right">
+    <th style="width: 30%;" class="text-end">
       <div class="input-group input-group-sm">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
-        </div>
-        <input id="attributeSearch" class="form-control mr-1" type="search"
+        <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
+        <input id="attributeSearch" class="form-control me-1" type="search"
                placeholder="Search attribute..."
                inputmode="search"
                i18n-placeholder="@@collections.tab.attributes.search.placeholder"
@@ -45,7 +43,7 @@
     <td class="align-middle">
       <input-box
         innerClass="bg-transparent"
-        [class.font-weight-bold]="attribute.id | isDefaultAttribute:collection"
+        [class.fw-bold]="attribute.id | isDefaultAttribute:collection"
         [canStayEmpty]="true"
         [userData]="false"
         [title]="attribute.name"
@@ -58,30 +56,30 @@
       </input-box>
     </td>
     <td class="align-middle">
-          <span [class.font-weight-bold]="attribute.id | isDefaultAttribute:collection">
+          <span [class.fw-bold]="attribute.id | isDefaultAttribute:collection">
             {{attribute.usageCount}}
           </span>
     </td>
-    <td class="text-right align-middle">
+    <td class="text-end align-middle">
       <div class="d-flex align-items-center justify-content-end">
-        <i class="fa-fw cursor-pointer mr-2"
+        <i class="fa-fw cursor-pointer me-2"
            [ngClass]="attribute.constraint?.type !== constraintType.Unknown ? 'text-success ' + (attribute?.constraint | constraintTypeIcon) : 'text-primary far fa-shapes'"
            (click)="onAttributeType(attribute)"
            [title]="attribute.constraint | constraintTypeIconTitle">
         </i>
         <i *ngIf="permissions?.roles?.TechConfig && attribute?.constraint?.type !== constraintType.Action"
-           class="fa-fw fa-function cursor-pointer mr-2"
+           class="fa-fw fa-function cursor-pointer me-2"
            [ngClass]="(attribute | attributeFunctionDefined:collection.rules) ? 'fa text-success' : 'far text-primary'"
            (click)="onAttributeFunction(attribute)"
            title="Edit function..." i18n-title="@@table.header.menu.editFunction">
         </i>
         <i *ngIf="permissions?.roles?.TechConfig && attribute?.constraint?.type === constraintType.Action"
-           class="fa-fw fa-function cursor-pointer mr-2"
+           class="fa-fw fa-function cursor-pointer me-2"
            [ngClass]="(attribute | attributeFunctionDefined:collection.rules) ? 'fa text-success' : 'far text-primary'"
            (click)="onAttributeFunction(attribute)"
            title="Edit automation..." i18n-title="@@table.header.menu.editAutomation">
         </i>
-        <i class="far fa-fw fa-trash-alt text-danger cursor-pointer mr-1"
+        <i class="far fa-fw fa-trash-alt text-danger cursor-pointer me-1"
            (click)="onDeleteAttribute(attribute)"
            title="Remove Attribute" i18n-title="@@remove.attribute">
         </i>

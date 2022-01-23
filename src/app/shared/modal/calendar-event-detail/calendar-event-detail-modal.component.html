@@ -16,7 +16,7 @@
   } as data">
 
     <select-item *ngIf="!dataResource"
-                 class="d-block mr-2"
+                 class="d-block me-2"
                  [items]="query$ | async | stemCollectionsItems:config:data.collections:data.linkTypes:data.permissions"
                  [removable]="false"
                  [fitParent]="false"
@@ -24,16 +24,16 @@
                  (selected)="onStemIndexSelect($event)">
     </select-item>
 
-    <div class="custom-control custom-checkbox"
+    <div class="form-check"
          *ngIf="config | canToggleAllDay:data.stemIndex:data.collections:data.linkTypes:data.permissions">
       <input id="allDayCheckbox"
              [attr.checked]="allDay$ | async"
              [checked]="allDay$ | async"
              (change)="onAllDayChecked($event.target.checked)"
              type="checkbox"
-             class="custom-control-input">
+             class="form-check-input">
       <label for="allDayCheckbox"
-             class="custom-control-label">
+             class="form-check-label">
       </label>
       <span i18n="@@dialog.create.calendar.event.allDay">All day event</span>
     </div>

@@ -6,7 +6,7 @@
   overflow: auto;
 }
 
-@include media-breakpoint-down(xs) {
+@include media-breakpoint-down(md) {
   .nav-link {
     padding: 0.5rem 0.8rem;
   }

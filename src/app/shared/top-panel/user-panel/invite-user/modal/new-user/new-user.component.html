@@ -1,6 +1,6 @@
 <form class="p-3">
 
-  <ng-container *ngIf="allowedUsers && allowedUsers.length; else noAllowedUsers">
+  <ng-container *ngIf="allowedUsers?.length; else noAllowedUsers">
     <div class="input-group">
       <input ngModel [value]="email" name="emailDropdown" #emailDropdown="ngModel"
              id="emailDropdown" class="form-control form-control-sm" type="email"
@@ -16,8 +16,8 @@
                 class="btn btn-sm btn-success"
                 [disabled]="isDuplicate || !isAllowed"
                 (click)="onAddUser()">
-          <i class="fas fa-plus mr-2"></i>
-          <span class="font-weight-bold" i18n="@@inviteUser.dialog.button">Add</span>
+          <i class="fas fa-plus me-2"></i>
+          <span class="fw-bold" i18n="@@inviteUser.dialog.button">Add</span>
         </button>
       </div>
     </div>
@@ -31,7 +31,7 @@
 
   <ng-template #noAllowedUsers>
     <div class="input-group">
-      <input ngModel [value]="email" name="emailField" #emailField="ngModel"
+      <input [value]="email" name="emailField" #emailField="ngModel" ngModel
              id="emailField" class="form-control form-control-sm" type="email"
              [placeholder]="emailPlaceHolder()"
              (keypress)="onKeyPress($event)"
@@ -39,15 +39,15 @@
       <div class="input-group-append">
         <button type="button"
                 class="btn btn-sm btn-success"
-                [disabled]="emailField.invalid || !email || isDuplicate"
+                [disabled]="!isValid || isDuplicate"
                 (click)="onAddUser()">
-          <i class="fas fa-plus mr-2"></i>
-          <span class="font-weight-bold" i18n="@@inviteUser.dialog.button">Add</span>
+          <i class="fas fa-plus me-2"></i>
+          <span class="fw-bold" i18n="@@inviteUser.dialog.button">Add</span>
         </button>
       </div>
     </div>
     <div class="flex-row pt-1">
-      <small id="emailValid" class="invalid-message" *ngIf="emailField.invalid && emailField.touched" i18n="@@inviteUser.dialog.user.email.invalid">
+      <small id="emailValid" class="invalid-message" *ngIf="!isValid && emailField.touched" i18n="@@inviteUser.dialog.user.email.invalid">
         Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
       </small>
       <small class="invalid-message" *ngIf="isDuplicate" i18n="@@inviteUser.dialog.email.duplicate">

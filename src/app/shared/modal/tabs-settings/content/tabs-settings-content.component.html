@@ -25,8 +25,8 @@
   <div class="d-flex flex-wrap align-items-center tabs-list">
 
     <div *ngFor="let tab of tabs$ | async; let index = index; let last = last; trackBy: trackByTab" class="position-relative tab cursor-pointer mt-1"
-         [class.mr-2]="last"
-         [class.mr-1]="!last"
+         [class.me-2]="last"
+         [class.me-1]="!last"
          [class.dragging]="(draggedTabId$ | async) === tab.id"
          [draggable]="editable"
          (dragstart)="onDragStart(tab)"

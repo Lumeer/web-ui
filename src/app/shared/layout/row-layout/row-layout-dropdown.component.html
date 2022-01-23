@@ -11,7 +11,7 @@
 
     <a class="dropdown-item py-2" *ngFor="let layout of layouts" (click)="onChooseLayout(layout)"
        [class.selectable]="showSelection">
-      <i *ngIf="showSelection" class="fa-fw far mr-2" [ngClass]="(layout | isLayoutSelected:selectedLayout) ? 'fa-check' : 'fa-none'"></i>
+      <i *ngIf="showSelection" class="fa-fw far me-2" [ngClass]="(layout | isLayoutSelected:selectedLayout) ? 'fa-check' : 'fa-none'"></i>
       <div class="layout" [style.grid-template-columns]="layout | layoutTemplateColumns">
         <div *ngFor="let item of layout" class="layout-item"></div>
       </div>

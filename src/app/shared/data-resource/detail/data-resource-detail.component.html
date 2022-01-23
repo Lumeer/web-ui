@@ -62,7 +62,7 @@
                         (newCommentClick)="editNewComment()">
         </comments-panel>
         <div *ngIf="data.commentsCount > 1">
-          <button class="btn btn-sm btn-success font-weight-bold my-3 mx-1"
+          <button class="btn btn-sm btn-success fw-bold my-3 mx-1"
                   i18n="@@document.detail.detail.comments.seeAll"
                   (click)="selectTab(detailTabType.Comments)">
             See {data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}} {{data.commentsCount}}
@@ -73,7 +73,7 @@
     </ng-container>
 
     <div *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
-      <links-toolbar class="d-block w-100 text-right"
+      <links-toolbar class="d-block w-100 text-end"
                      [collection]="resource"
                      [view]="data.currentView"
                      [permissions]="dataResourceData.permissions"

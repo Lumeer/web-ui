@@ -1,9 +1,9 @@
 <icons-presenter *ngIf="resource | resourceIconsColors as iconsColors"
-                 class="mr-1"
+                 class="me-1"
                  [colors]="iconsColors.colors"
                  [icons]="iconsColors.icons">
 </icons-presenter>
-<data-input-preview class="font-weight-bold d-inline-block"
+<data-input-preview class="fw-bold d-inline-block"
                     *ngIf="title.constraint?.type !== constraintType.Action"
                     [dataValue]="title.dataValue"
                     [configuration]="configuration"

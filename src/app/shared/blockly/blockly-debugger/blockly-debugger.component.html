@@ -1,4 +1,4 @@
-<div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-start border-top pt-3" #myDiv  (rendered)="recomputeWidth($event)">
+<div *ngIf="displayDebug" class="rollout d-flex flex-wrap align-items-center justify-content-start border-top pt-3" #myDiv  (rendered)="recomputeWidth($event)">
   <div *ngIf="displayDebug === displayTypes.DisplayJs">
     <h5 i18n="@@shared.blockly.debugger.source">Blockly Source Code</h5>
     <small class="text-muted">
@@ -34,12 +34,12 @@
     <p *ngIf="!blocklyError" i18n="@@shared.blockly.debugger.noError">No error recorded.</p>
   </div>
 </div>
-<div *ngIf="displayDebug" class="rollout form-group d-flex flex-wrap align-items-center justify-content-end border-bottom pb-3">
+<div *ngIf="displayDebug" class="rollout d-flex flex-wrap align-items-center justify-content-end border-bottom pb-3">
   <button
     type="button"
     class="btn btn-sm btn-primary"
     (click)="display(displayTypes.DisplayNone, $event)">
     <i class="fas fa-times"></i>&nbsp;
-    <span class="font-weight-bold" i18n="@@button.close">Close</span>
+    <span class="fw-bold" i18n="@@button.close">Close</span>
   </button>
 </div>

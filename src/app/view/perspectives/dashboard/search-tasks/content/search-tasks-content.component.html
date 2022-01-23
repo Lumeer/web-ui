@@ -59,8 +59,8 @@
 
       <div class="d-flex flex-nowrap align-items-center p-1" *ngIf="data.truncateContent">
         <i *ngIf="currentSize !== sizeType.L" class="fa fa-fw fa-none" aria-hidden="true"></i>
-        <i class="fa fa-fw fa-none align-self-center mr-2"
-           [class.ml-2]="currentSize === sizeType.L"
+        <i class="fa fa-fw fa-none align-self-center me-2"
+           [class.ms-2]="currentSize === sizeType.L"
            [ngClass]="currentSize === sizeType.M || currentSize === sizeType.L ? 'fa-2x' : 'bigger-icon'"
            aria-hidden="true">
         </i>

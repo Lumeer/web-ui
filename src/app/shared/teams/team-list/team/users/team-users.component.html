@@ -1,6 +1,6 @@
-<div class="d-flex align-items-center h-100 pr-1 py-1 flex-wrap" #wrapperElement
+<div class="d-flex align-items-center h-100 pe-1 py-1 flex-wrap" #wrapperElement
      *ngIf="selectedUsers$ | async as selectedUsers"
-     [class.pl-2]="selectedUsers.length"
+     [class.ps-2]="selectedUsers.length"
      [title]="selectedUsers | usersNames | join">
 
   <img ngxGravatar class="user cursor-pointer"
@@ -15,7 +15,7 @@
   <div #textInputParent>
     <button class="btn btn-sm btn-link text-nowrap py-0" *ngIf="editable && !(suggesting$ | async)"
             (click)="$event.stopPropagation(); onEditClick()">
-      <i class="far fa-users mr-1"></i>
+      <i class="far fa-users me-1"></i>
       <span *ngIf="!(selectedUsers | empty)" i18n="@@edit">Edit</span>
       <span *ngIf="selectedUsers | empty" i18n="@@team.users.add.users">Add Users</span>
     </button>
@@ -29,7 +29,7 @@
            placeholder="Search user"
            i18n-placeholder="@@teams.users.search.placeholder"
            (keydown)="onKeyDown($event)"
-           [class.ml-1]="selectedUsers.length > 0"
+           [class.ms-1]="selectedUsers.length > 0"
            [spellcheck]="false"
            class="border-0 bg-transparent"
            type="text">

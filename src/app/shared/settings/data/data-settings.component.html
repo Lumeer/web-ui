@@ -3,10 +3,11 @@
     <input type="checkbox" #forceSign [checked]="settings?.includeSubItems" (change)="onSubItemsChange($event.target.checked)">
     <span class="slider round" (click)="$event.stopPropagation()"></span>
   </label>
-  <span class="pl-2 cursor-pointer user-select-none" i18n="@@view.settings.includeChildren"
+  <span class="ps-2 cursor-pointer user-select-none" i18n="@@view.settings.includeChildren"
         (click)="forceSign.click()">Include sub-items</span>
-  <i class="fas fa-question-circle ml-1 cursor-help"
-     title="If turned on, sub-items are always visible no matter of defined filters."
-     i18n-title="@@view.settings.includeChildren.help">
+  <i class="fas fa-question-circle ms-1 cursor-help"
+     tooltip="If turned on, sub-items are always visible no matter of defined filters."
+     placement="bottom"
+     i18n-tooltip="@@view.settings.includeChildren.help">
   </i>
 </div>

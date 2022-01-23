@@ -68,7 +68,7 @@
          class="buttons opacity-content d-flex flex-column">
       <div id="dropdown-{{collection.id}}">
         <a *ngIf="canManageDetail" title="Configure" i18n-title="@@collection.button.configure"
-           class="rounded-left"
+           class="rounded-start"
            [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id]">
           <i class="fas fa-fw fa-cog" aria-hidden="true"></i>
         </a>
@@ -77,7 +77,7 @@
     <div *ngIf="!collection.id"
          class="button-remove opacity-content d-flex flex-column">
       <a (click)="onDelete()"
-         class="text-danger rounded-left"
+         class="text-danger rounded-start"
          title="Delete Table"
          i18n-title="@@collection.button.remove">
         <i class="far fa-fw fa-trash-alt"

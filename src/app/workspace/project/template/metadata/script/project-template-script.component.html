@@ -6,14 +6,14 @@
 
 <div class="script-content mt-3"
      *ngIf="{script: scriptText$ | async, copied: copied$ | async} as data">
-  <div class="mr-md-4 d-flex flex-column pt-3" [formGroup]="formGroup">
+  <div class="me-md-4 d-flex flex-column pt-3" [formGroup]="formGroup">
 
     <div class="d-flex flex-row flex-nowrap align-items-center">
       <label class="switch" for="showTopPanelScript">
         <input type="checkbox" formControlName="showTopPanel" id="showTopPanelScript" #showTopPanelCheckbox>
         <span class="slider round" (click)="$event.stopPropagation()"></span>
       </label>
-      <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.script.showTopPanel"
+      <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.script.showTopPanel"
             (click)="showTopPanelCheckbox.click()">Show application controls</span>
     </div>
 
@@ -35,7 +35,7 @@
 
     <div class="d-flex mt-3 mt-md-0">
 
-      <div class="btn-group mr-4" role="group">
+      <div class="btn-group me-4" role="group">
         <button type="button" class="btn btn-outline-primary"
                 [class.active]="scriptTypeControl.value === scriptType.Html"
                 (click)="onScriptTypeSelected(scriptType.Html)"><i
@@ -50,11 +50,11 @@
           class="fas fa-link"></i></button>
       </div>
 
-      <button *ngIf="!data.copied" class="btn btn-outline-primary ml-auto"
+      <button *ngIf="!data.copied" class="btn btn-outline-primary ms-auto"
               (click)="copyValue(data.script)">
         <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copy">Copy script</span>
       </button>
-      <button *ngIf="data.copied" class="btn btn-outline-primary ml-auto"
+      <button *ngIf="data.copied" class="btn btn-outline-primary ms-auto"
               [disabled]="true">
         <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copied">Copied!</span>
       </button>

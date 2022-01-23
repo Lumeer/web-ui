@@ -6,7 +6,7 @@
     <ng-container
       *ngIf="{canChangeQuery: canChangeQuery$ | async, query: query$ | async, perspective: perspective$ | async, currentView: currentView$ | async, queryItems: queryItems$ | async} as data">
       <div *ngIf="constraintData$ | async as constraintData"
-           class="d-flex flex-wrap flex-grow-1 pb-1 pr-1"
+           class="d-flex flex-wrap flex-grow-1 pb-1 pe-1"
            [style.width.px]="1"
            formArrayName="queryItems">
         <query-item
@@ -21,7 +21,7 @@
           (stemToggle)="onToggleExpandStem($event)"
           (stemTextChange)="onStemTextChanged($event)"
           (stemQueryItemAdd)="onAddQueryItemToStem($event.item, queryItemData.stemIndex, $event.stemId)"
-          class="d-inline-flex mt-1 ml-1 align-items-center">
+          class="d-inline-flex mt-1 ms-1 align-items-center">
         </query-item>
 
         <search-input #searchInput
@@ -30,7 +30,7 @@
                       (addQueryItem)="onAddQueryItem($event)"
                       (removeQueryItem)="onRemoveLastQueryItem(data.canChangeQuery)"
                       (search)="onSearch()"
-                      class="flex-grow-1 mt-1 ml-1 mw-100">
+                      class="flex-grow-1 mt-1 ms-1 mw-100">
         </search-input>
       </div>
 

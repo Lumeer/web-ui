@@ -2,12 +2,12 @@
   <ng-container *ngIf="allCollections.length; else noCollections">
 
     <div class="d-flex mt-2" *ngIf="projectPermissions?.roles?.CollectionContribute">
-      <post-it-collection-add-button class="ml-1"
+      <post-it-collection-add-button class="ms-1"
                                      [showAddTaskTable]="showAddTaskTable && projectPermissions?.roles?.LinkContribute && projectPermissions?.roles?.ViewContribute"
                                      (clicked)="createNewCollection()">
       </post-it-collection-add-button>
 
-      <table-import-button *ngIf="canImportCollection" class="ml-2">
+      <table-import-button *ngIf="canImportCollection" class="ms-2">
       </table-import-button>
     </div>
 

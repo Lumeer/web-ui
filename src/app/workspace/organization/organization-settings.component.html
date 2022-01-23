@@ -1,6 +1,6 @@
 <top-panel-wrapper>
   <div *ngIf="organization$ | async as organization"
-       class="col-12 col-lg-11 col-xl-10 mx-auto content">
+       class="col-12 col-lg-11 col-xl-10 container-fluid mx-auto content">
     <resource-header
       [resource]="organization"
       [resourceType]="organizationType"
@@ -12,12 +12,12 @@
       (descriptionChange)="onNewDescription($event)"
       (nameChange)="onNewName($event)"
       (codeChange)="onNewCode($event)">
-      <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
+      <div class="d-flex flex-row flex-nowrap align-items-center me-3"
            title="Number of users" i18n-title="@@organization.settings.users.count">
         <i class="far fa-user" aria-hidden="true"></i>&nbsp;<span>{{ userCount$ | async }}</span>
       </div>
 
-      <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
+      <div class="d-flex flex-row flex-nowrap align-items-center me-3"
            title="Number of projects" i18n-title="@@organization.settings.projects.count">
         <i class="far fa-edit" aria-hidden="true"></i>&nbsp;<span>{{ projectsCount$ | async }}</span>
       </div>

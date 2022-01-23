@@ -1,13 +1,13 @@
 <div class="d-flex flex-column flex-lg-row"
      *ngIf="{createdBy: createdBy$ | async, updatedBy: updatedBy$ | async} as users">
-  <div class="flex-grow-1 pr-lg-2 text-truncate" *ngIf="{iconColors : resource$ | async | resourceIconsColors} as data">
-    <icons-presenter class="mr-2"
+  <div class="flex-grow-1 pe-lg-2 text-truncate" *ngIf="{iconColors : resource$ | async | resourceIconsColors} as data">
+    <icons-presenter class="me-2"
                      [icons]="data.iconColors.icons"
                      [colors]="data.iconColors.colors">
     </icons-presenter>
     <span>{{resource?.name}}</span>
     <data-input-preview *ngIf="defaultValue | isNotNullOrUndefined"
-                        class="flex-fill d-block main-data-input font-weight-bold mt-1"
+                        class="flex-fill d-block main-data-input fw-bold mt-1"
                         [configuration]="configuration"
                         [dataValue]="defaultValue | dataValue:defaultAttribute?.constraint:constraintData"
                         [cursor]="dataResource | dataCursor:defaultAttribute?.id:view?.id"
@@ -16,15 +16,15 @@
 
   </div>
 
-  <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
+  <div class="flex-grow-1 flex-lg-grow-0 text-start text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
     <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates"
          *ngIf="resourceType === collectionResourceType">
-      <span (click)="versionClick.emit()" class="mr-1 text-success cursor-pointer" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
+      <span (click)="versionClick.emit()" class="me-1 text-success cursor-pointer" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
       <span *ngIf="(dataResource.creationDate | isDateValid) && users.createdBy">
         <short-date [date]="dataResource.creationDate" format="ll"
                     [tooltipText]="createdOnMsg + ' ' + (dataResource.creationDate | date:'medium')"
                     icon="fa-file"></short-date>
-        <user-avatar class="ml-2" [email]="users.createdBy.email"
+        <user-avatar class="ms-2" [email]="users.createdBy.email"
                      [tooltipText]="createdByMsg + ' ' + users.createdBy.name" [avatarSize]="15"></user-avatar>
       </span>
       <span *ngIf="(dataResource.updateDate | isDateValid) && users.updatedBy">
@@ -32,25 +32,25 @@
         <short-date [date]="dataResource.updateDate" format="ll"
                     [tooltipText]="updatedOnMsg + ' ' + (dataResource.updateDate | date:'medium')"
                     icon="fa-pencil"></short-date>
-        <user-avatar class="ml-2" [email]="users.updatedBy.email"
+        <user-avatar class="ms-2" [email]="users.updatedBy.email"
                      [tooltipText]="updatedByMsg + ' ' + users.updatedBy.name" [avatarSize]="15"></user-avatar>
       </span>
     </div>
 
     <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
-      <i class="fa fa-external-link mr-2 text-primary clickable"
+      <i class="fa fa-external-link me-2 text-primary clickable"
          aria-hidden="true"
          [tooltip]="copyTooltip"
          (click)="onCopyRecordUrl()"></i>
       <detail-settings-button *ngIf="permissions?.rolesWithView?.PerspectiveConfig"
                               [style.line-height.px]="0"
-                              class="mr-2"
+                              class="me-2"
                               [resource]="resource"
                               [resourceType]="resourceType"
                               [attributesSettings]="attributesSettings"
                               (attributesSettingsChanged)="attributesSettingsChanged.emit($event)">
       </detail-settings-button>
-      <i class="{{tableIcon}} mr-2 clickable"
+      <i class="{{tableIcon}} me-2 clickable"
          aria-hidden="true"
          *ngIf="permissions?.roles?.Read"
          tooltip="Switch to Table perspective"
@@ -60,14 +60,14 @@
          (click)="onSwitchToTable()"></i>
       <ng-container
         *ngIf="dataPermissions?.read && resourceType === collectionResourceType && document">
-        <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
+        <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable me-2"
            title="Remove from favorites"
            i18n-title="@@document.detail.favorite.remove"
            tooltip="Remove from favorites"
            i18n-tooltip="@@document.detail.favorite.remove"
            (click)="onFavoriteToggle()"></i>
         <i *ngIf="!document.favorite"
-           class="far fa-fw fa-star text-warning clickable mr-2"
+           class="far fa-fw fa-star text-warning clickable me-2"
            title="Add to favorites"
            i18n-title="@@document.detail.favorite.add"
            tooltip="Add to favorites"

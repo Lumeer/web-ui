@@ -1,12 +1,12 @@
-<div class="form-group text-muted small" i18n="@@collection.config.tab.rules.cron.info">
+<div class="text-muted small" i18n="@@collection.config.tab.rules.cron.info">
   An automation executed regularly according to the timer settings.
 </div>
 
-<div [formGroup]="configForm" class="config-form">
+<div [formGroup]="configForm" class="config-form mt-3">
 
   <label class="main" i18n="@@collection.config.tab.rules.cron.timer.every">Repeat every</label>
   <div class="d-flex align-items-center flex-nowrap">
-    <input class="form-control mr-2 interval-input" type="number"
+    <input class="form-control me-2 interval-input" type="number"
            min="1" [max]="unitControl.value | maxIntervalByUnit" id="interval" formControlName="interval"
            integer minValue="1" [maxValue]="unitControl.value | maxIntervalByUnit"/>
     <select-item class="type-input" [items]="unitsItems"
@@ -19,7 +19,7 @@
     <label class="main" i18n="@@collection.config.tab.rules.cron.timer.repeat">Repeat on</label>
     <div class="d-flex align-items-center flex-wrap">
       <custom-checkbox *ngFor="let dayOfWeek of dayOfWeeks; let last = last"
-                       [class.mr-3]="!last"
+                       [class.me-3]="!last"
                        [checkboxTitle]="dayOfWeek.title"
                        [checkboxId]="dayOfWeek.id"
                        [title]="dayOfWeek.tooltip"
@@ -32,10 +32,10 @@
   <ng-container *ngIf="unitControl.value | showOccurrence">
     <label class="main" i18n="@@collection.config.tab.rules.cron.timer.run">Run on</label>
     <div class="d-flex align-items-center flex-nowrap">
-      <input class="form-control hour-input mr-2" type="number"
+      <input class="form-control hour-input me-2" type="number"
              min="1" max="31" id="occurrence" formControlName="occurrence" integer minValue="1" maxValue="31"/>
       <span i18n="@@collection.config.tab.rules.cron.timer.dayInMonth">day in month</span>
-      <span class="text-secondary ml-1">
+      <span class="text-secondary ms-1">
         <i class="fal fa-question-circle" i18n-tooltip="@@collection.config.tab.rules.cron.timer.monthly"
            tooltip="If a month has lower count of days, the automation is executed on the last day of month (i.e. enter 31 to always execute at the end of month)."></i>
       </span>
@@ -58,7 +58,7 @@
 
   <label class="main" i18n="@@collection.config.tab.rules.cron.timer.execute">Execute at</label>
   <div class="d-flex align-items-center flex-nowrap">
-    <select-item class="mr-2 medium-input" [items]="hoursItems"
+    <select-item class="me-2 medium-input" [items]="hoursItems"
                  [selectedId]="hourControl.value || '0'"
                  [removable]="false"
                  (selected)="hourControl.setValue($event)">
@@ -100,7 +100,7 @@
            [checked]="executionsControl.value > 0">
     <label for="num" i18n="@@collection.config.tab.rules.cron.timer.after">After</label>
     <div class="d-flex align-items-center">
-      <input class="form-control mr-2 interval-input" type="number"
+      <input class="form-control me-2 interval-input" type="number"
              min="1" max="1000" id="executions"
              integer minValue="1" maxValue="1000" formControlName="executionsLeft"/>
       <span i18n="@@collection.config.tab.rules.cron.timer.executions">executions</span>
