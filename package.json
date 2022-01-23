@@ -26,7 +26,8 @@
     "test": "ng test",
     "test:watch": "ng test --watch",
     "cypress:open": "npx cypress open",
-    "cypress:run": "npx cypress run"
+    "cypress:run": "npx cypress run",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -149,7 +150,7 @@
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-rxjs": "^5.0.1",
-    "husky": "^4.3.8",
+    "husky": "^7.0.4",
     "jasmine": "~4.0.2",
     "jasmine-core": "~4.0.0",
     "jasmine-spec-reporter": "~7.0.0",
@@ -158,7 +159,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.3",
     "karma-jasmine": "~4.0.1",
     "karma-jasmine-html-reporter": "^1.7.0",
-    "lint-staged": "^11.1.2",
+    "lint-staged": "^12.2.2",
     "listr": "^0.14.3",
     "ngx-i18nsupport": "^0.17.1",
     "prettier": "^2.5.1",
@@ -204,11 +205,6 @@
       "maxSize": "350kb"
     }
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{ts,js,json,scss,md}": [
       "npm run format:fix"
