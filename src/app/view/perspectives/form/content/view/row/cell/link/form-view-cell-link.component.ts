@@ -27,6 +27,7 @@ import {
   SimpleChanges,
   ViewChild,
   ElementRef,
+  AfterViewChecked,
 } from '@angular/core';
 import {Collection} from '../../../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
@@ -51,7 +52,7 @@ import {
   styleUrls: ['./form-view-cell-link.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormViewCellLinkComponent implements OnChanges {
+export class FormViewCellLinkComponent implements OnChanges, AfterViewChecked {
   @Input()
   public multi: boolean;
 

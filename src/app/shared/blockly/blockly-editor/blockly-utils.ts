@@ -603,7 +603,8 @@ export class BlocklyUtils {
         if (idx2 >= 0 && this.getOutputConnectionCheck(children[idx2])?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
           const variable = block.inputList[0].fieldRow[1].getVariable();
           if (variable) {
-            const [collectionId] = this.getOutputConnectionCheck(children[idx2])?.split('_');
+            const check = this.getOutputConnectionCheck(children[idx2]) || '';
+            const [collectionId] = check.split('_');
 
             if (variable.type !== collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
               // disconnect and dispose all variable getters because they now have wrong name, color and icon
@@ -618,7 +619,8 @@ export class BlocklyUtils {
         } else if (idx3 >= 0 && this.getOutputConnectionCheck(children[idx3])?.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
           const variable = block.inputList[0].fieldRow[1].getVariable();
           if (variable) {
-            const [linkTypeId] = this.getOutputConnectionCheck(children[idx3])?.split('_');
+            const check = this.getOutputConnectionCheck(children[idx3]) || '';
+            const [linkTypeId] = check.split('_');
 
             if (variable.type !== linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX) {
               // disconnect and dispose all variable getters because they now have wrong name, color and icon
@@ -868,7 +870,7 @@ export class BlocklyUtils {
                 defaultType: type,
               },
             ],
-            colour: this_.shadeColor(collection.color, 0.5), // TODO: how many percent should go here?
+            colour: this_.shadeColor(collection.color, 0.5),
             output: type,
           });
         },
