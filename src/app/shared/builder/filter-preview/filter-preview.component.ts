@@ -42,6 +42,14 @@ export class FilterPreviewComponent implements OnChanges {
   @Input()
   public conditionValues: ConditionValue[];
 
+  public conditionAttribute: Attribute;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.attribute || changes.condition) {
+      this.conditionAttribute = modifyAttributeForQueryBuilder(this.attribute, this.condition);
+    }
+  }
+
   public readonly configuration: DataInputConfiguration = {
     common: {inline: true, skipValidation: true, inheritColor: true},
     color: {limitWidth: true},

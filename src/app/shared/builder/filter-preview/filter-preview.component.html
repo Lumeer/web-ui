@@ -8,7 +8,7 @@
                         [configuration]="configuration"
                         [constraint]="conditionAttribute.constraint">
     </data-input-preview>
-    <span class="ms-1" [class.ml-1]="index === 0"
+    <span class="ms-1" [class.ms-1]="index === 0"
           *ngIf="conditionValue.type">{{conditionValue.type | translateConditionValue:conditionAttribute}}</span>
   </ng-container>
 </ng-container>
