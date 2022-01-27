@@ -19,7 +19,7 @@
                     [disabled]="view?.id && !state.permissions.canConfig"
                     (click)="onPerspectiveChooserClick($event)">
               <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
-              <span class="ml-sm-1 text-nowrap">{{perspective | perspectiveName}}</span>
+              <span class="ms-sm-1 text-nowrap">{{perspective | perspectiveName}}</span>
             </button>
 
             <options-dropdown

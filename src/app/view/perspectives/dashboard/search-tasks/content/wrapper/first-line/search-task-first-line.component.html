@@ -16,7 +16,7 @@
   class="task-info order-4 order-md-3 d-flex align-items-center flex-row flex-md-nowrap flex-wrap justify-content-start justify-content-md-end"
   [class.from-start]="collection && large">
   <ng-container *ngIf="document | dataValueByAttribute:attributes?.assignee: constraintData as assigneeDataValue">
-    <data-input-preview class="data-input-preview text-truncate ml-0 ms-md-3 py-1"
+    <data-input-preview class="data-input-preview text-truncate ms-0 ms-md-3 py-1"
                         *ngIf="assigneeDataValue | formatDataValue; else emptyTitle"
                         [constraint]="attributes.assignee.constraint"
                         [cursor]="document | dataCursor:attributes?.assignee?.id:view?.id"

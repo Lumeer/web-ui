@@ -47,7 +47,7 @@ export class NotificationService {
 
   public error(message: string, config?: Partial<IndividualConfig>) {
     if (!this.configurationService.getConfiguration().notificationsDisabled) {
-      this.notifications.error(message, $localize`:@@notification.service.Error:Error`, {timeOut: 0});
+      this.notifications.error(message, $localize`:@@notification.service.Error:Error`, config);
     }
   }
 
