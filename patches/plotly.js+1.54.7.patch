@@ -1,0 +1,26 @@
+diff --git a/node_modules/plotly.js/dist/plotly-with-meta.js b/node_modules/plotly.js/dist/plotly-with-meta.js
+index dfec3e2..69d1c06 100644
+--- a/node_modules/plotly.js/dist/plotly-with-meta.js
++++ b/node_modules/plotly.js/dist/plotly-with-meta.js
+@@ -34467,7 +34467,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
+     return request.responseXML;
+   });
+   if (typeof define === "function" && define.amd) this.d3 = d3, define(d3); else if (typeof module === "object" && module.exports) module.exports = d3; else this.d3 = d3;
+-}();
++}.apply(self);
+ },{}],165:[function(_dereq_,module,exports){
+ module.exports = function () {
+     for (var i = 0; i < arguments.length; i++) {
+diff --git a/node_modules/plotly.js/dist/plotly.js b/node_modules/plotly.js/dist/plotly.js
+index 951e67d..b1fe036 100644
+--- a/node_modules/plotly.js/dist/plotly.js
++++ b/node_modules/plotly.js/dist/plotly.js
+@@ -34467,7 +34467,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
+     return request.responseXML;
+   });
+   if (typeof define === "function" && define.amd) this.d3 = d3, define(d3); else if (typeof module === "object" && module.exports) module.exports = d3; else this.d3 = d3;
+-}();
++}.apply(self);
+ },{}],165:[function(_dereq_,module,exports){
+ module.exports = function () {
+     for (var i = 0; i < arguments.length; i++) {
