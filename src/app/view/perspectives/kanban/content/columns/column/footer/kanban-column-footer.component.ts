@@ -74,7 +74,7 @@ export class KanbanColumnFooterComponent implements OnChanges {
     }, []);
   }
 
-  private createIconsAndColors(createResource: KanbanCreateResource): { icons: string[]; iconColors: string[] } {
+  private createIconsAndColors(createResource: KanbanCreateResource): {icons: string[]; iconColors: string[]} {
     if (getAttributesResourceType(createResource.resource) === AttributesResourceType.Collection) {
       const collection = <Collection>createResource.resource;
       return {icons: [collection.icon], iconColors: [collection.color]};

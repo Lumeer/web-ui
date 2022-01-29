@@ -39,7 +39,10 @@ import {WorkflowTablesStateService} from '../tables/service/workflow-tables-stat
 import {combineLatest, Observable} from 'rxjs';
 import {selectViewCursor} from '../../../../../core/store/navigation/navigation.state';
 import {map} from 'rxjs/operators';
-import {createCollectionQueryStem, queryStemWithoutFilters} from '../../../../../core/store/navigation/query/query.util';
+import {
+  createCollectionQueryStem,
+  queryStemWithoutFilters,
+} from '../../../../../core/store/navigation/query/query.util';
 import {WorkflowsAction} from '../../../../../core/store/workflows/workflows.action';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 import {View} from '../../../../../core/store/views/view';

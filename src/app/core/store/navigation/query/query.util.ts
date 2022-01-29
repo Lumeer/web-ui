@@ -19,12 +19,28 @@
 
 import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 
-import {AttributeFilter, ConditionType, conditionTypeNumberOfInputs, ConditionValue, ConstraintType, UnknownConstraint, UserConstraint, UserConstraintConditionValue, UserConstraintType,} from '@lumeer/data-filters';
+import {
+  AttributeFilter,
+  ConditionType,
+  conditionTypeNumberOfInputs,
+  ConditionValue,
+  ConstraintType,
+  UnknownConstraint,
+  UserConstraint,
+  UserConstraintConditionValue,
+  UserConstraintType,
+} from '@lumeer/data-filters';
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
-import {areArraysSame, arraySubtract, createRange, isArraySubset, uniqueValues,} from '../../../../shared/utils/array.utils';
+import {
+  areArraysSame,
+  arraySubtract,
+  createRange,
+  isArraySubset,
+  uniqueValues,
+} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
@@ -793,7 +809,10 @@ export function modifyAttributeForQueryBuilder(attribute: Attribute, condition: 
       return attributeWithoutLock;
     case ConstraintType.User:
       const userConstraint = <UserConstraint>attribute.constraint;
-      return {...attributeWithoutLock, constraint: new UserConstraint({...userConstraint, type: UserConstraintType.UsersAndTeams})};
+      return {
+        ...attributeWithoutLock,
+        constraint: new UserConstraint({...userConstraint, type: UserConstraintType.UsersAndTeams}),
+      };
     default:
       return attributeWithoutLock;
   }

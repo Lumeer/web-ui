@@ -332,7 +332,9 @@ export class DataResourceDetailComponent
       return convertQueryModelToString({stems: [createCollectionQueryStem(this.resource.id)]});
     }
     const collectionIds = (<LinkType>this.resource).collectionIds || [];
-    return convertQueryModelToString({stems: [{...createCollectionQueryStem(collectionIds[0]), linkTypeIds: [this.resource.id]}]});
+    return convertQueryModelToString({
+      stems: [{...createCollectionQueryStem(collectionIds[0]), linkTypeIds: [this.resource.id]}],
+    });
   }
 
   private createCursor(): ViewCursor {
