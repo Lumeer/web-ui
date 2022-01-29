@@ -38,6 +38,7 @@ import {
   UnknownConstraint,
   UserConstraintConditionValue,
 } from '@lumeer/data-filters';
+import {modifyAttributeForQueryBuilder} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'filter-builder-content',
@@ -76,13 +77,13 @@ export class FilterBuilderContentComponent implements OnChanges {
 
   public editing$ = new BehaviorSubject(-1);
 
-  public attributeWithoutLock: Attribute;
   public numInputs: number;
   public ngForIndexes: number[];
   public focused$ = new BehaviorSubject({column: 0, row: 0});
   public dataValues: DataValue[];
   public conditionItems: ConditionItem[];
   public conditionValueItems: ConstraintConditionValueItem[];
+  public conditionAttribute: Attribute;
 
   private keyDownListener: (event: KeyboardEvent) => void;
 
@@ -91,10 +92,6 @@ export class FilterBuilderContentComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute) {
       this.createItems();
-      this.attributeWithoutLock = {...this.attribute, lock: null};
-    }
-    if (changes.attribute || changes.selectedValues || changes.constraintData) {
-      this.dataValues = this.createDataValues();
     }
     if (changes.selectedCondition) {
       this.numInputs = conditionTypeNumberOfInputs(this.selectedCondition);
@@ -102,6 +99,10 @@ export class FilterBuilderContentComponent implements OnChanges {
     }
     if (changes.attribute || changes.selectedCondition) {
       this.initFocusedItem();
+      this.conditionAttribute = modifyAttributeForQueryBuilder(this.attribute, this.selectedCondition);
+    }
+    if (changes.attribute || changes.selectedValues || changes.selectedCondition || changes.constraintData) {
+      this.dataValues = this.createDataValues();
     }
     if (changes.visible) {
       this.onVisibleChanged();
@@ -154,7 +155,7 @@ export class FilterBuilderContentComponent implements OnChanges {
   private createDataValues(): DataValue[] {
     return (this.selectedValues || []).map(selectedValue => {
       const value = selectedValue?.value;
-      const constraint = this.attribute?.constraint || new UnknownConstraint();
+      const constraint = this.conditionAttribute?.constraint || new UnknownConstraint();
       return constraint.createDataValue(value || '', this.constraintData);
     });
   }

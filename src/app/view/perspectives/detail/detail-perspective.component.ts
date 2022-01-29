@@ -49,6 +49,7 @@ import {
   selectReadableCollectionsByView,
 } from '../../../core/store/common/permissions.selectors';
 import {
+  createCollectionQueryStem,
   filterStemsForCollection,
   getBaseCollectionIdsFromQuery,
   getQueryFiltersForCollection,
@@ -309,7 +310,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
   public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
     const currentQueryIsEmpty = queryIsEmpty(this.query);
-    const query: Query = currentQueryIsEmpty ? null : {stems: [{collectionId: data.collection.id}]};
+    const query: Query = currentQueryIsEmpty ? null : {stems: [createCollectionQueryStem(data.collection.id)]};
     this.emit(data.collection, data.document, query);
   }
 
@@ -336,7 +337,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
   private loadLinkInstances(document: DocumentModel, viewId: string) {
     if (document) {
-      const query: Query = {stems: [{collectionId: document.collectionId, documentIds: [document.id]}]};
+      const query: Query = {stems: [{...createCollectionQueryStem(document.collectionId), documentIds: [document.id]}]};
       this.store$.dispatch(new LinkInstancesAction.Get({query, workspace: {viewId}}));
     }
   }

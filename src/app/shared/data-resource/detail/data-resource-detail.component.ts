@@ -75,6 +75,7 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
 import {User} from '../../../core/store/users/user';
 import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
 import {composeViewSettingsLinkTypeCollectionId} from '../../settings/settings.util';
+import {createCollectionQueryStem} from '../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'data-resource-detail',
@@ -328,10 +329,10 @@ export class DataResourceDetailComponent
 
   private createQueryString(): string {
     if (this.isCollection) {
-      return convertQueryModelToString({stems: [{collectionId: this.resource.id}]});
+      return convertQueryModelToString({stems: [createCollectionQueryStem(this.resource.id)]});
     }
     const collectionIds = (<LinkType>this.resource).collectionIds || [];
-    return convertQueryModelToString({stems: [{collectionId: collectionIds[0], linkTypeIds: [this.resource.id]}]});
+    return convertQueryModelToString({stems: [{...createCollectionQueryStem(collectionIds[0]), linkTypeIds: [this.resource.id]}]});
   }
 
   private createCursor(): ViewCursor {

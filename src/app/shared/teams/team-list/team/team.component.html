@@ -31,14 +31,12 @@
 
 <div>
   <team-users class="d-block py-2"
-              [class.cursor-pointer]="true"
               [selectedUserIds]="team.users"
               [users]="users"
               [editable]="editable"
               (save)="onUsersSave($event)">
   </team-users>
   <roles class="mt-2"
-         [class.cursor-pointer]="changeRoles"
          [roles]="permissions | teamRoles:team"
          [resourceType]="resourceType"
          [emitAllChanges]="emitAllChanges"

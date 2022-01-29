@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
+import {modifyAttributeForQueryBuilder} from '../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'filter-preview',
@@ -28,7 +29,7 @@ import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filter
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-inline-flex text-truncate text-nowrap align-items-center'},
 })
-export class FilterPreviewComponent {
+export class FilterPreviewComponent implements OnChanges {
   @Input()
   public condition: ConditionType;
 
@@ -45,4 +46,12 @@ export class FilterPreviewComponent {
     common: {inline: true, skipValidation: true, inheritColor: true},
     color: {limitWidth: true},
   };
+
+  public conditionAttribute: Attribute;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.attribute || changes.condition) {
+      this.conditionAttribute = modifyAttributeForQueryBuilder(this.attribute, this.condition);
+    }
+  }
 }

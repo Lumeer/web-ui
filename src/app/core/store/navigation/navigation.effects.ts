@@ -34,6 +34,7 @@ import {convertQueryModelToString} from './query/query.converter';
 import {convertViewCursorToString} from './view-cursor/view-cursor';
 import {selectViewQuery} from '../views/views.state';
 import {convertPerspectiveSettingsToString} from './settings/perspective-settings';
+import {createCollectionQueryStem} from './query/query.util';
 
 @Injectable()
 export class NavigationEffects {
@@ -57,7 +58,7 @@ export class NavigationEffects {
       withLatestFrom(this.store$.pipe(select(selectViewQuery))),
       map(([action, query]) => {
         const stems = [...(query.stems || [])];
-        stems.push({collectionId: action.payload.collectionId});
+        stems.push(createCollectionQueryStem(action.payload.collectionId));
 
         return newQueryAction({...query, stems});
       })
