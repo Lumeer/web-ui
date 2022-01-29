@@ -64,6 +64,7 @@ import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions'
 import {ModalService} from '../../../modal/modal.service';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
+import {createCollectionQueryStem} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'notifications-menu',
@@ -200,7 +201,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   private navigateToCollection(notification: CollectionSharedUserNotification) {
     this.getOrganization(notification.organizationId, organization => {
       if (organization) {
-        const query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
+        const query = convertQueryModelToString({stems: [createCollectionQueryStem(notification.collectionId)]});
         const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Table];
 
         if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
@@ -227,7 +228,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
               query = '';
               path.push({vc: defaultView.code});
             } else if (collection && collectionsPermissions[collection.id]?.roles?.Read) {
-              query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
+              query = convertQueryModelToString({stems: [createCollectionQueryStem(notification.collectionId)]});
               path.push(Perspective.Workflow);
             } else {
               const document = documentsMap[notification.documentId];

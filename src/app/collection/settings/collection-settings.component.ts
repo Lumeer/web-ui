@@ -48,6 +48,7 @@ import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectCollectionPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
+import {createCollectionQueryStem} from '../../core/store/navigation/query/query.util';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -131,7 +132,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public documentsQuery(collectionId: string): string {
-    const query: Query = {stems: [{collectionId: collectionId}]};
+    const query: Query = {stems: [createCollectionQueryStem(collectionId)]};
     return convertQueryModelToString(query);
   }
 

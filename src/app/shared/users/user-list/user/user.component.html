@@ -3,14 +3,12 @@
 </div>
 
 <div class="pb-2 pt-3">
-  <user-teams [class.cursor-pointer]="true"
-              [teams]="teams"
+  <user-teams [teams]="teams"
               [selectedTeamIds]="user | filterUserTeams:teams"
               [editable]="changeTeams"
               (save)="onTeamsSave($event)">
   </user-teams>
-  <roles class="mt-3 cursor-pointer"
-         [class.cursor-pointer]="changeRoles"
+  <roles class="mt-3"
          [resourceType]="resourceType"
          [editable]="changeRoles"
          [transitiveRoles]="transitiveRoles"

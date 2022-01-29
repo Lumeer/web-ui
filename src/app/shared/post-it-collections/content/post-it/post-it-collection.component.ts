@@ -36,6 +36,7 @@ import {Perspective} from '../../../../view/perspectives/perspective';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
 import {permissionsCanManageCollectionDetail} from '../../../utils/permission.utils';
+import {createCollectionQueryStem} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'post-it-collection',
@@ -115,7 +116,7 @@ export class PostItCollectionComponent implements OnChanges {
   }
 
   public queryForCollectionDocuments(): string {
-    const query: Query = {stems: [{collectionId: this.collection.id}]};
+    const query: Query = {stems: [createCollectionQueryStem(this.collection.id)]};
     return convertQueryModelToString(query);
   }
 

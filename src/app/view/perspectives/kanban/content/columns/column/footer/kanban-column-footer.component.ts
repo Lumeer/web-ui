@@ -32,7 +32,7 @@ import {AttributesResourceType} from '../../../../../../../core/model/resource';
 import {DropdownOption} from '../../../../../../../shared/dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../../../../../../shared/dropdown/options/options-dropdown.component';
 import {KanbanCreateResource} from '../../../../util/kanban-data';
-import {getAttributesResourceType} from '../../../../../../../shared/utils/resource.utils';
+import {attributesResourcesAreSame, getAttributesResourceType} from '../../../../../../../shared/utils/resource.utils';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 
 @Component({
@@ -57,11 +57,21 @@ export class KanbanColumnFooterComponent implements OnChanges {
   public dropdownOptions: DropdownOption[] = [];
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.dropdownOptions = (this.resources || []).map(resourceCreate => ({
+    this.dropdownOptions = this.uniqueResources().map(resourceCreate => ({
       value: resourceCreate,
       displayValue: resourceCreate.resource.name,
       ...this.createIconsAndColors(resourceCreate),
     }));
+  }
+
+  private uniqueResources(): KanbanCreateResource[] {
+    return (this.resources || []).reduce((resources, resource) => {
+      if (!resources.some(res => attributesResourcesAreSame(res.resource, resource.resource))) {
+        resources.push(resource);
+      }
+
+      return resources;
+    }, []);
   }
 
   private createIconsAndColors(createResource: KanbanCreateResource): {icons: string[]; iconColors: string[]} {
@@ -79,8 +89,8 @@ export class KanbanColumnFooterComponent implements OnChanges {
   }
 
   public onButtonClick() {
-    if (this.resources.length === 1) {
-      this.selectResource.emit(this.resources[0]);
+    if (this.dropdownOptions.length === 1) {
+      this.onOptionSelect(this.dropdownOptions[0]);
     } else {
       this.dropdown.open();
     }

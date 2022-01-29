@@ -25,7 +25,10 @@ import {
   conditionTypeNumberOfInputs,
   ConditionValue,
   ConstraintType,
+  UnknownConstraint,
+  UserConstraint,
   UserConstraintConditionValue,
+  UserConstraintType,
 } from '@lumeer/data-filters';
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
@@ -47,7 +50,7 @@ import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/qu
 import {Workspace} from '../workspace';
 import {MapPosition} from '../../maps/map.model';
 import {formatMapCoordinates} from '../../maps/map-coordinates';
-import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+import {generateId, getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
 import {DataQuery} from '../../../model/data-query';
@@ -788,4 +791,29 @@ export function cleanQueryFromHiddenAttributes(
   });
 
   return {...query, stems};
+}
+
+export function createCollectionQueryStem(collectionId: string): QueryStem {
+  return {collectionId, id: generateId()};
+}
+
+export function modifyAttributeForQueryBuilder(attribute: Attribute, condition: ConditionType): Attribute {
+  const attributeWithoutLock = {...attribute, lock: null};
+  switch (attribute?.constraint?.type) {
+    case ConstraintType.Link:
+      switch (condition) {
+        case ConditionType.Contains:
+        case ConditionType.NotContains:
+          return {...attributeWithoutLock, constraint: new UnknownConstraint()};
+      }
+      return attributeWithoutLock;
+    case ConstraintType.User:
+      const userConstraint = <UserConstraint>attribute.constraint;
+      return {
+        ...attributeWithoutLock,
+        constraint: new UserConstraint({...userConstraint, type: UserConstraintType.UsersAndTeams}),
+      };
+    default:
+      return attributeWithoutLock;
+  }
 }

@@ -1,12 +1,12 @@
 <div class="d-flex align-items-center h-100 pr-1 py-1 flex-wrap" #wrapperElement
      *ngIf="selectedUsers$ | async as selectedUsers"
      [class.pl-2]="selectedUsers.length"
-     [title]="selectedUsers | usersNames | join"
-     (click)="onClick()"
-     (mousedown)="onMouseDown($event)">
+     [title]="selectedUsers | usersNames | join">
 
-  <img ngxGravatar class="user"
+  <img ngxGravatar class="user cursor-pointer"
        *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first"
+       (click)="onClick()"
+       (mousedown)="onMouseDown($event)"
        [email]="user.email"
        [size]="avatarSize"
        [style.min-width.px]="avatarSize"

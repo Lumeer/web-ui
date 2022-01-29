@@ -26,7 +26,6 @@ import {
   Output,
   EventEmitter,
   ViewChild,
-  HostListener,
 } from '@angular/core';
 import {Role} from '../../core/store/permissions/permissions';
 import {ResourceType} from '../../core/model/resource-type';
@@ -101,7 +100,6 @@ export class RolesComponent implements OnChanges {
     this.change.emit(roles);
   }
 
-  @HostListener('click')
   public onClick() {
     if (this.rolesDropdownComponent?.isOpen()) {
       this.rolesDropdownComponent?.closeAndSave();

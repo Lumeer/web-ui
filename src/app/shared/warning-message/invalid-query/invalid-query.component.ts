@@ -28,7 +28,7 @@ import {
 } from '../../../core/store/common/permissions.selectors';
 import {map, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
-import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
+import {createCollectionQueryStem, queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
@@ -83,7 +83,7 @@ export class InvalidQueryComponent implements OnChanges {
     this.store$.pipe(select(selectViewQuery), take(1)).subscribe(query => {
       let stem = ((query && query.stems) || [])[data.index];
       if (!stem) {
-        stem = {collectionId: data.collection.id};
+        stem = createCollectionQueryStem(data.collection.id);
       }
       const newQuery: Query = {...query, stems: [stem], fulltexts: query && query.fulltexts};
       this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));

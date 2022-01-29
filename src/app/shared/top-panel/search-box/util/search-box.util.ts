@@ -26,6 +26,7 @@ import {QueryData} from './query-data';
 import {CollectionQueryItem} from '../query-item/model/collection.query-item';
 import {convertQueryItemsToQueryModel, QueryItemsConverter} from '../query-item/query-items.converter';
 import {
+  createCollectionQueryStem,
   filterStemByLinkIndex,
   findStemIndexForCollection,
   findStemIndexForLinkType,
@@ -93,7 +94,7 @@ function addLinkItem(
       stem.linkTypeIds = [linkType.id];
     }
   } else {
-    query.stems.push({collectionId: linkType.collectionIds[0], linkTypeIds: [linkType.id]});
+    query.stems.push({...createCollectionQueryStem(linkType.collectionIds[0]), linkTypeIds: [linkType.id]});
   }
 
   return {stemIndex, items: new QueryItemsConverter(queryData).fromQuery(query)};

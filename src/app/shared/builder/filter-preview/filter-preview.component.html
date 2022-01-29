@@ -1,14 +1,14 @@
-<span [class.font-italic]="condition | conditionShouldBeItalic:attribute.constraint"
-      class="mx-1">{{condition | translateCondition:attribute}}</span>
+<span [class.font-italic]="condition | conditionShouldBeItalic:conditionAttribute.constraint"
+      class="mx-1">{{condition | translateCondition:conditionAttribute}}</span>
 <ng-container *ngFor="let conditionValue of conditionValues; let index = index">
   <ng-container *ngIf="index < (condition | conditionNumValues)">
     <span *ngIf="index > 0">,&nbsp;</span>
     <data-input-preview *ngIf="!conditionValue.type" [class.ml-1]="index === 0"
-                        [dataValue]="conditionValue.value | dataValue:attribute.constraint:constraintData"
+                        [dataValue]="conditionValue.value | dataValue:conditionAttribute.constraint:constraintData"
                         [configuration]="configuration"
-                        [constraint]="attribute.constraint">
+                        [constraint]="conditionAttribute.constraint">
     </data-input-preview>
     <span class="ml-1" [class.ml-1]="index === 0"
-          *ngIf="conditionValue.type">{{conditionValue.type | translateConditionValue:attribute}}</span>
+          *ngIf="conditionValue.type">{{conditionValue.type | translateConditionValue:conditionAttribute}}</span>
   </ng-container>
 </ng-container>

@@ -16,12 +16,12 @@
   <div class="d-flex flex-column ml-3" *ngFor="let column of ngForIndexes">
     <div class="text-muted px-2" i18n="@@filter.builder.value">Choose Value</div>
     <data-input class="h-100 data-input mt-2"
-                *ngIf="attributeWithoutLock | dataInputEditInfo:dataValues[column]:editable: ((editing$ | async) === column) as dataInputInfo"
-                [class.data-input-border]="attribute.constraint?.type !== constraintType.Boolean"
-                [class.data-input-padding]="attribute.constraint?.type !== constraintType.Color"
+                *ngIf="conditionAttribute | dataInputEditInfo:dataValues[column]:editable: ((editing$ | async) === column) as dataInputInfo"
+                [class.data-input-border]="conditionAttribute.constraint?.type !== constraintType.Boolean"
+                [class.data-input-padding]="conditionAttribute.constraint?.type !== constraintType.Color"
                 [class.editing]="dataInputInfo.editing"
                 [class.cursor-pointer]="dataInputInfo.editable"
-                [constraint]="attribute.constraint"
+                [constraint]="conditionAttribute.constraint"
                 [dataValue]="dataValues[column]"
                 [configuration]="configuration"
                 [editableInReadonly]="dataInputInfo.editable"
