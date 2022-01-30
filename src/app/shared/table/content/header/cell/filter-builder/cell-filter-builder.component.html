@@ -29,7 +29,7 @@
       </button>
     </div>
 
-    <div *ngFor="let filter of filters; let index = index" class="filter-row cursor-pointer px-2 mr-2 dropdown-item"
+    <div *ngFor="let filter of filters; let index = index" class="filter-row cursor-pointer px-2 me-2 dropdown-item"
          [class.active]="selectedIndex === index" (click)="selectedIndex = index">
       <filter-preview [style.max-width.px]="300"
                       [constraintData]="data.constraintData"
@@ -57,7 +57,7 @@
 
     <div *ngIf="editable" [class.mt-2]="filters && filters[selectedIndex]">
       <button class="btn btn-link px-0 small mx-1" (click)="$event.stopPropagation(); onNewFilter()">
-        <i class="fas fa-plus-circle mr-2"></i><span
+        <i class="fas fa-plus-circle me-2"></i><span
         i18n="@@table.cell.filters.new">Add new filter</span>
       </button>
     </div>

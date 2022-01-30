@@ -1,7 +1,7 @@
 <modal-wrapper class="d-block"
                [dialogType]="dialogType"
                [performingAction]="performingAction$ | async"
-               [submitDisabled]="form.invalid"
+               [submitDisabled]="invalid$ | async"
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()">
 

@@ -1,7 +1,7 @@
 <ng-container *ngIf="{filter: filter$ | async, attribute: attribute$ | async} as data">
   <div class="d-flex flex-wrap align-items-center text-truncate" (click)="data.attribute && onFilterClick()">
 
-    <select-item2 class="pl-2 pr-1"
+    <select-item2 class="ps-2 pe-1"
                   [class.flex-grow-1]="!data.attribute"
                   [removable]="false"
                   [disabled]="false"

@@ -1,13 +1,13 @@
 <div class="wrapper h-100">
-  <div class="d-inline-flex flex-row flex-nowrap h-100 align-items-start mr-4"
-       [class.mr-4]="perspectiveConfiguration?.additionalSpace"
+  <div class="d-inline-flex flex-row flex-nowrap h-100 align-items-start me-4"
+       [class.me-4]="perspectiveConfiguration?.additionalSpace"
        cdkDropList cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="dropColumn($event)">
     <kanban-column *ngFor="let column of kanbanData.columns; trackBy: trackByColumn; let first = first"
                    cdkDrag #kanbanColumn
                    [cdkDragDisabled]="!canManageConfig"
                    [cdkDragStartDelay]="dragDelay"
-                   [class.ml-3]="perspectiveConfiguration?.additionalSpace || !first"
+                   [class.ms-3]="perspectiveConfiguration?.additionalSpace || !first"
                    class="column"
                    [column]="column"
                    [postItLayout]="config?.cardLayout"
@@ -27,7 +27,7 @@
     </kanban-column>
 
     <kanban-column *ngIf="kanbanData.otherColumn?.cards?.length > 0"
-                   class="column ml-3" #kanbanColumn
+                   class="column ms-3" #kanbanColumn
                    [column]="kanbanData.otherColumn"
                    [kanbanData]="kanbanData"
                    [postItLayout]="config?.cardLayout"

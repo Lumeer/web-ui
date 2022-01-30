@@ -7,18 +7,18 @@
                      (isOpenChange)="isOpenChanged($event, linkType.id)">
       <div class="header-wrapper" accordion-heading
            *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
-        <div class="mr-2">
+        <div class="me-2">
           <i *ngIf="!(collapsedLinkTypes | includes:linkType.id)" class="fas fa-caret-down"></i>
           <i *ngIf="collapsedLinkTypes | includes:linkType.id" class="fas fa-caret-right"></i>
         </div>
-        <icons-presenter class="d-block mr-1"
+        <icons-presenter class="d-block me-1"
                          [colors]="iconData.iconColors.colors"
                          [icons]="iconData.iconColors.icons">
         </icons-presenter>
-        <div class="font-weight-bold text-truncate mr-2" [title]="linkType.name">{{linkType.name}}</div>
+        <div class="fw-bold text-truncate me-2" [title]="linkType.name">{{linkType.name}}</div>
         <div class="d-flex align-items-center">
           <i *ngIf="linkType | canCreateLinks:permissions?.linkTypes"
-             class="fas fa-plus-circle mr-2"
+             class="fas fa-plus-circle me-2"
              title="Add/Remove links"
              i18n-title="@@table.body.row.links.update"
              (click)="onSetLinks($event, linkType)"></i>

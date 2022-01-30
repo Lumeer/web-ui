@@ -9,7 +9,7 @@
   <ng-container *ngIf="multi || readonly">
 
     <div *ngFor="let team of data.selectedTeams; trackBy: trackByTeam"
-         class="badge badge-lg badge-pill badge-outline-info mr-2 team-tag">{{team.name}}</div>
+         class="badge badge-lg rounded-pill badge-outline-info me-2 team-tag">{{team.name}}</div>
 
     <img ngxGravatar
          *ngFor="let user of data.selectedUsers; trackBy:trackByUser; let first = first"
@@ -21,7 +21,7 @@
 
     <span *ngIf="!onlyIcon && data.selectedUsers?.length && (data.selectedUsers | usersAreValid:users:value.config)"
           [ngClass]="inputClass"
-          class="d-inline-block ml-2 text-nowrap user">
+          class="d-inline-block ms-2 text-nowrap user">
         {{data.selectedUsers | usersNames | join}}
       </span>
 
@@ -32,7 +32,7 @@
 
         <span data-test="user-data-input"
               [class.invalid-value]="!commonConfiguration?.skipValidation && !(user | userIsValid:users:value.config:data.selectedUsers.length)"
-              [class.ml-2]="first"
+              [class.ms-2]="first"
               class="d-inline-block user">
           {{user.name || user.email}}
         </span>
@@ -52,7 +52,7 @@
            (focus)="onFocused()"
            inputmode="email"
            (ngModelChange)="onInputChange()"
-           [class.ml-1]="data.selectedUsers.length > 0 || data.selectedTeams.length > 0"
+           [class.ms-1]="data.selectedUsers.length > 0 || data.selectedTeams.length > 0"
            [spellcheck]="false"
            [ngClass]="inputClass"
            class="border-0 w-100 h-100 bg-transparent"

@@ -361,7 +361,7 @@ input:-webkit-autofill {
 
 input,
 .form-control,
-.custom-control-input,
+.form-check-input,
 input,
 textarea,
 select,
@@ -379,7 +379,7 @@ select,
   box-shadow: none !important;
 }
 
-.custom-control-label {
+.form-check-label {
   &::before,
   &::after {
     box-shadow: none !important;

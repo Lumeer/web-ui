@@ -29,7 +29,7 @@
              placeholder="Custom title"
              i18n-placeholder="@@link.input.dropdown.title.placeholder"
              (keydown)="onTitleKeyDown($event)">
-      <button class="btn btn-sm btn-primary ml-2"
+      <button class="btn btn-sm btn-primary ms-2"
               [disabled]="invalid$ | async"
               (click)="$event.stopPropagation(); onSave()">
         <span i18n="@@button.save">Save</span>

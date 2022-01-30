@@ -13,7 +13,7 @@
          (click)="$event.stopImmediatePropagation(); $event.preventDefault(); onConditionSelect(item, row)">{{item.title}}</div>
   </div>
 
-  <div class="d-flex flex-column ml-3" *ngFor="let column of ngForIndexes">
+  <div class="d-flex flex-column ms-3" *ngFor="let column of ngForIndexes">
     <div class="text-muted px-2" i18n="@@filter.builder.value">Choose Value</div>
     <data-input class="h-100 data-input mt-2"
                 *ngIf="conditionAttribute | dataInputEditInfo:dataValues[column]:editable: ((editing$ | async) === column) as dataInputInfo"

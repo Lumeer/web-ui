@@ -1,3 +1,4 @@
+/.angular/cache
 target/
 dist/
 node_modules/

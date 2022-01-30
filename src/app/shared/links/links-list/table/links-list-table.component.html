@@ -1,5 +1,5 @@
 <div class="overflow-auto" #tableWrapper>
-  <table class="table position-relative"
+  <table class="table table-without-padding table-borderless position-relative"
          *ngIf="{columns: columns$ | async} as data">
     <thead links-list-table-header
            [columns]="data.columns"

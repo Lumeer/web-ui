@@ -1,5 +1,5 @@
 <cdk-virtual-scroll-viewport [itemSize]="32" class="h-100">
-  <table class="table table-sm">
+  <table class="table table-without-padding table-borderless table-sm">
     <thead>
     <tr>
       <th class="sticky-header check-column"
@@ -33,7 +33,7 @@
     </thead>
     <tbody>
     <tr *ngIf="documents.length === 0">
-      <td [attr.colspan]="collectionAttributes.length" class="text-center font-weight-bold">
+      <td [attr.colspan]="collectionAttributes.length" class="text-center fw-bold">
         <h4 i18n="@@shared.preview.results.noResults">No records found.</h4>
       </td>
     </tr>

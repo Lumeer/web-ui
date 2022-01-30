@@ -98,7 +98,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
 
   private createNumberDataValue(constraintData: ConstraintData): NumberDataValue {
     const config: NumberConstraintConfig = {...this.form.value};
-    let exampleValue = 123456789.123456789;
+    let exampleValue = 123456789.12345678;
     if (config.negative) {
       exampleValue *= -1;
     }

@@ -1,14 +1,10 @@
-<div [formGroup]="formGroup"
-     class="form-group">
-  <label for="linkName"
-         i18n="@@collection.new.dialog.link.label">Link</label>
+<div [formGroup]="formGroup">
+  <label class="form-label" for="linkName" i18n="@@collection.new.dialog.link.label">Link</label>
   <div class="input-group">
-    <div class="input-group-prepend">
-      <div class="input-group-text px-2">
-        <icons-presenter [colors]="colors"
-                         [icons]="icons">
-        </icons-presenter>
-      </div>
+    <div class="input-group-text px-2">
+      <icons-presenter [colors]="colors"
+                       [icons]="icons">
+      </icons-presenter>
     </div>
     <input #linkName
            [class.is-invalid]="linkNameInput.invalid"
@@ -18,7 +14,7 @@
            class="form-control"
            data-test="link-name-input"
            placeholder="Enter link name..." i18n-placeholder="@@collection.new.dialog.link.name.placeholder">
-    <div class="invalid-feedback">
+    <div class="invalid-feedback form-text">
       <div *ngIf="linkNameInput.errors && linkNameInput.errors.notUnique"
            i18n="@@validation.link.name.existing">
         Such a Link already exists.

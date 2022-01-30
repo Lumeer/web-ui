@@ -10,12 +10,12 @@
     <div class="d-flex flex-nowrap flex-row align-items-center">
       <div class="flex-grow-1 overflow-hidden">{{column.attribute.name}}</div>
 
-      <div *ngIf="column?.attribute?.description" class="ml-1"
+      <div *ngIf="column?.attribute?.description" class="ms-1"
            [tooltip]="column?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
-        <i class="far fa-question-circle ml-1"></i>
+        <i class="far fa-question-circle ms-1"></i>
       </div>
       <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
-        <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
+        <div class="d-flex flex-column align-items-center justify-content-center ms-1 icons"
              (click)="onContextMenu(index, $event)">
           <i *ngIf="(column.attribute | attributeFunctionDefined)"
              [class.mb-1]="typeData.iconName"

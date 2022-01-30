@@ -1,4 +1,4 @@
-<span *ngFor="let role of translatedRoles; trackBy:trackByRole" class="badge badge-lg mr-2 mb-2 cursor-pointer"
+<span *ngFor="let role of translatedRoles; trackBy:trackByRole" class="badge badge-lg me-2 mb-2 cursor-pointer"
       (click)="onClick()"
       [class.badge-outline-secondary]="role.fromParentOrTeams"
       [class.badge-outline-success]="!role.fromParentOrTeams"
@@ -7,7 +7,7 @@
 <ng-container *ngIf="editable">
   <div class="btn btn-sm btn-link mb-1 text-nowrap" #buttonElement
        (click)="$event.stopPropagation(); onClick()">
-    <i class="far fa-pencil mr-1"></i>
+    <i class="far fa-pencil me-1"></i>
     <span *ngIf="!(translatedRoles | empty)" i18n="@@edit">Edit</span>
     <span *ngIf="translatedRoles | empty" i18n="@@roles.add">Add Rights</span>
   </div>

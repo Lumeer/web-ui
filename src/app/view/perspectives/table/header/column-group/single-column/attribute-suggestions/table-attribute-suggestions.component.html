@@ -26,7 +26,7 @@
              (click)="onUseAttribute()">
             <icons-presenter [colors]="collection ? [collection.color] : []"
                              [icons]="collection ? [collection.icon] : []"
-                             class="mr-1">
+                             class="me-1">
             </icons-presenter>
             <span class="white-space-pre">{{state.lastName}}</span>
           </a>
@@ -48,11 +48,11 @@
                class="dropdown-item">
               <icons-presenter [colors]="[linkedAttribute.collection.color]"
                                [icons]="[linkedAttribute.collection.icon]"
-                               class="mr-1">
+                               class="me-1">
               </icons-presenter>
               <span
                 [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
-              <small class="text-secondary ml-1">({{linkedAttribute.linkType.name}})</small>
+              <small class="text-secondary ms-1">({{linkedAttribute.linkType.name}})</small>
             </a>
           </ng-container>
 
@@ -70,7 +70,7 @@
                class="dropdown-item">
               <icons-presenter [colors]="[linkedAttribute.collection.color]"
                                [icons]="[linkedAttribute.collection.icon]"
-                               class="mr-1">
+                               class="me-1">
               </icons-presenter>
               <span
                 [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>

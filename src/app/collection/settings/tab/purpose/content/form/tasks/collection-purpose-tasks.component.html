@@ -1,6 +1,6 @@
 <div [formGroup]="form" *ngIf="{collectionSelectItems: collection | attributesSelectItems} as data">
 
-  <div class="form-group row m-0 mt-3">
+  <div class="row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.assignee.label">
       Assignee
     </label>
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div class="form-group row m-0 mt-3">
+  <div class="row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.dueDate.label">
       Due Date
     </label>
@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <div class="form-group row m-0 mt-3">
+  <div class="row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.state.label">
       State
     </label>
@@ -63,7 +63,7 @@
     </div>
   </div>
 
-  <div class="form-group row m-0 mt-3"
+  <div class="row m-0 mt-3"
        *ngIf="collection?.attributes | stateListConstraint:stateControl.value:(documents$ | async):(constraintData$ | async) as stateConstraintData">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.stateList.label">
       Done States
@@ -87,7 +87,7 @@
     </div>
   </div>
 
-  <div class="form-group row m-0 mt-3">
+  <div class="row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.observer.label">
       Observer
     </label>
@@ -109,7 +109,7 @@
     </div>
   </div>
 
-  <div class="form-group row m-0 mt-3">
+  <div class="row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.priority.label">
       Priority
     </label>
@@ -128,7 +128,7 @@
     </div>
   </div>
 
-  <div class="form-group row m-0 mt-3">
+  <div class="row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.tags.label">
       Tags
     </label>
@@ -149,7 +149,7 @@
     </div>
   </div>
 
-  <div class="form-group row m-0 mt-3">
+  <div class="row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@projects.tab.template.metadata.defaultView">
       Open in View
     </label>

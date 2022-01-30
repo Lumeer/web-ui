@@ -105,7 +105,7 @@ export class AttributeTypeFormComponent implements OnChanges {
   }
 
   private createModifiedAttribute(): Attribute {
-    const type = constraintTypesMap[this.typeControl.value];
+    const type: ConstraintType = constraintTypesMap[this.typeControl.value];
     const config = this.createConstraintConfig(type);
     const constraint: Constraint = type ? createConstraint(type, config) : null;
     const attributeFunction: AttributeFunction = constraint.allowEditFunction ? this.attribute?.function : null;

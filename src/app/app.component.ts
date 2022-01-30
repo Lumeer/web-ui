@@ -22,7 +22,7 @@ import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import * as Sentry from '@sentry/browser';
-import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
+import {Angulartics2GoogleAnalytics} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
 import {combineLatest, Observable, of} from 'rxjs';

@@ -2,7 +2,7 @@
      [ngClass]="customHeader ? 'p-0' : ('bg-' + dialogType  + ' justify-content-center align-items-center text-center p-3')"
      *ngIf="showHeader">
   <ng-container *ngIf="!customHeader">
-    <i *ngIf="icon" class="{{icon}} icon text-white mr-2"></i>
+    <i *ngIf="icon" class="{{icon}} icon text-white me-2"></i>
     <h4 class="modal-title text-white">
       <ng-content select=".title"></ng-content>
     </h4>
@@ -22,7 +22,7 @@
             [attr.aria-disabled]="closeDisabled || performingAction"
             [disabled]="closeDisabled || performingAction"
             type="button"
-            class="btn btn-outline-primary text-nowrap float-left" (click)="onCloseClick()">
+            class="btn btn-outline-primary text-nowrap float-start" (click)="onCloseClick()">
       <ng-content select=".button-cancel"></ng-content>
     </button>
     <button *ngIf="showSubmit"
@@ -30,8 +30,8 @@
             [disabled]="submitDisabled || performingAction"
             (click)="onSubmitClick()"
             type="button"
-            class="btn btn-{{dialogType}} text-nowrap float-right">
-      <span *ngIf="performingAction" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+            class="btn btn-{{dialogType}} text-nowrap float-end">
+      <span *ngIf="performingAction" class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
       <ng-content select=".button-submit"></ng-content>
     </button>
     <button *ngIf="showSecondarySubmit"
@@ -39,12 +39,12 @@
             [disabled]="secondarySubmitDisabled || performingAction || performingSecondaryAction"
             (click)="onSecondarySubmitClick()"
             type="button"
-            [class.mr-2]="showSubmit"
-            class="btn btn-outline-{{secondarySubmitClass || dialogType}} text-nowrap float-right">
-      <span *ngIf="performingSecondaryAction" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+            [class.me-2]="showSubmit"
+            class="btn btn-outline-{{secondarySubmitClass || dialogType}} text-nowrap float-end">
+      <span *ngIf="performingSecondaryAction" class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
       <ng-content select=".button-secondary-submit"></ng-content>
     </button>
-    <span *ngIf="secondaryInfo" class="float-right text-muted py-1" [class.mr-3]="showSubmit || showSecondarySubmit">
+    <span *ngIf="secondaryInfo" class="float-end text-muted py-1" [class.me-3]="showSubmit || showSecondarySubmit">
       {{secondaryInfo}}
     </span>
   </div>

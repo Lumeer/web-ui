@@ -9,14 +9,14 @@
 
   <div class="body p-3">
     <form [formGroup]="form">
-      <div class="form-group">
+      <div>
         <div *ngIf="message.touched && message.errors"
              class="alert alert-danger"
              i18n="@@dialog.feedback.message.required"
              role="alert">
           You need to fill in the message.
         </div>
-        <label for="feedbackMessage"
+        <label class="form-label" for="feedbackMessage"
                i18n="@@dialog.feedback.message.label">
           Describe how we can improve the application to better fit your needs:
         </label>

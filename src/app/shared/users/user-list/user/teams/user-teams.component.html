@@ -4,12 +4,12 @@
   <div *ngFor="let team of selectedTeams; trackBy: trackByTeam"
        (mousedown)="onMouseDown($event)"
        (click)="onClick()"
-       class="badge badge-lg badge-pill badge-outline-info mr-2 mb-1 team-tag cursor-pointer">{{team.name}}</div>
+       class="badge badge-lg badge-pill badge-outline-info me-2 mb-1 team-tag cursor-pointer">{{team.name}}</div>
 
   <div #textInputParent>
     <button class="btn btn-sm btn-link text-nowrap py-0 mb-1" *ngIf="editable && !(suggesting$ | async)"
             (click)="$event.stopPropagation(); onEditClick()">
-      <i class="far fa-users mr-1"></i>
+      <i class="far fa-users me-1"></i>
       <span *ngIf="!(selectedTeams | empty)" i18n="@@edit">Edit</span>
       <span *ngIf="selectedTeams | empty" i18n="@@users.teams.add.teams">Add Teams</span>
     </button>
@@ -23,7 +23,7 @@
            placeholder="Add team"
            i18n-placeholder="@@user.teams.search.placeholder"
            (keydown)="onKeyDown($event)"
-           [class.ml-1]="selectedTeams.length > 0"
+           [class.ms-1]="selectedTeams.length > 0"
            [spellcheck]="false"
            class="border-0 bg-transparent mb-1"
            type="text">

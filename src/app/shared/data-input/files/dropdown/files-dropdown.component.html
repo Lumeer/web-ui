@@ -7,7 +7,7 @@
   <div class="card p-3"
        (click)="onClick($event)">
     <table *ngIf="filesAttachments?.length > 0 || files?.length > 0"
-           class="table table-sm">
+           class="table table-borderless table-sm">
       <tbody>
       <tr *ngFor="let file of filesAttachments; index as fileIndex">
         <td [class.border-top-0]="fileIndex === 0"
@@ -15,7 +15,7 @@
           <div [class.btn]="!file.uploading" [class.btn-link]="!file.uploading" class="p-0" (click)="onAttachmentClick(file)">{{ file.fileName }}</div>
         </td>
         <td [class.border-top-0]="fileIndex === 0"
-            class="text-right">
+            class="text-end">
           <i *ngIf="!file.uploading"
              (click)="onRemoveFileAttachment(file.id)"
              title="Delete file"
@@ -29,7 +29,7 @@
           <div class="btn btn-link p-0" (click)="onFileClick(file)">{{ file.name }}</div>
         </td>
         <td [class.border-top-0]="fileIndex === 0 && !filesAttachments?.length"
-            class="text-right">
+            class="text-end">
           <i (click)="onRemoveFile(fileIndex)"
              title="Delete file"
              i18n-title="@@files.dropdown.button.delete"
@@ -57,13 +57,13 @@
       </div>
     </div>
 
-    <div class="d-flex flex-grow-0 justify-content-end">
+    <div class="d-flex mt-2 flex-grow-0 justify-content-end">
       <button class="btn btn-sm btn-outline-secondary"
               data-test="files-dropdown-cancel-button"
               (click)="onCancel()">
         <span i18n="@@button.cancel">Cancel</span>
       </button>
-      <div class="ml-1">
+      <div class="ms-1">
         <input type="file"
                class="d-none"
                id="inputGroupFile01"

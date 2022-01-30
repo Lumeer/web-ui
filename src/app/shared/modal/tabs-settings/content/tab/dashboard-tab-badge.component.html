@@ -1,7 +1,7 @@
 <div class="d-inline-flex tab-badge py-1 px-2 align-items-baseline"
-     [ngClass]="selected ? 'badge-success' : (isDefault && tab.hidden ? 'badge-outline-secondary' : 'badge-outline-success')">
-  <i *ngIf="editable" class="fa-fw fa fa-grip-horizontal cursor-move mr-2 text-black-50"></i>
-  <span [class.mr-2]="editable">{{tab.title}}</span>
+     [ngClass]="selected ? 'bg-success' : (isDefault && tab.hidden ? 'bg-outline-secondary' : 'bg-outline-success')">
+  <i *ngIf="editable" class="fa-fw fa fa-grip-horizontal cursor-move me-2 text-black-50"></i>
+  <span [class.me-2]="editable">{{tab.title}}</span>
   <i *ngIf="editable && isDefault" (click)="toggleHidden.emit(); $event.stopPropagation()" class="text-primary clickable"
      [ngClass]="tab.hidden ? 'far fa-eye-slash' : 'far fa-eye'"
      [title]="tab.hidden ? showTitle : hideTitle"></i>

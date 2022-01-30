@@ -10,15 +10,15 @@
       valuable information, free ebooks and guides. Are you sure you want to continue?</p>
     <form [formGroup]="form"
           (submit)="onSubmit()">
-      <div [class.d-none]="stage !== 0" class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div [class.d-none]="stage !== 0">
+        <div class="form-check">
           <input [formControlName]="agreementName"
                  [id]="agreementName"
                  [name]="agreementName"
-                 class="custom-control-input"
+                 class="form-check-input"
                  type="checkbox">
           <label [for]="agreementName"
-                 class="custom-control-label">
+                 class="form-check-label">
             <span class="space-after" i18n="@@label.terms.start">I have read</span>
             <a [href]="termsOfServiceLink"
                i18n="@@termsOfService" class="space-after"
@@ -31,15 +31,15 @@
           </label>
         </div>
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="my-3">
+        <div class="form-check">
           <input [formControlName]="newsletterName"
                  [id]="newsletterName"
                  [name]="newsletterName"
-                 class="custom-control-input"
+                 class="form-check-input"
                  type="checkbox">
           <label [for]="newsletterName"
-                 class="custom-control-label">
+                 class="form-check-label">
             <span [class.d-none]="stage === 0" i18n="@@label.newsletter.secondChance">Please subscribe me to the Newsletter with all its benefits!<br/></span>
             <span [class.d-none]="stage !== 0"
                   i18n="@@label.newsletter.start">Send me free ebooks and materials on:<br/></span>

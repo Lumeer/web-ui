@@ -57,6 +57,7 @@ import {PipesModule} from '../shared/pipes/pipes.module';
 import {TopPanelModule} from '../shared/top-panel/top-panel.module';
 import {SequencesModule} from '../shared/sequences/sequences.module';
 import {SliderModule} from '../shared/slider/slider.module';
+import {InputModule} from '../shared/input/input.module';
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import {SliderModule} from '../shared/slider/slider.module';
     SequencesModule,
     SliderModule,
     FormsModule,
+    InputModule,
   ],
   declarations: [
     OrganizationDetailComponent,

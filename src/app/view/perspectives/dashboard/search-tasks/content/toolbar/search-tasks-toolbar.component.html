@@ -7,12 +7,12 @@
           title="Add Task"
           i18n-title="@@create.new.task"
           (click)="onAdd()">
-    <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
-    <span class="font-weight-bold" i18n="@@create.new.task">Add Task</span>
+    <i class="fa fa-plus-circle me-1" aria-hidden="true"></i>
+    <span class="fw-bold" i18n="@@create.new.task">Add Task</span>
   </button>
 
   <size-slider *ngIf="documentsCount"
-               class="ml-auto"
+               class="ms-auto"
                [defaultSize]="size"
                (newSize)="onSizeChange($event)">
   </size-slider>

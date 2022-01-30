@@ -1,5 +1,5 @@
 <div class="toolbar d-flex">
-  <i class="ml-auto far fa-fw fa-trash-alt text-danger cursor-pointer"
+  <i class="ms-auto far fa-fw fa-trash-alt text-danger cursor-pointer"
      (click)="delete.emit()"
      title="Delete" i18n-title="@@delete"
      aria-hidden="true">
@@ -8,13 +8,9 @@
 
 <form [formGroup]="form">
 
-  <div class="form-group row mb-0">
+  <div class="row mb-0">
 
-    <label class="col-form-label col-2 mb-2">
-          <span i18n="@@resource.new.dialog.icon.label">
-            Icon:
-          </span>
-    </label>
+    <label class="col-form-label col-2 mb-2" i18n="@@resource.new.dialog.icon.label">Icon:</label>
 
     <div class="col-8 d-block mb-3 text-center cursor-pointer" (click)="pickerComponent.toggle()">
       <div class="text-muted small my-2" i18n="@@resource.new.dialog.icon.label.hint">(click the icon to change it)</div>
@@ -39,8 +35,8 @@
     </div>
   </div>
 
-  <div class="form-group row">
-    <label class="col-12 col-form-label"
+  <div class="mt-3 row">
+    <label class="col-12 form-label"
            i18n="@@resource.new.dialog.name.label"
            for="name">Name:</label>
 
@@ -56,8 +52,8 @@
            i18n="@@view.modal.settings.name.notEmpty">View name can not be empty</small>
   </div>
 
-  <div class="form-group row mt-3">
-    <label class="col-12 col-form-label"
+  <div class="row mt-3">
+    <label class="col-12 form-label"
            i18n="@@view.modal.settings.priority"
            for="priority">Priority:</label>
 
@@ -82,8 +78,8 @@
     </div>
   </div>
 
-  <div class="form-group row mt-3">
-    <label class="col-12 col-form-label"
+  <div class="row mt-3">
+    <label class="col-12 form-label"
            i18n="@@view.modal.settings.folders"
            for="name">Folders:</label>
 

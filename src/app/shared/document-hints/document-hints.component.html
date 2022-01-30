@@ -22,7 +22,7 @@
           <div
             *ngIf="{value: (doc.data[column.attributeId] | dataValue : (data.collection | collectionAttribute : column.attributeId)?.constraint : constraintData) | previewDataValue} as state"
             [id]="'hint-' + doc.id + '-' + column.attributeId"
-            [class.font-weight-bold]="column.attributeId === attributeId"
+            [class.fw-bold]="column.attributeId === attributeId"
             [style.width.px]="column.width"
             (click)="$event.preventDefault();"
             [innerHtml]="column.hidden ? '' : (column.attributeId === attributeId ? (state.value | highlightText: (filter$ | async)) : state.value) | safeHtml"

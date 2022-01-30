@@ -1,15 +1,13 @@
 <div class="header" [style.background-color]="color | lightenColor:.5">
-  <div class="p-2 font-weight-bold" i18n="@@users.header.user">User</div>
+  <div class="p-2 fw-bold" i18n="@@users.header.user">User</div>
   <div class="roles">
-    <div class="font-weight-bold py-2 pr-2 text-nowrap">
+    <div class="fw-bold py-2 pe-2 text-nowrap">
       <span i18n="@@users.header.teams.roles">Teams & Rights</span>
-      <i class="far fa-question-circle ml-1" [tooltip]="legend" containerClass="bigger-tooltip"></i>
+      <i class="far fa-question-circle ms-1" [tooltip]="legend" containerClass="bigger-tooltip"></i>
     </div>
-    <div class="pl-3 input-group input-group-sm">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
-      </div>
-      <input id="userSearch" class="form-control mr-1" type="search"
+    <div class="ps-3 input-group input-group-sm">
+      <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
+      <input id="userSearch" class="form-control me-1" type="search"
              placeholder="Search user..."
              inputmode="search"
              i18n-placeholder="@@users.header.search.placeholder"
@@ -40,12 +38,12 @@
 </user-component>
 
 <ng-template #legend>
-  <div class="text-left">
+  <div class="text-start">
     <span class="badge badge-lg badge-outline-info" i18n="@@users.header.teams.roles.tooltip.teams">Teams</span>
-    <span class="ml-1" i18n="@@users.header.teams.roles.tooltip.member">the user is member of</span><br/>
+    <span class="ms-1" i18n="@@users.header.teams.roles.tooltip.member">the user is member of</span><br/>
     <span class="badge badge-lg badge-outline-success mt-1" i18n="@@users.header.teams.roles.tooltip.rights">Rights</span>
-    <span class="ml-1" i18n="@@users.header.teams.roles.tooltip.direct">directly assigned</span><br/>
+    <span class="ms-1" i18n="@@users.header.teams.roles.tooltip.direct">directly assigned</span><br/>
     <span class="badge badge-lg badge-outline-secondary mt-1" i18n="@@users.header.teams.roles.tooltip.rights">Rights</span>
-    <span class="ml-1" i18n="@@users.header.teams.roles.tooltip.indirect">gained from organization, project, or team</span>
+    <span class="ms-1" i18n="@@users.header.teams.roles.tooltip.indirect">gained from organization, project, or team</span>
   </div>
 </ng-template>

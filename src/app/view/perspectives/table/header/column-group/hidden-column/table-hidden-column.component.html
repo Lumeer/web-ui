@@ -12,7 +12,7 @@
                (click)="onShowSingleColumn(attribute)"
                mat-menu-item>
     <span>{{attribute | attributeLastName}}</span>
-    <small class="text-secondary pl-1">({{attribute.name}})</small>
+    <small class="text-secondary ps-1">({{attribute.name}})</small>
   </button>
   <button *ngIf="column.attributeIds.length > 1"
                (click)="onShowAllColumns()"

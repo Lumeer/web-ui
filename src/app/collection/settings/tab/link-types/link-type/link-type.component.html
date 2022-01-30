@@ -1,4 +1,4 @@
-<td class="d-flex flex-row no-wrap align-items-center pl-2">
+<td class="d-flex flex-row no-wrap align-items-center ps-2">
   <icons-presenter
     [colors]="linkType.collections | colors"
     [icons]="linkType.collections | icons"
@@ -6,7 +6,7 @@
   </icons-presenter>
 
   <input-box
-    class="ml-2 flex-grow-1"
+    class="ms-2 flex-grow-1"
     innerClass="bg-transparent"
     [editable]="permissions?.roles?.Manage"
     [title]="linkType.name"
@@ -19,10 +19,10 @@
 
 </td>
 
-<td class="text-right align-middle">
+<td class="text-end align-middle">
 
-  <span class="mr-3" title="Number of links" i18n-title="@@links.count">
-    <i class="far fa-link mr-1" aria-hidden="true"></i>
+  <span class="me-3" title="Number of links" i18n-title="@@links.count">
+    <i class="far fa-link me-1" aria-hidden="true"></i>
     <span>{{linkType.linksCount || 0}}</span>
   </span>
 

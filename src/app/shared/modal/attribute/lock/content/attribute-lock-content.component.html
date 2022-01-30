@@ -1,11 +1,11 @@
 <div class="d-inline-flex switch-wrapper p-1">
-  <div class="px-3 py-3 cursor-pointer mr-1 d-flex align-items-center badge" (click)="lockedControl.setValue(false)"
-       [ngClass]="lockedControl.value ? '' :'badge badge-success'">
-    <i class="far fa-lock-open mr-2"></i><span i18n="@@resource.attribute.lock.editable">Always editable</span>
+  <div class="px-3 py-3 cursor-pointer me-1 d-flex align-items-center badge" (click)="lockedControl.setValue(false)"
+       [ngClass]="lockedControl.value ? 'text-primary' :'badge bg-success'">
+    <i class="far fa-lock-open me-2"></i><span i18n="@@resource.attribute.lock.editable">Always editable</span>
   </div>
-  <div class="px-3 py-3 cursor-pointer ml-1 d-flex align-items-center badge" (click)="lockedControl.setValue(true)"
-       [ngClass]="lockedControl.value ?  'badge badge-danger' : ''">
-    <i class="far fa-lock mr-2"></i><span i18n="@@resource.attribute.lock.locked">Always locked</span>
+  <div class="px-3 py-3 cursor-pointer ms-1 d-flex align-items-center badge" (click)="lockedControl.setValue(true)"
+       [ngClass]="lockedControl.value ? 'badge bg-danger' : 'text-primary'">
+    <i class="far fa-lock me-2"></i><span i18n="@@resource.attribute.lock.locked">Always locked</span>
   </div>
 </div>
 

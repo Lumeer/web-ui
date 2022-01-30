@@ -16,6 +16,10 @@
   background-color: $success !important;
 }
 
+.toast-container.toast-top-center {
+  width: 100%;
+}
+
 .toast-container .ngx-toastr {
   box-shadow: $shadow-up;
 

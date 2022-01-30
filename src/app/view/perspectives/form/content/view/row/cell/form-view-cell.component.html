@@ -1,5 +1,5 @@
 <ng-container *ngIf="dataIsValid">
-  <div class="text-truncate font-weight-bold" [class.required]="mandatory">{{cell?.title}}</div>
+  <div class="text-truncate fw-bold" [class.required]="mandatory">{{cell?.title}}</div>
 
   <div *ngIf="cell?.type === type.Attribute"
        class="data-input mt-1 d-flex"

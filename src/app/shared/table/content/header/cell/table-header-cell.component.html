@@ -3,7 +3,7 @@
        (contextmenu)="onContextMenu($event)">
 
     <div #filterElement
-         class="filter-icon-wrapper mr-1 cursor-pointer"
+         class="filter-icon-wrapper me-1 cursor-pointer"
          (click)="onFilterClick($event)"
          (dblclick)="$event.stopPropagation(); $event.preventDefault()">
       <i *ngIf="column.attribute" class="fas fa-filter icon"
@@ -24,11 +24,11 @@
 
     <ng-container *ngIf="{iconName: (column.attribute?.constraint | constraintTypeIcon)} as typeData">
       <div class="d-flex flex-row align-items-center justify-content-center icons">
-        <div *ngIf="column?.attribute?.description && !editing" class="ml-1"
+        <div *ngIf="column?.attribute?.description && !editing" class="ms-1"
              [tooltip]="column?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
-          <i class="far fa-question-circle ml-1"></i>
+          <i class="far fa-question-circle ms-1"></i>
         </div>
-        <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons cursor-pointer"
+        <div class="d-flex flex-column align-items-center justify-content-center ms-1 icons cursor-pointer"
              (click)="onContextMenu($event)">
           <i *ngIf="(column.attribute | attributeFunctionDefined)"
              [class.mb-1]="typeData.iconName"

@@ -23,7 +23,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
 import {AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {DialogType} from '../../../../modal/dialog-type';
 import {minLengthValidator} from '../../../../../core/validators/custom-validators';
 import {uniqueValuesValidator} from '../../../../../core/validators/unique-values-validator';
@@ -32,7 +32,7 @@ import {minimumValuesCountValidator} from '../../../../../core/validators/mininu
 import {SelectionListsAction} from '../../../../../core/store/selection-lists/selection-lists.action';
 import {parseSelectOptionsFromForm} from '../../../../modal/attribute/type/form/constraint-config/select/select-constraint.utils';
 import {keyboardEventCode, KeyCode} from '../../../../key-code';
-import {map, take} from 'rxjs/operators';
+import {distinctUntilChanged, map, take} from 'rxjs/operators';
 import {selectSelectionListsByProjectSorted} from '../../../../../core/store/selection-lists/selection-lists.state';
 
 @Component({
@@ -53,6 +53,7 @@ export class SelectionListModalComponent implements OnInit {
 
   public form: FormGroup;
   public performingAction$ = new BehaviorSubject(false);
+  public invalid$: Observable<boolean>;
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: FormBuilder) {}
 
@@ -72,6 +73,11 @@ export class SelectionListModalComponent implements OnInit {
         ]
       ),
     });
+
+    this.invalid$ = this.form.statusChanges.pipe(
+      map(() => this.form.invalid),
+      distinctUntilChanged()
+    );
   }
 
   public uniqueName(excludeId?: string): AsyncValidatorFn {

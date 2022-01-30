@@ -5,10 +5,10 @@
       <input type="checkbox" [formControlName]="formControlName.DisplayValues" [id]="formControlName.DisplayValues" #displayValues>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.select.displayValues.label" (click)="displayValues.click()">Distinguish display values</span>
-    <i class="fas fa-question-circle ml-1 cursor-help"
-       title="Use different values for users and for computations in functions (e.g. High Priority = 3)."
-       i18n-title="@@constraint.select.displayValues.help">
+    <span class="ps-2 cursor-pointer user-select-none" i18n="@@constraint.select.displayValues.label" (click)="displayValues.click()">Distinguish display values</span>
+    <i class="fas fa-question-circle ms-1 cursor-help"
+       tooltip="Use different values for users and for computations in functions (e.g. High Priority = 3)."
+       i18n-tooltip="@@constraint.select.displayValues.help">
     </i>
   </div>
 
@@ -25,7 +25,7 @@
       <div [formGroup]="group"
            *ngIf="{background: group.get(formControlNames.Background)?.value} as groupData"
            class="d-flex">
-        <div class="flex-grow-0 mr-1 mt-2" *ngIf="data.enabled">
+        <div class="flex-grow-0 me-1 mt-2" *ngIf="data.enabled">
           <i cdkDragHandle
              class="fas fa-fw fa-lg fa-grip-vertical cursor-move text-black-50"
              title="Reorder options"
@@ -59,8 +59,8 @@
                  placeholder="Display as..."
                  i18n-placeholder="@@constraint.select.option.displayValue">
         </div>
-        <div *ngIf="data.enabled" class="flex-grow-0 ml-2 d-flex align-items-center">
-          <i class="fas fa-fw fa-palette text-success mr-2 cursor-pointer"
+        <div *ngIf="data.enabled" class="flex-grow-0 ms-2 d-flex align-items-center">
+          <i class="fas fa-fw fa-palette text-success me-2 cursor-pointer"
              title="Choose background color" (click)="onPaletteClick(optionIndex, colorPicker)"
              i18n-title="@@constraint.select.option.background" #colorElement></i>
           <color-picker [color]="groupData.background"

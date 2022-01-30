@@ -1,13 +1,13 @@
 <div class="title-row mb-1">
   <input-box placeholder="Field title"
-             innerClass="font-weight-bold"
+             innerClass="fw-bold"
              i18n-placeholder="@@perspective.form.editor.row.cell.title"
              [canStayEmpty]="false"
              [maxLines]="1"
              [initialValue]="cell?.title"
              (newValue)="onNewTitle($event)">
   </input-box>
-  <form-editor-cell-actions class="ml-2"
+  <form-editor-cell-actions class="ms-2"
                             [config]="cell?.config"
                             [type]="cell?.type"
                             [view]="view"

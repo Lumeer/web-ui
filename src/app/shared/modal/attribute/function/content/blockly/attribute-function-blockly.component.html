@@ -1,18 +1,18 @@
 <div class="d-flex pb-2">
-  <div class="flex-grow-1 text-right">
-    <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="!isFunction">
-      <input class="custom-control-input" type="checkbox" [checked]="recursiveControl.value"
+  <div class="flex-grow-1 text-end">
+    <div class="form-check me-3 d-inline-block" *ngIf="!isFunction">
+      <input class="form-check-input" type="checkbox" [checked]="recursiveControl.value"
              (change)="recursiveControl.patchValue($event.target.checked)" id="recursive">
-      <label class="custom-control-label" for="recursive">
+      <label class="form-check-label" for="recursive">
         <span i18n="@@collection.config.tab.rules.blockly.recursive">Recursive</span>
-        <i class="far fa-question-circle ml-1" tooltip="Trigger also on changes made by other automations" i18n-tooltip="@@collection.config.tab.rules.blockly.recursive.tooltip"></i>
+        <i class="far fa-question-circle ms-1" tooltip="Trigger also on changes made by other automations" i18n-tooltip="@@collection.config.tab.rules.blockly.recursive.tooltip"></i>
       </label>
     </div>
 
-    <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="!isFunction">
-      <input class="custom-control-input" type="checkbox" [checked]="dryRunControl.value"
+    <div class="form-check me-3 d-inline-block" *ngIf="!isFunction">
+      <input class="form-check-input" type="checkbox" [checked]="dryRunControl.value"
              (change)="dryRunControl.patchValue($event.target.checked)" id="dryRun">
-      <label class="custom-control-label" for="dryRun" i18n="@@collection.config.tab.rules.blockly.dryRun">
+      <label class="form-check-label" for="dryRun" i18n="@@collection.config.tab.rules.blockly.dryRun">
         Dry Run
       </label>
     </div>

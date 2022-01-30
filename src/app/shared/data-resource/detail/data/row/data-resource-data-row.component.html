@@ -1,14 +1,14 @@
 <div *ngIf="!editableKey; else editableKeyInput"
      class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center data-input key">
   <span class="font-italic">{{keyDataValue.value}}</span>
-  <div *ngIf="row?.attribute?.description" class="ml-1 text-muted font-normal"
+  <div *ngIf="row?.attribute?.description" class="ms-1 text-muted font-normal"
        [tooltip]="row?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
     <i class="far fa-question-circle font-normal"></i>
   </div>
 </div>
 
 <ng-template #editableKeyInput>
-  <div class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+  <div class="p-0 pe-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
     <data-input class="h-100 w-100 p-1 data-input key"
                 [cursor]="cursor"
                 [focus]="true"
@@ -30,7 +30,7 @@
 </ng-template>
 
 <ng-container *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async):lockStats as dataInputInfo">
-  <div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+  <div class="p-0 ps-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
     <data-input class="h-100 w-100 p-1 data-input value"
                 [constraint]="row.attribute?.constraint"
                 [cursor]="cursor"
@@ -53,7 +53,7 @@
     </data-input>
   </div>
 
-  <data-resource-data-row-icons class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center"
+  <data-resource-data-row-icons class="d-flex flex-row flex-nowrap align-items-center ms-1 justify-content-center"
                                 [row]="row"
                                 [lockStats]="lockStats"
                                 [showLockStats]="dataInputInfo.showLockStats"

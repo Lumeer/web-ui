@@ -133,9 +133,9 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
         if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
           const check = input.connection.targetConnection?.check_;
           if (check instanceof Array) {
-            connected.push(...input.connection.targetConnection?.check_);
+            connected.push(...check);
           } else {
-            connected.push(input.connection.targetConnection?.check_);
+            connected.push(check);
           }
         }
       });

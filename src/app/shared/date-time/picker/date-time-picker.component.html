@@ -15,8 +15,8 @@
                             [bsValue]="dateControl.value"
                             (bsValueChange)="onDateChange($event)">
       </bs-datepicker-inline>
-      <div class="d-flex flex-column pr-3 pb-3"
-           [class.pl-3]="!((options | hasDateOption) && (options | hasTimeOption))"
+      <div class="d-flex flex-column pe-3 pb-3"
+           [class.ps-3]="!((options | hasDateOption) && (options | hasTimeOption))"
            [class.pt-3]="!(options | hasDateOption)">
         <div *ngIf="options | hasTimeOption"
              class="d-flex flex-column flex-grow-1 align-items-center justify-content-center mb-3">
@@ -38,7 +38,7 @@
                   (click)="onCancel($event)">
             <span i18n="@@button.cancel">Cancel</span>
           </button>
-          <button class="btn btn-sm btn-primary ml-2"
+          <button class="btn btn-sm btn-primary ms-2"
                   data-test="date-time-picker-save-button"
                   [disabled]="!dateControl.value"
                   (click)="onSave($event)">

@@ -1,7 +1,7 @@
 <form [formGroup]="form">
 
-  <div class="form-group row">
-    <label class="col-12 col-form-label"
+  <div class="row">
+    <label class="col-12 form-label"
            i18n="@@selection.lists.modal.name.title" for="name">Name:</label>
 
     <div class="col-12">
@@ -12,13 +12,14 @@
              i18n-placeholder="@@selection.lists.modal.name.placeholder"
              placeholder="Enter unique name">
     </div>
-    <small class="col-12 text-danger mt-1" *ngIf="nameControl.touched && nameControl.errors?.minLength"
+    <small class="col-12 form-text text-danger mt-1" *ngIf="nameControl.touched && nameControl.errors?.minLength"
            i18n="@@selection.lists.modal.name.error.minLength">List name can not be empty</small>
-    <small class="col-12 text-danger mt-1" *ngIf="nameControl.errors?.notUnique"
+    <small class="col-12 form-text text-danger mt-1" *ngIf="nameControl.errors?.notUnique"
            i18n="@@selection.lists.modal.name.error.notUnique">List name already exists</small>
   </div>
 
-  <select-constraint-options-form [form]="form"
+  <select-constraint-options-form class="d-block mt-1"
+                                  [form]="form"
                                   [options]="list.options">
   </select-constraint-options-form>
 

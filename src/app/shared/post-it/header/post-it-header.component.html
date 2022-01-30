@@ -1,5 +1,5 @@
-<span *ngIf="tag" class="d-flex align-items-center mr-2">
-    <span class="text-white badge badge-pill align-text-bottom tag" [style.background-color]="tag?.color">
+<span *ngIf="tag" class="d-flex align-items-center me-2">
+    <span class="text-white badge rounded-pill align-text-bottom tag" [style.background-color]="tag?.color">
       {{tag?.title}}
     </span>
   </span>
@@ -11,7 +11,7 @@
       {{ resource?.name }}
 </span>
 
-<div class="d-flex align-self-center ml-auto">
+<div class="d-flex align-self-center ms-auto">
   <i *ngIf="dataPermissions?.read"
      class="icon text-primary far fa-file-search p-1 cursor-pointer"
      title="Show detail" i18n-title="@@show.detail"

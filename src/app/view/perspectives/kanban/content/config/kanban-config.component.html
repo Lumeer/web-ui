@@ -9,7 +9,7 @@
 </kanban-stem-config>
 
 <ng-container *ngIf="config | kanbanAggregationDefined">
-  <h6 class="font-weight-bold mt-4" i18n="@@perspective.kanban.config.column.summary">Column Summary</h6>
+  <h6 class="fw-bold mt-4" i18n="@@perspective.kanban.config.column.summary">Column Summary</h6>
   <kanban-aggregation-config class="d-block"
                              [aggregation]="config?.aggregation"
                              (aggregationChange)="onAggregationChanged($event)">
@@ -17,14 +17,14 @@
 </ng-container>
 
 <ng-container *ngIf="visible && (config | isAnyKanbanAttributeSelected)">
-  <h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.column.size">Column size</h6>
+  <h6 class="mt-4 fw-bold" i18n="@@perspective.kanban.config.column.size">Column size</h6>
   <size-slider class="d-block w-100" [defaultSize]="config?.columnSize"
                [numItems]="4"
                (newSize)="onColumnSizeChanged($event)">
 
   </size-slider>
 
-  <h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.card.layout">Card layout</h6>
+  <h6 class="mt-4 fw-bold" i18n="@@perspective.kanban.config.card.layout">Card layout</h6>
   <values-slider class="d-block w-100" [items]="cardLayoutSliderItems"
                  [selectedId]="config?.cardLayout"
                  (itemSelected)="onCardLayoutChanged($event)">

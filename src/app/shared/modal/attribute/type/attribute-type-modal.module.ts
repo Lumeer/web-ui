@@ -60,6 +60,7 @@ import {ProgressModule} from '../../../progress/progress.module';
 import {ViewConstraintConfigFormComponent} from './form/constraint-config/view/view-constraint-config-form.component';
 import {AttributeCommonModalModule} from '../common/attribute-common-modal.module';
 import {AttributeLockModalModule} from '../lock/attribute-lock-modal.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,7 @@ import {AttributeLockModalModule} from '../lock/attribute-lock-modal.module';
     ProgressModule,
     AttributeCommonModalModule,
     AttributeLockModalModule,
+    TooltipModule,
   ],
   exports: [AttributeTypeModalComponent, SelectConstraintOptionsFormComponent],
 })

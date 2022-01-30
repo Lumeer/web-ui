@@ -14,7 +14,7 @@
               [class.invalid-value]="!commonConfiguration?.skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions?.length)"
               [spellcheck]="false"
               [innerHTML]="option.displayValue || option.value"
-              [class.ml-2]="!first && !configuration?.wrapItems">
+              [class.ms-2]="!first && !configuration?.wrapItems">
         </span>
     </ng-container>
 
@@ -27,7 +27,7 @@
            (focus)="onFocused()"
            (blur)="onBlur()"
            (ngModelChange)="onInput()"
-           [class.ml-1]="selectedOptions?.length > 0"
+           [class.ms-1]="selectedOptions?.length > 0"
            [spellcheck]="false"
            [ngClass]="inputClass"
            autoSizeInput

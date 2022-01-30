@@ -2,13 +2,11 @@
   <table class="table table-borderless table-sm">
     <thead [style.background-color]="(collection$ | async)?.color | lightenColor:.5">
     <tr>
-      <th i18n="@@collections.tab.linkTypes.name" class="pl-2">Link Type</th>
-      <th [style.width.%]="30" class="text-right">
+      <th i18n="@@collections.tab.linkTypes.name" class="ps-2">Link Type</th>
+      <th [style.width.%]="30" class="text-end">
         <div class="input-group input-group-sm">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
-          </div>
-          <input class="form-control mr-1" type="search"
+          <span class="input-group-text"><i class="fas fa-search"></i></span>
+          <input class="form-control me-1" type="search"
                  placeholder="Search link type..."
                  inputmode="search"
                  i18n-placeholder="@@collections.tab.linkTypes.search.placeholder"

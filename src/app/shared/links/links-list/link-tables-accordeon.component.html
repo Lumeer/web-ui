@@ -5,15 +5,15 @@
                    [isDisabled]="false"
                    (isOpenChange)="isOpenChanged($event, collection.id)">
     <div class="header-wrapper" accordion-heading>
-      <div class="mr-2">
+      <div class="me-2">
         <i *ngIf="!(collapsedCollections | includes:collection.id)" class="fas fa-caret-down"></i>
         <i *ngIf="collapsedCollections | includes:collection.id" class="fas fa-caret-right"></i>
       </div>
-      <icons-presenter class="d-block mr-1"
+      <icons-presenter class="d-block me-1"
                        [colors]="[collection.color]"
                        [icons]="[collection.icon]">
       </icons-presenter>
-      <div class="font-weight-bold text-truncate mr-2" [title]="collection.name">{{collection.name}}</div>
+      <div class="fw-bold text-truncate me-2" [title]="collection.name">{{collection.name}}</div>
     </div>
     <div>
       <links-list-table

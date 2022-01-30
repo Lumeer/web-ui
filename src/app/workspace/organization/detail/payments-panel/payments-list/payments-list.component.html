@@ -1,7 +1,7 @@
 <div class="my-4">
   <h5 i18n="@@organizations.tab.detail.payments.payments">Previous Orders</h5>
   <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped table-borderless">
       <caption i18n="@@organizations.tab.detail.payments.list">List of previous orders</caption>
       <thead>
         <tr>
@@ -18,8 +18,8 @@
         <tr *ngFor="let payment of payments">
           <td class="align-middle">{{ payment.date | date : 'shortDate'}}</td>
           <td class="align-middle">
-            <span *ngIf="payment.serviceLevel === 'FREE'" class="badge badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.payments.trial">Free</span>
-            <span *ngIf="payment.serviceLevel !== 'FREE'" class="badge badge-pill badge-success p-2" i18n="@@organizations.tab.detail.payments.business">Business</span>
+            <span *ngIf="payment.serviceLevel === 'FREE'" class="badge rounded-pill bg-danger p-2" i18n="@@organizations.tab.detail.payments.trial">Free</span>
+            <span *ngIf="payment.serviceLevel !== 'FREE'" class="badge rounded-pill bg-success p-2" i18n="@@organizations.tab.detail.payments.business">Business</span>
           </td>
           <td class="align-middle">
             {{ payment.users }}
@@ -28,16 +28,16 @@
             </button>
           </td>
           <td class="align-middle">{{ payment.currency }} {{ payment.amount | number:'1.2-2' }}</td>
-          <td class="align-middle" *ngIf="payment.state === 'PAID'"><span class="badge badge-pill badge-success p-2" i18n="@@organizations.tab.detail.payments.paid">Paid</span></td>
-          <td class="align-middle" *ngIf="payment.state === 'CANCELED'"><span class="badge badge-pill badge-light p-2" i18n="@@organizations.tab.detail.payments.canceled">Canceled</span></td>
-          <td class="align-middle" *ngIf="payment.state === 'TIMEOUTED'"><span class="badge badge-pill badge-light p-2" i18n="@@organizations.tab.detail.payments.timeouted">Timeouted</span></td>
+          <td class="align-middle" *ngIf="payment.state === 'PAID'"><span class="badge rounded-pill bg-success p-2" i18n="@@organizations.tab.detail.payments.paid">Paid</span></td>
+          <td class="align-middle" *ngIf="payment.state === 'CANCELED'"><span class="badge rounded-pill bg-light p-2" i18n="@@organizations.tab.detail.payments.canceled">Canceled</span></td>
+          <td class="align-middle" *ngIf="payment.state === 'TIMEOUTED'"><span class="badge rounded-pill bg-light p-2" i18n="@@organizations.tab.detail.payments.timeouted">Timeouted</span></td>
           <td class="align-middle" *ngIf="payment.state !== 'PAID' && payment.state !== 'CANCELED' && payment.state !== 'TIMEOUTED'">
-            <span class="badge badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.payments.ordered">Ordered</span>
-            <button type="button" class="btn btn-sm btn-primary ml-2" (click)="refreshPayment(payment.paymentId)"
+            <span class="badge rounded-pill bg-danger p-2" i18n="@@organizations.tab.detail.payments.ordered">Ordered</span>
+            <button type="button" class="btn btn-sm btn-primary ms-2" (click)="refreshPayment(payment.paymentId)"
                     title="Refresh payment state" i18n-title="@@organizations.tab.detail.payments.refresh">
               <i class="fas fa-sync-alt"></i>
             </button>
-            <button *ngIf="payment.state !== 'AUTHORIZED' " type="button" class="btn btn-sm btn-primary ml-2"
+            <button *ngIf="payment.state !== 'AUTHORIZED' " type="button" class="btn btn-sm btn-primary ms-2"
                     (click)="repayEvent(payment.gwUrl)" title="Try to pay again"
                     i18n-title="@@organizations.tab.detail.payments.repay">
               <i class="fas fa-credit-card"></i>
@@ -46,7 +46,7 @@
           <td class="align-middle">{{ payment.start | date : 'shortDate'}}</td>
           <td class="align-middle">{{ payment.validUntil | date : 'shortDate' }}</td>
         </tr>
-        <tr *ngIf="!payments">
+        <tr *ngIf="!payments?.length">
           <td colspan="7" class="align-middle text-center" i18n="@@organizations.tab.detail.payments.giveItATry">You've never had a chance to see Lumeer for <strong>Business</strong>. Give it a try today!</td>
         </tr>
       </tbody>

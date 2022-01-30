@@ -5,11 +5,11 @@
                      [isDisabled]="attributesSettings.length === 0"
                      [isOpen]="index === firstNonEmptyAttributesIndex">
       <div class="header-wrapper" accordion-heading *ngIf="{iconColors: resourceData.resource | resourceIconsColors} as data">
-        <icons-presenter class="d-block mr-1"
+        <icons-presenter class="d-block me-1"
                          [colors]="data.iconColors.colors"
                          [icons]="data.iconColors.icons">
         </icons-presenter>
-        <div class="font-weight-bold text-truncate mr-2" [title]="resourceData.resource.name">{{resourceData.resource.name}}</div>
+        <div class="fw-bold text-truncate me-2" [title]="resourceData.resource.name">{{resourceData.resource.name}}</div>
         <div class="small text-muted">{{attributesSettings | countShowedAttributes}}/{{resourceData.resource.attributes.length}}</div>
       </div>
 
@@ -26,7 +26,7 @@
           [isDefault]="attributeSettings.attributeId === resourceData.defaultAttributeId"
           (settingsChanged)="onResourceSettingsChanged(attributesSettings, index, resourceData, resourceData.type, $event)"
           (cdkDragDropped)="onResourceSettingsDropped(attributesSettings, resourceData, resourceData.type, $event)">
-          <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
+          <i class="fa-fw fa fa-grip-vertical cursor-move me-1 text-black-50" cdkDragHandle></i>
         </attribute-settings>
       </div>
     </accordion-group>

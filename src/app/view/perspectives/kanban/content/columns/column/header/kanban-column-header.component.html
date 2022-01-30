@@ -13,7 +13,7 @@
 
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="column.title; else otherTitle">
-      <data-input-preview class="px-3 py-2 text-truncate flex-grow-1 font-weight-bold"
+      <data-input-preview class="px-3 py-2 text-truncate flex-grow-1 fw-bold"
                           [dataValue]="column.title | dataValue:column.constraint:constraintData"
                           [constraint]="column.constraint"
                           [configuration]="dataInputConfiguration">
@@ -30,12 +30,12 @@
 </ng-template>
 
 <data-input-preview *ngIf="!(column.summary | isNullOrUndefined)"
-                    class="align-self-center flex-fill text-right small text-muted mr-3 overflow-hidden"
+                    class="align-self-center flex-fill text-end small text-muted me-3 overflow-hidden"
                     [configuration]="dataInputConfiguration"
                     [dataValue]="column.summary | dataValue:null">
 </data-input-preview>
 
-<div class="d-flex align-items-center justify-content-center pr-3"
+<div class="d-flex align-items-center justify-content-center pe-3"
      *ngIf="column.cards?.length === 0 && column.constraint?.type !== constraintTypes.Color && column.title">
   <i class="far fa-trash-alt text-danger cursor-pointer" (click)="onRemove()"></i>
 </div>

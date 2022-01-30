@@ -1,4 +1,4 @@
-<div class="form-group row" [formGroup]="form">
+<div class="row" [formGroup]="form">
 
   <label class="col-2 col-form-label"
          i18n="@@resource.new.dialog.code.label"
@@ -20,7 +20,7 @@
   </div>
 
   <small *ngIf="codeInput.invalid && (codeInput.dirty || codeInput.touched)"
-         class="text-danger col-10 ml-auto mt-1">
+         class="text-danger col-10 ms-auto mt-1">
           <span *ngIf="codeInput.errors.minlength"
                 i18n="@@resource.new.dialog.code.error.length.min">
             Code must have at least 2 characters.

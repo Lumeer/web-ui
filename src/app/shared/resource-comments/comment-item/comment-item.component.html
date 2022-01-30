@@ -5,11 +5,11 @@
                  [avatarSize]="15"
                  placement="top"
                  [email]="user?.email || comment?.authorEmail"
-                 [tooltipText]="createdByMsg + ' ' + (user?.name || comment?.authorName)" class="mr-2">
+                 [tooltipText]="createdByMsg + ' ' + (user?.name || comment?.authorName)" class="me-2">
     </user-avatar>
-    <span *ngIf="!comment.id && !comment.error" class="spinner-grow spinner-grow-sm mr-2 avatar-indicator" role="status"
+    <span *ngIf="!comment.id && !comment.error" class="spinner-grow spinner-grow-sm me-2 avatar-indicator" role="status"
           aria-hidden="true"></span>
-    <i *ngIf="!comment.id && comment.error" class="fa fa-exclamation-circle text-danger mr-2 cursor-pointer avatar-indicator"
+    <i *ngIf="!comment.id && comment.error" class="fa fa-exclamation-circle text-danger me-2 cursor-pointer avatar-indicator"
        tooltip="I could not create the comment. Click here to try again."
        i18n-tooltip="@@comment.item.create.fail" (click)="onRefresh.emit(comment)"></i>
     <short-date icon="fa-file"
@@ -17,7 +17,7 @@
                 [tooltipText]="createdOnMsg + ' ' + (comment?.creationDate | date:'medium')"
                 placement="top"
                 format="ll"
-                class="mr-3">
+                class="me-3">
     </short-date>
     <short-date *ngIf="comment?.updateDate"
                 icon="fa-pencil"
@@ -25,7 +25,7 @@
                 [tooltipText]="updatedOnMsg + ' ' + (comment?.updateDate | date:'medium')"
                 placement="top"
                 format="ll"
-                class="mr-3">
+                class="me-3">
     </short-date>
   </div>
 
@@ -36,7 +36,7 @@
        tooltip="Edit"
        i18n-tooltip="@@button.edit"
        placement="top"
-       class="fal fa-edit color-success mr-2 cursor-pointer"
+       class="fal fa-edit color-success me-2 cursor-pointer"
        (click)="editComment(comment)">
     </i>
     <i *ngIf="currentUser?.id === comment?.author"

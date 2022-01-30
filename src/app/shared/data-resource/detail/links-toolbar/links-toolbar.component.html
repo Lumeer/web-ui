@@ -5,8 +5,8 @@
           aria-haspopup="true"
           class="btn btn-sm btn-primary my-2"
           [matMenuTriggerFor]="contextMenu">
-    <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
-    <span class="font-weight-bold" i18n="@@perspective.detail.linkType.add">Create New Link</span>
+    <i class="fa fa-plus-circle me-1" aria-hidden="true"></i>
+    <span class="fw-bold" i18n="@@perspective.detail.linkType.add">Create New Link</span>
   </button>
 
   <mat-menu #contextMenu="matMenu">
@@ -16,7 +16,7 @@
             (click)="onUseCollection(collection)">
       <icons-presenter [colors]="[collection.color]"
                        [icons]="[collection.icon]"
-                       class="mr-2">
+                       class="me-2">
       </icons-presenter>
       <span [title]="collection.name"
             data-test="table-header-add-collection-option">

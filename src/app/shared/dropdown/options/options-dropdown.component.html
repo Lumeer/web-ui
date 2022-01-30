@@ -26,7 +26,7 @@
          data-test="select-item-option"
          tabindex>
 
-        <i *ngIf="showSelection || multiSelect" class="fa-fw far mr-2"
+        <i *ngIf="showSelection || multiSelect" class="fa-fw far me-2"
            [ngClass]="(selectedValues | includes:option.value) ? 'fa-check' : 'fa-none'">
         </i>
 
@@ -42,21 +42,21 @@
                *ngIf="option.gravatar"
                [email]="option.gravatar"
                [size]="avatarSize"
-               [class.mr-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
+               [class.me-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
 
           <img *ngIf="option.imageUrl"
                [src]="option.imageUrl"
-               [class.mr-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
+               [class.me-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
 
           <icons-presenter *ngIf="option.icons && option.iconColors"
-                           [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined"
+                           [class.me-1]="(option.displayValue || option.value) | isNotNullOrUndefined"
                            [colors]="option.iconColors"
                            [icons]="option.icons">
           </icons-presenter>
 
           <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
              class="fa-fw {{option.icons[0]}}"
-             [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined">
+             [class.me-1]="(option.displayValue || option.value) | isNotNullOrUndefined">
           </i>
           <span class="text-nowrap" [innerHTML]="(option.displayValue || option.value) | highlightText:highlightedText">
         </span>

@@ -1,18 +1,12 @@
 <div class="input-group input-group-sm w-auto">
-  <div *ngIf="label" class="input-group-prepend">
-    <span class="input-group-text align-items-end">{{label}}</span>
-  </div>
+  <span *ngIf="label" class="input-group-text align-items-end">{{label}}</span>
   <input #copyInputBox
          class="form-control copy-input-box"
          [class.copied]="copied$ | async"
          type="text"
          [readOnly]="true"
          [value]="(copied$ | async) ? copiedText : value">
-  <div class="input-group-append">
-          <span class="input-group-text cursor-pointer text-secondary"
-                title="Copy to clipboard" i18n-title="@@copyInputBox.clipboard.copy"
-                (click)="copyValue()">
-            <i class="fas fa-copy"></i>
-          </span>
-  </div>
+  <span class="input-group-text cursor-pointer text-secondary"
+        title="Copy to clipboard" i18n-title="@@copyInputBox.clipboard.copy"
+        (click)="copyValue()"><i class="fas fa-copy"></i></span>
 </div>

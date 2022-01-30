@@ -3,15 +3,15 @@
     <span i18n="@@dialog.attribute.function.title">Edit Function of</span>
     <icons-presenter
       *ngIf="resource | resourceIconsColors as iconColors"
-      class="ml-2"
+      class="ms-2"
       [colors]="iconColors.colors"
       [icons]="iconColors.icons">
     </icons-presenter>
-    <span class="ml-1">{{attribute?.name}}</span>
+    <span class="ms-1">{{attribute?.name}}</span>
   </h5>
 
   <h5 class="modal-title break-all" *ngIf="rule">
     <span i18n="@@dialog.attribute.function.automation.title">Edit Automation</span>
-    <span class="ml-1">{{rule.name}}</span>
+    <span class="ms-1">{{rule.name}}</span>
   </h5>
 </div>

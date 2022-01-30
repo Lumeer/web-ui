@@ -4,8 +4,7 @@
     *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canSave)} as buttonsData">
     <form class="view-controls-grid">
       <div class="perspective d-flex align-items-center justify-content-start">
-        <div class="input-group flex-nowrap mr-2 mb-2" data-tour="perspective">
-          <div class="input-group-prepend">
+        <div class="input-group flex-nowrap me-2 mb-2" data-tour="perspective">
         <span class="input-group-text">
           <strong *ngIf="novice"
                   i18n="@@view.perspective.guide.select">1.&nbsp;Select View</strong>
@@ -13,7 +12,6 @@
              class="far fa-eye fa-fw">
           </i>
         </span>
-          </div>
           <ng-container *ngIf="perspective$ | async as perspective">
 
             <button aria-expanded="false" aria-haspopup="true" type="button" #perspectiveElement
@@ -21,7 +19,7 @@
                     [disabled]="view?.id && !state.permissions.canConfig"
                     (click)="onPerspectiveChooserClick($event)">
               <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
-              <span class="ml-sm-1 text-nowrap">{{perspective | perspectiveName}}</span>
+              <span class="ms-sm-1 text-nowrap">{{perspective | perspectiveName}}</span>
             </button>
 
             <options-dropdown
@@ -38,12 +36,11 @@
         </div>
 
         <i *ngIf="novice"
-           class="view-arrow fas fa-arrow-circle-right mr-2 mb-2 text-muted">
+           class="view-arrow fas fa-arrow-circle-right me-2 mb-2 text-muted">
         </i>
       </div>
 
       <div class="view-name input-group flex-nowrap flex-fill mb-2" data-tour="view">
-        <div class="input-group-prepend">
       <span class="input-group-text">
         <strong *ngIf="novice"
                 i18n="@@view.perspective.guide.title">2.&nbsp;Set Title</strong>
@@ -51,7 +48,6 @@
            class="far fa-file-edit fa-fw">
         </i>
       </span>
-        </div>
         <input #viewNameInput
                [class.font-italic]="!view.code || view.name !== name"
                [value]="name"
@@ -91,13 +87,13 @@
       </div>
     </form>
     <div *ngIf="state.viewChanged && state.permissions.canSave"
-         class="small text-right text-warning">
-      <i class="far fa-exclamation-triangle mr-1 text-warning"
+         class="small text-end text-warning">
+      <i class="far fa-exclamation-triangle me-1 text-warning"
          title="Changes are not saved yet!" i18n-title="@@view.changes.not.saved">
       </i>
       <span class="text-warning" i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
       <span *ngIf="!buttonsData.disabled"
-            class="btn-link text-success ml-1 cursor-pointer text-underline" (click)="revertChanges()"
+            class="btn-link text-success ms-1 cursor-pointer text-underline" (click)="revertChanges()"
             i18n="@@view.changes.not.saved.undo">Undo changes</span>
     </div>
   </ng-container>

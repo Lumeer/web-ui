@@ -4,8 +4,8 @@
           [closeOnClickOrigin]="true"
           [showBackdrop]="false">
   <div class="panel-item notifications card py-2 overflow-auto">
-    <form class="px-3 pt-1 pb-2 text-right">
-      <span class="small text-muted mr-1 align-text-top" i18n="@@userNotifications.showUnread">Show only unread</span>
+    <form class="px-3 pt-1 pb-2 text-end">
+      <span class="small text-muted me-1 align-text-top" i18n="@@userNotifications.showUnread">Show only unread</span>
       <label class="switch">
         <input type="checkbox" [checked]="unreadOnly" (click)="toggleUnreadFilter($event)">
         <span class="slider round" (click)="$event.stopPropagation()"></span>

@@ -1,6 +1,6 @@
 <div [style.background-color]="queryItem | queryItemBackground"
      [style.border-color]="queryItem | queryItemBorder:(readonly || !queryItemForm || queryItemForm.valid)"
-     [class.pr-2]="readonly"
+     [class.pe-2]="readonly"
      class="query-item px-1 d-flex align-items-center h-100">
   <icons-presenter [colors]="queryItem.colors"
                    [icons]="queryItem.icons">
@@ -13,14 +13,14 @@
   </em>
 
   <span *ngIf="!(queryItem | isDeletedItem)"
-        [class.font-weight-bold]="queryItem | isCollectionItem"
+        [class.fw-bold]="queryItem | isCollectionItem"
         [title]="queryItem | queryItemText"
         [class.text-truncate]="!(queryItem | isAttributeItem)"
         class="mx-1">
     {{queryItem | queryItemText | truncate:30}}
   </span>
 
-  <filter-preview class="mr-1  flex-grow-1" *ngIf="attribute"
+  <filter-preview class="me-1  flex-grow-1" *ngIf="attribute"
                   [attribute]="attribute"
                   [constraintData]="constraintData"
                   [condition]="conditionControl?.value"
@@ -29,7 +29,7 @@
 
   <i *ngIf="!readonly"
      (click)="onRemove()"
-     class="mr-1 fas fa-times remove"
+     class="me-1 fas fa-times remove"
      title="Delete query item" i18n-title="@@query.item.button.remove">
   </i>
 </div>

@@ -5,7 +5,7 @@
       <input type="checkbox" formControlName="isPublic" id="isPublic" #isPublicCheckbox>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.isPublic"
+    <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.isPublic"
           (click)="isPublicCheckbox.click()">Public access to the project</span>
   </div>
 
@@ -19,7 +19,7 @@
       anything.
     </div>
 
-    <div class="form-group row m-0 mt-4">
+    <div class="row m-0 mt-4">
       <label class="col-sm-3 px-0 col-lg-2 col-form-label" for="imageUrl"
              i18n="@@projects.tab.template.metadata.imageUrl">
         Image address
@@ -117,7 +117,7 @@
             <input type="checkbox" formControlName="showTopPanel" id="showTopPanel" #showTopPanelCheckbox>
             <span class="slider round" (click)="$event.stopPropagation()"></span>
           </label>
-          <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.showTopPanel"
+          <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.showTopPanel"
                 (click)="showTopPanelCheckbox.click()">Show application controls (the upper panel)</span>
         </div>
       </div>

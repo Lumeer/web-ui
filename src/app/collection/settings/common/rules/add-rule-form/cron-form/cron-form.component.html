@@ -4,14 +4,12 @@
                            [collection]="collection"
                            [linkType]="linkType">
   </cron-configuration-form>
-  <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
-    <div>
-      <span class="text-nowrap font-weight-bold" i18n="@@collection.config.tab.rules.blockly.editAutomation.message">Edit Automation Code:</span>
-    </div>
-    <div class="flex-grow-1 text-right">
-      <div class="custom-control custom-checkbox mr-3 d-inline-block">
-        <input class="custom-control-input" type="checkbox" formControlName="blocklyDryRun" id="blocklyDryRun">
-        <label class="custom-control-label" for="blocklyDryRun" i18n="@@collection.config.tab.rules.blockly.dryRun">
+  <div class="d-flex flex-wrap align-items-center justify-content-start my-3">
+    <div class="text-nowrap fw-bold" i18n="@@collection.config.tab.rules.blockly.editAutomation.message">Edit Automation Code:></div>
+    <div class="flex-grow-1 text-end">
+      <div class="form-check me-3 d-inline-block">
+        <input class="form-check-input" type="checkbox" formControlName="blocklyDryRun" id="blocklyDryRun">
+        <label class="form-check-label" for="blocklyDryRun" i18n="@@collection.config.tab.rules.blockly.dryRun">
           Dry Run
         </label>
       </div>

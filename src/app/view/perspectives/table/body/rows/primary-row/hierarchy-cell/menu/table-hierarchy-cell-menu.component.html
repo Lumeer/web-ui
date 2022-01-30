@@ -11,22 +11,22 @@
             (click)="onIndent()"
             mat-menu-item>
       <div class="d-flex align-items-baseline">
-        <i class="fa fa-fw fa-indent mr-1"
+        <i class="fa fa-fw fa-indent me-1"
            aria-hidden="true"></i>
         <span class="flex-grow-1"
               i18n="@@table.body.row.indent">Indent</span>
-        <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ →' : 'Shift + Alt + →'}}</small>
+        <small class="text-secondary ms-3">{{macOS ? '⇧ ⌥ →' : 'Shift + Alt + →'}}</small>
       </div>
     </button>
     <button *ngIf="outdentable$ | async"
             (click)="onOutdent()"
             mat-menu-item>
       <div class="d-flex align-items-baseline">
-        <i class="fa fa-fw fa-outdent mr-1"
+        <i class="fa fa-fw fa-outdent me-1"
            aria-hidden="true"></i>
         <span class="flex-grow-1"
               i18n="@@table.body.row.outdent">Outdent</span>
-        <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
+        <small class="text-secondary ms-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
       </div>
     </button>
   </ng-template>

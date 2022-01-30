@@ -1,8 +1,8 @@
 <ng-container *ngIf="organization">
-  <i class="fas fa-user mr-1" i18n-title="@@resource.status.line.users" title="Users"></i>{{usersCount$ | async}}
-  <i class="fas fa-th-large ml-3 mr-1" i18n-title="@@resource.status.line.projects" title="Projects"></i>{{projectsCount$ | async}}
+  <i class="fas fa-user me-1" i18n-title="@@resource.status.line.users" title="Users"></i>{{usersCount$ | async}}
+  <i class="fas fa-th-large ms-3 me-1" i18n-title="@@resource.status.line.projects" title="Projects"></i>{{projectsCount$ | async}}
 </ng-container>
 <ng-container *ngIf="project">
-  <i class="fas fa-book mr-1" i18n-title="@@collection" title="Table"></i>{{collectionsCount$ | async}}
-  <i class="fas fa-file-alt ml-3 mr-1" i18n-title="@@records" title="Records"></i>{{documentsCount$ | async}}
+  <i class="fas fa-book me-1" i18n-title="@@collection" title="Table"></i>{{collectionsCount$ | async}}
+  <i class="fas fa-file-alt ms-3 me-1" i18n-title="@@records" title="Records"></i>{{documentsCount$ | async}}
 </ng-container>

@@ -1,7 +1,6 @@
 <div class="input-group flex-nowrap"
      #selectItemParent>
-  <div *ngIf="placeholderIcon || placeholderText"
-       class="input-group-prepend">
+  <ng-container *ngIf="placeholderIcon || placeholderText">
     <span [style.color]="placeholderColor"
           [title]="placeholderTitle || ''"
           class="input-group-text">
@@ -10,7 +9,7 @@
          class="fa-fw {{placeholderIcon}}"></i>
       {{placeholderText}}
     </span>
-  </div>
+  </ng-container>
 
   <button class="btn btn-outline-gray-600 dropdown-toggle flex-grow-1 d-flex align-items-center {{buttonClasses}}"
           type="button"
@@ -44,6 +43,6 @@
 </div>
 
 <ng-template #empty>
-      <span class="flex-grow-1 text-left empty-text text-truncate"
+      <span class="flex-grow-1 text-start empty-text text-truncate"
             [title]="emptyValue">{{emptyValue}}</span>
 </ng-template>

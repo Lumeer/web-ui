@@ -49,12 +49,12 @@
         showDetail: row.documentId && !dataInputInfo.editing && group.column && group.column.id === detailColumnId,
         showLock: group.column?.id === (mouseHoverColumnId$ | async) && dataInputInfo.showLockStats && !(group.column?.attribute | isAttributeEnabledByLockStats:data.cell?.lockStats)
         } as hoverData">
-          <div *ngIf="hoverData.showDetail" class="detail-trigger small pl-1 pr-1 cursor-pointer"
+          <div *ngIf="hoverData.showDetail" class="detail-trigger small ps-1 pe-1 cursor-pointer"
                [class.has-comments]="row.commentsCount"
                [class.has-lock]="hoverData.showLock"
                (click)="onDetailClick($event)"
                (dblclick)="$event.preventDefault(); $event.stopPropagation()">
-            <span class="detail-text btn-link pl-1 mr-2">Detail&nbsp;&gt;</span>
+            <span class="detail-text btn-link ps-1 me-2">Detail&nbsp;&gt;</span>
             <comments-count *ngIf="row.commentsCount" [count]="row.commentsCount">
             </comments-count>
           </div>

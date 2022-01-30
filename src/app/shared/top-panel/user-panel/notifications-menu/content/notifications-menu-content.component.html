@@ -1,4 +1,4 @@
-<span tooltip="Notifications" i18n-tooltip="@@topPanel.notifications.title" placement="bottom" class="fa-stack ml-1 cursor-pointer" #origin (click)="dropdown.open()">
+<span tooltip="Notifications" i18n-tooltip="@@topPanel.notifications.title" placement="bottom" class="fa-stack ms-1 cursor-pointer" #origin (click)="dropdown.open()">
   <i class="fa fa-bell fa-stack-1x font-size-15"
      [class.text-primary]="unreadNotifications?.length > 0"
      [class.text-secondary]="!unreadNotifications || unreadNotifications.length === 0"></i>
