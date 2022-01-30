@@ -54,12 +54,4 @@ export class FilterPreviewComponent implements OnChanges {
     common: {inline: true, skipValidation: true, inheritColor: true},
     color: {limitWidth: true},
   };
-
-  public conditionAttribute: Attribute;
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.attribute || changes.condition) {
-      this.conditionAttribute = modifyAttributeForQueryBuilder(this.attribute, this.condition);
-    }
-  }
 }
