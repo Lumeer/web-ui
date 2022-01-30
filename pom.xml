@@ -14,6 +14,7 @@
     <source.root>/</source.root>
     <public.path>/</public.path>
     <module.name>app</module.name>
+    <skip.npm.build>false</skip.npm.build>
   </properties>
 
    <build>
@@ -63,6 +64,7 @@
                   <id>exec-npm-install</id>
                   <phase>generate-sources</phase>
                   <configuration>
+                     <skip>${skip.npm.build}</skip>
                      <executable>npm</executable>
                      <arguments>
                         <argument>install</argument>
@@ -77,6 +79,7 @@
                   <id>exec-npm-build</id>
                   <phase>generate-sources</phase>
                   <configuration>
+                     <skip>${skip.npm.build}</skip>
                      <executable>npm</executable>
                      <arguments>
                         <argument>run</argument>
