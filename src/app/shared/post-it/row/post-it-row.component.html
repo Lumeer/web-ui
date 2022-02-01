@@ -43,10 +43,12 @@
        class="text-pre overflow-hidden p-1 align-middle data-input-readonly w-100"
        [title]="dataValue | formatDataValueTitle"
        [class.invalid-value]="!(dataValue | isDataValueValid)"
+       [class.bigger-default-attribute]="postItLayoutType.Zero === layoutType && isDefaultAttribute"
        [class.value-focused]="valueFocused$ | async">
   </div>
   <data-input class="h-100 w-100 p-1 data-input value"
               *ngIf="dataInputInfo.showDataInput"
+              [class.bigger-default-attribute]="postItLayoutType.Zero === layoutType && isDefaultAttribute"
               [constraint]="row.attribute?.constraint"
               [cursor]="cursor"
               [focus]="true"

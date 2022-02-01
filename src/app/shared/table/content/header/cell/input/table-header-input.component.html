@@ -9,11 +9,19 @@
   <input #textInput
          [readonly]="!edited"
          [value]="value"
-         [title]="column.attribute | attributeTitle : column.name"
+         [delay]="700"
+         [tooltip]="descriptionTooltip"
+         placement="bottom"
+         [adaptivePosition]="false"
+         containerClass="bigger-tooltip"
          [class.text-default-attribute]="default"
          (blur)="onBlur()"
          (input)="onInput($event)"
          (keydown)="onKeyDown($event)"
          (paste)="onPaste($event)"
          class="w-100 p-0 editable">
+</ng-template>
+
+<ng-template #descriptionTooltip>
+  <div [innerHTML]="column?.attribute | attributeTitle | safeHtml"></div>
 </ng-template>

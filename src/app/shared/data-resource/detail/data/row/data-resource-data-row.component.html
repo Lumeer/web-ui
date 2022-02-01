@@ -2,9 +2,12 @@
      class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center data-input key">
   <span class="font-italic">{{keyDataValue.value}}</span>
   <div *ngIf="row?.attribute?.description" class="ms-1 text-muted font-normal"
-       [tooltip]="row?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
+       [tooltip]="descriptionTooltip" [adaptivePosition]="false" placement="bottom" containerClass="bigger-tooltip">
     <i class="far fa-question-circle font-normal"></i>
   </div>
+  <ng-template #descriptionTooltip>
+    <div [innerHTML]="row?.attribute | attributeTitle | safeHtml"></div>
+  </ng-template>
 </div>
 
 <ng-template #editableKeyInput>

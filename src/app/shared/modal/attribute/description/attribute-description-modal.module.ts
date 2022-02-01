@@ -26,6 +26,8 @@ import {PipesModule} from '../../../pipes/pipes.module';
 import {PresenterModule} from '../../../presenter/presenter.module';
 import {AttributeDescriptionContentComponent} from './content/attribute-description-content.component';
 import {InputModule} from '../../../input/input.module';
+import {QuillModule} from 'ngx-quill';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,7 @@ import {InputModule} from '../../../input/input.module';
     AttributeDescriptionHeaderComponent,
     AttributeDescriptionContentComponent,
   ],
-  imports: [CommonModule, ModalWrapperModule, PipesModule, PresenterModule, InputModule],
+  imports: [CommonModule, ModalWrapperModule, PipesModule, PresenterModule, InputModule, QuillModule, FormsModule],
   exports: [AttributeDescriptionModalComponent],
 })
 export class AttributeDescriptionModalModule {}

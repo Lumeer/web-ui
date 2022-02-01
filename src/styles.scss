@@ -460,3 +460,12 @@ modal-container {
 .border-right {
   border-right: 1px solid $gray-300 !important;
 }
+
+.bigger-default-attribute {
+  font-weight: bolder;
+  font-size: larger;
+
+  .ql-container {
+    font-size: 1.15rem;
+  }
+}

@@ -17,7 +17,6 @@
         (mousedown)="onMouseDown($event)"
         [style.width.px]="group.width"
         [style.height.px]="tableRowHeight"
-        [title]="group.column?.attribute | attributeTitle:group.column?.name:!columnData.editing"
         scope="col"
         (click)="onHeaderClick(group.column)"
         (dblclick)="onHeaderDoubleClick(group.column)">

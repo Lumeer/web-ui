@@ -43,6 +43,7 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
 import {DataInputModalService} from '../data-input-modal.service';
 import {ConstraintType, DataValue, TextDataValue} from '@lumeer/data-filters';
 import {clickedInsideElement} from '../../utils/html-modifier';
+import {defaultTextEditorBubbleOptions} from '../../modal/text-editor/text-editor.utils';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -102,9 +103,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private mouseDownListener: (event: MouseEvent) => void;
   private pasteValueAfterEditorCreation: boolean;
 
-  public readonly modules = {
-    toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
-  };
+  public readonly modules = defaultTextEditorBubbleOptions;
 
   constructor(private modalService: DataInputModalService, private renderer: Renderer2, private element: ElementRef) {}
 

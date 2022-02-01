@@ -12,7 +12,7 @@
     <ng-content select=".custom-header"></ng-content>
   </ng-container>
 </div>
-<div class="modal-body p-0">
+<div class="modal-body p-0" [class.allow-overflow]="allowBodyOverflow">
   <ng-content select=".body"></ng-content>
 </div>
 <div class="modal-footer footer-bg p-3"

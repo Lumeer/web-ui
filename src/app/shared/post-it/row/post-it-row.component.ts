@@ -80,6 +80,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   @Input()
   public editableKey = false;
 
+  @Input()
+  public isDefaultAttribute: boolean;
+
   @Output()
   public newValue = new EventEmitter<any>();
 

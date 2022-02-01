@@ -74,6 +74,9 @@ export class ModalWrapperComponent {
   @Input()
   public customHeader: boolean;
 
+  @Input()
+  public allowBodyOverflow: boolean;
+
   @Output()
   public onClose = new EventEmitter();
 

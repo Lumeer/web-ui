@@ -38,6 +38,7 @@ import {ContentChange} from 'ngx-quill';
 
 import * as QuillNamespace from 'quill';
 import QuillMention from 'quill-mention';
+import {defaultTextEditorBubbleOptions} from '../../modal/text-editor/text-editor.utils';
 
 @Component({
   selector: 'new-comment',
@@ -80,7 +81,7 @@ export class NewCommentComponent implements OnInit, AfterViewChecked {
   public readonly minLength = 2;
   public readonly maxLength = 2048;
   public readonly modules = {
-    toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
+    ...defaultTextEditorBubbleOptions,
     mention: {
       allowedChars: /^.*$/,
       mentionDenotationChars: ['@'],

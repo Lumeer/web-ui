@@ -2,6 +2,7 @@
                dialogType="primary"
                [performingAction]="performingAction$ | async"
                [customHeader]="true"
+               [allowBodyOverflow]="true"
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()"
                *ngIf="{collection: collection$ | async, linkType: linkType$ | async, attribute: attribute$ | async} as data">

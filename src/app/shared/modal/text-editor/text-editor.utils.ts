@@ -40,3 +40,7 @@ export const defaultTextEditorOptions = {
     ['link'], // link and image, video
   ],
 };
+
+export const defaultTextEditorBubbleOptions = {
+  toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
+};

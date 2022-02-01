@@ -27,6 +27,7 @@
       [class.row-top-divider]="index > 0"
       [row]="row"
       [ngClass]="layoutType | postItLayoutTypeClass"
+      [isDefaultAttribute]="row.attribute.id | isDefaultAttribute:resource"
       [layoutType]="layoutType"
       [permissions]="allowedPermissions"
       [cursor]="dataResource | dataCursor : row.attribute?.id:viewId"
