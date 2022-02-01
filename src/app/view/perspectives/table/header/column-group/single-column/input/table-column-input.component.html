@@ -2,9 +2,13 @@
      [class.text-default-attribute]="default"
      class="flex-grow-1 title text-truncate"
      data-test="table-column-input">{{value}}</div>
-<div class="small" *ngIf="attribute?.description && !edited" [tooltip]="attribute | attributeTitle"
-     adaptivePosition="false" placement="top"><i class="far fa-question-circle ms-1"></i>
+<div class="small" *ngIf="attribute?.description && !edited" [tooltip]="descriptionTooltip" containerClass="bigger-tooltip"
+     [adaptivePosition]="false" placement="bottom"><i class="far fa-question-circle ms-1"></i>
 </div>
+
+<ng-template #descriptionTooltip>
+  <div [innerHTML]="attribute | attributeTitle | safeHtml"></div>
+</ng-template>
 
 <ng-template #editableInput>
   <input #textInput

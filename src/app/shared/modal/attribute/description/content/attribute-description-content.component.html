@@ -1,12 +1,7 @@
-<input-box
-  class="d-block w-100"
-  [innerClass]="'w-100'"
-  [initialValue]="currentDescription"
-  [canStayEmpty]="true"
-  [fontSizeRem]="1"
-  [userData]="true"
-  [title]="currentDescription"
-  placeholder="Fill in description"
-  i18n-placeholder="@@resource.description"
-  (newValue)="currentDescription = $event">
-</input-box>
+<quill-editor class="w-100"
+              [(ngModel)]="currentDescription"
+              [modules]="modules"
+              placeholder="Fill in description"
+              i18n-placeholder="@@resource.description"
+              theme="bubble">
+</quill-editor>

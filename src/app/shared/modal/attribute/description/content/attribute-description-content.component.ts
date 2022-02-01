@@ -18,6 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {defaultTextEditorBubbleOptions} from '../../../text-editor/text-editor.utils';
 
 @Component({
   selector: 'attribute-description-content',
@@ -30,6 +31,8 @@ export class AttributeDescriptionContentComponent implements OnInit {
 
   @Output()
   public descriptionChange = new EventEmitter<string>();
+
+  public readonly modules = defaultTextEditorBubbleOptions;
 
   public currentDescription: string;
 
