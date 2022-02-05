@@ -1,0 +1,34 @@
+<div class="d-flex flex-column align-items-center px-3" *ngIf="service.selectedTemplate$ | async as template">
+  <h5 class="text-center" i18n="@@choose.organization.title.template">Selected template</h5>
+
+  <div class="template card p-3 mt-2 card-selected">
+    <i class="indicator fas fa-check"></i>
+    <div class="template-image">
+      <img [src]="template.templateMetadata?.imageUrl" alt=""/>
+    </div>
+
+    <div>
+      <div class="fw-bold">{{template.name}}</div>
+      <div class="mt-2 text-muted small">{{template.description}}</div>
+    </div>
+
+  </div>
+</div>
+
+<h5 class="text-center mt-5" [class.mt-5]="service.selectedTemplate$ | async"
+    i18n="@@choose.organization.title">Choose organization</h5>
+
+<div class="d-flex justify-content-center flex-wrap mt-3">
+
+  <div *ngFor="let organization of organizations$ | async" class="card organization-card p-3 m-1 cursor-pointer"
+       (click)="onSelect(organization)"
+       [class.card-selected]="(service.selectedOrganization$ | async)?.id === organization.id">
+    <i class="indicator fas fa-check"></i>
+    <div class="d-flex align-items-center flex-column text-center">
+      <i class="fa-fw fa-3x {{ organization.icon }}" [style.color]="organization.color"></i>
+      <h4 class="mb-0 mt-1" [style.color]="organization.color">{{organization.code}}</h4>
+      <div class="text-truncate mt-1 w-100" [title]="organization.name">{{organization.name}}</div>
+    </div>
+  </div>
+
+</div>

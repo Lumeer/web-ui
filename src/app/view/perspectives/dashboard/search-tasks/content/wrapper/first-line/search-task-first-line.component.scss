@@ -1,3 +1,5 @@
+@import '~src/styles/bootstrap_var';
+
 .data-input-preview {
   line-height: 1.4rem;
 }
@@ -16,7 +18,7 @@
   }
 }
 
-@media (min-width: 576px) {
+@include media-breakpoint-up(sm) {
   :host {
     grid-template-columns: auto 1fr auto auto;
 

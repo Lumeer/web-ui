@@ -18,17 +18,15 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {LoadingState} from '../../../../../../core/model/loading-state';
+import {Project} from '../../../../../../../../../core/store/projects/project';
 
 @Component({
-  selector: 'empty-templates',
-  templateUrl: './empty-templates.component.html',
+  selector: 'template-item',
+  templateUrl: './template-item.component.html',
+  styleUrls: ['./template-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-block w-100 h-100'},
 })
-export class EmptyTemplatesComponent {
+export class TemplateItemComponent {
   @Input()
-  public loadingState: LoadingState;
-
-  public readonly state = LoadingState;
+  public template: Project;
 }

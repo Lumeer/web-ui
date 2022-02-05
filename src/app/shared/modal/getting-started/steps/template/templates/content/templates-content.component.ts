@@ -17,17 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Project} from '../../../../../../../core/store/projects/project';
-import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Component({
-  selector: 'templates-select',
-  templateUrl: './templates-select.component.html',
-  styleUrls: ['./templates-select.component.scss'],
+  selector: 'templates-content',
+  templateUrl: './templates-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-flex flex-column mw-100'},
 })
-export class TemplatesSelectComponent implements OnChanges {
+export class TemplatesContentComponent {
   @Input()
   public templates: Project[];
 
@@ -37,19 +36,15 @@ export class TemplatesSelectComponent implements OnChanges {
   @Input()
   public selectedTemplate: Project;
 
+  @Input()
+  public mobile: boolean;
+
+  @Output()
+  public selectTag = new EventEmitter<string>();
+
   @Output()
   public selectTemplate = new EventEmitter<Project>();
 
-  public tagImageUrl: string;
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedTag) {
-      this.tagImageUrl = this.createTagImageUrl();
-    }
-  }
-
-  private createTagImageUrl(): string {
-    const tagWithoutAccent = removeAccentFromString(this.selectedTag).replace(/ /g, '_');
-    return `https://www.lumeer.io/wp-content/uploads/lumeer-projects/${tagWithoutAccent}.jpg`;
-  }
+  @Output()
+  public backToTemplates = new EventEmitter();
 }

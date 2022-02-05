@@ -26,15 +26,16 @@ import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {WarningMessageModule} from '../../warning-message/warning-message.module';
 import {FilterTemplatesPipe} from './pipes/filter-templates.pipe';
 import {FilterTemplatesByTagPipe} from './pipes/filter-templates-by-tag.pipe';
-import {SelectProjectTemplateComponent} from './template/select-project-template.component';
-import {ProjectTemplatesComponent} from './template/templates/project-templates.component';
-import {TemplatesTagsComponent} from './template/templates/tags/templates-tags.component';
-import {TemplatesSelectComponent} from './template/templates/content/select/templates-select.component';
-import {TemplateDetailComponent} from './template/templates/content/detail/template-detail.component';
-import {EmptyTemplatesComponent} from './template/templates/empty/empty-templates.component';
-import {TemplateItemComponent} from './template/templates/content/select/template/template-item.component';
-import {TemplatesToolbarComponent} from './template/templates/content/toolbar/templates-toolbar.component';
-import {TemplatesContentComponent} from './template/templates/content/templates-content.component';
+import {SelectProjectTemplateComponent} from './steps/template/select-project-template.component';
+import {ProjectTemplatesComponent} from './steps/template/templates/project-templates.component';
+import {TemplatesTagsComponent} from './steps/template/templates/tags/templates-tags.component';
+import {TemplatesSelectComponent} from './steps/template/templates/content/select/templates-select.component';
+import {TemplateDetailComponent} from './steps/template/templates/content/detail/template-detail.component';
+import {EmptyTemplatesComponent} from './steps/template/templates/empty/empty-templates.component';
+import {TemplateItemComponent} from './steps/template/templates/content/select/template/template-item.component';
+import {TemplatesToolbarComponent} from './steps/template/templates/content/toolbar/templates-toolbar.component';
+import {TemplatesContentComponent} from './steps/template/templates/content/templates-content.component';
+import {ChooseOrganizationComponent} from './steps/choose-organization/choose-organization.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import {TemplatesContentComponent} from './template/templates/content/templates-
     TemplatesToolbarComponent,
     FilterTemplatesByTagPipe,
     SelectProjectTemplateComponent,
+    ChooseOrganizationComponent,
   ],
   imports: [CommonModule, PipesModule, ModalWrapperModule, WarningMessageModule, FormsModule],
   exports: [GettingStartedModalComponent],

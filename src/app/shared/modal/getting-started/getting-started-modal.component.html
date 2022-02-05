@@ -20,6 +20,8 @@
       <select-project-template *ngSwitchCase="stage.Template"
                                [initialTemplateCode]="templateCode">
       </select-project-template>
+      <choose-organization *ngSwitchCase="stage.ChooseOrganization">
+      </choose-organization>
     </ng-container>
   </div>
 

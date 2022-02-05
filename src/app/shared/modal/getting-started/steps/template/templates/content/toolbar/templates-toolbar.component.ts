@@ -17,19 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Project} from '../../../../../../core/store/projects/project';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Project} from '../../../../../../../../core/store/projects/project';
 
 @Component({
-  selector: 'templates-content',
-  templateUrl: './templates-content.component.html',
+  selector: 'templates-toolbar',
+  templateUrl: './templates-toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-flex flex-column mw-100'},
 })
-export class TemplatesContentComponent {
-  @Input()
-  public templates: Project[];
-
+export class TemplatesToolbarComponent {
   @Input()
   public selectedTag: string;
 
@@ -43,8 +39,13 @@ export class TemplatesContentComponent {
   public selectTag = new EventEmitter<string>();
 
   @Output()
-  public selectTemplate = new EventEmitter<Project>();
-
-  @Output()
   public backToTemplates = new EventEmitter();
+
+  public back() {
+    if (this.selectedTag && this.selectedTemplate) {
+      this.selectTag.emit(this.selectedTag);
+    } else {
+      this.backToTemplates.emit();
+    }
+  }
 }

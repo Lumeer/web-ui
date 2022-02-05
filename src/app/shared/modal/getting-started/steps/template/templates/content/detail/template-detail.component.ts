@@ -19,8 +19,8 @@
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {Project} from '../../../../../../../core/store/projects/project';
-import {ConfigurationService} from '../../../../../../../configuration/configuration.service';
+import {Project} from '../../../../../../../../core/store/projects/project';
+import {ConfigurationService} from '../../../../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'template-detail',

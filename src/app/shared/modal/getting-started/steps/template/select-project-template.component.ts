@@ -19,14 +19,14 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Project} from '../../../../core/store/projects/project';
-import {LoadingState} from '../../../../core/model/loading-state';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
+import {Project} from '../../../../../core/store/projects/project';
+import {LoadingState} from '../../../../../core/model/loading-state';
+import {AppState} from '../../../../../core/store/app.state';
 import {
   selectProjectTemplates,
   selectProjectTemplatesLoadingState,
-} from '../../../../core/store/projects/projects.state';
+} from '../../../../../core/store/projects/projects.state';
 
 @Component({
   selector: 'select-project-template',
