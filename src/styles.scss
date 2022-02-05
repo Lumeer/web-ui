@@ -1,4 +1,5 @@
 @import 'styles/variables';
+@import 'styles/bootstrap_var';
 @import '~bootstrap/scss/bootstrap';
 @import 'styles/bootswatch';
 @import 'styles/custom/cursor';
@@ -363,13 +364,13 @@ modal-container {
   }
 }
 
-@media only screen and (min-width: 576px) {
+@include media-breakpoint-up(sm) {
   modal-container .modal-dialog {
     max-height: calc(100% - 3.5rem);
   }
 }
 
-@media (min-width: 1100px) {
+@include media-breakpoint-up(lg) {
   .modal-dialog.modal-xxl {
     max-width: 1000px;
   }
@@ -378,7 +379,7 @@ modal-container {
   }
 }
 
-@media (min-width: 992px) and (max-width: 1098px) {
+@include media-breakpoint-between(lg, xl) {
   .modal-dialog.modal-xxl {
     max-width: 900px;
   }
@@ -387,7 +388,7 @@ modal-container {
   }
 }
 
-@media (min-width: 768px) and (max-width: 991.98px) {
+@include media-breakpoint-between(md, lg) {
   .modal-dialog.modal-xxl {
     max-width: 700px;
   }

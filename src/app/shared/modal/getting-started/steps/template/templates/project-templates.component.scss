@@ -1,3 +1,5 @@
+@import '~src/styles/bootstrap_var';
+
 .layout {
   position: relative;
 
@@ -7,13 +9,13 @@
     right: 0;
   }
 
-  @media (min-width: 768px) {
+  @include media-breakpoint-up(md) {
     .tags {
       width: 250px;
     }
   }
 
-  @media (max-width: 767.98px) {
+  @include media-breakpoint-down(md) {
     .tags {
       flex: 1;
     }

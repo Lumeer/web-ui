@@ -1,0 +1,60 @@
+@import '~src/styles/variables';
+@import '~src/styles/bootstrap_var';
+
+.template {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  grid-gap: 1rem;
+  width: 50%;
+
+  @include media-breakpoint-down(xl) {
+    width: 60%;
+  }
+
+  @include media-breakpoint-down(lg) {
+    width: 100%;
+  }
+
+  .template-image {
+    width: 90px;
+    height: 90px;
+
+    & img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-repeat: no-repeat;
+      object-fit: cover;
+    }
+  }
+}
+
+.card-selected {
+  position: relative;
+  background: lighten($success, 60%);
+  box-shadow: $shadow-default;
+
+  .indicator {
+    display: inline-block !important;
+    position: absolute;
+    top: 0.35rem;
+    right: 0.35rem;
+    color: $success;
+  }
+}
+
+.organization-card {
+  width: $post-it-width;
+  height: $post-it-width;
+  cursor: pointer;
+  position: relative;
+
+  .indicator {
+    display: none;
+  }
+
+  &:hover {
+    box-shadow: $shadow-default;
+  }
+}

@@ -20,10 +20,10 @@
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, HostListener, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {createTagsFromTemplates} from './tags/templates-tags.component';
-import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../../../animations';
-import {Project} from '../../../../../core/store/projects/project';
-import {LoadingState} from '../../../../../core/model/loading-state';
-import {GettingStartedService} from '../../getting-started.service';
+import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../../../../animations';
+import {Project} from '../../../../../../core/store/projects/project';
+import {LoadingState} from '../../../../../../core/model/loading-state';
+import {GettingStartedService} from '../../../getting-started.service';
 
 @Component({
   selector: 'project-templates',

@@ -18,13 +18,19 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of, Subject} from 'rxjs';
+import {distinctUntilChanged, map, switchMap, take} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';
 import {Project} from '../../../core/store/projects/project';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectProjectTemplatesCount, selectReadableProjectsCount} from '../../../core/store/projects/projects.state';
+import {
+  selectProjectTemplates,
+  selectProjectTemplatesCount,
+  selectReadableProjectsCount,
+} from '../../../core/store/projects/projects.state';
+import {Organization} from '../../../core/store/organizations/organization';
+import {selectContributeOrganizations} from '../../../core/store/organizations/organizations.state';
 
 @Injectable()
 export class GettingStartedService {
@@ -41,6 +47,9 @@ export class GettingStartedService {
   private _stage$ = new BehaviorSubject(GettingStartedStage.Template);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
 
+  private _close$ = new Subject();
+  public close$ = this._close$.asObservable();
+
   // components data
 
   private _selectedTag$ = new BehaviorSubject<string>(null);
@@ -48,10 +57,29 @@ export class GettingStartedService {
   private _selectedTemplate$ = new BehaviorSubject<Project>(null);
   public selectedTemplate$ = this._selectedTemplate$.pipe(distinctUntilChanged((a, b) => a?.id === b?.id));
 
+  private _selectedOrganization$ = new BehaviorSubject<Organization>(null);
+  public selectedOrganization$ = this._selectedOrganization$.pipe(distinctUntilChanged((a, b) => a?.id === b?.id));
+
   constructor(private store$: Store<AppState>) {
     this.button$ = this._stage$.pipe(switchMap(stage => this.getButton(stage)));
     this.secondaryButton$ = this._stage$.pipe(switchMap(stage => this.getSecondaryButton(stage)));
     this.closeButton$ = this._stage$.pipe(switchMap(stage => this.getCloseButton(stage)));
+  }
+
+  public get stage(): GettingStartedStage {
+    return this._stage$.value;
+  }
+
+  private set stage(value: GettingStartedStage) {
+    this._stage$.next(value);
+  }
+
+  private set performingAction(value: boolean) {
+    this._performingAction$.next(value);
+  }
+
+  private set performingSecondaryAction(value: boolean) {
+    this._performingSecondaryAction$.next(value);
   }
 
   public get selectedTag(): string {
@@ -70,11 +98,21 @@ export class GettingStartedService {
     this._selectedTemplate$.next(value);
   }
 
+  public set selectedOrganization(value: Organization) {
+    this._selectedOrganization$.next(value);
+  }
+
   private getButton(stage: GettingStartedStage): Observable<DialogButton> {
     switch (stage) {
       case GettingStartedStage.Template:
         return of({
           disabled$: this.selectedTemplate$.pipe(map(template => !template?.id)),
+          class: DialogType.Primary,
+          title: $localize`:@@templates.button.use:Use this template`,
+        });
+      case GettingStartedStage.ChooseOrganization:
+        return of({
+          disabled$: this.selectedOrganization$.pipe(map(template => !template?.id)),
           class: DialogType.Primary,
           title: $localize`:@@templates.button.use:Use this template`,
         });
@@ -109,6 +147,7 @@ export class GettingStartedService {
   private getCloseButton(stage: GettingStartedStage): Observable<DialogButton> {
     switch (stage) {
       case GettingStartedStage.Template:
+      case GettingStartedStage.ChooseOrganization:
         return this.store$.pipe(
           select(selectReadableProjectsCount),
           map(projectsCount => {
@@ -126,9 +165,56 @@ export class GettingStartedService {
     }
   }
 
-  public onSubmit() {}
+  public onSubmit() {
+    switch (this.stage) {
+      case GettingStartedStage.Template:
+        this.checkNextStageFromTemplate(this.selectedTemplate);
+        break;
+      case GettingStartedStage.ChooseOrganization:
+        this.submitTemplate(this.selectedOrganization, this.selectedTemplate);
+    }
+  }
 
-  public onSecondarySubmit() {}
+  public onSecondarySubmit() {
+    switch (this.stage) {
+      case GettingStartedStage.Template:
+        this.store$
+          .pipe(
+            select(selectProjectTemplates),
+            take(1),
+            map(templates => templates.find(t => t.code === 'EMPTY'))
+          )
+          .subscribe(emptyTemplate => {
+            this.checkNextStageFromTemplate(emptyTemplate);
+          });
+        break;
+    }
+  }
+
+  public onClose() {
+    this.close();
+  }
+
+  private close() {
+    this._close$.next(null);
+  }
+
+  private checkNextStageFromTemplate(template?: Project) {
+    this.store$.pipe(select(selectContributeOrganizations), take(1)).subscribe(organizations => {
+      if (organizations.length === 1) {
+        this.submitTemplate(organizations[0], template);
+      } else if (organizations.length > 1) {
+        this.selectedTemplate = template;
+        this.stage = GettingStartedStage.ChooseOrganization;
+      } else {
+        // TODO show some error
+      }
+    });
+  }
+
+  private submitTemplate(organization: Organization, template?: Project) {
+    this.performingAction = true;
+  }
 }
 
 export enum GettingStartedStage {

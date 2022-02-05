@@ -1,4 +1,6 @@
-@media (min-width: 992px) {
+@import '~src/styles/bootstrap_var';
+
+@include media-breakpoint-up(lg) {
   .rows-settings {
     border-right: 1px solid rgba(0, 0, 0, 0.1);
   }

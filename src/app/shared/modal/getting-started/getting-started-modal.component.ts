@@ -17,27 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {NavigationExtras} from '@angular/router';
-import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {AppState} from '../../../core/store/app.state';
 import {Project} from '../../../core/store/projects/project';
-import {ProjectTemplatesComponent} from './template/templates/project-templates.component';
-import {ProjectsAction} from '../../../core/store/projects/projects.action';
 import {Organization} from '../../../core/store/organizations/organization';
 import {CreateProjectService} from '../../../core/service/create-project.service';
 import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
 import {GettingStartedService, GettingStartedStage} from './getting-started.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   templateUrl: './getting-started-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [GettingStartedService],
 })
-export class GettingStartedModalComponent implements OnInit {
+export class GettingStartedModalComponent implements OnInit, OnDestroy {
   @Input()
   public organizations: Organization[];
 
@@ -47,10 +45,9 @@ export class GettingStartedModalComponent implements OnInit {
   @Input()
   public navigationExtras: NavigationExtras;
 
-  @ViewChild(ProjectTemplatesComponent)
-  public templatesComponent: ProjectTemplatesComponent;
-
   public readonly stage = GettingStartedStage;
+
+  private subscriptions = new Subscription();
 
   constructor(
     private bsModalRef: BsModalRef,
@@ -61,8 +58,30 @@ export class GettingStartedModalComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    // TODO check if its needed
-    this.store$.dispatch(new ProjectsAction.GetCodes({organizationIds: this.organizations.map(org => org.id)}));
+    this.subscribeClose();
+    this.subscribeStage();
+  }
+
+  private subscribeClose() {
+    this.subscriptions.add(this.service.close$.subscribe(() => this.hideDialog()));
+  }
+
+  private subscribeStage() {
+    this.subscriptions.add(
+      this.service.stage$.subscribe(stage => {
+        switch (stage) {
+          case GettingStartedStage.Template:
+            this.bsModalRef.setClass('modal-xxl modal-h-100');
+            break;
+          default:
+            this.bsModalRef.setClass('modal-lg');
+        }
+      })
+    );
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   public onSubmit() {
@@ -113,11 +132,10 @@ export class GettingStartedModalComponent implements OnInit {
   }
 
   public onClose() {
-    this.hideDialog();
+    this.service.onClose();
   }
 
-  public hideDialog() {
-    // this.bsModalRef.setClass('modal-lg');
+  private hideDialog() {
     this.bsModalRef.hide();
   }
 }

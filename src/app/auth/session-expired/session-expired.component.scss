@@ -1,6 +1,8 @@
+@import '~src/styles/bootstrap_var';
+
 $session-width: 350px;
 
-@media (max-width: 768px) {
+@include media-breakpoint-down(md) {
   :host {
     background-position: center;
   }

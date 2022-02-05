@@ -18,8 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
-import {Project} from '../../../../../../core/store/projects/project';
-import {uniqueValues} from '../../../../../utils/array.utils';
+import {Project} from '../../../../../../../core/store/projects/project';
+import {uniqueValues} from '../../../../../../utils/array.utils';
 
 @Component({
   selector: 'templates-tags',
