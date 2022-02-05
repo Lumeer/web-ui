@@ -9,13 +9,13 @@
   </span>
 
   <div class="body h-100">
-    <create-resource-dialog-form
-      class="d-block h-100 p-3"
-      *ngIf="contentValid$ | async; else contentInvalid"
-      [parentId]="parentId"
-      [resourceType]="resourceType"
-      [usedCodes]="usedCodes$ | async"
-      (submitResource)="submitResource($event)">
+    <create-resource-dialog-form class="d-block h-100 p-3"
+                                 *ngIf="contentValid$ | async; else contentInvalid"
+                                 [parentId]="parentId"
+                                 [form]="form"
+                                 [resourceType]="resourceType"
+                                 [usedCodes]="usedCodes$ | async"
+                                 (submitResource)="submitResource($event)">
     </create-resource-dialog-form>
 
   </div>

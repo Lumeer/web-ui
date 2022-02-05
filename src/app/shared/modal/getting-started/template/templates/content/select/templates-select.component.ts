@@ -17,18 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
-import {Project} from '../../../../../core/store/projects/project';
-import {createTagsFromTemplates} from '../../model/templates-util';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
+import {Project} from '../../../../../../../core/store/projects/project';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Component({
-  selector: 'templates-tags',
-  templateUrl: './templates-tags.component.html',
-  styleUrls: ['./templates-tags.component.scss'],
+  selector: 'templates-select',
+  templateUrl: './templates-select.component.html',
+  styleUrls: ['./templates-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-flex flex-column'},
 })
-export class TemplatesTagsComponent implements OnChanges {
+export class TemplatesSelectComponent implements OnChanges {
   @Input()
   public templates: Project[];
 
@@ -39,21 +38,18 @@ export class TemplatesTagsComponent implements OnChanges {
   public selectedTemplate: Project;
 
   @Output()
-  public selectTag = new EventEmitter<string>();
-
-  @Output()
   public selectTemplate = new EventEmitter<Project>();
 
-  public search: string;
-  public tags: string[];
+  public tagImageUrl: string;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.templates) {
-      this.createTags();
+    if (changes.selectedTag) {
+      this.tagImageUrl = this.createTagImageUrl();
     }
   }
 
-  private createTags() {
-    this.tags = createTagsFromTemplates(this.templates);
+  private createTagImageUrl(): string {
+    const tagWithoutAccent = removeAccentFromString(this.selectedTag).replace(/ /g, '_');
+    return `https://www.lumeer.io/wp-content/uploads/lumeer-projects/${tagWithoutAccent}.jpg`;
   }
 }

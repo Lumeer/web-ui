@@ -45,7 +45,7 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {CreateProjectModalComponent} from './create-project/create-project-modal.component';
+import {GettingStartedModalComponent} from './getting-started/getting-started-modal.component';
 import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ModalsAction} from '../../core/store/modals/modals.action';
@@ -317,7 +317,7 @@ export class ModalService {
       organizations,
       navigationExtras: extras,
     };
-    return this.showStaticDialog(initialState, CreateProjectModalComponent, 'modal-xxl modal-h-100');
+    return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-xxl modal-h-100');
   }
 
   public showCopyProjectDialog(

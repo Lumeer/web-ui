@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {LoadingState} from '../../../../../core/model/loading-state';
+import {LoadingState} from '../../../../../../core/model/loading-state';
 
 @Component({
   selector: 'empty-templates',

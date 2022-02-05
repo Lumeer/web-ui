@@ -18,31 +18,26 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {FormBuilder} from '@angular/forms';
+import {NavigationExtras} from '@angular/router';
+import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Project} from '../../../core/store/projects/project';
-import {LoadingState} from '../../../core/model/loading-state';
-import {
-  selectProjectTemplates,
-  selectProjectTemplatesLoadingState,
-  selectReadableProjects,
-} from '../../../core/store/projects/projects.state';
-import {CreateProjectTemplatesComponent} from './templates/create-project-templates.component';
-import {FormBuilder, Validators} from '@angular/forms';
-import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+import {ProjectTemplatesComponent} from './template/templates/project-templates.component';
 import {ProjectsAction} from '../../../core/store/projects/projects.action';
-import {NavigationExtras} from '@angular/router';
 import {Organization} from '../../../core/store/organizations/organization';
 import {CreateProjectService} from '../../../core/service/create-project.service';
 import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
+import {GettingStartedService, GettingStartedStage} from './getting-started.service';
 
 @Component({
-  templateUrl: './create-project-modal.component.html',
+  templateUrl: './getting-started-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [GettingStartedService],
 })
-export class CreateProjectModalComponent implements OnInit {
+export class GettingStartedModalComponent implements OnInit {
   @Input()
   public organizations: Organization[];
 
@@ -52,68 +47,46 @@ export class CreateProjectModalComponent implements OnInit {
   @Input()
   public navigationExtras: NavigationExtras;
 
-  @ViewChild(CreateProjectTemplatesComponent)
-  public templatesComponent: CreateProjectTemplatesComponent;
+  @ViewChild(ProjectTemplatesComponent)
+  public templatesComponent: ProjectTemplatesComponent;
 
-  public onClose$ = new Subject();
-
-  public templates$: Observable<Project[]>;
-  public templatesState$: Observable<LoadingState>;
-  public projectsCount$: Observable<number>;
-
-  public performingAction$ = new BehaviorSubject(false);
-  public performingSecondaryAction$ = new BehaviorSubject(false);
-
-  public form = this.fb.group({
-    templateSelected: [false, Validators.requiredTrue],
-  });
-  public formDisabled$ = this.form.statusChanges.pipe(
-    startWith('INVALID'),
-    distinctUntilChanged(),
-    map(status => status === 'INVALID')
-  );
+  public readonly stage = GettingStartedStage;
 
   constructor(
     private bsModalRef: BsModalRef,
     private store$: Store<AppState>,
     private fb: FormBuilder,
+    public service: GettingStartedService,
     private createProjectService: CreateProjectService
   ) {}
 
   public ngOnInit() {
-    this.templates$ = this.store$.pipe(select(selectProjectTemplates));
-    this.templatesState$ = this.store$.pipe(select(selectProjectTemplatesLoadingState));
-    this.projectsCount$ = this.store$.pipe(
-      select(selectReadableProjects),
-      map(projects => (projects ? projects.length : 0))
-    );
-
+    // TODO check if its needed
     this.store$.dispatch(new ProjectsAction.GetCodes({organizationIds: this.organizations.map(org => org.id)}));
   }
 
   public onSubmit() {
-    const template = this.templatesComponent.selectedTemplate$.value;
-    if (this.organizations.length === 1) {
-      this.performingAction$.next(true);
-      this.createProject(template);
-    } else {
-      this.chooseOrganization(template);
-    }
+    this.service.onSubmit();
+    // const template = this.templatesComponent.selectedTemplate$.value;
+    // if (this.organizations.length === 1) {
+    //   this.performingAction$.next(true);
+    //   this.createProject(template);
+    // } else {
+    //   this.chooseOrganization(template);
+    // }
   }
 
   public onSecondarySubmit() {
-    if (this.organizations.length === 1) {
-      this.performingSecondaryAction$.next(true);
-      this.createProject();
-    } else {
-      this.chooseOrganization();
-    }
+    this.service.onSecondarySubmit();
+    // if (this.organizations.length === 1) {
+    //   this.performingSecondaryAction$.next(true);
+    //   this.createProject();
+    // } else {
+    //   this.chooseOrganization();
+    // }
   }
 
-  private onFailure() {
-    this.performingAction$.next(false);
-    this.performingSecondaryAction$.next(false);
-  }
+  private onFailure() {}
 
   private createProject(template?: Project) {
     const code = template?.code || 'EMPTY';
@@ -133,18 +106,18 @@ export class CreateProjectModalComponent implements OnInit {
         organizations: this.organizations,
         initialCode: template?.code || 'EMPTY',
         templateId: template?.id,
-        onClose$: this.onClose$,
+        onClose$: null,
         navigationExtras: this.navigationExtras,
       })
     );
   }
 
   public onClose() {
-    this.onClose$.next(null);
     this.hideDialog();
   }
 
   public hideDialog() {
+    // this.bsModalRef.setClass('modal-lg');
     this.bsModalRef.hide();
   }
 }

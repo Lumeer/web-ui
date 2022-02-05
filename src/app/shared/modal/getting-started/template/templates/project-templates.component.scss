@@ -1,4 +1,12 @@
 .layout {
+  position: relative;
+
+  .full-width {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+
   @media (min-width: 768px) {
     .tags {
       width: 250px;

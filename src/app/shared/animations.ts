@@ -52,24 +52,26 @@ export const animateVisible = trigger('animateVisible', [
   transition('* => void', [animate(500, keyframes([style({opacity: 1}), style({opacity: 0})]))]),
 ]);
 
+export const emptyEnterAnimation = trigger('enterEmpty', [transition(':enter', [])]);
+
 export const enterLeftAnimation = trigger('enterLeftAnimation', [
   transition(':enter', [
     style({transform: 'translateX(100%)', opacity: 0.6}),
-    animate('200ms ease-in-out', style({transform: 'translateX(0)', opacity: 1})),
+    animate('300ms ease-in-out', style({transform: 'translateX(0)', opacity: 1})),
   ]),
   transition(':leave', [
     style({transform: 'translateX(0)', opacity: 1}),
-    animate('200ms ease-in-out', style({transform: 'translateX(100%)', opacity: 0.6})),
+    animate('300ms ease-in-out', style({transform: 'translateX(100%)', opacity: 0.6})),
   ]),
 ]);
 
 export const enterRightAnimation = trigger('enterRightAnimation', [
   transition(':enter', [
     style({transform: 'translateX(-100%)', opacity: 0.6}),
-    animate('200ms ease-in-out', style({transform: 'translateX(0)', opacity: 1})),
+    animate('300ms ease-in-out', style({transform: 'translateX(0)', opacity: 1})),
   ]),
   transition(':leave', [
     style({transform: 'translateX(0)', opacity: 1}),
-    animate('200ms ease-in-out', style({transform: 'translateX(-100%)', opacity: 0.6})),
+    animate('300ms ease-in-out', style({transform: 'translateX(-100%)', opacity: 0.6})),
   ]),
 ]);

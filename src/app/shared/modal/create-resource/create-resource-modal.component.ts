@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Action, select, Store} from '@ngrx/store';
-import {filter, map} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, startWith} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {ResourceType} from '../../../core/model/resource-type';
 import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
@@ -41,6 +41,10 @@ import {
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {NavigationExtras} from '@angular/router';
+import {AsyncValidatorFn, FormBuilder, FormGroup} from '@angular/forms';
+import {ProjectValidators} from '../../../core/validators/project.validators';
+import {OrganizationValidators} from '../../../core/validators/organization.validators';
+import {minLengthValidator} from '../../../core/validators/custom-validators';
 
 @Component({
   templateUrl: './create-resource-modal.component.html',
@@ -61,34 +65,57 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
   public navigationExtras: NavigationExtras;
 
   @ViewChild(CreateResourceDialogFormComponent)
-  set content(content: CreateResourceDialogFormComponent) {
-    if (content) {
-      this.resourceFormComponent = content;
-      this.initFormStatusChanges();
-    }
-  }
+  public resourceFormComponent: CreateResourceDialogFormComponent;
+
+  public form: FormGroup;
 
   public contentValid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);
   public usedCodes$: Observable<string[]>;
-  public formInvalid$ = new BehaviorSubject(true);
+  public formInvalid$: Observable<boolean>;
   public preventClose$ = new BehaviorSubject(true);
 
   public onClose$ = new Subject();
 
   private subscriptions = new Subscription();
-  private resourceFormComponent: CreateResourceDialogFormComponent;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private fb: FormBuilder,
+    private projectValidators: ProjectValidators,
+    private organizationValidators: OrganizationValidators
+  ) {}
 
   public ngOnInit() {
+    this.createForm();
     this.parseResourceType();
   }
 
-  public initFormStatusChanges() {
-    const form = this.resourceFormComponent.form;
-    setTimeout(() => this.formInvalid$.next(form.invalid));
-    this.subscriptions.add(form.statusChanges.subscribe(() => this.formInvalid$.next(form.invalid)));
+  private createForm() {
+    const initialCode = '';
+
+    this.form = this.fb.group({
+      code: [initialCode, minLengthValidator(2), this.createAsyncValidator()],
+      name: null,
+    });
+
+    this.formInvalid$ = this.form.statusChanges.pipe(
+      startWith(''),
+      map(() => this.form.invalid),
+      distinctUntilChanged()
+    );
+  }
+
+  private createAsyncValidator(): AsyncValidatorFn {
+    if (this.resourceType === ResourceType.Organization) {
+      return this.organizationValidators.uniqueCode();
+    } else if (this.resourceType === ResourceType.Project) {
+      this.projectValidators.setOrganizationId(this.parentId);
+      return this.projectValidators.uniqueCode();
+    }
+
+    return null;
   }
 
   public onSubmit() {

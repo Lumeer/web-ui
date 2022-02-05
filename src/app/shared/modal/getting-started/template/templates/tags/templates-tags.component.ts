@@ -17,16 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Project} from '../../../../../core/store/projects/project';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
+import {Project} from '../../../../../../core/store/projects/project';
+import {uniqueValues} from '../../../../../utils/array.utils';
 
 @Component({
-  selector: 'templates-content',
-  templateUrl: './templates-content.component.html',
+  selector: 'templates-tags',
+  templateUrl: './templates-tags.component.html',
+  styleUrls: ['./templates-tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-flex flex-column mw-100'},
+  host: {class: 'd-flex flex-column'},
 })
-export class TemplatesContentComponent {
+export class TemplatesTagsComponent implements OnChanges {
   @Input()
   public templates: Project[];
 
@@ -36,15 +38,30 @@ export class TemplatesContentComponent {
   @Input()
   public selectedTemplate: Project;
 
-  @Input()
-  public mobile: boolean;
-
   @Output()
   public selectTag = new EventEmitter<string>();
 
   @Output()
   public selectTemplate = new EventEmitter<Project>();
 
-  @Output()
-  public backToTemplates = new EventEmitter();
+  public search: string;
+  public tags: string[];
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.templates) {
+      this.createTags();
+    }
+  }
+
+  private createTags() {
+    this.tags = createTagsFromTemplates(this.templates);
+  }
+}
+
+export function createTagsFromTemplates(templates: Project[]): string[] {
+  const tags = templates?.reduce((arr, template) => {
+    arr.push(...(template.templateMetadata?.tags || []));
+    return arr;
+  }, []);
+  return uniqueValues(tags.sort());
 }

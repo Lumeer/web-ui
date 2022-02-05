@@ -88,9 +88,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   private redirectToPublicWorkspace(): Subscription {
     return this.getOrganizationsAndProjects()
       .pipe(take(1))
-      .subscribe(({organizations, projects}) => {
-        const organization = organizations[0];
-        const project = projects[0];
+      .subscribe(({organizationsWithProjects}) => {
+        const organization = organizationsWithProjects[0];
+        const project = organization?.projects?.[0];
 
         this.store$.pipe(select(selectPublicViewCode), take(1)).subscribe(viewCode => {
           if (organization && project) {
@@ -105,17 +105,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   private redirectToWorkspace(): Subscription {
     return combineLatest([this.getDefaultWorkspace(), this.getOrganizationsAndProjects()])
       .pipe(take(1))
-      .subscribe(([workspace, {organizations, projects}]) => {
-        if (organizations.length > 0 && projects.length > 0) {
-          if (workspace) {
-            this.navigateToWorkspaceProject(workspace, organizations, projects);
-          } else {
-            this.navigateToAnyProject(organizations, projects);
-          }
-        } else if (organizations.length === 0) {
+      .subscribe(([workspace, {organizationsWithProjects, contributeOrganizations}]) => {
+        if (organizationsWithProjects.length > 0) {
+          this.navigateToWorkspaceProject(workspace, organizationsWithProjects);
+        } else if (contributeOrganizations.length === 0) {
           this.selectService.createNewOrganization({replaceUrl: true});
         } else {
-          this.createNewProject(organizations);
+          this.createNewProject(contributeOrganizations);
         }
       });
   }
@@ -125,36 +121,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     modalRef.content.onClose$.subscribe(() => this.redirectToWorkspace());
   }
 
-  private navigateToWorkspaceProject(workspace: DefaultWorkspace, organizations: Organization[], projects: Project[]) {
+  private navigateToWorkspaceProject(
+    workspace: DefaultWorkspace,
+    organizationsWithProjects: OrganizationWithProjects[]
+  ) {
     const workspaceOrganization =
-      workspace.organizationId && organizations.find(org => org.id === workspace.organizationId);
-    const workspaceProject = workspace.projectId && projects.find(proj => proj.id === workspace.projectId);
+      workspace?.organizationId && organizationsWithProjects.find(org => org.id === workspace.organizationId);
+    const workspaceProject =
+      workspace?.projectId && workspaceOrganization?.projects?.find(proj => proj.id === workspace.projectId);
 
-    if (workspaceOrganization && workspaceProject) {
-      this.navigateToProject(workspaceOrganization, workspaceProject);
-    } else if (workspaceOrganization) {
-      const project = projects.find(proj => proj.organizationId === workspaceOrganization.id);
-      if (project) {
-        this.navigateToProject(workspaceOrganization, project);
-      } else {
-        this.navigateToAnyProject(organizations, projects);
-      }
+    if (workspaceOrganization) {
+      this.navigateToProject(workspaceOrganization, workspaceProject || workspaceOrganization.projects[0]);
     } else {
-      this.navigateToAnyProject(organizations, projects);
-    }
-  }
-
-  private navigateToAnyProject(organizations: Organization[], projects: Project[]) {
-    const organization = organizations.find(org => projects.some(proj => proj.organizationId === org.id));
-    if (organization) {
-      const project = projects.find(proj => proj.organizationId === organization.id);
-      if (project) {
-        this.navigateToProject(organization, project);
-      } else {
-        this.selectService.createNewProject([organization], null, {replaceUrl: true});
-      }
-    } else {
-      this.selectService.createNewOrganization({replaceUrl: true});
+      this.navigateToProject(organizationsWithProjects[0], organizationsWithProjects[0].projects[0]);
     }
   }
 
@@ -187,7 +166,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getOrganizationsAndProjects(): Observable<{organizations: Organization[]; projects: Project[]}> {
+  private getOrganizationsAndProjects(): Observable<{
+    organizationsWithProjects: OrganizationWithProjects[];
+    contributeOrganizations: Organization[];
+  }> {
     return combineLatest([
       this.getOrganizations().pipe(
         tap(organizations =>
@@ -215,30 +197,37 @@ export class HomeComponent implements OnInit, OnDestroy {
   private filterReadableOrganizationsAndProjects(
     organizations: Organization[],
     projects: Project[]
-  ): Observable<{organizations: Organization[]; projects: Project[]}> {
+  ): Observable<{organizationsWithProjects: OrganizationWithProjects[]; contributeOrganizations: Organization[]}> {
     return combineLatest([this.store$.pipe(select(selectCurrentUser)), this.store$.pipe(select(selectAllTeams))]).pipe(
       map(([user, teams]) => {
         const readableOrganizations = [];
-        const readableProjects = [];
+        const contributeOrganizations = [];
         for (const organization of organizations) {
           const userTeams = teams.filter(
             team => team.organizationId === organization.id && team.users?.includes(user.id)
           );
           const organizationUser = {...user, teams: userTeams};
           if (userHasRoleInOrganization(organization, organizationUser, RoleType.Read)) {
-            readableOrganizations.push(organization);
-            readableProjects.push(
-              ...projects.filter(
-                project =>
-                  project.organizationId === organization.id &&
-                  userHasRoleInProject(organization, project, organizationUser, RoleType.Read)
-              )
+            const readableProjects = projects.filter(
+              project =>
+                project.organizationId === organization.id &&
+                userHasRoleInProject(organization, project, organizationUser, RoleType.Read)
             );
+            if (readableProjects.length) {
+              const organizationWithProjects = {
+                ...organization,
+                projects: sortResourcesByOrder(readableProjects),
+              };
+              readableOrganizations.push(organizationWithProjects);
+            }
+          }
+          if (userHasRoleInOrganization(organization, organizationUser, RoleType.ProjectContribute)) {
+            contributeOrganizations.push(organization);
           }
         }
         return {
-          organizations: sortResourcesByOrder(readableOrganizations),
-          projects: sortResourcesByOrder(readableProjects),
+          organizationsWithProjects: sortResourcesByOrder(readableOrganizations),
+          contributeOrganizations: sortResourcesByOrder(contributeOrganizations),
         };
       })
     );
@@ -248,3 +237,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 }
+
+type OrganizationWithProjects = Organization & {projects: Project[]};

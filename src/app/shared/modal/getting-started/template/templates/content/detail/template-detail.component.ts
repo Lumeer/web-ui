@@ -18,38 +18,37 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
-import {Project} from '../../../../../../core/store/projects/project';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {Project} from '../../../../../../../core/store/projects/project';
+import {ConfigurationService} from '../../../../../../../configuration/configuration.service';
 
 @Component({
-  selector: 'templates-select',
-  templateUrl: './templates-select.component.html',
-  styleUrls: ['./templates-select.component.scss'],
+  selector: 'template-detail',
+  templateUrl: './template-detail.component.html',
+  styleUrls: ['./template-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TemplatesSelectComponent implements OnChanges {
+export class TemplateDetailComponent implements OnChanges {
   @Input()
-  public templates: Project[];
-
-  @Input()
-  public selectedTag: string;
-
-  @Input()
-  public selectedTemplate: Project;
+  public template: Project;
 
   @Output()
-  public selectTemplate = new EventEmitter<Project>();
+  public selectTag = new EventEmitter<string>();
 
-  public tagImageUrl: string;
+  public publicViewUrl: SafeUrl;
+
+  constructor(private domSanitizer: DomSanitizer, private configurationService: ConfigurationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedTag) {
-      this.tagImageUrl = this.createTagImageUrl();
+    if (changes.template && this.template) {
+      this.publicViewUrl = this.createPublicViewUrl();
     }
   }
 
-  private createTagImageUrl(): string {
-    const tagWithoutAccent = removeAccentFromString(this.selectedTag).replace(/ /g, '_');
-    return `https://www.lumeer.io/wp-content/uploads/lumeer-projects/${tagWithoutAccent}.jpg`;
+  private createPublicViewUrl(): SafeUrl {
+    const url = `${this.configurationService.getConfiguration().publicViewCdn}?o=${
+      this.template.templateMetadata?.organizationId
+    }&p=${this.template.id}`;
+    return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

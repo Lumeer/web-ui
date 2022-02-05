@@ -1,0 +1,30 @@
+<modal-wrapper class="d-block"
+               *ngIf="{button: service.button$ | async, secondaryButton: service.secondaryButton$ | async, closeButton: service.closeButton$ | async} as data"
+               [performingAction]="service.performingAction$ | async"
+               [performingSecondaryAction]="service.performingSecondaryAction$ | async"
+               [customHeader]="true"
+               [showSubmit]="!!data.button"
+               [submitDisabled]="data.button?.disabled$ | async"
+               [dialogType]="data.button?.class"
+               [showSecondarySubmit]="!!data.secondaryButton"
+               [secondarySubmitClass]="data.secondaryButton?.class"
+               [secondarySubmitDisabled]="data.secondaryButton?.disabled$ | async"
+               [showClose]="!!data.closeButton"
+               [closeDisabled]="data.closeButton?.disabled$ | async"
+               (onSubmit)="onSubmit()"
+               (onSecondarySubmit)="onSecondarySubmit()"
+               (onClose)="onClose()">
+
+  <div class="body w-100 h-100">
+    <ng-container [ngSwitch]="service.stage$ | async">
+      <select-project-template *ngSwitchCase="stage.Template"
+                               [initialTemplateCode]="templateCode">
+      </select-project-template>
+    </ng-container>
+  </div>
+
+  <span class="button-cancel">{{data.closeButton?.title}}</span>
+  <span class="button-secondary-submit">{{data.secondaryButton?.title}}</span>
+  <span class="button-submit">{{data.button?.title}}</span>
+
+</modal-wrapper>
