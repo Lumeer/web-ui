@@ -20,25 +20,26 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {CreateProjectModalComponent} from './create-project-modal.component';
+import {GettingStartedModalComponent} from './getting-started-modal.component';
 import {PipesModule} from '../../pipes/pipes.module';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {CreateProjectTemplatesComponent} from './templates/create-project-templates.component';
-import {TemplatesTagsComponent} from './templates/tags/templates-tags.component';
-import {TemplatesSelectComponent} from './templates/content/select/templates-select.component';
-import {TemplateDetailComponent} from './templates/content/detail/template-detail.component';
-import {EmptyTemplatesComponent} from './templates/empty/empty-templates.component';
 import {WarningMessageModule} from '../../warning-message/warning-message.module';
 import {FilterTemplatesPipe} from './pipes/filter-templates.pipe';
-import {TemplateItemComponent} from './templates/content/select/template/template-item.component';
-import {TemplatesContentComponent} from './templates/content/templates-content.component';
-import {TemplatesToolbarComponent} from './templates/content/toolbar/templates-toolbar.component';
 import {FilterTemplatesByTagPipe} from './pipes/filter-templates-by-tag.pipe';
+import {SelectProjectTemplateComponent} from './template/select-project-template.component';
+import {ProjectTemplatesComponent} from './template/templates/project-templates.component';
+import {TemplatesTagsComponent} from './template/templates/tags/templates-tags.component';
+import {TemplatesSelectComponent} from './template/templates/content/select/templates-select.component';
+import {TemplateDetailComponent} from './template/templates/content/detail/template-detail.component';
+import {EmptyTemplatesComponent} from './template/templates/empty/empty-templates.component';
+import {TemplateItemComponent} from './template/templates/content/select/template/template-item.component';
+import {TemplatesToolbarComponent} from './template/templates/content/toolbar/templates-toolbar.component';
+import {TemplatesContentComponent} from './template/templates/content/templates-content.component';
 
 @NgModule({
   declarations: [
-    CreateProjectModalComponent,
-    CreateProjectTemplatesComponent,
+    GettingStartedModalComponent,
+    ProjectTemplatesComponent,
     TemplatesTagsComponent,
     TemplatesSelectComponent,
     TemplateDetailComponent,
@@ -48,8 +49,9 @@ import {FilterTemplatesByTagPipe} from './pipes/filter-templates-by-tag.pipe';
     TemplatesContentComponent,
     TemplatesToolbarComponent,
     FilterTemplatesByTagPipe,
+    SelectProjectTemplateComponent,
   ],
   imports: [CommonModule, PipesModule, ModalWrapperModule, WarningMessageModule, FormsModule],
-  exports: [CreateProjectModalComponent],
+  exports: [GettingStartedModalComponent],
 })
-export class CreateProjectModalModule {}
+export class GettingStartedModalModule {}

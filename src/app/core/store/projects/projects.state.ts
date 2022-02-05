@@ -55,6 +55,8 @@ export const selectReadableProjects = createSelector(
   (projects, permissions) => projects.filter(project => permissions?.[project.id]?.roles?.Read)
 );
 
+export const selectReadableProjectsCount = createSelector(selectReadableProjects, projects => projects?.length || 0);
+
 export const selectProjectsDictionary = createSelector(
   selectProjectsState,
   projectsAdapter.getSelectors().selectEntities
@@ -102,6 +104,8 @@ export const selectProjectByOrganizationAndCode = (organizationId: string, proje
   );
 
 export const selectProjectTemplates = createSelector(selectProjectsState, state => state.templates);
+
+export const selectProjectTemplatesCount = createSelector(selectProjectTemplates, templates => templates?.length || 0);
 
 export const selectPublicProject = createSelector(
   selectProjectsDictionary,

@@ -1,11 +1,12 @@
 <div class="layout h-100 d-flex flex-row overflow-hidden" *ngIf="templates.length; else empty"
-     [@.disabled]="!(mobile$ | async)">
+     @enterEmpty [@.disabled]="!(mobile$ | async)">
 
   <ng-container
-    *ngIf="{selectedTag: selectedTag$ | async, selectedTemplate: selectedTemplate$ | async, mobile: mobile$ | async, column: column$ | async} as data">
+    *ngIf="{selectedTag: service.selectedTag$ | async, selectedTemplate: service.selectedTemplate$ | async, mobile: mobile$ | async, column: column$ | async} as data">
 
     <templates-tags *ngIf="data.column === 0 || !data.mobile"
                     class="tags"
+                    [class.full-width]="data.mobile"
                     @enterRightAnimation
                     [templates]="templates"
                     [selectedTag]="data.selectedTag"
@@ -15,6 +16,7 @@
     </templates-tags>
     <templates-content *ngIf="data.column === 1 || !data.mobile"
                        class="flex-1"
+                       [class.full-width]="data.mobile"
                        @enterLeftAnimation
                        [templates]="templates | filterTemplatesByTag:data.selectedTag"
                        [selectedTag]="data.selectedTag"

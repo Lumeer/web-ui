@@ -18,18 +18,15 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {AsyncValidatorFn, FormBuilder, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 
 import {ResourceType} from '../../../../core/model/resource-type';
 import {safeGetRandomIcon} from '../../../picker/icons';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
 import * as Colors from '../../../picker/colors';
 import {Resource} from '../../../../core/model/resource';
-import {ProjectValidators} from '../../../../core/validators/project.validators';
-import {OrganizationValidators} from '../../../../core/validators/organization.validators';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
-import {Subscription} from 'rxjs';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
 
 @Component({
@@ -40,6 +37,9 @@ import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-pi
 export class CreateResourceDialogFormComponent implements OnInit {
   @Input()
   public parentId: string;
+
+  @Input()
+  public form: FormGroup;
 
   @Input()
   public resourceType: ResourceType;
@@ -53,50 +53,20 @@ export class CreateResourceDialogFormComponent implements OnInit {
   @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
-  public form: FormGroup;
   public color = DEFAULT_COLOR;
   public icon = DEFAULT_ICON;
 
-  public subscriptions = new Subscription();
-
   private readonly colors = Colors.palette;
 
-  constructor(
-    private fb: FormBuilder,
-    private projectValidators: ProjectValidators,
-    private organizationValidators: OrganizationValidators
-  ) {}
-
   public ngOnInit() {
-    this.createForm();
     this.color = this.colors[Math.round(Math.random() * this.colors.length)];
     this.icon = safeGetRandomIcon();
-  }
-
-  private createForm() {
-    const initialCode = '';
-
-    this.form = this.fb.group({
-      code: [initialCode, null, this.createAsyncValidator()],
-      name: null,
-    });
   }
 
   public onEnter(event: any) {
     // enter is somehow propagated to dropdown and throws error
     event.preventDefault();
     event.stopPropagation();
-  }
-
-  private createAsyncValidator(): AsyncValidatorFn {
-    if (this.resourceType === ResourceType.Organization) {
-      return this.organizationValidators.uniqueCode();
-    } else if (this.resourceType === ResourceType.Project) {
-      this.projectValidators.setOrganizationId(this.parentId);
-      return this.projectValidators.uniqueCode();
-    }
-
-    return null;
   }
 
   private createResourceObject(): Resource {

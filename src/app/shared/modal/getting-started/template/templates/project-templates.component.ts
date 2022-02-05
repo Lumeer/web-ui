@@ -18,22 +18,21 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, HostListener, OnInit} from '@angular/core';
-import {animate, style, transition, trigger} from '@angular/animations';
-import {Project} from '../../../../core/store/projects/project';
-import {LoadingState} from '../../../../core/model/loading-state';
 import {BehaviorSubject} from 'rxjs';
-import {createTagsFromTemplates} from '../model/templates-util';
-import {AbstractControl, FormGroup} from '@angular/forms';
-import {enterLeftAnimation, enterRightAnimation} from '../../../animations';
+import {createTagsFromTemplates} from './tags/templates-tags.component';
+import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../../../animations';
+import {Project} from '../../../../../core/store/projects/project';
+import {LoadingState} from '../../../../../core/model/loading-state';
+import {GettingStartedService} from '../../getting-started.service';
 
 @Component({
-  selector: 'create-project-templates',
-  templateUrl: './create-project-templates.component.html',
-  styleUrls: ['./create-project-templates.component.scss'],
+  selector: 'project-templates',
+  templateUrl: './project-templates.component.html',
+  styleUrls: ['./project-templates.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [enterLeftAnimation, enterRightAnimation],
+  animations: [enterLeftAnimation, enterRightAnimation, emptyEnterAnimation],
 })
-export class CreateProjectTemplatesComponent implements OnInit, OnChanges {
+export class ProjectTemplatesComponent implements OnInit, OnChanges {
   @Input()
   public templates: Project[];
 
@@ -41,15 +40,12 @@ export class CreateProjectTemplatesComponent implements OnInit, OnChanges {
   public loadingState: LoadingState;
 
   @Input()
-  public form: FormGroup;
-
-  @Input()
   public initialTemplateCode: string;
 
-  public selectedTag$ = new BehaviorSubject<string>(null);
-  public selectedTemplate$ = new BehaviorSubject<Project>(null);
   public mobile$ = new BehaviorSubject(false);
   public column$ = new BehaviorSubject(0);
+
+  constructor(public service: GettingStartedService) {}
 
   public ngOnInit() {
     this.detectMobileResolution();
@@ -61,52 +57,43 @@ export class CreateProjectTemplatesComponent implements OnInit, OnChanges {
     }
   }
 
-  private get templateSelectedControl(): AbstractControl {
-    return this.form.controls.templateSelected;
-  }
-
   private checkSelectedItems() {
-    if (this.selectedTag$.value || this.selectedTemplate$.value) {
+    if (this.service.selectedTag || this.service.selectedTemplate) {
       return;
     }
 
     const selectedTemplate =
       this.initialTemplateCode && this.templates?.find(template => template.code === this.initialTemplateCode);
     if (selectedTemplate) {
-      this.selectedTemplate$.next(selectedTemplate);
-      this.selectedTag$.next(selectedTemplate.templateMetadata?.tags?.[0]);
-      setTimeout(() => this.templateSelectedControl.patchValue(true));
+      this.service.selectedTemplate = selectedTemplate;
+      this.service.selectedTag = selectedTemplate.templateMetadata?.tags?.[0];
     } else if (this.templates?.length) {
       const tags = createTagsFromTemplates(this.templates);
-      this.selectedTag$.next(tags[0]);
+      this.service.selectedTag = tags[0];
     }
   }
 
   public onSelectTagThroughSearch(tag: string) {
-    this.selectedTag$.next(tag);
-    this.selectedTemplate$.next(null);
+    this.service.selectedTag = tag;
+    this.service.selectedTemplate = null;
     this.column$.next(1);
-    this.templateSelectedControl.patchValue(false);
   }
 
   public onSelectTemplateThroughSearch(template: Project) {
-    this.selectedTag$.next(null);
-    this.selectedTemplate$.next(template);
+    this.service.selectedTag = null;
+    this.service.selectedTemplate = template;
     this.column$.next(1);
-    this.templateSelectedControl.patchValue(true);
   }
 
   public onSelectTemplate(template: Project) {
-    this.selectedTemplate$.next(template);
+    this.service.selectedTemplate = template;
     this.column$.next(1);
-    this.templateSelectedControl.patchValue(true);
   }
 
   public onSelectTag(tag: string) {
-    this.selectedTag$.next(tag);
-    this.selectedTemplate$.next(null);
+    this.service.selectedTag = tag;
+    this.service.selectedTemplate = null;
     this.column$.next(1);
-    this.templateSelectedControl.patchValue(false);
   }
 
   public backToTemplates() {

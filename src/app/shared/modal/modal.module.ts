@@ -30,7 +30,7 @@ import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-
 import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
 import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
 import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
-import {CreateProjectModalModule} from './create-project/create-project-modal.module';
+import {GettingStartedModalModule} from './getting-started/getting-started-modal.module';
 import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
@@ -58,7 +58,7 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
     VerifyEmailModalModule,
-    CreateProjectModalModule,
+    GettingStartedModalModule,
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
@@ -81,7 +81,7 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
     VerifyEmailModalModule,
-    CreateProjectModalModule,
+    GettingStartedModalModule,
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,

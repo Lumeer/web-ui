@@ -17,16 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {Project} from '../../../../../../../core/store/projects/project';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Project} from '../../../../../../core/store/projects/project';
 
 @Component({
-  selector: 'template-item',
-  templateUrl: './template-item.component.html',
-  styleUrls: ['./template-item.component.scss'],
+  selector: 'templates-content',
+  templateUrl: './templates-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-flex flex-column mw-100'},
 })
-export class TemplateItemComponent {
+export class TemplatesContentComponent {
   @Input()
-  public template: Project;
+  public templates: Project[];
+
+  @Input()
+  public selectedTag: string;
+
+  @Input()
+  public selectedTemplate: Project;
+
+  @Input()
+  public mobile: boolean;
+
+  @Output()
+  public selectTag = new EventEmitter<string>();
+
+  @Output()
+  public selectTemplate = new EventEmitter<Project>();
+
+  @Output()
+  public backToTemplates = new EventEmitter();
 }

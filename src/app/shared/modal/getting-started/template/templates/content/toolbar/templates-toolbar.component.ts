@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {Project} from '../../../../../../core/store/projects/project';
+import {Project} from '../../../../../../../core/store/projects/project';
 
 @Component({
   selector: 'templates-toolbar',

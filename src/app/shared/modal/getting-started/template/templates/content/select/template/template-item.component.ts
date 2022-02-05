@@ -17,13 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Project} from '../../../../core/store/projects/project';
-import {uniqueValues} from '../../../utils/array.utils';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Project} from '../../../../../../../../core/store/projects/project';
 
-export function createTagsFromTemplates(templates: Project[]): string[] {
-  const tags = templates?.reduce((arr, template) => {
-    arr.push(...(template.templateMetadata?.tags || []));
-    return arr;
-  }, []);
-  return uniqueValues(tags.sort());
+@Component({
+  selector: 'template-item',
+  templateUrl: './template-item.component.html',
+  styleUrls: ['./template-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TemplateItemComponent {
+  @Input()
+  public template: Project;
 }
