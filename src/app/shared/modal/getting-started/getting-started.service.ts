@@ -31,6 +31,13 @@ import {
 } from '../../../core/store/projects/projects.state';
 import {Organization} from '../../../core/store/organizations/organization';
 import {selectContributeOrganizations} from '../../../core/store/organizations/organizations.state';
+import {CreateProjectService} from '../../../core/service/create-project.service';
+import {NavigationExtras} from '@angular/router';
+import {InvitationType} from '../../../core/model/invitation-type';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {isEmailValid} from '../../utils/email.utils';
+
+const EMPTY_TEMPLATE_CODE = 'EMPTY';
 
 @Injectable()
 export class GettingStartedService {
@@ -44,7 +51,7 @@ export class GettingStartedService {
   public readonly secondaryButton$: Observable<DialogButton>;
   public readonly closeButton$: Observable<DialogButton>;
 
-  private _stage$ = new BehaviorSubject(GettingStartedStage.Template);
+  private _stage$ = new BehaviorSubject(GettingStartedStage.InviteUsers);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
 
   private _close$ = new Subject();
@@ -60,7 +67,14 @@ export class GettingStartedService {
   private _selectedOrganization$ = new BehaviorSubject<Organization>(null);
   public selectedOrganization$ = this._selectedOrganization$.pipe(distinctUntilChanged((a, b) => a?.id === b?.id));
 
-  constructor(private store$: Store<AppState>) {
+  public _invitations$ = new BehaviorSubject<UserInvitation[]>([emptyInvitation, emptyInvitation, emptyInvitation]);
+  public invitations$ = this._invitations$.asObservable();
+
+  // other data
+  private navigationExtras: NavigationExtras;
+  private createdProject: Project;
+
+  constructor(private store$: Store<AppState>, private createProjectService: CreateProjectService) {
     this.button$ = this._stage$.pipe(switchMap(stage => this.getButton(stage)));
     this.secondaryButton$ = this._stage$.pipe(switchMap(stage => this.getSecondaryButton(stage)));
     this.closeButton$ = this._stage$.pipe(switchMap(stage => this.getCloseButton(stage)));
@@ -98,8 +112,47 @@ export class GettingStartedService {
     this._selectedTemplate$.next(value);
   }
 
+  public get invitations(): UserInvitation[] {
+    return this._invitations$.value;
+  }
+
+  public set invitations(value: UserInvitation[]) {
+    this._invitations$.next(value);
+  }
+
+  public get selectedOrganization() {
+    return this._selectedOrganization$.value;
+  }
+
   public set selectedOrganization(value: Organization) {
     this._selectedOrganization$.next(value);
+  }
+
+  public setNavigationExtras(value: NavigationExtras) {
+    this.navigationExtras = value;
+  }
+
+  public setInvitationEmail(index: number, email: string) {
+    const invitations = this.patchInvitation(index, invitation => ({...invitation, email}));
+    if (index === invitations.length - 1 && email.trim().length > 0) {
+      invitations.push(emptyInvitation);
+    }
+    this.invitations = invitations;
+  }
+
+  public setInvitationType(index: number, type: InvitationType) {
+    this.invitations = this.patchInvitation(index, invitation => ({...invitation, type}));
+  }
+
+  public addInvitation() {
+    this.invitations = [...this._invitations$.value, emptyInvitation];
+  }
+
+  private patchInvitation(index: number, patch: (UserInvitation) => UserInvitation): UserInvitation[] {
+    const invitationsCopy = [...this._invitations$.value];
+    const invitation = invitationsCopy[index];
+    invitationsCopy[index] = patch(invitation);
+    return invitationsCopy;
   }
 
   private getButton(stage: GettingStartedStage): Observable<DialogButton> {
@@ -115,6 +168,12 @@ export class GettingStartedService {
           disabled$: this.selectedOrganization$.pipe(map(template => !template?.id)),
           class: DialogType.Primary,
           title: $localize`:@@templates.button.use:Use this template`,
+        });
+      case GettingStartedStage.InviteUsers:
+        return of({
+          disabled$: of(false),
+          class: DialogType.Primary,
+          title: $localize`:@@getting.started.invite.users.confirm:Invite my colleagues`,
         });
       default:
         return of(null);
@@ -139,6 +198,12 @@ export class GettingStartedService {
             return null;
           })
         );
+      case GettingStartedStage.InviteUsers:
+        return of({
+          disabled$: of(false),
+          class: DialogType.Primary,
+          title: $localize`:@@getting.started.invite.users.skip:I'll do it later`,
+        });
       default:
         return of(null);
     }
@@ -172,6 +237,10 @@ export class GettingStartedService {
         break;
       case GettingStartedStage.ChooseOrganization:
         this.submitTemplate(this.selectedOrganization, this.selectedTemplate);
+        break;
+      case GettingStartedStage.InviteUsers:
+        this.checkSubmitInvitations();
+        break;
     }
   }
 
@@ -182,13 +251,26 @@ export class GettingStartedService {
           .pipe(
             select(selectProjectTemplates),
             take(1),
-            map(templates => templates.find(t => t.code === 'EMPTY'))
+            map(templates => templates.find(t => t.code === EMPTY_TEMPLATE_CODE))
           )
           .subscribe(emptyTemplate => {
             this.checkNextStageFromTemplate(emptyTemplate);
           });
         break;
+      case GettingStartedStage.InviteUsers:
+        this.checkNextStageFromInviteUsers();
+        break;
     }
+  }
+
+  private checkNextStageFromInviteUsers() {
+    this.store$.pipe(select(selectCurrentUser), take(1)).subscribe(currentUser => {
+      if (currentUser.emailVerified) {
+        this.stage = GettingStartedStage.Video;
+      } else {
+        this.stage = GettingStartedStage.EmailVerification;
+      }
+    });
   }
 
   public onClose() {
@@ -200,6 +282,11 @@ export class GettingStartedService {
   }
 
   private checkNextStageFromTemplate(template?: Project) {
+    if (this.selectedOrganization) {
+      this.submitTemplate(this.selectedOrganization, template);
+      return;
+    }
+
     this.store$.pipe(select(selectContributeOrganizations), take(1)).subscribe(organizations => {
       if (organizations.length === 1) {
         this.submitTemplate(organizations[0], template);
@@ -214,14 +301,57 @@ export class GettingStartedService {
 
   private submitTemplate(organization: Organization, template?: Project) {
     this.performingAction = true;
+
+    const code = template?.code || EMPTY_TEMPLATE_CODE;
+    this.createProjectService.createProjectInOrganization(organization, code, {
+      templateId: template?.id,
+      navigationExtras: this.navigationExtras,
+      onSuccess: project => this.onProjectCreated(project),
+      onFailure: () => this.onFailure(),
+    });
+  }
+
+  private checkSubmitInvitations() {
+    const validInvitations = this.filterValidInvitations();
+    if (validInvitations.length > 0) {
+      this.submitInvitations(validInvitations);
+    } else {
+      this.checkNextStageFromInviteUsers();
+    }
+  }
+
+  private filterValidInvitations(): UserInvitation[] {
+    return this.invitations.reduce((invitations, invitation) => {
+      const cleanedInvitation = {...invitation, email: invitation.email.trim()};
+      if (isEmailValid(cleanedInvitation.email) && !invitations.some(inv => inv.email === cleanedInvitation.email)) {
+        invitations.push(cleanedInvitation);
+      }
+      return invitations;
+    }, []);
+  }
+
+  private submitInvitations(invitations: UserInvitation[]) {
+    this.performingAction = true;
+
+    // TODO server
+  }
+
+  private onProjectCreated(project: Project) {
+    this.createdProject = project;
+    this.stage = GettingStartedStage.InviteUsers;
+  }
+
+  private onFailure() {
+    this.performingAction = false;
+    this.performingSecondaryAction = false;
   }
 }
 
 export enum GettingStartedStage {
   Template = 0,
   ChooseOrganization = 1,
-  Invitation = 2,
-  ConfirmEmail = 3,
+  InviteUsers = 2,
+  EmailVerification = 3,
   Video = 4,
 }
 
@@ -230,3 +360,10 @@ export interface DialogButton {
   class?: DialogType;
   disabled$?: Observable<boolean>;
 }
+
+interface UserInvitation {
+  email: string;
+  type: InvitationType;
+}
+
+const emptyInvitation: UserInvitation = {email: '', type: InvitationType.Manage};

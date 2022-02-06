@@ -40,6 +40,7 @@
             (click)="onSecondarySubmitClick()"
             type="button"
             [class.me-2]="showSubmit"
+            [class.border-transparent]="secondaryBorderless"
             class="btn btn-outline-{{secondarySubmitClass || dialogType}} text-nowrap float-end">
       <span *ngIf="performingSecondaryAction" class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
       <ng-content select=".button-secondary-submit"></ng-content>

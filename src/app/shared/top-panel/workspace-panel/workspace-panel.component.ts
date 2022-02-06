@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -86,6 +86,6 @@ export class WorkspacePanelComponent implements OnInit {
   }
 
   public createNewProject(organization: Organization) {
-    this.selectService.createNewProject([organization]);
+    this.selectService.createNewProject(organization);
   }
 }
