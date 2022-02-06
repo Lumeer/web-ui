@@ -60,6 +60,9 @@ export class ModalWrapperComponent {
   public secondarySubmitClass: string;
 
   @Input()
+  public secondaryBorderless: boolean;
+
+  @Input()
   public closeDisabled: boolean;
 
   @Input()

@@ -9,6 +9,7 @@
                [showSecondarySubmit]="!!data.secondaryButton"
                [secondarySubmitClass]="data.secondaryButton?.class"
                [secondarySubmitDisabled]="data.secondaryButton?.disabled$ | async"
+               [secondaryBorderless]="true"
                [showClose]="!!data.closeButton"
                [closeDisabled]="data.closeButton?.disabled$ | async"
                (onSubmit)="onSubmit()"
@@ -22,6 +23,7 @@
       </select-project-template>
       <choose-organization *ngSwitchCase="stage.ChooseOrganization">
       </choose-organization>
+      <invite-users *ngSwitchCase="stage.InviteUsers"></invite-users>
     </ng-container>
   </div>
 

@@ -30,7 +30,7 @@ import {selectContributeOrganizations} from '../../../../../core/store/organizat
   templateUrl: './choose-organization.component.html',
   styleUrls: ['./choose-organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-block p-5'},
+  host: {class: 'd-block p-4'},
 })
 export class ChooseOrganizationComponent implements OnInit {
   public organizations$: Observable<Organization[]>;

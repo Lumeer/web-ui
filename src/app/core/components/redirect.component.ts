@@ -64,9 +64,7 @@ export class RedirectComponent implements OnInit {
 
   public redirectToTemplate(templateCode: string) {
     const observable = this.getWritableOrganizationsForTemplate(templateCode);
-    this.selectWritableOrganizations(observable, organizations =>
-      this.createProjectByTemplate(organizations, templateCode)
-    );
+    this.selectWritableOrganizations(observable, () => this.createProjectByTemplate(templateCode));
   }
 
   public redirectToCopyProject(organizationId: string, projectId: string) {
@@ -100,8 +98,8 @@ export class RedirectComponent implements OnInit {
     modalRef.content.onClose$.subscribe(() => this.redirectToHome());
   }
 
-  private createProjectByTemplate(organizations: Organization[], templateCode: string) {
-    const modalRef = this.workspaceSelectService.createNewProject(organizations, templateCode, {replaceUrl: true});
+  private createProjectByTemplate(templateCode: string) {
+    const modalRef = this.workspaceSelectService.createNewProject(null, templateCode, {replaceUrl: true});
     modalRef.content.onClose$.subscribe(() => this.redirectToHome());
   }
 

@@ -307,14 +307,14 @@ export class ModalService {
   }
 
   public showCreateProjectDialog(
-    organizations: Organization[],
+    organization: Organization,
     templateCode: string,
     extras?: NavigationExtras
   ): BsModalRef {
     this.store$.dispatch(new ProjectsAction.GetTemplates());
     const initialState = {
       templateCode,
-      organizations,
+      organization,
       navigationExtras: extras,
     };
     return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-xxl modal-h-100');

@@ -36,6 +36,8 @@ import {TemplateItemComponent} from './steps/template/templates/content/select/t
 import {TemplatesToolbarComponent} from './steps/template/templates/content/toolbar/templates-toolbar.component';
 import {TemplatesContentComponent} from './steps/template/templates/content/templates-content.component';
 import {ChooseOrganizationComponent} from './steps/choose-organization/choose-organization.component';
+import {InviteUsersComponent} from './steps/invite-users/invite-users.component';
+import {SelectModule} from '../../select/select.module';
 
 @NgModule({
   declarations: [
@@ -52,8 +54,9 @@ import {ChooseOrganizationComponent} from './steps/choose-organization/choose-or
     FilterTemplatesByTagPipe,
     SelectProjectTemplateComponent,
     ChooseOrganizationComponent,
+    InviteUsersComponent,
   ],
-  imports: [CommonModule, PipesModule, ModalWrapperModule, WarningMessageModule, FormsModule],
+  imports: [CommonModule, PipesModule, ModalWrapperModule, WarningMessageModule, FormsModule, SelectModule],
   exports: [GettingStartedModalComponent],
 })
 export class GettingStartedModalModule {}

@@ -65,7 +65,7 @@ export class ProjectTemplatesComponent implements OnInit, OnChanges {
     const selectedTemplate =
       this.initialTemplateCode && this.templates?.find(template => template.code === this.initialTemplateCode);
     if (selectedTemplate) {
-      this.service.selectedTemplate = selectedTemplate;
+      setTimeout(() => (this.service.selectedTemplate = selectedTemplate));
       this.service.selectedTag = selectedTemplate.templateMetadata?.tags?.[0];
     } else if (this.templates?.length) {
       const tags = createTagsFromTemplates(this.templates);

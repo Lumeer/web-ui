@@ -107,7 +107,7 @@ export class ChooseOrganizationModalComponent implements OnInit {
       bsModalRef.content.onClose$ = this.onClose$;
     } else {
       const bsModalRef = this.modalService.showCreateProjectDialog(
-        this.organizations,
+        this.organizations[0],
         this.initialCode,
         this.navigationExtras
       );

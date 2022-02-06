@@ -1,0 +1,13 @@
+@import '~src/styles/bootstrap_var';
+
+.emails-wrapper {
+  width: 50%;
+
+  @include media-breakpoint-down(xl) {
+    width: 60%;
+  }
+
+  @include media-breakpoint-down(lg) {
+    width: 100%;
+  }
+}

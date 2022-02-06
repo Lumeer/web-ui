@@ -79,7 +79,7 @@ export class WorkspaceSelectService {
 
   private checkAndCreateNewProject(organization: Organization) {
     if (userHasRoleInOrganization(organization, this.currentUser, RoleType.ProjectContribute)) {
-      this.createNewProject([organization]);
+      this.createNewProject(organization);
     } else {
       this.dispatchErrorCreateProjectNotification();
     }
@@ -90,8 +90,8 @@ export class WorkspaceSelectService {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  public createNewProject(organizations: Organization[], templateCode?: string, extras?: NavigationExtras): BsModalRef {
-    return this.modalService.showCreateProjectDialog(organizations, templateCode, extras);
+  public createNewProject(organization: Organization, templateCode?: string, extras?: NavigationExtras): BsModalRef {
+    return this.modalService.showCreateProjectDialog(organization, templateCode, extras);
   }
 
   public copyProject(
@@ -108,7 +108,7 @@ export class WorkspaceSelectService {
   }
 
   public createNewOrganization(extras?: NavigationExtras): BsModalRef {
-    return this.openCreateOrganizationModal(organization => this.createNewProject([organization], null, extras));
+    return this.openCreateOrganizationModal(organization => this.createNewProject(organization, null, extras));
   }
 
   private openCreateOrganizationModal(callback: (Organization) => void): BsModalRef {
