@@ -45,10 +45,8 @@ import {selectDefaultViewConfig, selectViewsDictionary, selectViewsLoaded, selec
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
-import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {User} from '../users/user';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
-import {convertUserModelToDto} from '../users/user.converter';
 import {createCallbackActions} from '../utils/store.utils';
 import {cleanQueryFromHiddenAttributes, mapPositionPathParams} from '../navigation/query/query.util';
 import {SearchesAction} from '../searches/searches.action';
@@ -59,7 +57,7 @@ import {MapsAction} from '../maps/maps.action';
 import {CalendarsAction} from '../calendars/calendars.action';
 import {KanbansAction} from '../kanbans/kanbans.action';
 import {ChartAction} from '../charts/charts.action';
-import {ViewService, UserService} from '../../data-service';
+import {UserService, ViewService} from '../../data-service';
 import {WorkflowsAction} from '../workflows/workflows.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -75,6 +73,9 @@ import {convertTeamModelToDto} from '../teams/teams.converter';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 import {viewSettingsIdByView} from '../view-settings/view-settings.util';
 import {ViewSettingsAction} from '../view-settings/view-settings.action';
+import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
+import {InvitationType} from '../../model/invitation-type';
+import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 
 @Injectable()
 export class ViewsEffects {
@@ -410,11 +411,13 @@ export class ViewsEffects {
       return of([]);
     }
 
-    const usersDtos = newUsers.map(user => convertUserModelToDto(user));
+    const invitationsDtos = newUsers.map(user =>
+      convertUserInvitationToDto({email: user.email, type: InvitationType.JoinOnly})
+    );
     return this.store$.select(pipe(selectWorkspaceWithIds)).pipe(
       take(1),
       mergeMap(workspace =>
-        this.userService.createUsersInWorkspace(workspace.organizationId, workspace.projectId, usersDtos)
+        this.userService.createUsersInWorkspace(workspace.organizationId, workspace.projectId, invitationsDtos)
       ),
       map(users =>
         users

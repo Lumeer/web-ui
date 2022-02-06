@@ -19,10 +19,10 @@
 
 import {Observable} from 'rxjs';
 import {UserDto} from '../../dto';
-import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
-import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
+import {UserHintsDto} from '../../dto/user.dto';
+import {UserInvitationDto} from '../../dto/user-invitation.dto';
 
 export abstract class UserService {
   public abstract createUser(organizationId: string, user: UserDto): Observable<UserDto>;
@@ -30,8 +30,7 @@ export abstract class UserService {
   public abstract createUsersInWorkspace(
     organizationId: string,
     projectId: string,
-    users: UserDto[],
-    invitationType?: InvitationType
+    invitations: UserInvitationDto[]
   ): Observable<UserDto[]>;
 
   public abstract updateUser(organizationId: string, id: string, user: UserDto): Observable<UserDto>;

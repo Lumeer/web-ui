@@ -47,6 +47,7 @@ import {selectAllServiceLimits} from '../organizations/service-limits/service-li
 import {ServiceLevelType} from '../../dto/service-level-type';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {TeamsAction} from '../teams/teams.action';
+import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
 
 @Injectable()
 export class UsersEffects {
@@ -251,25 +252,24 @@ export class UsersEffects {
     this.actions$.pipe(
       ofType<UsersAction.InviteUsers>(UsersActionType.INVITE),
       mergeMap(action => {
-        const usersDto = action.payload.users.map(user => convertUserModelToDto(user));
+        const invitationsDto = action.payload.invitations.map(user => convertUserInvitationToDto(user));
 
         return this.userService
-          .createUsersInWorkspace(
-            action.payload.organizationId,
-            action.payload.projectId,
-            usersDto,
-            action.payload.invitationType
-          )
+          .createUsersInWorkspace(action.payload.organizationId, action.payload.projectId, invitationsDto)
           .pipe(
             map(dtos => dtos.map(dto => convertUserDtoToModel(dto))),
-            map(users => new UsersAction.InviteSuccess({users})),
+            mergeMap(users => [
+              new UsersAction.InviteSuccess({users}),
+              ...createCallbackActions(action.payload.onSuccess),
+            ]),
             catchError(error =>
               of(
                 new UsersAction.InviteFailure({
                   error,
                   organizationId: action.payload.organizationId,
                   projectId: action.payload.projectId,
-                })
+                }),
+                ...createCallbackActions(action.payload.onFailure)
               )
             )
           );

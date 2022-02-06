@@ -19,9 +19,9 @@
 
 import {Action} from '@ngrx/store';
 import {DefaultWorkspace, User, UserHints} from './user';
-import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../organizations/payment/payment';
 import {UserHintsDto} from '../../dto/user.dto';
+import {UserInvitation} from '../../model/user-invitation';
 
 export enum UsersActionType {
   GET = '[Users] Get',
@@ -191,7 +191,13 @@ export namespace UsersAction {
     public readonly type = UsersActionType.INVITE;
 
     public constructor(
-      public payload: {organizationId: string; projectId: string; users: User[]; invitationType?: InvitationType}
+      public payload: {
+        organizationId: string;
+        projectId: string;
+        invitations: UserInvitation[];
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 

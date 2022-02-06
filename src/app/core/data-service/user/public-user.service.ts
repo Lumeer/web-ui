@@ -23,11 +23,11 @@ import {Observable, of} from 'rxjs';
 import {UserService} from './user.service';
 import {UserDto} from '../../dto';
 import {generateId} from '../../../shared/utils/resource.utils';
-import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {DEFAULT_USER} from '../../constants';
 import {UserHintsDto} from '../../dto/user.dto';
+import {UserInvitationDto} from '../../dto/user-invitation.dto';
 
 @Injectable()
 export class PublicUserService implements UserService {
@@ -38,10 +38,9 @@ export class PublicUserService implements UserService {
   public createUsersInWorkspace(
     organizationId: string,
     projectId: string,
-    users: UserDto[],
-    invitationType?: InvitationType
+    invitations: UserInvitationDto[]
   ): Observable<UserDto[]> {
-    return of(users.map(user => ({...user, organizations: [organizationId], id: generateId()})));
+    return of(invitations.map(user => ({...user, organizations: [organizationId], id: generateId()})));
   }
 
   public updateUser(organizationId: string, id: string, user: UserDto): Observable<UserDto> {
