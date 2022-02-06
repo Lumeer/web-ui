@@ -36,6 +36,8 @@ import {NavigationExtras} from '@angular/router';
 import {InvitationType} from '../../../core/model/invitation-type';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {isEmailValid} from '../../utils/email.utils';
+import {UserInvitation} from '../../../core/model/user-invitation';
+import {UsersAction} from '../../../core/store/users/users.action';
 
 const EMPTY_TEMPLATE_CODE = 'EMPTY';
 
@@ -51,7 +53,7 @@ export class GettingStartedService {
   public readonly secondaryButton$: Observable<DialogButton>;
   public readonly closeButton$: Observable<DialogButton>;
 
-  private _stage$ = new BehaviorSubject(GettingStartedStage.InviteUsers);
+  private _stage$ = new BehaviorSubject(GettingStartedStage.Template);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
 
   private _close$ = new Subject();
@@ -333,15 +335,33 @@ export class GettingStartedService {
   private submitInvitations(invitations: UserInvitation[]) {
     this.performingAction = true;
 
-    // TODO server
+    this.store$.dispatch(
+      new UsersAction.InviteUsers({
+        invitations,
+        organizationId: this.selectedOrganization.id,
+        projectId: this.createdProject.id,
+        onSuccess: () => this.onInvitationsSent(),
+        onFailure: () => this.onFailure(),
+      })
+    );
   }
 
   private onProjectCreated(project: Project) {
     this.createdProject = project;
     this.stage = GettingStartedStage.InviteUsers;
+    this.stopPerformingActions();
+  }
+
+  private onInvitationsSent() {
+    this.checkNextStageFromInviteUsers();
+    this.stopPerformingActions();
   }
 
   private onFailure() {
+    this.stopPerformingActions();
+  }
+
+  private stopPerformingActions() {
     this.performingAction = false;
     this.performingSecondaryAction = false;
   }
@@ -359,11 +379,6 @@ export interface DialogButton {
   title: string;
   class?: DialogType;
   disabled$?: Observable<boolean>;
-}
-
-interface UserInvitation {
-  email: string;
-  type: InvitationType;
 }
 
 const emptyInvitation: UserInvitation = {email: '', type: InvitationType.Manage};

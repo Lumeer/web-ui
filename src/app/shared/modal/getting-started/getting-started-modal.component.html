@@ -23,7 +23,12 @@
       </select-project-template>
       <choose-organization *ngSwitchCase="stage.ChooseOrganization">
       </choose-organization>
-      <invite-users *ngSwitchCase="stage.InviteUsers"></invite-users>
+      <invite-users *ngSwitchCase="stage.InviteUsers">
+      </invite-users>
+      <email-verification *ngSwitchCase="stage.EmailVerification">
+      </email-verification>
+      <getting-started-video *ngSwitchCase="stage.Video">
+      </getting-started-video>
     </ng-container>
   </div>
 

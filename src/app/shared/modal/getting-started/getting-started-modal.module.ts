@@ -38,6 +38,8 @@ import {TemplatesContentComponent} from './steps/template/templates/content/temp
 import {ChooseOrganizationComponent} from './steps/choose-organization/choose-organization.component';
 import {InviteUsersComponent} from './steps/invite-users/invite-users.component';
 import {SelectModule} from '../../select/select.module';
+import {EmailVerificationComponent} from './steps/email-verification/email-verification.component';
+import {GettingStartedVideoComponent} from './steps/video/getting-started-video.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import {SelectModule} from '../../select/select.module';
     SelectProjectTemplateComponent,
     ChooseOrganizationComponent,
     InviteUsersComponent,
+    EmailVerificationComponent,
+    GettingStartedVideoComponent,
   ],
   imports: [CommonModule, PipesModule, ModalWrapperModule, WarningMessageModule, FormsModule, SelectModule],
   exports: [GettingStartedModalComponent],
