@@ -23,11 +23,14 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Subscription} from 'rxjs';
 import {Organization} from '../../../core/store/organizations/organization';
 import {GettingStartedService, GettingStartedStage} from './getting-started.service';
+import {animateOpacityEnterLeave} from '../../animations';
 
 @Component({
   templateUrl: './getting-started-modal.component.html',
+  styleUrls: ['./getting-started-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [GettingStartedService],
+  animations: [animateOpacityEnterLeave],
 })
 export class GettingStartedModalComponent implements OnInit, OnDestroy {
   @Input()
@@ -80,6 +83,7 @@ export class GettingStartedModalComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+    this.service.onDestroy();
   }
 
   public onSubmit() {

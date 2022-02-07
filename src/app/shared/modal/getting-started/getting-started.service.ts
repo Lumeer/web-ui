@@ -18,8 +18,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of, Subject} from 'rxjs';
-import {distinctUntilChanged, map, switchMap, take} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription, timer} from 'rxjs';
+import {distinctUntilChanged, map, skip, switchMap, take} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';
 import {Project} from '../../../core/store/projects/project';
 import {AppState} from '../../../core/store/app.state';
@@ -53,8 +53,9 @@ export class GettingStartedService {
   public readonly secondaryButton$: Observable<DialogButton>;
   public readonly closeButton$: Observable<DialogButton>;
 
-  private _stage$ = new BehaviorSubject(GettingStartedStage.Video);
+  private _stage$ = new BehaviorSubject(GettingStartedStage.Template);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
+  public stages$ = of(5);
 
   private _close$ = new Subject();
   public close$ = this._close$.asObservable();
@@ -75,6 +76,7 @@ export class GettingStartedService {
   // other data
   private navigationExtras: NavigationExtras;
   private createdProject: Project;
+  private stageSubscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private createProjectService: CreateProjectService) {
     this.button$ = this._stage$.pipe(switchMap(stage => this.getButton(stage)));
@@ -88,6 +90,8 @@ export class GettingStartedService {
 
   private set stage(value: GettingStartedStage) {
     this._stage$.next(value);
+    this.stopPerformingActions();
+    this.unsubscribe();
   }
 
   private set performingAction(value: boolean) {
@@ -291,11 +295,39 @@ export class GettingStartedService {
   private checkNextStageFromInviteUsers() {
     this.store$.pipe(select(selectCurrentUser), take(1)).subscribe(currentUser => {
       if (currentUser.emailVerified) {
-        this.stage = GettingStartedStage.Video;
+        // TODO uncomment
+        // this.moveToVideoStage();
+        this.moveToEmailVerificationStage();
       } else {
-        this.stage = GettingStartedStage.EmailVerification;
+        this.moveToEmailVerificationStage();
       }
     });
+  }
+
+  private moveToVideoStage() {
+    this.stage = GettingStartedStage.Video;
+  }
+
+  private moveToEmailVerificationStage() {
+    this.stage = GettingStartedStage.EmailVerification;
+    this.scheduleEmailVerificationCheck();
+  }
+
+  private scheduleEmailVerificationCheck() {
+    this.stageSubscriptions.add(
+      // TODO remove skip(1)
+      this.store$.pipe(select(selectCurrentUser), skip(1)).subscribe(user => {
+        if (this.stage === GettingStartedStage.EmailVerification && user.emailVerified) {
+          this.moveToVideoStage();
+        }
+      })
+    );
+    let currentInterval = 5;
+    this.stageSubscriptions.add(
+      timer(0, 60_000)
+        .pipe(switchMap(() => interval(currentInterval++ * 1000)))
+        .subscribe(() => this.store$.dispatch(new UsersAction.GetCurrentUser()))
+    );
   }
 
   public onClose() {
@@ -307,21 +339,26 @@ export class GettingStartedService {
   }
 
   private checkNextStageFromTemplate(template?: Project) {
-    if (this.selectedOrganization) {
-      this.submitTemplate(this.selectedOrganization, template);
-      return;
-    }
+    // TODO uncomment
+    // if (this.selectedOrganization) {
+    //   this.submitTemplate(this.selectedOrganization, template);
+    //   return;
+    // }
 
     this.store$.pipe(select(selectContributeOrganizations), take(1)).subscribe(organizations => {
       if (organizations.length === 1) {
         this.submitTemplate(organizations[0], template);
       } else if (organizations.length > 1) {
         this.selectedTemplate = template;
-        this.stage = GettingStartedStage.ChooseOrganization;
+        this.moveToChooseOrganizationStage();
       } else {
         // TODO show some error
       }
     });
+  }
+
+  private moveToChooseOrganizationStage() {
+    this.stage = GettingStartedStage.ChooseOrganization;
   }
 
   private submitTemplate(organization: Organization, template?: Project) {
@@ -393,13 +430,15 @@ export class GettingStartedService {
 
   private onProjectCreated(project: Project) {
     this.createdProject = project;
+    this.moveToInviteUsersStage();
+  }
+
+  private moveToInviteUsersStage() {
     this.stage = GettingStartedStage.InviteUsers;
-    this.stopPerformingActions();
   }
 
   private onInvitationsSent() {
     this.checkNextStageFromInviteUsers();
-    this.stopPerformingActions();
   }
 
   private onFailure() {
@@ -409,6 +448,15 @@ export class GettingStartedService {
   private stopPerformingActions() {
     this.performingAction = false;
     this.performingSecondaryAction = false;
+  }
+
+  private unsubscribe() {
+    this.stageSubscriptions.unsubscribe();
+    this.stageSubscriptions = new Subscription();
+  }
+
+  public onDestroy() {
+    this.unsubscribe();
   }
 }
 

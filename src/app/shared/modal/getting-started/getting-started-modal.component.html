@@ -16,18 +16,20 @@
                (onSecondarySubmit)="onSecondarySubmit()"
                (onClose)="onClose()">
 
+  <getting-started-progress class="custom-header"></getting-started-progress>
+
   <div class="body w-100 h-100">
     <ng-container [ngSwitch]="service.stage$ | async">
       <select-project-template *ngSwitchCase="stage.Template"
                                [initialTemplateCode]="templateCode">
       </select-project-template>
-      <choose-organization *ngSwitchCase="stage.ChooseOrganization">
+      <choose-organization *ngSwitchCase="stage.ChooseOrganization" @enterOpacityAnimation>
       </choose-organization>
-      <invite-users *ngSwitchCase="stage.InviteUsers">
+      <invite-users *ngSwitchCase="stage.InviteUsers" @enterOpacityAnimation>
       </invite-users>
-      <email-verification *ngSwitchCase="stage.EmailVerification">
+      <email-verification *ngSwitchCase="stage.EmailVerification" @enterOpacityAnimation>
       </email-verification>
-      <getting-started-video *ngSwitchCase="stage.Video">
+      <getting-started-video *ngSwitchCase="stage.Video" @enterOpacityAnimation>
       </getting-started-video>
     </ng-container>
   </div>

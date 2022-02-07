@@ -48,7 +48,7 @@
       </data-input>
 
       <div *ngIf="(mouseEntered$ | async) && dataInputInfo.showLockStats && !(data.attribute | isAttributeEnabledByLockStats:dataInputData.lockStats)"
-           @enterAnimation
+           @enterOpacityAnimation
            class="lock-icon cursor-pointer"
            [tooltip]="statsTooltip" containerClass="bigger-tooltip">
         <i class="fas fa-sm fa-lock"></i>
