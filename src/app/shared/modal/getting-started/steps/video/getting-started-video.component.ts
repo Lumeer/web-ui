@@ -17,12 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'getting-started-video',
   templateUrl: './getting-started-video.component.html',
-  styleUrls: ['./getting-started-video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-block p-3 h-100'},
 })
-export class GettingStartedVideoComponent {}
+export class GettingStartedVideoComponent implements OnInit {
+  public videoUrl: SafeResourceUrl;
+
+  constructor(private sanitizer: DomSanitizer) {}
+
+  public ngOnInit() {
+    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/G1hx35S13Oo');
+  }
+}

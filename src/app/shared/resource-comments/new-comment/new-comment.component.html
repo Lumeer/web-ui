@@ -3,7 +3,7 @@
      *ngIf="{editing: editing$ | async} as data">
   <div class="editor">
     <div [class.d-none]="data.editing" class="comment-input" (click)="editComment(true)">
-      <p class="text-muted font-italic p-2 cursor-text" i18n="@@document.detail.comments.new.write">Write a new comment...</p>
+      <p class="text-muted fst-italic p-2 cursor-text" i18n="@@document.detail.comments.new.write">Write a new comment...</p>
     </div>
 
     <quill-editor *ngIf="data.editing"
@@ -19,7 +19,7 @@
       (onContentChanged)="contentChanged($event)">
     </quill-editor>
 
-    <div *ngIf="data.editing" class="float-end text-muted small font-italic p-1">
+    <div *ngIf="data.editing" class="float-end text-muted small fst-italic p-1">
       <progress-circle [tooltip]="(progress | number:'1.0-0') + '%'" [progress]="progress" [radius]="10" [stroke]="2"></progress-circle>
     </div>
   </div>

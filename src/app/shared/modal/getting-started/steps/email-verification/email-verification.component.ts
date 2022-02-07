@@ -23,8 +23,8 @@ import {GettingStartedService} from '../../getting-started.service';
 @Component({
   selector: 'email-verification',
   templateUrl: './email-verification.component.html',
-  styleUrls: ['./email-verification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-block p-4'},
 })
 export class EmailVerificationComponent {
   constructor(public service: GettingStartedService) {}

@@ -17,7 +17,7 @@
                  (save)="onSave($event)">
 </user-data-input>
 
-<div class="font-italic mb-2-5" [ngClass]="typeControl.value === type.UsersAndTeams ? 'mt-2' : 'mt-1'">
+<div class="fst-italic mb-2-5" [ngClass]="typeControl.value === type.UsersAndTeams ? 'mt-2' : 'mt-1'">
   <span *ngIf="locked && filtersControl.length" i18n="@@resource.attribute.lock.group.divider.locked">can edit when</span>
   <span *ngIf="locked && !filtersControl.length" i18n="@@resource.attribute.lock.group.divider.locked.short">can edit</span>
   <span *ngIf="!locked && filtersControl.length" i18n="@@resource.attribute.lock.group.divider.editable">can not edit when</span>

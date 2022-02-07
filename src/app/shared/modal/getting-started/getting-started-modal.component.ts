@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {NavigationExtras} from '@angular/router';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Subscription} from 'rxjs';
@@ -64,8 +64,15 @@ export class GettingStartedModalComponent implements OnInit, OnDestroy {
           case GettingStartedStage.Template:
             this.bsModalRef.setClass('modal-xxl modal-h-100');
             break;
+          case GettingStartedStage.EmailVerification:
+            this.bsModalRef.setClass('');
+            break;
+          case GettingStartedStage.Video:
+            this.bsModalRef.setClass('modal-lg h-100');
+            break;
           default:
             this.bsModalRef.setClass('modal-lg');
+            break;
         }
       })
     );
