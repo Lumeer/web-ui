@@ -18,7 +18,6 @@
  */
 
 import {Component, ChangeDetectionStrategy} from '@angular/core';
-import {GettingStartedService} from '../../getting-started.service';
 
 @Component({
   selector: 'email-verification',
@@ -26,6 +25,4 @@ import {GettingStartedService} from '../../getting-started.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block p-4'},
 })
-export class EmailVerificationComponent {
-  constructor(public service: GettingStartedService) {}
-}
+export class EmailVerificationComponent {}

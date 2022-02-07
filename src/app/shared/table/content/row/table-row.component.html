@@ -58,7 +58,7 @@
             <comments-count *ngIf="row.commentsCount" [count]="row.commentsCount">
             </comments-count>
           </div>
-          <div *ngIf="hoverData.showLock" class="lock-icon cursor-pointer" @enterAnimation
+          <div *ngIf="hoverData.showLock" class="lock-icon cursor-pointer" @enterOpacityAnimation
                [tooltip]="statsTooltip" containerClass="bigger-tooltip">
             <i class="fas fa-sm fa-lock"></i>
 
