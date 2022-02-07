@@ -28,6 +28,7 @@ config.PUSHER_KEY = env.PUSHER_KEY;
 config.SENTRY_DSN = env.SENTRY_DSN;
 config.SESSION_TIMEOUT = env.SESSION_TIMEOUT;
 config.SMARTLOOK_KEY = env.SMARTLOOK_KEY;
+config.ADMIN_USER_EMAIL = env.ADMIN_USER_EMAILS;
 
 const dir = './src/assets/config';
 
