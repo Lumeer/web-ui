@@ -1,5 +1,5 @@
 <div *ngIf="!editableKey && postItLayoutType.Zero !== layoutType"
-     class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key text-truncate"
+     class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center fst-italic data-input key text-truncate"
      [class.key-focused]="keyFocused$ | async"
      (mousedown)="$event.stopPropagation()">
   {{keyDataValue?.value}}

@@ -1,4 +1,4 @@
-<span [class.font-italic]="condition | conditionShouldBeItalic:attribute.constraint"
+<span [class.fst-italic]="condition | conditionShouldBeItalic:attribute.constraint"
       class="mx-1">{{condition | translateCondition:attribute}}</span>
 <ng-container *ngFor="let conditionValue of conditionValues; let index = index">
   <ng-container *ngIf="index < (condition | conditionNumValues)">

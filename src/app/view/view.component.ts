@@ -38,12 +38,8 @@ import {
 } from '../core/store/views/views.state';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewSettingsService} from '../core/service/view-settings.service';
-import {selectCurrentUser} from '../core/store/users/users.state';
-import {ModalService} from '../shared/modal/modal.service';
-import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
 import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
 import {parseSelectTranslation} from '../shared/utils/translation.utils';
-import {ConfigurationService} from '../configuration/configuration.service';
 
 @Component({
   templateUrl: './view.component.html',
@@ -63,9 +59,7 @@ export class ViewComponent implements OnInit {
     private fileAttachmentsService: FileAttachmentsService,
     private viewSettingsService: ViewSettingsService,
     private notificationService: NotificationService,
-    private store$: Store<AppState>,
-    private modalService: ModalService,
-    private configurationService: ConfigurationService
+    private store$: Store<AppState>
   ) {}
 
   public ngOnInit() {
@@ -74,24 +68,6 @@ export class ViewComponent implements OnInit {
 
     this.fileAttachmentsService.init();
     this.viewSettingsService.init();
-
-    if (this.configurationService.getConfiguration().auth) {
-      this.checkEmailVerified();
-    }
-  }
-
-  private checkEmailVerified() {
-    this.store$
-      .pipe(
-        select(selectCurrentUser),
-        filter(user => !!user),
-        first()
-      )
-      .subscribe(user => {
-        if (!user?.emailVerified) {
-          this.modalService.showStaticDialog({}, VerifyEmailModalComponent);
-        }
-      });
   }
 
   private bindView(): Observable<View> {

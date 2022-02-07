@@ -80,7 +80,7 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
       tap(lists => (this.selectionLists = lists)),
       map(lists => {
         return [
-          {id: undefined, classList: 'font-italic', value: $localize`:@@constraint.select.lists.custom:Custom`},
+          {id: undefined, classList: 'fst-italic', value: $localize`:@@constraint.select.lists.custom:Custom`},
           ...lists.map(list => ({id: list.id, value: list.name})),
         ];
       }),

@@ -53,7 +53,7 @@ export class GettingStartedService {
   public readonly secondaryButton$: Observable<DialogButton>;
   public readonly closeButton$: Observable<DialogButton>;
 
-  private _stage$ = new BehaviorSubject(GettingStartedStage.Template);
+  private _stage$ = new BehaviorSubject(GettingStartedStage.Video);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
 
   private _close$ = new Subject();
@@ -177,6 +177,12 @@ export class GettingStartedService {
           class: DialogType.Primary,
           title: $localize`:@@getting.started.invite.users.confirm:Invite my colleagues`,
         });
+      case GettingStartedStage.EmailVerification:
+        return of({
+          disabled$: of(false),
+          class: DialogType.Primary,
+          title: $localize`:@@verifyEmail.button.resendEmail:Resend verification email`,
+        });
       default:
         return of(null);
     }
@@ -206,6 +212,12 @@ export class GettingStartedService {
           class: DialogType.Primary,
           title: $localize`:@@getting.started.invite.users.skip:I'll do it later`,
         });
+      case GettingStartedStage.EmailVerification:
+        return of({
+          disabled$: of(false),
+          class: DialogType.Primary,
+          title: $localize`:@@button.reload:Reload`,
+        });
       default:
         return of(null);
     }
@@ -227,6 +239,11 @@ export class GettingStartedService {
             return null;
           })
         );
+      case GettingStartedStage.Video:
+        return of({
+          disabled$: of(false),
+          title: $localize`:@@button.cancel:Cancel`,
+        });
       default:
         return of(null);
     }
@@ -242,6 +259,9 @@ export class GettingStartedService {
         break;
       case GettingStartedStage.InviteUsers:
         this.checkSubmitInvitations();
+        break;
+      case GettingStartedStage.EmailVerification:
+        this.resendVerificationEmail();
         break;
     }
   }
@@ -261,6 +281,9 @@ export class GettingStartedService {
         break;
       case GettingStartedStage.InviteUsers:
         this.checkNextStageFromInviteUsers();
+        break;
+      case GettingStartedStage.EmailVerification:
+        this.reloadUser();
         break;
     }
   }
@@ -342,6 +365,28 @@ export class GettingStartedService {
         projectId: this.createdProject.id,
         onSuccess: () => this.onInvitationsSent(),
         onFailure: () => this.onFailure(),
+      })
+    );
+  }
+
+  private resendVerificationEmail() {
+    this.performingAction = true;
+
+    this.store$.dispatch(
+      new UsersAction.ResendVerificationEmail({
+        onSuccess: () => (this.performingAction = false),
+        onFailure: () => (this.performingAction = false),
+      })
+    );
+  }
+
+  private reloadUser() {
+    this.performingSecondaryAction = true;
+
+    this.store$.dispatch(
+      new UsersAction.GetCurrentUser({
+        onSuccess: () => (this.performingSecondaryAction = false),
+        onFailure: () => (this.performingSecondaryAction = false),
       })
     );
   }

@@ -8,7 +8,7 @@
          [class.mt-2]="first"
          [class.focused]="data.focused?.column === 0 && data.focused?.row === row"
          [class.active]="item.value === selectedCondition"
-         [class.font-italic]="item.value | conditionShouldBeItalic:attribute.constraint"
+         [class.fst-italic]="item.value | conditionShouldBeItalic:attribute.constraint"
          (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault()"
          (click)="$event.stopImmediatePropagation(); $event.preventDefault(); onConditionSelect(item, row)">{{item.title}}</div>
   </div>

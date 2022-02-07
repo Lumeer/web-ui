@@ -29,7 +29,6 @@ import {CalendarEventDetailModalModule} from './calendar-event-detail/calendar-e
 import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
 import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
 import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
-import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
 import {GettingStartedModalModule} from './getting-started/getting-started-modal.module';
 import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
@@ -57,7 +56,6 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
-    VerifyEmailModalModule,
     GettingStartedModalModule,
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
@@ -80,7 +78,6 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
-    VerifyEmailModalModule,
     GettingStartedModalModule,
     CopyProjectModalModule,
     ChooseOrganizationModalModule,

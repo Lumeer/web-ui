@@ -49,7 +49,7 @@
         </i>
       </span>
         <input #viewNameInput
-               [class.font-italic]="!view.code || view.name !== name"
+               [class.fst-italic]="!view.code || view.name !== name"
                [value]="name"
                [disabled]="view && !state.permissions.canSave"
                (input)="onNameInput(viewNameInput.value)"
