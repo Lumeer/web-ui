@@ -64,7 +64,7 @@ export class DeleteDocumentBlocklyComponent extends BlocklyComponent {
     Blockly.JavaScript[BlocklyUtils.DELETE_DOCUMENT] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
-      return this_.blocklyUtils.getLumeerVariable() + '.removeDocument(' + argument0 + ')';
+      return this_.blocklyUtils.getLumeerVariable() + '.removeDocument(' + argument0 + ');\n';
     };
   }
 
