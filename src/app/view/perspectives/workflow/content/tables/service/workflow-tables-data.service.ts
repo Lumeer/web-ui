@@ -334,6 +334,7 @@ export class WorkflowTablesDataService {
           queryByStem,
           linkPermissions
         );
+        const collectionVisibleColumns = collectionColumns.filter(column => !column.hidden);
 
         // creating link columns
         const currentLinkColumns = (tableByCollection?.columns || []).filter(column => column.linkTypeId);
@@ -345,6 +346,7 @@ export class WorkflowTablesDataService {
           viewSettings,
           queryByStem
         );
+        const linkVisibleColumns = linkColumns.filter(column => !column.hidden);
 
         // aggregate documents and links to create rows
         const attribute = findAttributeByQueryAttribute(stemConfig.attribute, collections, linkTypes);
@@ -399,8 +401,8 @@ export class WorkflowTablesDataService {
                   viewSettings,
                   constraintData
                 ),
-                linkColumns,
-                collectionColumns,
+                linkVisibleColumns,
+                collectionVisibleColumns,
                 linkPermissions,
                 collectionPermissions,
                 linkType,
@@ -452,8 +454,8 @@ export class WorkflowTablesDataService {
             tableId,
             tableByCollection?.rows || [],
             [],
-            linkColumns,
-            collectionColumns,
+            linkVisibleColumns,
+            collectionVisibleColumns,
             linkPermissions,
             collectionPermissions,
             linkType,

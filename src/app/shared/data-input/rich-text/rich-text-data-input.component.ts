@@ -23,6 +23,7 @@ import {
   ElementRef,
   EventEmitter,
   HostBinding,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
@@ -33,7 +34,7 @@ import {
 } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
@@ -44,12 +45,14 @@ import {DataInputModalService} from '../data-input-modal.service';
 import {ConstraintType, DataValue, TextDataValue} from '@lumeer/data-filters';
 import {clickedInsideElement} from '../../utils/html-modifier';
 import {defaultTextEditorBubbleOptions} from '../../modal/text-editor/text-editor.utils';
+import {animateOpacityEnterLeave} from '../../animations';
 
 @Component({
   selector: 'rich-text-data-input',
   templateUrl: './rich-text-data-input.component.html',
   styleUrls: ['./rich-text-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [animateOpacityEnterLeave],
 })
 export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   @Input()
@@ -102,6 +105,8 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private keyDownListener: (event: KeyboardEvent) => void;
   private mouseDownListener: (event: MouseEvent) => void;
   private pasteValueAfterEditorCreation: boolean;
+
+  public mouseEntered$ = new BehaviorSubject(false);
 
   public readonly modules = defaultTextEditorBubbleOptions;
 
@@ -301,6 +306,16 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     if (this.readonly && !this.editableInReadonly) {
       this.openTextEditor();
     }
+  }
+
+  @HostListener('mouseenter')
+  public onMouseEnter() {
+    this.mouseEntered$.next(true);
+  }
+
+  @HostListener('mouseleave')
+  public onMouseLeave() {
+    this.mouseEntered$.next(false);
   }
 }
 
