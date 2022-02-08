@@ -42,7 +42,7 @@
           (cancel)="onDataInputCancel(group.column)">
         </data-input>
         <div class="d-flex align-items-center html-input"
-             *ngIf="group.column && !dataInputInfo.showDataInput"
+             *ngIf="group.column && !dataInputInfo.showDataInput && dataInputInfo.hasValue"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
         <ng-container *ngIf="{
