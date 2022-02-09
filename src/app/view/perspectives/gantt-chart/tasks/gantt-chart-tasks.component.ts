@@ -359,7 +359,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     dataResource: DataResource
   ) {
     const resource = this.getResourceById(model.resourceId, model.resourceType);
-    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
+    const constraint = findAttributeConstraint(resource.attributes, model.attributeId);
     const saveValue = constraint ? constraint.createDataValue(swimlane, this.constraintData).serialize() : swimlane;
 
     const changed = (dataResource.data && dataResource.data[model.attributeId] !== saveValue) || false;
@@ -392,10 +392,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     dataResource: DataResource = null
   ) {
     const resource = this.getResourceById(model.resourceId, model.resourceType);
-    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
+    const constraint = findAttributeConstraint(resource.attributes, model.attributeId);
     if (constraint?.type === ConstraintType.Duration) {
-      const start = moment(task.start, this.options && this.options.dateFormat);
-      const end = moment(task.end, this.options && this.options.dateFormat);
+      const start = moment(task.start, this.options?.dateFormat);
+      const end = moment(task.end, this.options?.dateFormat);
 
       const durationCountsMap = subtractDatesToDurationCountsMap(end.toDate(), start.toDate());
       const durationString = durationCountsMapToString(durationCountsMap);
@@ -414,11 +414,11 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     dataResource: DataResource = null,
     subtractDay?: boolean
   ) {
-    let momentDate = moment(dateString, this.options && this.options.dateFormat);
+    let momentDate = moment(dateString, this.options?.dateFormat);
     const resource = this.getResourceById(model.resourceId, model.resourceType);
     const constraint =
-      findAttributeConstraint(resource && resource.attributes, model.attributeId) ||
-      new DateTimeConstraint({format: this.options && this.options.dateFormat});
+      findAttributeConstraint(resource.attributes, model.attributeId) ||
+      new DateTimeConstraint({format: this.options?.dateFormat});
     if (!constraintContainsHoursInConfig(constraint)) {
       momentDate = momentDate.startOf('day');
       if (subtractDay) {
@@ -440,7 +440,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     dataResource: DataResource = null
   ) {
     const resource = this.getResourceById(model.resourceId, model.resourceType);
-    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
+    const constraint = findAttributeConstraint(resource.attributes, model.attributeId);
     const saveValue = constraint
       ? constraint
           .createDataValue(progress, this.constraintData)

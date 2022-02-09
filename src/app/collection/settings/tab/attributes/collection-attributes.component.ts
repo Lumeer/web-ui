@@ -56,7 +56,7 @@ export class CollectionAttributesComponent implements OnInit {
       tap(collection => (this.collection = collection))
     );
     this.permissions$ = this.collection$.pipe(
-      switchMap(collection => this.store$.pipe(select(selectCollectionPermissions(collection.id))))
+      switchMap(collection => this.store$.pipe(select(selectCollectionPermissions(collection?.id))))
     );
   }
 

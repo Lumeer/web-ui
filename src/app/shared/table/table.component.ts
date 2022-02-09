@@ -194,7 +194,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if ((changes.selectedCell || changes.scrollToSelection) && this.selectedCell && this.scrollToSelection) {
+    if (
+      (changes.selectedCell || changes.editedCell || changes.scrollToSelection) &&
+      (this.selectedCell || this.editedCell) &&
+      this.scrollToSelection
+    ) {
       this.checkScrollPositionForSelectedCell();
     }
     if (changes.tableModel) {
@@ -221,7 +225,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private checkScrollPositionForSelectedCell() {
-    const {top, left} = this.tableScrollService.computeScrollOffsets(this.tableModel, this.selectedCell);
+    const {top, left} = this.tableScrollService.computeScrollOffsets(
+      this.tableModel,
+      this.editedCell || this.selectedCell
+    );
     this.viewPort?.scrollTo({top, left, behavior: 'smooth'});
   }
 

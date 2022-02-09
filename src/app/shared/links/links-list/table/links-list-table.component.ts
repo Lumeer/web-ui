@@ -292,7 +292,7 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
         array => {
           return setAttributeToAttributeSettings(column.attribute.id, array, {width: data.width});
         },
-        this.linkType.id
+        this.linkType?.id
       );
       this.attributesSettingsChanged.emit(attributesSettings);
     } else if (column.linkTypeId) {

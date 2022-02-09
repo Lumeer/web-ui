@@ -233,6 +233,8 @@ export class WorkflowTablesStateService {
     if (canEditCell(cell, column, rowCell, row)) {
       this.selectedCell$.next(null);
       this.editedCell$.next({...cell, inputValue});
+    } else {
+      this.selectedCell$.next({...cell});
     }
   }
 
@@ -290,12 +292,31 @@ export class WorkflowTablesStateService {
     columnIndex: number,
     type: TableCellType = TableCellType.Body
   ) {
+    this.cellAction(tableIndex, rowIndex, columnIndex, type, cell => this.setSelectedCell(cell));
+  }
+
+  public editCell(
+    tableIndex: number,
+    rowIndex: number | null,
+    columnIndex: number,
+    type: TableCellType = TableCellType.Body
+  ) {
+    this.cellAction(tableIndex, rowIndex, columnIndex, type, cell => this.setEditedCell(cell, ''));
+  }
+
+  public cellAction(
+    tableIndex: number,
+    rowIndex: number | null,
+    columnIndex: number,
+    type: TableCellType = TableCellType.Body,
+    action: (TableCell) => void
+  ) {
     const table = this.tables[tableIndex];
     if (table) {
       const column = table.columns[columnIndex];
       const row = type === TableCellType.Body ? table.rows[rowIndex] : null;
       if (column && (row || type !== TableCellType.Body)) {
-        this.setSelectedCell({
+        action({
           tableId: table.id,
           columnId: column.id,
           rowId: row?.id,
@@ -456,7 +477,7 @@ export class WorkflowTablesStateService {
       this.setTables(newTables);
 
       const columnIndex = table.columns.findIndex(column => column.default);
-      setTimeout(() => this.selectCell(tableIndex, rows.length - 1, Math.max(columnIndex, 0)));
+      setTimeout(() => this.editCell(tableIndex, rows.length - 1, Math.max(columnIndex, 0)));
     }
   }
 

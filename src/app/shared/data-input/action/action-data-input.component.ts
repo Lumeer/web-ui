@@ -200,8 +200,8 @@ export class ActionDataInputComponent implements OnChanges {
 
     const attributesMap = objectsByIdMap(resource.attributes);
     const attribute = attributesMap[attributeId];
-    const stats = computeAttributeLockStats(dataResource, resource, attribute.lock, constraintData);
     const lock = attribute?.lock || {locked: false, exceptionGroups: []};
+    const stats = computeAttributeLockStats(dataResource, resource, lock, constraintData);
     return {
       ...stats,
       attributesMap,
