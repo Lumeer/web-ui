@@ -23,6 +23,6 @@
                      class="table-first-row table-last-row table-only-row">
     </table-empty-row>
 
-    <div *ngIf="perspectiveConfiguration?.additionalSpace" [style.min-height.rem]="3">&nbsp;</div>
+    <div class="bottom-padding-2" *ngIf="perspectiveConfiguration?.additionalSpace" [style.min-height.rem]="1">&nbsp;</div>
   </cdk-virtual-scroll-viewport>
 </ng-container>

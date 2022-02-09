@@ -17,7 +17,7 @@
   <kanban-columns
     *ngIf="data$ | async as kanbanData"
     class="flex-grow-1 h-100"
-    [class.pb-4]="perspectiveConfiguration?.additionalSpace"
+    [class.bottom-padding-2]="perspectiveConfiguration?.additionalSpace"
     [collections]="collections"
     [data]="data"
     [linkTypes]="linkTypes"
