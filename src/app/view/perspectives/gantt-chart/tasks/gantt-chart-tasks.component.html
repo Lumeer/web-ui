@@ -9,8 +9,8 @@
                           (modeChange)="onModeChanged($event)">
       </gantt-chart-header>
       <gantt-chart-visualization
-        class="d-block"
-        [class.pb-6]="perspectiveConfiguration?.additionalSpace"
+        class="d-block pb-3"
+        [class.bottom-padding-4]="perspectiveConfiguration?.additionalSpace"
         [canManageConfig]="canManageConfig"
         [currentMode]="config.mode"
         [tasks]="data.tasksData?.tasks"

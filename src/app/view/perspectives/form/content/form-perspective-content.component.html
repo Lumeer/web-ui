@@ -7,7 +7,8 @@
 </form-mode>
 
 <form-editor *ngIf="builderMode"
-             class="d-block mb-6"
+             class="d-block"
+             [class.bottom-margin-4]="configuration?.additionalSpace"
              [config]="config"
              [collection]="collection"
              [view]="view"
@@ -17,7 +18,8 @@
 </form-editor>
 
 <form-view *ngIf="!builderMode"
-           class="d-block mt-3 mb-6"
+           class="d-block mt-3"
+           [class.bottom-margin-4]="configuration?.additionalSpace"
            [config]="config"
            [collection]="collection"
            [query]="query"

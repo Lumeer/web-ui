@@ -17,7 +17,7 @@
     <chart-data
       *ngIf="data.config"
       class="flex-grow-1 mx-4"
-      [class.mb-5]="perspectiveConfiguration?.additionalSpace"
+      [class.bottom-margin-4]="perspectiveConfiguration?.additionalSpace"
       [collections]="data.collections"
       [documents]="data.documentsAndLinks.documents"
       [linkTypes]="linkTypes$ | async"
