@@ -1,6 +1,8 @@
 <input *ngIf="!edited; else editableInput"
        [value]="value"
-       [title]="column.attribute | attributeTitle : column.name : true"
+       [tooltip]="descriptionTooltip"
+       placement="bottom"
+       [delay]="700"
        [class.text-default-attribute]="default"
        class="w-100 p-0"
        readonly>
@@ -23,5 +25,5 @@
 </ng-template>
 
 <ng-template #descriptionTooltip>
-  <div [innerHTML]="column?.attribute | attributeTitle | safeHtml"></div>
+  <div [innerHTML]="column?.attribute | attributeTitle:(edited ? null : column.name):!edited | safeHtml"></div>
 </ng-template>

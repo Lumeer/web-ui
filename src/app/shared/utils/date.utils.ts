@@ -18,8 +18,8 @@
  */
 
 import * as moment from 'moment';
-import {createDateTimeOptions} from '../date-time/date-time-options';
 import {DurationInputArg2} from 'moment';
+import {createDateTimeOptions} from '../date-time/date-time-options';
 import {
   Constraint,
   ConstraintData,
@@ -138,6 +138,10 @@ export function createDatesInterval(
   }
 
   if (endDate.getTime() < startDate.getTime()) {
+    if (endConstraint?.type === ConstraintType.Duration) {
+      // it means that duration is less than 0
+      return {start: endDate, end: startDate};
+    }
     return {start: endDate, end: startDate, swapped: true};
   }
   return {start: startDate, end: endDate};

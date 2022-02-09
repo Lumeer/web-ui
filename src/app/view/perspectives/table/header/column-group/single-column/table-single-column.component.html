@@ -16,7 +16,6 @@
        (click)="onClick()"
        [delay]="700"
        [tooltip]="descriptionTooltip"
-       [tooltipEnable]="state.edited"
        placement="bottom"
        [adaptivePosition]="false"
        containerClass="bigger-tooltip"
@@ -73,8 +72,8 @@
                              (split)="onSplit()"
                              (lockSettings)="onLockSettings()">
   </table-column-context-menu>
+  <ng-template #descriptionTooltip>
+    <div [innerHTML]="attribute | attributeTitle:(state.edited ? null : state.lastName):!state.edited | safeHtml"></div>
+  </ng-template>
 </ng-container>
 
-<ng-template #descriptionTooltip>
-  <div [innerHTML]="attribute | attributeTitle | safeHtml"></div>
-</ng-template>
