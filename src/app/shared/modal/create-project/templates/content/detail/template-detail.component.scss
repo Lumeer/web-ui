@@ -2,6 +2,11 @@
 
 :host {
   overflow-x: auto;
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr;
+  justify-content: center;
+  grid-template-rows: min-content min-content min-content min-content minmax(300px, 1fr);
 }
 
 .main-image {

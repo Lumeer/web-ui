@@ -1,5 +1,13 @@
 @import '~src/styles/variables';
 
+:host {
+  overflow-x: auto;
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content min-content min-content minmax(300px, 1fr);
+}
+
 iframe {
   border: solid 1px $gray-200;
   border-radius: $border-radius-small;
