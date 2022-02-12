@@ -23,6 +23,7 @@
          (click)="editable && onOptionSelect($event, option)"
          class="dropdown-item text-truncate"
          [class.dropdown-item-multi]="multiSelect"
+         [class.dropdown-item-disabled]="!editable"
          data-test="select-item-option"
          tabindex>
 

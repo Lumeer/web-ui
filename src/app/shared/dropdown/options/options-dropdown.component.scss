@@ -9,6 +9,11 @@
   min-height: 30px;
   max-height: 100px;
 
+  &.dropdown-item-disabled {
+    background-color: transparent !important;
+    color: $primary !important;
+  }
+
   .option {
     border-radius: 0.5rem;
     padding: 0 0.5rem;

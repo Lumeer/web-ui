@@ -3,16 +3,16 @@
        class="main-image"/>
 </div>
 
-<div class="pt-2 px-3 pb-3">
+<h3 class="pt-2 px-3 mb-0 text-center">{{template.name}}</h3>
 
-  <h3 class="mb-0 text-center">{{template.name}}</h3>
-
-  <div class="tags d-flex justify-content-center mt-1 flex-wrap" *ngIf="template.templateMetadata?.tags?.length">
+<div>
+  <div class="px-3 tags d-flex justify-content-center pt-1 flex-wrap" *ngIf="template.templateMetadata?.tags?.length">
     <div *ngFor="let tag of template.templateMetadata.tags" class="tag py-1 px-2 m-1 cursor-pointer text-nowrap"
          (click)="selectTag.emit(tag)">{{tag}}</div>
   </div>
+</div>
 
-  <div class="my-3 text-center">{{template.description}}</div>
-  <iframe [src]="publicViewUrl" width="100%" height="300px">
-  </iframe>
+<div class="p-3 text-center">{{template.description}}</div>
+<div class="px-3 pb-3">
+  <iframe width="100%" height="100%" [src]="publicViewUrl"></iframe>
 </div>
