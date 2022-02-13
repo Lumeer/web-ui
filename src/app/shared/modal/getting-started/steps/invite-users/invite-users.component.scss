@@ -2,6 +2,9 @@
 
 .emails-wrapper {
   width: 50%;
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-row-gap: 0.5rem;
 
   @include media-breakpoint-down(xl) {
     width: 60%;

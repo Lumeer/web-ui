@@ -1,16 +1,13 @@
 <h5 class="text-center fw-bold" i18n="@@getting.started.invite.users.title">We're almost there</h5>
 <div class="text-center mt-2" i18n="@@getting.started.invite.users.title">Invite your teammates and build your project together</div>
 
-<div class="emails-wrapper d-flex flex-column m-auto">
-  <div *ngFor="let invitation of service.invitations$ | async; trackBy: trackByIndex; let index = index; let first = first"
-       class="input-group d-flex justify-content-center"
-       [class.mt-4]="first"
-       [class.mt-2]="!first">
-    <input class="form-control form-control-sm email-input"
+<div class="input-group-multiline emails-wrapper m-auto mt-2">
+  <ng-container *ngFor="let invitation of service.invitations$ | async; trackBy: trackByIndex; let index = index;">
+    <input class="form-control form-control-sm w-100 email-input"
            [value]="invitation.email"
            inputmode="email"
            type="email"
-           (input)="onEmailChanged(index, $event.target.value)"
+           (blur)="onEmailChanged(index, $event.target.value)"
            placeholder="Type email here"
            i18n-placeholder="@@getting.started.invite.users.email.placeholder"/>
 
@@ -22,9 +19,9 @@
                    (selected)="onTypeChanged(index, $event)">
       </select-item>
     </div>
-  </div>
+  </ng-container>
 
-  <button class="btn btn-link px-0 small mt-2 align-self-start" (click)="onAddInvitation()"><i
+  <button class="btn btn-link px-0 small mt-2 align-self-start text-start" (click)="onAddInvitation()"><i
     class="fas fa-plus-circle me-2"></i><span
     i18n="@@getting.started.invite.users.add">Add colleague</span>
   </button>

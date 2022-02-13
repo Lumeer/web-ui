@@ -20,10 +20,12 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {NavigationExtras} from '@angular/router';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription, combineLatest} from 'rxjs';
 import {Organization} from '../../../core/store/organizations/organization';
 import {GettingStartedService, GettingStartedStage} from './getting-started.service';
 import {animateOpacityEnterLeave} from '../../animations';
+import {ModalProgress} from '../wrapper/model/modal-progress';
+import {map} from 'rxjs/operators';
 
 @Component({
   templateUrl: './getting-started-modal.component.html',
@@ -44,6 +46,8 @@ export class GettingStartedModalComponent implements OnInit, OnDestroy {
 
   public readonly stage = GettingStartedStage;
 
+  public progress$: Observable<ModalProgress>;
+
   private subscriptions = new Subscription();
 
   constructor(private bsModalRef: BsModalRef, public service: GettingStartedService) {}
@@ -51,6 +55,10 @@ export class GettingStartedModalComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.service.setNavigationExtras(this.navigationExtras);
     this.service.selectedOrganization = this.organization;
+
+    this.progress$ = combineLatest([this.service.stage$, this.service.stages$]).pipe(
+      map(([stage, stages]) => ({value: stage + 1, max: stages}))
+    );
 
     this.subscribeClose();
     this.subscribeStage();
@@ -71,7 +79,7 @@ export class GettingStartedModalComponent implements OnInit, OnDestroy {
             this.bsModalRef.setClass('');
             break;
           case GettingStartedStage.Video:
-            this.bsModalRef.setClass('modal-lg h-100');
+            this.bsModalRef.setClass('modal-xl');
             break;
           default:
             this.bsModalRef.setClass('modal-lg');

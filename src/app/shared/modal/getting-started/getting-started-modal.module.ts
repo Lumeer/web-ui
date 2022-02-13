@@ -40,7 +40,6 @@ import {InviteUsersComponent} from './steps/invite-users/invite-users.component'
 import {SelectModule} from '../../select/select.module';
 import {EmailVerificationComponent} from './steps/email-verification/email-verification.component';
 import {GettingStartedVideoComponent} from './steps/video/getting-started-video.component';
-import {GettingStartedProgressComponent} from './progress/getting-started-progress.component';
 import {ProgressModule} from '../../progress/progress.module';
 
 @NgModule({
@@ -61,7 +60,6 @@ import {ProgressModule} from '../../progress/progress.module';
     InviteUsersComponent,
     EmailVerificationComponent,
     GettingStartedVideoComponent,
-    GettingStartedProgressComponent,
   ],
   imports: [
     CommonModule,
