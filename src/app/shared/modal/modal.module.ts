@@ -30,8 +30,6 @@ import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-
 import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
 import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
 import {GettingStartedModalModule} from './getting-started/getting-started-modal.module';
-import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
-import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
 import {UserSettingsModalModule} from './user-settings/user-settings-modal.module';
 import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
@@ -57,8 +55,6 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
     GettingStartedModalModule,
-    CopyProjectModalModule,
-    ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
     UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
@@ -79,8 +75,6 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
     GettingStartedModalModule,
-    CopyProjectModalModule,
-    ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
     UserSettingsModalModule,
     ModifyDocumentLinksModalModule,

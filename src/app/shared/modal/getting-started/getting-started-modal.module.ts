@@ -41,6 +41,8 @@ import {SelectModule} from '../../select/select.module';
 import {EmailVerificationComponent} from './steps/email-verification/email-verification.component';
 import {GettingStartedVideoComponent} from './steps/video/getting-started-video.component';
 import {ProgressModule} from '../../progress/progress.module';
+import {CopyProjectComponent} from './steps/copy-project/copy-project.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -60,11 +62,13 @@ import {ProgressModule} from '../../progress/progress.module';
     InviteUsersComponent,
     EmailVerificationComponent,
     GettingStartedVideoComponent,
+    CopyProjectComponent,
   ],
   imports: [
     CommonModule,
     PipesModule,
     ModalWrapperModule,
+    RouterModule,
     WarningMessageModule,
     FormsModule,
     SelectModule,

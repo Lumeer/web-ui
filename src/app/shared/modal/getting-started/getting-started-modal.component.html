@@ -22,6 +22,8 @@
       <select-project-template *ngSwitchCase="stage.Template"
                                [initialTemplateCode]="templateCode">
       </select-project-template>
+      <copy-project *ngSwitchCase="stage.CopyProject">
+      </copy-project>
       <choose-organization *ngSwitchCase="stage.ChooseOrganization" @enterOpacityAnimation>
       </choose-organization>
       <invite-users *ngSwitchCase="stage.InviteUsers" @enterOpacityAnimation>

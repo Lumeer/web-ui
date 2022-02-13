@@ -90,17 +90,26 @@ export class WorkspaceSelectService {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  public createNewProject(organization: Organization, templateCode?: string, extras?: NavigationExtras): BsModalRef {
-    return this.modalService.showCreateProjectDialog(organization, templateCode, extras);
+  public createNewProject(organization: Organization): BsModalRef {
+    return this.modalService.showCreateProjectDialog([organization], organization);
+  }
+
+  public createNewProjectWithTemplate(
+    writableOrganizations: Organization[],
+    organization: Organization,
+    templateCode: string,
+    extras?: NavigationExtras
+  ): BsModalRef {
+    return this.modalService.showCreateProjectDialog(writableOrganizations, organization, templateCode, extras);
   }
 
   public copyProject(
-    organizations: Organization[],
+    writableOrganizations: Organization[],
     organizationId: string,
     projectId: string,
     extras?: NavigationExtras
   ): BsModalRef {
-    return this.modalService.showCopyProjectDialog(organizations, organizationId, projectId, extras);
+    return this.modalService.showCopyProjectDialog(writableOrganizations, organizationId, projectId, extras);
   }
 
   public selectProject(organization: Organization, project: Project) {
@@ -108,7 +117,9 @@ export class WorkspaceSelectService {
   }
 
   public createNewOrganization(extras?: NavigationExtras): BsModalRef {
-    return this.openCreateOrganizationModal(organization => this.createNewProject(organization, null, extras));
+    return this.openCreateOrganizationModal(organization =>
+      this.createNewProjectWithTemplate([organization], organization, null, extras)
+    );
   }
 
   private openCreateOrganizationModal(callback: (Organization) => void): BsModalRef {

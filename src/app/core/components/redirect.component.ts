@@ -19,15 +19,10 @@
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {combineLatest, Observable, of} from 'rxjs';
-import {catchError, first, map, mergeMap, skipWhile, take, tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, map, mergeMap, take} from 'rxjs/operators';
 import {Organization} from '../store/organizations/organization';
-import {select, Store} from '@ngrx/store';
-import {selectAllOrganizationsSorted, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
-import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {WorkspaceSelectService} from '../service/workspace-select.service';
-import {AppState} from '../store/app.state';
-import {NotificationsAction} from '../store/notifications/notifications.action';
 import {TemplateService} from '../rest/template.service';
 import {OrganizationService} from '../data-service';
 import {OrganizationConverter} from '../store/organizations/organization.converter';
@@ -43,8 +38,7 @@ export class RedirectComponent implements OnInit {
     private templateService: TemplateService,
     private organizationService: OrganizationService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private store$: Store<AppState>
+    private router: Router
   ) {}
 
   public ngOnInit() {
@@ -63,69 +57,23 @@ export class RedirectComponent implements OnInit {
   }
 
   public redirectToTemplate(templateCode: string) {
-    const observable = this.getWritableOrganizationsForTemplate(templateCode);
-    this.selectWritableOrganizations(observable, () => this.createProjectByTemplate(templateCode));
+    this.getWritableOrganizationsForTemplate(templateCode)
+      .pipe(take(1))
+      .subscribe(organizations => this.createProjectByTemplate(organizations, templateCode));
   }
 
   public redirectToCopyProject(organizationId: string, projectId: string) {
-    const observable = this.getWritableOrganizations(organizationId, projectId);
-    this.selectWritableOrganizations(observable, organizations =>
-      this.createProjectByCopy(organizations, organizationId, projectId)
-    );
-  }
-
-  public selectWritableOrganizations(
-    observable: Observable<Organization[]>,
-    callback: (organizations: Organization[]) => void
-  ) {
-    combineLatest([this.selectOrganizations(), observable])
+    this.getWritableOrganizations(organizationId, projectId)
       .pipe(take(1))
-      .subscribe(([organizations, writableOrganizations]) => {
-        if (!writableOrganizations) {
-          this.redirectToHome(() => this.showError());
-        } else if (writableOrganizations.length) {
-          callback(writableOrganizations);
-        } else {
-          this.redirectToHome(() => this.showErrorNoRights(organizations));
-        }
-      });
+      .subscribe(organizations => this.createProjectByCopy(organizations, organizationId, projectId));
   }
 
   private createProjectByCopy(organizations: Organization[], organizationId: string, projectId: string) {
-    const modalRef = this.workspaceSelectService.copyProject(organizations, organizationId, projectId, {
-      replaceUrl: true,
-    });
-    modalRef.content.onClose$.subscribe(() => this.redirectToHome());
+    this.workspaceSelectService.copyProject(organizations, organizationId, projectId, {replaceUrl: true});
   }
 
-  private createProjectByTemplate(templateCode: string) {
-    const modalRef = this.workspaceSelectService.createNewProject(null, templateCode, {replaceUrl: true});
-    modalRef.content.onClose$.subscribe(() => this.redirectToHome());
-  }
-
-  private showError() {
-    const message = $localize`:@@template.create.error:I am sorry, something went wrong.`;
-
-    setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
-  }
-
-  private showErrorNoRights(organizations: Organization[]) {
-    if (organizations.length) {
-      const message = $localize`:@@template.create.limitsExceeded:I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?`;
-      setTimeout(
-        () =>
-          this.store$.dispatch(
-            new OrganizationsAction.OfferPayment({
-              message,
-              organizationCode: organizations[0].code,
-            })
-          ),
-        1000
-      );
-    } else {
-      const message = $localize`:@@template.create.empty:I am sorry, you do not have any organization to create project in.`;
-      setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
-    }
+  private createProjectByTemplate(organizations: Organization[], templateCode: string) {
+    this.workspaceSelectService.createNewProjectWithTemplate(organizations, null, templateCode, {replaceUrl: true});
   }
 
   private redirectToHome(then?: () => void) {
@@ -144,19 +92,6 @@ export class RedirectComponent implements OnInit {
       map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
       map(organizations => sortResourcesByOrder(organizations)),
       catchError(() => of([]))
-    );
-  }
-
-  private selectOrganizations(): Observable<Organization[]> {
-    return this.store$.select(selectOrganizationsLoaded).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new OrganizationsAction.Get());
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectAllOrganizationsSorted))),
-      first()
     );
   }
 }

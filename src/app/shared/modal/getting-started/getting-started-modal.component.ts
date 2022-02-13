@@ -20,26 +20,36 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {NavigationExtras} from '@angular/router';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {Observable, Subscription, combineLatest} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {Organization} from '../../../core/store/organizations/organization';
 import {GettingStartedService, GettingStartedStage} from './getting-started.service';
 import {animateOpacityEnterLeave} from '../../animations';
 import {ModalProgress} from '../wrapper/model/modal-progress';
 import {map} from 'rxjs/operators';
+import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
 
 @Component({
   templateUrl: './getting-started-modal.component.html',
   styleUrls: ['./getting-started-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [GettingStartedService],
+  providers: [PublicProjectService, GettingStartedService],
   animations: [animateOpacityEnterLeave],
 })
 export class GettingStartedModalComponent implements OnInit, OnDestroy {
   @Input()
-  public organization: Organization;
+  public writableOrganizations: Organization[];
+
+  @Input()
+  public selectedOrganization: Organization;
 
   @Input()
   public templateCode: string;
+
+  @Input()
+  public copyOrganizationId: string;
+
+  @Input()
+  public copyProjectId: string;
 
   @Input()
   public navigationExtras: NavigationExtras;
@@ -54,7 +64,15 @@ export class GettingStartedModalComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.service.setNavigationExtras(this.navigationExtras);
-    this.service.selectedOrganization = this.organization;
+    this.service.setWritableOrganizations(this.writableOrganizations);
+    this.service.selectedOrganization = this.selectedOrganization;
+
+    if (this.copyOrganizationId && this.copyProjectId) {
+      this.service.setCopyData(this.copyOrganizationId, this.copyProjectId);
+      this.service.setInitialStage(GettingStartedStage.CopyProject);
+    } else {
+      this.service.setInitialStage(GettingStartedStage.Template);
+    }
 
     this.progress$ = combineLatest([this.service.stage$, this.service.stages$]).pipe(
       map(([stage, stages]) => ({value: stage + 1, max: stages}))

@@ -40,7 +40,6 @@ import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
 import {OrganizationService} from '../../data-service';
 import {ModalService} from '../../../shared/modal/modal.service';
-import {ChooseOrganizationModalComponent} from '../../../shared/modal/choose-organization/choose-organization-modal.component';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -322,18 +321,6 @@ export class OrganizationsEffects {
     )
   );
 
-  public choose$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType<OrganizationsAction.Choose>(OrganizationsActionType.CHOOSE),
-        tap((action: OrganizationsAction.Choose) => {
-          const modalRef = this.modalService.showStaticDialog(action.payload, ChooseOrganizationModalComponent);
-          modalRef.content.onClose$ = action.payload.onClose$;
-        })
-      ),
-    {dispatch: false}
-  );
-
   public offerPayment$ = createEffect(() =>
     this.actions$.pipe(
       ofType<OrganizationsAction.OfferPayment>(OrganizationsActionType.OFFER_PAYMENT),
@@ -343,12 +330,21 @@ export class OrganizationsEffects {
         return new NotificationsAction.Confirm({
           title: action.payload.title || title,
           message: action.payload.message || message,
-          action: new RouterAction.Go({
-            path: ['/o', action.payload.organizationCode, 'detail'],
-            extras: {fragment: 'orderService'},
-          }),
+          action: new OrganizationsAction.GoToPayment({code: action.payload.organizationCode}),
           type: 'warning',
           yesFirst: false,
+        });
+      })
+    )
+  );
+
+  public goToPayment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<OrganizationsAction.GoToPayment>(OrganizationsActionType.GO_TO_PAYMENT),
+      map(action => {
+        return new RouterAction.Go({
+          path: ['/o', action.payload.code, 'detail'],
+          extras: {fragment: 'orderService'},
         });
       })
     )

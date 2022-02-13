@@ -35,7 +35,6 @@ import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
-import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
@@ -80,9 +79,6 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
 
   public ngOnInit() {
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
-
-    this.store$.dispatch(new OrganizationsAction.Get());
-    this.store$.dispatch(new OrganizationsAction.GetCodes());
 
     if (window['ResizeObserver']) {
       this.resizeObserver = new ResizeObserver(() =>

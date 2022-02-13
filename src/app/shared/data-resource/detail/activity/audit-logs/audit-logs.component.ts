@@ -43,9 +43,9 @@ import {selectOrganizationPermissions} from '../../../../../core/store/user-perm
 import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
 import {first, map} from 'rxjs/operators';
-import {RouterAction} from '../../../../../core/store/router/router.action';
 import {generateId} from '../../../../utils/resource.utils';
 import {selectRevertingAuditLogsIds} from '../../../../../core/store/audit-logs/audit-logs.state';
+import {OrganizationsAction} from '../../../../../core/store/organizations/organizations.action';
 
 @Component({
   selector: 'audit-logs',
@@ -112,12 +112,7 @@ export class AuditLogsComponent implements OnInit, OnChanges {
         first()
       )
       .subscribe(code => {
-        this.store$.dispatch(
-          new RouterAction.Go({
-            path: ['/o', code, 'detail'],
-            extras: {fragment: 'orderService'},
-          })
-        );
+        this.store$.dispatch(new OrganizationsAction.GoToPayment({code}));
       });
   }
 

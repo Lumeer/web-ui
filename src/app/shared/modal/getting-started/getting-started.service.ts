@@ -18,26 +18,28 @@
  */
 
 import {Injectable} from '@angular/core';
+import {NavigationExtras} from '@angular/router';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription, timer} from 'rxjs';
-import {distinctUntilChanged, map, switchMap, take} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, map, switchMap, take, tap} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';
 import {Project} from '../../../core/store/projects/project';
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {
   selectProjectTemplates,
   selectProjectTemplatesCount,
   selectReadableProjectsCount,
 } from '../../../core/store/projects/projects.state';
 import {Organization} from '../../../core/store/organizations/organization';
-import {selectContributeOrganizations} from '../../../core/store/organizations/organizations.state';
+import {selectContributeOrganizationsByIds} from '../../../core/store/organizations/organizations.state';
 import {CreateProjectService} from '../../../core/service/create-project.service';
-import {NavigationExtras} from '@angular/router';
 import {InvitationType} from '../../../core/model/invitation-type';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {isEmailValid} from '../../utils/email.utils';
 import {UserInvitation} from '../../../core/model/user-invitation';
 import {UsersAction} from '../../../core/store/users/users.action';
+import {ProjectConverter} from '../../../core/store/projects/project.converter';
+import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
 
 const EMPTY_TEMPLATE_CODE = 'EMPTY';
 
@@ -53,7 +55,7 @@ export class GettingStartedService {
   public readonly secondaryButton$: Observable<DialogButton>;
   public readonly closeButton$: Observable<DialogButton>;
 
-  private _stage$ = new BehaviorSubject(GettingStartedStage.InviteUsers);
+  private _stage$ = new BehaviorSubject(null);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
   public stages$ = of(5);
 
@@ -73,12 +75,21 @@ export class GettingStartedService {
   public _invitations$ = new BehaviorSubject<UserInvitation[]>([emptyInvitation, emptyInvitation, emptyInvitation]);
   public invitations$ = this._invitations$.asObservable();
 
+  public copyProject$: Observable<Project>;
+
   // other data
+  private writableOrganizationsIds: string[];
   private navigationExtras: NavigationExtras;
   private createdProject: Project;
+  private copyProject: Project;
   private stageSubscriptions = new Subscription();
+  private copyProjectData: {organizationId: string; projectId: string};
 
-  constructor(private store$: Store<AppState>, private createProjectService: CreateProjectService) {
+  constructor(
+    private store$: Store<AppState>,
+    private createProjectService: CreateProjectService,
+    private publicProjectService: PublicProjectService
+  ) {
     this.button$ = this._stage$.pipe(switchMap(stage => this.getButton(stage)));
     this.secondaryButton$ = this._stage$.pipe(switchMap(stage => this.getSecondaryButton(stage)));
     this.closeButton$ = this._stage$.pipe(switchMap(stage => this.getCloseButton(stage)));
@@ -92,6 +103,7 @@ export class GettingStartedService {
     this._stage$.next(value);
     this.stopPerformingActions();
     this.unsubscribe();
+    this.scheduleStageActions(value);
   }
 
   private set performingAction(value: boolean) {
@@ -136,6 +148,20 @@ export class GettingStartedService {
 
   public setNavigationExtras(value: NavigationExtras) {
     this.navigationExtras = value;
+  }
+
+  public setWritableOrganizations(organizations: Organization[]) {
+    this.writableOrganizationsIds = (organizations || []).map(organization => organization.id);
+  }
+
+  public setCopyData(organizationId: string, projectId: string) {
+    this.copyProjectData = {organizationId, projectId};
+  }
+
+  public setInitialStage(value: GettingStartedStage) {
+    if (!this.stage) {
+      this.stage = value;
+    }
   }
 
   public setInvitationEmail(index: number, rawEmail: string) {
@@ -191,13 +217,30 @@ export class GettingStartedService {
           class: DialogType.Primary,
           title: $localize`:@@templates.button.use:Use this template`,
         });
-      case GettingStartedStage.ChooseOrganization:
+      case GettingStartedStage.CopyProject:
         return of({
-          icon: 'fas fa-mouse-pointer',
-          disabled$: this.selectedOrganization$.pipe(map(template => !template?.id)),
+          icon: 'fas fa-copy',
+          disabled$: of(false),
           class: DialogType.Primary,
-          title: $localize`:@@templates.button.use:Use this template`,
+          title: $localize`:@@dialog.project.copy.confirm:Copy and Open`,
         });
+      case GettingStartedStage.ChooseOrganization:
+        if (this.selectedTemplate) {
+          return of({
+            icon: 'fas fa-mouse-pointer',
+            disabled$: this.selectedOrganization$.pipe(map(template => !template?.id)),
+            class: DialogType.Primary,
+            title: $localize`:@@templates.button.use:Use this template`,
+          });
+        } else if (this.copyProject) {
+          return of({
+            icon: 'fas fa-copy',
+            disabled$: this.selectedOrganization$.pipe(map(template => !template?.id)),
+            class: DialogType.Primary,
+            title: $localize`:@@dialog.project.copy.confirm:Copy and Open`,
+          });
+        }
+        return of(null);
       case GettingStartedStage.InviteUsers:
         return of({
           icon: 'fas fa-user-plus',
@@ -262,6 +305,7 @@ export class GettingStartedService {
   private getCloseButton(stage: GettingStartedStage): Observable<DialogButton> {
     switch (stage) {
       case GettingStartedStage.Template:
+      case GettingStartedStage.CopyProject:
       case GettingStartedStage.ChooseOrganization:
         return this.store$.pipe(
           select(selectReadableProjectsCount),
@@ -285,8 +329,15 @@ export class GettingStartedService {
       case GettingStartedStage.Template:
         this.checkNextStageFromTemplate(this.selectedTemplate);
         break;
+      case GettingStartedStage.CopyProject:
+        this.checkNextStageFromCopyProject(this.copyProject);
+        break;
       case GettingStartedStage.ChooseOrganization:
-        this.submitTemplate(this.selectedOrganization, this.selectedTemplate);
+        if (this.selectedTemplate) {
+          this.submitTemplate(this.selectedOrganization, this.selectedTemplate);
+        } else if (this.copyProject) {
+          this.submitCopyProject(this.selectedOrganization, this.copyProject);
+        }
         break;
       case GettingStartedStage.InviteUsers:
         this.checkSubmitInvitations();
@@ -325,27 +376,33 @@ export class GettingStartedService {
   private checkNextStageFromInviteUsers() {
     this.store$.pipe(select(selectCurrentUser), take(1)).subscribe(currentUser => {
       if (currentUser.emailVerified) {
-        this.moveToVideoStage();
+        this.stage = GettingStartedStage.Video;
       } else {
-        this.moveToEmailVerificationStage();
+        this.stage = GettingStartedStage.EmailVerification;
       }
     });
   }
 
-  private moveToVideoStage() {
-    this.stage = GettingStartedStage.Video;
-  }
-
-  private moveToEmailVerificationStage() {
-    this.stage = GettingStartedStage.EmailVerification;
-    this.scheduleEmailVerificationCheck();
+  private scheduleStageActions(stage: GettingStartedStage) {
+    switch (stage) {
+      case GettingStartedStage.EmailVerification:
+        this.scheduleEmailVerificationCheck();
+        break;
+      case GettingStartedStage.CopyProject:
+        const {organizationId, projectId} = this.copyProjectData;
+        this.copyProject$ = this.publicProjectService.getProject(organizationId, projectId).pipe(
+          map(dto => ProjectConverter.fromDto(dto, organizationId)),
+          catchError(() => of(null)),
+          tap(project => (this.copyProject = project))
+        );
+    }
   }
 
   private scheduleEmailVerificationCheck() {
     this.stageSubscriptions.add(
       this.store$.pipe(select(selectCurrentUser)).subscribe(user => {
         if (this.stage === GettingStartedStage.EmailVerification && user.emailVerified) {
-          this.moveToVideoStage();
+          this.stage = GettingStartedStage.Video;
         }
       })
     );
@@ -371,20 +428,14 @@ export class GettingStartedService {
       return;
     }
 
-    this.store$.pipe(select(selectContributeOrganizations), take(1)).subscribe(organizations => {
+    this.selectContributeOrganizations$().subscribe(organizations => {
       if (organizations.length === 1) {
         this.submitTemplate(organizations[0], template);
-      } else if (organizations.length > 1) {
-        this.selectedTemplate = template;
-        this.moveToChooseOrganizationStage();
       } else {
-        // TODO show some error
+        this.selectedTemplate = template;
+        this.stage = GettingStartedStage.ChooseOrganization;
       }
     });
-  }
-
-  private moveToChooseOrganizationStage() {
-    this.stage = GettingStartedStage.ChooseOrganization;
   }
 
   private submitTemplate(organization: Organization, template?: Project) {
@@ -393,6 +444,36 @@ export class GettingStartedService {
     const code = template?.code || EMPTY_TEMPLATE_CODE;
     this.createProjectService.createProjectInOrganization(organization, code, {
       templateId: template?.id,
+      navigationExtras: this.navigationExtras,
+      onSuccess: project => this.onProjectCreated(project),
+      onFailure: () => this.onFailure(),
+    });
+  }
+
+  private checkNextStageFromCopyProject(copyProject: Project) {
+    if (this.selectedOrganization) {
+      this.submitCopyProject(this.selectedOrganization, copyProject);
+      return;
+    }
+
+    this.selectContributeOrganizations$().subscribe(organizations => {
+      if (organizations.length === 1) {
+        this.submitTemplate(organizations[0], copyProject);
+      } else {
+        this.stage = GettingStartedStage.ChooseOrganization;
+      }
+    });
+  }
+
+  public selectContributeOrganizations$(): Observable<Organization[]> {
+    return this.store$.pipe(select(selectContributeOrganizationsByIds(this.writableOrganizationsIds)), take(1));
+  }
+
+  private submitCopyProject(organization: Organization, copyProject: Project) {
+    this.performingAction = true;
+
+    this.createProjectService.createProjectInOrganization(organization, copyProject?.code, {
+      copyProject,
       navigationExtras: this.navigationExtras,
       onSuccess: project => this.onProjectCreated(project),
       onFailure: () => this.onFailure(),
@@ -456,10 +537,6 @@ export class GettingStartedService {
 
   private onProjectCreated(project: Project) {
     this.createdProject = project;
-    this.moveToInviteUsersStage();
-  }
-
-  private moveToInviteUsersStage() {
     this.stage = GettingStartedStage.InviteUsers;
   }
 
@@ -488,10 +565,11 @@ export class GettingStartedService {
 
 export enum GettingStartedStage {
   Template = 0,
-  ChooseOrganization = 1,
-  InviteUsers = 2,
-  EmailVerification = 3,
-  Video = 4,
+  CopyProject = 1,
+  ChooseOrganization = 2,
+  InviteUsers = 3,
+  EmailVerification = 4,
+  Video = 5,
 }
 
 export interface DialogButton {
