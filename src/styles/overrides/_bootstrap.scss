@@ -17,12 +17,20 @@ select.form-control {
   appearance: auto;
 }
 
-.input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+.input-group-multiline input {
+  border-right: 0 !important;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.input-group > .input-group-append .btn {
+.input-group,
+.input-group-multiline .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group,
+.input-group-multiline .input-group-append .btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }

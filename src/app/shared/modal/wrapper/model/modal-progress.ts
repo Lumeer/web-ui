@@ -17,22 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-
-@Component({
-  selector: 'getting-started-video',
-  templateUrl: './getting-started-video.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./getting-started-video.component.scss'],
-  host: {class: 'd-block p-3'},
-})
-export class GettingStartedVideoComponent implements OnInit {
-  public videoUrl: SafeResourceUrl;
-
-  constructor(private sanitizer: DomSanitizer) {}
-
-  public ngOnInit() {
-    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/G1hx35S13Oo');
-  }
+export interface ModalProgress {
+  value: number;
+  max: number;
 }

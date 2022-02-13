@@ -12,11 +12,10 @@
                [secondaryBorderless]="true"
                [showClose]="!!data.closeButton"
                [closeDisabled]="data.closeButton?.disabled$ | async"
+               [progress]="progress$ | async"
                (onSubmit)="onSubmit()"
                (onSecondarySubmit)="onSecondarySubmit()"
                (onClose)="onClose()">
-
-  <getting-started-progress class="custom-header"></getting-started-progress>
 
   <div class="body w-100 h-100">
     <ng-container [ngSwitch]="service.stage$ | async">
@@ -36,6 +35,6 @@
 
   <span class="button-cancel">{{data.closeButton?.title}}</span>
   <span class="button-secondary-submit">{{data.secondaryButton?.title}}</span>
-  <span class="button-submit">{{data.button?.title}}</span>
+  <span class="button-submit"><i [ngClass]="data.button?.icon">&nbsp;</i>{{data.button?.title}}</span>
 
 </modal-wrapper>

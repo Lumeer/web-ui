@@ -17,6 +17,9 @@
 </div>
 <div class="modal-footer footer-bg p-3"
      *ngIf="showFooter">
+  <div *ngIf="progress" class="progress-wrapper">
+    <div class="progress" [style.width.px]="width$ | async"></div>
+  </div>
   <div class="d-block w-100">
     <button *ngIf="showClose"
             [attr.aria-disabled]="closeDisabled || performingAction"
@@ -41,7 +44,7 @@
             type="button"
             [class.me-2]="showSubmit"
             [class.border-transparent]="secondaryBorderless"
-            class="btn btn-outline-{{secondarySubmitClass || dialogType}} text-nowrap float-end">
+            class="btn btn-link clickable text-decoration-none text-{{secondarySubmitClass || dialogType}} text-nowrap float-end">
       <span *ngIf="performingSecondaryAction" class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
       <ng-content select=".button-secondary-submit"></ng-content>
     </button>

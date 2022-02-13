@@ -17,10 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  HostListener,
+  ElementRef,
+  SimpleChanges,
+} from '@angular/core';
 import {DialogType} from '../dialog-type';
 import {PlatformLocation} from '@angular/common';
 import {BsModalRef} from 'ngx-bootstrap/modal';
+import {ModalProgress} from './model/modal-progress';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'modal-wrapper',
@@ -28,7 +41,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
   styleUrls: ['./modal-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalWrapperComponent {
+export class ModalWrapperComponent implements OnChanges {
   @Input()
   public dialogType: DialogType;
 
@@ -80,6 +93,9 @@ export class ModalWrapperComponent {
   @Input()
   public allowBodyOverflow: boolean;
 
+  @Input()
+  public progress: ModalProgress;
+
   @Output()
   public onClose = new EventEmitter();
 
@@ -89,10 +105,25 @@ export class ModalWrapperComponent {
   @Output()
   public onSecondarySubmit = new EventEmitter();
 
-  constructor(private location: PlatformLocation, private ref: BsModalRef) {
+  public width$: Observable<number>;
+
+  public elementWidth$ = new BehaviorSubject(0);
+
+  constructor(private location: PlatformLocation, private ref: BsModalRef, public element: ElementRef) {
     location.onPopState(() => {
       this.ref.hide();
     });
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.progress && this.progress) {
+      this.checkNewSizeAfterDelay();
+      this.width$ = this.elementWidth$.pipe(
+        map(width => {
+          return width * (this.progress.value / this.progress.max);
+        })
+      );
+    }
   }
 
   public onCloseClick() {
@@ -109,5 +140,22 @@ export class ModalWrapperComponent {
     if (!this.secondarySubmitDisabled) {
       this.onSecondarySubmit.emit();
     }
+  }
+
+  public ngAfterViewInit() {
+    this.checkNewSizeAfterDelay();
+  }
+
+  private checkNewSizeAfterDelay() {
+    setTimeout(() => this.checkNewSize());
+  }
+
+  private checkNewSize() {
+    this.elementWidth$.next(this.element.nativeElement.offsetWidth);
+  }
+
+  @HostListener('window:resize')
+  public onResize() {
+    this.checkNewSize();
   }
 }

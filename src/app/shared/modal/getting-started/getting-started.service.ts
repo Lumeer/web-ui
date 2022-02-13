@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription, timer} from 'rxjs';
-import {distinctUntilChanged, map, skip, switchMap, take} from 'rxjs/operators';
+import {distinctUntilChanged, map, switchMap, take} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';
 import {Project} from '../../../core/store/projects/project';
 import {AppState} from '../../../core/store/app.state';
@@ -53,7 +53,7 @@ export class GettingStartedService {
   public readonly secondaryButton$: Observable<DialogButton>;
   public readonly closeButton$: Observable<DialogButton>;
 
-  private _stage$ = new BehaviorSubject(GettingStartedStage.Template);
+  private _stage$ = new BehaviorSubject(GettingStartedStage.InviteUsers);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
   public stages$ = of(5);
 
@@ -138,16 +138,37 @@ export class GettingStartedService {
     this.navigationExtras = value;
   }
 
-  public setInvitationEmail(index: number, email: string) {
-    const invitations = this.patchInvitation(index, invitation => ({...invitation, email}));
-    if (index === invitations.length - 1 && email.trim().length > 0) {
+  public setInvitationEmail(index: number, rawEmail: string) {
+    const email = rawEmail?.trim() || '';
+
+    // check type for same invitation email
+    let type = this.invitations[index].type;
+    for (let i = 0; i < this.invitations.length; i++) {
+      if (i !== index && this.invitations[i].email === email) {
+        type = this.invitations[i].type;
+        break;
+      }
+    }
+
+    const invitations = this.patchInvitation(index, invitation => ({...invitation, type, email}));
+    if (index === invitations.length - 1 && email.length > 0) {
       invitations.push(emptyInvitation);
     }
+
     this.invitations = invitations;
   }
 
   public setInvitationType(index: number, type: InvitationType) {
-    this.invitations = this.patchInvitation(index, invitation => ({...invitation, type}));
+    const invitations = this.patchInvitation(index, invitation => ({...invitation, type}));
+
+    // sync invitation types for same emails
+    for (let i = 0; i < invitations.length; i++) {
+      if (i !== index && invitations[i].email === invitations[index].email) {
+        invitations[i] = {...invitations[i], type};
+      }
+    }
+
+    this.invitations = invitations;
   }
 
   public addInvitation() {
@@ -165,27 +186,38 @@ export class GettingStartedService {
     switch (stage) {
       case GettingStartedStage.Template:
         return of({
+          icon: 'fas fa-mouse-pointer',
           disabled$: this.selectedTemplate$.pipe(map(template => !template?.id)),
           class: DialogType.Primary,
           title: $localize`:@@templates.button.use:Use this template`,
         });
       case GettingStartedStage.ChooseOrganization:
         return of({
+          icon: 'fas fa-mouse-pointer',
           disabled$: this.selectedOrganization$.pipe(map(template => !template?.id)),
           class: DialogType.Primary,
           title: $localize`:@@templates.button.use:Use this template`,
         });
       case GettingStartedStage.InviteUsers:
         return of({
+          icon: 'fas fa-user-plus',
           disabled$: of(false),
           class: DialogType.Primary,
           title: $localize`:@@getting.started.invite.users.confirm:Invite my colleagues`,
         });
       case GettingStartedStage.EmailVerification:
         return of({
+          icon: 'fas fa-check',
           disabled$: of(false),
           class: DialogType.Primary,
           title: $localize`:@@verifyEmail.button.resendEmail:Resend verification email`,
+        });
+      case GettingStartedStage.Video:
+        return of({
+          icon: 'fas fa-rocket-launch',
+          disabled$: of(false),
+          class: DialogType.Primary,
+          title: $localize`:@@getting.started.video.button:Get started`,
         });
       default:
         return of(null);
@@ -243,11 +275,6 @@ export class GettingStartedService {
             return null;
           })
         );
-      case GettingStartedStage.Video:
-        return of({
-          disabled$: of(false),
-          title: $localize`:@@button.cancel:Cancel`,
-        });
       default:
         return of(null);
     }
@@ -266,6 +293,9 @@ export class GettingStartedService {
         break;
       case GettingStartedStage.EmailVerification:
         this.resendVerificationEmail();
+        break;
+      case GettingStartedStage.Video:
+        this.close();
         break;
     }
   }
@@ -295,9 +325,7 @@ export class GettingStartedService {
   private checkNextStageFromInviteUsers() {
     this.store$.pipe(select(selectCurrentUser), take(1)).subscribe(currentUser => {
       if (currentUser.emailVerified) {
-        // TODO uncomment
-        // this.moveToVideoStage();
-        this.moveToEmailVerificationStage();
+        this.moveToVideoStage();
       } else {
         this.moveToEmailVerificationStage();
       }
@@ -315,8 +343,7 @@ export class GettingStartedService {
 
   private scheduleEmailVerificationCheck() {
     this.stageSubscriptions.add(
-      // TODO remove skip(1)
-      this.store$.pipe(select(selectCurrentUser), skip(1)).subscribe(user => {
+      this.store$.pipe(select(selectCurrentUser)).subscribe(user => {
         if (this.stage === GettingStartedStage.EmailVerification && user.emailVerified) {
           this.moveToVideoStage();
         }
@@ -339,11 +366,10 @@ export class GettingStartedService {
   }
 
   private checkNextStageFromTemplate(template?: Project) {
-    // TODO uncomment
-    // if (this.selectedOrganization) {
-    //   this.submitTemplate(this.selectedOrganization, template);
-    //   return;
-    // }
+    if (this.selectedOrganization) {
+      this.submitTemplate(this.selectedOrganization, template);
+      return;
+    }
 
     this.store$.pipe(select(selectContributeOrganizations), take(1)).subscribe(organizations => {
       if (organizations.length === 1) {
@@ -469,6 +495,7 @@ export enum GettingStartedStage {
 }
 
 export interface DialogButton {
+  icon?: string;
   title: string;
   class?: DialogType;
   disabled$?: Observable<boolean>;
