@@ -15,20 +15,39 @@
   </div>
 </div>
 
-<h5 class="text-center mt-5" [class.mt-5]="service.selectedTemplate$ | async"
+<h5 class="text-center" [class.mt-5]="service.selectedTemplate$ | async"
     i18n="@@choose.organization.title">Choose organization</h5>
 
-<div class="d-flex justify-content-center flex-wrap mt-3">
+<ng-container *ngIf="contributeOrganizations$ | async as organizations">
+  <div class="d-flex justify-content-center flex-wrap mt-3" *ngIf="organizations.length; else emptyOrganizations">
 
-  <div *ngFor="let organization of organizations$ | async" class="card organization-card p-3 m-1 cursor-pointer"
-       (click)="onSelect(organization)"
-       [class.card-selected]="(service.selectedOrganization$ | async)?.id === organization.id">
-    <i class="indicator fas fa-check"></i>
-    <div class="d-flex align-items-center flex-column text-center">
-      <i class="fa-fw fa-3x {{ organization.icon }}" [style.color]="organization.color"></i>
-      <h4 class="mb-0 mt-1" [style.color]="organization.color">{{organization.code}}</h4>
-      <div class="text-truncate mt-1 w-100" [title]="organization.name">{{organization.name}}</div>
+    <div *ngFor="let organization of contributeOrganizations$ | async" class="card organization-card p-3 m-1 cursor-pointer"
+         (click)="onSelect(organization)"
+         [class.card-selected]="(service.selectedOrganization$ | async)?.id === organization.id">
+      <i class="indicator fas fa-check"></i>
+      <div class="d-flex align-items-center flex-column text-center">
+        <i class="fa-fw fa-3x {{ organization.icon }}" [style.color]="organization.color"></i>
+        <h4 class="mb-0 mt-1" [style.color]="organization.color">{{organization.code}}</h4>
+        <div class="text-truncate mt-1 w-100" [title]="organization.name">{{organization.name}}</div>
+      </div>
     </div>
-  </div>
 
-</div>
+  </div>
+</ng-container>
+
+<ng-template #emptyOrganizations>
+  <ng-container *ngIf="manageOrganizations$ | async as manageOrganizations">
+
+    <div *ngIf="manageOrganizations.length" class="d-flex flex-column align-items-center">
+      <h4 class="text-danger text-center m-5" i18n="@@template.create.limitsExceeded">I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</h4>
+      <button class="btn btn-primary mb-5">
+        <a class="color-inherit" [routerLink]="['/o', manageOrganizations[0].code, 'detail']" [fragment]="'orderService'" target="_blank"><span
+          i18n="@@teams.update.serviceLimits.button">Upgrade now!</span></a>
+      </button>
+    </div>
+    <div *ngIf="!manageOrganizations.length">
+      <h4 class="text-danger text-center m-5" i18n="@@template.create.empty">I am sorry, you do not have any organization to create project in.</h4>
+    </div>
+  </ng-container>
+
+</ng-template>

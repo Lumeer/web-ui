@@ -27,7 +27,6 @@ import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';
 import {selectUrl} from '../../../../core/store/navigation/navigation.state';
 import {selectCurrentUser} from '../../../../core/store/users/users.state';
-import {ServiceLimitsAction} from '../../../../core/store/organizations/service-limits/service-limits.action';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {filter, first, map} from 'rxjs/operators';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
@@ -144,7 +143,6 @@ export class UserMenuComponent implements OnInit {
   }
 
   private bindServiceLimits() {
-    this.store$.dispatch(new ServiceLimitsAction.GetAll());
     this.freePlan$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
       map(serviceLimits => serviceLimits?.serviceLevel === ServiceLevelType.FREE)

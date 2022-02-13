@@ -21,14 +21,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {filter, map, switchMap, take} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {Organization} from '../store/organizations/organization';
-import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectAllOrganizations, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
+import {selectAllOrganizations} from '../store/organizations/organizations.state';
 import {Project} from '../store/projects/project';
-import {ProjectsAction} from '../store/projects/projects.action';
-import {selectAllProjects, selectProjectsLoaded} from '../store/projects/projects.state';
+import {selectAllProjects} from '../store/projects/projects.state';
 import {DefaultWorkspace} from '../store/users/user';
 import {selectCurrentUser} from '../store/users/users.state';
 import {NotificationService} from '../notifications/notification.service';
@@ -37,8 +35,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {selectPublicViewCode} from '../store/public-data/public-data.state';
 import {PublicDataAction} from '../store/public-data/public-data.action';
 import {ConfigurationService} from '../../configuration/configuration.service';
-import {TeamsAction} from '../store/teams/teams.action';
-import {selectAllTeams, selectTeamsLoaded} from '../store/teams/teams.state';
+import {selectAllTeams} from '../store/teams/teams.state';
 import {userHasRoleInOrganization, userHasRoleInProject} from '../../shared/utils/permission.utils';
 import {RoleType} from '../model/role-type';
 import {sortResourcesByOrder} from '../../shared/utils/resource.utils';
@@ -111,14 +108,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         } else if (contributeOrganizations.length === 0) {
           this.selectService.createNewOrganization({replaceUrl: true});
         } else {
-          this.createNewProject();
+          this.selectService.createNewProjectWithTemplate(contributeOrganizations, null, null, {replaceUrl: true});
         }
       });
-  }
-
-  private createNewProject() {
-    const modalRef = this.selectService.createNewProject(null, null, {replaceUrl: true});
-    modalRef.content.onClose$.subscribe(() => this.redirectToWorkspace());
   }
 
   private navigateToWorkspaceProject(
@@ -154,43 +146,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getOrganizations(): Observable<Organization[]> {
-    return this.store$.select(selectOrganizationsLoaded).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new OrganizationsAction.Get());
-        }
-      }),
-      filter(loaded => loaded),
-      switchMap(() => this.store$.select(selectAllOrganizations))
-    );
-  }
-
   private getOrganizationsAndProjects(): Observable<{
     organizationsWithProjects: OrganizationWithProjects[];
     contributeOrganizations: Organization[];
   }> {
     return combineLatest([
-      this.getOrganizations().pipe(
-        tap(organizations =>
-          organizations.forEach(org => {
-            this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id}));
-            this.store$.dispatch(new TeamsAction.Get({organizationId: org.id}));
-          })
-        )
-      ),
-      this.store$.pipe(select(selectProjectsLoaded)),
-      this.store$.pipe(select(selectTeamsLoaded)),
+      this.store$.pipe(select(selectAllOrganizations)),
+      this.store$.pipe(select(selectAllProjects)),
     ]).pipe(
-      filter(([organizations, projectsLoaded, teamsLoaded]) =>
-        organizations.every(org => projectsLoaded[org.id] && teamsLoaded[org.id])
-      ),
-      switchMap(([organizations]) =>
-        this.store$.pipe(
-          select(selectAllProjects),
-          switchMap(projects => this.filterReadableOrganizationsAndProjects(organizations, projects))
-        )
-      )
+      switchMap(([organizations, projects]) => this.filterReadableOrganizationsAndProjects(organizations, projects))
     );
   }
 

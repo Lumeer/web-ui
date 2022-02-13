@@ -46,7 +46,6 @@ import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {GettingStartedModalComponent} from './getting-started/getting-started-modal.component';
-import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
@@ -307,31 +306,33 @@ export class ModalService {
   }
 
   public showCreateProjectDialog(
-    organization: Organization,
-    templateCode: string,
+    writableOrganizations: Organization[],
+    selectedOrganization: Organization,
+    templateCode?: string,
     extras?: NavigationExtras
   ): BsModalRef {
     this.store$.dispatch(new ProjectsAction.GetTemplates());
     const initialState = {
+      writableOrganizations,
       templateCode,
-      organization,
+      selectedOrganization,
       navigationExtras: extras,
     };
     return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-xxl modal-h-100');
   }
 
   public showCopyProjectDialog(
-    organizations: Organization[],
-    organizationId: string,
-    projectId: string,
+    writableOrganizations: Organization[],
+    copyOrganizationId: string,
+    copyProjectId: string,
     extras?: NavigationExtras
   ): BsModalRef {
     const initialState = {
-      organizations,
-      organizationId,
-      projectId,
+      writableOrganizations,
+      copyOrganizationId,
+      copyProjectId,
       navigationExtras: extras,
     };
-    return this.showStaticDialog(initialState, CopyProjectModalComponent, 'modal-lg');
+    return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-lg');
   }
 }

@@ -20,9 +20,6 @@
 import {Action} from '@ngrx/store';
 import {Organization} from './organization';
 import {Permission, PermissionType} from '../permissions/permissions';
-import {Project} from '../projects/project';
-import {NavigationExtras} from '@angular/router';
-import {Subject} from 'rxjs';
 
 export enum OrganizationsActionType {
   GET = '[Organizations] Get',
@@ -47,6 +44,7 @@ export enum OrganizationsActionType {
   CHOOSE = '[Organizations] Choose',
 
   OFFER_PAYMENT = '[Organizations] Offer payment',
+  GO_TO_PAYMENT = '[Organizations] Go To payment',
 
   DELETE = '[Organizations] Delete',
   DELETE_SUCCESS = '[Organizations] Delete :: Success',
@@ -146,26 +144,16 @@ export namespace OrganizationsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class Choose implements Action {
-    public readonly type = OrganizationsActionType.CHOOSE;
-
-    public constructor(
-      public payload: {
-        organizations: Organization[];
-        initialCode: string;
-        onClose$: Subject<any>;
-        copyProject?: Project;
-        templateId?: string;
-        navigationExtras?: NavigationExtras;
-        previousDialogState?: any;
-      }
-    ) {}
-  }
-
   export class OfferPayment implements Action {
     public readonly type = OrganizationsActionType.OFFER_PAYMENT;
 
     public constructor(public payload: {organizationCode: string; message?: string; title?: string}) {}
+  }
+
+  export class GoToPayment implements Action {
+    public readonly type = OrganizationsActionType.GO_TO_PAYMENT;
+
+    public constructor(public payload: {code: string}) {}
   }
 
   export class Delete implements Action {
@@ -231,7 +219,6 @@ export namespace OrganizationsAction {
     | Update
     | UpdateSuccess
     | UpdateFailure
-    | Choose
     | Delete
     | DeleteSuccess
     | DeleteFailure

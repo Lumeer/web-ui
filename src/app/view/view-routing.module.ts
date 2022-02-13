@@ -37,6 +37,8 @@ import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 import {DashboardDataGuard} from '../core/guards/data/dashboard-data.guard';
 import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
+import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
+import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
 
 const viewRoutes: Routes = [
   {
@@ -44,6 +46,8 @@ const viewRoutes: Routes = [
     canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard],
     canDeactivate: [ViewConfigCleanUpGuard],
     resolve: {
+      organizations: OrganizationsProjectsGuard,
+      limits: ServiceLimitsGuard,
       collections: CollectionsGuard,
       views: ViewsGuard,
       linkTypes: LinkTypesGuard,

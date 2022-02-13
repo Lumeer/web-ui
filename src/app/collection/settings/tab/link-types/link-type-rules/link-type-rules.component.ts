@@ -26,12 +26,12 @@ import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organiza
 import {filter, first, map} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {RouterAction} from '../../../../../core/store/router/router.action';
 import {LinkTypesAction} from '../../../../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
 import {containsAttributeWithRule} from '../../../../../shared/utils/attribute.utils';
 import {generateId} from '../../../../../shared/utils/resource.utils';
+import {OrganizationsAction} from '../../../../../core/store/organizations/organizations.action';
 
 @Component({
   selector: 'link-type-rules',
@@ -181,12 +181,7 @@ export class LinkTypeRulesComponent implements OnInit {
         first()
       )
       .subscribe(code => {
-        this.store$.dispatch(
-          new RouterAction.Go({
-            path: ['/o', code, 'detail'],
-            extras: {fragment: 'orderService'},
-          })
-        );
+        this.store$.dispatch(new OrganizationsAction.GoToPayment({code}));
       });
   }
 }

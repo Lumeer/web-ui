@@ -23,7 +23,7 @@ import {Observable} from 'rxjs';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {GettingStartedService} from '../../getting-started.service';
 import {AppState} from '../../../../../core/store/app.state';
-import {selectContributeOrganizations} from '../../../../../core/store/organizations/organizations.state';
+import {selectManageOrganizations} from '../../../../../core/store/organizations/organizations.state';
 
 @Component({
   selector: 'choose-organization',
@@ -33,12 +33,14 @@ import {selectContributeOrganizations} from '../../../../../core/store/organizat
   host: {class: 'd-block p-4'},
 })
 export class ChooseOrganizationComponent implements OnInit {
-  public organizations$: Observable<Organization[]>;
+  public contributeOrganizations$: Observable<Organization[]>;
+  public manageOrganizations$: Observable<Organization[]>;
 
   constructor(private store$: Store<AppState>, public service: GettingStartedService) {}
 
   public ngOnInit() {
-    this.organizations$ = this.store$.pipe(select(selectContributeOrganizations));
+    this.contributeOrganizations$ = this.service.selectContributeOrganizations$();
+    this.manageOrganizations$ = this.store$.pipe(select(selectManageOrganizations));
   }
 
   public onSelect(organization: Organization) {

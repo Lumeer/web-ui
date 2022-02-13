@@ -28,10 +28,10 @@ import {CollectionsAction} from '../../../../core/store/collections/collections.
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {filter, first, map, tap} from 'rxjs/operators';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
-import {RouterAction} from '../../../../core/store/router/router.action';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {containsAttributeWithRule} from '../../../../shared/utils/attribute.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
+import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
 
 @Component({
   selector: 'collection-rules',
@@ -205,12 +205,7 @@ export class CollectionRulesComponent implements OnInit {
         first()
       )
       .subscribe(code => {
-        this.store$.dispatch(
-          new RouterAction.Go({
-            path: ['/o', code, 'detail'],
-            extras: {fragment: 'orderService'},
-          })
-        );
+        this.store$.dispatch(new OrganizationsAction.GoToPayment({code}));
       });
   }
 }

@@ -1,0 +1,26 @@
+<div class="content" *ngIf="service.copyProject$ | async as project; else contentInvalid">
+  <div class="d-flex align-items-center flex-column px-3 pt-3">
+
+    <div class="image" *ngIf="project.templateMetadata?.imageUrl">
+      <img [src]="project.templateMetadata?.imageUrl" alt=""/>
+    </div>
+
+    <h4 class="m-0 mt-1" [style.color]="project.color">{{project.code}}</h4>
+  </div>
+
+  <h3 class="m-0 px-3 text-center" [class.pt-2]="project.name || project.description">{{project.name}}</h3>
+
+  <div class="px-3" [class.pt-3]="project.description">
+    <div class="mb-1 text-center" *ngIf="project.description">{{project.description}}</div>
+  </div>
+
+  <div class="p-3">
+    <iframe [src]="publicViewUrl$ | async" width="100%" height="100%"></iframe>
+  </div>
+</div>
+
+<ng-template #contentInvalid>
+  <h4 class="text-danger text-center m-5"
+      i18n="@@resource.new.dialog.invalid">I am sorry, something went wrong.
+  </h4>
+</ng-template>
