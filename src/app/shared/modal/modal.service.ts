@@ -60,6 +60,7 @@ import {RoleType} from '../../core/model/role-type';
 import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
 import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
 import {AttributeLock} from '@lumeer/data-filters';
+import {GettingStartedModalType} from './getting-started/model/getting-started-modal-type';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -71,6 +72,10 @@ export class ModalService {
 
   public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
+  }
+
+  public isSomeModalOpened(): boolean {
+    return this.bsModalService.getModalsCount() > 0;
   }
 
   public showChooseLinkDocument(
@@ -313,6 +318,7 @@ export class ModalService {
   ): BsModalRef {
     this.store$.dispatch(new ProjectsAction.GetTemplates());
     const initialState = {
+      type: GettingStartedModalType.Template,
       writableOrganizations,
       templateCode,
       selectedOrganization,
@@ -328,10 +334,25 @@ export class ModalService {
     extras?: NavigationExtras
   ): BsModalRef {
     const initialState = {
+      type: GettingStartedModalType.CopyProject,
       writableOrganizations,
       copyOrganizationId,
       copyProjectId,
       navigationExtras: extras,
+    };
+    return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-lg');
+  }
+
+  public showEmailVerificationDialog(): BsModalRef {
+    const initialState = {
+      type: GettingStartedModalType.EmailVerification,
+    };
+    return this.showStaticDialog(initialState, GettingStartedModalComponent, '');
+  }
+
+  public showOnboardingVideoDialog(): BsModalRef {
+    const initialState = {
+      type: GettingStartedModalType.Video,
     };
     return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-lg');
   }

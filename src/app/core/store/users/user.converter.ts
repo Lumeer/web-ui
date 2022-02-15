@@ -18,9 +18,9 @@
  */
 
 import {UserDto} from '../../dto';
-import {DefaultWorkspace, NotificationsSettings, User, UserHints} from './user';
+import {DefaultWorkspace, NotificationsSettings, User, UserHints, UserOnboarding} from './user';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
-import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
+import {NotificationsSettingsDto, UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
 import {UserNotificationTypeMap} from '../../model/user-notification';
 import {NotificationFrequencyMap} from '../../model/notification-frequency';
 import {NotificationChannelMap} from '../../model/notification-channel';
@@ -60,6 +60,7 @@ export function convertUserDtoToModel(dto: UserDto): User {
     emailVerified: dto.emailVerified,
     notifications: convertNotificationsFromDto(dto.notifications),
     hints: convertUserHintsDtoToModel(dto.hints),
+    onboarding: convertUserOnboardingDtoToModel(dto.onboarding),
   };
 }
 
@@ -104,4 +105,12 @@ export function convertUserHintsModelToDto(hints: UserHints): UserHintsDto {
 
 export function convertUserHintsDtoToModel(hints: UserHintsDto): UserHints {
   return hints;
+}
+
+export function convertUserOnboardingModelToDto(model: UserOnboarding): UserOnboardingDto {
+  return model;
+}
+
+export function convertUserOnboardingDtoToModel(model: UserOnboardingDto): UserOnboarding {
+  return model;
 }

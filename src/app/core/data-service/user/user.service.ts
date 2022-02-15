@@ -21,7 +21,7 @@ import {Observable} from 'rxjs';
 import {UserDto} from '../../dto';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
-import {UserHintsDto} from '../../dto/user.dto';
+import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
 import {UserInvitationDto} from '../../dto/user-invitation.dto';
 
 export abstract class UserService {
@@ -60,4 +60,6 @@ export abstract class UserService {
   public abstract getHints(): Observable<UserHintsDto>;
 
   public abstract updateHints(hints: UserHintsDto): Observable<UserHintsDto>;
+
+  public abstract updateOnboarding(dto: UserOnboardingDto): Observable<UserOnboardingDto>;
 }

@@ -19,6 +19,8 @@
 
 import {Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {GettingStartedService} from '../../getting-started.service';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'getting-started-video',
@@ -30,9 +32,32 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 export class GettingStartedVideoComponent implements OnInit {
   public videoUrl: SafeResourceUrl;
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private service: GettingStartedService,
+    private configurationService: ConfigurationService
+  ) {}
+
+  public get locale(): string {
+    return this.configurationService.getConfiguration().locale;
+  }
 
   public ngOnInit() {
-    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/G1hx35S13Oo');
+    this.videoUrl = this.makeVideoUrl();
+  }
+
+  private makeVideoUrl(): SafeResourceUrl {
+    switch (this.service.selectedTemplate?.code) {
+      default:
+        return this.makeDefaultVideoUrl();
+    }
+  }
+
+  private makeDefaultVideoUrl(): SafeResourceUrl {
+    switch (this.locale) {
+      // case LanguageCode.CZ:
+      default:
+        return this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/G1hx35S13Oo');
+    }
   }
 }

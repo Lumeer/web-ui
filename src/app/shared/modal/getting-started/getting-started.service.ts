@@ -40,6 +40,12 @@ import {UserInvitation} from '../../../core/model/user-invitation';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {ProjectConverter} from '../../../core/store/projects/project.converter';
 import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {RouterAction} from '../../../core/store/router/router.action';
+import {User, UserOnboarding} from '../../../core/store/users/user';
+import {GettingStartedStage} from './model/getting-started-stage';
+import {uniqueValues} from '../../utils/array.utils';
+import {organizationReadableUsersAndTeams} from '../../utils/permission.utils';
 
 const EMPTY_TEMPLATE_CODE = 'EMPTY';
 
@@ -57,7 +63,7 @@ export class GettingStartedService {
 
   private _stage$ = new BehaviorSubject(null);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
-  public stages$ = of(5);
+  public stages$: Observable<GettingStartedStage[]>;
 
   private _close$ = new Subject();
   public close$ = this._close$.asObservable();
@@ -158,10 +164,44 @@ export class GettingStartedService {
     this.copyProjectData = {organizationId, projectId};
   }
 
-  public setInitialStage(value: GettingStartedStage) {
+  public setInitialStage(initialStage: GettingStartedStage) {
     if (!this.stage) {
-      this.stage = value;
+      this.stage = initialStage;
     }
+    this.subscribeStages(initialStage);
+  }
+
+  private subscribeStages(initialStage: GettingStartedStage) {
+    this.stages$ = combineLatest([
+      this.selectCurrentUser$(),
+      this.selectedOrganization$,
+      this.selectContributeOrganizations$(),
+    ]).pipe(
+      map(([currentUser, selectedOrganization, contributeOrganizations]) => {
+        const stages = [];
+
+        if (initialStage === GettingStartedStage.Template || initialStage === GettingStartedStage.CopyProject) {
+          stages.push(initialStage);
+
+          if (!selectedOrganization && contributeOrganizations.length > 1) {
+            stages.push(GettingStartedStage.ChooseOrganization);
+          }
+
+          if (this.shouldShowInviteUsers(selectedOrganization)) {
+            stages.push(GettingStartedStage.InviteUsers);
+          }
+        }
+
+        if (!currentUser?.emailVerified) {
+          stages.push(GettingStartedStage.EmailVerification);
+        }
+        if (!currentUser?.onboarding?.videoShowed) {
+          stages.push(GettingStartedStage.Video);
+        }
+
+        return uniqueValues(stages);
+      })
+    );
   }
 
   public setInvitationEmail(index: number, rawEmail: string) {
@@ -374,13 +414,23 @@ export class GettingStartedService {
   }
 
   private checkNextStageFromInviteUsers() {
-    this.store$.pipe(select(selectCurrentUser), take(1)).subscribe(currentUser => {
-      if (currentUser.emailVerified) {
-        this.stage = GettingStartedStage.Video;
-      } else {
-        this.stage = GettingStartedStage.EmailVerification;
-      }
-    });
+    this.selectCurrentUser$()
+      .pipe(take(1))
+      .subscribe(currentUser => {
+        if (currentUser.emailVerified) {
+          this.checkVideoStage(currentUser);
+        } else {
+          this.stage = GettingStartedStage.EmailVerification;
+        }
+      });
+  }
+
+  private checkVideoStage(currentUser: User) {
+    if (currentUser.onboarding?.videoShowed) {
+      this.close();
+    } else {
+      this.stage = GettingStartedStage.Video;
+    }
   }
 
   private scheduleStageActions(stage: GettingStartedStage) {
@@ -395,14 +445,18 @@ export class GettingStartedService {
           catchError(() => of(null)),
           tap(project => (this.copyProject = project))
         );
+        break;
+      case GettingStartedStage.Video:
+        this.patchUserOnboarding('videoShowed', true);
+        break;
     }
   }
 
   private scheduleEmailVerificationCheck() {
     this.stageSubscriptions.add(
-      this.store$.pipe(select(selectCurrentUser)).subscribe(user => {
+      this.selectCurrentUser$().subscribe(user => {
         if (this.stage === GettingStartedStage.EmailVerification && user.emailVerified) {
-          this.stage = GettingStartedStage.Video;
+          this.checkVideoStage(user);
         }
       })
     );
@@ -420,6 +474,12 @@ export class GettingStartedService {
 
   private close() {
     this._close$.next(null);
+
+    this.store$.pipe(select(selectWorkspace), take(1)).subscribe(workspace => {
+      if (!workspace?.organizationCode) {
+        this.store$.dispatch(new RouterAction.Go({path: ['/'], extras: {replaceUrl: true}}));
+      }
+    });
   }
 
   private checkNextStageFromTemplate(template?: Project) {
@@ -428,24 +488,27 @@ export class GettingStartedService {
       return;
     }
 
-    this.selectContributeOrganizations$().subscribe(organizations => {
-      if (organizations.length === 1) {
-        this.submitTemplate(organizations[0], template);
-      } else {
-        this.selectedTemplate = template;
-        this.stage = GettingStartedStage.ChooseOrganization;
-      }
-    });
+    this.selectContributeOrganizations$()
+      .pipe(take(1))
+      .subscribe(organizations => {
+        if (organizations.length === 1) {
+          this.submitTemplate(organizations[0], template);
+        } else {
+          this.selectedTemplate = template;
+          this.stage = GettingStartedStage.ChooseOrganization;
+        }
+      });
   }
 
-  private submitTemplate(organization: Organization, template?: Project) {
+  private submitTemplate(organization: Organization, template: Project) {
     this.performingAction = true;
+    this.selectedOrganization = organization;
 
     const code = template?.code || EMPTY_TEMPLATE_CODE;
     this.createProjectService.createProjectInOrganization(organization, code, {
       templateId: template?.id,
       navigationExtras: this.navigationExtras,
-      onSuccess: project => this.onProjectCreated(project),
+      onSuccess: project => this.onProjectCreated(organization, project, template?.code),
       onFailure: () => this.onFailure(),
     });
   }
@@ -456,17 +519,23 @@ export class GettingStartedService {
       return;
     }
 
-    this.selectContributeOrganizations$().subscribe(organizations => {
-      if (organizations.length === 1) {
-        this.submitTemplate(organizations[0], copyProject);
-      } else {
-        this.stage = GettingStartedStage.ChooseOrganization;
-      }
-    });
+    this.selectContributeOrganizations$()
+      .pipe(take(1))
+      .subscribe(organizations => {
+        if (organizations.length === 1) {
+          this.submitTemplate(organizations[0], copyProject);
+        } else {
+          this.stage = GettingStartedStage.ChooseOrganization;
+        }
+      });
   }
 
   public selectContributeOrganizations$(): Observable<Organization[]> {
-    return this.store$.pipe(select(selectContributeOrganizationsByIds(this.writableOrganizationsIds)), take(1));
+    return this.store$.pipe(select(selectContributeOrganizationsByIds(this.writableOrganizationsIds)));
+  }
+
+  private selectCurrentUser$(): Observable<User> {
+    return this.store$.pipe(select(selectCurrentUser));
   }
 
   private submitCopyProject(organization: Organization, copyProject: Project) {
@@ -475,7 +544,7 @@ export class GettingStartedService {
     this.createProjectService.createProjectInOrganization(organization, copyProject?.code, {
       copyProject,
       navigationExtras: this.navigationExtras,
-      onSuccess: project => this.onProjectCreated(project),
+      onSuccess: project => this.onProjectCreated(organization, project),
       onFailure: () => this.onFailure(),
     });
   }
@@ -507,7 +576,7 @@ export class GettingStartedService {
         invitations,
         organizationId: this.selectedOrganization.id,
         projectId: this.createdProject.id,
-        onSuccess: () => this.onInvitationsSent(),
+        onSuccess: () => this.onInvitationsSent(invitations.length),
         onFailure: () => this.onFailure(),
       })
     );
@@ -535,13 +604,31 @@ export class GettingStartedService {
     );
   }
 
-  private onProjectCreated(project: Project) {
+  private onProjectCreated(organization: Organization, project: Project, template?: string) {
     this.createdProject = project;
-    this.stage = GettingStartedStage.InviteUsers;
+    if (this.shouldShowInviteUsers(organization)) {
+      this.stage = GettingStartedStage.InviteUsers;
+    } else {
+      this.checkNextStageFromInviteUsers();
+    }
+
+    this.selectCurrentUser$()
+      .pipe(take(1))
+      .subscribe(currentUser => {
+        if (template && !currentUser?.onboarding?.template) {
+          this.patchUserOnboarding('template', template);
+        }
+      });
   }
 
-  private onInvitationsSent() {
+  private shouldShowInviteUsers(organization: Organization): boolean {
+    const {readableUsers, readableTeams} = organizationReadableUsersAndTeams(organization);
+    return readableUsers + readableTeams < 2;
+  }
+
+  private onInvitationsSent(count: number) {
     this.checkNextStageFromInviteUsers();
+    this.patchUserOnboarding('invitedUsers', count);
   }
 
   private onFailure() {
@@ -561,15 +648,10 @@ export class GettingStartedService {
   public onDestroy() {
     this.unsubscribe();
   }
-}
 
-export enum GettingStartedStage {
-  Template = 0,
-  CopyProject = 1,
-  ChooseOrganization = 2,
-  InviteUsers = 3,
-  EmailVerification = 4,
-  Video = 5,
+  private patchUserOnboarding(key: keyof UserOnboarding, value: any) {
+    this.store$.dispatch(new UsersAction.SetOnboarding({key, value}));
+  }
 }
 
 export interface DialogButton {

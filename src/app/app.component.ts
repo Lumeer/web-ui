@@ -25,8 +25,8 @@ import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
-import {combineLatest, Observable, of} from 'rxjs';
-import {catchError, filter, first, map, timeout, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, Observable, of, switchMap} from 'rxjs';
+import {catchError, delay, filter, first, map, timeout, withLatestFrom} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
 import {AuthService} from './auth/auth.service';
 import {ServiceLevelType} from './core/dto/service-level-type';
@@ -47,6 +47,8 @@ import {ConfigurationService} from './configuration/configuration.service';
 import {LanguageCode} from './core/model/language';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {csLocale, huLocale} from 'ngx-bootstrap/locale';
+import {ModalService} from './shared/modal/modal.service';
+import {selectWorkspace} from './core/store/navigation/navigation.state';
 
 @Component({
   selector: APP_NAME_SELECTOR,
@@ -66,6 +68,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private sessionService: SessionService,
     private tooltipConfig: TooltipConfig,
     private localeService: BsLocaleService,
+    private modalService: ModalService,
     private configurationService: ConfigurationService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
@@ -79,6 +82,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initCheckUserInteraction();
     this.initTooltipConfig();
     this.initLanguage();
+    this.initUserOnboardingCheck();
   }
 
   public ngOnInit() {
@@ -121,6 +125,32 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (this.configurationService.getConfiguration().auth) {
       this.authService.handleAuthentication();
     }
+  }
+
+  private initUserOnboardingCheck() {
+    if (!this.configurationService.getConfiguration().auth) {
+      return;
+    }
+
+    this.store$
+      .pipe(
+        select(selectWorkspace),
+        filter(workspace => !!workspace?.organizationCode),
+        switchMap(() => this.store$.pipe(select(selectCurrentUser))),
+        filter(user => !!user),
+        first(),
+        delay(1000)
+      )
+      .subscribe(user => {
+        if (this.modalService.isSomeModalOpened()) {
+          return;
+        }
+        if (!user?.emailVerified) {
+          this.modalService.showEmailVerificationDialog();
+        } else if (!user.onboarding.videoShowed) {
+          this.modalService.showOnboardingVideoDialog();
+        }
+      });
   }
 
   private startAnalyticsTracking() {
