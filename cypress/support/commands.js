@@ -44,6 +44,7 @@ Cypress.Commands.add('loginAndDismissAgreement', () => {
 
   if (!lumeerAuth) {
     cy.dismissAgreement();
+    cy.dismissOnboardingVideo();
   }
 });
 
@@ -70,6 +71,13 @@ Cypress.Commands.add('dismissAgreement', () => {
   cy.patchCurrentUser({
     agreement: true,
     newsletter: true,
+  });
+});
+
+Cypress.Commands.add('dismissOnboardingVideo', () => {
+  // make sure to dismiss initial onboarding video
+  cy.setOnboarding({
+    videoPlayed: true,
   });
 });
 
