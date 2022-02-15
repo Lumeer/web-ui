@@ -147,7 +147,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
         if (!user?.emailVerified) {
           this.modalService.showEmailVerificationDialog();
-        } else if (!user.onboarding.videoShowed) {
+        } else if (!user.onboarding?.videoShowed) {
           this.modalService.showOnboardingVideoDialog();
         }
       });
