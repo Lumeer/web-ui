@@ -41,8 +41,17 @@ export interface User {
   emailVerified?: boolean;
   notifications?: NotificationsSettings;
   hints?: UserHints;
+  onboarding?: UserOnboarding;
 
   correlationId?: string;
+}
+
+export interface UserOnboarding {
+  template?: string;
+  invitedUsers?: number;
+  videoShowed?: boolean;
+  videoPlayed?: boolean;
+  videoPlayedSeconds?: number;
 }
 
 export interface DefaultWorkspace {

@@ -35,6 +35,8 @@ import {
   convertUserHintsDtoToModel,
   convertUserHintsModelToDto,
   convertUserModelToDto,
+  convertUserOnboardingDtoToModel,
+  convertUserOnboardingModelToDto,
 } from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
@@ -437,30 +439,6 @@ export class UsersEffects {
     )
   );
 
-  public getHints$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<UsersAction.GetHints>(UsersActionType.GET_HINTS),
-      mergeMap(() => {
-        return this.userService.getHints().pipe(
-          map(dto => convertUserHintsDtoToModel(dto)),
-          map(hints => new UsersAction.GetHintsSuccess({hints})),
-          catchError(error => of(new UsersAction.GetHintsFailure({error})))
-        );
-      })
-    )
-  );
-
-  public getHintsFailure$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<UsersAction.GetHintsFailure>(UsersActionType.GET_HINTS_FAILURE),
-      tap(action => console.error(action.payload.error)),
-      map(() => {
-        const message = $localize`:@@currentUser.get.fail:Could not get user details`;
-        return new NotificationsAction.Error({message});
-      })
-    )
-  );
-
   public updateHints$ = createEffect(() =>
     this.actions$.pipe(
       ofType<UsersAction.UpdateHints>(UsersActionType.UPDATE_HINTS),
@@ -468,7 +446,7 @@ export class UsersEffects {
       mergeMap(([action, user]) => {
         return this.userService.updateHints(convertUserHintsModelToDto(action.payload.hints)).pipe(
           map(dto => convertUserHintsDtoToModel(dto)),
-          map(hints => new UsersAction.UpdateHintsSuccess({hints: hints})),
+          map(hints => new UsersAction.UpdateHintsSuccess({hints})),
           catchError(error => of(new UsersAction.UpdateHintsFailure({error, originalHints: {...user.hints}})))
         );
       })
@@ -496,6 +474,23 @@ export class UsersEffects {
         } else {
           return EMPTY;
         }
+      })
+    )
+  );
+
+  public setOnboarding$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.SetOnboarding>(UsersActionType.SET_ONBOARDING),
+      withLatestFrom(this.store$.select(selectCurrentUser)),
+      mergeMap(([action, user]) => {
+        const model = {...user.onboarding, [action.payload.key]: action.payload.value};
+        const dto = convertUserOnboardingModelToDto(model);
+
+        return this.userService.updateOnboarding(dto).pipe(
+          map(dto => convertUserOnboardingDtoToModel(dto)),
+          map(onboarding => new UsersAction.SetOnboardingSuccess({onboarding})),
+          catchError(() => EMPTY)
+        );
       })
     )
   );

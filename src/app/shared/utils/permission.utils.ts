@@ -108,6 +108,19 @@ export function getUserTeams(organization: Organization, user: User): string[] {
   return user?.teams?.map(group => group.id) || [];
 }
 
+export function organizationReadableUsersAndTeams(resource: Organization): {
+  readableUsers: number;
+  readableTeams: number;
+} {
+  const readableUsers = (resource?.permissions?.users || []).filter(permission =>
+    permission.roles?.some(role => role.type === RoleType.Read)
+  ).length;
+  const readableTeams = (resource?.permissions?.groups || []).filter(permission =>
+    permission.roles?.some(role => role.type === RoleType.Read)
+  ).length;
+  return {readableUsers, readableTeams};
+}
+
 export function userPermissionsInCollection(
   organization: Organization,
   project: Project,

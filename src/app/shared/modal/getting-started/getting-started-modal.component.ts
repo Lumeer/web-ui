@@ -22,11 +22,13 @@ import {NavigationExtras} from '@angular/router';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {Organization} from '../../../core/store/organizations/organization';
-import {GettingStartedService, GettingStartedStage} from './getting-started.service';
+import {GettingStartedService} from './getting-started.service';
 import {animateOpacityEnterLeave} from '../../animations';
 import {ModalProgress} from '../wrapper/model/modal-progress';
 import {map} from 'rxjs/operators';
 import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
+import {GettingStartedStage} from './model/getting-started-stage';
+import {GettingStartedModalType} from './model/getting-started-modal-type';
 
 @Component({
   templateUrl: './getting-started-modal.component.html',
@@ -36,6 +38,9 @@ import {PublicProjectService} from '../../../core/data-service/project/public-pr
   animations: [animateOpacityEnterLeave],
 })
 export class GettingStartedModalComponent implements OnInit, OnDestroy {
+  @Input()
+  public type: GettingStartedModalType = GettingStartedModalType.Template;
+
   @Input()
   public writableOrganizations: Organization[];
 
@@ -67,15 +72,30 @@ export class GettingStartedModalComponent implements OnInit, OnDestroy {
     this.service.setWritableOrganizations(this.writableOrganizations);
     this.service.selectedOrganization = this.selectedOrganization;
 
-    if (this.copyOrganizationId && this.copyProjectId) {
-      this.service.setCopyData(this.copyOrganizationId, this.copyProjectId);
-      this.service.setInitialStage(GettingStartedStage.CopyProject);
-    } else {
-      this.service.setInitialStage(GettingStartedStage.Template);
+    switch (this.type) {
+      case GettingStartedModalType.Template:
+        this.service.setInitialStage(GettingStartedStage.Template);
+        break;
+      case GettingStartedModalType.CopyProject:
+        this.service.setCopyData(this.copyOrganizationId, this.copyProjectId);
+        this.service.setInitialStage(GettingStartedStage.CopyProject);
+        break;
+      case GettingStartedModalType.EmailVerification:
+        this.service.setInitialStage(GettingStartedStage.EmailVerification);
+        break;
+      case GettingStartedModalType.Video:
+        this.service.setInitialStage(GettingStartedStage.Video);
+        break;
     }
 
     this.progress$ = combineLatest([this.service.stage$, this.service.stages$]).pipe(
-      map(([stage, stages]) => ({value: stage + 1, max: stages}))
+      map(([stage, stages]) => {
+        if (stages.length < 2) {
+          return null;
+        }
+        const stageIndex = stages.findIndex(s => s === stage);
+        return {value: stageIndex + 1, max: stages.length};
+      })
     );
 
     this.subscribeClose();

@@ -26,7 +26,7 @@ import {generateId} from '../../../shared/utils/resource.utils';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {DEFAULT_USER} from '../../constants';
-import {UserHintsDto} from '../../dto/user.dto';
+import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
 import {UserInvitationDto} from '../../dto/user-invitation.dto';
 
 @Injectable()
@@ -107,6 +107,10 @@ export class PublicUserService implements UserService {
   }
 
   public updateHints(hints: UserHintsDto): Observable<UserHintsDto> {
+    return of({});
+  }
+
+  public updateOnboarding(dto: UserOnboardingDto): Observable<UserOnboardingDto> {
     return of({});
   }
 }
