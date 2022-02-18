@@ -26,7 +26,7 @@ import {AttributeTypeModalComponent} from './attribute/type/attribute-type-modal
 import {AppState} from '../../core/store/app.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {first, map, mergeMap, take} from 'rxjs/operators';
-import {combineLatest} from 'rxjs';
+import {combineLatest, interval, Observable} from 'rxjs';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {Organization} from '../../core/store/organizations/organization';
@@ -76,6 +76,10 @@ export class ModalService {
 
   public isSomeModalOpened(): boolean {
     return this.bsModalService.getModalsCount() > 0;
+  }
+
+  public isSomeModalOpened$(): Observable<boolean> {
+    return interval(1000).pipe(map(() => this.isSomeModalOpened()));
   }
 
   public showChooseLinkDocument(

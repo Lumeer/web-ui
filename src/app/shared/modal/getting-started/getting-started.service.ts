@@ -61,7 +61,7 @@ export class GettingStartedService {
   public readonly secondaryButton$: Observable<DialogButton>;
   public readonly closeButton$: Observable<DialogButton>;
 
-  private _stage$ = new BehaviorSubject(null);
+  private _stage$ = new BehaviorSubject<GettingStartedStage>(null);
   public stage$ = this._stage$.pipe(distinctUntilChanged());
   public stages$: Observable<GettingStartedStage[]>;
 
@@ -173,9 +173,9 @@ export class GettingStartedService {
 
   private subscribeStages(initialStage: GettingStartedStage) {
     this.stages$ = combineLatest([
-      this.selectCurrentUser$(),
-      this.selectedOrganization$,
-      this.selectContributeOrganizations$(),
+      this.selectCurrentUser$().pipe(take(1)),
+      this.selectedOrganization$.pipe(take(1)),
+      this.selectContributeOrganizations$().pipe(take(1)),
     ]).pipe(
       map(([currentUser, selectedOrganization, contributeOrganizations]) => {
         const stages = [];

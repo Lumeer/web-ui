@@ -57,7 +57,9 @@ export class GettingStartedVideoComponent implements OnInit {
     switch (this.locale) {
       // case LanguageCode.CZ:
       default:
-        return this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/G1hx35S13Oo');
+        return this.sanitizer.bypassSecurityTrustResourceUrl(
+          'https://player.vimeo.com/video/676885140?h=f8ab98eb2c&color=00b388&byline=0&portrait=0'
+        );
     }
   }
 }
