@@ -115,7 +115,7 @@ export function clickedInsideElement(event: Event, tagName: string): boolean {
   const paths = (<any>event).path as HTMLElement[];
   if (paths) {
     for (const element of paths) {
-      if (element?.tagName?.toUpperCase() === tagName.toUpperCase()) {
+      if (element?.tagName?.toUpperCase() === (tagName || '').toUpperCase()) {
         return true;
       }
     }

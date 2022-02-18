@@ -47,7 +47,6 @@ import {getTableElementFromInnerElement} from '../../../../../core/store/tables/
 @Component({
   selector: 'table-rows',
   templateUrl: './table-rows.component.html',
-  styleUrls: ['./table-rows.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowsComponent implements OnChanges {
