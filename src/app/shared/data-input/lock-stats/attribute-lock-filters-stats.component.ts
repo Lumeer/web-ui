@@ -57,6 +57,10 @@ export class AttributeLockFiltersStatsComponent implements OnChanges {
 
   public attributesMap$: Observable<Record<string, Attribute>>;
 
+  public trackByIndex(index: number, object: any): string {
+    return String(index);
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attributesMap || changes.collectionId || changes.linkTypeId) {
       if (this.attributesMap) {
