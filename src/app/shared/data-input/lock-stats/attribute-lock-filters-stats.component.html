@@ -7,7 +7,7 @@
   <div class="content-grid mt-2" *ngIf="{attributesMap: attributesMap$ | async} as data">
     <ng-container *ngFor="let group of stats.groups; trackBy: trackByIndex; let last = last">
 
-      <div class="larger-column text-start fst-italic" *ngIf="!group.filtersStats?.length" i18n="@@resource.attribute.lock.stats.group.user">You are the User</div>
+      <div class="larger-column text-start fst-italic" *ngIf="!group.filtersStats?.length" i18n="@@resource.attribute.lock.stats.group.user">You are a specific user</div>
       <ng-container *ngFor="let stat of group.filtersStats">
         <ng-container *ngIf="data.attributesMap && data.attributesMap[stat.filter.attributeId] as attribute">
           <div class="text-start pe-2 text-truncate">{{attribute.name}}</div>
