@@ -75,3 +75,10 @@ export const enterRightAnimation = trigger('enterRightAnimation', [
     animate('300ms ease-in-out', style({transform: 'translateX(-100%)', opacity: 0.6})),
   ]),
 ]);
+
+export const smoothSizeAnimation = trigger('grow', [
+  transition('void <=> *', []),
+  transition('* <=> *', [style({height: '{{startHeight}}px', width: '{{startWidth}}px'}), animate('1.5s ease')], {
+    params: {startHeight: 0, startWidth: 0},
+  }),
+]);

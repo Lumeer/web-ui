@@ -20,10 +20,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {GetHelpComponent} from './get-help.component';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   declarations: [GetHelpComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, DirectivesModule],
   exports: [GetHelpComponent],
 })
 export class GetHelpModule {}

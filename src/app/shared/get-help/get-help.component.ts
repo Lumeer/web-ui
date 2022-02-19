@@ -20,15 +20,20 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {LanguageCode} from '../../core/model/language';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {smoothSizeAnimation} from '../animations';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'get-help',
   templateUrl: './get-help.component.html',
   styleUrls: ['./get-help.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [smoothSizeAnimation],
 })
 export class GetHelpComponent implements OnInit {
   public link: string;
+
+  public extendedContent$ = new BehaviorSubject(false);
 
   constructor(private configurationService: ConfigurationService) {}
 
@@ -38,5 +43,13 @@ export class GetHelpComponent implements OnInit {
     } else {
       this.link = 'https://www.lumeer.io/get-help';
     }
+  }
+
+  public toggleContent() {
+    this.extendedContent$.next(true);
+  }
+
+  public hideContent() {
+    this.extendedContent$.next(false);
   }
 }
