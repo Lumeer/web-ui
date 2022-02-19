@@ -494,13 +494,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="constraint.percentage.display.progress.color" datatype="html">
         <source>Choose progress color</source><target>Zvolte barvu ukazatele</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="constraint.config.percentage.display.text" datatype="html">
         <source>Text</source><target>Text</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.ts</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="constraint.config.percentage.display.progress" datatype="html">
         <source>Progress Bar</source><target>Ukazatel průběhu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="constraint.select.options.description" datatype="html">
         <source> Keeps a predefined set of valid values from which one can be selected. At least one value must be configured. </source><target>
     Nabízí na výběr jednu z alespoň dvou nastavených hodnot.
@@ -513,14 +513,14 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="constraint.select.lists.label" datatype="html">
         <source> Selection list </source><target> Seznam s výběrem </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="constraint.select.lists.create" datatype="html">
         <source> Create or edit custom lists in <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>Project settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
         <target> Vytvořte nebo upravte vlastní seznamy v <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>nastavení projektu<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="constraint.select.lists.custom" datatype="html">
         <source>Custom</source><target>Vlastní</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit><trans-unit id="constraint.select.displayValues.label" datatype="html">
         <source>Distinguish display values</source><target>
         Rozlišit mezi výpočetní a zobrazenou hodnotou
@@ -574,7 +574,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/user/user-constraint-config-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="constraint.usersAndTeams.multi.label" datatype="html">
         <source>Allow to select multiple users or teams</source><target>Povolit výběr více uživatelů nebo týmů</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/user/user-constraint-config-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="constraint.user.externalUsers.label" datatype="html">
         <source>Allow unregistered users (any valid email)</source><target>
         Povolit neregistrované uživatele (jakýkoliv platný email)
@@ -582,22 +582,22 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/user/user-constraint-config-form.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="constraint.usersAndTeams.onlyIcon.label" datatype="html">
         <source>Display user name instead of email</source><target>Zobrazit jméno uživatele místo emailu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/user/user-constraint-config-form.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="constraint.usersAndTeams.type.label" datatype="html">
         <source>Allowed values</source><target>Povolené hodnoty</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/user/user-constraint-config-form.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="constraint.usersAndTeams.type" datatype="html">
         <source>{type, select, users {Only Users} teams {Only Teams} usersAndTeams {Users and Teams}}</source><target>{type, select, users {Jen uživatelé} teams {Jen týmy} usersAndTeams {Uživatelé a týmy}}</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/user/user-constraint-config-form.component.ts</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="constraint.view.description" datatype="html">
         <source> Allows you to choose views and navigate to them with ease. </source><target> Umožní vybrat pohled a snadno se na něj přepnout. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/view/view-constraint-config-form.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="constraint.view.multi.label" datatype="html">
         <source>Allow select multiple views</source><target>Povolit vybrat více pohledů</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/view/view-constraint-config-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="constraint.view.newWindow.label" datatype="html">
         <source>Open view in new window</source><target>Otevřít pohled v novém okně</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/view/view-constraint-config-form.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="constraint.link.openInApp.label" datatype="html">
         <source>Open content inside dialog</source><target>Otevřít obsah zde v aplikaci</target>
 
@@ -810,7 +810,7 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="view.share.disabled.tooltip" datatype="html">
         <source>To share a view, first set its name and save it using the controls to the left.</source>
         <target>K nasdílení pohledu jej nejprve pojmenujte a uložte pomocí políčka a tlačítka vlevo.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit>
 
 
@@ -884,8 +884,8 @@
 
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
-            
-            
+
+
             <trans-unit id="table.header.menu.edit" datatype="html">
                 <source>Edit name</source>
                 <target>Upravit název</target>
@@ -997,9 +997,9 @@
         </context-group>
       </trans-unit><trans-unit id="resource.variables.header.name" datatype="html">
         <source>Name</source><target>Název</target>
-        
-        
-        
+
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="resource.variables.header.value" datatype="html">
         <source>Value</source><target>Hodnota</target>
         <context-group purpose="location">
@@ -1022,12 +1022,12 @@
         </context-group>
       </trans-unit><trans-unit id="resource.variables.add.button" datatype="html">
         <source>Create variable</source><target>Vytvořit proměnnou</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="resource.variables.validation.duplicate" datatype="html">
         <source> This variable name already exists.
 </source><target> Proměnná s tímto názvem již existuje.
 </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="projects.tab.variables.existing.title" datatype="html">
         <source>Existing variables</source><target>Existující proměnné</target>
         <context-group purpose="location">
@@ -1036,10 +1036,10 @@
         </context-group>
       </trans-unit><trans-unit id="resource.variables.header.search.placeholder" datatype="html">
         <source>Search variable...</source><target>Vyhledat proměnnou...</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="resource.variables.header.search.title" datatype="html">
         <source>Search for variables</source><target>Vyhledat proměnné</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="resource.variables.header.value.remove.tooltip" datatype="html">
         <source>Remove this variable</source><target>Odstranit tuto proměnnou</target>
         <context-group purpose="location">
@@ -1177,7 +1177,7 @@
         </context-group>
       </trans-unit><trans-unit id="roles.add" datatype="html">
         <source>Add Rights</source><target>Přidat práva</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/roles.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit>
             <trans-unit id="query.item.button.remove" datatype="html">
                 <source>Delete query item</source>
@@ -1203,11 +1203,11 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="constraint.files.modify.constraint.title" datatype="html">
         <source>Delete all files?</source><target>Smazat všechny soubory?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="constraint.files.modify.constraint.message" datatype="html">
         <source>Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</source>
         <target>Změna typu atributu ze 'Souboru' trvale odstraní všechny přílohy v tomto sloupci. Chcete pokračovat?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">259</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>All day event</source><target>
       Celodenní
@@ -1383,7 +1383,7 @@
         </context-group>
       </trans-unit><trans-unit id="show" datatype="html">
         <source>Show</source><target>Zobrazit</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="verifyEmail.title" datatype="html">
         <source>Please Verify Your Email</source><target>Prosím ověřte Váš email</target>
 
@@ -1694,10 +1694,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="groups.group.delete.message" datatype="html">
         <source>Do you want to permanently remove this team?</source>
         <target>Chcete trvale odstranit tento tým?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="groups.group.delete.title" datatype="html">
         <source>Remove team?</source><target>Odstranit tým?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit>
 
 
@@ -2201,13 +2201,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint-config-form.component.ts</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="constraint.action.confirmation.placeholder" datatype="html">
         <source>Are you sure to perform <x id="PH" equiv-text="buttonTitle"/>?</source><target>Chcete skutečně provést <x id="PH" equiv-text="buttonTitle"/>?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint.utils.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="equation.operator" datatype="html">
         <source>{operator, select, and {And} or {Or}}</source><target>{operator, select, and {a zároveň} or {nebo} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/common/conditions/condition/constraint-condition-form.component.ts</context><context context-type="linenumber">103</context></context-group></trans-unit><trans-unit id="constraint.action.confirmation.required" datatype="html">
         <source>Require confirmation</source><target>Vyžadovat potvrzení</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/confirmation/action-constraint-confirmation-form.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.default.title" datatype="html">
         <source>New event</source><target>Nová událost</target>
 
@@ -2331,7 +2331,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="modal.links.modify.empty.title" datatype="html">
         <source> I am sorry but there is nothing to link. </source>
         <target> Je mi líto, ale není zde nic k propojení. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit>
             <trans-unit id="collection.settings.users.count" datatype="html">
                 <source>Number of users</source>
@@ -3318,10 +3318,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.attribute.sticky.row" datatype="html">
         <source>Fixed column</source><target>Přichytit sloupec</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.attribute.sticky.column" datatype="html">
         <source>Fixed row</source><target>Přichytit řádek</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.sort.order" datatype="html">
         <source>Select values order</source><target>Zvolte pořadí hodnot</target>
 
@@ -3834,7 +3834,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">137</context></context-group></trans-unit><trans-unit id="warning.attribute.nameEmpty" datatype="html">
         <source>I am sorry, the attribute name must not be empty.</source>
         <target>Je mi líto, ale název atributu nesmí být prázdný.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">138</context></context-group></trans-unit><trans-unit id="warning.link.nameExisting" datatype="html">
         <source>I am sorry, the link '<x id="name" equiv-text="action.payload.name"/>' already exists.</source>
         <target>Je mi líto, ale název '<x id="name" equiv-text="action.payload.name"/>' již existuje.</target>
@@ -3842,7 +3842,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">152</context></context-group></trans-unit><trans-unit id="warning.link.nameEmpty" datatype="html">
         <source>I am sorry, the link name must not be empty.</source>
         <target>Je mi líto, ale název propojení nesmí být prázdný.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">153</context></context-group></trans-unit>
             <trans-unit id="organization.contact.get.fail" datatype="html">
                 <source>Could not read contact information</source>
@@ -3913,22 +3913,22 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">178</context></context-group></trans-unit><trans-unit id="resource.variables.get.fail" datatype="html">
         <source>Could not read variables</source><target>Nemohl jsem načíst proměnné</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="resource.variables.create.fail" datatype="html">
         <source>Could not create variable</source><target>Nemohl jsem vytvořit proměnnou</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="resource.variables.update.fail" datatype="html">
         <source>Could not update variable</source><target>Nemohl jsem upravit proměnnou</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="resource.variables.delete.confirm.title" datatype="html">
         <source>Delete variable</source><target>Smazat proměnnou</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">135</context></context-group></trans-unit><trans-unit id="document.variables.delete.confirm.message" datatype="html">
         <source>Do you really want to delete this variable?</source><target>Chcete skutečně smazat tuto proměnnou?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">136</context></context-group></trans-unit><trans-unit id="resource.variables.delete.fail" datatype="html">
         <source>Could not delete variable</source><target>Nemohl jsem smazat proměnnou</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">169</context></context-group></trans-unit><trans-unit id="selection.lists.get.fail" datatype="html">
         <source>Could not read selection lists</source><target>Nemohl jsem načíst seznamy hodnot</target>
         <context-group purpose="location">
@@ -3988,7 +3988,7 @@
                 <target>Zadejte e-mail kolegů, které chcete pozvat</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/new-user/new-user.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit>
-            
+
 
 
 
@@ -4168,7 +4168,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/teams/user-teams.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="users.actions.delete" datatype="html">
         <source>Delete User</source><target>Odstranit uživatele</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
 
 
@@ -4183,10 +4183,10 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.teams" datatype="html">
         <source>Teams</source><target>Týmy</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.member" datatype="html">
         <source>the user is member of</source><target>jichž je uživatel členem</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.rights" datatype="html">
         <source>Rights</source><target>Práva</target>
 
@@ -4719,7 +4719,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="teams.team.name.existing" datatype="html">
         <source>I am sorry, the team '<x id="name" equiv-text="name"/>' already exists.</source>
         <target>Je mi líto, ale tým '<x id="name" equiv-text="name"/>' již existuje.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="team.users.add.users" datatype="html">
         <source>Add Users</source><target>Přidat uživatele</target>
         <context-group purpose="location">
@@ -4875,7 +4875,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">437</context></context-group></trans-unit><trans-unit id="map.popup.title.create" datatype="html">
         <source>Create Record</source><target>Vytvořit záznam</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.utils.ts</context><context context-type="linenumber">120</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/image-content/render/svg-image-map.ts</context><context context-type="linenumber">230</context></context-group></trans-unit><trans-unit id="map.control.compass" datatype="html">
         <source>Reset bearing to north</source><target>Otočit zpět na sever</target>
 
@@ -5074,7 +5074,7 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.buttons.update.label" datatype="html">
         <source>Update Button</source><target>Tlačítko pro úpravu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.editor.createOnly.label" datatype="html">
         <source>Only allow creation of new records</source><target>Povolit pouze vytváření nových záznamů</target>
         <context-group purpose="location">
@@ -5090,7 +5090,7 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.section.action.add" datatype="html">
         <source>Add a Section</source><target>Přidat sekci</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.mandatory" datatype="html">
         <source>This input is mandatory</source><target>Tato položka je povinná</target>
         <context-group purpose="location">
@@ -5141,30 +5141,30 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.row.cell.select.empty" datatype="html">
         <source>Select input field</source><target>Vyberte vstupní pole</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.description" datatype="html">
         <source>Add a description for this input field or leave blank for no description</source>
         <target>Zadejte popis tohoto vstupního pole, nebo nechte prázdné</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.attribute.empty" datatype="html">
         <source>No Attributes found</source><target>Nenalezeny žádné atributy</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context><context context-type="linenumber">138</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.attribute" datatype="html">
         <source>Attribute</source><target>Atribut</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context><context context-type="linenumber">144</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.link.empty" datatype="html">
         <source>No Link Types found</source><target>Nenalezena žádná propojení</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context><context context-type="linenumber">163</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.link" datatype="html">
         <source>Link Type</source><target>Propojení</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context><context context-type="linenumber">169</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.action.layout" datatype="html">
         <source>Change the row layout</source><target>Změnit rozložení řádku</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/form-editor-row.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.action.delete" datatype="html">
         <source>Remove this row</source><target>Odstranit tento řádek</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/form-editor-row.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="perspective.form.editor.section.title" datatype="html">
         <source>Add a section title or leave blank for no title</source>
         <target>Zadejte název sekce, nebo nechte prázdné pro žádný název</target>
@@ -5181,10 +5181,10 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.row.action.add" datatype="html">
         <source>Add a Form Row</source><target>Přidat řádek formuláře</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="perspective.form.editor.section.action.delete" datatype="html">
         <source>Remove This Section</source><target>Odstranit tuto sekci</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="perspective.form.view.mode.designer.label" datatype="html">
         <source>Designer Mode</source><target>Režim návrhu</target>
         <context-group purpose="location">
@@ -5194,30 +5194,30 @@
       </trans-unit><trans-unit id="perspective.form.view.mode.designer.tooltip" datatype="html">
         <source>Active designer mode allows you to change the form fields and layout</source>
         <target>Aktivní návrhový režim umožňuje měnit položky a rozložení formuláře</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="perspective.form.view.mode.empty" datatype="html">
         <source>I am sorry, but you could not create/update records or build the form.</source>
         <target>Je mi líto, ale nemůžete vytvořit/upravit záznamy nebo upravovat formulář.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="perspective.form.view.documents.new" datatype="html">
         <source>Add a new row</source><target>Přidat nový řádek</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.view.documents.new.adding" datatype="html">
         <source>Adding a new row</source><target>Přidávám nový řádek</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.title" datatype="html">
         <source>Unconfirmed changes</source><target>Nepotvrzené změny</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">448</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
         <source>There are some changes in form that was not saved. Are you sure to select another record?</source>
         <target>Ve formuláři jsou neuložené změny. Chcete skutečně vybrat jiný záznam?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">449</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
         <source>Yes, Select Record</source><target>Ano, vybrat záznam</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">450</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
         <source>No, Keep Editing</source><target>Ne, pokračovat v úpravách</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">451</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.delete" datatype="html">
         <source>Delete This Record</source><target>Smazat tento záznam</target>
         <context-group purpose="location">
@@ -5359,10 +5359,10 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.buttons.create.title.default" datatype="html">
         <source>Create Record</source><target>Vytvořit záznam</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="perspective.form.editor.buttons.update.title.default" datatype="html">
         <source>Update Record</source><target>Upravit záznam</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION"/> cards} other {<x id="INTERPOLATION"/> cards}}</source><target>{VAR_PLURAL, plural, =0 {žádné karty} =1 {1 karta} =2 {2 karty} =3 {3 karty} =4 {4 karty} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> karet} }</target>
 
@@ -5672,8 +5672,8 @@
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.recursive.tooltip" datatype="html">
         <source>Trigger also on changes made by other automations</source><target>Spouštět také při změnách vyvolaných jinými automatizacemi</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="collection.config.tab.automations.empty" datatype="html">
         <source> There are no automations yet. Create some by clicking on the button below! </source><target>
     Nemáte ještě žádné automatizace. Vytvořte ji pomocí tlačítka níže!
@@ -5775,7 +5775,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">554</context></context-group></trans-unit><trans-unit id="view.dashboard.set.fail" datatype="html">
         <source>Could not save dashboard settings</source><target>Nepodařilo se uložit nastavení dashboardu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">660</context></context-group></trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock2" datatype="html">
         <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="limit"/> documents can be created within a single sequence of automations and functions.</source>
         <target>Vytvoří nový záznam. Přiřaďte jej do proměnné, abyste mohli nastavit jeho atributy. Je možné vytvořit maximálně <x id="limit" equiv-text="{{limit}}"/> záznamů v rámci jednoho řetězce volání automatizací a funkcí, aby se předešlo neúmyslnému zacyklení.</target>
@@ -5866,10 +5866,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/link-documents-no-return-blockly-component.ts</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="blockly.tooltip.loopBreakBlock" datatype="html">
         <source>Breaks the for cycle, and a switch case.</source><target>Přeruší cyklus nebo switch.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-break-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.loopContinueBlock" datatype="html">
         <source>Continues the for cycle.</source><target>Pokračuje dalším krokem for cyklu.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-continue-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
         <source>Gets current date as object for further function calls.</source>
         <target>Vrátí aktuální datum a čas k použití v dalších funkcích.</target>
@@ -6227,7 +6227,7 @@
         </context-group>
       </trans-unit><trans-unit id="or" datatype="html">
         <source>Or</source><target>Nebo</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/lock-stats/attribute-lock-filters-stats.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.action.add" datatype="html">
         <source>Add Exception Set
 </source><target>Přidat množinu vyjímek
@@ -6248,25 +6248,28 @@
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.attribute.lock.group.divider.editable" datatype="html">
-        <source>can not edit when</source><target>nemůže/nemohou upravovat pokud</target>
+      </trans-unit><trans-unit id="resource.attribute.lock.group.divider.locked.short" datatype="html">
+        <source>can edit</source><target>může/mohou upravovat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
+      </trans-unit><trans-unit id="resource.attribute.lock.group.divider.editable" datatype="html">
+        <source>can not edit when</source><target>nemůže/nemohou upravovat pokud</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.divider.editable.short" datatype="html">
+        <source>can not edit</source><target>nemůže/nemohou upravovat</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
       </trans-unit><trans-unit id="resource.attribute.lock.group.exception.add" datatype="html">
         <source>Add exception</source><target>Přidat vyjímku</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.attribute.lock.group.action.delete" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.action.delete" datatype="html">
         <source>Delete whole set</source><target>Smazat celou množinu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.attribute.lock.group.type.everyone" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.type.everyone" datatype="html">
         <source>Everyone</source><target>Kdokoliv</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.ts</context>

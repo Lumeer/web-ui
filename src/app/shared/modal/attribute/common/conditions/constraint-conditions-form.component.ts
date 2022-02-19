@@ -58,9 +58,6 @@ export class ConstraintConditionsFormComponent implements OnChanges {
   public resource: AttributesResource;
 
   @Input()
-  public attribute: Attribute;
-
-  @Input()
   public label: string;
 
   @Input()
@@ -74,9 +71,7 @@ export class ConstraintConditionsFormComponent implements OnChanges {
       this.createForm();
     }
     if (changes.resource || changes.attribute) {
-      this.attributeSelectItems = resourceAttributesSelectItems(this.resource).filter(
-        item => item.id !== this.attribute?.id
-      );
+      this.attributeSelectItems = resourceAttributesSelectItems(this.resource);
     }
   }
 
@@ -131,13 +126,15 @@ export class ConstraintConditionsFormComponent implements OnChanges {
 export function createActionEquationFromFormArray(filtersArray: FormArray): AttributeFilterEquation {
   const filters = <{[key in ConstraintFiltersFormControl]: any}[]>filtersArray.value;
   const equations: AttributeFilterEquation[] = (filters || [])
-    .filter(fil => fil.attribute && areConditionValuesDefined(fil.condition, fil.values, fil.constraintType))
-    .map(fil => {
-      const numConditionValues = conditionTypeNumberOfInputs(fil.condition);
-      const conditionValues = fil.values?.slice(0, numConditionValues) || [];
+    .filter(
+      filter => filter.attribute && areConditionValuesDefined(filter.condition, filter.values, filter.constraintType)
+    )
+    .map(filter => {
+      const numConditionValues = conditionTypeNumberOfInputs(filter.condition);
+      const conditionValues = filter.values?.slice(0, numConditionValues) || [];
       return {
-        filter: {attributeId: fil.attribute, condition: fil.condition, conditionValues},
-        operator: fil.operator,
+        filter: {attributeId: filter.attribute, condition: filter.condition, conditionValues},
+        operator: filter.operator,
       };
     });
   const operator = equations.length === 1 ? EquationOperator.And : equations[0]?.operator;

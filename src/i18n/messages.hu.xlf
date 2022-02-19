@@ -2351,25 +2351,28 @@
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.attribute.lock.group.divider.editable" datatype="html">
-        <source>can not edit when</source><target state="new">can not edit when</target>
+      </trans-unit><trans-unit id="resource.attribute.lock.group.divider.locked.short" datatype="html">
+        <source>can edit</source><target state="new">can edit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
+      </trans-unit><trans-unit id="resource.attribute.lock.group.divider.editable" datatype="html">
+        <source>can not edit when</source><target state="new">can not edit when</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.divider.editable.short" datatype="html">
+        <source>can not edit</source><target state="new">can not edit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
       </trans-unit><trans-unit id="resource.attribute.lock.group.exception.add" datatype="html">
         <source>Add exception</source><target state="new">Add exception</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.attribute.lock.group.action.delete" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.action.delete" datatype="html">
         <source>Delete whole set</source><target state="new">Delete whole group</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.attribute.lock.group.type.everyone" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.type.everyone" datatype="html">
         <source>Everyone</source><target state="new">Everyone</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.ts</context>
