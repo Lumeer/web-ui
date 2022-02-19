@@ -75,14 +75,11 @@ export class AttributeLockContentComponent implements OnInit {
       const group = this.groupsControl.at(index) as FormGroup;
       const filtersArray = group.controls.filters as FormArray;
 
-      const equation = createActionEquationFromFormArray(filtersArray);
-      if (equation.equations.length > 0) {
-        groups.push({
-          type: group.value.type,
-          typeValue: group.value.typeValue,
-          equation,
-        });
-      }
+      groups.push({
+        type: group.value.type,
+        typeValue: group.value.typeValue,
+        equation: createActionEquationFromFormArray(filtersArray),
+      });
       return groups;
     }, []);
     const locked = this.lockedControl.value;

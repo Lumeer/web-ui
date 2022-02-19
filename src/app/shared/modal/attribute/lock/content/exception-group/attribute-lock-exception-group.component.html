@@ -18,12 +18,13 @@
 </user-data-input>
 
 <div class="font-italic mb-2-5" [ngClass]="typeControl.value === type.UsersAndTeams ? 'mt-2' : 'mt-1'">
-  <span *ngIf="locked" i18n="@@resource.attribute.lock.group.divider.locked">can edit when</span>
-  <span *ngIf="!locked" i18n="@@resource.attribute.lock.group.divider.editable">can not edit when</span>
+  <span *ngIf="locked && filtersControl.length" i18n="@@resource.attribute.lock.group.divider.locked">can edit when</span>
+  <span *ngIf="locked && !filtersControl.length" i18n="@@resource.attribute.lock.group.divider.locked.short">can edit</span>
+  <span *ngIf="!locked && filtersControl.length" i18n="@@resource.attribute.lock.group.divider.editable">can not edit when</span>
+  <span *ngIf="!locked && !filtersControl.length" i18n="@@resource.attribute.lock.group.divider.editable.short">can not edit</span>
 </div>
 
 <constraint-conditions-form class="d-block mt-1"
-                            [attribute]="attribute"
                             [resource]="resource"
                             [filtersArray]="filtersControl"
                             buttonLabel="Add exception"

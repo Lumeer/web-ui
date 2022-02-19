@@ -38,13 +38,14 @@ import {Constraint, ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings, View} from '../../../core/store/views/view';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
-import {shadeColor} from '../../utils/html-modifier';
+import {clickedInsideElement, shadeColor} from '../../utils/html-modifier';
 import {filterVisibleAttributesBySettings} from '../../utils/attribute.utils';
 import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, map, tap} from 'rxjs/operators';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import {KeyCode} from '../../key-code';
 
 const ROW_HEIGHT = 32;
 const COLUMN_WIDTH = 120;
@@ -103,6 +104,7 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   };
   public readonly rowHeight = ROW_HEIGHT;
 
+  public hasFocus = true;
   public columns: PreviewResultsColumn[];
   public hasData: boolean;
   public scrolledIndex$: Observable<number>;
@@ -265,6 +267,31 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   private checkNumVisibleRows() {
     if (this.viewPort) {
       this.numVisibleRows$.next(this.viewPort.getViewportSize() / ROW_HEIGHT - 1);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  public onClick(event: MouseEvent) {
+    this.hasFocus = clickedInsideElement(event, this.element.nativeElement.tagName);
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeydown(event: KeyboardEvent) {
+    if (!this.hasFocus) {
+      return;
+    }
+    if (event.code === KeyCode.ArrowUp) {
+      const index = (this.dataResources || []).findIndex(dataResource => dataResource.id === this.selectedId);
+      this.activeByIndex(index - 1);
+    } else if (event.code === KeyCode.ArrowDown) {
+      const index = (this.dataResources || []).findIndex(dataResource => dataResource.id === this.selectedId);
+      this.activeByIndex(index + 1);
+    }
+  }
+
+  private activeByIndex(index: number) {
+    if (index >= 0 && index < (this.dataResources || []).length) {
+      this.activate(this.dataResources[index]);
     }
   }
 }

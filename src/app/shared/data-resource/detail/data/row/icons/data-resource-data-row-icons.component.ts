@@ -27,6 +27,7 @@ import {DataCursor} from '../../../../../data-input/data-cursor';
   selector: 'data-resource-data-row-icons',
   templateUrl: './data-resource-data-row-icons.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'lock-icon'},
 })
 export class DataResourceDataRowIconsComponent implements OnChanges {
   @Input()

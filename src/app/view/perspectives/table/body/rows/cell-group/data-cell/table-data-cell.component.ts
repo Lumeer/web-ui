@@ -56,7 +56,7 @@ import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-
 import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
-import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';
+import {findTableRow, getTableColumnWidth, isTableRowStriped} from '../../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
 import {
   selectAffected,
@@ -187,6 +187,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     action: {center: true},
   };
 
+  public striped: boolean;
   private hintWasUsed = false;
   private attribute: Attribute;
   private selectedSubscriptions = new Subscription();
@@ -260,6 +261,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
     if (changes.cursor && this.cursor) {
       this.row$ = this.store$.pipe(select(selectTableRow(this.cursor)));
+      this.striped = isTableRowStriped([], this.cursor.rowPath);
     }
     if (this.cursor.partIndex > 1 && (objectChanged(changes.document) || objectChanged(changes.linkInstance))) {
       this.affectedSubscription.unsubscribe();

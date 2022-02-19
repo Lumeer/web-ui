@@ -210,11 +210,24 @@ export function areConditionValuesDefined(
   return (
     condition &&
     createRange(0, conditionTypeNumberOfInputs(condition)).every(
-      index =>
-        conditionValues[index] &&
-        (conditionValues[index].type || conditionValues[index].value || constraintType === ConstraintType.Boolean)
+      index => conditionValues[index] && isConditionValueDefined(conditionValues[index], condition, constraintType)
     )
   );
+}
+
+function isConditionValueDefined(value: ConditionValue, condition: ConditionType, type: ConstraintType): boolean {
+  if (type === ConstraintType.Boolean) {
+    return true;
+  }
+  switch (condition) {
+    case ConditionType.Equals:
+    case ConditionType.NotEquals:
+    case ConditionType.IsEmpty:
+    case ConditionType.NotEmpty:
+      return true;
+    default:
+      return value.type || value.value;
+  }
 }
 
 export function queryIsNotEmpty(query: Query): boolean {

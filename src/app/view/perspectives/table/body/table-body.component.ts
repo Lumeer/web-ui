@@ -39,7 +39,6 @@ import {View} from '../../../../core/store/views/view';
 @Component({
   selector: 'table-body',
   templateUrl: './table-body.component.html',
-  styleUrls: ['./table-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableBodyComponent implements OnChanges {
