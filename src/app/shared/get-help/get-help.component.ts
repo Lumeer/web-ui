@@ -20,7 +20,7 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {LanguageCode} from '../../core/model/language';
 import {ConfigurationService} from '../../configuration/configuration.service';
-import {smoothSizeAnimation} from '../animations';
+import {leaveAnimation, smoothSizeAnimation} from '../animations';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
@@ -28,7 +28,7 @@ import {BehaviorSubject} from 'rxjs';
   templateUrl: './get-help.component.html',
   styleUrls: ['./get-help.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [smoothSizeAnimation],
+  animations: [smoothSizeAnimation, leaveAnimation],
 })
 export class GetHelpComponent implements OnInit {
   public link: string;
@@ -46,10 +46,6 @@ export class GetHelpComponent implements OnInit {
   }
 
   public toggleContent() {
-    this.extendedContent$.next(true);
-  }
-
-  public hideContent() {
-    this.extendedContent$.next(false);
+    this.extendedContent$.next(!this.extendedContent$.value);
   }
 }
