@@ -19,23 +19,22 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {Angulartics2} from 'angulartics2';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import mixpanel from 'mixpanel-browser';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {keyboardEventCode, KeyCode} from '../../../../key-code';
-import {DialogType} from '../../../../modal/dialog-type';
-import {UserService} from '../../../../../core/data-service';
-import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {UserService} from '../../../core/data-service';
+import {DialogType} from '../dialog-type';
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 
 @Component({
-  selector: 'user-feedback-modal',
-  templateUrl: './user-feedback-modal.component.html',
+  templateUrl: './get-in-touch-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserFeedbackModalComponent implements OnInit {
+export class GetInTouchModalComponent implements OnInit {
   public readonly form = new FormGroup({
     message: new FormControl('', Validators.required),
   });
@@ -95,14 +94,14 @@ export class UserFeedbackModalComponent implements OnInit {
   }
 
   private notifyOnSuccess() {
-    const message = $localize`:@@dialog.feedback.success:Your feedback has been sent.`;
+    const message = $localize`:@@dialog.getInTouch.success:Your message has been sent.`;
     this.notificationService.success(message);
 
     this.hideDialog();
   }
 
   private notifyOnError() {
-    const message = $localize`:@@dialog.feedback.error:Could not send feedback.`;
+    const message = $localize`:@@dialog.getInTouch.error:Could not send your message.`;
     this.notificationService.error(message);
 
     this.performingAction$.next(false);

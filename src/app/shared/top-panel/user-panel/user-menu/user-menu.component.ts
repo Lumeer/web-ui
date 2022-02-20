@@ -32,7 +32,6 @@ import {map} from 'rxjs/operators';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {UsersAction} from '../../../../core/store/users/users.action';
-import {UserFeedbackModalComponent} from './user-feedback-modal/user-feedback-modal.component';
 import {ModalService} from '../../../modal/modal.service';
 import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview/referrals-overview-modal.component';
 import {UserSettingsModalComponent} from '../../../modal/user-settings/user-settings-modal.component';
@@ -124,10 +123,8 @@ export class UserMenuComponent implements OnInit {
     }
   }
 
-  public onFeedbackClick() {
-    const config = {initialState: {}, keyboard: false};
-    config['backdrop'] = 'static';
-    this.modalService.show(UserFeedbackModalComponent, config);
+  public onGetInTouchClick() {
+    this.modalService.showGetInTouchDialog();
   }
 
   public onAffiliateClick() {

@@ -61,6 +61,7 @@ import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.co
 import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
 import {AttributeLock} from '@lumeer/data-filters';
 import {GettingStartedModalType} from './getting-started/model/getting-started-modal-type';
+import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -359,5 +360,9 @@ export class ModalService {
       type: GettingStartedModalType.Video,
     };
     return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-lg');
+  }
+
+  public showGetInTouchDialog(): BsModalRef {
+    return this.showStaticDialog({}, GetInTouchModalComponent, '');
   }
 }

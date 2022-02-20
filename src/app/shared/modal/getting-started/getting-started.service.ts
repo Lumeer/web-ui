@@ -46,6 +46,7 @@ import {User, UserOnboarding} from '../../../core/store/users/user';
 import {GettingStartedStage} from './model/getting-started-stage';
 import {uniqueValues} from '../../utils/array.utils';
 import {organizationReadableUsersAndTeams} from '../../utils/permission.utils';
+import {ModalService} from '../modal.service';
 
 const EMPTY_TEMPLATE_CODE = 'EMPTY';
 
@@ -94,7 +95,8 @@ export class GettingStartedService {
   constructor(
     private store$: Store<AppState>,
     private createProjectService: CreateProjectService,
-    private publicProjectService: PublicProjectService
+    private publicProjectService: PublicProjectService,
+    private modalService: ModalService
   ) {
     this.button$ = this._stage$.pipe(switchMap(stage => this.getButton(stage)));
     this.secondaryButton$ = this._stage$.pipe(switchMap(stage => this.getSecondaryButton(stage)));
@@ -252,7 +254,7 @@ export class GettingStartedService {
     switch (stage) {
       case GettingStartedStage.Template:
         return of({
-          icon: 'fas fa-mouse-pointer',
+          icon: 'fas fa-file-check',
           disabled$: this.selectedTemplate$.pipe(map(template => !template?.id)),
           class: DialogType.Primary,
           title: $localize`:@@templates.button.use:Use this template`,
@@ -267,7 +269,7 @@ export class GettingStartedService {
       case GettingStartedStage.ChooseOrganization:
         if (this.selectedTemplate) {
           return of({
-            icon: 'fas fa-mouse-pointer',
+            icon: 'fas fa-file-check',
             disabled$: this.selectedOrganization$.pipe(map(template => !template?.id)),
             class: DialogType.Primary,
             title: $localize`:@@templates.button.use:Use this template`,
@@ -336,6 +338,12 @@ export class GettingStartedService {
           disabled$: of(false),
           class: DialogType.Primary,
           title: $localize`:@@button.reload:Reload`,
+        });
+      case GettingStartedStage.Video:
+        return of({
+          disabled$: of(false),
+          class: DialogType.Primary,
+          title: $localize`:@@menu.getInTouch:Get in Touch with Us`,
         });
       default:
         return of(null);
@@ -409,6 +417,9 @@ export class GettingStartedService {
         break;
       case GettingStartedStage.EmailVerification:
         this.reloadUser();
+        break;
+      case GettingStartedStage.Video:
+        this.showGetInTouch();
         break;
     }
   }
@@ -624,6 +635,11 @@ export class GettingStartedService {
   private shouldShowInviteUsers(organization: Organization): boolean {
     const {readableUsers, readableTeams} = organizationReadableUsersAndTeams(organization);
     return readableUsers + readableTeams < 2;
+  }
+
+  private showGetInTouch() {
+    this.close();
+    this.modalService.showGetInTouchDialog();
   }
 
   private onInvitationsSent(count: number) {

@@ -38,6 +38,7 @@ import {TextInputModalModule} from './text-input/text-input-modal.module';
 import {DataResourcesDetailModalModule} from './data-resources-detail/data-resources-detail-modal.module';
 import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.module';
 import {AttributeModalModule} from './attribute/attribute-modal.module';
+import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
 
 @NgModule({
   imports: [
@@ -61,6 +62,7 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     ViewModalModule,
     DataResourcesDetailModalModule,
     TabsSettingsModalModule,
+    GetInTouchModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -82,6 +84,7 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     DataResourcesDetailModalModule,
     TabsSettingsModalModule,
     AttributeModalModule,
+    GetInTouchModalModule,
   ],
 })
 export class ModalModule {}
