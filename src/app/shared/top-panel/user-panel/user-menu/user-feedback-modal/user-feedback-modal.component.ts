@@ -95,14 +95,14 @@ export class UserFeedbackModalComponent implements OnInit {
   }
 
   private notifyOnSuccess() {
-    const message = $localize`:@@dialog.feedback.success:Your feedback has been sent.`;
+    const message = $localize`:@@dialog.getInTouch.success:Your message has been sent.`;
     this.notificationService.success(message);
 
     this.hideDialog();
   }
 
   private notifyOnError() {
-    const message = $localize`:@@dialog.feedback.error:Could not send feedback.`;
+    const message = $localize`:@@dialog.getInTouch.error:Could not send your message.`;
     this.notificationService.error(message);
 
     this.performingAction$.next(false);

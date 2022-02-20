@@ -5,7 +5,7 @@
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()">
 
-  <span class="title" i18n="@@dialog.feedback.title">Send Feedback</span>
+  <span class="title" i18n="@@dialog.getInTouch.title">Get in Touch with Us</span>
 
   <div class="body p-3">
     <form [formGroup]="form">
@@ -17,14 +17,14 @@
           You need to fill in the message.
         </div>
         <label class="form-label" for="feedbackMessage"
-               i18n="@@dialog.feedback.message.label">
-          Describe how we can improve the application to better fit your needs:
+               i18n="@@dialog.getInTouch.message.label">
+          Let us know, how we can help you, or what we could improve:
         </label>
         <textarea class="form-control"
                   formControlName="message"
                   id="feedbackMessage"
-                  i18n-placeholder="@@dialog.feedback.message.placeholder"
-                  placeholder="I think the application can be improved in...">
+                  i18n-placeholder="@@dialog.getInTouch.message.placeholder"
+                  placeholder="I would like to schedule a call to discuss...">
         </textarea>
       </div>
     </form>

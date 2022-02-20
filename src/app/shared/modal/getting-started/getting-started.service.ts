@@ -252,7 +252,7 @@ export class GettingStartedService {
     switch (stage) {
       case GettingStartedStage.Template:
         return of({
-          icon: 'fas fa-mouse-pointer',
+          icon: 'fas fa-file-check',
           disabled$: this.selectedTemplate$.pipe(map(template => !template?.id)),
           class: DialogType.Primary,
           title: $localize`:@@templates.button.use:Use this template`,
@@ -267,7 +267,7 @@ export class GettingStartedService {
       case GettingStartedStage.ChooseOrganization:
         if (this.selectedTemplate) {
           return of({
-            icon: 'fas fa-mouse-pointer',
+            icon: 'fas fa-file-check',
             disabled$: this.selectedOrganization$.pipe(map(template => !template?.id)),
             class: DialogType.Primary,
             title: $localize`:@@templates.button.use:Use this template`,
