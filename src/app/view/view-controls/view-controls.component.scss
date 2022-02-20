@@ -1,10 +1,11 @@
 @import '../../../styles/variables';
+@import '~src/styles/bootstrap_var';
 
 .view-controls-grid {
   display: grid;
   grid-template-areas: 'perspective' 'view-name';
 
-  @media (min-width: 576px) {
+  @include media-breakpoint-up(sm) {
     grid-template-areas: 'perspective view-name';
     grid-template-columns: auto 1fr;
   }
@@ -14,7 +15,7 @@
   grid-area: perspective;
 }
 
-@media (max-width: 575.98px) {
+@include media-breakpoint-down(sm) {
   .view-arrow {
     display: none;
   }

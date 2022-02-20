@@ -37,6 +37,15 @@ export interface UserDto {
   emailVerified?: boolean;
   notifications?: NotificationsSettingsDto;
   hints?: UserHintsDto;
+  onboarding?: UserOnboardingDto;
+}
+
+export interface UserOnboardingDto {
+  template?: string;
+  invitedUsers?: number;
+  videoShowed?: boolean;
+  videoPlayed?: boolean;
+  videoPlayedSeconds?: number;
 }
 
 export type UserHintsDto = {[key: string]: any};

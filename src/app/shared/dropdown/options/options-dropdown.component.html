@@ -62,6 +62,7 @@
           <span class="text-nowrap" [innerHTML]="(option.displayValue || option.value) | highlightText:highlightedText">
         </span>
         </div>
+        <div *ngIf="option.description" class="text-muted small px-2 option-description">{{option.description}}</div>
       </a>
 
     </ng-container>

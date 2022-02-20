@@ -86,6 +86,17 @@ Cypress.Commands.add('patchCurrentUser', user => {
   });
 });
 
+Cypress.Commands.add('setOnboarding', data => {
+  cy.request({
+    method: 'PUT',
+    url: Cypress.env('engineUrl') + 'rest/users/current/onboarding',
+    body: data,
+    auth: {
+      bearer: Cypress.env('authAccessToken'),
+    },
+  });
+});
+
 Cypress.Commands.add('saveDefaultWorkspace', defaultWorkspace => {
   cy.request({
     method: 'PUT',

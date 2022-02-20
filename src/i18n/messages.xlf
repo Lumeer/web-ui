@@ -6,7 +6,7 @@
         <source>Lumeer | Visual, easy project and team management</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="agreement.welcome.message" datatype="html">
@@ -374,16 +374,8 @@
           <context context-type="linenumber">40</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/copy-project/copy-project-modal.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
           <context context-type="linenumber">22</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/create-project-modal.component.html</context>
-          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context>
@@ -396,6 +388,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context>
           <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">356</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
@@ -1380,27 +1376,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context>
           <context context-type="linenumber">98</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="template.create.error" datatype="html">
-        <source>I am sorry, something went wrong.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/redirect.component.ts</context>
-          <context context-type="linenumber">109</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="template.create.limitsExceeded" datatype="html">
-        <source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/redirect.component.ts</context>
-          <context context-type="linenumber">116</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="template.create.empty" datatype="html">
-        <source>I am sorry, you do not have any organization to create project in.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/redirect.component.ts</context>
-          <context context-type="linenumber">128</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.not.found" datatype="html">
@@ -2496,53 +2471,53 @@
         <source>Could not get organizations</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="organization.create.fail" datatype="html">
         <source>Could not create the organization</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="organization.update.fail" datatype="html">
         <source>Could not update the organization</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">223</context>
         </context-group>
       </trans-unit>
       <trans-unit id="organization.delete.fail" datatype="html">
         <source>Could not delete the organization</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">272</context>
         </context-group>
       </trans-unit>
       <trans-unit id="organization.permission.change.fail" datatype="html">
         <source>Could not change the organization permissions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">318</context>
         </context-group>
       </trans-unit>
       <trans-unit id="serviceLimits.trial" datatype="html">
         <source>Free Service</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
-          <context context-type="linenumber">341</context>
+          <context context-type="linenumber">328</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context>
-          <context context-type="linenumber">304</context>
+          <context context-type="linenumber">312</context>
         </context-group>
       </trans-unit>
       <trans-unit id="project.create.serviceLimits" datatype="html">
         <source>You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">329</context>
         </context-group>
       </trans-unit>
       <trans-unit id="organization.payments.get.fail" datatype="html">
@@ -2829,166 +2804,162 @@
         <source>Could not get users</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="currentUser.get.fail" datatype="html">
         <source>Could not get user details</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">150</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">458</context>
+          <context context-type="linenumber">153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="currentUser.resendVerificationEmail.fail" datatype="html">
         <source>Could not request another verification email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="currentUser.patch.fail" datatype="html">
         <source>Could not update user details</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.create.fail" datatype="html">
         <source>Could not add the user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.create.serviceLimits.basic" datatype="html">
         <source>You are allowed to invite only <x id="limit" equiv-text="limits.users"/> users to your organization. Do you want to upgrade your plan now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">242</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.create.serviceLimits.business.title" datatype="html">
         <source>Limits exceeded</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">243</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.create.serviceLimits" datatype="html">
         <source>You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">242</context>
+          <context context-type="linenumber">245</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.update.fail" datatype="html">
         <source>Could not update the user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">332</context>
+          <context context-type="linenumber">334</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">483</context>
+          <context context-type="linenumber">461</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.delete.fail" datatype="html">
         <source>Could not delete the user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">355</context>
+          <context context-type="linenumber">357</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.defaultWorkspace.save.fail" datatype="html">
         <source>Could not save the default workspace</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">386</context>
+          <context context-type="linenumber">388</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.teams.set.fail" datatype="html">
         <source>Could not set user teams</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">411</context>
+          <context context-type="linenumber">413</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.referrals.fail" datatype="html">
         <source>Could not get your referrals at the moment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">434</context>
+          <context context-type="linenumber">436</context>
         </context-group>
       </trans-unit>
       <trans-unit id="views.get.fail" datatype="html">
         <source>Could not get views</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.create.fail" datatype="html">
         <source>Could not create the view</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.update.fail" datatype="html">
         <source>Could not update the view</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">256</context>
+          <context context-type="linenumber">257</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.delete.fail" datatype="html">
         <source>Could not delete the view</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">360</context>
+          <context context-type="linenumber">361</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.change.permission.fail" datatype="html">
         <source>Could not change the view permissions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">458</context>
+          <context context-type="linenumber">461</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.set.folders.fail" datatype="html">
         <source>Could not update view folders</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">494</context>
+          <context context-type="linenumber">497</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.add.favorite.fail" datatype="html">
         <source>Could not add the view to favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">524</context>
+          <context context-type="linenumber">527</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.remove.favorite.fail" datatype="html">
         <source>Could not remove the view from favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">554</context>
+          <context context-type="linenumber">557</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.dashboard.set.fail" datatype="html">
         <source>Could not save dashboard settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
-          <context context-type="linenumber">660</context>
+          <context context-type="linenumber">663</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.help" datatype="html">
@@ -3103,7 +3074,7 @@
           <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
@@ -4301,12 +4272,20 @@
           <context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="inviteUser.dialog.readOnly.title2" datatype="html">
         <source>View</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
           <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inviteUser.dialog.write.title2" datatype="html">
@@ -4315,12 +4294,20 @@
           <context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="inviteUser.dialog.manage.title2" datatype="html">
         <source>Create</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
           <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tag.remove" datatype="html">
@@ -5532,47 +5519,15 @@
           <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="choose.organization.title" datatype="html">
-        <source>Choose organization</source>
+      <trans-unit id="link.new.dialog.title" datatype="html">
+        <source>Create new link</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/choose-organization/choose-organization-modal.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.back" datatype="html">
-        <source>Back</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/choose-organization/choose-organization-modal.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="choose.organization.confirm" datatype="html">
-        <source>Use organization</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/choose-organization/choose-organization-modal.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dialog.project.copy.title" datatype="html">
-        <source> Copy and Open Project </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/copy-project/copy-project-modal.component.html</context>
-          <context context-type="linenumber">7,9</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dialog.project.copy.confirm" datatype="html">
-        <source>Copy and Open</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/copy-project/copy-project-modal.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.new.dialog.invalid" datatype="html">
         <source>I am sorry, something went wrong. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/copy-project/copy-project-modal.component.html</context>
-          <context context-type="linenumber">24,25</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
           <context context-type="linenumber">30,31</context>
@@ -5582,19 +5537,16 @@
           <context context-type="linenumber">30,31</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/copy-project/copy-project.component.html</context>
+          <context context-type="linenumber">24,25</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context>
           <context context-type="linenumber">32,33</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context>
           <context context-type="linenumber">34,35</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="link.new.dialog.title" datatype="html">
-        <source>Create new link</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
-          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.new.dialog.link.label" datatype="html">
@@ -5625,66 +5577,6 @@
           <context context-type="linenumber">23,25</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="templates.button.empty" datatype="html">
-        <source>Start with empty project</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/create-project-modal.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="templates.button.use" datatype="html">
-        <source>Use this template</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/create-project-modal.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="templates.tags.title" datatype="html">
-        <source>Templates</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/templates/content/toolbar/templates-toolbar.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/templates/tags/templates-tags.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="templates.loading" datatype="html">
-        <source>Loading templates</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="templates.empty" datatype="html">
-        <source>I am sorry, but I could find any templates.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="templates.empty.subtitle" datatype="html">
-        <source>You can still <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>create an empty project<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> by clicking on the button below.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="templates.tags.search.placeholder" datatype="html">
-        <source>Search templates</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/templates/tags/templates-tags.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="templates.tags.search.empty" datatype="html">
-        <source>There are no matching templates</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-project/templates/tags/templates-tags.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="resource.new.dialog.title" datatype="html">
         <source> Create a new <x id="ICU" equiv-text="{resourceType, select, organization {Organization} project {Project}}"/> </source>
         <context-group purpose="location">
@@ -5700,7 +5592,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="resource.new.dialog.code.label" datatype="html">
-        <source> Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup&gt;"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup&gt;"/></source>
+        <source> Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup class=&quot;text-danger&quot;&gt;"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
           <context context-type="linenumber">5,6</context>
@@ -5770,13 +5662,6 @@
           <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="resource.new.dialog.required" datatype="html">
-        <source>Required</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="resource.new.dialog.name.label" datatype="html">
         <source>Name:</source>
         <context-group purpose="location">
@@ -5827,18 +5712,260 @@
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="templates.button.use" datatype="html">
+        <source>Use this template</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">258</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">273</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dialog.project.copy.confirm" datatype="html">
+        <source>Copy and Open</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">265</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">280</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="getting.started.invite.users.confirm" datatype="html">
+        <source>Invite my colleagues</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">289</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="verifyEmail.button.resendEmail" datatype="html">
+        <source>Resend verification email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">296</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="getting.started.video.button" datatype="html">
+        <source>Get started</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">303</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="templates.button.empty" datatype="html">
+        <source>Start with empty project</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">322</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="getting.started.invite.users.skip" datatype="html">
+        <source>I&apos;ll do it later</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">332</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="button.reload" datatype="html">
+        <source>Reload</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+          <context context-type="linenumber">338</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="choose.organization.title.template" datatype="html">
+        <source>Selected template</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/choose-organization/choose-organization.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="choose.organization.title" datatype="html">
+        <source>Choose organization</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/choose-organization/choose-organization.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.create.limitsExceeded" datatype="html">
+        <source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/choose-organization/choose-organization.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="teams.update.serviceLimits.button" datatype="html">
+        <source>Upgrade now!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/choose-organization/choose-organization.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.create.empty" datatype="html">
+        <source>I am sorry, you do not have any organization to create project in.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/choose-organization/choose-organization.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="verifyEmail.title" datatype="html">
+        <source>Please Verify Your Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/email-verification/email-verification.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="verifyEmail.info2" datatype="html">
+        <source>Please verify your email by clicking on the link that we have sent you. After email is verified you will be automatically redirected to the application.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/email-verification/email-verification.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="verifyEmail.thankYou" datatype="html">
+        <source>Thank you.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/email-verification/email-verification.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="getting.started.invite.users.title" datatype="html">
+        <source>We&apos;re almost there</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="getting.started.invite.users.subtitle" datatype="html">
+        <source>Invite your teammates and build your project together</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="getting.started.invite.users.email.placeholder" datatype="html">
+        <source>Type email here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="getting.started.invite.users.add" datatype="html">
+        <source>Add colleague</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="inviteUser.dialog.readOnlyNoAccess.description1" datatype="html">
+        <source>New colleagues can join the project, they won&apos;t see exiting tables and views.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="inviteUser.dialog.readOnly.description1" datatype="html">
+        <source>New colleagues will see everything in the project, they cannot change anything.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="inviteUser.dialog.write.description1" datatype="html">
+        <source>New colleagues will see everything in the project and they will be able to change and add data.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="inviteUser.dialog.manage.description1" datatype="html">
+        <source>You give your newly invited colleagues full control over the project. They can read, write and manage everything.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="templates.tags.title" datatype="html">
+        <source>Templates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/content/toolbar/templates-toolbar.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/tags/templates-tags.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="templates.loading" datatype="html">
+        <source>Loading templates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="templates.empty" datatype="html">
+        <source>I am sorry, but I could find any templates.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="templates.empty.subtitle" datatype="html">
+        <source>You can still <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>create an empty project<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> by clicking on the button below.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="templates.tags.search.placeholder" datatype="html">
+        <source>Search templates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/tags/templates-tags.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="templates.tags.search.empty" datatype="html">
+        <source>There are no matching templates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/tags/templates-tags.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="function.create.serviceLimits" datatype="html">
         <source>You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context>
-          <context context-type="linenumber">299</context>
+          <context context-type="linenumber">307</context>
         </context-group>
       </trans-unit>
       <trans-unit id="function.create.serviceLimits.noRights" datatype="html">
         <source>You can have only a single function per table/link type in the Free Plan.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context>
-          <context context-type="linenumber">305</context>
+          <context context-type="linenumber">313</context>
         </context-group>
       </trans-unit>
       <trans-unit id="modal.links.modify.title" datatype="html">
@@ -6266,62 +6393,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context>
           <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="verifyEmail.title" datatype="html">
-        <source>Please Verify Your Email</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="verifyEmail.info" datatype="html">
-        <source>Please verify your email by clicking on the link that we have sent you. Then hit Reload.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="verifyEmail.thankYou" datatype="html">
-        <source>Thank you.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="verifyEmail.button.resendEmail" datatype="html">
-        <source>Resend verification email</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="verifyEmail.button.sending" datatype="html">
-        <source>Sending...</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="verifyEmail.button.emailFailure" datatype="html">
-        <source>Could not send email</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="verifyEmail.button.emailSent" datatype="html">
-        <source>Email sent</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.reload" datatype="html">
-        <source>Reload</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context>
-          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.settings.reset.iconColor" datatype="html">
@@ -7133,13 +7204,6 @@
           <context context-type="linenumber">44,46</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="teams.update.serviceLimits.button" datatype="html">
-        <source>Upgrade now!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="teams.header.configuration.remark" datatype="html">
         <source>Teams are created at the organizational level.</source>
         <context-group purpose="location">
@@ -7514,34 +7578,6 @@
           <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="inviteUser.dialog.readOnlyNoAccess.description1" datatype="html">
-        <source> New colleagues can join the project, they won&apos;t see exiting tables and views. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">66,68</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="inviteUser.dialog.readOnly.description1" datatype="html">
-        <source> New colleagues will see everything in the project, they cannot change anything. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">69,71</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="inviteUser.dialog.write.description1" datatype="html">
-        <source> New colleagues will see everything in the project and they will be able to change and add data. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">72,74</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="inviteUser.dialog.manage.description1" datatype="html">
-        <source> You give your newly invited colleagues full control over the project. They can read, write and manage everything. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">75,77</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source>
         <context-group purpose="location">
@@ -7557,8 +7593,8 @@
           <context context-type="linenumber">97</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.next" datatype="html">
@@ -7568,8 +7604,8 @@
           <context context-type="linenumber">101</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inviteUser.dialog.button" datatype="html">
@@ -7829,8 +7865,8 @@
           <context context-type="linenumber">238</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="dialog.feedback.title" datatype="html">
-        <source>Send Feedback</source>
+      <trans-unit id="dialog.getInTouch.title" datatype="html">
+        <source>Get in Touch with Us</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context>
           <context context-type="linenumber">8</context>
@@ -7843,15 +7879,15 @@
           <context context-type="linenumber">16,18</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="dialog.feedback.message.label" datatype="html">
-        <source> Describe how we can improve the application to better fit your needs: </source>
+      <trans-unit id="dialog.getInTouch.message.label" datatype="html">
+        <source> Let us know, how we can help you, or what we could improve: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context>
           <context context-type="linenumber">20,22</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="dialog.feedback.message.placeholder" datatype="html">
-        <source>I think the application can be improved in...</source>
+      <trans-unit id="dialog.getInTouch.message.placeholder" datatype="html">
+        <source>I would like to schedule a call to discuss...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context>
           <context context-type="linenumber">27</context>
@@ -7864,15 +7900,15 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="dialog.feedback.success" datatype="html">
-        <source>Your feedback has been sent.</source>
+      <trans-unit id="dialog.getInTouch.success" datatype="html">
+        <source>Your message has been sent.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.ts</context>
           <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="dialog.feedback.error" datatype="html">
-        <source>Could not send feedback.</source>
+      <trans-unit id="dialog.getInTouch.error" datatype="html">
+        <source>Could not send your message.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.ts</context>
           <context context-type="linenumber">105</context>
@@ -7903,12 +7939,15 @@
           <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="menu.sendFeedback" datatype="html">
-        <source>Send Feedback</source>
+      <trans-unit id="menu.getInTouch" datatype="html">
+        <source>Get in Touch with Us</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
+      </trans-unit>
+      <trans-unit id="menu.getInTouch.item" datatype="html">
+        <source>Get in Touch</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
           <context context-type="linenumber">45</context>
@@ -8000,8 +8039,8 @@
       <trans-unit id="button.dismiss" datatype="html">
         <source>Dismiss</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context>
@@ -8011,148 +8050,148 @@
       <trans-unit id="button.onward" datatype="html">
         <source>Onward!</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="menu.appTour.invocationError" datatype="html">
         <source>Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">128</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.basic" datatype="html">
         <source>Access your information</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">272</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.basic" datatype="html">
         <source>Lumeer organizes your information in tables. Later, you can use this button to add your tables. Then you can open the table by simply clicking on it.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.welcome" datatype="html">
         <source>Welcome to Lumeer</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">278</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">188</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.welcome" datatype="html">
         <source>Let me guide you around briefly! By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">191</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.searchViewsNoView" datatype="html">
         <source>Create views of your data</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">302</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.searchViewsNoView" datatype="html">
         <source>Views are the central nerve of Lumeer. They are the main booster of your productivity and save your precious time. Your first task is to create a View!</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">305</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.searchViews" datatype="html">
         <source>Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">327</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">237</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.tablesView" datatype="html">
         <source>See the tables</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">335</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">245</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.tablesTab" datatype="html">
         <source>The raw data are stored in Tables which can be accessed on their own tab.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">338</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">248</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.search" datatype="html">
         <source>Search for information</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">347</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">257</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.search" datatype="html">
         <source>The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">260</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.perspectives" datatype="html">
         <source>Perspectives</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">358</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.perspectives" datatype="html">
         <source>When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">361</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.views" datatype="html">
         <source>Views and sharing</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">369</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">279</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.views" datatype="html">
         <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">372</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">282</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.getHelp" datatype="html">
         <source>Help with Lumeer</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">380</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">290</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.getHelp" datatype="html">
         <source>Here you can always get help in case you got lost.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">383</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">293</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.userMenu" datatype="html">
         <source>Return to this Tour</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">391</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">301</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.userMenu" datatype="html">
         <source>You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">394</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/wizard.service.ts</context>
+          <context context-type="linenumber">304</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.detail.type" datatype="html">
@@ -10420,35 +10459,35 @@
         <source>View already exist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">158</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.name.exists.message" datatype="html">
         <source>Do you really want to {create, select, 1 {create view with the same name} 0 {change view name}}?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.dialog.clone.message" datatype="html">
         <source>Do you want to make a copy of the view or rename the existing one?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.dialog.clone.clone" datatype="html">
         <source>Make a copy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.dialog.clone.update" datatype="html">
         <source>Rename</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="organizations.tab.detail.contact.invoicingContact" datatype="html">

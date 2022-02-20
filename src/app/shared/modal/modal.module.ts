@@ -29,10 +29,7 @@ import {CalendarEventDetailModalModule} from './calendar-event-detail/calendar-e
 import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
 import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
 import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
-import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
-import {CreateProjectModalModule} from './create-project/create-project-modal.module';
-import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
-import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
+import {GettingStartedModalModule} from './getting-started/getting-started-modal.module';
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
 import {UserSettingsModalModule} from './user-settings/user-settings-modal.module';
 import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
@@ -41,6 +38,7 @@ import {TextInputModalModule} from './text-input/text-input-modal.module';
 import {DataResourcesDetailModalModule} from './data-resources-detail/data-resources-detail-modal.module';
 import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.module';
 import {AttributeModalModule} from './attribute/attribute-modal.module';
+import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
 
 @NgModule({
   imports: [
@@ -57,16 +55,14 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
-    VerifyEmailModalModule,
-    CreateProjectModalModule,
-    CopyProjectModalModule,
-    ChooseOrganizationModalModule,
+    GettingStartedModalModule,
     EmbeddedLinkModalModule,
     UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
     ViewModalModule,
     DataResourcesDetailModalModule,
     TabsSettingsModalModule,
+    GetInTouchModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -80,10 +76,7 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
-    VerifyEmailModalModule,
-    CreateProjectModalModule,
-    CopyProjectModalModule,
-    ChooseOrganizationModalModule,
+    GettingStartedModalModule,
     EmbeddedLinkModalModule,
     UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
@@ -91,6 +84,7 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
     DataResourcesDetailModalModule,
     TabsSettingsModalModule,
     AttributeModalModule,
+    GetInTouchModalModule,
   ],
 })
 export class ModalModule {}

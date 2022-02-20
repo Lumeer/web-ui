@@ -124,6 +124,7 @@ function createDropdownOptions(items: SelectItemModel[]): DropdownOption[] {
   return (items || []).map(item => ({
     value: item.id,
     displayValue: item.value,
+    description: item.description,
     icons: item.icons,
     classList: item.classList,
     iconColors: item.iconColors,

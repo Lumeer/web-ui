@@ -31,3 +31,28 @@
     }
   }
 }
+
+.border-transparent {
+  border: 1px solid transparent;
+}
+
+.modal-footer {
+  position: relative;
+}
+
+.progress-wrapper {
+  position: absolute;
+  margin: 0 !important;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  width: 100%;
+  background: $gray-400;
+
+  .progress {
+    background: $success;
+    height: 3px;
+    transition: width 200ms ease-in-out;
+    border-radius: 0 0.25rem 0.25rem 0;
+  }
+}

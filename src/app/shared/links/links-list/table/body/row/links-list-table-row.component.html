@@ -53,7 +53,7 @@
         </data-input>
 
         <div *ngIf="column?.id === (mouseHoverColumnId$ | async) && dataInputInfo.showLockStats && !(column?.attribute | isAttributeEnabledByLockStats:columnData.lockStats)"
-             class="lock-icon cursor-pointer" @enterAnimation
+             class="lock-icon cursor-pointer" @enterOpacityAnimation
              [tooltip]="statsTooltip" containerClass="bigger-tooltip">
           <i class="fas fa-sm fa-lock"></i>
 

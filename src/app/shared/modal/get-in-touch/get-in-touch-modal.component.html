@@ -1,0 +1,36 @@
+<modal-wrapper class="d-block"
+               [dialogType]="dialogType.Success"
+               [performingAction]="performingAction$ | async"
+               [submitDisabled]="formInvalid$ | async"
+               (onSubmit)="onSubmit()"
+               (onClose)="hideDialog()">
+
+  <span class="title" i18n="@@dialog.getInTouch.title">Get in Touch with Us</span>
+
+  <div class="body p-3">
+    <form [formGroup]="form">
+      <div>
+        <div *ngIf="message.touched && message.errors"
+             class="alert alert-danger"
+             i18n="@@dialog.feedback.message.required"
+             role="alert">
+          You need to fill in the message.
+        </div>
+        <label class="form-label" for="feedbackMessage"
+               i18n="@@dialog.getInTouch.message.label">
+          Let us know, how we can help you, or what we could improve:
+        </label>
+        <textarea class="form-control"
+                  formControlName="message"
+                  id="feedbackMessage"
+                  i18n-placeholder="@@dialog.getInTouch.message.placeholder"
+                  placeholder="I would like to schedule a call to discuss...">
+        </textarea>
+      </div>
+    </form>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@button.send">Send</span>
+
+</modal-wrapper>

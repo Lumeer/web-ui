@@ -9,6 +9,6 @@
     <span class="ps-1">{{createdBy.name || createdBy.email}}</span>
   </div>
   <div *ngIf="fileAttachment.creationDate | isDateValid"
-       class="font-italic small"
+       class="fst-italic small"
        [class.mt-2]="!createdBy">{{fileAttachment.creationDate | fromNow}}</div>
 </div>

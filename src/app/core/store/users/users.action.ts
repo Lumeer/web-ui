@@ -18,10 +18,9 @@
  */
 
 import {Action} from '@ngrx/store';
-import {DefaultWorkspace, User, UserHints} from './user';
-import {InvitationType} from '../../model/invitation-type';
+import {DefaultWorkspace, User, UserHints, UserOnboarding} from './user';
 import {PaymentStats} from '../organizations/payment/payment';
-import {UserHintsDto} from '../../dto/user.dto';
+import {UserInvitation} from '../../model/user-invitation';
 
 export enum UsersActionType {
   GET = '[Users] Get',
@@ -69,14 +68,6 @@ export enum UsersActionType {
   REFERRALS_SUCCESS = '[Users] Referrals :: Success',
   REFERRALS_FAILURE = '[Users] Referrals :: Failure',
 
-  GET_HINTS = '[User] Get Hints',
-  GET_HINTS_SUCCESS = '[User] Get Hints :: Success',
-  GET_HINTS_FAILURE = '[User] Get Hints :: Failure',
-
-  PATCH_USER_SETTINGS = '[User] Patch User Settings',
-  PATCH_USER_SETTINGS_SUCCESS = '[User] Patch User Settings :: Success',
-  PATCH_USER_SETTINGS_FAILURE = '[User] Patch User Settings :: Failure',
-
   UPDATE_HINTS = '[User] Update Hints',
   UPDATE_HINTS_SUCCESS = '[User] Update Hints :: Success',
   UPDATE_HINTS_FAILURE = '[User] Update Hints :: Failure',
@@ -84,6 +75,9 @@ export enum UsersActionType {
   SET_HINT = '[User] Set Hint',
   SET_HINT_SUCCESS = '[User] Set Hint :: Success',
   SET_HINT_FAILURE = '[User] Set Hint :: Failure',
+
+  SET_ONBOARDING = '[User] Set Onboarding',
+  SET_ONBOARDING_SUCCESS = '[User] Set Onboarding :: Success',
 }
 
 export namespace UsersAction {
@@ -191,7 +185,13 @@ export namespace UsersAction {
     public readonly type = UsersActionType.INVITE;
 
     public constructor(
-      public payload: {organizationId: string; projectId: string; users: User[]; invitationType?: InvitationType}
+      public payload: {
+        organizationId: string;
+        projectId: string;
+        invitations: UserInvitation[];
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 
@@ -275,22 +275,6 @@ export namespace UsersAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class GetHints implements Action {
-    public readonly type = UsersActionType.GET_HINTS;
-  }
-
-  export class GetHintsSuccess implements Action {
-    public readonly type = UsersActionType.GET_HINTS_SUCCESS;
-
-    public constructor(public payload: {hints: UserHintsDto}) {}
-  }
-
-  export class GetHintsFailure implements Action {
-    public readonly type = UsersActionType.GET_HINTS_FAILURE;
-
-    public constructor(public payload: {error: any}) {}
-  }
-
   export class UpdateHints implements Action {
     public readonly type = UsersActionType.UPDATE_HINTS;
 
@@ -327,6 +311,18 @@ export namespace UsersAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class SetOnboarding implements Action {
+    public readonly type = UsersActionType.SET_ONBOARDING;
+
+    public constructor(public payload: {key: keyof UserOnboarding; value: any}) {}
+  }
+
+  export class SetOnboardingSuccess implements Action {
+    public readonly type = UsersActionType.SET_ONBOARDING_SUCCESS;
+
+    public constructor(public payload: {onboarding: UserOnboarding}) {}
+  }
+
   export type All =
     | Get
     | GetSuccess
@@ -359,13 +355,12 @@ export namespace UsersAction {
     | SetTeams
     | SetTeamsSuccess
     | SetTeamsFailure
-    | GetHints
-    | GetHintsSuccess
-    | GetHintsFailure
     | UpdateHints
     | UpdateHintsSuccess
     | UpdateHintsFailure
     | SetHint
     | SetHintSuccess
-    | SetHintFailure;
+    | SetHintFailure
+    | SetOnboarding
+    | SetOnboardingSuccess;
 }

@@ -1,10 +1,12 @@
+@import '~src/styles/bootstrap_var';
+
 .buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 1rem;
 }
 
-@media (max-width: 575.98px) {
+@include media-breakpoint-down(sm) {
   .buttons {
     grid-template-columns: 1fr;
   }

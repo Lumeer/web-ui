@@ -1,5 +1,7 @@
+@import '~src/styles/bootstrap_var';
+
 :host {
-  @media (min-width: 992px) {
+  @include media-breakpoint-up(lg) {
     min-height: 300px;
     display: flex;
     max-height: calc(100vh - 3.5rem);

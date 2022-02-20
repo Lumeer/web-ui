@@ -1,0 +1,23 @@
+@import '~src/styles/bootstrap_var';
+
+.layout {
+  position: relative;
+
+  .full-width {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+
+  @include media-breakpoint-up(md) {
+    .tags {
+      width: 250px;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .tags {
+      flex: 1;
+    }
+  }
+}

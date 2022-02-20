@@ -42,7 +42,6 @@ import {NewUserComponent} from './user-panel/invite-user/modal/new-user/new-user
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputModule} from '../input/input.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
-import {UserFeedbackModalComponent} from './user-panel/user-menu/user-feedback-modal/user-feedback-modal.component';
 import {BookmarksModule} from '../bookmarks/bookmarks.module';
 import {GravatarModule} from 'ngx-gravatar';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
@@ -82,7 +81,6 @@ import {RedDotModule} from '../red-dot/red-dot.module';
     InviteUserComponent,
     InviteUserModalComponent,
     NewUserComponent,
-    UserFeedbackModalComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],
 })

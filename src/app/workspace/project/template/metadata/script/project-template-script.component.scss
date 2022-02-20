@@ -1,8 +1,10 @@
+@import '~src/styles/bootstrap_var';
+
 .script-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
 
-  @media (max-width: 767.98px) {
+  @include media-breakpoint-down(md) {
     grid-template-columns: 1fr;
   }
 }

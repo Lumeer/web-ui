@@ -26,7 +26,7 @@ import {AttributeTypeModalComponent} from './attribute/type/attribute-type-modal
 import {AppState} from '../../core/store/app.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {first, map, mergeMap, take} from 'rxjs/operators';
-import {combineLatest} from 'rxjs';
+import {combineLatest, interval, Observable} from 'rxjs';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {Organization} from '../../core/store/organizations/organization';
@@ -45,8 +45,7 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {CreateProjectModalComponent} from './create-project/create-project-modal.component';
-import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
+import {GettingStartedModalComponent} from './getting-started/getting-started-modal.component';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
@@ -61,6 +60,8 @@ import {RoleType} from '../../core/model/role-type';
 import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
 import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
 import {AttributeLock} from '@lumeer/data-filters';
+import {GettingStartedModalType} from './getting-started/model/getting-started-modal-type';
+import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -72,6 +73,14 @@ export class ModalService {
 
   public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
+  }
+
+  public isSomeModalOpened(): boolean {
+    return this.bsModalService.getModalsCount() > 0;
+  }
+
+  public isSomeModalOpened$(): Observable<boolean> {
+    return interval(1000).pipe(map(() => this.isSomeModalOpened()));
   }
 
   public showChooseLinkDocument(
@@ -307,31 +316,53 @@ export class ModalService {
   }
 
   public showCreateProjectDialog(
-    organizations: Organization[],
-    templateCode: string,
+    writableOrganizations: Organization[],
+    selectedOrganization: Organization,
+    templateCode?: string,
     extras?: NavigationExtras
   ): BsModalRef {
     this.store$.dispatch(new ProjectsAction.GetTemplates());
     const initialState = {
+      type: GettingStartedModalType.Template,
+      writableOrganizations,
       templateCode,
-      organizations,
+      selectedOrganization,
       navigationExtras: extras,
     };
-    return this.showStaticDialog(initialState, CreateProjectModalComponent, 'modal-xxl modal-h-100');
+    return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-xxl modal-h-100');
   }
 
   public showCopyProjectDialog(
-    organizations: Organization[],
-    organizationId: string,
-    projectId: string,
+    writableOrganizations: Organization[],
+    copyOrganizationId: string,
+    copyProjectId: string,
     extras?: NavigationExtras
   ): BsModalRef {
     const initialState = {
-      organizations,
-      organizationId,
-      projectId,
+      type: GettingStartedModalType.CopyProject,
+      writableOrganizations,
+      copyOrganizationId,
+      copyProjectId,
       navigationExtras: extras,
     };
-    return this.showStaticDialog(initialState, CopyProjectModalComponent, 'modal-lg');
+    return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-lg');
+  }
+
+  public showEmailVerificationDialog(): BsModalRef {
+    const initialState = {
+      type: GettingStartedModalType.EmailVerification,
+    };
+    return this.showStaticDialog(initialState, GettingStartedModalComponent, '');
+  }
+
+  public showOnboardingVideoDialog(): BsModalRef {
+    const initialState = {
+      type: GettingStartedModalType.Video,
+    };
+    return this.showStaticDialog(initialState, GettingStartedModalComponent, 'modal-lg');
+  }
+
+  public showGetInTouchDialog(): BsModalRef {
+    return this.showStaticDialog({}, GetInTouchModalComponent, '');
   }
 }

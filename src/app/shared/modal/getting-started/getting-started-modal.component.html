@@ -1,0 +1,42 @@
+<modal-wrapper class="d-block"
+               *ngIf="{button: service.button$ | async, secondaryButton: service.secondaryButton$ | async, closeButton: service.closeButton$ | async} as data"
+               [performingAction]="service.performingAction$ | async"
+               [performingSecondaryAction]="service.performingSecondaryAction$ | async"
+               [customHeader]="true"
+               [showSubmit]="!!data.button"
+               [submitDisabled]="data.button?.disabled$ | async"
+               [dialogType]="data.button?.class"
+               [showSecondarySubmit]="!!data.secondaryButton"
+               [secondarySubmitClass]="data.secondaryButton?.class"
+               [secondarySubmitDisabled]="data.secondaryButton?.disabled$ | async"
+               [secondaryBorderless]="true"
+               [showClose]="!!data.closeButton"
+               [closeDisabled]="data.closeButton?.disabled$ | async"
+               [progress]="progress$ | async"
+               (onSubmit)="onSubmit()"
+               (onSecondarySubmit)="onSecondarySubmit()"
+               (onClose)="onClose()">
+
+  <div class="body w-100 h-100">
+    <ng-container [ngSwitch]="service.stage$ | async">
+      <select-project-template *ngSwitchCase="stage.Template"
+                               [initialTemplateCode]="templateCode">
+      </select-project-template>
+      <copy-project *ngSwitchCase="stage.CopyProject">
+      </copy-project>
+      <choose-organization *ngSwitchCase="stage.ChooseOrganization" @enterOpacityAnimation>
+      </choose-organization>
+      <invite-users *ngSwitchCase="stage.InviteUsers" @enterOpacityAnimation>
+      </invite-users>
+      <email-verification *ngSwitchCase="stage.EmailVerification" @enterOpacityAnimation>
+      </email-verification>
+      <getting-started-video *ngSwitchCase="stage.Video" @enterOpacityAnimation>
+      </getting-started-video>
+    </ng-container>
+  </div>
+
+  <span class="button-cancel">{{data.closeButton?.title}}</span>
+  <span class="button-secondary-submit">{{data.secondaryButton?.title}}</span>
+  <span class="button-submit"><i class="me-1" [ngClass]="data.button?.icon">&nbsp;</i>{{data.button?.title}}</span>
+
+</modal-wrapper>

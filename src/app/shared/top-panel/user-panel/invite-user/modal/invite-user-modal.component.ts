@@ -20,21 +20,20 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {DialogType} from '../../../../modal/dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectAllUsers} from '../../../../../core/store/users/users.state';
-import {filter, first, map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {InvitationType} from '../../../../../core/model/invitation-type';
 import {UsersAction} from '../../../../../core/store/users/users.action';
-import {User} from '../../../../../core/store/users/user';
-import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {selectProjectByWorkspace} from '../../../../../core/store/projects/projects.state';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {
   selectOrganizationPermissions,
   selectProjectPermissions,
 } from '../../../../../core/store/user-permissions/user-permissions.state';
+import {UserInvitation} from '../../../../../core/model/user-invitation';
+import {selectWorkspaceWithIds} from '../../../../../core/store/common/common.selectors';
 
 @Component({
   templateUrl: './invite-user-modal.component.html',
@@ -44,6 +43,7 @@ import {
 export class InviteUserModalComponent implements OnInit {
   public readonly dialogType = DialogType;
 
+  public performingAction$ = new BehaviorSubject(false);
   public newUsers$ = new BehaviorSubject<string[]>([]);
   public existingUsers$: Observable<string[]>;
 
@@ -81,40 +81,24 @@ export class InviteUserModalComponent implements OnInit {
   }
 
   public finalSubmit() {
-    const selectedUsers = this.newUsers$.getValue();
+    this.performingAction$.next(true);
 
-    combineLatest([
-      this.store$.pipe(select(selectOrganizationByWorkspace)),
-      this.store$.pipe(select(selectProjectByWorkspace)),
-    ])
-      .pipe(
-        filter(([organization, project]) => !!organization && !!project),
-        first()
-      )
-      .subscribe(([organization, project]) => {
-        this.store$.dispatch(
-          new UsersAction.InviteUsers({
-            organizationId: organization.id,
-            projectId: project.id,
-            users: selectedUsers.map(
-              userEmail =>
-                ({
-                  email: userEmail,
-                  groupsMap: {},
-                  defaultWorkspace: {
-                    organizationId: organization.id,
-                    organizationCode: organization.code,
-                    projectId: project.id,
-                    projectCode: project.code,
-                  },
-                } as User)
-            ),
-            invitationType: this.accessType,
-          })
-        );
-      });
+    this.store$.pipe(select(selectWorkspaceWithIds), take(1)).subscribe(workspace => {
+      const invitations: UserInvitation[] = this.newUsers$.getValue().map(email => ({email, type: this.accessType}));
+      this.store$.dispatch(
+        new UsersAction.InviteUsers({
+          organizationId: workspace.organizationId,
+          projectId: workspace.projectId,
+          invitations,
+          onSuccess: () => this.hideDialog(),
+          onFailure: () => this.onFailure(),
+        })
+      );
+    });
+  }
 
-    this.hideDialog();
+  private onFailure() {
+    this.performingAction$.next(false);
   }
 
   public onAddUser(userEmail: string) {

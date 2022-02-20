@@ -24,12 +24,12 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {UserService} from './user.service';
 import {UserDto} from '../../dto';
-import {InvitationType} from '../../model/invitation-type';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {FeedbackDto} from '../../dto/feedback.dto';
-import {UserHintsDto} from '../../dto/user.dto';
+import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {UserInvitationDto} from '../../dto/user-invitation.dto';
 
 @Injectable()
 export class ApiUserService implements UserService {
@@ -42,14 +42,11 @@ export class ApiUserService implements UserService {
   public createUsersInWorkspace(
     organizationId: string,
     projectId: string,
-    users: UserDto[],
-    invitationType?: InvitationType
+    invitations: UserInvitationDto[]
   ): Observable<UserDto[]> {
     return this.httpClient.post<UserDto[]>(
-      `${this.organizationApiPrefix(organizationId)}projects/${projectId}/users/${
-        invitationType || InvitationType.JoinOnly
-      }`,
-      users
+      `${this.organizationApiPrefix(organizationId)}projects/${projectId}/users/invite`,
+      invitations
     );
   }
 
@@ -118,6 +115,10 @@ export class ApiUserService implements UserService {
 
   public updateHints(hints: UserHintsDto): Observable<UserHintsDto> {
     return this.httpClient.put<UserHintsDto>(`${this.usersApiPrefix()}/current/hints`, hints);
+  }
+
+  public updateOnboarding(dto: UserOnboardingDto): Observable<UserOnboardingDto> {
+    return this.httpClient.put<UserOnboardingDto>(`${this.usersApiPrefix()}/current/onboarding`, dto);
   }
 
   private usersApiPrefix(): string {

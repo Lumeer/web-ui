@@ -49,6 +49,34 @@ export const selectReadableOrganizations = createSelector(
   selectOrganizationsPermissions,
   (organizations, permissions) => organizations.filter(organization => permissions?.[organization.id]?.roles?.Read)
 );
+
+export const selectContributeOrganizations = createSelector(
+  selectAllOrganizations,
+  selectOrganizationsPermissions,
+  (organizations, permissions) =>
+    organizations.filter(
+      organization =>
+        permissions?.[organization.id]?.roles?.Read && permissions?.[organization.id]?.roles?.ProjectContribute
+    )
+);
+
+export const selectManageOrganizations = createSelector(
+  selectAllOrganizations,
+  selectOrganizationsPermissions,
+  (organizations, permissions) =>
+    organizations.filter(
+      organization => permissions?.[organization.id]?.roles?.Read && permissions?.[organization.id]?.roles?.Manage
+    )
+);
+export const selectContributeOrganizationsByIds = (ids: string[]) =>
+  createSelector(selectAllOrganizations, selectOrganizationsPermissions, (organizations, permissions) =>
+    organizations.filter(
+      organization =>
+        ids?.includes(organization.id) &&
+        permissions?.[organization.id]?.roles?.Read &&
+        permissions?.[organization.id]?.roles?.ProjectContribute
+    )
+  );
 export const selectAllOrganizationsSorted = createSelector(selectReadableOrganizations, organizations =>
   sortResourcesByOrder(organizations)
 );

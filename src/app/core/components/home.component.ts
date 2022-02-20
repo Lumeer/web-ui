@@ -21,14 +21,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {filter, map, switchMap, take} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {Organization} from '../store/organizations/organization';
-import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectAllOrganizations, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
+import {selectAllOrganizations} from '../store/organizations/organizations.state';
 import {Project} from '../store/projects/project';
-import {ProjectsAction} from '../store/projects/projects.action';
-import {selectAllProjects, selectProjectsLoaded} from '../store/projects/projects.state';
+import {selectAllProjects} from '../store/projects/projects.state';
 import {DefaultWorkspace} from '../store/users/user';
 import {selectCurrentUser} from '../store/users/users.state';
 import {NotificationService} from '../notifications/notification.service';
@@ -37,8 +35,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {selectPublicViewCode} from '../store/public-data/public-data.state';
 import {PublicDataAction} from '../store/public-data/public-data.action';
 import {ConfigurationService} from '../../configuration/configuration.service';
-import {TeamsAction} from '../store/teams/teams.action';
-import {selectAllTeams, selectTeamsLoaded} from '../store/teams/teams.state';
+import {selectAllTeams} from '../store/teams/teams.state';
 import {userHasRoleInOrganization, userHasRoleInProject} from '../../shared/utils/permission.utils';
 import {RoleType} from '../model/role-type';
 import {sortResourcesByOrder} from '../../shared/utils/resource.utils';
@@ -88,9 +85,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   private redirectToPublicWorkspace(): Subscription {
     return this.getOrganizationsAndProjects()
       .pipe(take(1))
-      .subscribe(({organizations, projects}) => {
-        const organization = organizations[0];
-        const project = projects[0];
+      .subscribe(({organizationsWithProjects}) => {
+        const organization = organizationsWithProjects[0];
+        const project = organization?.projects?.[0];
 
         this.store$.pipe(select(selectPublicViewCode), take(1)).subscribe(viewCode => {
           if (organization && project) {
@@ -105,56 +102,30 @@ export class HomeComponent implements OnInit, OnDestroy {
   private redirectToWorkspace(): Subscription {
     return combineLatest([this.getDefaultWorkspace(), this.getOrganizationsAndProjects()])
       .pipe(take(1))
-      .subscribe(([workspace, {organizations, projects}]) => {
-        if (organizations.length > 0 && projects.length > 0) {
-          if (workspace) {
-            this.navigateToWorkspaceProject(workspace, organizations, projects);
-          } else {
-            this.navigateToAnyProject(organizations, projects);
-          }
-        } else if (organizations.length === 0) {
+      .subscribe(([workspace, {organizationsWithProjects, contributeOrganizations}]) => {
+        if (organizationsWithProjects.length > 0) {
+          this.navigateToWorkspaceProject(workspace, organizationsWithProjects);
+        } else if (contributeOrganizations.length === 0) {
           this.selectService.createNewOrganization({replaceUrl: true});
         } else {
-          this.createNewProject(organizations);
+          this.selectService.createNewProjectWithTemplate(contributeOrganizations, null, null, {replaceUrl: true});
         }
       });
   }
 
-  private createNewProject(organizations: Organization[]) {
-    const modalRef = this.selectService.createNewProject(organizations.slice(0, 1), null, {replaceUrl: true});
-    modalRef.content.onClose$.subscribe(() => this.redirectToWorkspace());
-  }
-
-  private navigateToWorkspaceProject(workspace: DefaultWorkspace, organizations: Organization[], projects: Project[]) {
+  private navigateToWorkspaceProject(
+    workspace: DefaultWorkspace,
+    organizationsWithProjects: OrganizationWithProjects[]
+  ) {
     const workspaceOrganization =
-      workspace.organizationId && organizations.find(org => org.id === workspace.organizationId);
-    const workspaceProject = workspace.projectId && projects.find(proj => proj.id === workspace.projectId);
+      workspace?.organizationId && organizationsWithProjects.find(org => org.id === workspace.organizationId);
+    const workspaceProject =
+      workspace?.projectId && workspaceOrganization?.projects?.find(proj => proj.id === workspace.projectId);
 
-    if (workspaceOrganization && workspaceProject) {
-      this.navigateToProject(workspaceOrganization, workspaceProject);
-    } else if (workspaceOrganization) {
-      const project = projects.find(proj => proj.organizationId === workspaceOrganization.id);
-      if (project) {
-        this.navigateToProject(workspaceOrganization, project);
-      } else {
-        this.navigateToAnyProject(organizations, projects);
-      }
+    if (workspaceOrganization) {
+      this.navigateToProject(workspaceOrganization, workspaceProject || workspaceOrganization.projects[0]);
     } else {
-      this.navigateToAnyProject(organizations, projects);
-    }
-  }
-
-  private navigateToAnyProject(organizations: Organization[], projects: Project[]) {
-    const organization = organizations.find(org => projects.some(proj => proj.organizationId === org.id));
-    if (organization) {
-      const project = projects.find(proj => proj.organizationId === organization.id);
-      if (project) {
-        this.navigateToProject(organization, project);
-      } else {
-        this.selectService.createNewProject([organization], null, {replaceUrl: true});
-      }
-    } else {
-      this.selectService.createNewOrganization({replaceUrl: true});
+      this.navigateToProject(organizationsWithProjects[0], organizationsWithProjects[0].projects[0]);
     }
   }
 
@@ -175,70 +146,52 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getOrganizations(): Observable<Organization[]> {
-    return this.store$.select(selectOrganizationsLoaded).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new OrganizationsAction.Get());
-        }
-      }),
-      filter(loaded => loaded),
-      switchMap(() => this.store$.select(selectAllOrganizations))
-    );
-  }
-
-  private getOrganizationsAndProjects(): Observable<{organizations: Organization[]; projects: Project[]}> {
+  private getOrganizationsAndProjects(): Observable<{
+    organizationsWithProjects: OrganizationWithProjects[];
+    contributeOrganizations: Organization[];
+  }> {
     return combineLatest([
-      this.getOrganizations().pipe(
-        tap(organizations =>
-          organizations.forEach(org => {
-            this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id}));
-            this.store$.dispatch(new TeamsAction.Get({organizationId: org.id}));
-          })
-        )
-      ),
-      this.store$.pipe(select(selectProjectsLoaded)),
-      this.store$.pipe(select(selectTeamsLoaded)),
+      this.store$.pipe(select(selectAllOrganizations)),
+      this.store$.pipe(select(selectAllProjects)),
     ]).pipe(
-      filter(([organizations, projectsLoaded, teamsLoaded]) =>
-        organizations.every(org => projectsLoaded[org.id] && teamsLoaded[org.id])
-      ),
-      switchMap(([organizations]) =>
-        this.store$.pipe(
-          select(selectAllProjects),
-          switchMap(projects => this.filterReadableOrganizationsAndProjects(organizations, projects))
-        )
-      )
+      switchMap(([organizations, projects]) => this.filterReadableOrganizationsAndProjects(organizations, projects))
     );
   }
 
   private filterReadableOrganizationsAndProjects(
     organizations: Organization[],
     projects: Project[]
-  ): Observable<{organizations: Organization[]; projects: Project[]}> {
+  ): Observable<{organizationsWithProjects: OrganizationWithProjects[]; contributeOrganizations: Organization[]}> {
     return combineLatest([this.store$.pipe(select(selectCurrentUser)), this.store$.pipe(select(selectAllTeams))]).pipe(
       map(([user, teams]) => {
         const readableOrganizations = [];
-        const readableProjects = [];
+        const contributeOrganizations = [];
         for (const organization of organizations) {
           const userTeams = teams.filter(
             team => team.organizationId === organization.id && team.users?.includes(user.id)
           );
           const organizationUser = {...user, teams: userTeams};
           if (userHasRoleInOrganization(organization, organizationUser, RoleType.Read)) {
-            readableOrganizations.push(organization);
-            readableProjects.push(
-              ...projects.filter(
-                project =>
-                  project.organizationId === organization.id &&
-                  userHasRoleInProject(organization, project, organizationUser, RoleType.Read)
-              )
+            const readableProjects = projects.filter(
+              project =>
+                project.organizationId === organization.id &&
+                userHasRoleInProject(organization, project, organizationUser, RoleType.Read)
             );
+            if (readableProjects.length) {
+              const organizationWithProjects = {
+                ...organization,
+                projects: sortResourcesByOrder(readableProjects),
+              };
+              readableOrganizations.push(organizationWithProjects);
+            }
+          }
+          if (userHasRoleInOrganization(organization, organizationUser, RoleType.ProjectContribute)) {
+            contributeOrganizations.push(organization);
           }
         }
         return {
-          organizations: sortResourcesByOrder(readableOrganizations),
-          projects: sortResourcesByOrder(readableProjects),
+          organizationsWithProjects: sortResourcesByOrder(readableOrganizations),
+          contributeOrganizations: sortResourcesByOrder(contributeOrganizations),
         };
       })
     );
@@ -248,3 +201,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 }
+
+type OrganizationWithProjects = Organization & {projects: Project[]};

@@ -3,7 +3,7 @@
   <label class="col-2 col-form-label"
          i18n="@@resource.new.dialog.code.label"
          for="code">
-    Code:<sup>*</sup>
+    Code:<sup class="text-danger">*</sup>
   </label>
 
   <div class="col-10">
@@ -21,7 +21,7 @@
 
   <small *ngIf="codeInput.invalid && (codeInput.dirty || codeInput.touched)"
          class="text-danger col-10 ms-auto mt-1">
-          <span *ngIf="codeInput.errors.minlength"
+          <span *ngIf="codeInput.errors.minLength"
                 i18n="@@resource.new.dialog.code.error.length.min">
             Code must have at least 2 characters.
           </span>

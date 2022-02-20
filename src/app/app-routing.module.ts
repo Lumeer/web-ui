@@ -26,12 +26,17 @@ import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/components/home.component';
 import {RedirectComponent} from './core/components/redirect.component';
 import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
+import {OrganizationsProjectsGuard} from './core/guards/data/organizations-projects.guard';
+import {ServiceLimitsGuard} from './core/guards/data/service-limits.guard';
 
 const appRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
     canActivate: [AuthGuard, CurrentUserGuard],
+    resolve: {
+      organizations: OrganizationsProjectsGuard,
+    },
     component: HomeComponent,
   },
   {
@@ -41,11 +46,19 @@ const appRoutes: Routes = [
   {
     path: 'template/:templateCode',
     canActivate: [AuthGuard, CurrentUserGuard],
+    resolve: {
+      organizations: OrganizationsProjectsGuard,
+      limits: ServiceLimitsGuard,
+    },
     component: RedirectComponent,
   },
   {
     path: 'open/:organizationId/:projectId',
     canActivate: [AuthGuard, CurrentUserGuard],
+    resolve: {
+      organizations: OrganizationsProjectsGuard,
+      limits: ServiceLimitsGuard,
+    },
     component: RedirectComponent,
   },
   {
