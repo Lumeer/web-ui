@@ -77,7 +77,7 @@ Cypress.Commands.add('dismissAgreement', () => {
 Cypress.Commands.add('dismissOnboardingVideo', () => {
   // make sure to dismiss initial onboarding video
   cy.setOnboarding({
-    videoPlayed: true,
+    videoShowed: true,
   });
 });
 
