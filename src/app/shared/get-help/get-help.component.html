@@ -1,17 +1,27 @@
-<div class="wrapper bg-white cursor-pointer" data-tour="get-help-button" [@borderRadius]="(extendedContent$ | async) ? 'open' : 'closed'">
+<div class="wrapper bg-white cursor-pointer" data-tour="get-help-button" [ngClass]="(extendedContent$ | async) ? 'open' : 'closed'">
 
-  <div class="body d-flex flex-column align-items-start p-1" *ngIf="extendedContent$ | async" [@shrinkOut]="">
+  <div class="body d-flex flex-column align-items-start" *ngIf="extendedContent$ | async" [@shrinkOut]="">
 
-    <div class="btn btn-link text-decoration-none text-nowrap"><i class="fas fa-fw fa-envelope me-2"></i><span>Contact us</span></div>
-    <div class="btn btn-link text-decoration-none text-nowrap"><i class="fas fa-fw fa-headset me-2"></i><span>Schedule meeting</span></div>
-    <div class="btn btn-link text-decoration-none text-nowrap"><i class="fas fa-fw fa-play me-2"></i><span>Watch video</span></div>
-    <div class="btn btn-link text-decoration-none text-nowrap"><i class="fas fa-fw fa-book me-2"></i><span>Read docs</span></div>
+    <div class="dropdown-item py-2 first-item">
+      <a [href]="link" target="_blank" class="color-inherit">
+        <i class="far fa-fw fa-book me-2"></i><span i18n="@@help.documentation">Read documentation</span>
+      </a>
+    </div>
+    <div class="dropdown-item py-2" (click)="openTour()">
+      <i class="far fa-fw fa-map-signs me-2"></i><span i18n="@@help.applicationTour">Open application tour</span>
+    </div>
+    <div class="dropdown-item py-2" (click)="openVideo()">
+      <i class="fas fa-fw fa-play me-2"></i><span i18n="@@help.introductionVideo">Watch introduction video</span>
+    </div>
+    <div class="dropdown-item py-2" (click)="openGenInTouch()">
+      <i class="far fa-fw fa-comment me-2"></i><span i18n="@@menu.getInTouch">Get in Touch with Us</span>
+    </div>
 
   </div>
 
   <div class="header py-2 px-3 text-nowrap" (click)="toggleContent()">
     <i class="fa far fa-life-ring fa-fw color-danger me-2"></i>
-    <div class="pe-4" [style.min-width.px]="(extendedContent$ | async) ? 150 : 0" i18n="@@get.help.button">Get Help</div>
-    <i class="far fa-chevron-down" (click)="$event.stopPropagation(); toggleContent()"></i>
+    <div class="pe-4" i18n="@@get.help.button">Get Help</div>
+    <i class="far fa-chevron-down" [@rotate]="(extendedContent$ | async) ? 'open' : 'closed'" (click)="$event.stopPropagation(); toggleContent()"></i>
   </div>
 </div>

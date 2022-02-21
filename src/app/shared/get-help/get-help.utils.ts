@@ -17,37 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {animate, sequence, state, style, transition, trigger} from '@angular/animations';
+import {animate, group, state, style, transition, trigger} from '@angular/animations';
 
-export const borderRadiusAnimation = trigger('borderRadius', [
+export const rotateAnimation = trigger('rotate', [
   state(
     'open',
     style({
-      borderRadius: '0.5rem',
+      transform: 'rotate(180deg)',
     })
   ),
   state(
     'closed',
     style({
-      borderRadius: '1rem',
+      transform: 'rotate(0deg)',
     })
   ),
+  transition('open <=> closed', [animate('0.3s')]),
 ]);
 
 export const shrinkOutAnimation = trigger('shrinkOut', [
-  transition(
-    ':enter',
-    sequence([
-      style({width: 0, height: 0, opacity: 0}),
-      animate('0.3s ease', style({width: '*', height: '*'})),
-      animate('0.2s ease', style({opacity: 1})),
-    ])
-  ),
-  transition(
-    ':leave',
-    sequence([
-      style({width: '*', height: '*', opacity: 0}),
-      animate('0.3s ease', style({width: 0, height: 0, opacity: 0})),
-    ])
-  ),
+  transition(':enter', [
+    style({width: 0, height: 0, opacity: 0}),
+    group([animate('0.3s ease', style({width: '*', height: '*'})), animate('0.2s 0.1s ease', style({opacity: 1}))]),
+  ]),
+  transition(':leave', [
+    style({width: '*', height: '*', opacity: 1}),
+    group([animate('0.3s 0.1s ease', style({width: 0, height: 0})), animate('0.2s ease', style({opacity: 0}))]),
+  ]),
 ]);

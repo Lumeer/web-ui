@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
@@ -37,14 +37,13 @@ import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview
 import {UserSettingsModalComponent} from '../../../modal/user-settings/user-settings-modal.component';
 import {availableLanguages, Language, LanguageCode} from '../../../../core/model/language';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
-import {WizardService} from './wizard.service';
+import {ApplicationTourService} from '../../../../core/service/application-tour.service';
 
 @Component({
   selector: 'user-menu',
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [WizardService],
 })
 export class UserMenuComponent implements OnInit {
   @Input()
@@ -55,9 +54,6 @@ export class UserMenuComponent implements OnInit {
 
   @Input()
   public userEmail: string;
-
-  @Output()
-  public toggleControls = new EventEmitter();
 
   public readonly buildNumber: string;
   public readonly locale: string;
@@ -73,7 +69,7 @@ export class UserMenuComponent implements OnInit {
   public constructor(
     private authService: AuthService,
     private modalService: ModalService,
-    private wizardService: WizardService,
+    private applicationTourService: ApplicationTourService,
     private store$: Store<AppState>,
     private router: Router,
     private configurationService: ConfigurationService
@@ -85,20 +81,11 @@ export class UserMenuComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.wizardService.init();
-    this.wizardService.setOnStart(() => this.onWizardStart());
-
     this.currentLanguage = availableLanguages.find(language => language.code === this.locale);
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.url$ = this.store$.pipe(select(selectUrl));
     this.bindServiceLimits();
-  }
-
-  private onWizardStart() {
-    if (!this.controlsVisible) {
-      this.toggleControls.emit();
-    }
   }
 
   private getHelpLink() {
@@ -138,18 +125,7 @@ export class UserMenuComponent implements OnInit {
   }
 
   public onStartTour() {
-    this.wizardService.restartTour();
-  }
-
-  @HostListener('document:click', ['$event'])
-  public onClick(event: MouseEvent) {
-    const element = event.target as HTMLElement;
-    if (
-      (!element.id || element.id.indexOf('driver') < 0) &&
-      (!element.className || element.className.indexOf('driver') < 0)
-    ) {
-      this.wizardService.checkDismiss();
-    }
+    this.applicationTourService.restartTour();
   }
 
   public onHintsToggle($event: MouseEvent, state: boolean) {

@@ -7,9 +7,13 @@
   right: 1.5rem;
   tab-index: 99999;
   z-index: $z-index-help;
-  transition: $transition-base;
+  transition: all 0.3s ease;
   box-shadow: $shadow-up !important;
   border-radius: 1rem;
+
+  &.open {
+    border-radius: 0.5rem;
+  }
 
   &:hover {
     box-shadow: $shadow-up-up !important;
@@ -20,5 +24,10 @@
     display: grid;
     align-items: center;
     grid-template-columns: min-content 1fr min-content;
+  }
+
+  .first-item {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
   }
 }

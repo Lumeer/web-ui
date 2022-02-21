@@ -62,4 +62,6 @@ export abstract class UserService {
   public abstract updateHints(hints: UserHintsDto): Observable<UserHintsDto>;
 
   public abstract updateOnboarding(dto: UserOnboardingDto): Observable<UserOnboardingDto>;
+
+  public abstract logEvent(event: string): Observable<any>;
 }

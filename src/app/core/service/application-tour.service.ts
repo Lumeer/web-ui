@@ -20,55 +20,59 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
 import * as Driver from 'driver.js';
-import {combineLatest, Observable, switchMap} from 'rxjs';
-import {selectCurrentUser} from '../../../../core/store/users/users.state';
-import {selectAllCollections} from '../../../../core/store/collections/collections.state';
-import {selectAllViews} from '../../../../core/store/views/views.state';
-import {selectUrl} from '../../../../core/store/navigation/navigation.state';
-import {filter, first, map} from 'rxjs/operators';
-import {User} from '../../../../core/store/users/user';
-import {Perspective} from '../../../../view/perspectives/perspective';
-import {SearchTab} from '../../../../core/store/navigation/search-tab';
-import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
-import {UsersAction} from '../../../../core/store/users/users.action';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {ModalService} from '../../../modal/modal.service';
+import {combineLatest, filter, Observable, switchMap} from 'rxjs';
+import {Workspace} from '../store/navigation/workspace';
+import {AppState} from '../store/app.state';
+import {ModalService} from '../../shared/modal/modal.service';
+import {selectUrl, selectWorkspace} from '../store/navigation/navigation.state';
+import {map, take} from 'rxjs/operators';
+import {User} from '../store/users/user';
+import {selectCurrentUser} from '../store/users/users.state';
+import {selectAllCollectionsCount} from '../store/collections/collections.state';
+import {selectAllViewsCount} from '../store/views/views.state';
+import {selectProjectPermissions} from '../store/user-permissions/user-permissions.state';
+import {Perspective} from '../../view/perspectives/perspective';
+import {SearchTab} from '../store/navigation/search-tab';
+import {NotificationsAction} from '../store/notifications/notifications.action';
+import {UsersAction} from '../store/users/users.action';
+import {AllowedPermissions} from '../model/allowed-permissions';
 
-@Injectable()
-export class WizardService {
-  private starting = false;
+@Injectable({providedIn: 'root'})
+export class ApplicationTourService {
+  private starting: boolean;
+  private dismissing: boolean;
+  private tourDone: boolean;
   private driver: Driver;
-  private dismissing = false;
   private workspace: Workspace;
-  private onStart: () => void;
 
   constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {}
 
   public init() {
+    const scrollIntoViewOptions: ScrollIntoViewOptions = {behavior: 'auto', block: 'start'};
     this.driver = new Driver({
+      animate: true,
       opacity: 0.5,
-      scrollIntoViewOptions: {block: 'start'},
+      allowClose: false,
+      overlayClickNext: true,
+      scrollIntoViewOptions,
       closeBtnText: $localize`:@@button.dismiss:Dismiss`,
       doneBtnText: $localize`:@@button.onward:Onward!`,
       nextBtnText: $localize`:@@button.next:Next`,
       prevBtnText: $localize`:@@button.previous:Previous`,
       onReset: () => this.dismissWizard(),
+      onNext: () => this.onNextStep(),
+      onHighlightStarted: element => (element.getNode() as HTMLElement)?.scrollIntoView(scrollIntoViewOptions),
     });
 
-    combineLatest([
-      this.observeWizardStartUser$(),
-      this.store$.pipe(select(selectAllCollections)),
-      this.store$.pipe(select(selectAllViews)),
-      this.store$.pipe(select(selectUrl)),
-    ])
+    combineLatest([this.observeWizardStartUser$(), this.selectTourData$(), this.store$.pipe(select(selectUrl))])
       .pipe(
-        filter(([user, collections, views, url]) => !!user && !!collections && !!views && !!url),
-        filter(([, , , url]) => isViewSearchAll(url)),
-        first()
+        filter(([, , url]) => isViewSearchAll(url)),
+        take(1)
       )
-      .subscribe(([user, collections, views]) => this.startTour(user, false, collections.length, views.length));
+      .subscribe(([user, data]) => this.startTour(user, false, data));
+
+    this.store$.pipe(select(selectWorkspace)).subscribe(workspace => (this.workspace = workspace));
   }
 
   private observeWizardStartUser$(): Observable<User> {
@@ -88,39 +92,35 @@ export class WizardService {
     this.workspace = workspace;
   }
 
-  public setOnStart(onStart: () => void) {
-    this.onStart = onStart;
-  }
-
   public restartTour() {
-    this.recallWizard();
-
-    combineLatest([
-      this.store$.pipe(select(selectCurrentUser)),
-      this.store$.pipe(select(selectAllCollections)),
-      this.store$.pipe(select(selectAllViews)),
-    ])
-      .pipe(
-        filter(([, collections, views]) => !!collections && !!views),
-        first()
-      )
-      .subscribe(([user, collections, views]) => this.startTour(user, true, collections.length, views.length));
+    combineLatest([this.store$.pipe(select(selectCurrentUser)), this.selectTourData$()])
+      .pipe(take(1))
+      .subscribe(([user, data]) => this.startTour(user, true, data));
   }
 
-  private startTour(user: User, manual: boolean, collectionsCount: number, viewsCount: number) {
+  private selectTourData$(): Observable<TourData> {
+    return combineLatest([
+      this.store$.pipe(select(selectAllCollectionsCount)),
+      this.store$.pipe(select(selectAllViewsCount)),
+      this.store$.pipe(select(selectProjectPermissions)),
+    ]).pipe(map(([collectionsCount, viewsCount, permissions]) => ({collectionsCount, viewsCount, permissions})));
+  }
+
+  private startTour(user: User, manual: boolean, data: TourData) {
     if (!this.starting && !this.dismissing) {
       this.starting = true;
 
       if (manual) {
         // we need to make sure to be on the home page
-        const organizationCode = this.workspace.organizationCode || user.defaultWorkspace?.organizationCode;
-        const projectCode = this.workspace.projectCode || user.defaultWorkspace?.projectCode;
+        const organizationCode = this.workspace?.organizationCode || user.defaultWorkspace?.organizationCode;
+        const projectCode = this.workspace?.projectCode || user.defaultWorkspace?.projectCode;
 
         if (organizationCode && projectCode) {
           this.router
             .navigate(['/', 'w', organizationCode, projectCode, 'view', Perspective.Search, SearchTab.All])
             .then(() => {
-              this.kickstartTour(collectionsCount, viewsCount);
+              this.log('Tour recall');
+              this.kickstartTour(data);
             });
         } else {
           this.store$.dispatch(
@@ -131,29 +131,42 @@ export class WizardService {
         }
       } else {
         // we already checked the url
-        this.kickstartTour(collectionsCount, viewsCount);
+        this.kickstartTour(data);
       }
     }
   }
 
-  private kickstartTour(collectionsCount: number, viewsCount: number) {
-    this.onStart?.();
+  private kickstartTour(data: TourData) {
+    // TODO top panel
 
     setTimeout(() => {
       // trick to allow access to all document elements
       this.driver.reset(true);
-      this.defineSteps(collectionsCount, viewsCount);
+      this.defineSteps(data);
+      this.scrollToTop();
 
-      document.getElementsByClassName('search-perspective')?.[0]?.scrollTo(0, 0);
+      this.log('Tour started');
 
       this.driver.start();
       this.starting = false;
+      this.tourDone = false;
     }, 500);
+  }
+
+  private scrollToTop() {
+    document.getElementsByClassName('search-perspective')?.[0]?.scrollTo(0, 0);
   }
 
   private dismissWizard() {
     if (!this.starting && !this.dismissing) {
       this.dismissing = true;
+
+      if (this.tourDone) {
+        this.log('Tour done');
+      } else {
+        this.log('Tour dismissed');
+      }
+
       this.store$.dispatch(
         new UsersAction.PatchCurrentUser({
           user: {wizardDismissed: true},
@@ -164,18 +177,18 @@ export class WizardService {
     }
   }
 
-  private recallWizard() {
-    if (!this.dismissing) {
-      this.store$.dispatch(
-        new UsersAction.PatchCurrentUser({
-          user: {wizardDismissed: false},
-        })
-      );
-    }
+  private log(event: string) {
+    this.store$.dispatch(new UsersAction.LogEvent({event}));
   }
 
-  private defineSteps(collectionsCount: number, viewsCount: number) {
-    const totalSteps = viewsCount > 0 ? 8 : collectionsCount > 0 ? 8 : 7;
+  private defineSteps(data: TourData) {
+    const totalSteps = this.createSteps(data).length;
+    const driverSteps = this.createSteps(data, totalSteps);
+
+    this.driver.defineSteps(driverSteps);
+  }
+
+  private createSteps(data: TourData, totalSteps?: number): Driver.Step[] {
     let stepNo = 1;
 
     const driverSteps = [];
@@ -193,19 +206,19 @@ export class WizardService {
       },
     });
 
-    if (viewsCount === 0) {
-      if (collectionsCount === 0) {
-        // views = 0, collections = 0
-        driverSteps.push({
-          element: '[data-tour="collection-create"]',
-          popover: {
-            title: basicTitle,
-            description: stepCounterString(stepNo++, totalSteps) + basicDescription,
-            position: 'top',
-          },
-        });
-      } else {
-        // views = 0, collections > 0
+    if (data.viewsCount === 0 && data.collectionsCount === 0 && data.permissions?.roles?.CollectionContribute) {
+      driverSteps.push({
+        element: '[data-tour="collection-create"]',
+        popover: {
+          title: basicTitle,
+          description: stepCounterString(stepNo++, totalSteps) + basicDescription,
+          position: 'top',
+        },
+      });
+    }
+
+    if (data.viewsCount === 0 && data.collectionsCount > 0) {
+      if (data.permissions?.roles?.ViewContribute) {
         driverSteps.push({
           element: '[data-tour="search-views"]',
           popover: {
@@ -216,7 +229,9 @@ export class WizardService {
             position: 'top',
           },
         });
+      }
 
+      if (data.permissions?.roles?.CollectionContribute) {
         driverSteps.push({
           element: '[data-tour="collection-add"]',
           popover: {
@@ -226,8 +241,9 @@ export class WizardService {
           },
         });
       }
-    } else {
-      // views > 0, collections?
+    }
+
+    if (data.viewsCount > 0) {
       driverSteps.push({
         element: '[data-tour="search-views-label"]',
         popover: {
@@ -238,9 +254,11 @@ export class WizardService {
           position: 'bottom',
         },
       });
+    }
 
+    if (data.viewsCount > 0 && data.collectionsCount > 0) {
       driverSteps.push({
-        element: '[data-tour="tables-tab"]',
+        element: '[data-tour="tab-tables"]',
         popover: {
           title: $localize`:@@appTour.title.tablesView:See the tables`,
           description:
@@ -273,16 +291,18 @@ export class WizardService {
       },
     });
 
-    driverSteps.push({
-      element: '[data-tour="view"]',
-      popover: {
-        title: $localize`:@@appTour.title.views:Views and sharing`,
-        description:
-          stepCounterString(stepNo++, totalSteps) +
-          $localize`:@@appTour.description.views:Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.`,
-        position: 'bottom',
-      },
-    });
+    if (data.permissions?.roles?.ViewContribute) {
+      driverSteps.push({
+        element: '[data-tour="view"]',
+        popover: {
+          title: $localize`:@@appTour.title.views:Views and sharing`,
+          description:
+            stepCounterString(stepNo++, totalSteps) +
+            $localize`:@@appTour.description.views:Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.`,
+          position: 'bottom',
+        },
+      });
+    }
 
     driverSteps.push({
       element: '[data-tour="get-help-button"]',
@@ -295,6 +315,19 @@ export class WizardService {
       },
     });
 
+    if (data.permissions?.roles?.UserConfig) {
+      driverSteps.push({
+        element: '[data-tour="invite-users"]',
+        popover: {
+          title: $localize`:@@appTour.title.inviteUsers:Invite teammates`,
+          description:
+            stepCounterString(stepNo++, totalSteps) +
+            $localize`:@@appTour.description.inviteUsers:Working together can make difference. Invite teammates and boost your productivity.`,
+          position: 'left',
+        },
+      });
+    }
+
     driverSteps.push({
       element: '[data-tour="user-menu"]',
       popover: {
@@ -306,7 +339,17 @@ export class WizardService {
       },
     });
 
-    this.driver.defineSteps(driverSteps);
+    return driverSteps;
+  }
+
+  private countTourSteps(data: TourData): number {
+    let count = 0;
+
+    if (data.permissions?.roles?.UserConfig) {
+      count += 1;
+    }
+
+    return count;
   }
 
   public checkDismiss() {
@@ -314,6 +357,10 @@ export class WizardService {
       this.dismissWizard();
       this.driver.reset(true);
     }
+  }
+
+  private onNextStep() {
+    this.tourDone = this.driver.hasNextStep();
   }
 }
 
@@ -324,4 +371,10 @@ function isViewSearchAll(url: string): boolean {
 
 function stepCounterString(stepNo: number, totalSteps: number): string {
   return '(' + stepNo + '/' + totalSteps + ') ';
+}
+
+interface TourData {
+  collectionsCount: number;
+  viewsCount: number;
+  permissions: AllowedPermissions;
 }

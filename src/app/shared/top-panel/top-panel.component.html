@@ -23,7 +23,6 @@
   </workspace-panel>
 
   <user-panel [workspace]="state.workspace"
-              (toggleControls)="onToggleControls()"
               [controlsVisible]="!mobile || (controlsShown$ | async)"
               [contentHeight]="firstLineHeight"
               [mobile]="mobile"

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -44,9 +44,6 @@ export class UserPanelComponent implements OnInit {
 
   @Input()
   public contentHeight: number;
-
-  @Output()
-  public toggleControls = new EventEmitter();
 
   public readonly showControls: boolean;
 

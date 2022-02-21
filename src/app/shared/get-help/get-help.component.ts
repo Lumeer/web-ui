@@ -21,21 +21,27 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {LanguageCode} from '../../core/model/language';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {BehaviorSubject} from 'rxjs';
-import {borderRadiusAnimation, shrinkOutAnimation} from './get-help.utils';
+import {shrinkOutAnimation, rotateAnimation} from './get-help.utils';
+import {ApplicationTourService} from '../../core/service/application-tour.service';
+import {ModalService} from '../modal/modal.service';
 
 @Component({
   selector: 'get-help',
   templateUrl: './get-help.component.html',
   styleUrls: ['./get-help.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [borderRadiusAnimation, shrinkOutAnimation],
+  animations: [shrinkOutAnimation, rotateAnimation],
 })
 export class GetHelpComponent implements OnInit {
   public link: string;
 
   public extendedContent$ = new BehaviorSubject(false);
 
-  constructor(private configurationService: ConfigurationService) {}
+  constructor(
+    private configurationService: ConfigurationService,
+    private wizardService: ApplicationTourService,
+    private modalService: ModalService
+  ) {}
 
   public ngOnInit() {
     if (this.configurationService.getConfiguration().locale === LanguageCode.CZ) {
@@ -45,7 +51,32 @@ export class GetHelpComponent implements OnInit {
     }
   }
 
+  public openTour() {
+    this.toggleContent();
+    this.wizardService.restartTour();
+  }
+
+  public openVideo() {
+    this.toggleContent();
+    this.modalService.showOnboardingVideoDialog();
+  }
+
+  public openGenInTouch() {
+    this.toggleContent();
+    this.modalService.showGetInTouchDialog();
+  }
+
   public toggleContent() {
     this.extendedContent$.next(!this.extendedContent$.value);
+
+    // 1. Read documentation
+    // 2. Open Application tour
+    // 3. Watch introduction video
+    // 4. Get in Touch with us
+    // 5. subscribe newsletter
+    // 6. Book product demo
+
+    // Book product demo
+    // Meno; Firma; Industry; Velkost firmy; Describe use-case
   }
 }

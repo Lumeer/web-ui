@@ -49,6 +49,7 @@ import {defineLocale} from 'ngx-bootstrap/chronos';
 import {csLocale, huLocale} from 'ngx-bootstrap/locale';
 import {ModalService} from './shared/modal/modal.service';
 import {selectWorkspace} from './core/store/navigation/navigation.state';
+import {ApplicationTourService} from './core/service/application-tour.service';
 
 @Component({
   selector: APP_NAME_SELECTOR,
@@ -70,6 +71,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private localeService: BsLocaleService,
     private modalService: ModalService,
     private configurationService: ConfigurationService,
+    private applicationTourService: ApplicationTourService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle($localize`:@@page.title:Lumeer | Visual, easy project and team management`);
@@ -83,6 +85,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initTooltipConfig();
     this.initLanguage();
     this.initUserOnboardingCheck();
+    this.initApplicationTour();
   }
 
   public ngOnInit() {
@@ -151,6 +154,10 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.modalService.showOnboardingVideoDialog();
         }
       });
+  }
+
+  private initApplicationTour() {
+    this.applicationTourService.init();
   }
 
   private startAnalyticsTracking() {

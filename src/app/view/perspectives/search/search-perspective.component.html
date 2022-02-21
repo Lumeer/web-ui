@@ -1,7 +1,7 @@
 <div class="container-fluid d-block col-12 col-lg-10 col-xl-9" *ngIf="{queryParams: queryParams$ | async} as data">
   <div class="content">
     <ul class="nav nav-tabs">
-      <li *ngFor="let tab of tabs$ | async; trackBy: trackByTab" role="presentation" class="nav-item">
+      <li *ngFor="let tab of tabs$ | async; trackBy: trackByTab" role="presentation" class="nav-item" [attr.data-tour]="'tab-' + tab.id">
         <a [routerLink]="tab.id"
            [queryParams]="data.queryParams"
            routerLinkActive="active"

@@ -113,4 +113,8 @@ export class PublicUserService implements UserService {
   public updateOnboarding(dto: UserOnboardingDto): Observable<UserOnboardingDto> {
     return of({});
   }
+
+  public logEvent(event: string): Observable<any> {
+    return of(true);
+  }
 }

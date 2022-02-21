@@ -26,7 +26,7 @@ import {EMPTY, from, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {UserService} from '../../data-service';
 import {AppState} from '../app.state';
-import {CommonAction} from '../common/common.action';
+import {CommonAction, CommonActionType} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {
@@ -492,6 +492,14 @@ export class UsersEffects {
           catchError(() => EMPTY)
         );
       })
+    )
+  );
+
+  public logEvent$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.LogEvent>(UsersActionType.LOG_EVENT),
+      mergeMap(action => this.userService.logEvent(action.payload.event)),
+      mergeMap(() => [])
     )
   );
 

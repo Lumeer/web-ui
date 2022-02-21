@@ -36,6 +36,10 @@ export const initialCollectionsState: CollectionsState = collectionsAdapter.getI
 export const selectCollectionsState = (state: AppState) => state.collections;
 
 export const selectAllCollections = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectAll);
+export const selectAllCollectionsCount = createSelector(
+  selectCollectionsState,
+  collectionsAdapter.getSelectors().selectTotal
+);
 export const selectCollectionsDictionary = createSelector(
   selectCollectionsState,
   collectionsAdapter.getSelectors().selectEntities

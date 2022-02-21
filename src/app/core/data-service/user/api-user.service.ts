@@ -121,6 +121,10 @@ export class ApiUserService implements UserService {
     return this.httpClient.put<UserOnboardingDto>(`${this.usersApiPrefix()}/current/onboarding`, dto);
   }
 
+  public logEvent(event: string): Observable<any> {
+    return this.httpClient.post<UserOnboardingDto>(`${this.usersApiPrefix()}/current/log`, {event});
+  }
+
   private usersApiPrefix(): string {
     return `${this.configurationService.getConfiguration().apiUrl}/rest/users`;
   }

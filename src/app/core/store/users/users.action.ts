@@ -62,6 +62,8 @@ export enum UsersActionType {
 
   SET_PENDING = '[Users] Set Pending',
 
+  LOG_EVENT = '[Users] Log Event',
+
   CLEAR = '[Users] Clear',
 
   REFERRALS = '[Users] Referrals',
@@ -321,6 +323,12 @@ export namespace UsersAction {
     public readonly type = UsersActionType.SET_ONBOARDING_SUCCESS;
 
     public constructor(public payload: {onboarding: UserOnboarding}) {}
+  }
+
+  export class LogEvent implements Action {
+    public readonly type = UsersActionType.LOG_EVENT;
+
+    public constructor(public payload: {event: string}) {}
   }
 
   export type All =
