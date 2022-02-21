@@ -20,15 +20,15 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {LanguageCode} from '../../core/model/language';
 import {ConfigurationService} from '../../configuration/configuration.service';
-import {leaveAnimation, smoothSizeAnimation} from '../animations';
 import {BehaviorSubject} from 'rxjs';
+import {borderRadiusAnimation, shrinkOutAnimation} from './get-help.utils';
 
 @Component({
   selector: 'get-help',
   templateUrl: './get-help.component.html',
   styleUrls: ['./get-help.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [smoothSizeAnimation, leaveAnimation],
+  animations: [borderRadiusAnimation, shrinkOutAnimation],
 })
 export class GetHelpComponent implements OnInit {
   public link: string;

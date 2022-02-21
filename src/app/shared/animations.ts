@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {animate, keyframes, sequence, state, style, transition, trigger} from '@angular/animations';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 export const animateOpacityFromUp = trigger('animateOpacityFromUp', [
   state('in', style({transform: 'translateY(0)', opacity: 1})),
@@ -74,25 +74,4 @@ export const enterRightAnimation = trigger('enterRightAnimation', [
     style({transform: 'translateX(0)', opacity: 1}),
     animate('300ms ease-in-out', style({transform: 'translateX(-100%)', opacity: 0.6})),
   ]),
-]);
-
-export const smoothSizeAnimation = trigger('grow', [
-  transition('void <=> *', []),
-  transition(
-    '* <=> *',
-    sequence([
-      style({width: '{{startWidth}}px'}),
-      animate('0.4s ease'),
-      style({height: '{{startHeight}}px', width: '*'}),
-      animate('0.3s ease'),
-    ]),
-    {
-      params: {startHeight: 0, startWidth: 0},
-    }
-  ),
-]);
-
-export const leaveAnimation = trigger('shrinkOut', [
-  state('in', style({height: '*'})),
-  transition('* => void', [style({height: '*'}), animate(250, style({height: 0}))]),
 ]);

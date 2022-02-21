@@ -25,17 +25,17 @@ import {Directive, OnChanges, Input, HostBinding, ElementRef, SimpleChanges} fro
 })
 export class SmoothSizeDirective implements OnChanges {
   @Input()
-  public smoothSize: any;
+  public opened: boolean;
 
-  private pulse: boolean;
   private startHeight: number;
   private startWidth: number;
+  private value: string;
 
   constructor(private element: ElementRef) {}
 
-  @HostBinding('@grow')
+  @HostBinding('@smoothSize')
   get grow() {
-    return {value: this.pulse, params: {startHeight: this.startHeight, startWidth: this.startWidth}};
+    return {value: this.value, params: {startHeight: this.startHeight, startWidth: this.startWidth}};
   }
 
   public setStartParams() {
@@ -45,6 +45,6 @@ export class SmoothSizeDirective implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     this.setStartParams();
-    this.pulse = !this.pulse;
+    this.value = this.opened ? 'open' : 'closed';
   }
 }

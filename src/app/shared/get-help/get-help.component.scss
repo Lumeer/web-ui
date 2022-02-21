@@ -1,17 +1,15 @@
 @import '~src/styles/variables';
 @import '~src/styles/bootstrap_var';
 
-$border-radius: 0.2rem;
-
 .wrapper {
   position: fixed;
   bottom: 1rem;
-  right: 1rem;
+  right: 1.5rem;
   tab-index: 99999;
   z-index: $z-index-help;
   transition: $transition-base;
   box-shadow: $shadow-up !important;
-  border-radius: $border-radius;
+  border-radius: 1rem;
 
   &:hover {
     box-shadow: $shadow-up-up !important;
@@ -22,7 +20,5 @@ $border-radius: 0.2rem;
     display: grid;
     align-items: center;
     grid-template-columns: min-content 1fr min-content;
-    background: $success-light;
-    border-radius: $border-radius;
   }
 }
