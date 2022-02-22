@@ -126,7 +126,7 @@ export class ApiUserService implements UserService {
   }
 
   public scheduleDemo(message: string): Observable<any> {
-    return this.httpClient.post(`${this.usersApiPrefix()}/current/product-demo`, {message});
+    return this.httpClient.post(`${this.usersApiPrefix()}/product-demo`, {message});
   }
 
   private usersApiPrefix(): string {
