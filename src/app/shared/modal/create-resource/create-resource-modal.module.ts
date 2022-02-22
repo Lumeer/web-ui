@@ -30,6 +30,7 @@ import {CreateResourceDialogParentComponent} from './form/parent/create-resource
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {PresenterModule} from '../../presenter/presenter.module';
+import {DirectivesModule} from '../../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {PresenterModule} from '../../presenter/presenter.module';
     ReactiveFormsModule,
     ModalWrapperModule,
     PickerModule,
+    DirectivesModule,
     PresenterModule,
     PipesModule,
   ],

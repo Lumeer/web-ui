@@ -20,10 +20,15 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {LanguageCode} from '../../core/model/language';
 import {ConfigurationService} from '../../configuration/configuration.service';
-import {BehaviorSubject} from 'rxjs';
-import {shrinkOutAnimation, rotateAnimation} from './get-help.utils';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {ApplicationTourService} from '../../core/service/application-tour.service';
 import {ModalService} from '../modal/modal.service';
+import {AppState} from '../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectCurrentUser} from '../../core/store/users/users.state';
+import {map, take} from 'rxjs/operators';
+import {rotateAnimation, shrinkOutAnimation} from './model/get-help.utils';
+import {NewsletterToggleService} from './model/newsletter-toggle.service';
 
 @Component({
   selector: 'get-help',
@@ -31,16 +36,21 @@ import {ModalService} from '../modal/modal.service';
   styleUrls: ['./get-help.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [shrinkOutAnimation, rotateAnimation],
+  providers: [NewsletterToggleService],
 })
 export class GetHelpComponent implements OnInit {
   public link: string;
 
   public extendedContent$ = new BehaviorSubject(false);
 
+  public showNewsletter$: Observable<boolean>;
+
   constructor(
     private configurationService: ConfigurationService,
     private wizardService: ApplicationTourService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private store$: Store<AppState>,
+    private newsletterToggleService: NewsletterToggleService
   ) {}
 
   public ngOnInit() {
@@ -49,6 +59,12 @@ export class GetHelpComponent implements OnInit {
     } else {
       this.link = 'https://www.lumeer.io/get-help';
     }
+
+    this.showNewsletter$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(currentUser => !currentUser?.newsletter),
+      take(1)
+    );
   }
 
   public openTour() {
@@ -61,22 +77,21 @@ export class GetHelpComponent implements OnInit {
     this.modalService.showOnboardingVideoDialog();
   }
 
-  public openGenInTouch() {
+  public openGetInTouch() {
     this.toggleContent();
     this.modalService.showGetInTouchDialog();
   }
 
+  public openBookDemo() {
+    this.toggleContent();
+    this.modalService.showBookProductDemoDialog();
+  }
+
   public toggleContent() {
     this.extendedContent$.next(!this.extendedContent$.value);
+  }
 
-    // 1. Read documentation
-    // 2. Open Application tour
-    // 3. Watch introduction video
-    // 4. Get in Touch with us
-    // 5. subscribe newsletter
-    // 6. Book product demo
-
-    // Book product demo
-    // Meno; Firma; Industry; Velkost firmy; Describe use-case
+  public onNewsletterChange(checked: boolean) {
+    this.newsletterToggleService.set('', checked);
   }
 }

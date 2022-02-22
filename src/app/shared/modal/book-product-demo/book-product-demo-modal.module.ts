@@ -19,13 +19,16 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {GetHelpComponent} from './get-help.component';
-import {DirectivesModule} from '../directives/directives.module';
-import {InputModule} from '../input/input.module';
+import {ReactiveFormsModule} from '@angular/forms';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {BookProductDemoModalComponent} from './book-product-demo-modal.component';
+import {BookProductDemoContentComponent} from './content/book-product-demo-content.component';
+import {DirectivesModule} from '../../directives/directives.module';
+import {SelectModule} from '../../select/select.module';
 
 @NgModule({
-  declarations: [GetHelpComponent],
-  imports: [CommonModule, DirectivesModule, InputModule],
-  exports: [GetHelpComponent],
+  declarations: [BookProductDemoModalComponent, BookProductDemoContentComponent],
+  imports: [CommonModule, ModalWrapperModule, ReactiveFormsModule, DirectivesModule, SelectModule],
+  exports: [BookProductDemoModalComponent],
 })
-export class GetHelpModule {}
+export class BookProductDemoModalModule {}

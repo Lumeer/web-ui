@@ -29,14 +29,18 @@ import {UserService} from '../../../core/data-service';
 import {DialogType} from '../dialog-type';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {keyboardEventCode, KeyCode} from '../../key-code';
+import {minLengthValidator, notEmptyValidator} from '../../../core/validators/custom-validators';
 
 @Component({
-  templateUrl: './get-in-touch-modal.component.html',
+  templateUrl: './book-product-demo-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GetInTouchModalComponent implements OnInit {
+export class BookProductDemoModalComponent implements OnInit {
   public readonly form = new FormGroup({
-    message: new FormControl('', Validators.required),
+    name: new FormControl('', notEmptyValidator()),
+    industry: new FormControl('', notEmptyValidator()),
+    numEmployees: new FormControl('', notEmptyValidator()),
+    useCase: new FormControl('', notEmptyValidator()),
   });
 
   public readonly dialogType = DialogType;
@@ -53,38 +57,53 @@ export class GetInTouchModalComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
+    // TODO init name
     this.formInvalid$ = this.form.valueChanges.pipe(
       map(() => this.form.invalid),
       startWith(true)
     );
   }
 
-  public get message(): AbstractControl {
-    return this.form.get('message');
+  public get nameControl(): AbstractControl {
+    return this.form.get('name');
+  }
+
+  public get industryControl(): AbstractControl {
+    return this.form.get('industry');
+  }
+
+  public get numEmployeesControl(): AbstractControl {
+    return this.form.get('numEmployees');
+  }
+
+  public get useCaseControl(): AbstractControl {
+    return this.form.get('useCase');
   }
 
   public onSubmit() {
-    this.form.markAsTouched();
-    this.message.markAsTouched();
+    const message = `Name: ${this.nameControl.value.trim()}
+    Industry: ${this.nameControl.value.trim()}
+    Employees: ${this.nameControl.value}
+    Use case: ${this.useCaseControl.value.trim()}`;
 
-    this.sendFeedback(this.message.value);
+    this.sendFeedback(message);
   }
 
   private sendFeedback(message: string) {
     this.performingAction$.next(true);
 
-    this.userService.sendFeedback(message).subscribe({
+    this.userService.scheduleDemo(message).subscribe({
       next: () => {
         if (this.configurationService.getConfiguration().analytics) {
           this.angulartics2.eventTrack.next({
-            action: 'Feedback send',
+            action: 'Demo scheduled',
             properties: {
-              category: 'Feedback',
+              category: 'ProductDemo',
             },
           });
 
           if (this.configurationService.getConfiguration().mixpanelKey) {
-            mixpanel.track('Feedback Send');
+            mixpanel.track('Demo scheduled');
           }
         }
         this.notifyOnSuccess();
@@ -94,14 +113,14 @@ export class GetInTouchModalComponent implements OnInit {
   }
 
   private notifyOnSuccess() {
-    const message = $localize`:@@dialog.getInTouch.success:Your message has been sent.`;
+    const message = $localize`:@@dialog.productDemo.success:We received your request and will get back to you soon.`;
     this.notificationService.success(message);
 
     this.hideDialog();
   }
 
   private notifyOnError() {
-    const message = $localize`:@@dialog.getInTouch.error:Could not send your message.`;
+    const message = $localize`:@@dialog.productDemo.error:Could not schedule product demo.`;
     this.notificationService.error(message);
 
     this.performingAction$.next(false);

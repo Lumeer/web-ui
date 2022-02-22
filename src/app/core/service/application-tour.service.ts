@@ -37,6 +37,7 @@ import {SearchTab} from '../store/navigation/search-tab';
 import {NotificationsAction} from '../store/notifications/notifications.action';
 import {UsersAction} from '../store/users/users.action';
 import {AllowedPermissions} from '../model/allowed-permissions';
+import {AppPropertiesAction} from '../store/app-properties/app-properties.action';
 
 @Injectable({providedIn: 'root'})
 export class ApplicationTourService {
@@ -137,7 +138,7 @@ export class ApplicationTourService {
   }
 
   private kickstartTour(data: TourData) {
-    // TODO top panel
+    this.store$.dispatch(new AppPropertiesAction.OpenTopPanel());
 
     setTimeout(() => {
       // trick to allow access to all document elements
@@ -167,14 +168,22 @@ export class ApplicationTourService {
         this.log('Tour dismissed');
       }
 
-      this.store$.dispatch(
-        new UsersAction.PatchCurrentUser({
-          user: {wizardDismissed: true},
-          onSuccess: () => (this.dismissing = false),
-          onFailure: () => (this.dismissing = false),
-        })
-      );
+      this.patchWizardDismissed();
     }
+  }
+
+  private patchWizardDismissed() {
+    this.store$.pipe(select(selectCurrentUser), take(1)).subscribe(currentUser => {
+      if (!currentUser.wizardDismissed) {
+        this.store$.dispatch(
+          new UsersAction.PatchCurrentUser({
+            user: {wizardDismissed: true},
+            onSuccess: () => (this.dismissing = false),
+            onFailure: () => (this.dismissing = false),
+          })
+        );
+      }
+    });
   }
 
   private log(event: string) {
@@ -340,16 +349,6 @@ export class ApplicationTourService {
     });
 
     return driverSteps;
-  }
-
-  private countTourSteps(data: TourData): number {
-    let count = 0;
-
-    if (data.permissions?.roles?.UserConfig) {
-      count += 1;
-    }
-
-    return count;
   }
 
   public checkDismiss() {

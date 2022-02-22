@@ -509,3 +509,8 @@ modal-container {
     padding-bottom: 5rem !important;
   }
 }
+
+label.form-label.required:after {
+  content: '*';
+  color: $danger;
+}

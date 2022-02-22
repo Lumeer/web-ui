@@ -17,15 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {GetHelpComponent} from './get-help.component';
-import {DirectivesModule} from '../directives/directives.module';
-import {InputModule} from '../input/input.module';
+import {AppPropertiesState, initialAppPropertiesState} from './app-properties.state';
+import {AppPropertiesAction, AppPropertiesActionType} from './app-properties.action';
 
-@NgModule({
-  declarations: [GetHelpComponent],
-  imports: [CommonModule, DirectivesModule, InputModule],
-  exports: [GetHelpComponent],
-})
-export class GetHelpModule {}
+export function appPropertiesReducer(
+  state: AppPropertiesState = initialAppPropertiesState,
+  action: AppPropertiesAction.All
+): AppPropertiesState {
+  switch (action.type) {
+    case AppPropertiesActionType.OPEN_TOP_PANEL:
+      return {...state, topPanelOpened: true};
+    case AppPropertiesActionType.SET_TOP_PANEL_OPENED:
+      return {...state, topPanelOpened: action.payload.opened};
+    case AppPropertiesActionType.TOGGLE_TOP_PANEL:
+      return {...state, topPanelOpened: !state.topPanelOpened};
+    default:
+      return state;
+  }
+}

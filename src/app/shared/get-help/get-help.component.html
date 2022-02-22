@@ -13,8 +13,19 @@
     <div class="dropdown-item py-2" (click)="openVideo()">
       <i class="fas fa-fw fa-play me-2"></i><span i18n="@@help.introductionVideo">Watch introduction video</span>
     </div>
-    <div class="dropdown-item py-2" (click)="openGenInTouch()">
+    <div class="dropdown-item py-2" (click)="openGetInTouch()">
       <i class="far fa-fw fa-comment me-2"></i><span i18n="@@menu.getInTouch">Get in Touch with Us</span>
+    </div>
+    <div class="dropdown-item py-2" (click)="openBookDemo()">
+      <i class="far fa-fw fa-headset me-2"></i><span i18n="@@menu.getInTouch">Book product demo</span>
+    </div>
+
+    <div class="px-3 py-2 text-nowrap" *ngIf="showNewsletter$ | async">
+      <toggle-checkbox [checked]="false"
+                       (checkedChange)="onNewsletterChange($event)"
+                       label="Subscribe to the Newsletter!"
+                       i18n-label="@@help.newsletter">
+      </toggle-checkbox>
     </div>
 
   </div>

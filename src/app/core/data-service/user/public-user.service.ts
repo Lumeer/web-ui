@@ -117,4 +117,8 @@ export class PublicUserService implements UserService {
   public logEvent(event: string): Observable<any> {
     return of(true);
   }
+
+  public scheduleDemo(message: string): Observable<any> {
+    return of(true);
+  }
 }

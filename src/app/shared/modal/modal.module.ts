@@ -39,6 +39,7 @@ import {DataResourcesDetailModalModule} from './data-resources-detail/data-resou
 import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.module';
 import {AttributeModalModule} from './attribute/attribute-modal.module';
 import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
+import {BookProductDemoModalModule} from './book-product-demo/book-product-demo-modal.module';
 
 @NgModule({
   imports: [
@@ -63,6 +64,7 @@ import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
     DataResourcesDetailModalModule,
     TabsSettingsModalModule,
     GetInTouchModalModule,
+    BookProductDemoModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -85,6 +87,7 @@ import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
     TabsSettingsModalModule,
     AttributeModalModule,
     GetInTouchModalModule,
+    BookProductDemoModalModule,
   ],
 })
 export class ModalModule {}

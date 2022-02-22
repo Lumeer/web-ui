@@ -93,7 +93,7 @@ export class ApiUserService implements UserService {
   }
 
   public getCurrentUserWithLastLogin(): Observable<UserDto> {
-    return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/currentWithLastLogin`);
+    return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/current-extended`);
   }
 
   public patchCurrentUser(user: Partial<UserDto>): Observable<UserDto> {
@@ -122,7 +122,11 @@ export class ApiUserService implements UserService {
   }
 
   public logEvent(event: string): Observable<any> {
-    return this.httpClient.post<UserOnboardingDto>(`${this.usersApiPrefix()}/current/log`, {event});
+    return this.httpClient.post(`${this.usersApiPrefix()}/current/log`, {event});
+  }
+
+  public scheduleDemo(message: string): Observable<any> {
+    return this.httpClient.post(`${this.usersApiPrefix()}/current/product-demo`, {message});
   }
 
   private usersApiPrefix(): string {
