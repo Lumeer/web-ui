@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
 import {LanguageCode} from '../../core/model/language';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -29,6 +29,7 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
 import {map, take} from 'rxjs/operators';
 import {rotateAnimation, shrinkOutAnimation} from './model/get-help.utils';
 import {NewsletterToggleService} from './model/newsletter-toggle.service';
+import {clickedInsideElement} from '../utils/html-modifier';
 
 @Component({
   selector: 'get-help',
@@ -93,5 +94,12 @@ export class GetHelpComponent implements OnInit {
 
   public onNewsletterChange(checked: boolean) {
     this.newsletterToggleService.set('', checked);
+  }
+
+  @HostListener('document:click', ['$event'])
+  private onClick(event: MouseEvent) {
+    if (this.extendedContent$.value && !clickedInsideElement(event, 'get-help')) {
+      this.toggleContent();
+    }
   }
 }

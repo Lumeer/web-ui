@@ -19,16 +19,14 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Angulartics2} from 'angulartics2';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import mixpanel from 'mixpanel-browser';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {UserService} from '../../../core/data-service';
 import {DialogType} from '../dialog-type';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 import {keyboardEventCode, KeyCode} from '../../key-code';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   templateUrl: './get-in-touch-modal.component.html',
@@ -44,13 +42,7 @@ export class GetInTouchModalComponent implements OnInit {
   public formInvalid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);
 
-  public constructor(
-    private bsRef: BsModalRef,
-    private notificationService: NotificationService,
-    private userService: UserService,
-    private angulartics2: Angulartics2,
-    private configurationService: ConfigurationService
-  ) {}
+  public constructor(private bsRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.formInvalid$ = this.form.valueChanges.pipe(
@@ -73,37 +65,16 @@ export class GetInTouchModalComponent implements OnInit {
   private sendFeedback(message: string) {
     this.performingAction$.next(true);
 
-    this.userService.sendFeedback(message).subscribe({
-      next: () => {
-        if (this.configurationService.getConfiguration().analytics) {
-          this.angulartics2.eventTrack.next({
-            action: 'Feedback send',
-            properties: {
-              category: 'Feedback',
-            },
-          });
-
-          if (this.configurationService.getConfiguration().mixpanelKey) {
-            mixpanel.track('Feedback Send');
-          }
-        }
-        this.notifyOnSuccess();
-      },
-      error: () => this.notifyOnError(),
-    });
+    this.store$.dispatch(
+      new UsersAction.GetInTouch({
+        message,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.onError(),
+      })
+    );
   }
 
-  private notifyOnSuccess() {
-    const message = $localize`:@@dialog.getInTouch.success:Your message has been sent.`;
-    this.notificationService.success(message);
-
-    this.hideDialog();
-  }
-
-  private notifyOnError() {
-    const message = $localize`:@@dialog.getInTouch.error:Could not send your message.`;
-    this.notificationService.error(message);
-
+  private onError() {
     this.performingAction$.next(false);
   }
 

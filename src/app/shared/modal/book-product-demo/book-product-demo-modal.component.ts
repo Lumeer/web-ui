@@ -18,18 +18,17 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Angulartics2} from 'angulartics2';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import mixpanel from 'mixpanel-browser';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {UserService} from '../../../core/data-service';
+import {map, startWith, take} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {minLengthValidator, notEmptyValidator} from '../../../core/validators/custom-validators';
+import {notEmptyValidator} from '../../../core/validators/custom-validators';
+import {AppState} from '../../../core/store/app.state';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {UsersAction} from '../../../core/store/users/users.action';
 
 @Component({
   templateUrl: './book-product-demo-modal.component.html',
@@ -48,20 +47,17 @@ export class BookProductDemoModalComponent implements OnInit {
   public formInvalid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);
 
-  public constructor(
-    private bsRef: BsModalRef,
-    private notificationService: NotificationService,
-    private userService: UserService,
-    private angulartics2: Angulartics2,
-    private configurationService: ConfigurationService
-  ) {}
+  public constructor(private bsRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    // TODO init name
     this.formInvalid$ = this.form.valueChanges.pipe(
       map(() => this.form.invalid),
       startWith(true)
     );
+
+    this.store$
+      .pipe(select(selectCurrentUser), take(1))
+      .subscribe(currentUser => this.nameControl.setValue(currentUser?.name));
   }
 
   public get nameControl(): AbstractControl {
@@ -92,37 +88,16 @@ export class BookProductDemoModalComponent implements OnInit {
   private sendFeedback(message: string) {
     this.performingAction$.next(true);
 
-    this.userService.scheduleDemo(message).subscribe({
-      next: () => {
-        if (this.configurationService.getConfiguration().analytics) {
-          this.angulartics2.eventTrack.next({
-            action: 'Demo scheduled',
-            properties: {
-              category: 'ProductDemo',
-            },
-          });
-
-          if (this.configurationService.getConfiguration().mixpanelKey) {
-            mixpanel.track('Demo scheduled');
-          }
-        }
-        this.notifyOnSuccess();
-      },
-      error: () => this.notifyOnError(),
-    });
+    this.store$.dispatch(
+      new UsersAction.BookProductDemo({
+        message,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.onError(),
+      })
+    );
   }
 
-  private notifyOnSuccess() {
-    const message = $localize`:@@dialog.productDemo.success:We received your request and will get back to you soon.`;
-    this.notificationService.success(message);
-
-    this.hideDialog();
-  }
-
-  private notifyOnError() {
-    const message = $localize`:@@dialog.productDemo.error:Could not schedule product demo.`;
-    this.notificationService.error(message);
-
+  private onError() {
     this.performingAction$.next(false);
   }
 

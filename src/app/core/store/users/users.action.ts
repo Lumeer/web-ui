@@ -74,6 +74,14 @@ export enum UsersActionType {
   UPDATE_HINTS_SUCCESS = '[User] Update Hints :: Success',
   UPDATE_HINTS_FAILURE = '[User] Update Hints :: Failure',
 
+  BOOK_PRODUCT_DEMO = '[User] Book Product Demo',
+  BOOK_PRODUCT_DEMO_SUCCESS = '[User] Book Product Demo :: Success',
+  BOOK_PRODUCT_DEMO_FAILURE = '[User] Book Product Demo :: Failure',
+
+  GET_IN_TOUCH = '[User] Get In Touch',
+  GET_IN_TOUCH_SUCCESS = '[User] Get In Touch :: Success',
+  GET_IN_TOUCH_FAILURE = '[User] Get In Touch :: Failure',
+
   SET_HINT = '[User] Set Hint',
   SET_HINT_SUCCESS = '[User] Set Hint :: Success',
   SET_HINT_FAILURE = '[User] Set Hint :: Failure',
@@ -229,6 +237,50 @@ export namespace UsersAction {
 
   export class UpdateFailure implements Action {
     public readonly type = UsersActionType.UPDATE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class BookProductDemo implements Action {
+    public readonly type = UsersActionType.BOOK_PRODUCT_DEMO;
+
+    public constructor(
+      public payload: {
+        message: string;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
+    ) {}
+  }
+
+  export class BookProductDemoSuccess implements Action {
+    public readonly type = UsersActionType.BOOK_PRODUCT_DEMO_SUCCESS;
+  }
+
+  export class BookProductDemoFailure implements Action {
+    public readonly type = UsersActionType.BOOK_PRODUCT_DEMO_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class GetInTouch implements Action {
+    public readonly type = UsersActionType.GET_IN_TOUCH;
+
+    public constructor(
+      public payload: {
+        message: string;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
+    ) {}
+  }
+
+  export class GetInTouchSuccess implements Action {
+    public readonly type = UsersActionType.GET_IN_TOUCH_SUCCESS;
+  }
+
+  export class GetInTouchFailure implements Action {
+    public readonly type = UsersActionType.GET_IN_TOUCH_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
