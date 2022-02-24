@@ -777,13 +777,13 @@
         <source>Get in Touch with Us</source><target state="final">Get in Touch with Us</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">346</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="menu.bookProductDemo" datatype="html">
-        <source>Book product demo</source><target state="final">Book product demo</target>
+        <source>Book Product Demo</source><target state="final">Book Product Demo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="help.newsletter" datatype="html">
-        <source>Subscribe to the Newsletter!</source><target state="final">Subscribe to the Newsletter!</target>
+        <source>Subscribe to Our Newsletter!</source><target state="final">Subscribe to Our Newsletter!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">26</context>
@@ -1610,19 +1610,19 @@
         <source>Add a filter</source><target state="final">Add a filter</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/filters/filters/resource-filters.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="help.documentation" datatype="html">
-        <source>Read documentation</source><target state="final">Read documentation</target>
+        <source>Read Documentation</source><target state="final">Read Documentation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="help.applicationTour" datatype="html">
-        <source>Open application tour</source><target state="final">Open application tour</target>
+        <source>Open Application Tour</source><target state="final">Open Application Tour</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit><trans-unit id="help.introductionVideo" datatype="html">
-        <source>Watch introduction video</source><target state="final">Watch introduction video</target>
+        <source>Watch Introduction Video</source><target state="final">Watch Introduction Video</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">14</context>

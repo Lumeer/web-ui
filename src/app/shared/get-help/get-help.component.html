@@ -4,26 +4,26 @@
 
     <div class="dropdown-item py-2 first-item">
       <a [href]="link" target="_blank" class="color-inherit">
-        <i class="far fa-fw fa-book me-2"></i><span i18n="@@help.documentation">Read documentation</span>
+        <i class="far fa-fw fa-book me-2"></i><span i18n="@@help.documentation">Read Documentation</span>
       </a>
     </div>
     <div class="dropdown-item py-2" (click)="openTour()">
-      <i class="far fa-fw fa-map-signs me-2"></i><span i18n="@@help.applicationTour">Open application tour</span>
+      <i class="far fa-fw fa-map-signs me-2"></i><span i18n="@@help.applicationTour">Open Application Tour</span>
     </div>
     <div class="dropdown-item py-2" (click)="openVideo()">
-      <i class="fas fa-fw fa-play me-2"></i><span i18n="@@help.introductionVideo">Watch introduction video</span>
+      <i class="fas fa-fw fa-play me-2"></i><span i18n="@@help.introductionVideo">Watch Introduction Video</span>
     </div>
     <div class="dropdown-item py-2" (click)="openGetInTouch()">
       <i class="far fa-fw fa-comment me-2"></i><span i18n="@@menu.getInTouch">Get in Touch with Us</span>
     </div>
     <div class="dropdown-item py-2" (click)="openBookDemo()">
-      <i class="far fa-fw fa-headset me-2"></i><span i18n="@@menu.bookProductDemo">Book product demo</span>
+      <i class="far fa-fw fa-headset me-2"></i><span i18n="@@menu.bookProductDemo">Book Product Demo</span>
     </div>
 
     <div class="px-3 py-2 text-nowrap" *ngIf="showNewsletter$ | async">
       <toggle-checkbox [checked]="false"
                        (checkedChange)="onNewsletterChange($event)"
-                       label="Subscribe to the Newsletter!"
+                       label="Subscribe to Our Newsletter!"
                        i18n-label="@@help.newsletter">
       </toggle-checkbox>
     </div>

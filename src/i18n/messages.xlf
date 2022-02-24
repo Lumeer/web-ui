@@ -4444,21 +4444,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="help.documentation" datatype="html">
-        <source>Read documentation</source>
+        <source>Read Documentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="help.applicationTour" datatype="html">
-        <source>Open application tour</source>
+        <source>Open Application Tour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="help.introductionVideo" datatype="html">
-        <source>Watch introduction video</source>
+        <source>Watch Introduction Video</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">14</context>
@@ -4480,14 +4480,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="menu.bookProductDemo" datatype="html">
-        <source>Book product demo</source>
+        <source>Book Product Demo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="help.newsletter" datatype="html">
-        <source>Subscribe to the Newsletter!</source>
+        <source>Subscribe to Our Newsletter!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
           <context context-type="linenumber">26</context>
