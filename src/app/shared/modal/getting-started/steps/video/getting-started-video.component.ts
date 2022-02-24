@@ -30,7 +30,7 @@ import {generateId} from '../../../../utils/resource.utils';
   templateUrl: './getting-started-video.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./getting-started-video.component.scss'],
-  host: {class: 'd-block p-3'},
+  host: {class: 'd-block'},
 })
 export class GettingStartedVideoComponent implements OnInit, OnDestroy {
   public readonly elementId = `videoPlaceholder${generateId()}`;
