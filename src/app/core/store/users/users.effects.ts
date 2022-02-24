@@ -464,6 +464,107 @@ export class UsersEffects {
     )
   );
 
+  public bookProductDemo$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.BookProductDemo>(UsersActionType.BOOK_PRODUCT_DEMO),
+      mergeMap(action => {
+        return this.userService.scheduleDemo(action.payload.message).pipe(
+          mergeMap(() => [
+            new UsersAction.BookProductDemoSuccess(),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(error =>
+            of(new UsersAction.BookProductDemoFailure({error}), ...createCallbackActions(action.payload.onFailure))
+          )
+        );
+      })
+    )
+  );
+
+  public bookProductDemoSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.BookProductDemoSuccess>(UsersActionType.BOOK_PRODUCT_DEMO_SUCCESS),
+      tap(() => {
+        if (this.configurationService.getConfiguration().analytics) {
+          this.angulartics2.eventTrack.next({
+            action: 'Demo scheduled',
+            properties: {
+              category: 'ProductDemo',
+            },
+          });
+
+          if (this.configurationService.getConfiguration().mixpanelKey) {
+            mixpanel.track('Demo scheduled');
+          }
+        }
+      }),
+      map(() => {
+        const message = $localize`:@@dialog.productDemo.success:We received your request and will get back to you soon.`;
+        return new NotificationsAction.Success({message});
+      })
+    )
+  );
+
+  public bookProductDemoFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.BookProductDemoFailure>(UsersActionType.BOOK_PRODUCT_DEMO_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = $localize`:@@dialog.productDemo.error:Could not schedule product demo.`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
+  public getInTouch$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.GetInTouch>(UsersActionType.GET_IN_TOUCH),
+      mergeMap(action => {
+        return this.userService.sendFeedback(action.payload.message).pipe(
+          mergeMap(() => [new UsersAction.GetInTouchSuccess(), ...createCallbackActions(action.payload.onSuccess)]),
+          catchError(error =>
+            of(new UsersAction.GetInTouchFailure({error}), ...createCallbackActions(action.payload.onFailure))
+          )
+        );
+      })
+    )
+  );
+
+  public getInTouchSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.GetInTouchSuccess>(UsersActionType.GET_IN_TOUCH_SUCCESS),
+      tap(() => {
+        if (this.configurationService.getConfiguration().analytics) {
+          this.angulartics2.eventTrack.next({
+            action: 'Feedback send',
+            properties: {
+              category: 'Feedback',
+            },
+          });
+
+          if (this.configurationService.getConfiguration().mixpanelKey) {
+            mixpanel.track('Feedback Send');
+          }
+        }
+      }),
+      map(() => {
+        const message = $localize`:@@dialog.getInTouch.success:Your message has been sent.`;
+        return new NotificationsAction.Success({message});
+      })
+    )
+  );
+
+  public getInTouchFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.GetInTouchFailure>(UsersActionType.GET_IN_TOUCH_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = $localize`:@@dialog.getInTouch.error:Could not send your message.`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
   public setHint$ = createEffect(() =>
     this.actions$.pipe(
       ofType<UsersAction.SetHint>(UsersActionType.SET_HINT),
@@ -492,6 +593,14 @@ export class UsersEffects {
           catchError(() => EMPTY)
         );
       })
+    )
+  );
+
+  public logEvent$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.LogEvent>(UsersActionType.LOG_EVENT),
+      mergeMap(action => this.userService.logEvent(action.payload.event)),
+      mergeMap(() => [])
     )
   );
 

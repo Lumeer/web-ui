@@ -62,6 +62,7 @@ import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal
 import {AttributeLock} from '@lumeer/data-filters';
 import {GettingStartedModalType} from './getting-started/model/getting-started-modal-type';
 import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
+import {BookProductDemoModalComponent} from './book-product-demo/book-product-demo-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -364,5 +365,9 @@ export class ModalService {
 
   public showGetInTouchDialog(): BsModalRef {
     return this.showStaticDialog({}, GetInTouchModalComponent, '');
+  }
+
+  public showBookProductDemoDialog(): BsModalRef {
+    return this.showStaticDialog({}, BookProductDemoModalComponent, '');
   }
 }

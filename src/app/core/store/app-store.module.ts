@@ -93,6 +93,7 @@ import {DashboardDataEffects} from './dashboard-data/dashboard-data.effects';
 import {formsReducer} from './form/form.reducer';
 import {resourceVariablesReducer} from './resource-variables/resource-variables.reducer';
 import {ResourceVariablesEffects} from './resource-variables/resource-variables.effects';
+import {appPropertiesReducer} from './app-properties/app-properties.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -135,6 +136,7 @@ const reducers: ActionReducerMap<AppState> = {
   selectionLists: selectionListsReducer,
   dashboardData: dashboardDataReducer,
   variables: resourceVariablesReducer,
+  properties: appPropertiesReducer,
 };
 
 const effects = [

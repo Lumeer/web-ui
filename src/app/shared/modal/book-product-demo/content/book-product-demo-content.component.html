@@ -1,0 +1,69 @@
+<form [formGroup]="form">
+  <div class="mt-3 row">
+    <label class="col-12 form-label required"
+           i18n="@@dialog.productDemo.form.name.label"
+           for="name">Your name:</label>
+
+    <div class="col-12">
+      <input type="text"
+             id="name"
+             formControlName="name"
+             class="form-control"
+             i18n-placeholder="@@dialog.productDemo.form.name.placeholder"
+             placeholder="Enter your full name (e.g John Doe)">
+    </div>
+    <small class="col-12 text-danger mt-1" *ngIf="nameControl.touched && nameControl.errors?.notEmpty"
+           i18n="@@dialog.productDemo.form.name.notEmpty">Your name can not be empty</small>
+  </div>
+
+  <div class="mt-3 row">
+    <label class="col-12 form-label required"
+           i18n="@@dialog.productDemo.form.industry.label"
+           for="name">Company industry:</label>
+
+    <div class="col-12">
+      <input type="text"
+             id="industry"
+             formControlName="industry"
+             class="form-control"
+             i18n-placeholder="@@dialog.productDemo.form.industry.placeholder"
+             placeholder="Enter your company industry">
+    </div>
+    <small class="col-12 text-danger mt-1" *ngIf="industryControl.touched && industryControl.errors?.notEmpty"
+           i18n="@@dialog.productDemo.form.industry.notEmpty">Industry can not be empty</small>
+  </div>
+
+  <div class="mt-3 row">
+    <label class="col-12 form-label required"
+           i18n="@@dialog.productDemo.form.numEployees.label"
+           for="name">Company size:</label>
+
+    <div class="col-12">
+      <select-item emptyValue="Select your company size"
+                   i18n-emptyValue="@@dialog.productDemo.form.numEployees.emptyValue"
+                   [removable]="false"
+                   [items]="numEmployeesItems"
+                   [selectedId]="numEmployeesControl.value"
+                   (selected)="numEmployeesControl.setValue($event)">
+      </select-item>
+    </div>
+  </div>
+
+
+  <div class="mt-3 row">
+    <label class="col-12 form-label required"
+           i18n="@@dialog.productDemo.form.useCase.label"
+           for="useCase">Let us know, what is your use case:</label>
+
+    <div class="col-12">
+    <textarea class="form-control"
+              formControlName="useCase"
+              id="useCase"
+              i18n-placeholder="@@dialog.productDemo.form.useCase.placeholder"
+              placeholder="Our company helps clients... We would like to...">
+    </textarea>
+      <small class="col-12 text-danger mt-1" *ngIf="useCaseControl.touched && useCaseControl.errors?.notEmpty"
+             i18n="@@dialog.productDemo.form.useCase.notEmpty">Use case can not be empty</small>
+    </div>
+  </div>
+</form>

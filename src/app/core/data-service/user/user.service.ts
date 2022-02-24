@@ -57,9 +57,13 @@ export abstract class UserService {
 
   public abstract sendFeedback(message: string): Observable<any>;
 
+  public abstract scheduleDemo(message: string): Observable<any>;
+
   public abstract getHints(): Observable<UserHintsDto>;
 
   public abstract updateHints(hints: UserHintsDto): Observable<UserHintsDto>;
 
   public abstract updateOnboarding(dto: UserOnboardingDto): Observable<UserOnboardingDto>;
+
+  public abstract logEvent(event: string): Observable<any>;
 }

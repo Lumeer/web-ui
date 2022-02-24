@@ -31,7 +31,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
@@ -41,6 +41,8 @@ import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
 import {UserPanelComponent} from './user-panel/user-panel.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
 import {ResizeObserver} from '../resize-observer';
+import {selectTopPanelOpened} from '../../core/store/app-properties/app-properties.state';
+import {AppPropertiesAction} from '../../core/store/app-properties/app-properties.action';
 
 declare let ResizeObserver: ResizeObserver;
 
@@ -68,7 +70,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
 
   public readonly firstLineHeight = 50;
 
-  public controlsShown$ = new BehaviorSubject(true);
+  public controlsShown$: Observable<boolean>;
   public workspace$: Observable<Workspace>;
 
   private resizeObserver: ResizeObserver;
@@ -89,6 +91,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     } else {
       this.subscriptions.add(this.subscribeToWorkspaceChanges());
     }
+    this.controlsShown$ = this.store$.pipe(select(selectTopPanelOpened));
   }
 
   private subscribeToWorkspaceChanges(): Subscription {
@@ -102,7 +105,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.mobile) {
-      this.controlsShown$.next(!this.mobile);
+      this.store$.dispatch(new AppPropertiesAction.SetTopPanelOpened({opened: !this.mobile}));
     }
   }
 
@@ -159,6 +162,6 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   }
 
   public onToggleControls() {
-    this.controlsShown$.next(!this.controlsShown$.getValue());
+    this.store$.dispatch(new AppPropertiesAction.ToggleTopPanel());
   }
 }

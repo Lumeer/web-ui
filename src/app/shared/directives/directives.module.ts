@@ -29,6 +29,7 @@ import {IntegerDirective} from './integer.directive';
 import {AutoSizeInputDirective} from './autosize-input.directive';
 import {ClickOutsideDirective} from './click-outside.directive';
 import {ResizerDirective} from './resizer.directive';
+import {SmoothSizeDirective} from './smooth-size.directive';
 
 @NgModule({
   imports: [CommonModule],
@@ -42,6 +43,7 @@ import {ResizerDirective} from './resizer.directive';
     AutoSizeInputDirective,
     ClickOutsideDirective,
     ResizerDirective,
+    SmoothSizeDirective,
   ],
   exports: [
     NgVarDirective,
@@ -53,6 +55,7 @@ import {ResizerDirective} from './resizer.directive';
     AutoSizeInputDirective,
     ClickOutsideDirective,
     ResizerDirective,
+    SmoothSizeDirective,
   ],
 })
 export class DirectivesModule {}

@@ -1,20 +1,33 @@
 @import '~src/styles/variables';
 @import '~src/styles/bootstrap_var';
 
-a {
+.wrapper {
   position: fixed;
   bottom: 1rem;
-  right: 1rem;
+  right: 1.5rem;
   tab-index: 99999;
   z-index: $z-index-help;
+  transition: all 0.3s ease;
+  box-shadow: $shadow-up !important;
+  border-radius: 1rem;
 
-  button {
-    transition: $transition-base;
-    box-shadow: $shadow-up !important;
+  &.open {
+    border-radius: 0.5rem;
+  }
 
-    &:hover {
-      box-shadow: $shadow-up-up !important;
-      transform: translate(-2px, -2px);
-    }
+  &:hover {
+    box-shadow: $shadow-up-up !important;
+    transform: translate(-2px, -2px);
+  }
+
+  .header {
+    display: grid;
+    align-items: center;
+    grid-template-columns: min-content 1fr min-content;
+  }
+
+  .first-item {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
   }
 }

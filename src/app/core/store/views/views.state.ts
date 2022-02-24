@@ -74,6 +74,7 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
 export const selectViewsState = (state: AppState) => state.views;
 
 export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getSelectors().selectAll);
+export const selectAllViewsCount = createSelector(selectViewsState, viewsAdapter.getSelectors().selectTotal);
 export const selectAllViewsSorted = createSelector(selectAllViews, views => sortResourcesByFavoriteAndLastUsed(views));
 export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
 export const selectViewByCode = (code: string) =>

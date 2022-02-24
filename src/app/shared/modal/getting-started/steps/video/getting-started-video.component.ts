@@ -17,22 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {Component, ChangeDetectionStrategy, OnInit, ElementRef, OnDestroy} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 import {GettingStartedService} from '../../getting-started.service';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
+
+import Player, {TimeEvent} from '@vimeo/player';
+import {generateId} from '../../../../utils/resource.utils';
 
 @Component({
   selector: 'getting-started-video',
   templateUrl: './getting-started-video.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./getting-started-video.component.scss'],
-  host: {class: 'd-block p-3'},
+  host: {class: 'd-block'},
 })
-export class GettingStartedVideoComponent implements OnInit {
-  public videoUrl: SafeResourceUrl;
+export class GettingStartedVideoComponent implements OnInit, OnDestroy {
+  public readonly elementId = `videoPlaceholder${generateId()}`;
+
+  public videoId: number;
+
+  private player: Player;
+  private playedSecondsArray: boolean[];
 
   constructor(
+    private element: ElementRef,
     private sanitizer: DomSanitizer,
     private service: GettingStartedService,
     private configurationService: ConfigurationService
@@ -43,23 +52,67 @@ export class GettingStartedVideoComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.videoUrl = this.makeVideoUrl();
+    this.videoId = this.makeVideoId();
+
+    const element = this.element.nativeElement.getElementsByClassName('video-placeholder')[0];
+    this.player = new Player(element, {
+      id: this.videoId,
+      quality: '1080p',
+      responsive: true,
+    });
+
+    this.player.on('play', () => this.onVideoPlayed());
+    this.player.on('timeupdate', value => this.onVideoPlaying(value));
   }
 
-  private makeVideoUrl(): SafeResourceUrl {
-    switch (this.service.selectedTemplate?.code) {
-      default:
-        return this.makeDefaultVideoUrl();
+  private onVideoPlaying(event: TimeEvent) {
+    this.initPlayedSecondsArray(event);
+
+    this.playedSecondsArray[Math.floor(event.seconds)] = true;
+  }
+
+  private initPlayedSecondsArray(event: TimeEvent) {
+    if (this.playedSecondsArray) {
+      return;
+    }
+
+    this.playedSecondsArray = [];
+
+    for (let second = 0; second < event.duration; second++) {
+      this.playedSecondsArray[second] = false;
     }
   }
 
-  private makeDefaultVideoUrl(): SafeResourceUrl {
+  private onVideoPlayed() {
+    this.service.onVideoPlayed();
+  }
+
+  private makeVideoId(): number {
+    switch (this.service.selectedTemplate?.code) {
+      default:
+        return this.getDefaultVideoId();
+    }
+  }
+
+  private getDefaultVideoId(): number {
     switch (this.locale) {
       // case LanguageCode.CZ:
       default:
-        return this.sanitizer.bypassSecurityTrustResourceUrl(
-          'https://player.vimeo.com/video/676885140?h=f8ab98eb2c&color=00b388&byline=0&portrait=0'
-        );
+        return 676885140;
     }
+  }
+
+  public ngOnDestroy() {
+    this.player.destroy();
+    this.computeTotalSecondsPlayed();
+  }
+
+  private computeTotalSecondsPlayed() {
+    if (!this.playedSecondsArray) {
+      return;
+    }
+
+    const playedSeconds = this.playedSecondsArray.filter(played => played).length;
+    this.service.onVideoPlayedSeconds(playedSeconds);
   }
 }

@@ -463,6 +463,14 @@ export class GettingStartedService {
     }
   }
 
+  public onVideoPlayed() {
+    this.patchUserOnboarding('videoPlayed', true);
+  }
+
+  public onVideoPlayedSeconds(seconds: number) {
+    this.patchUserOnboarding('videoPlayedSeconds', seconds);
+  }
+
   private scheduleEmailVerificationCheck() {
     this.stageSubscriptions.add(
       this.selectCurrentUser$().subscribe(user => {
@@ -666,7 +674,13 @@ export class GettingStartedService {
   }
 
   private patchUserOnboarding(key: keyof UserOnboarding, value: any) {
-    this.store$.dispatch(new UsersAction.SetOnboarding({key, value}));
+    this.selectCurrentUser$()
+      .pipe(take(1))
+      .subscribe(currentUser => {
+        if (!currentUser.onboarding?.[key]) {
+          this.store$.dispatch(new UsersAction.SetOnboarding({key, value}));
+        }
+      });
   }
 }
 

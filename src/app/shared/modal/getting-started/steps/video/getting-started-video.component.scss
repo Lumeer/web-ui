@@ -1,3 +1,9 @@
+:host {
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  overflow: hidden;
+}
+
 .video {
   position: relative;
   width: 100%;
@@ -5,7 +11,7 @@
   padding-bottom: 56.25%;
 }
 
-.video iframe {
+.video > * {
   position: absolute;
   width: 100%;
   height: 100%;

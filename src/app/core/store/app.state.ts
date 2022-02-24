@@ -58,6 +58,7 @@ import {initialSelectionListsState, SelectionListsState} from './selection-lists
 import {DashboardDataState, initialDashboardDataState} from './dashboard-data/dashboard-data.state';
 import {FormsState, initialFormsState} from './form/form.state';
 import {initialResourceVariablesState, ResourceVariablesState} from './resource-variables/resource-variables.state';
+import {AppPropertiesState, initialAppPropertiesState} from './app-properties/app-properties.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -100,6 +101,7 @@ export interface AppState {
   selectionLists: SelectionListsState;
   dashboardData: DashboardDataState;
   variables: ResourceVariablesState;
+  properties: AppPropertiesState;
 }
 
 export function initialAppState(): AppState {
@@ -144,5 +146,6 @@ export function initialAppState(): AppState {
     selectionLists: initialSelectionListsState,
     dashboardData: initialDashboardDataState,
     variables: initialResourceVariablesState,
+    properties: initialAppPropertiesState,
   };
 }

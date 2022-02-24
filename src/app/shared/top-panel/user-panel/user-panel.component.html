@@ -5,7 +5,6 @@
   <user-menu *ngIf="showControls"
              [workspace]="workspace"
              [userEmail]="(user$ | async)?.email"
-             [controlsVisible]="controlsVisible"
-             (toggleControls)="toggleControls.emit()">
+             [controlsVisible]="controlsVisible">
   </user-menu>
 </div>

@@ -1,0 +1,17 @@
+<modal-wrapper class="d-block"
+               [dialogType]="dialogType.Success"
+               [performingAction]="performingAction$ | async"
+               [submitDisabled]="formInvalid$ | async"
+               (onSubmit)="onSubmit()"
+               (onClose)="hideDialog()">
+
+  <span class="title" i18n="@@dialog.productDemo.title">Book product demo</span>
+
+  <div class="body p-3">
+    <book-product-demo-content [form]="form"></book-product-demo-content>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@button.send">Send</span>
+
+</modal-wrapper>

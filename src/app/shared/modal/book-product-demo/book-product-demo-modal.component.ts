@@ -18,23 +18,28 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {BsModalRef} from 'ngx-bootstrap/modal';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith, take} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {UsersAction} from '../../../core/store/users/users.action';
-import {Store} from '@ngrx/store';
+import {notEmptyValidator} from '../../../core/validators/custom-validators';
 import {AppState} from '../../../core/store/app.state';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {UsersAction} from '../../../core/store/users/users.action';
 
 @Component({
-  templateUrl: './get-in-touch-modal.component.html',
+  templateUrl: './book-product-demo-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GetInTouchModalComponent implements OnInit {
+export class BookProductDemoModalComponent implements OnInit {
   public readonly form = new FormGroup({
-    message: new FormControl('', Validators.required),
+    name: new FormControl('', notEmptyValidator()),
+    industry: new FormControl('', notEmptyValidator()),
+    numEmployees: new FormControl('', notEmptyValidator()),
+    useCase: new FormControl('', notEmptyValidator()),
   });
 
   public readonly dialogType = DialogType;
@@ -49,24 +54,42 @@ export class GetInTouchModalComponent implements OnInit {
       map(() => this.form.invalid),
       startWith(true)
     );
+
+    this.store$
+      .pipe(select(selectCurrentUser), take(1))
+      .subscribe(currentUser => this.nameControl.setValue(currentUser?.name));
   }
 
-  public get message(): AbstractControl {
-    return this.form.get('message');
+  public get nameControl(): AbstractControl {
+    return this.form.get('name');
+  }
+
+  public get industryControl(): AbstractControl {
+    return this.form.get('industry');
+  }
+
+  public get numEmployeesControl(): AbstractControl {
+    return this.form.get('numEmployees');
+  }
+
+  public get useCaseControl(): AbstractControl {
+    return this.form.get('useCase');
   }
 
   public onSubmit() {
-    this.form.markAsTouched();
-    this.message.markAsTouched();
+    const message = `Name: ${this.nameControl.value.trim()}
+    Industry: ${this.nameControl.value.trim()}
+    Employees: ${this.nameControl.value}
+    Use case: ${this.useCaseControl.value.trim()}`;
 
-    this.sendFeedback(this.message.value);
+    this.sendFeedback(message);
   }
 
   private sendFeedback(message: string) {
     this.performingAction$.next(true);
 
     this.store$.dispatch(
-      new UsersAction.GetInTouch({
+      new UsersAction.BookProductDemo({
         message,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.onError(),

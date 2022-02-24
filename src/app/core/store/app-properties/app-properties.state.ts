@@ -17,15 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {GetHelpComponent} from './get-help.component';
-import {DirectivesModule} from '../directives/directives.module';
-import {InputModule} from '../input/input.module';
+import {createSelector} from '@ngrx/store';
+import {ConstraintData} from '@lumeer/data-filters';
+import {AppState} from '../app.state';
+import {selectAllUsers, selectCurrentUserForWorkspace} from '../users/users.state';
+import {selectAllViews} from '../views/views.state';
+import {selectTeamsForWorkspace} from '../teams/teams.state';
+import {selectSelectionListsByWorkspace} from '../selection-lists/selection-lists.state';
 
-@NgModule({
-  declarations: [GetHelpComponent],
-  imports: [CommonModule, DirectivesModule, InputModule],
-  exports: [GetHelpComponent],
-})
-export class GetHelpModule {}
+export interface AppPropertiesState {
+  topPanelOpened: boolean;
+}
+
+export const initialAppPropertiesState: AppPropertiesState = {
+  topPanelOpened: true,
+};
+
+export const selectAppPropertiesState = (state: AppState) => state.properties;
+
+export const selectTopPanelOpened = createSelector(selectAppPropertiesState, properties => properties.topPanelOpened);
