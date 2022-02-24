@@ -27,7 +27,7 @@
              formControlName="industry"
              class="form-control"
              i18n-placeholder="@@dialog.productDemo.form.industry.placeholder"
-             placeholder="Enter company industry (e.g)">
+             placeholder="Enter your company industry">
     </div>
     <small class="col-12 text-danger mt-1" *ngIf="industryControl.touched && industryControl.errors?.notEmpty"
            i18n="@@dialog.productDemo.form.industry.notEmpty">Industry can not be empty</small>
@@ -39,7 +39,7 @@
            for="name">Company size:</label>
 
     <div class="col-12">
-      <select-item emptyValue="Select company size"
+      <select-item emptyValue="Select your company size"
                    i18n-emptyValue="@@dialog.productDemo.form.numEployees.emptyValue"
                    [removable]="false"
                    [items]="numEmployeesItems"
@@ -59,8 +59,8 @@
     <textarea class="form-control"
               formControlName="useCase"
               id="useCase"
-              i18n-placeholder="@@dialog.productDemo.form.industry.placeholder"
-              placeholder="I would like to setup my project...">
+              i18n-placeholder="@@dialog.productDemo.form.useCase.placeholder"
+              placeholder="Our company helps clients... We would like to...">
     </textarea>
       <small class="col-12 text-danger mt-1" *ngIf="useCaseControl.touched && useCaseControl.errors?.notEmpty"
              i18n="@@dialog.productDemo.form.useCase.notEmpty">Use case can not be empty</small>
