@@ -806,12 +806,14 @@ export function cleanQueryFromHiddenAttributes(
   return {...query, stems};
 }
 
-export function createCollectionQueryStem(collectionId: string): QueryStem {
-  return {collectionId, id: generateId()};
+export function createCollectionQueryStem(collectionId: string, filters?: CollectionAttributeFilter[]): QueryStem {
+  return {collectionId, id: generateId(), filters};
 }
 
 export function createOpenCollectionQuery(collection: Collection, query: Query): Query {
-  const stem = query.stems?.find(s => s.collectionId === collection.id) || createCollectionQueryStem(collection?.id);
+  const filters = getQueryFiltersForCollection(query, collection?.id);
+  const stem =
+    query.stems?.find(s => s.collectionId === collection?.id) || createCollectionQueryStem(collection?.id, filters);
   return {...query, stems: [stem]};
 }
 
