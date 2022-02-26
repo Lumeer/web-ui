@@ -100,17 +100,17 @@ export function convertNotificationsToDto(notifications: NotificationsSettings):
 }
 
 export function convertUserHintsModelToDto(hints: UserHints): UserHintsDto {
-  return hints;
+  return {...hints};
 }
 
 export function convertUserHintsDtoToModel(hints: UserHintsDto): UserHints {
-  return hints;
+  return {...hints};
 }
 
 export function convertUserOnboardingModelToDto(model: UserOnboarding): UserOnboardingDto {
-  return model;
+  return {...model};
 }
 
-export function convertUserOnboardingDtoToModel(model: UserOnboardingDto): UserOnboarding {
-  return model;
+export function convertUserOnboardingDtoToModel(dto: UserOnboardingDto): UserOnboarding {
+  return {...dto};
 }

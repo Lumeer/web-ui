@@ -44,6 +44,7 @@ export interface UserOnboardingDto {
   template?: string;
   invitedUsers?: number;
   videoShowed?: boolean;
+  helpOpened?: boolean;
   videoPlayed?: boolean;
   videoPlayedSeconds?: number;
 }

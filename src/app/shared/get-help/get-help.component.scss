@@ -17,13 +17,29 @@
 
   &:hover {
     box-shadow: $shadow-up-up !important;
-    transform: translate(-2px, -2px);
   }
 
   .header {
-    display: grid;
+    display: flex;
     align-items: center;
-    grid-template-columns: min-content 1fr min-content;
+
+    .header-label {
+      display: grid;
+      grid-template-columns: min-content 1fr min-content;
+
+      .spacer {
+        width: 0.5rem;
+      }
+    }
+
+    .header-chevron {
+      display: grid;
+      grid-template-columns: min-content min-content;
+
+      .spacer {
+        width: 0.5rem;
+      }
+    }
   }
 
   .first-item {

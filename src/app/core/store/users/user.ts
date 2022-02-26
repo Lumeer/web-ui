@@ -51,6 +51,7 @@ export interface UserOnboarding {
   invitedUsers?: number;
   videoShowed?: boolean;
   videoPlayed?: boolean;
+  helpOpened?: boolean;
   videoPlayedSeconds?: number;
 }
 

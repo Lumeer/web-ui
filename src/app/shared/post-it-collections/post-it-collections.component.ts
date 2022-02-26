@@ -30,7 +30,7 @@ import {selectCollectionsLoaded} from '../../core/store/collections/collections.
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
+import {queryContainsOnlyFulltexts, queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {
   selectCollectionsByCustomViewAndQuery,
@@ -42,6 +42,7 @@ import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.s
 import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {View} from '../../core/store/views/view';
+import {DataResourcesAction} from '../../core/store/data-resources/data-resources.action';
 
 @Component({
   selector: 'post-it-collections',
@@ -87,7 +88,7 @@ export class PostItCollectionsComponent implements OnInit, OnChanges {
         }
         return this.store$.pipe(select(selectViewQuery));
       }),
-      tap(query => (this.query = query))
+      tap(query => this.onQueryChanged(query))
     );
     this.view$ = this.overrideView$.pipe(
       switchMap(view => {
@@ -108,6 +109,14 @@ export class PostItCollectionsComponent implements OnInit, OnChanges {
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
     this.loaded$ = this.store$.pipe(select(selectCollectionsLoaded));
+  }
+
+  private onQueryChanged(query: Query) {
+    this.query = query;
+
+    if (queryContainsOnlyFulltexts(query)) {
+      this.store$.dispatch(new DataResourcesAction.Get({query}));
+    }
   }
 
   public onDelete(collection: Collection) {

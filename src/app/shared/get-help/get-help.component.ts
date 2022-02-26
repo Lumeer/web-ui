@@ -17,34 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, OnInit} from '@angular/core';
 import {LanguageCode} from '../../core/model/language';
 import {ConfigurationService} from '../../configuration/configuration.service';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, switchMap} from 'rxjs';
 import {ApplicationTourService} from '../../core/service/application-tour.service';
 import {ModalService} from '../modal/modal.service';
 import {AppState} from '../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCurrentUser} from '../../core/store/users/users.state';
-import {map, take} from 'rxjs/operators';
-import {rotateAnimation, shrinkOutAnimation} from './model/get-help.utils';
+import {distinctUntilChanged, map, take} from 'rxjs/operators';
+import {ButtonState, rotateAnimation, scaleAnimation, shrinkOutAnimation} from './model/get-help.utils';
 import {NewsletterToggleService} from './model/newsletter-toggle.service';
 import {clickedInsideElement} from '../utils/html-modifier';
+import {UsersAction} from '../../core/store/users/users.action';
 
 @Component({
   selector: 'get-help',
   templateUrl: './get-help.component.html',
   styleUrls: ['./get-help.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [shrinkOutAnimation, rotateAnimation],
+  animations: [shrinkOutAnimation, rotateAnimation, scaleAnimation],
   providers: [NewsletterToggleService],
 })
 export class GetHelpComponent implements OnInit {
   public link: string;
+  public buttonState = ButtonState;
 
+  public mouseEntered$ = new BehaviorSubject(false);
   public extendedContent$ = new BehaviorSubject(false);
 
   public showNewsletter$: Observable<boolean>;
+  public buttonState$: Observable<ButtonState>;
 
   constructor(
     private configurationService: ConfigurationService,
@@ -65,6 +69,32 @@ export class GetHelpComponent implements OnInit {
       select(selectCurrentUser),
       map(currentUser => !currentUser?.newsletter),
       take(1)
+    );
+
+    this.buttonState$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(currentUser => currentUser?.onboarding?.helpOpened),
+      distinctUntilChanged(),
+      // take(1),
+      switchMap(helpOpened =>
+        combineLatest([this.extendedContent$, this.mouseEntered$]).pipe(
+          map(([extended, mouseEntered]) => {
+            if (extended) {
+              return ButtonState.Open;
+            }
+
+            if (helpOpened) {
+              if (mouseEntered) {
+                return ButtonState.Entered;
+              } else {
+                return ButtonState.Compact;
+              }
+            }
+
+            return ButtonState.Closed;
+          })
+        )
+      )
     );
   }
 
@@ -90,6 +120,18 @@ export class GetHelpComponent implements OnInit {
 
   public toggleContent() {
     this.extendedContent$.next(!this.extendedContent$.value);
+    this.checkPatchUser(this.extendedContent$.value);
+  }
+
+  private checkPatchUser(opened: boolean) {
+    if (!opened) {
+      return;
+    }
+    this.store$.pipe(select(selectCurrentUser), take(1)).subscribe(currentUser => {
+      if (!currentUser?.onboarding?.helpOpened) {
+        this.store$.dispatch(new UsersAction.SetOnboarding({key: 'helpOpened', value: true}));
+      }
+    });
   }
 
   public onNewsletterChange(checked: boolean) {

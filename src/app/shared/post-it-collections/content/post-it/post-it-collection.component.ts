@@ -36,7 +36,7 @@ import {Perspective} from '../../../../view/perspectives/perspective';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
 import {permissionsCanManageCollectionDetail} from '../../../utils/permission.utils';
-import {createCollectionQueryStem} from '../../../../core/store/navigation/query/query.util';
+import {createCollectionQueryStem, createOpenCollectionQuery} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'post-it-collection',
@@ -53,6 +53,9 @@ export class PostItCollectionComponent implements OnChanges {
 
   @Input()
   public permissions: AllowedPermissions;
+
+  @Input()
+  public query: Query;
 
   @Output()
   public update = new EventEmitter<Collection>();
@@ -84,7 +87,7 @@ export class PostItCollectionComponent implements OnChanges {
     if (changes.permissions) {
       this.canManageDetail = permissionsCanManageCollectionDetail(this.permissions);
     }
-    if (changes.collection || changes.workspace) {
+    if (changes.collection || changes.workspace || changes.query) {
       if (this.collection?.id) {
         this.path = ['/w', this.workspace?.organizationCode, this.workspace?.projectCode, 'view', Perspective.Table];
         this.queryParams = {[QueryParam.Query]: this.queryForCollectionDocuments()};
@@ -116,8 +119,7 @@ export class PostItCollectionComponent implements OnChanges {
   }
 
   public queryForCollectionDocuments(): string {
-    const query: Query = {stems: [createCollectionQueryStem(this.collection.id)]};
-    return convertQueryModelToString(query);
+    return convertQueryModelToString(createOpenCollectionQuery(this.collection, this.query));
   }
 
   public togglePicker() {
