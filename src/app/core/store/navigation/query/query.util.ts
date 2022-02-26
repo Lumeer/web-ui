@@ -811,7 +811,7 @@ export function createCollectionQueryStem(collectionId: string): QueryStem {
 }
 
 export function createOpenCollectionQuery(collection: Collection, query: Query): Query {
-  const stem = createCollectionQueryStem(collection?.id);
+  const stem = query.stems?.find(s => s.collectionId === collection.id) || createCollectionQueryStem(collection?.id);
   return {...query, stems: [stem]};
 }
 
