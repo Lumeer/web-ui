@@ -44,6 +44,14 @@
           Attributes
         </a>
       </li>
+      <li role="presentation" class="nav-item">
+        <a [routerLink]="['activity']"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@collection.config.tab.activity">
+          Activity
+        </a>
+      </li>
       <li role="presentation" class="nav-item" *ngIf="permissions?.roles?.TechConfig">
         <a [routerLink]="['rules']"
            routerLinkActive="active"

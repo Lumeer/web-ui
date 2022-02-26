@@ -1,25 +1,16 @@
-<ng-container *ngIf="auditLogs?.length || auditLogCreated">
+<ng-container *ngIf="auditLogs?.length; else emptyState">
   <ng-container
     *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async, revertingIds: revertingAuditLogs$ | async} as data">
-    <audit-log *ngFor="let auditLog of auditLogs; trackBy:trackByAudit; let first = first"
+    <audit-log *ngFor="let auditLog of auditLogs; trackBy:trackByAudit; let first = first; let last = last"
                [auditLog]="auditLog"
-               [parent]="parent"
+               [parent]="auditLog | auditLogParent:parentData"
                [first]="first"
                [reverting]="data.revertingIds | includes:auditLog.id"
-               [last]="!auditLogCreated"
+               [last]="last"
                [constraintData]="data.constraintData"
-               [allowRevert]="first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE)"
+               [allowRevert]="first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE) && (auditLog | auditLogRevertable)"
                [usersMap]="data.usersMap"
                (revert)="onRevert(auditLog)">
-    </audit-log>
-    <audit-log *ngIf="auditLogCreated"
-               [auditLog]="auditLogCreated"
-               [parent]="parent"
-               [first]="auditLogs.length === 0"
-               [last]="true"
-               [constraintData]="data.constraintData"
-               [allowRevert]="false"
-               [usersMap]="data.usersMap">
     </audit-log>
     <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
          class="py-3 mt-3 d-flex flex-column align-items-center text-center">

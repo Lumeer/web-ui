@@ -60,6 +60,7 @@ import {IsDayOfWeekSelectedPipe} from './settings/common/rules/add-rule-form/cro
 import {MaxIntervalByUnitPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/max-interval-by-unit.pipe';
 import {ShowDaysOfWeekPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-days-of-week.pipe';
 import {ShowOccurrencePipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-occurrence.pipe';
+import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule, TeamsModule],
@@ -97,6 +98,7 @@ import {ShowOccurrencePipe} from './settings/common/rules/add-rule-form/cron-for
     MaxIntervalByUnitPipe,
     ShowDaysOfWeekPipe,
     ShowOccurrencePipe,
+    CollectionActivityComponent,
   ],
   providers: [CollectionSettingsGuard, CollectionTabGuard],
 })

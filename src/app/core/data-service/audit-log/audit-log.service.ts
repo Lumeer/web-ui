@@ -29,6 +29,10 @@ export abstract class AuditLogService {
     workspace?: Workspace
   ): Observable<AuditLogDto[]>;
 
+  public abstract getByProject(workspace?: Workspace): Observable<AuditLogDto[]>;
+
+  public abstract getByCollection(collectionId: string, workspace?: Workspace): Observable<AuditLogDto[]>;
+
   public abstract revertDocument(
     collectionId: string,
     documentId: string,
@@ -41,6 +45,8 @@ export abstract class AuditLogService {
     linkInstanceId: string,
     workspace?: Workspace
   ): Observable<AuditLogDto[]>;
+
+  public abstract getByLinkType(linkTypeId: string, workspace?: Workspace): Observable<AuditLogDto[]>;
 
   public abstract revertLink(
     linkTypeId: string,

@@ -37,6 +37,7 @@ import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.co
 import {CollectionTabGuard} from './collection-tab.guard';
 import {RoleType} from '../core/model/role-type';
 import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
+import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
 
 const collectionRoutes: Routes = [
   {
@@ -62,6 +63,10 @@ const collectionRoutes: Routes = [
         path: 'rules',
         component: CollectionRulesComponent,
         data: {role: RoleType.TechConfig},
+      },
+      {
+        path: 'activity',
+        component: CollectionActivityComponent,
       },
       {
         path: 'linktypes',

@@ -52,7 +52,6 @@ import {SliderModule} from './slider/slider.module';
 import {SettingsModule} from './settings/settings.module';
 import {TableModule} from './table/table.module';
 import {ResizableSidebarModule} from './resizable-sidebar/resizable-sidebar.module';
-import {ResourceCommentsModule} from './resource-comments/resource-comments.module';
 import {RedDotModule} from './red-dot/red-dot.module';
 import {MenuModule} from './menu/menu.module';
 import {ButtonModule} from './button/button.module';
@@ -61,7 +60,7 @@ import {ProgressModule} from './progress/progress.module';
 import {BoxModule} from './box/box.module';
 import {LayoutModule} from './layout/layout.module';
 import {FiltersModule} from './filters/filters.module';
-import {ResourceModuleModule} from './resource/resource-module.module';
+import {ResourceModule} from './resource/resource.module';
 
 @NgModule({
   imports: [
@@ -98,7 +97,6 @@ import {ResourceModuleModule} from './resource/resource-module.module';
     SettingsModule,
     TableModule,
     ResizableSidebarModule,
-    ResourceCommentsModule,
     RedDotModule,
     MenuModule,
     ButtonModule,
@@ -106,7 +104,7 @@ import {ResourceModuleModule} from './resource/resource-module.module';
     BoxModule,
     LayoutModule,
     FiltersModule,
-    ResourceModuleModule,
+    ResourceModule,
   ],
   declarations: [TourComponent],
   exports: [
@@ -145,7 +143,6 @@ import {ResourceModuleModule} from './resource/resource-module.module';
     SettingsModule,
     TableModule,
     ResizableSidebarModule,
-    ResourceCommentsModule,
     RedDotModule,
     MenuModule,
     ButtonModule,
@@ -153,7 +150,7 @@ import {ResourceModuleModule} from './resource/resource-module.module';
     BoxModule,
     LayoutModule,
     FiltersModule,
-    ResourceModuleModule,
+    ResourceModule,
   ],
 })
 export class SharedModule {}

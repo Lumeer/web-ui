@@ -1,0 +1,5 @@
+<audit-logs class="p-3"
+            [auditLogs]="audit$ | async"
+            [parentData]="parentData$ | async"
+            (revert)="onRevertAudit($event)">
+</audit-logs>

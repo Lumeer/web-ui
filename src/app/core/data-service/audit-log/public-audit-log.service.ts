@@ -44,6 +44,18 @@ export class PublicAuditLogService implements AuditLogService {
     return of([]);
   }
 
+  public getByCollection(collectionId: string): Observable<AuditLogDto[]> {
+    return of([]);
+  }
+
+  public getByLinkType(linkTypeId: string): Observable<AuditLogDto[]> {
+    return of([]);
+  }
+
+  public getByProject(): Observable<AuditLogDto[]> {
+    return of([]);
+  }
+
   public revertDocument(collectionId: string, documentId: string, auditLogId: string): Observable<DocumentDto> {
     return this.store$.pipe(
       select(selectDocumentById(documentId)),

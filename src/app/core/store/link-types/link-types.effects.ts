@@ -188,7 +188,7 @@ export class LinkTypesEffects {
         const {linkTypeId} = action.payload;
         const actions: Action[] = [
           new LinkInstancesAction.ClearByLinkType({linkTypeId}),
-          AuditLogActions.clearByLink({linkTypeId}),
+          AuditLogActions.clearByLinkType({linkTypeId}),
         ];
 
         return actions;

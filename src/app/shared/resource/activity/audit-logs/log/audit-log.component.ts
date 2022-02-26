@@ -18,11 +18,11 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
-import {AuditLog} from '../../../../../../core/store/audit-logs/audit-log.model';
-import {User} from '../../../../../../core/store/users/user';
 import {ConstraintData} from '@lumeer/data-filters';
-import {AttributesResource} from '../../../../../../core/model/resource';
-import {DEFAULT_USER} from '../../../../../../core/constants';
+import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
+import {AttributesResource} from '../../../../../core/model/resource';
+import {User} from '../../../../../core/store/users/user';
+import {DEFAULT_USER} from '../../../../../core/constants';
 
 @Component({
   selector: 'audit-log',

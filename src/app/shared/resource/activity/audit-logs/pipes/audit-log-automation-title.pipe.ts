@@ -17,24 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {USER_AVATAR_SIZE} from '../../../core/constants';
+import {Pipe, PipeTransform} from '@angular/core';
+import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
+import {Attribute} from '../../../../../core/store/collections/collection';
 
-@Component({
-  selector: 'user-avatar',
-  templateUrl: './user-avatar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'auditLogAutomationTitle',
 })
-export class UserAvatarComponent {
-  @Input()
-  public email: string;
-
-  @Input()
-  public tooltipText: string;
-
-  @Input()
-  public avatarSize = USER_AVATAR_SIZE;
-
-  @Input()
-  public placement: string;
+export class AuditLogAutomationTitlePipe implements PipeTransform {
+  public transform(auditLog: AuditLog, attributes: Attribute[]): string {
+    if (auditLog.automation?.length) {
+      if (auditLog.automation.startsWith('=')) {
+        const attributeId = auditLog.automation.substring(1);
+        return attributes?.find(attribute => attribute.id === attributeId)?.name || '';
+      }
+      return auditLog.automation;
+    }
+    return '';
+  }
 }

@@ -54,13 +54,13 @@
       <div class="my-5">
       </div>
       <ng-container *ngIf="dataResourceData.permissions?.rolesWithView?.CommentContribute">
-        <comments-panel *ngIf="resource && dataResource?.id"
+        <resource-comments *ngIf="resource && dataResource?.id"
                         [maxCommentsCount]="1"
                         [permissions]="dataResourceData.permissions"
                         [resourceType]="resourceType | attributeResourceTypeToResourceType"
                         [resourceId]="dataResource.id"
                         (newCommentClick)="editNewComment()">
-        </comments-panel>
+        </resource-comments>
         <div *ngIf="data.commentsCount > 1">
           <button class="btn btn-sm btn-success fw-bold my-3 mx-1"
                   i18n="@@document.detail.detail.comments.seeAll"
@@ -134,14 +134,14 @@
 
     <ng-container
       *ngIf="data.selectedTab === detailTabType.Comments && dataResourceData.permissions?.rolesWithView?.CommentContribute">
-      <comments-panel *ngIf="resource && dataResource?.id"
+      <resource-comments *ngIf="resource && dataResource?.id"
                       [permissions]="dataResourceData.permissions"
                       [resourceType]="resourceType | attributeResourceTypeToResourceType"
                       [resourceId]="dataResource.id"
                       [startEditing]="data.startEditing"
                       (onSaveComment)="startEditing$.next(false)"
                       (onCancelComment)="startEditing$.next(false)">
-      </comments-panel>
+      </resource-comments>
     </ng-container>
 
     <ng-container

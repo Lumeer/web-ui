@@ -50,13 +50,13 @@ import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
 import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
 import {DirectivesModule} from '../directives/directives.module';
 import {MenuModule} from '../menu/menu.module';
-import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {CellFilterBuilderComponent} from './content/header/cell/filter-builder/cell-filter-builder.component';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {FilterBuilderModule} from '../builder/filter-builder/filter-builder.module';
 import {FilterPreviewModule} from '../builder/filter-preview/filter-preview.module';
 import {TableCellAffectedPipe} from './pipes/table-cell-affected.pipe';
+import {ResourceCommentsModule} from '../resource/comments/resource-comments.module';
 
 @NgModule({
   declarations: [

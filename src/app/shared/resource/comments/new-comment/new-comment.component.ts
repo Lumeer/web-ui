@@ -28,17 +28,17 @@ import {
   Renderer2,
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {isMacOS} from '../../utils/system.utils';
-import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../key-code';
-import {User} from '../../../core/store/users/user';
-import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
-import {generateId} from '../../utils/resource.utils';
-import {objectValues, preventEvent} from '../../utils/common.utils';
 import {ContentChange} from 'ngx-quill';
-
 import * as QuillNamespace from 'quill';
 import QuillMention from 'quill-mention';
-import {defaultTextEditorBubbleOptions} from '../../modal/text-editor/text-editor.utils';
+
+import {isMacOS} from '../../../utils/system.utils';
+import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../key-code';
+import {User} from '../../../../core/store/users/user';
+import {ResourceCommentModel} from '../../../../core/store/resource-comments/resource-comment.model';
+import {generateId} from '../../../utils/resource.utils';
+import {objectValues, preventEvent} from '../../../utils/common.utils';
+import {defaultTextEditorBubbleOptions} from '../../../modal/text-editor/text-editor.utils';
 
 @Component({
   selector: 'new-comment',

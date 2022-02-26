@@ -19,9 +19,9 @@
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Constraint, ConstraintData, DataValue} from '@lumeer/data-filters';
-import {isNullOrUndefined, objectsByIdMap} from '../../../../../../utils/common.utils';
-import {AttributesResource} from '../../../../../../../core/model/resource';
-import {DataInputConfiguration} from '../../../../../../data-input/data-input-configuration';
+import {AttributesResource} from '../../../../../../core/model/resource';
+import {isNullOrUndefined, objectsByIdMap} from '../../../../../utils/common.utils';
+import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
 
 interface ChangeEntry {
   label?: string;

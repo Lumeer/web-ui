@@ -19,22 +19,19 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ResourceHeaderComponent} from './header/resource-header.component';
-import {PickerModule} from '../picker/picker.module';
-import {InputModule} from '../input/input.module';
-import {ResourceVariablesComponent} from './variables/resource-variables.component';
-import {ResourceVariableRowComponent} from './variables/table/row/resource-variable-row.component';
-import {ResourceVariableHeaderComponent} from './variables/header/resource-variable-header.component';
 import {FormsModule} from '@angular/forms';
-import {ResourceVariablesTableComponent} from './variables/table/resource-variables-table.component';
-import {PipesModule} from '../pipes/pipes.module';
-import {FilterResourceVariablesPipe} from './variables/pipes/filter-resource-variables.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {ResourceVariablesKeysPipe} from './variables/pipes/resource-variables-keys.pipe';
+import {ResourceVariablesComponent} from './resource-variables.component';
+import {ResourceVariableRowComponent} from './table/row/resource-variable-row.component';
+import {ResourceVariableHeaderComponent} from './header/resource-variable-header.component';
+import {ResourceVariablesTableComponent} from './table/resource-variables-table.component';
+import {FilterResourceVariablesPipe} from './pipes/filter-resource-variables.pipe';
+import {ResourceVariablesKeysPipe} from './pipes/resource-variables-keys.pipe';
+import {PipesModule} from '../../pipes/pipes.module';
+import {InputModule} from '../../input/input.module';
 
 @NgModule({
   declarations: [
-    ResourceHeaderComponent,
     ResourceVariablesComponent,
     ResourceVariableRowComponent,
     ResourceVariableHeaderComponent,
@@ -42,7 +39,7 @@ import {ResourceVariablesKeysPipe} from './variables/pipes/resource-variables-ke
     FilterResourceVariablesPipe,
     ResourceVariablesKeysPipe,
   ],
-  imports: [CommonModule, PickerModule, InputModule, FormsModule, PipesModule, TooltipModule],
-  exports: [ResourceHeaderComponent, ResourceVariablesComponent],
+  imports: [CommonModule, FormsModule, InputModule, PipesModule, TooltipModule],
+  exports: [ResourceVariablesComponent],
 })
-export class ResourceModuleModule {}
+export class ResourceVariablesModule {}

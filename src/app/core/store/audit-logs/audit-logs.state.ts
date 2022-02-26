@@ -22,6 +22,7 @@ import {AuditLog} from './audit-log.model';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {ResourceType} from '../../model/resource-type';
+import {isCollectionAuditLog, isLinkTypeAuditLog, isProjectAuditLog} from './audit-log.utils';
 
 export interface AuditLogsState extends EntityState<AuditLog> {
   revertingIds: string[];
@@ -40,6 +41,15 @@ export const {selectIds, selectEntities, selectAll, selectTotal} = auditLogsAdap
 export const selectAuditLogs = createSelector(selectAuditLogsState, selectAll);
 
 export const selectRevertingAuditLogsIds = createSelector(selectAuditLogsState, state => state.revertingIds);
+
+export const selectAuditLogsByProject = (projectId: string) =>
+  createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isProjectAuditLog(log, projectId))));
+
+export const selectAuditLogsByCollection = (collectionId: string) =>
+  createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isCollectionAuditLog(log, collectionId))));
+
+export const selectAuditLogsByLinkType = (linkTypeId: string) =>
+  createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isLinkTypeAuditLog(log, linkTypeId))));
 
 export const selectAuditLogsByDocument = (documentId: string) =>
   createSelector(selectAuditLogs, logs =>

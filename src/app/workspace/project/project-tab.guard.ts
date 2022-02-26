@@ -37,7 +37,7 @@ export class ProjectTabGuard implements CanActivateChild {
   constructor(private router: Router, private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
-    if (!next.data.role) {
+    if (!next.data?.role) {
       return of(true);
     }
     return this.selectUserAndResources().pipe(

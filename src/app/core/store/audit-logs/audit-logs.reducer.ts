@@ -25,11 +25,12 @@ import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils'
 
 export const auditLogsReducer = createReducer(
   initialAuditLogsState,
+  on(AuditLogActions.getByProjectSuccess, (state, action) => auditLogsAdapter.setAll(action.auditLogs, state)),
   on(AuditLogActions.getByDocumentSuccess, (state, action) =>
     auditLogsAdapter.upsertMany(
       action.auditLogs,
       auditLogsAdapter.removeMany(
-        log => log.resourceType === ResourceType.Collection && log.resourceId === action.documentId,
+        log => log.resourceType === ResourceType.Document && log.resourceId === action.documentId,
         state
       )
     )
@@ -39,6 +40,28 @@ export const auditLogsReducer = createReducer(
       action.auditLogs,
       auditLogsAdapter.removeMany(
         log => log.resourceType === ResourceType.Link && log.resourceId === action.linkInstanceId,
+        state
+      )
+    )
+  ),
+  on(AuditLogActions.getByCollectionSuccess, (state, action) =>
+    auditLogsAdapter.upsertMany(
+      action.auditLogs,
+      auditLogsAdapter.removeMany(
+        log =>
+          (log.resourceType === ResourceType.Document && log.parentId === action.collectionId) ||
+          log.resourceType === ResourceType.Collection,
+        state
+      )
+    )
+  ),
+  on(AuditLogActions.getByLinkTypeSuccess, (state, action) =>
+    auditLogsAdapter.upsertMany(
+      action.auditLogs,
+      auditLogsAdapter.removeMany(
+        log =>
+          (log.resourceType === ResourceType.Link && log.parentId === action.linkTypeId) ||
+          log.resourceType === ResourceType.LinkType,
         state
       )
     )
@@ -67,10 +90,11 @@ export const auditLogsReducer = createReducer(
       state
     )
   ),
-  on(AuditLogActions.clearByLink, (state, action) =>
+  on(AuditLogActions.clearByLinkType, (state, action) =>
     auditLogsAdapter.removeMany(
       log => log.resourceType === ResourceType.Link && log.parentId === action.linkTypeId,
       state
     )
-  )
+  ),
+  on(AuditLogActions.clear, () => initialAuditLogsState)
 );

@@ -56,6 +56,56 @@ export class AuditLogsEffects {
     )
   );
 
+  public getByProject$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.getByProject),
+      mergeMap(action =>
+        this.service.getByProject(action.workspace).pipe(
+          map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
+          map(auditLogs => AuditLogActions.getByProjectSuccess({auditLogs})),
+          catchError(error => of(AuditLogActions.getFailure({error})))
+        )
+      )
+    )
+  );
+
+  public getByCollection$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.getByCollection),
+      mergeMap(action =>
+        this.service.getByCollection(action.collectionId, action.workspace).pipe(
+          map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
+          map(auditLogs => AuditLogActions.getByCollectionSuccess({collectionId: action.collectionId, auditLogs})),
+          catchError(error => of(AuditLogActions.getFailure({error})))
+        )
+      )
+    )
+  );
+
+  public getByLinkType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.getByLinkType),
+      mergeMap(action =>
+        this.service.getByLinkType(action.linkTypeId, action.workspace).pipe(
+          map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
+          map(auditLogs => AuditLogActions.getByLinkTypeSuccess({linkTypeId: action.linkTypeId, auditLogs})),
+          catchError(error => of(AuditLogActions.getFailure({error})))
+        )
+      )
+    )
+  );
+
+  public getFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.getFailure),
+      tap(action => console.error(action.error)),
+      map(() => {
+        const message = $localize`:@@audit.get.any.fail:Could not get activity logs`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
   public revertDocument$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuditLogActions.revertDocument),

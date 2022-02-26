@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {AuditLogService} from './audit-log.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {AuditLogDto} from '../../dto/audit-log.dto';
 import {HttpClient} from '@angular/common/http';
 import {ConfigurationService} from '../../../configuration/configuration.service';
@@ -47,6 +47,27 @@ export class ApiAuditLogService extends BaseService implements AuditLogService {
 
   public getByLink(linkTypeId: string, linkInstanceId: string, workspace?: Workspace): Observable<AuditLogDto[]> {
     return this.httpClient.get<AuditLogDto[]>(this.linkTypeApiPrefix(linkTypeId, linkInstanceId, workspace), {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
+  }
+
+  public getByCollection(collectionId: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    const api = `${this.workspaceApiPrefix({...workspace, collectionId})}/collections/${collectionId}/audit`;
+    return this.get(api, workspace);
+  }
+
+  public getByLinkType(linkTypeId: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    const api = `${this.workspaceApiPrefix(workspace)}/link-types/${linkTypeId}/audit`;
+    return this.get(api, workspace);
+  }
+
+  public getByProject(workspace?: Workspace): Observable<AuditLogDto[]> {
+    const api = `${this.workspaceApiPrefix(workspace)}/audit`;
+    return this.get(api, workspace);
+  }
+
+  private get(api: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    return this.httpClient.get<AuditLogDto[]>(api, {
       headers: {...this.workspaceHeaders(workspace)},
     });
   }

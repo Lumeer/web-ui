@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
-import {User} from '../../../core/store/users/user';
+import {ResourceCommentModel} from '../../../../core/store/resource-comments/resource-comment.model';
+import {User} from '../../../../core/store/users/user';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({

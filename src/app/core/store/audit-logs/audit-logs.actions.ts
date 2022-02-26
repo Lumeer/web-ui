@@ -21,6 +21,35 @@ import {createAction, props} from '@ngrx/store';
 import {AuditLog} from './audit-log.model';
 import {Workspace} from '../navigation/workspace';
 
+export const getByProject = createAction('[AuditLogs] Get By Project', props<{workspace?: Workspace}>());
+
+export const getByProjectSuccess = createAction(
+  '[AuditLogs] Get By Project : Success',
+  props<{auditLogs: AuditLog[]}>()
+);
+
+export const getFailure = createAction('[AuditLogs] Get : Success', props<{error: any}>());
+
+export const getByCollection = createAction(
+  '[AuditLogs] Get By Collection',
+  props<{collectionId: string; workspace?: Workspace}>()
+);
+
+export const getByCollectionSuccess = createAction(
+  '[AuditLogs] Get By Collection :: Success',
+  props<{collectionId: string; auditLogs: AuditLog[]}>()
+);
+
+export const getByLinkType = createAction(
+  '[AuditLogs] Get By LinkType',
+  props<{linkTypeId: string; workspace?: Workspace}>()
+);
+
+export const getByLinkTypeSuccess = createAction(
+  '[AuditLogs] Get By LinkType',
+  props<{linkTypeId: string; auditLogs: AuditLog[]}>()
+);
+
 export const getByDocument = createAction(
   '[AuditLogs] Get By Document',
   props<{documentId: string; collectionId: string; workspace?: Workspace}>()
@@ -74,4 +103,6 @@ export const revertLinkFailure = createAction(
 
 export const clearByCollection = createAction('[AuditLogs] Clear By Collection', props<{collectionId: string}>());
 
-export const clearByLink = createAction('[AuditLogs] Clear By Link', props<{linkTypeId: string}>());
+export const clearByLinkType = createAction('[AuditLogs] Clear By LinkType', props<{linkTypeId: string}>());
+
+export const clear = createAction('[AuditLogs] Clear');

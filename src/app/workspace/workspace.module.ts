@@ -51,18 +51,19 @@ import {ProjectUploadComponent} from './project/upload/project-upload.component'
 import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
 import {SelectionListsModule} from '../shared/lists/selection/selection-lists.module';
 import {ProjectVariablesComponent} from './project/variables/project-variables.component';
-import {ResourceModuleModule} from '../shared/resource/resource-module.module';
+import {ResourceModule} from '../shared/resource/resource.module';
 import {SelectModule} from '../shared/select/select.module';
 import {PipesModule} from '../shared/pipes/pipes.module';
 import {TopPanelModule} from '../shared/top-panel/top-panel.module';
 import {SequencesModule} from '../shared/sequences/sequences.module';
 import {SliderModule} from '../shared/slider/slider.module';
 import {InputModule} from '../shared/input/input.module';
+import {ProjectActivityComponent} from './project/activity/project-activity.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    ResourceModuleModule,
+    ResourceModule,
     WorkspaceRoutingModule,
     UsersModule,
     DirectivesModule,
@@ -98,6 +99,7 @@ import {InputModule} from '../shared/input/input.module';
     ProjectUploadComponent,
     ProjectSelectionListsComponent,
     ProjectVariablesComponent,
+    ProjectActivityComponent,
   ],
   exports: [],
   providers: [

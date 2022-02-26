@@ -18,20 +18,18 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AuditLog} from '../../../../../../core/store/audit-logs/audit-log.model';
-import {Attribute} from '../../../../../../core/store/collections/collection';
+import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
 
 @Pipe({
-  name: 'auditLogAutomationTitle',
+  name: 'auditLogAutomationString',
 })
-export class AuditLogAutomationTitlePipe implements PipeTransform {
-  public transform(auditLog: AuditLog, attributes: Attribute[]): string {
+export class AuditLogAutomationStringPipe implements PipeTransform {
+  public transform(auditLog: AuditLog): string {
     if (auditLog.automation?.length) {
       if (auditLog.automation.startsWith('=')) {
-        const attributeId = auditLog.automation.substring(1);
-        return attributes?.find(attribute => attribute.id === attributeId)?.name || '';
+        return $localize`:@@audit.automation.function:Function`;
       }
-      return auditLog.automation;
+      return $localize`:@@audit.automation.automation:Automation`;
     }
     return '';
   }

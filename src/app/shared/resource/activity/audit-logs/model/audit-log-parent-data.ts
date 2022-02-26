@@ -17,20 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {AuditLog} from '../../../../../../core/store/audit-logs/audit-log.model';
+import {AttributesResource} from '../../../../../core/model/resource';
 
-@Pipe({
-  name: 'auditLogAutomationString',
-})
-export class AuditLogAutomationStringPipe implements PipeTransform {
-  public transform(auditLog: AuditLog): string {
-    if (auditLog.automation?.length) {
-      if (auditLog.automation.startsWith('=')) {
-        return $localize`:@@audit.automation.function:Function`;
-      }
-      return $localize`:@@audit.automation.automation:Automation`;
-    }
-    return '';
-  }
+export interface AuditLogParentData {
+  collectionsMap?: Record<string, AttributesResource>;
+  linkTypesMap?: Record<string, AttributesResource>;
 }

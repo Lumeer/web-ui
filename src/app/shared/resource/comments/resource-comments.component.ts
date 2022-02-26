@@ -27,27 +27,27 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {ResourceType} from '../../core/model/resource-type';
-import {AppState} from '../../core/store/app.state';
+import {ResourceType} from '../../../core/model/resource-type';
+import {AppState} from '../../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {User} from '../../core/store/users/user';
-import {selectCurrentUser, selectUsersDictionary} from '../../core/store/users/users.state';
-import {ResourceCommentsAction} from '../../core/store/resource-comments/resource-comments.action';
-import {ResourceCommentModel} from '../../core/store/resource-comments/resource-comment.model';
-import {selectResourceCommentsByResource} from '../../core/store/resource-comments/resource-comments.state';
-import {generateId} from '../utils/resource.utils';
-import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {User} from '../../../core/store/users/user';
+import {selectCurrentUser, selectUsersDictionary} from '../../../core/store/users/users.state';
+import {ResourceCommentsAction} from '../../../core/store/resource-comments/resource-comments.action';
+import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
+import {selectResourceCommentsByResource} from '../../../core/store/resource-comments/resource-comments.state';
+import {generateId} from '../../utils/resource.utils';
 import {map, take} from 'rxjs/operators';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 
 @Component({
-  selector: 'comments-panel',
-  templateUrl: './comments-panel.component.html',
-  styleUrls: ['./comments-panel.component.scss'],
+  selector: 'resource-comments',
+  templateUrl: './resource-comments.component.html',
+  styleUrls: ['./resource-comments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentsPanelComponent implements OnInit, OnChanges {
+export class ResourceCommentsComponent implements OnInit, OnChanges {
   @Input()
   public resourceType: ResourceType;
 

@@ -46,6 +46,7 @@ import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 import {ProjectVariablesComponent} from './project/variables/project-variables.component';
 import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
 import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
+import {ProjectActivityComponent} from './project/activity/project-activity.component';
 
 const workspaceRoutes: Routes = [
   {
@@ -74,6 +75,10 @@ const workspaceRoutes: Routes = [
         path: 'teams',
         component: ProjectTeamsComponent,
         data: {role: RoleType.UserConfig},
+      },
+      {
+        path: 'activity',
+        component: ProjectActivityComponent,
       },
       {
         path: 'sequences',

@@ -19,18 +19,18 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {UserAvatarComponent} from './user-avatar/user-avatar.component';
+import {FormsModule} from '@angular/forms';
 import {GravatarModule} from 'ngx-gravatar';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {QuillModule} from 'ngx-quill';
+import {UserAvatarComponent} from './user-avatar/user-avatar.component';
 import {ShortDateComponent} from './comment-item/short-date/short-date.component';
-import {PipesModule} from '../pipes/pipes.module';
 import {CommentItemComponent} from './comment-item/comment-item.component';
 import {NewCommentComponent} from './new-comment/new-comment.component';
-import {CommentsPanelComponent} from './comments-panel.component';
+import {ResourceCommentsComponent} from './resource-comments.component';
 import {ProgressCircleComponent} from './new-comment/progress-circle/progress-circle.component';
 import {CommentsCountComponent} from './comments-count/comments-count.component';
-import {QuillModule} from 'ngx-quill';
-import {FormsModule} from '@angular/forms';
+import {PipesModule} from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,7 @@ import {FormsModule} from '@angular/forms';
     ShortDateComponent,
     CommentItemComponent,
     NewCommentComponent,
-    CommentsPanelComponent,
+    ResourceCommentsComponent,
     ProgressCircleComponent,
     CommentsCountComponent,
   ],
@@ -48,7 +48,7 @@ import {FormsModule} from '@angular/forms';
     UserAvatarComponent,
     ShortDateComponent,
     NewCommentComponent,
-    CommentsPanelComponent,
+    ResourceCommentsComponent,
     CommentsCountComponent,
   ],
 })
