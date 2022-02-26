@@ -24,7 +24,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
 import {
   selectReadableCollectionsByView,
-  selectCollectionsInCustomQuery,
+  selectCollectionsByCustomViewAndQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {map, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -66,7 +66,7 @@ export class InvalidQueryComponent implements OnChanges {
     if (changes.query || changes.view) {
       const collectionsObservable$ = queryIsEmptyExceptPagination(this.query)
         ? this.store$.pipe(select(selectReadableCollectionsByView(this.view)))
-        : this.store$.pipe(select(selectCollectionsInCustomQuery(this.query)));
+        : this.store$.pipe(select(selectCollectionsByCustomViewAndQuery(this.view, this.query)));
       this.collections$ = collectionsObservable$.pipe(
         map(collections => sortResourcesByFavoriteAndLastUsed(collections))
       );
@@ -81,11 +81,11 @@ export class InvalidQueryComponent implements OnChanges {
 
   public onCollectionSelect(data: {collection: Collection; index: number}) {
     this.store$.pipe(select(selectViewQuery), take(1)).subscribe(query => {
-      let stem = ((query && query.stems) || [])[data.index];
+      let stem = query?.stems?.[data.index];
       if (!stem) {
         stem = createCollectionQueryStem(data.collection.id);
       }
-      const newQuery: Query = {...query, stems: [stem], fulltexts: query && query.fulltexts};
+      const newQuery: Query = {...query, stems: [stem]};
       this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
     });
   }

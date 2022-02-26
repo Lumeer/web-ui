@@ -19,20 +19,57 @@
 
 import {animate, group, state, style, transition, trigger} from '@angular/animations';
 
+export enum ButtonState {
+  Open = 'open',
+  Closed = 'closed',
+  Compact = 'compact',
+  Entered = 'entered',
+}
+
 export const rotateAnimation = trigger('rotate', [
   state(
-    'open',
+    ButtonState.Open,
     style({
       transform: 'rotate(180deg)',
     })
   ),
   state(
-    'closed',
+    ButtonState.Closed,
     style({
       transform: 'rotate(0deg)',
     })
   ),
-  transition('open <=> closed', [animate('0.3s')]),
+  state(
+    ButtonState.Entered,
+    style({
+      transform: 'rotate(0deg)',
+    })
+  ),
+  transition(`${ButtonState.Open} <=> ${ButtonState.Closed}`, [animate('0.3s')]),
+  transition(`${ButtonState.Open} <=> ${ButtonState.Entered}`, [animate('0.3s')]),
+]);
+
+export const scaleAnimation = trigger('scale', [
+  state(
+    ButtonState.Open,
+    style({
+      fontSize: '100%',
+    })
+  ),
+  state(
+    ButtonState.Entered,
+    style({
+      fontSize: '130%',
+    })
+  ),
+  state(
+    ButtonState.Compact,
+    style({
+      fontSize: '130%',
+    })
+  ),
+  transition(`${ButtonState.Open} <=> ${ButtonState.Closed}`, [animate('0.3s')]),
+  transition(`${ButtonState.Open} <=> ${ButtonState.Entered}`, [animate('0.3s')]),
 ]);
 
 export const shrinkOutAnimation = trigger('shrinkOut', [

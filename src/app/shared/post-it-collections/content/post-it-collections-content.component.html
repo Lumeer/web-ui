@@ -18,6 +18,7 @@
                           [class.selected]="selectedCollections$ | async | includes:(collection.correlationId || collection.id)"
                           [collection]="collection"
                           [workspace]="workspace"
+                          [query]="query"
                           [permissions]="collectionsPermissions && collection.id && collectionsPermissions[collection.id]"
                           (update)="updateCollection($event)"
                           (create)="createCollection($event)"

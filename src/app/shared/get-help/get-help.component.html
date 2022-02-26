@@ -1,38 +1,54 @@
-<div class="wrapper bg-white cursor-pointer" data-tour="get-help-button" [ngClass]="(extendedContent$ | async) ? 'open' : 'closed'">
+<ng-container *ngIf="{state: buttonState$ | async, opened: extendedContent$ | async} as data">
+  <div class="wrapper bg-white cursor-pointer" data-tour="get-help-button" [ngClass]="data.state"
+       (mouseenter)="mouseEntered$.next(true)"
+       (mouseleave)="mouseEntered$.next(false)">
 
-  <div class="body d-flex flex-column align-items-start" *ngIf="extendedContent$ | async" [@shrinkOut]="">
+    <div class="body d-flex flex-column align-items-start" *ngIf="data.opened" [@shrinkOut]="">
 
-    <div class="dropdown-item py-2 first-item">
-      <a [href]="link" target="_blank" class="color-inherit">
-        <i class="far fa-fw fa-book me-2"></i><span i18n="@@help.documentation">Read Documentation</span>
-      </a>
-    </div>
-    <div class="dropdown-item py-2" (click)="openTour()">
-      <i class="far fa-fw fa-map-signs me-2"></i><span i18n="@@help.applicationTour">Open Application Tour</span>
-    </div>
-    <div class="dropdown-item py-2" (click)="openVideo()">
-      <i class="fas fa-fw fa-play me-2"></i><span i18n="@@help.introductionVideo">Watch Introduction Video</span>
-    </div>
-    <div class="dropdown-item py-2" (click)="openGetInTouch()">
-      <i class="far fa-fw fa-comment me-2"></i><span i18n="@@menu.getInTouch">Get in Touch with Us</span>
-    </div>
-    <div class="dropdown-item py-2" (click)="openBookDemo()">
-      <i class="far fa-fw fa-headset me-2"></i><span i18n="@@menu.bookProductDemo">Book Product Demo</span>
+      <div class="dropdown-item py-2 first-item">
+        <a [href]="link" target="_blank" class="color-inherit">
+          <i class="far fa-fw fa-book me-2"></i><span i18n="@@help.documentation">Read Documentation</span>
+        </a>
+      </div>
+      <div class="dropdown-item py-2" (click)="openTour()">
+        <i class="far fa-fw fa-map-signs me-2"></i><span i18n="@@help.applicationTour">Open Application Tour</span>
+      </div>
+      <div class="dropdown-item py-2" (click)="openVideo()">
+        <i class="fas fa-fw fa-play me-2"></i><span i18n="@@help.introductionVideo">Watch Introduction Video</span>
+      </div>
+      <div class="dropdown-item py-2" (click)="openGetInTouch()">
+        <i class="far fa-fw fa-comment me-2"></i><span i18n="@@menu.getInTouch">Get in Touch with Us</span>
+      </div>
+      <div class="dropdown-item py-2" (click)="openBookDemo()">
+        <i class="far fa-fw fa-headset me-2"></i><span i18n="@@menu.bookProductDemo">Book Product Demo</span>
+      </div>
+
+      <div class="px-3 py-2 text-nowrap" *ngIf="showNewsletter$ | async">
+        <toggle-checkbox [checked]="false"
+                         (checkedChange)="onNewsletterChange($event)"
+                         label="Subscribe to Our Newsletter!"
+                         i18n-label="@@help.newsletter">
+        </toggle-checkbox>
+      </div>
+
     </div>
 
-    <div class="px-3 py-2 text-nowrap" *ngIf="showNewsletter$ | async">
-      <toggle-checkbox [checked]="false"
-                       (checkedChange)="onNewsletterChange($event)"
-                       label="Subscribe to Our Newsletter!"
-                       i18n-label="@@help.newsletter">
-      </toggle-checkbox>
+    <div class="header py-2 text-nowrap"
+         [ngClass]="data.state === buttonState.Open || data.state === buttonState.Closed ? 'px-3 ' + data.state : 'px-2 ' + data.state"
+         (click)="toggleContent()">
+      <i class="fa far fa-life-ring fa-fw color-danger" [@scale]="data.state"></i>
+      <div *ngIf="data.state === buttonState.Closed || data.state === buttonState.Open"
+           [@shrinkOut]="" class="flex-grow-1 header-label">
+        <div class="spacer">&nbsp;</div>
+        <div i18n="@@get.help.button">Get Help</div>
+        <div class="spacer">&nbsp;</div>
+      </div>
+      <div class="header-chevron"
+           *ngIf="data.state === buttonState.Closed || data.state === buttonState.Entered || data.state === buttonState.Open"
+           [@shrinkOut]="">
+        <div class="spacer"></div>
+        <i class="far fa-chevron-down chevron" [@rotate]="data.state"></i>
+      </div>
     </div>
-
   </div>
-
-  <div class="header py-2 px-3 text-nowrap" (click)="toggleContent()">
-    <i class="fa far fa-life-ring fa-fw color-danger me-2"></i>
-    <div class="pe-4" i18n="@@get.help.button">Get Help</div>
-    <i class="far fa-chevron-down" [@rotate]="(extendedContent$ | async) ? 'open' : 'closed'" (click)="$event.stopPropagation(); toggleContent()"></i>
-  </div>
-</div>
+</ng-container>

@@ -810,6 +810,11 @@ export function createCollectionQueryStem(collectionId: string): QueryStem {
   return {collectionId, id: generateId()};
 }
 
+export function createOpenCollectionQuery(collection: Collection, query: Query): Query {
+  const stem = createCollectionQueryStem(collection?.id);
+  return {...query, stems: [stem]};
+}
+
 export function modifyAttributeForQueryBuilder(attribute: Attribute, condition: ConditionType): Attribute {
   const attributeWithoutLock = {...attribute, lock: null};
   switch (attribute?.constraint?.type) {
