@@ -25,12 +25,16 @@ import {Observable} from 'rxjs';
 import {
   selectReadableCollectionsByView,
   selectCollectionsByCustomViewAndQuery,
+  selectCollectionsInCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
-import {map, take} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
-import {createCollectionQueryStem, queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
+import {
+  createOpenCollectionQuery,
+  queryContainsOnlyFulltexts,
+  queryIsEmptyExceptPagination,
+} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
-import {selectViewQuery} from '../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
 import {View} from '../../../core/store/views/view';
 
@@ -66,7 +70,9 @@ export class InvalidQueryComponent implements OnChanges {
     if (changes.query || changes.view) {
       const collectionsObservable$ = queryIsEmptyExceptPagination(this.query)
         ? this.store$.pipe(select(selectReadableCollectionsByView(this.view)))
-        : this.store$.pipe(select(selectCollectionsByCustomViewAndQuery(this.view, this.query)));
+        : queryContainsOnlyFulltexts(this.query)
+        ? this.store$.pipe(select(selectCollectionsByCustomViewAndQuery(this.view, this.query)))
+        : this.store$.pipe(select(selectCollectionsInCustomQuery(this.query)));
       this.collections$ = collectionsObservable$.pipe(
         map(collections => sortResourcesByFavoriteAndLastUsed(collections))
       );
@@ -80,13 +86,7 @@ export class InvalidQueryComponent implements OnChanges {
   }
 
   public onCollectionSelect(data: {collection: Collection; index: number}) {
-    this.store$.pipe(select(selectViewQuery), take(1)).subscribe(query => {
-      let stem = query?.stems?.[data.index];
-      if (!stem) {
-        stem = createCollectionQueryStem(data.collection.id);
-      }
-      const newQuery: Query = {...query, stems: [stem]};
-      this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
-    });
+    const query = createOpenCollectionQuery(data.collection, this.view?.query || this.query);
+    this.store$.dispatch(new NavigationAction.SetQuery({query}));
   }
 }
