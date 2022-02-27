@@ -1,0 +1,25 @@
+<div>Filters</div>
+<div class="filters mt-1">
+  <user-data-input class="form-control p-0 cursor-pointer"
+                   [value]="usersDataValue"
+                   [focus]="true"
+                   [readonly]="!(editingUsers$ | async)"
+                   placeholder="Filter Users or Teams"
+                   i18n-placeholder="@@audit.filters.users.placeholder"
+                   (click)="onClickUsers()"
+                   (cancel)="onCancelUsers()"
+                   (save)="onSaveUsers($event)">
+  </user-data-input>
+
+  <select-data-input class="form-control p-0 cursor-pointer"
+                     [focus]="true"
+                     [value]="typesDataValue"
+                     [readonly]="!(editingTypes$ | async)"
+                     placeholder="Filter Types"
+                     i18n-placeholder="@@audit.filters.types.placeholder"
+                     (click)="onClickTypes()"
+                     (cancel)="onCancelTypes()"
+                     (save)="onSaveTypes($event)">
+  </select-data-input>
+
+</div>

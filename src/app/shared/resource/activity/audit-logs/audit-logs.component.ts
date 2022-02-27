@@ -22,7 +22,7 @@ import {AuditLog} from '../../../../core/store/audit-logs/audit-log.model';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {User} from '../../../../core/store/users/user';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {selectUsersDictionary} from '../../../../core/store/users/users.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
@@ -36,6 +36,7 @@ import {first, map} from 'rxjs/operators';
 import {selectRevertingAuditLogsIds} from '../../../../core/store/audit-logs/audit-logs.state';
 import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
 import {AuditLogParentData} from './model/audit-log-parent-data';
+import {AuditLogFilters} from './model/audit-log-filters';
 
 @Component({
   selector: 'audit-logs',
@@ -59,6 +60,8 @@ export class AuditLogsComponent implements OnInit {
   public organizationPermissions$: Observable<AllowedPermissions>;
   public serviceLimits$: Observable<ServiceLimits>;
   public revertingAuditLogs$: Observable<string[]>;
+
+  public filters$ = new BehaviorSubject<AuditLogFilters>({users: [], types: []});
 
   constructor(private store$: Store<AppState>) {}
 
@@ -88,5 +91,9 @@ export class AuditLogsComponent implements OnInit {
 
   public onRevert(auditLog: AuditLog) {
     this.revert.emit(auditLog);
+  }
+
+  public onFiltersChanged(filters: AuditLogFilters) {
+    this.filters$.next(filters);
   }
 }

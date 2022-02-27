@@ -4,6 +4,8 @@
      [title]="selectedOptions | selectOptionsJoined | unescapeHtml"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
+  <div class="text-muted px-1" *ngIf="readonly && placeholder && !selectedOptions.length">{{placeholder}}</div>
+
   <ng-container *ngIf="multi || readonly">
 
     <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">

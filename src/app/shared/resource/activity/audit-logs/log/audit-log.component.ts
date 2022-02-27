@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
 import {ConstraintData} from '@lumeer/data-filters';
-import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
+import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {User} from '../../../../../core/store/users/user';
 import {DEFAULT_USER} from '../../../../../core/constants';
@@ -59,6 +59,7 @@ export class AuditLogComponent implements OnChanges {
   public revert = new EventEmitter();
 
   public user: User;
+  public type: AuditLogType;
 
   public readonly updatedByMsg: string;
   public readonly updatedOnMsg: string;
@@ -76,6 +77,7 @@ export class AuditLogComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.auditLog || changes.usersMap) {
+      this.type = this.auditLog?.type;
       this.user = this.usersMap?.[this.auditLog.userId];
       this.hasNewState = Object.keys(this.auditLog?.newState || {}).length > 0;
       this.hasOldState = Object.keys(this.auditLog?.oldState || {}).length > 0;
