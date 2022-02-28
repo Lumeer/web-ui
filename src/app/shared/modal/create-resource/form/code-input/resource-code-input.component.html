@@ -2,9 +2,7 @@
 
   <label class="col-2 col-form-label required"
          i18n="@@resource.new.dialog.code.label"
-         for="code">
-    Code:
-  </label>
+         for="code">Code:</label>
 
   <div class="col-10">
     <input type="text"
@@ -25,19 +23,19 @@
                 i18n="@@resource.new.dialog.code.error.length.min">
             Code must have at least 2 characters.
           </span>
-          <span *ngIf="codeInput.errors.maxlength"
-                i18n="@@resource.new.dialog.code.error.length.max">
+    <span *ngIf="codeInput.errors.maxlength"
+          i18n="@@resource.new.dialog.code.error.length.max">
             Code can have 5 characters at most.
           </span>
-          <span *ngIf="codeInput.errors.required"
+    <span *ngIf="codeInput.errors.required"
           i18n="@@resource.new.dialog.code.error.required">
             Code is required.
           </span>
-          <span *ngIf="codeInput.errors.pattern && !codeInput.errors.minlength && !codeInput.errors.maxlength"
+    <span *ngIf="codeInput.errors.pattern && !codeInput.errors.minlength && !codeInput.errors.maxlength"
           i18n="@@resource.new.dialog.code.error.pattern">
             Code must contain only characters and digits.
           </span>
-          <span *ngIf="codeInput.errors.notUniqueCode"
+    <span *ngIf="codeInput.errors.notUniqueCode"
           i18n="@@resource.new.dialog.code.error.duplicity">
             Sorry, this code is already taken. Try another one!
           </span>

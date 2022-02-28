@@ -260,7 +260,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.dialog.title" datatype="html">
@@ -271,7 +271,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
@@ -3097,6 +3097,34 @@
           <context context-type="linenumber">436</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="dialog.productDemo.success" datatype="html">
+        <source>We received your request and will get back to you soon.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">502</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dialog.productDemo.error" datatype="html">
+        <source>Could not schedule product demo.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">513</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dialog.getInTouch.success" datatype="html">
+        <source>Your message has been sent.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">551</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dialog.getInTouch.error" datatype="html">
+        <source>Could not send your message.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">562</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="views.get.fail" datatype="html">
         <source>Could not get views</source>
         <context-group purpose="location">
@@ -4447,28 +4475,28 @@
         <source>Read Documentation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="help.applicationTour" datatype="html">
         <source>Open Application Tour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="help.introductionVideo" datatype="html">
         <source>Watch Introduction Video</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="menu.getInTouch" datatype="html">
         <source>Get in Touch with Us</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
@@ -4483,21 +4511,21 @@
         <source>Book Product Demo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="help.newsletter" datatype="html">
         <source>Subscribe to Our Newsletter!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="get.help.button" datatype="html">
         <source>Get Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="copyInputBox.clipboard.copy" datatype="html">
@@ -5739,20 +5767,6 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="dialog.productDemo.success" datatype="html">
-        <source>We received your request and will get back to you soon.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.ts</context>
-          <context context-type="linenumber">116</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dialog.productDemo.error" datatype="html">
-        <source>Could not schedule product demo.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.ts</context>
-          <context context-type="linenumber">123</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="dialog.productDemo.form.name.label" datatype="html">
         <source>Your name:</source>
         <context-group purpose="location">
@@ -5949,7 +5963,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="resource.new.dialog.code.label" datatype="html">
-        <source> Code: </source>
+        <source>Code:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context>
           <context context-type="linenumber">5,7</context>
@@ -6095,20 +6109,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context>
           <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dialog.getInTouch.success" datatype="html">
-        <source>Your message has been sent.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.ts</context>
-          <context context-type="linenumber">97</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dialog.getInTouch.error" datatype="html">
-        <source>Could not send your message.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.ts</context>
-          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="templates.button.use" datatype="html">

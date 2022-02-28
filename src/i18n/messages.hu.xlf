@@ -911,17 +911,11 @@
 				<target>Küld</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="dialog.productDemo.success" datatype="html">
         <source>We received your request and will get back to you soon.</source><target state="new">We received your request and will get back to you soon.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.ts</context>
-          <context context-type="linenumber">116</context>
-        </context-group>
-      </trans-unit><trans-unit id="dialog.productDemo.error" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">502</context></context-group></trans-unit><trans-unit id="dialog.productDemo.error" datatype="html">
         <source>Could not schedule product demo.</source><target state="new">Could not schedule product demo.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.ts</context>
-          <context context-type="linenumber">123</context>
-        </context-group>
-      </trans-unit><trans-unit id="dialog.productDemo.form.name.label" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">513</context></context-group></trans-unit><trans-unit id="dialog.productDemo.form.name.label" datatype="html">
         <source>Your name:</source><target state="new">Your name:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/book-product-demo/content/book-product-demo-content.component.html</context>
@@ -947,8 +941,8 @@
         </context-group>
       </trans-unit><trans-unit id="dialog.productDemo.form.industry.placeholder" datatype="html">
         <source>Enter your company industry</source><target state="new">Enter company industry (e.g)</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/content/book-product-demo-content.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="dialog.productDemo.form.industry.notEmpty" datatype="html">
         <source>Industry can not be empty</source><target state="new">Industry can not be empty</target>
         <context-group purpose="location">
@@ -987,11 +981,11 @@
         </context-group>
       </trans-unit><trans-unit id="dialog.getInTouch.success" datatype="html">
         <source>Your message has been sent.</source><target state="new">Your message has been sent.</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.error" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">551</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.error" datatype="html">
         <source>Could not send your message.</source><target state="new">Could not send your message.</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.ts</context><context context-type="linenumber">104</context></context-group></trans-unit>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">562</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="button.share">
 				<source>Share</source>
 				<target>Megoszt</target>
@@ -1327,11 +1321,11 @@
 			<trans-unit datatype="html" id="collection.delete.dialog.message">
 				<source>Do you really want to delete this table?</source>
 				<target>Biztosan törlöd ezt a táblát?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">112</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">112</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.delete.dialog.title">
 				<source>Delete?</source>
 				<target>Törlés?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">113</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">114</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">113</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.delete.fail">
 				<source>Could not delete table</source>
 				<target>A tábla nem törölhető</target>
@@ -2508,10 +2502,10 @@
 				<target>Ki kell töltenie az üzenetet.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.message.label" datatype="html">
         <source> Let us know, how we can help you, or what we could improve: </source><target state="new"> Let us know, how we can help you, or what we could improve: </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.message.placeholder" datatype="html">
         <source>I would like to schedule a call to discuss...</source><target state="new">I would like to schedule a call to discuss...</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
 
 
@@ -2520,7 +2514,7 @@
 				<target>Másolás és megnyitás</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">267</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">282</context></context-group></trans-unit><trans-unit id="getting.started.invite.users.confirm" datatype="html">
         <source>Invite my colleagues</source><target state="new">Invite my colleagues</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">291</context></context-group></trans-unit>
 
 			<trans-unit datatype="html" id="distance.feat">
@@ -2828,7 +2822,7 @@
 			<trans-unit datatype="html" id="get.help.button">
 				<source>Get Help</source>
 				<target>Segítség szerzése</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="group.create.fail">
 				<source>Could not create the group</source>
 				<target>Nem lehet létrehozni a csoportot</target>
@@ -3821,20 +3815,14 @@
         </context-group>
       </trans-unit><trans-unit id="menu.getInTouch" datatype="html">
         <source>Get in Touch with Us</source><target state="new">Get in Touch with Us</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">346</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="menu.bookProductDemo" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">346</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="menu.bookProductDemo" datatype="html">
         <source>Book Product Demo</source><target state="new">Book product demo</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-      </trans-unit><trans-unit id="help.newsletter" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="help.newsletter" datatype="html">
         <source>Subscribe to Our Newsletter!</source><target state="new">Subscribe to the Newsletter!</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="menu.getInTouch.item" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="menu.getInTouch.item" datatype="html">
         <source>Get in Touch</source><target state="new">Get in Touch</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
@@ -4888,11 +4876,8 @@
 					<target>Kód szükséges.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.new.dialog.code.label">
-					<source> Code: </source>
-					<target>Kód:
-						<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup>"/>
-						*
-						<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup>"/></target>
+					<source>Code:</source>
+					<target>Kód:</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/code-input/resource-code-input.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.new.dialog.code.placeholder">
 					<source>Enter code (e.g. LMR)</source>
@@ -5690,7 +5675,7 @@
 					<target>Kezdés üres projekttel</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">324</context></context-group></trans-unit><trans-unit id="getting.started.invite.users.skip" datatype="html">
         <source>I'll do it later</source><target state="new">I'll do it later</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">334</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="templates.button.use">
 					<source>Use this template</source>
@@ -5766,7 +5751,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/notifications-menu.component.ts</context><context context-type="linenumber">238</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.title" datatype="html">
         <source>Get in Touch with Us</source><target state="new">Get in Touch with Us</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="topPanel.organizationMenu.title">
 					<source>Organization menu</source>
@@ -5837,23 +5822,14 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/filters/filters/resource-filters.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="help.documentation" datatype="html">
         <source>Read Documentation</source><target state="new">Read documentation</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit><trans-unit id="help.applicationTour" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="help.applicationTour" datatype="html">
         <source>Open Application Tour</source><target state="new">Open application tour</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="help.introductionVideo" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="help.introductionVideo" datatype="html">
         <source>Watch Introduction Video</source><target state="new">Watch introduction video</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/get-help/get-help.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="user.notification.settings.language">
 					<source>Notifications language</source>
 					<target>Értesítések nyelve</target>
@@ -6144,7 +6120,7 @@
 					<target>Ellenőrző e-mail újraküldése</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">298</context></context-group></trans-unit><trans-unit id="getting.started.video.button" datatype="html">
         <source>Get started</source><target state="new">Get started</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">305</context></context-group></trans-unit>
 
 
@@ -6163,10 +6139,10 @@
         </context-group>
       </trans-unit><trans-unit id="getting.started.invite.users.email.placeholder" datatype="html">
         <source>Type email here</source><target state="new">Type email here</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="getting.started.invite.users.add" datatype="html">
         <source>Add colleague</source><target state="new">Add colleague</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="verifyEmail.title">
 					<source>Please Verify Your Email</source>
