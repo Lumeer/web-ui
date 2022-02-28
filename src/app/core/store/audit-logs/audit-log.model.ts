@@ -35,6 +35,13 @@ export interface AuditLog {
 }
 
 export enum AuditLogType {
-  Updated = 'updated',
-  Created = 'created',
+  Created = 'Created',
+  Updated = 'Updated',
+  Deleted = 'Deleted',
 }
+
+export const auditLogMap: Record<string, AuditLogType> = {
+  [AuditLogType.Created]: AuditLogType.Created,
+  [AuditLogType.Updated]: AuditLogType.Updated,
+  [AuditLogType.Deleted]: AuditLogType.Deleted,
+};

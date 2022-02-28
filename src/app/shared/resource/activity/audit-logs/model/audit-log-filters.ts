@@ -48,9 +48,12 @@ export const auditLogTypeFilterConstraint = new SelectConstraint({
 });
 
 function translateAuditType(type: AuditLogType): string {
-  return parseSelectTranslation('@@audit.title.data.update:{type, select, updated {Updated} created {Created}}', {
-    type,
-  });
+  return parseSelectTranslation(
+    '@@audit.title.data.update2:{type, select, Updated {Updated} Created {Created} Deleted {Deleted}}',
+    {
+      type,
+    }
+  );
 }
 
 export function filterAuditLogs(

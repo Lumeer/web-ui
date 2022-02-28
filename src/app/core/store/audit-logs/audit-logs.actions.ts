@@ -62,20 +62,11 @@ export const getByDocumentSuccess = createAction(
 
 export const getByDocumentFailure = createAction('[AuditLogs] Get By Document :: Failure', props<{error: any}>());
 
-export const revertDocument = createAction(
-  '[AuditLogs] Revert Document',
-  props<{documentId: string; collectionId: string; auditLogId: string; workspace?: Workspace}>()
-);
+export const revert = createAction('[AuditLogs] Revert ', props<{auditLogId: string; workspace?: Workspace}>());
 
-export const revertDocumentSuccess = createAction(
-  '[AuditLogs] Revert Document :: Success',
-  props<{auditLogId: string}>()
-);
+export const revertSuccess = createAction('[AuditLogs] Revert :: Success', props<{auditLogId: string}>());
 
-export const revertDocumentFailure = createAction(
-  '[AuditLogs] Revert Document :: Failure',
-  props<{error: any; auditLogId: string}>()
-);
+export const revertFailure = createAction('[AuditLogs] Revert :: Failure', props<{error: any; auditLogId: string}>());
 
 export const getByLink = createAction(
   '[AuditLogs] Get By Link',
@@ -88,18 +79,6 @@ export const getByLinkSuccess = createAction(
 );
 
 export const getByLinkFailure = createAction('[AuditLogs] Get By Link :: Failure', props<{error: any}>());
-
-export const revertLink = createAction(
-  '[AuditLogs] Revert Link',
-  props<{linkInstanceId: string; linkTypeId: string; auditLogId: string; workspace?: Workspace}>()
-);
-
-export const revertLinkSuccess = createAction('[AuditLogs] Revert Link :: Success', props<{auditLogId: string}>());
-
-export const revertLinkFailure = createAction(
-  '[AuditLogs] Revert Link :: Failure',
-  props<{error: any; auditLogId: string}>()
-);
 
 export const clearByCollection = createAction('[AuditLogs] Clear By Collection', props<{collectionId: string}>());
 

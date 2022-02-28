@@ -159,21 +159,9 @@ export class ResourceActivityComponent implements OnChanges {
   }
 
   public revertAuditAction(auditLog: AuditLog): Action {
-    if (auditLog.resourceType === ResourceType.Document) {
-      return AuditLogActions.revertDocument({
-        documentId: auditLog.resourceId,
-        collectionId: auditLog.parentId,
-        auditLogId: auditLog.id,
-        workspace: this.workspace,
-      });
-    } else if (auditLog.resourceType === ResourceType.Link) {
-      return AuditLogActions.revertLink({
-        linkInstanceId: auditLog.resourceId,
-        linkTypeId: auditLog.parentId,
-        auditLogId: auditLog.id,
-        workspace: this.workspace,
-      });
-    }
-    return null;
+    return AuditLogActions.revert({
+      auditLogId: auditLog.id,
+      workspace: this.workspace,
+    });
   }
 }

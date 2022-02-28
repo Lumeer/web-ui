@@ -19,7 +19,6 @@
 
 import {Observable} from 'rxjs';
 import {AuditLogDto} from '../../dto/audit-log.dto';
-import {DocumentDto, LinkInstanceDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class AuditLogService {
@@ -33,12 +32,7 @@ export abstract class AuditLogService {
 
   public abstract getByCollection(collectionId: string, workspace?: Workspace): Observable<AuditLogDto[]>;
 
-  public abstract revertDocument(
-    collectionId: string,
-    documentId: string,
-    auditLogId: string,
-    workspace?: Workspace
-  ): Observable<DocumentDto>;
+  public abstract revert(auditLogId: string, workspace?: Workspace): Observable<any>;
 
   public abstract getByLink(
     linkTypeId: string,
@@ -47,11 +41,4 @@ export abstract class AuditLogService {
   ): Observable<AuditLogDto[]>;
 
   public abstract getByLinkType(linkTypeId: string, workspace?: Workspace): Observable<AuditLogDto[]>;
-
-  public abstract revertLink(
-    linkTypeId: string,
-    linkInstanceId: string,
-    auditLogId: string,
-    workspace?: Workspace
-  ): Observable<LinkInstanceDto>;
 }

@@ -24,6 +24,7 @@ export interface AuditLogDto {
   resourceId: string;
   changeDate: number;
   user?: string;
+  type?: string;
   userName?: string;
   userEmail?: string;
   automation?: string;

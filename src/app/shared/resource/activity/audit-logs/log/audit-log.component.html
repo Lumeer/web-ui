@@ -10,7 +10,7 @@
 
 <div class="title d-flex">
   <div class="flex-grow-1 text-truncate">
-    <span i18n="@@audit.title.data.update">{type, select, updated {Updated} created {Created}}</span>
+    <span i18n="@@audit.title.data.update2">{type, select, Updated {Updated} Created {Created} Deleted {Deleted}}</span>
     <span *ngIf="auditLog.automation" class="badge bg-info ms-2"
           placement="top"
           [tooltip]="auditLog | auditLogAutomationTitle:parent?.attributes">{{auditLog | auditLogAutomationString}}</span>

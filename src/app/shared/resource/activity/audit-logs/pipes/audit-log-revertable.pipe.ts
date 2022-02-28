@@ -25,6 +25,6 @@ import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit
 })
 export class AuditLogRevertablePipe implements PipeTransform {
   public transform(auditLog: AuditLog): boolean {
-    return auditLog.type === AuditLogType.Updated;
+    return auditLog.type === AuditLogType.Updated || auditLog.type === AuditLogType.Deleted;
   }
 }

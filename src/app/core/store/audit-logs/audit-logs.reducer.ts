@@ -66,21 +66,12 @@ export const auditLogsReducer = createReducer(
       )
     )
   ),
-  on(AuditLogActions.revertDocument, (state, action) => ({
+  on(AuditLogActions.revert, (state, action) => ({
     ...state,
     revertingIds: appendToArray(state.revertingIds, action.auditLogId),
   })),
-  on(AuditLogActions.revertDocumentSuccess, (state, action) => auditLogsAdapter.removeOne(action.auditLogId, state)),
-  on(AuditLogActions.revertDocumentFailure, (state, action) => ({
-    ...state,
-    revertingIds: removeFromArray(state.revertingIds, action.auditLogId),
-  })),
-  on(AuditLogActions.revertLink, (state, action) => ({
-    ...state,
-    revertingIds: appendToArray(state.revertingIds, action.auditLogId),
-  })),
-  on(AuditLogActions.revertLinkSuccess, (state, action) => auditLogsAdapter.removeOne(action.auditLogId, state)),
-  on(AuditLogActions.revertLinkFailure, (state, action) => ({
+  on(AuditLogActions.revertSuccess, (state, action) => auditLogsAdapter.removeOne(action.auditLogId, state)),
+  on(AuditLogActions.revertFailure, (state, action) => ({
     ...state,
     revertingIds: removeFromArray(state.revertingIds, action.auditLogId),
   })),
