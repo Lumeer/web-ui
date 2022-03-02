@@ -48,7 +48,7 @@ import {convertQueryModelToString} from '../../../../core/store/navigation/query
 import {Project} from '../../../../core/store/projects/project';
 import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 import {selectWorkspaceModels} from '../../../../core/store/common/common.selectors';
-import {Perspective} from '../../../../view/perspectives/perspective';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../../view/perspectives/perspective';
 import {WorkspaceSelectService} from '../../../../core/service/workspace-select.service';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -65,6 +65,10 @@ import {ModalService} from '../../../modal/modal.service';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
 import {createCollectionQueryStem} from '../../../../core/store/navigation/query/query.util';
+import {
+  convertStringToViewCursor,
+  convertViewCursorToString,
+} from '../../../../core/store/navigation/view-cursor/view-cursor';
 
 @Component({
   selector: 'notifications-menu',
@@ -221,13 +225,16 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
       ([organization, collection, viewsMap, viewsPermissions, documentsMap, collectionsPermissions]) => {
         if (organization) {
           if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
+            let cursorId: string;
             let query: string;
             const path: any[] = ['w', organization.code, notification.projectCode, 'view'];
             const defaultView = viewsMap[collection?.purpose?.metaData?.defaultViewCode];
             if (defaultView && viewsPermissions[defaultView.id]?.roles?.Read) {
+              cursorId = defaultView.code;
               query = '';
               path.push({vc: defaultView.code});
             } else if (collection && collectionsPermissions[collection.id]?.roles?.Read) {
+              cursorId = DEFAULT_PERSPECTIVE_ID;
               query = convertQueryModelToString({stems: [createCollectionQueryStem(notification.collectionId)]});
               path.push(Perspective.Workflow);
             } else {
@@ -241,7 +248,10 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
               return;
             }
 
-            const cursor = notification.documentCursor;
+            const cursor = convertViewCursorToString({
+              ...convertStringToViewCursor(notification.documentCursor),
+              id: cursorId,
+            });
             const buildUrl = this.router
               .createUrlTree(path, {queryParams: {[QueryParam.Query]: query, [QueryParam.ViewCursor]: cursor}})
               .toString();

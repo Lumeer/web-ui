@@ -24,6 +24,7 @@ import {ConfigurationService} from '../../../../../configuration/configuration.s
 
 import Player, {TimeEvent} from '@vimeo/player';
 import {generateId} from '../../../../utils/resource.utils';
+import {LanguageCode} from '../../../../../core/model/language';
 
 @Component({
   selector: 'getting-started-video',
@@ -96,7 +97,8 @@ export class GettingStartedVideoComponent implements OnInit, OnDestroy {
 
   private getDefaultVideoId(): number {
     switch (this.locale) {
-      // case LanguageCode.CZ:
+      case LanguageCode.CZ:
+        return 683864380;
       default:
         return 676885140;
     }

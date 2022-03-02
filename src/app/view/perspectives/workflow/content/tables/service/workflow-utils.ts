@@ -348,9 +348,10 @@ export function sortWorkflowTables(
   return tables;
 }
 
-export function workflowCellToViewCursor(cell: TableCell, column: TableColumn): ViewCursor {
+export function workflowCellToViewCursor(workflowId: string, cell: TableCell, column: TableColumn): ViewCursor {
   if (cell?.type === TableCellType.Body) {
     return {
+      id: workflowId,
       documentId: cell.documentId,
       linkInstanceId: cell.linkId,
       collectionId: column?.collectionId,

@@ -6,33 +6,35 @@
 
   <div class="custom-header text-truncate p-3 bg-primary text-white w-100 rounded-top h5" [innerHTML]="title"></div>
 
-  <div class="body h-100"
-       *ngIf="{resources: resources$ | async, dataResources: dataResources$ | async, selectedDataResource: selectedDataResource$ | async} as data">
-    <ng-container *ngIf=" data.resources.length || data.dataResources.length; else noData">
+  <div class="body h-100 w-100">
+    <ng-container *ngIf="{resources: resources$ | async, dataResources: dataResources$ | async, selectedDataResource: selectedDataResource$ | async} as data">
 
-      <data-resources-preview *ngIf="!data.selectedDataResource"
-                              class="h-100 p-3"
-                              @enterRightAnimation
-                              [constraintData]="constraintData$ | async"
-                              [dataResources]="data.dataResources"
-                              [resources]="data.resources"
-                              [showDuplicates]="showDuplicates$ | async"
-                              [hasDuplicates]="hasDuplicates"
-                              [selectedResource]="selectedResource$ | async"
-                              [viewSettings]="viewSettings$ | async"
-                              (selectDataResource)="onSelectDataResource($event)"
-                              (selectResource)="onSelectResource($event)"
-                              (showDuplicatesChange)="showDuplicates$.next($event)">
-      </data-resources-preview>
-      <data-resources-detail *ngIf="data.selectedDataResource"
-                             class="h-100 py-3"
-                             @enterLeftAnimation
-                             [resource]="selectedResource$ | async"
-                             [viewId]="viewId"
-                             [dataResource]="data.selectedDataResource"
-                             (routingPerformed)="hideDialog()"
-                             (back)="resetSelectedDataResource()">
-      </data-resources-detail>
+      <div class="parent h-100 w-100" @enterEmpty *ngIf=" data.resources.length || data.dataResources.length; else noData">
+
+        <data-resources-preview *ngIf="!data.selectedDataResource"
+                                class="h-100 mw-100 p-3 body-item flex-1"
+                                @enterRightAnimation
+                                [constraintData]="constraintData$ | async"
+                                [dataResources]="data.dataResources"
+                                [resources]="data.resources"
+                                [showDuplicates]="showDuplicates$ | async"
+                                [hasDuplicates]="hasDuplicates"
+                                [selectedResource]="selectedResource$ | async"
+                                [viewSettings]="viewSettings$ | async"
+                                (selectDataResource)="onSelectDataResource($event)"
+                                (selectResource)="onSelectResource($event)"
+                                (showDuplicatesChange)="showDuplicates$.next($event)">
+        </data-resources-preview>
+        <data-resources-detail *ngIf="data.selectedDataResource"
+                               class="h-100 mw-100 py-3 body-item flex-1"
+                               @enterLeftAnimation
+                               [resource]="selectedResource$ | async"
+                               [viewId]="viewId"
+                               [dataResource]="data.selectedDataResource"
+                               (routingPerformed)="hideDialog()"
+                               (back)="resetSelectedDataResource()">
+        </data-resources-detail>
+      </div>
     </ng-container>
   </div>
 

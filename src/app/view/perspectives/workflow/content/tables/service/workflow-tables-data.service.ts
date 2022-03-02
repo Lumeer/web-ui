@@ -169,7 +169,7 @@ export class WorkflowTablesDataService {
       )
       .subscribe(cell => {
         const column = cell && this.stateService.findTableColumn(cell.tableId, cell.columnId);
-        this.store$.dispatch(new WorkflowsAction.SetSelectedCell({cell, column}));
+        this.store$.dispatch(new WorkflowsAction.SetSelectedCell({workflowId: this.workflowId, cell, column}));
       });
   }
 

@@ -36,7 +36,7 @@ import {selectDocumentsByIds} from '../../../core/store/documents/documents.stat
 import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
 import {selectLinkInstancesByIds} from '../../../core/store/link-instances/link-instances.state';
 import {groupLinkInstancesByLinkTypes} from '../../../core/store/link-instances/link-instance.utils';
-import {enterLeftAnimation, enterRightAnimation} from '../../animations';
+import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../animations';
 import {Query} from '../../../core/store/navigation/query/query';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {ViewSettings} from '../../../core/store/views/view';
@@ -46,7 +46,8 @@ import {selectViewById} from '../../../core/store/views/views.state';
 @Component({
   templateUrl: './data-resources-detail-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [enterLeftAnimation, enterRightAnimation],
+  styleUrls: ['./data-resources-detail-modal.component.scss'],
+  animations: [enterLeftAnimation, enterRightAnimation, emptyEnterAnimation],
 })
 export class DataResourcesDetailModalComponent implements OnInit {
   @Input()
