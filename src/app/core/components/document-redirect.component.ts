@@ -31,7 +31,7 @@ import {selectViewsDictionaryByCode} from '../store/views/views.state';
 import {selectCollectionsPermissions, selectViewsPermissions} from '../store/user-permissions/user-permissions.state';
 import {ModalService} from '../../shared/modal/modal.service';
 import {convertQueryModelToString} from '../store/navigation/query/query.converter';
-import {Perspective} from '../../view/perspectives/perspective';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../view/perspectives/perspective';
 import {QueryParam} from '../store/navigation/query-param';
 import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cursor/view-cursor';
 import {getDefaultAttributeId} from '../store/collections/collection.util';
@@ -83,12 +83,15 @@ export class DocumentRedirectComponent implements OnInit {
       .pipe(take(1))
       .subscribe(([collection, viewsMap, viewsPermissions, collectionsPermissions]) => {
         let query: string;
+        let cursorId: string;
         const path: any[] = ['w', organizationCode, projectCode, 'view'];
         const defaultView = viewsMap[collection?.purpose?.metaData?.defaultViewCode];
         if (defaultView && viewsPermissions[defaultView.id]?.roles?.Read) {
+          cursorId = defaultView.code;
           query = '';
           path.push({vc: defaultView.code});
         } else if (collection && collectionsPermissions[collection.id]?.roles?.Read) {
+          cursorId = DEFAULT_PERSPECTIVE_ID;
           query = convertQueryModelToString({stems: [{collectionId: document.collectionId}]});
           path.push(Perspective.Workflow);
         } else if (collection) {
@@ -101,6 +104,7 @@ export class DocumentRedirectComponent implements OnInit {
         }
 
         const cursor: ViewCursor = {
+          id: cursorId,
           documentId: document.id,
           collectionId: document.collectionId,
           attributeId: getDefaultAttributeId(collection),

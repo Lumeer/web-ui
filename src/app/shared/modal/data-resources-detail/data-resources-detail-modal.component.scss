@@ -1,0 +1,10 @@
+.parent {
+  position: relative;
+  transform: translateX(0%) !important;
+
+  .body-item {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+}

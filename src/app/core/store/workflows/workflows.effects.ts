@@ -60,8 +60,8 @@ export class WorkflowsEffects {
       ofType<WorkflowsAction.SetSelectedCell>(WorkflowsActionType.SET_SELECTED_CELL),
       withLatestFrom(this.store$.pipe(select(selectViewCursor))),
       mergeMap(([action, viewCursor]) => {
-        const {cell, column} = action.payload;
-        const cursor = workflowCellToViewCursor(cell, column);
+        const {cell, column, workflowId} = action.payload;
+        const cursor = workflowCellToViewCursor(workflowId, cell, column);
         cursor && (cursor.sidebar = viewCursor?.sidebar);
         if (cursor && !deepObjectsEquals(cursor, viewCursor)) {
           return of(new NavigationAction.SetViewCursor({cursor}));

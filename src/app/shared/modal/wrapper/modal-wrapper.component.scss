@@ -15,11 +15,12 @@
 .modal-header {
   border-top-left-radius: 0.2rem;
   border-top-right-radius: 0.2rem;
-  border-bottom: 0px transparent;
+  border-bottom: 0 transparent;
 }
 
 .modal-body:not(.allow-overflow) {
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .btn-success {

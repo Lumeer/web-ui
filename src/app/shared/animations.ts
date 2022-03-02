@@ -56,22 +56,22 @@ export const emptyEnterAnimation = trigger('enterEmpty', [transition(':enter', [
 
 export const enterLeftAnimation = trigger('enterLeftAnimation', [
   transition(':enter', [
-    style({transform: 'translateX(100%)', opacity: 0.6}),
-    animate('300ms ease-in-out', style({transform: 'translateX(0)', opacity: 1})),
+    style({left: '100%', right: '-100%', opacity: 0.4}),
+    animate('300ms ease-in-out', style({left: '0%', right: '0%', opacity: 1})),
   ]),
   transition(':leave', [
-    style({transform: 'translateX(0)', opacity: 1}),
-    animate('300ms ease-in-out', style({transform: 'translateX(100%)', opacity: 0.6})),
+    style({left: '0%', right: '0%', opacity: 1}),
+    animate('300ms ease-in-out', style({left: '100%', right: '-100%', opacity: 0.4})),
   ]),
 ]);
 
 export const enterRightAnimation = trigger('enterRightAnimation', [
   transition(':enter', [
-    style({transform: 'translateX(-100%)', opacity: 0.6}),
-    animate('300ms ease-in-out', style({transform: 'translateX(0)', opacity: 1})),
+    style({left: '-100%', right: '100%', opacity: 0.4}),
+    animate('300ms ease-in-out', style({left: '0%', right: '0%', opacity: 1})),
   ]),
   transition(':leave', [
-    style({transform: 'translateX(0)', opacity: 1}),
-    animate('300ms ease-in-out', style({transform: 'translateX(-100%)', opacity: 0.6})),
+    style({left: '0%', right: '0%', opacity: 1}),
+    animate('300ms ease-in-out', style({left: '-100%', right: '100%', opacity: 0.4})),
   ]),
 ]);

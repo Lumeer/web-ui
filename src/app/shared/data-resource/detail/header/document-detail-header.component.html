@@ -39,6 +39,7 @@
 
     <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
       <i class="fa fa-external-link me-2 text-primary clickable"
+         *ngIf="resourceType === collectionResourceType"
          aria-hidden="true"
          [tooltip]="copyTooltip"
          (click)="onCopyRecordUrl()"></i>

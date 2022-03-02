@@ -8,7 +8,7 @@
                  [class.invalid-value]="!commonConfiguration?.skipValidation && !valid">
 </quill-view-html>
 
-<span class="icon-fullscreen" @enterAnimation
+<span class="icon-fullscreen" @enterOpacityAnimation
       *ngIf="!readonly || (mouseEntered$ | async)"
       [class.always-visible]="!readonly"
       (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
