@@ -31,12 +31,15 @@ import {selectProjectsLoaded} from '../../store/projects/projects.state';
 import {selectTeamsLoaded} from '../../store/teams/teams.state';
 import {selectAllOrganizations, selectOrganizationsLoaded} from '../../store/organizations/organizations.state';
 import {OrganizationsAction} from '../../store/organizations/organizations.action';
+import {PublicDataAction} from '../../store/public-data/public-data.action';
 
 @Injectable()
 export class OrganizationsProjectsGuard implements Resolve<Organization[]> {
   constructor(private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Organization[]> {
+    this.initPublicData(route);
+
     return combineLatest([
       this.getOrganizations().pipe(
         tap(organizations =>
@@ -55,6 +58,22 @@ export class OrganizationsProjectsGuard implements Resolve<Organization[]> {
       map(([organizations]) => organizations),
       first()
     );
+  }
+
+  private initPublicData(route: ActivatedRouteSnapshot) {
+    const organizationId = route.queryParams['o'];
+    const projectId = route.queryParams['p'];
+
+    if (organizationId && projectId) {
+      this.store$.dispatch(
+        new PublicDataAction.InitData({
+          organizationId,
+          projectId,
+          viewCode: route.queryParams['v'],
+          showTopPanel: route.queryParams['tp'] && JSON.parse(route.queryParams['tp']),
+        })
+      );
+    }
   }
 
   private getOrganizations(): Observable<Organization[]> {
