@@ -21,30 +21,25 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
-import {CollectionSettingsGuard} from './collection-settings.guard';
-import {CollectionSettingsComponent} from './settings/collection-settings.component';
-import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
-import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
-import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
-import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
-import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purpose.component';
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {GroupsGuard} from '../core/guards/data/groups.guard';
-import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
-import {CollectionTabGuard} from './collection-tab.guard';
 import {RoleType} from '../core/model/role-type';
 import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
-import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
+import {LinkTypeSettingsGuard} from './link-type-settings.guard';
+import {LinkTypeTabGuard} from './link-type-tab.guard';
+import {LinkTypeSettingsComponent} from './settings/link-type-settings.component';
+import {LinkTypeActivityComponent} from './settings/tab/activity/link-type-activity.component';
+import {LinkTypeAttributesComponent} from './settings/tab/attributes/link-type-attributes.component';
 
-const collectionRoutes: Routes = [
+const linkTypeRoutes: Routes = [
   {
-    path: 'o/:organizationCode/p/:projectCode/c/:collectionId',
-    canActivate: [AuthGuard, CurrentUserGuard, CollectionSettingsGuard],
-    canActivateChild: [CollectionTabGuard],
-    component: CollectionSettingsComponent,
+    path: 'o/:organizationCode/p/:projectCode/l/:linkTypeId',
+    canActivate: [AuthGuard, CurrentUserGuard, LinkTypeSettingsGuard],
+    canActivateChild: [LinkTypeTabGuard],
+    component: LinkTypeSettingsComponent,
     resolve: {
       linkTypes: LinkTypesGuard,
       collections: CollectionsGuard,
@@ -56,41 +51,22 @@ const collectionRoutes: Routes = [
     children: [
       {
         path: 'attributes',
-        component: CollectionAttributesComponent,
+        component: LinkTypeAttributesComponent,
         data: {role: RoleType.AttributeEdit},
       },
       {
         path: 'rules',
-        component: CollectionRulesComponent,
+        component: LinkTypeAttributesComponent,
         data: {role: RoleType.TechConfig},
       },
       {
         path: 'activity',
-        component: CollectionActivityComponent,
+        component: LinkTypeActivityComponent,
         data: {role: RoleType.Manage},
       },
       {
-        path: 'linktypes',
-        component: CollectionLinkTypesComponent,
-      },
-      {
-        path: 'users',
-        component: CollectionUsersComponent,
-        data: {role: RoleType.UserConfig},
-      },
-      {
-        path: 'teams',
-        component: CollectionTeamsComponent,
-        data: {role: RoleType.UserConfig},
-      },
-      {
-        path: 'purpose',
-        component: CollectionPurposeComponent,
-        data: {role: RoleType.TechConfig},
-      },
-      {
         path: '',
-        redirectTo: 'purpose',
+        redirectTo: 'activity',
         pathMatch: 'full',
       },
     ],
@@ -98,7 +74,7 @@ const collectionRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(collectionRoutes)],
+  imports: [RouterModule.forChild(linkTypeRoutes)],
   exports: [RouterModule],
 })
-export class CollectionRoutingModule {}
+export class LinkTypeRoutingModule {}

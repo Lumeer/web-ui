@@ -23,6 +23,7 @@ export interface Workspace {
   projectCode?: string;
   projectId?: string;
   collectionId?: string;
+  linkTypeId?: string;
   viewCode?: string;
   viewId?: string;
 }

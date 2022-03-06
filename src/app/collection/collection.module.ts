@@ -27,7 +27,6 @@ import {CollectionAttributesComponent} from './settings/tab/attributes/collectio
 import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
 import {CollectionSettingsGuard} from './collection-settings.guard';
 import {UsersModule} from '../shared/users/users.module';
-import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pipe';
 import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.component';
 import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pipe';
 import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
@@ -40,8 +39,6 @@ import {NoRulesComponent} from './settings/common/rules/no-rules/no-rules.compon
 import {HasCreatePipe} from './settings/common/rules/single-rule/has-create.pipe';
 import {HasUpdatePipe} from './settings/common/rules/single-rule/has-update.pipe';
 import {HasDeletePipe} from './settings/common/rules/single-rule/has-delete.pipe';
-import {AddCollectionAttributeComponent} from './settings/tab/attributes/add/add-collection-attribute.component';
-import {CollectionAttributesTableComponent} from './settings/tab/attributes/table/collection-attributes-table.component';
 import {LinkTypeRulesComponent} from './settings/tab/link-types/link-type-rules/link-type-rules.component';
 import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purpose.component';
 import {CollectionPurposeContentComponent} from './settings/tab/purpose/content/collection-purpose-content.component';
@@ -61,11 +58,19 @@ import {MaxIntervalByUnitPipe} from './settings/common/rules/add-rule-form/cron-
 import {ShowDaysOfWeekPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-days-of-week.pipe';
 import {ShowOccurrencePipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-occurrence.pipe';
 import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
+import {ResourceAttributesModule} from '../shared/attributes/resource-attributes.module';
 
 @NgModule({
-  imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule, TeamsModule],
+  imports: [
+    SharedModule,
+    CollectionRoutingModule,
+    UsersModule,
+    DataInputModule,
+    TooltipModule,
+    TeamsModule,
+    ResourceAttributesModule,
+  ],
   declarations: [
-    AttributeFilterPipe,
     LinkTypeFilterPipe,
     CollectionSettingsComponent,
     CollectionUsersComponent,
@@ -83,8 +88,6 @@ import {CollectionActivityComponent} from './settings/tab/activity/collection-ac
     HasUpdatePipe,
     HasDeletePipe,
     AttributeNamesPipe,
-    AddCollectionAttributeComponent,
-    CollectionAttributesTableComponent,
     LinkTypeRulesComponent,
     CollectionPurposeComponent,
     CollectionPurposeContentComponent,

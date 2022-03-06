@@ -22,7 +22,6 @@ import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, U
 
 import {Observable, of} from 'rxjs';
 import {map, mergeMap, switchMap, take} from 'rxjs/operators';
-import {selectCollectionById} from '../core/store/collections/collections.state';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../core/store/app.state';
 import {selectNavigation} from '../core/store/navigation/navigation.state';
@@ -30,12 +29,13 @@ import {WorkspaceService} from '../workspace/workspace.service';
 import {Project} from '../core/store/projects/project';
 import {User} from '../core/store/users/user';
 import {Organization} from '../core/store/organizations/organization';
-import {Collection} from '../core/store/collections/collection';
 import {userRoleTypesInResource} from '../shared/utils/permission.utils';
 import {RoleType} from '../core/model/role-type';
+import {selectLinkTypeById} from '../core/store/link-types/link-types.state';
+import {LinkType} from '../core/store/link-types/link.type';
 
 @Injectable()
-export class CollectionTabGuard implements CanActivateChild {
+export class LinkTypeTabGuard implements CanActivateChild {
   constructor(private router: Router, private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
@@ -44,26 +44,23 @@ export class CollectionTabGuard implements CanActivateChild {
     }
     return this.selectUserAndResources().pipe(
       map(data => {
-        const roleTypes = userRoleTypesInResource(data.organization, data.project, data.collection, data.user);
+        const roleTypes = userRoleTypesInResource(data.organization, data.project, data.linkType, data.user);
         if (roleTypes.includes(next.data.role)) {
           return true;
         }
 
-        const baseUrl = ['/o', data.organization?.code, 'p', data.project?.code, 'c', data.collection.id];
-        if (roleTypes.includes(RoleType.TechConfig)) {
-          return this.router.createUrlTree([...baseUrl, 'purpose']);
-        }
+        const baseUrl = ['/o', data.organization?.code, 'p', data.project?.code, 'l', data.linkType.id];
         if (roleTypes.includes(RoleType.AttributeEdit)) {
           return this.router.createUrlTree([...baseUrl, 'attributes']);
         }
-        if (roleTypes.includes(RoleType.UserConfig)) {
-          return this.router.createUrlTree([...baseUrl, 'users']);
+        if (roleTypes.includes(RoleType.TechConfig)) {
+          return this.router.createUrlTree([...baseUrl, 'rules']);
         }
         if (roleTypes.includes(RoleType.Manage)) {
           return this.router.createUrlTree([...baseUrl, 'activity']);
         }
 
-        return this.router.createUrlTree([...baseUrl, 'linktypes']);
+        return false;
       })
     );
   }
@@ -72,7 +69,7 @@ export class CollectionTabGuard implements CanActivateChild {
     user?: User;
     organization?: Organization;
     project?: Project;
-    collection: Collection;
+    linkType: LinkType;
   }> {
     return this.store$.pipe(
       select(selectNavigation),
@@ -82,10 +79,10 @@ export class CollectionTabGuard implements CanActivateChild {
         this.workspaceService.selectOrGetUserAndWorkspace(workspace?.organizationCode, workspace?.projectCode).pipe(
           mergeMap(data =>
             this.store$.pipe(
-              select(selectCollectionById(workspace?.collectionId)),
-              map(collection => ({
+              select(selectLinkTypeById(workspace?.linkTypeId)),
+              map(linkType => ({
                 ...data,
-                collection,
+                linkType,
               }))
             )
           )

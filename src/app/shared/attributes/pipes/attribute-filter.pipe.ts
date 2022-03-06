@@ -18,8 +18,7 @@
  */
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
-
-import {Attribute} from '../../../../core/store/collections/collection';
+import {Attribute} from '../../../core/store/collections/collection';
 
 @Pipe({
   name: 'attributeFilter',

@@ -17,33 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {AppState} from '../../../../core/store/app.state';
+import {AttributesResourceType} from '../../../../core/model/resource';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-types.state';
 
 @Component({
-  selector: '[link-type]',
-  templateUrl: './link-type.component.html',
+  templateUrl: './link-type-attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinkTypeComponent {
-  @Input()
-  public linkType: LinkType;
+export class LinkTypeAttributesComponent implements OnInit {
+  public linkType$: Observable<LinkType>;
+  public linkTypeType = AttributesResourceType.LinkType;
 
-  @Input()
-  public allLinkTypes: LinkType[];
+  constructor(private store$: Store<AppState>) {}
 
-  @Input()
-  public permissions: AllowedPermissions;
-
-  @Input()
-  public workspace: Workspace;
-
-  @Output()
-  public delete = new EventEmitter<number>();
-
-  public onDelete() {
-    this.delete.emit();
+  public ngOnInit() {
+    this.linkType$ = this.store$.pipe(select(selectLinkTypeByWorkspace));
   }
 }

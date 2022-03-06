@@ -52,6 +52,8 @@ export class ProjectTabGuard implements CanActivateChild {
           return this.router.createUrlTree([...baseUrl, 'users']);
         } else if (roleTypes.includes(RoleType.TechConfig)) {
           return this.router.createUrlTree([...baseUrl, 'sequences']);
+        } else if (roleTypes.includes(RoleType.Manage)) {
+          return this.router.createUrlTree([...baseUrl, 'activity']);
         }
         return false;
       })

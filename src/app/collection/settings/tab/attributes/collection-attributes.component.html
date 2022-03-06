@@ -1,16 +1,1 @@
-<ng-container *ngIf="collection$ | async as collection">
-  <add-collection-attribute class="d-block my-4"
-                            [attributes]="collection.attributes"
-                            (save)="onCreateAttribute($event)">
-
-  </add-collection-attribute>
-  <collection-attributes-table class="d-block mt-4 mb-6"
-                               [collection]="collection"
-                               [permissions]="permissions$ | async"
-                               (setDefault)="setDefaultAttribute($event)"
-                               (delete)="onDeleteAttribute($event)"
-                               (rename)="onNewAttributeName($event)"
-                               (function)="onAttributeFunction($event)"
-                               (attributeType)="onAttributeType($event)">
-  </collection-attributes-table>
-</ng-container>
+<resource-attributes [resource]="collection$ | async" [attributesResourceType]="collectionType"></resource-attributes>

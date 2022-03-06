@@ -79,6 +79,7 @@ const workspaceRoutes: Routes = [
       {
         path: 'activity',
         component: ProjectActivityComponent,
+        data: {role: RoleType.Manage},
       },
       {
         path: 'sequences',

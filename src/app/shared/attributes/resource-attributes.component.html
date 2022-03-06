@@ -1,0 +1,15 @@
+<add-resource-attribute class="d-block my-4"
+                        [attributes]="resource?.attributes"
+                        (save)="onCreateAttribute($event)">
+
+</add-resource-attribute>
+<collection-attributes-table class="d-block mt-4 mb-6"
+                             [resource]="resource"
+                             [attributesResourceType]="attributesResourceType"
+                             [permissions]="permissions$ | async"
+                             (setDefault)="setDefaultAttribute($event)"
+                             (delete)="onDeleteAttribute($event)"
+                             (rename)="onNewAttributeName($event)"
+                             (function)="onAttributeFunction($event)"
+                             (attributeType)="onAttributeType($event)">
+</collection-attributes-table>

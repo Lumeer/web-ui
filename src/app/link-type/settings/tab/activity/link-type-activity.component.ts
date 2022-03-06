@@ -17,25 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {ResourceType} from '../../../../core/model/resource-type';
 import {AppState} from '../../../../core/store/app.state';
-import {Collection} from '../../../../core/store/collections/collection';
-import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {AttributesResourceType} from '../../../../core/model/resource';
+import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
+import {selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Component({
-  templateUrl: './collection-attributes.component.html',
+  selector: 'link-type-activity',
+  templateUrl: './link-type-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionAttributesComponent implements OnInit {
-  public collection$: Observable<Collection>;
-  public collectionType = AttributesResourceType.LinkType;
+export class LinkTypeActivityComponent implements OnInit {
+  public linkType$: Observable<LinkType>;
+  public workspace$: Observable<Workspace>;
+
+  public readonly resourceType = ResourceType.LinkType;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.collection$ = this.store$.pipe(select(selectCollectionByWorkspace));
+    this.linkType$ = this.store$.pipe(select(selectLinkTypeByWorkspace));
+    this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
   }
 }

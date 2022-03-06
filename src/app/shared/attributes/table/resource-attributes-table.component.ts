@@ -17,25 +17,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChildren, QueryList} from '@angular/core';
-import {Attribute, Collection} from '../../../../../core/store/collections/collection';
-import {InputBoxComponent} from '../../../../../shared/input/input-box/input-box.component';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChildren,
+} from '@angular/core';
 import {ConstraintType} from '@lumeer/data-filters';
-import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX} from '../../../../../shared/utils/attribute.utils';
+import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {InputBoxComponent} from '../../input/input-box/input-box.component';
+import {FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX} from '../../utils/attribute.utils';
+import {AppState} from '../../../core/store/app.state';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {shadeColor} from '../../utils/html-modifier';
+import {COLOR_LINK_DEFAULT} from '../../../core/constants';
 
 @Component({
   selector: 'collection-attributes-table',
-  templateUrl: './collection-attributes-table.component.html',
-  styleUrls: ['./collection-attributes-table.component.scss'],
+  templateUrl: './resource-attributes-table.component.html',
+  styleUrls: ['./resource-attributes-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionAttributesTableComponent {
+export class ResourceAttributesTableComponent implements OnChanges {
   @Input()
-  public collection: Collection;
+  public resource: AttributesResource;
+
+  @Input()
+  public attributesResourceType: AttributesResourceType;
 
   @Input()
   public permissions: AllowedPermissions;
@@ -62,8 +78,26 @@ export class CollectionAttributesTableComponent {
   public readonly constraintType = ConstraintType;
 
   public searchString: string;
+  public color: string;
+  public hasDefaultAttribute: boolean;
 
   constructor(private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.resource) {
+      this.checkResourceParams();
+    }
+  }
+
+  private checkResourceParams() {
+    if (this.attributesResourceType === AttributesResourceType.Collection) {
+      this.hasDefaultAttribute = true;
+      this.color = shadeColor((<Collection>this.resource).color, 0.5);
+    } else {
+      this.hasDefaultAttribute = false;
+      this.color = COLOR_LINK_DEFAULT;
+    }
+  }
 
   public setDefaultAttribute(attribute: Attribute) {
     this.setDefault.emit(attribute);
@@ -78,7 +112,7 @@ export class CollectionAttributesTableComponent {
   }
 
   public resetAttributeName(attribute: Attribute) {
-    const index = (this.collection?.attributes || []).findIndex(attr => attr.id === attribute.id);
+    const index = (this.resource?.attributes || []).findIndex(attr => attr.id === attribute.id);
     const inputComponent = this.attributesInputs?.toArray()[index];
     inputComponent?.setValue(attribute.name);
   }
@@ -96,7 +130,7 @@ export class CollectionAttributesTableComponent {
   }
 
   private attributeExist(name: string, excludeId: string): boolean {
-    return (this.collection?.attributes || []).some(attribute => attribute.id !== excludeId && attribute.name === name);
+    return (this.resource?.attributes || []).some(attribute => attribute.id !== excludeId && attribute.name === name);
   }
 
   public onAttributeFunction(attribute: Attribute) {

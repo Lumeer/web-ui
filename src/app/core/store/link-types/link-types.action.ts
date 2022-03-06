@@ -76,7 +76,7 @@ export namespace LinkTypesAction {
   export class GetSingle implements Action {
     public readonly type = LinkTypesActionType.GET_SINGLE;
 
-    public constructor(public payload: {linkTypeId: string}) {}
+    public constructor(public payload: {linkTypeId: string; workspace?: Workspace}) {}
   }
 
   export class GetSuccess implements Action {

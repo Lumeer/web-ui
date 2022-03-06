@@ -27,19 +27,19 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {Attribute} from '../../../../../core/store/collections/collection';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {KeyCode} from '../../../../../shared/key-code';
-import {filterOutInvalidAttributeNameCharacters} from '../../../../../shared/utils/attribute.utils';
-import {notEmptyValidator} from '../../../../../core/validators/custom-validators';
+import {Attribute} from '../../../core/store/collections/collection';
+import {notEmptyValidator} from '../../../core/validators/custom-validators';
+import {KeyCode} from '../../key-code';
+import {filterOutInvalidAttributeNameCharacters} from '../../utils/attribute.utils';
 
 @Component({
-  selector: 'add-collection-attribute',
-  templateUrl: './add-collection-attribute.component.html',
+  selector: 'add-resource-attribute',
+  templateUrl: './add-resource-attribute.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block'},
 })
-export class AddCollectionAttributeComponent implements OnInit, OnChanges {
+export class AddResourceAttributeComponent implements OnInit, OnChanges {
   @Input()
   public attributes: Attribute[];
 

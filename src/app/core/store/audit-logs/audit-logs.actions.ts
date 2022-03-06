@@ -46,7 +46,7 @@ export const getByLinkType = createAction(
 );
 
 export const getByLinkTypeSuccess = createAction(
-  '[AuditLogs] Get By LinkType',
+  '[AuditLogs] Get By LinkType :: Success',
   props<{linkTypeId: string; auditLogs: AuditLog[]}>()
 );
 
