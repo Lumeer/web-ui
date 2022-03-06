@@ -18,11 +18,11 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Rule, RuleType} from '../../../../../core/model/rule';
-import {AppState} from '../../../../../core/store/app.state';
+import {Rule, RuleType} from '../../../core/model/rule';
+import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {Attribute} from '../../../../../core/store/collections/collection';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {Attribute} from '../../../core/store/collections/collection';
 
 @Component({
   selector: 'single-rule',

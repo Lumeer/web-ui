@@ -18,8 +18,9 @@
  */
 
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ReactiveFormsModule} from '@angular/forms';
 
-import {SharedModule} from '../shared/shared.module';
 import {CollectionRoutingModule} from './collection-routing.module';
 import {CollectionSettingsComponent} from './settings/collection-settings.component';
 import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
@@ -28,47 +29,47 @@ import {CollectionUsersComponent} from './settings/tab/users/collection-users.co
 import {CollectionSettingsGuard} from './collection-settings.guard';
 import {UsersModule} from '../shared/users/users.module';
 import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.component';
-import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pipe';
 import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
-import {AddRuleComponent} from './settings/common/rules/add-rule/add-rule.component';
-import {SingleRuleComponent} from './settings/common/rules/single-rule/single-rule.component';
-import {AddRuleFormComponent} from './settings/common/rules/add-rule-form/add-rule-form.component';
-import {AutoLinkFormComponent} from './settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component';
-import {BlocklyFormComponent} from './settings/common/rules/add-rule-form/blockly-form/blockly-form.component';
-import {NoRulesComponent} from './settings/common/rules/no-rules/no-rules.component';
-import {HasCreatePipe} from './settings/common/rules/single-rule/has-create.pipe';
-import {HasUpdatePipe} from './settings/common/rules/single-rule/has-update.pipe';
-import {HasDeletePipe} from './settings/common/rules/single-rule/has-delete.pipe';
-import {LinkTypeRulesComponent} from './settings/tab/link-types/link-type-rules/link-type-rules.component';
 import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purpose.component';
 import {CollectionPurposeContentComponent} from './settings/tab/purpose/content/collection-purpose-content.component';
 import {CollectionPurposeSelectComponent} from './settings/tab/purpose/content/select/collection-purpose-select.component';
 import {CollectionPurposeFormComponent} from './settings/tab/purpose/content/form/collection-purpose-form.component';
 import {CollectionPurposeTasksComponent} from './settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component';
 import {DataInputModule} from '../shared/data-input/data-input.module';
-import {CronFormComponent} from './settings/common/rules/add-rule-form/cron-form/cron-form.component';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {AttributeNamesPipe} from './settings/common/rules/single-rule/attribute-names.pipe';
 import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
 import {TeamsModule} from '../shared/teams/teams.module';
 import {CollectionTabGuard} from './collection-tab.guard';
-import {CronConfigurationFormComponent} from './settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component';
-import {IsDayOfWeekSelectedPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/is-day-of-week-selected.pipe';
-import {MaxIntervalByUnitPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/max-interval-by-unit.pipe';
-import {ShowDaysOfWeekPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-days-of-week.pipe';
-import {ShowOccurrencePipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-occurrence.pipe';
-import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
 import {ResourceAttributesModule} from '../shared/attributes/resource-attributes.module';
+import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type/link-type-filter.pipe';
+import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
+import {RulesModule} from '../shared/rules/rules.module';
+import {SelectModule} from '../shared/select/select.module';
+import {InputModule} from '../shared/input/input.module';
+import {PipesModule} from '../shared/pipes/pipes.module';
+import {DirectivesModule} from '../shared/directives/directives.module';
+import {PresenterModule} from '../shared/presenter/presenter.module';
+import {ResourceModule} from '../shared/resource/resource.module';
+import {TopPanelModule} from '../shared/top-panel/top-panel.module';
 
 @NgModule({
   imports: [
-    SharedModule,
+    CommonModule,
     CollectionRoutingModule,
     UsersModule,
     DataInputModule,
     TooltipModule,
     TeamsModule,
     ResourceAttributesModule,
+    RulesModule,
+    SelectModule,
+    InputModule,
+    PipesModule,
+    DirectivesModule,
+    ReactiveFormsModule,
+    PresenterModule,
+    ResourceModule,
+    TopPanelModule,
   ],
   declarations: [
     LinkTypeFilterPipe,
@@ -78,29 +79,12 @@ import {ResourceAttributesModule} from '../shared/attributes/resource-attributes
     CollectionLinkTypesComponent,
     LinkTypeComponent,
     CollectionRulesComponent,
-    AddRuleComponent,
-    SingleRuleComponent,
-    AddRuleFormComponent,
-    AutoLinkFormComponent,
-    BlocklyFormComponent,
-    NoRulesComponent,
-    HasCreatePipe,
-    HasUpdatePipe,
-    HasDeletePipe,
-    AttributeNamesPipe,
-    LinkTypeRulesComponent,
     CollectionPurposeComponent,
     CollectionPurposeContentComponent,
     CollectionPurposeSelectComponent,
     CollectionPurposeFormComponent,
     CollectionPurposeTasksComponent,
-    CronFormComponent,
     CollectionTeamsComponent,
-    CronConfigurationFormComponent,
-    IsDayOfWeekSelectedPipe,
-    MaxIntervalByUnitPipe,
-    ShowDaysOfWeekPipe,
-    ShowOccurrencePipe,
     CollectionActivityComponent,
   ],
   providers: [CollectionSettingsGuard, CollectionTabGuard],

@@ -18,18 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChronoUnit} from '../../../../../../../../core/model/rule';
+import {RuleTiming} from '../../../core/model/rule';
 
 @Pipe({
-  name: 'showDaysOfWeek',
+  name: 'hasUpdate',
 })
-export class ShowDaysOfWeekPipe implements PipeTransform {
-  public transform(unit: ChronoUnit): boolean {
-    switch (unit) {
-      case ChronoUnit.Weeks:
-        return true;
-      default:
-        return false;
-    }
+export class HasUpdatePipe implements PipeTransform {
+  private readonly updateTimings = [
+    RuleTiming.Update,
+    RuleTiming.CreateUpdate,
+    RuleTiming.UpdateDelete,
+    RuleTiming.All,
+  ];
+
+  public transform(value: RuleTiming): boolean {
+    return this.updateTimings.indexOf(value) >= 0;
   }
 }

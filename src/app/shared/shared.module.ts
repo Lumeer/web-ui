@@ -61,6 +61,8 @@ import {BoxModule} from './box/box.module';
 import {LayoutModule} from './layout/layout.module';
 import {FiltersModule} from './filters/filters.module';
 import {ResourceModule} from './resource/resource.module';
+import {ResourceAttributesModule} from './attributes/resource-attributes.module';
+import {RulesModule} from './rules/rules.module';
 
 @NgModule({
   imports: [
@@ -105,6 +107,8 @@ import {ResourceModule} from './resource/resource.module';
     LayoutModule,
     FiltersModule,
     ResourceModule,
+    ResourceAttributesModule,
+    RulesModule,
   ],
   declarations: [TourComponent],
   exports: [
@@ -151,6 +155,8 @@ import {ResourceModule} from './resource/resource.module';
     LayoutModule,
     FiltersModule,
     ResourceModule,
+    ResourceAttributesModule,
+    RulesModule,
   ],
 })
 export class SharedModule {}

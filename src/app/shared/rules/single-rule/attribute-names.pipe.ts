@@ -18,13 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChronoUnit, maxIntervalByChronoUnit} from '../../../../../../../../core/model/rule';
+import {Rule} from '../../../core/model/rule';
+import {Attribute} from '../../../core/store/collections/collection';
+import {attributesWithRule} from '../../utils/attribute.utils';
 
 @Pipe({
-  name: 'maxIntervalByUnit',
+  name: 'attributeNames',
 })
-export class MaxIntervalByUnitPipe implements PipeTransform {
-  public transform(unit: ChronoUnit): number {
-    return maxIntervalByChronoUnit(unit);
+export class AttributeNamesPipe implements PipeTransform {
+  public transform(value: Rule, attributes: Attribute[]): string {
+    return attributesWithRule(attributes, value)?.join(', ');
   }
 }

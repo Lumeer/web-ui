@@ -18,9 +18,9 @@
  */
 
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {SharedModule} from '../shared/shared.module';
 import {LinkTypeSettingsGuard} from './link-type-settings.guard';
 import {LinkTypeTabGuard} from './link-type-tab.guard';
 import {LinkTypeSettingsComponent} from './settings/link-type-settings.component';
@@ -29,14 +29,39 @@ import {LinkTypeActivityComponent} from './settings/tab/activity/link-type-activ
 import {LinkTypeHeaderComponent} from './settings/header/link-type-header.component';
 import {LinkTypeAttributesComponent} from './settings/tab/attributes/link-type-attributes.component';
 import {ResourceAttributesModule} from '../shared/attributes/resource-attributes.module';
+import {LinkTypeRulesComponent} from './settings/tab/rules/link-type-rules.component';
+import {RulesModule} from '../shared/rules/rules.module';
+import {LinkTypeCollectionsComponent} from './settings/tab/collections/link-type-collections.component';
+import {LinkTypeCollectionComponent} from './settings/tab/collections/collection/link-type-collection.component';
+import {PipesModule} from '../shared/pipes/pipes.module';
+import {DirectivesModule} from '../shared/directives/directives.module';
+import {PresenterModule} from '../shared/presenter/presenter.module';
+import {InputModule} from '../shared/input/input.module';
+import {ResourceActivityModule} from '../shared/resource/activity/resource-activity.module';
+import {TopPanelModule} from '../shared/top-panel/top-panel.module';
 
 @NgModule({
-  imports: [SharedModule, LinkTypeRoutingModule, TooltipModule, ResourceAttributesModule],
+  imports: [
+    CommonModule,
+    LinkTypeRoutingModule,
+    TooltipModule,
+    InputModule,
+    ResourceActivityModule,
+    TopPanelModule,
+    ResourceAttributesModule,
+    RulesModule,
+    PipesModule,
+    DirectivesModule,
+    PresenterModule,
+  ],
   declarations: [
     LinkTypeSettingsComponent,
     LinkTypeActivityComponent,
     LinkTypeHeaderComponent,
     LinkTypeAttributesComponent,
+    LinkTypeRulesComponent,
+    LinkTypeCollectionsComponent,
+    LinkTypeCollectionComponent,
   ],
   providers: [LinkTypeSettingsGuard, LinkTypeTabGuard],
 })

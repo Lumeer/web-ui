@@ -17,21 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {RuleTiming} from '../../../../../core/model/rule';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
+
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 @Pipe({
-  name: 'hasUpdate',
+  name: 'linkTypeFilter',
 })
-export class HasUpdatePipe implements PipeTransform {
-  private readonly updateTimings = [
-    RuleTiming.Update,
-    RuleTiming.CreateUpdate,
-    RuleTiming.UpdateDelete,
-    RuleTiming.All,
-  ];
-
-  public transform(value: RuleTiming): boolean {
-    return this.updateTimings.indexOf(value) >= 0;
+@Injectable()
+export class LinkTypeFilterPipe implements PipeTransform {
+  public transform(linkTypes: LinkType[], value: string): any[] {
+    if (!linkTypes || !value) {
+      return linkTypes;
+    }
+    return linkTypes.filter(lt => lt.name.toLowerCase().includes(value.toLocaleLowerCase()));
   }
 }

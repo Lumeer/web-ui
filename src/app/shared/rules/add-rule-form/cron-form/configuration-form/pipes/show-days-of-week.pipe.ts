@@ -18,20 +18,18 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {RuleTiming} from '../../../../../core/model/rule';
+import {ChronoUnit} from '../../../../../../core/model/rule';
 
 @Pipe({
-  name: 'hasDelete',
+  name: 'showDaysOfWeek',
 })
-export class HasDeletePipe implements PipeTransform {
-  private readonly deleteTimings = [
-    RuleTiming.Delete,
-    RuleTiming.UpdateDelete,
-    RuleTiming.CreateDelete,
-    RuleTiming.All,
-  ];
-
-  public transform(value: RuleTiming): boolean {
-    return this.deleteTimings.indexOf(value) >= 0;
+export class ShowDaysOfWeekPipe implements PipeTransform {
+  public transform(unit: ChronoUnit): boolean {
+    switch (unit) {
+      case ChronoUnit.Weeks:
+        return true;
+      default:
+        return false;
+    }
   }
 }

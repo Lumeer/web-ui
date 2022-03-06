@@ -18,20 +18,18 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {RuleTiming} from '../../../../../core/model/rule';
+import {ChronoUnit} from '../../../../../../core/model/rule';
 
 @Pipe({
-  name: 'hasCreate',
+  name: 'showOccurrence',
 })
-export class HasCreatePipe implements PipeTransform {
-  private readonly createTimings = [
-    RuleTiming.Create,
-    RuleTiming.CreateUpdate,
-    RuleTiming.CreateDelete,
-    RuleTiming.All,
-  ];
-
-  public transform(value: RuleTiming): boolean {
-    return this.createTimings.indexOf(value) >= 0;
+export class ShowOccurrencePipe implements PipeTransform {
+  public transform(unit: ChronoUnit): boolean {
+    switch (unit) {
+      case ChronoUnit.Months:
+        return true;
+      default:
+        return false;
+    }
   }
 }

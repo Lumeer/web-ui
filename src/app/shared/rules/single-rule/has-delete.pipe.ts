@@ -18,13 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {bitTest} from '../../../../../../../../shared/utils/common.utils';
+import {RuleTiming} from '../../../core/model/rule';
 
 @Pipe({
-  name: 'isDayOfWeekSelected',
+  name: 'hasDelete',
 })
-export class IsDayOfWeekSelectedPipe implements PipeTransform {
-  public transform(dayOfWeeks: number, bit: number): boolean {
-    return bitTest(dayOfWeeks, bit);
+export class HasDeletePipe implements PipeTransform {
+  private readonly deleteTimings = [
+    RuleTiming.Delete,
+    RuleTiming.UpdateDelete,
+    RuleTiming.CreateDelete,
+    RuleTiming.All,
+  ];
+
+  public transform(value: RuleTiming): boolean {
+    return this.deleteTimings.indexOf(value) >= 0;
   }
 }

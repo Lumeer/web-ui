@@ -18,24 +18,24 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
-import {CronRuleConfiguration} from '../../../../../../core/model/rule';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {CronRuleConfiguration} from '../../../../core/model/rule';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {FormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
-import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
-import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
-import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
+import {RuleVariable} from '../../../blockly/rule-variable-type';
+import {BlocklyDebugDisplay} from '../../../blockly/blockly-debugger/blockly-debugger.component';
+import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../blockly/blockly-editor/blockly-editor-toolbox';
+import {BLOCKLY_FUNCTION_BUTTONS} from '../../../blockly/blockly-editor/blockly-utils';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../../../core/store/app.state';
+import {AppState} from '../../../../core/store/app.state';
 import {
   selectContributeAndWritableCollections,
   selectContributeAndWritableLinkTypes,
   selectViewsByRead,
-} from '../../../../../../core/store/common/permissions.selectors';
-import {View} from '../../../../../../core/store/views/view';
-import {selectResourceVariablesKeysByCurrentProject} from '../../../../../../core/store/resource-variables/resource-variables.state';
+} from '../../../../core/store/common/permissions.selectors';
+import {View} from '../../../../core/store/views/view';
+import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
 
 @Component({
   selector: 'cron-form',

@@ -17,19 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
-
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Pipe, PipeTransform} from '@angular/core';
+import {bitTest} from '../../../../../utils/common.utils';
 
 @Pipe({
-  name: 'linkTypeFilter',
+  name: 'isDayOfWeekSelected',
 })
-@Injectable()
-export class LinkTypeFilterPipe implements PipeTransform {
-  public transform(linkTypes: LinkType[], value: string): any[] {
-    if (!linkTypes || !value) {
-      return linkTypes;
-    }
-    return linkTypes.filter(lt => lt.name.toLowerCase().includes(value.toLocaleLowerCase()));
+export class IsDayOfWeekSelectedPipe implements PipeTransform {
+  public transform(dayOfWeeks: number, bit: number): boolean {
+    return bitTest(dayOfWeeks, bit);
   }
 }

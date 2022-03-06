@@ -17,30 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {Observable} from 'rxjs';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+
 import {select, Store} from '@ngrx/store';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {AppState} from '../../../../core/store/app.state';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {Collection} from '../../../../core/store/collections/collection';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {selectLinkTypeByWorkspaceWithCollections} from '../../../../core/store/link-types/link-types.state';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
-import {selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-types.state';
-import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Component({
-  templateUrl: './link-type-activity.component.html',
+  templateUrl: './link-type-collections.component.html',
+  styleUrls: ['./link-type-collections.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinkTypeActivityComponent implements OnInit {
-  public linkType$: Observable<LinkType>;
+export class LinkTypeCollectionsComponent implements OnInit {
+  public collections$: Observable<Collection[]>;
   public workspace$: Observable<Workspace>;
-
-  public readonly resourceType = ResourceType.LinkType;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.linkType$ = this.store$.pipe(select(selectLinkTypeByWorkspace));
+    this.subscribeData();
+  }
+
+  private subscribeData() {
+    this.collections$ = this.store$
+      .select(selectLinkTypeByWorkspaceWithCollections)
+      .pipe(map(linkType => linkType?.collections || []));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
+  }
+
+  public trackByCollection(index: number, collection: Collection): string {
+    return collection.id;
   }
 }

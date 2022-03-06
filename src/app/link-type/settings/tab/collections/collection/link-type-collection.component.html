@@ -1,0 +1,20 @@
+<td class="d-flex flex-row no-wrap align-items-center ps-2 py-3">
+  <icons-presenter *ngIf="collection | resourceIconsColors as iconsColors"
+    [colors]="iconsColors.colors"
+    [icons]="iconsColors.icons"
+    [title]="collection.name">
+  </icons-presenter>
+
+  <a class="ms-2 flex-grow-1" [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id]">{{collection.name}}</a>
+
+</td>
+
+<td class="text-end align-middle">
+
+  <div class="d-flex flex-row text-success flex-nowrap align-items-center cursor-pointer color-success justify-content-end"
+       (click)="onDocumentsClick()"
+       title="Number of records" i18n-title="@@collection.settings.records.count">
+    <i class="far fa-file" aria-hidden="true"></i>&nbsp;<span>{{ collection?.documentsCount || 0 }}</span>
+  </div>
+
+</td>

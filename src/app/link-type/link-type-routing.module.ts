@@ -33,6 +33,8 @@ import {LinkTypeTabGuard} from './link-type-tab.guard';
 import {LinkTypeSettingsComponent} from './settings/link-type-settings.component';
 import {LinkTypeActivityComponent} from './settings/tab/activity/link-type-activity.component';
 import {LinkTypeAttributesComponent} from './settings/tab/attributes/link-type-attributes.component';
+import {LinkTypeRulesComponent} from './settings/tab/rules/link-type-rules.component';
+import {LinkTypeCollectionsComponent} from './settings/tab/collections/link-type-collections.component';
 
 const linkTypeRoutes: Routes = [
   {
@@ -56,8 +58,13 @@ const linkTypeRoutes: Routes = [
       },
       {
         path: 'rules',
-        component: LinkTypeAttributesComponent,
+        component: LinkTypeRulesComponent,
         data: {role: RoleType.TechConfig},
+      },
+      {
+        path: 'tables',
+        component: LinkTypeCollectionsComponent,
+        data: {role: RoleType.Manage},
       },
       {
         path: 'activity',

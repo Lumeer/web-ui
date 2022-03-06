@@ -17,41 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Rule, RuleTiming, RuleType} from '../../../../../core/model/rule';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
-import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
-import {filter, first, map} from 'rxjs/operators';
-import {AppState} from '../../../../../core/store/app.state';
-import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {LinkTypesAction} from '../../../../../core/store/link-types/link-types.action';
-import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
-import {containsAttributeWithRule} from '../../../../../shared/utils/attribute.utils';
-import {generateId} from '../../../../../shared/utils/resource.utils';
-import {OrganizationsAction} from '../../../../../core/store/organizations/organizations.action';
+import {filter, first, map, tap} from 'rxjs/operators';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {AppState} from '../../../../core/store/app.state';
+import {selectLinkTypeById, selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-types.state';
+import {Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
+import {generateId} from '../../../../shared/utils/resource.utils';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
+import {containsAttributeWithRule} from '../../../../shared/utils/attribute.utils';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
 
 @Component({
-  selector: 'link-type-rules',
   templateUrl: './link-type-rules.component.html',
   styleUrls: ['./link-type-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkTypeRulesComponent implements OnInit {
-  @Input()
-  public linkType: LinkType;
-
-  @Output()
-  public linkTypeUpdate = new EventEmitter<LinkType>();
-
   public rulesCountLimit$: Observable<number>;
   public ruleNames$: Observable<string[]>;
+  public linkType$: Observable<LinkType>;
   public editingRules$ = new BehaviorSubject<Record<string, boolean>>({});
 
   public addingRules: Rule[] = [];
 
+  private linkType: LinkType;
   private readonly copyOf: string;
 
   public constructor(private store$: Store<AppState>) {
@@ -59,15 +54,16 @@ export class LinkTypeRulesComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.linkType$ = this.store$.pipe(
+      select(selectLinkTypeByWorkspace),
+      tap(linkType => (this.linkType = linkType))
+    );
     this.rulesCountLimit$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
       filter(limits => !!limits),
       map(serviceLimits => serviceLimits.rulesPerCollection)
     );
-    this.ruleNames$ = this.store$.pipe(
-      select(selectLinkTypeById(this.linkType.id)),
-      map(linkType => linkType?.rules?.map(r => r.name) || [])
-    );
+    this.ruleNames$ = this.linkType$.pipe(map(linkType => linkType?.rules?.map(r => r.name) || []));
   }
 
   public onNewRule() {
@@ -183,5 +179,9 @@ export class LinkTypeRulesComponent implements OnInit {
       .subscribe(code => {
         this.store$.dispatch(new OrganizationsAction.GoToPayment({code}));
       });
+  }
+
+  public updateLinkType(linkType: LinkType) {
+    this.store$.dispatch(new LinkTypesAction.Update({linkType}));
   }
 }

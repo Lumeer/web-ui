@@ -24,6 +24,14 @@
         </a>
       </li>
       <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.Manage">
+        <a [routerLink]="['tables']"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@linkType.config.tab.tables">
+          Tables
+        </a>
+      </li>
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.Manage">
         <a [routerLink]="['activity']"
            routerLinkActive="active"
            class="nav-link"

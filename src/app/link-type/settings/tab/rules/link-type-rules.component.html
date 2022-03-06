@@ -1,4 +1,4 @@
-<div class="d-flex pb-3">
+<div class="row mt-4 mb-6" *ngIf="linkType$ | async as linkType">
   <ul class="list-group ps-5 flex-fill"
       *ngIf="{rulesLimit: rulesCountLimit$ | async, ruleNames: ruleNames$ | async, editingRules: editingRules$ | async} as data">
     <li

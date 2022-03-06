@@ -19,8 +19,8 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'auto-link-form',

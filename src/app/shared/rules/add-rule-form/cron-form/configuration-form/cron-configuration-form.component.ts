@@ -19,25 +19,25 @@
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, OnInit} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {ChronoUnit, maxIntervalByChronoUnit} from '../../../../../../../core/model/rule';
-import {SelectItemModel} from '../../../../../../../shared/select/select-item/select-item.model';
-import {bitClear, bitSet, isDateValid, objectChanged} from '../../../../../../../shared/utils/common.utils';
-import {generateId} from '../../../../../../../shared/utils/resource.utils';
-import {ConfigurationService} from '../../../../../../../configuration/configuration.service';
-import {LanguageCode} from '../../../../../../../core/model/language';
 import * as moment from 'moment';
-import {Collection} from '../../../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {Observable} from 'rxjs';
-import {View} from '../../../../../../../core/store/views/view';
-import {AppState} from '../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
-import {selectViewsByReadSorted} from '../../../../../../../core/store/common/permissions.selectors';
 import {map} from 'rxjs/operators';
-import {getBaseCollectionIdsFromQuery} from '../../../../../../../core/store/navigation/query/query.util';
-import {createRange} from '../../../../../../../shared/utils/array.utils';
-import {defaultDateFormat} from '../../../../../../../shared/utils/date.utils';
+import {ChronoUnit, maxIntervalByChronoUnit} from '../../../../../core/model/rule';
+import {SelectItemModel} from '../../../../select/select-item/select-item.model';
+import {bitClear, bitSet, isDateValid, objectChanged} from '../../../../utils/common.utils';
+import {generateId} from '../../../../utils/resource.utils';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {LanguageCode} from '../../../../../core/model/language';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {View} from '../../../../../core/store/views/view';
+import {AppState} from '../../../../../core/store/app.state';
+import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
+import {selectViewsByReadSorted} from '../../../../../core/store/common/permissions.selectors';
+import {getBaseCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
+import {createRange} from '../../../../utils/array.utils';
+import {defaultDateFormat} from '../../../../utils/date.utils';
 
 interface DayOfWeek {
   bit: number;
