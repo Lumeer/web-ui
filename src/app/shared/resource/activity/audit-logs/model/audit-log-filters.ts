@@ -43,6 +43,7 @@ export const auditLogTypeFilterConstraint = new SelectConstraint({
   options: [
     {value: AuditLogType.Created, displayValue: translateAuditType(AuditLogType.Created)},
     {value: AuditLogType.Updated, displayValue: translateAuditType(AuditLogType.Updated)},
+    {value: AuditLogType.Deleted, displayValue: translateAuditType(AuditLogType.Deleted)},
   ],
   displayValues: false,
 });

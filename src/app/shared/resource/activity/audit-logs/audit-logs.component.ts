@@ -37,6 +37,10 @@ import {selectRevertingAuditLogsIds} from '../../../../core/store/audit-logs/aud
 import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
 import {AuditLogParentData} from './model/audit-log-parent-data';
 import {AuditLogFilters} from './model/audit-log-filters';
+import {View} from '../../../../core/store/views/view';
+import {selectViewsDictionary} from '../../../../core/store/views/views.state';
+import {Collection} from '../../../../core/store/collections/collection';
+import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'audit-logs',
@@ -60,6 +64,8 @@ export class AuditLogsComponent implements OnInit {
   public organizationPermissions$: Observable<AllowedPermissions>;
   public serviceLimits$: Observable<ServiceLimits>;
   public revertingAuditLogs$: Observable<string[]>;
+  public viewsMap$: Observable<Record<string, View>>;
+  public collectionsMap$: Observable<Record<string, Collection>>;
 
   public filters$ = new BehaviorSubject<AuditLogFilters>({users: [], types: []});
 
@@ -71,6 +77,8 @@ export class AuditLogsComponent implements OnInit {
     this.organizationPermissions$ = this.store$.pipe(select(selectOrganizationPermissions));
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
     this.revertingAuditLogs$ = this.store$.pipe(select(selectRevertingAuditLogsIds));
+    this.viewsMap$ = this.store$.pipe(select(selectViewsDictionary));
+    this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
   }
 
   public trackByAudit(index: number, log: AuditLog): string {

@@ -23,6 +23,8 @@ import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit
 import {AttributesResource} from '../../../../../core/model/resource';
 import {User} from '../../../../../core/store/users/user';
 import {DEFAULT_USER} from '../../../../../core/constants';
+import {View} from '../../../../../core/store/views/view';
+import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'audit-log',
@@ -39,6 +41,12 @@ export class AuditLogComponent implements OnChanges {
 
   @Input()
   public usersMap: Record<string, User>;
+
+  @Input()
+  public viewsMap: Record<string, View>;
+
+  @Input()
+  public collectionsMap: Record<string, Collection>;
 
   @Input()
   public constraintData: ConstraintData;
@@ -59,6 +67,7 @@ export class AuditLogComponent implements OnChanges {
   public revert = new EventEmitter();
 
   public user: User;
+  public view: View;
   public type: AuditLogType;
 
   public readonly updatedByMsg: string;
@@ -76,11 +85,16 @@ export class AuditLogComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.auditLog || changes.usersMap) {
+    if (changes.auditLog) {
       this.type = this.auditLog?.type;
-      this.user = this.usersMap?.[this.auditLog.userId];
       this.hasNewState = Object.keys(this.auditLog?.newState || {}).length > 0;
       this.hasOldState = Object.keys(this.auditLog?.oldState || {}).length > 0;
+    }
+    if (changes.auditLog || changes.usersMap) {
+      this.user = this.usersMap?.[this.auditLog.userId];
+    }
+    if (changes.auditLog || changes.viewsMap) {
+      this.view = this.viewsMap?.[this.auditLog.viewId];
     }
   }
 }

@@ -27,6 +27,7 @@ export interface AuditLog {
   changeDate: Date;
   type: AuditLogType;
   userId?: string;
+  viewId?: string;
   userName?: string;
   userEmail?: string;
   automation?: string;

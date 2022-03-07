@@ -29,6 +29,7 @@ export function convertAuditLogDtoToModel(dto: AuditLogDto): AuditLog {
     resourceId: dto.resourceId,
     changeDate: dto.changeDate ? new Date(dto.changeDate) : null,
     userId: dto.user,
+    viewId: dto.viewId,
     type: auditLogMap[dto.type] || AuditLogType.Updated,
     userName: dto.userName,
     userEmail: dto.userEmail,

@@ -4,6 +4,7 @@
                    [value]="usersDataValue"
                    [focus]="true"
                    [readonly]="!(editingUsers$ | async)"
+                   [configuration]="userConfig"
                    placeholder="Filter Users or Teams"
                    i18n-placeholder="@@audit.filters.users.placeholder"
                    (click)="onClickUsers()"

@@ -25,6 +25,7 @@ export interface AuditLogDto {
   changeDate: number;
   user?: string;
   type?: string;
+  viewId?: string;
   userName?: string;
   userEmail?: string;
   automation?: string;

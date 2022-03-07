@@ -5,7 +5,7 @@
                       (filtersChanged)="onFiltersChanged($event)">
   </audit-logs-filters>
   <ng-container
-    *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async, revertingIds: revertingAuditLogs$ | async} as data">
+    *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async, revertingIds: revertingAuditLogs$ | async, viewsMap: viewsMap$ | async, collectionsMap: collectionsMap$ | async} as data">
     <audit-log *ngFor="let auditLog of auditLogs | filterAuditLogs:(filters$ | async): data.constraintData; trackBy:trackByAudit; let first = first; let last = last"
                [auditLog]="auditLog"
                [parent]="auditLog | auditLogParent:parentData"
@@ -15,6 +15,8 @@
                [constraintData]="data.constraintData"
                [allowRevert]="first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE) && (auditLog | auditLogRevertable)"
                [usersMap]="data.usersMap"
+               [viewsMap]="data.viewsMap"
+               [collectionsMap]="data.collectionsMap"
                (revert)="onRevert(auditLog)">
     </audit-log>
     <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"

@@ -21,6 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {BehaviorSubject} from 'rxjs';
 import {ConstraintData, SelectDataValue, UserDataValue} from '@lumeer/data-filters';
 import {AuditLogFilters, auditLogTypeFilterConstraint, auditLogUsersFilterConstraint} from '../model/audit-log-filters';
+import {UserDataInputConfiguration} from '../../../../data-input/data-input-configuration';
 
 @Component({
   selector: 'audit-logs-filters',
@@ -39,6 +40,7 @@ export class AuditLogsFiltersComponent implements OnChanges {
   public filtersChanged = new EventEmitter<AuditLogFilters>();
 
   public usersDataValue: UserDataValue;
+  public userConfig: UserDataInputConfiguration = {onlyIcon: true};
   public typesDataValue: SelectDataValue;
 
   public editingUsers$ = new BehaviorSubject(false);

@@ -10,10 +10,16 @@
 
 <div class="title d-flex">
   <div class="flex-grow-1 text-truncate">
-    <span i18n="@@audit.title.data.update2">{type, select, Updated {Updated} Created {Created} Deleted {Deleted}}</span>
+    <span i18n="@@audit.title.data.type">{type, select, Updated {Updated} Created {Created} Deleted {Deleted}}</span>
     <span *ngIf="auditLog.automation" class="badge bg-info ms-2"
           placement="top"
           [tooltip]="auditLog | auditLogAutomationTitle:parent?.attributes">{{auditLog | auditLogAutomationString}}</span>
+    <span *ngIf="view" class="badge ms-2"
+          placement="top"
+          [style.background-color]="view | viewColor:collectionsMap"
+          [style.color]="view | viewColor:collectionsMap | contrastColor"
+          i18n="@@audit.title.changed.view" tooltip="Changed by view"
+    ><i [ngClass]="view| viewIcon" class="me-1"></i>&nbsp;{{view.name}}</span>
   </div>
   <span *ngIf="allowRevert && !reverting" class="clickable ms-2" (click)="revert.emit()"
         title="Revert"
@@ -31,8 +37,7 @@
   <short-date class="small text-secondary d-block"
               [date]="auditLog.changeDate"
               [tooltipText]="updatedOnMsg + ' ' + (auditLog.changeDate | date:'medium')"
-              placement="top"
-              format="ll">
+              placement="top">
   </short-date>
   <audit-log-entries class="d-block"
                      *ngIf="hasNewState"
