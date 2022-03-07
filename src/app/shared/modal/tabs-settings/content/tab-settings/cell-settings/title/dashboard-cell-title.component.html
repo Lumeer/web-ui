@@ -1,0 +1,7 @@
+<label class="mb-2 w-100" i18n="@@search.tabs.settings.dialog.cell.title">Title</label>
+
+<input class="form-control"
+       type="text"
+       [readOnly]="!editable"
+       (blur)="onBlur($event.target.value)"
+       [value]="title">

@@ -1,9 +1,12 @@
-<div class="d-flex flex-row-reverse flex-wrap">
-  <dashboard-tab-action *ngFor="let action of dashboardCell?.actions"
-                        class="p-1"
-                        [action]="action"
-                        [views]="views">
-  </dashboard-tab-action>
+<div class="cell-header">
+  <div><div class="px-2 py-1 fw-bold" *ngIf="dashboardCell?.title">{{dashboardCell.title}}</div></div>
+  <div class="d-flex flex-row-reverse flex-wrap">
+    <dashboard-tab-action *ngFor="let action of dashboardCell?.actions"
+                          class="p-1"
+                          [action]="action"
+                          [views]="views">
+    </dashboard-tab-action>
+  </div>
 </div>
 <ng-container [ngSwitch]="dashboardCell?.type">
   <img *ngSwitchCase="cellType.Image" class="image" [ngClass]="scale" [src]="url" alt=""/>

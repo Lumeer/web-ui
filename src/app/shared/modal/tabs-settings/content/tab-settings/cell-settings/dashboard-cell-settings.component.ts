@@ -94,4 +94,9 @@ export class DashboardCellSettingsComponent {
     const newCell = {...this.cell, actions};
     this.cellChange.emit(newCell);
   }
+
+  public onTitleChange(title: string) {
+    const newCell = {...this.cell, title};
+    this.cellChange.emit(newCell);
+  }
 }

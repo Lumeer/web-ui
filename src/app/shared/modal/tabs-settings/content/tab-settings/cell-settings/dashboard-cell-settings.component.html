@@ -33,8 +33,14 @@
   </dashboard-image-config>
 </ng-container>
 
+<dashboard-cell-title *ngIf="cell?.type" class="d-block mt-4"
+                      [title]="cell.title || ''"
+                      [editable]="editable"
+                      (titleChange)="onTitleChange($event)">
+</dashboard-cell-title>
+
 <dashboard-actions-config *ngIf="cell?.type"
-                          class="mt-4"
+                          class="d-block mt-3"
                           [actions]="cell.actions"
                           [views]="views"
                           [editable]="editable"
