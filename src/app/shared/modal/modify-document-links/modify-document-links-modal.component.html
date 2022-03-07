@@ -25,6 +25,7 @@
     </ng-container>
 
     <resource-filters [resource]="data.collection"
+                      [resourceType]="resourceType.Collection"
                       (filtersChange)="onFiltersChange($event)">
     </resource-filters>
 

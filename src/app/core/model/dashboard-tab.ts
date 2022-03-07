@@ -41,6 +41,7 @@ export interface DashboardCell {
   type?: DashboardCellType;
   config?: DashboardCellConfig;
   actions?: DashboardAction[];
+  title?: string;
 }
 
 export type DashboardCellConfig = DashboardViewCellConfig | DashboardImageCellConfig;

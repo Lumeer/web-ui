@@ -47,6 +47,7 @@ import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {TabsSettingsSecondaryInfoPipe} from './pipes/tabs-settings-secondary-info.pipe';
 import {LayoutModule} from '../../layout/layout.module';
+import {DashboardCellTitleComponent} from './content/tab-settings/cell-settings/title/dashboard-cell-title.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import {LayoutModule} from '../../layout/layout.module';
     DashboardActionConfigComponent,
     IsTabSelectedPipe,
     TabsSettingsSecondaryInfoPipe,
+    DashboardCellTitleComponent,
   ],
   imports: [
     CommonModule,

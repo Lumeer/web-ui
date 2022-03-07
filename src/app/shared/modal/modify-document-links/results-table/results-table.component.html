@@ -1,5 +1,5 @@
 <cdk-virtual-scroll-viewport [itemSize]="32" class="h-100">
-  <table class="table table-without-padding table-borderless table-sm">
+  <table class="table table-borderless table-sm">
     <thead>
     <tr>
       <th class="sticky-header check-column"
@@ -39,7 +39,7 @@
     </tr>
     <tr *cdkVirtualFor="let row of rows; trackBy:trackByRow"
         class="clickable-row" (click)="toggleRow(row)">
-      <td class="check-column">
+      <td class="check-column align-middle">
         <custom-checkbox class="d-inline-block"
                          [checkboxId]="row.linkInstance?.id || row.document.id"
                          [checked]="row | isResultRowChecked:removedLinkInstancesIds:selectedDocumentIds"

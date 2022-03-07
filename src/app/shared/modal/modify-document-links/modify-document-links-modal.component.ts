@@ -47,6 +47,7 @@ import {generateCorrelationId} from '../../utils/resource.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {ResourceAttributeSettings, View} from '../../../core/store/views/view';
 import {selectCurrentView, selectViewById} from '../../../core/store/views/views.state';
+import {AttributesResourceType} from '../../../core/model/resource';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',
@@ -85,6 +86,7 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
   public query$: Observable<Query>;
   public currentView$: Observable<View>;
 
+  public readonly resourceType = AttributesResourceType;
   public readonly dialogType = DialogType;
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
