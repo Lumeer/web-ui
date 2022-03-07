@@ -1,0 +1,35 @@
+<dropdown [origin]="origin"
+          [closeOnClickOutside]="true"
+          [closeOnClickOrigin]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false">
+
+  <div class="card p-3 overflow-auto" [style.width.px]="280">
+
+    <user-data-input class="form-control p-0 cursor-pointer"
+                     [value]="usersDataValue"
+                     [focus]="true"
+                     [readonly]="!(editingUsers$ | async)"
+                     [configuration]="userConfig"
+                     placeholder="Filter Users or Teams"
+                     i18n-placeholder="@@audit.filters.users.placeholder"
+                     (click)="onClickUsers($event)"
+                     (cancel)="onCancelUsers()"
+                     (save)="onSaveUsers($event)">
+    </user-data-input>
+
+    <select-data-input class="form-control p-0 mt-2 cursor-pointer"
+                       [focus]="true"
+                       [value]="typesDataValue"
+                       [readonly]="!(editingTypes$ | async)"
+                       placeholder="Filter Types"
+                       i18n-placeholder="@@audit.filters.types.placeholder"
+                       (click)="onClickTypes($event)"
+                       (cancel)="onCancelTypes()"
+                       (save)="onSaveTypes($event)">
+    </select-data-input>
+
+  </div>
+
+
+</dropdown>

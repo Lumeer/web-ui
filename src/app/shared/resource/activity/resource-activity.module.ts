@@ -34,6 +34,9 @@ import {AuditLogRevertablePipe} from './audit-logs/pipes/audit-log-revertable.pi
 import {AuditLogsFiltersComponent} from './audit-logs/filters/audit-logs-filters.component';
 import {FilterAuditLogsPipe} from './audit-logs/pipes/filter-audit-logs.pipe';
 import {SelectModule} from '../../select/select.module';
+import {AuditLogFiltersCountPipe} from './audit-logs/pipes/audit-log-filters-count.pipe';
+import {AuditLogFiltersDropdownComponent} from './audit-logs/filters/dropdown/audit-log-filters-dropdown.component';
+import {DropdownModule} from '../../dropdown/dropdown.module';
 
 @NgModule({
   declarations: [
@@ -47,8 +50,18 @@ import {SelectModule} from '../../select/select.module';
     AuditLogRevertablePipe,
     FilterAuditLogsPipe,
     AuditLogsFiltersComponent,
+    AuditLogFiltersCountPipe,
+    AuditLogFiltersDropdownComponent,
   ],
-  imports: [CommonModule, ResourceCommentsModule, PipesModule, TooltipModule, DataInputModule, SelectModule],
+  imports: [
+    CommonModule,
+    DropdownModule,
+    ResourceCommentsModule,
+    PipesModule,
+    TooltipModule,
+    DataInputModule,
+    SelectModule,
+  ],
   exports: [ResourceActivityComponent],
 })
 export class ResourceActivityModule {}

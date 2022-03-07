@@ -26,10 +26,17 @@ import {
 } from '@lumeer/data-filters';
 import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
 import {parseSelectTranslation} from '../../../../utils/translation.utils';
+import {View} from '../../../../../core/store/views/view';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 export interface AuditLogFilters {
-  users: string[];
-  types: AuditLogType[];
+  users?: string[];
+  types?: AuditLogType[];
+  views?: string[];
+  collections?: string[];
+  linkTypes?: string[];
 }
 
 export const auditLogUsersFilterConstraint = new UserConstraint({
@@ -60,18 +67,40 @@ function translateAuditType(type: AuditLogType): string {
 export function filterAuditLogs(
   logs: AuditLog[],
   filters: AuditLogFilters,
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  viewsMap: Record<string, View>,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
 ): AuditLog[] {
   const userFilterDataValue = filters.users?.length
     ? auditLogUsersFilterConstraint.createDataValue(filters.users, constraintData)
     : null;
 
   return (logs || []).filter(log => {
-    if (userFilterDataValue) {
-      return userFilterDataValue.meetCondition(ConditionType.HasSome, [{value: log.userId}]);
+    if (userFilterDataValue && !userFilterDataValue.meetCondition(ConditionType.HasSome, [{value: log.userId}])) {
+      return false;
     }
-    if (filters.types?.length) {
-      return filters.types.includes(log.type);
+    if (filters.types?.length && !filters.types.includes(log.type)) {
+      return false;
+    }
+    if (filters.views?.length && !filters.views.includes(log.viewId) && !!viewsMap[log.viewId]) {
+      return false;
+    }
+    if (
+      filters.collections?.length &&
+      log.resourceType === ResourceType.Document &&
+      !filters.collections.includes(log.parentId) &&
+      !!collectionsMap[log.parentId]
+    ) {
+      return false;
+    }
+    if (
+      filters.linkTypes?.length &&
+      log.resourceType === ResourceType.Link &&
+      !filters.linkTypes.includes(log.parentId) &&
+      !!linkTypesMap[log.parentId]
+    ) {
+      return false;
     }
 
     return true;

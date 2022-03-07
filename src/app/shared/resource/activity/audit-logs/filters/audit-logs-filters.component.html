@@ -1,26 +1,17 @@
-<div>Filters</div>
-<div class="filters mt-1">
-  <user-data-input class="form-control p-0 cursor-pointer"
-                   [value]="usersDataValue"
-                   [focus]="true"
-                   [readonly]="!(editingUsers$ | async)"
-                   [configuration]="userConfig"
-                   placeholder="Filter Users or Teams"
-                   i18n-placeholder="@@audit.filters.users.placeholder"
-                   (click)="onClickUsers()"
-                   (cancel)="onCancelUsers()"
-                   (save)="onSaveUsers($event)">
-  </user-data-input>
+<button #buttonElement class="btn btn-info text-nowrap filters-button" (click)="dropdownComponent.toggle()">
+  <i class="fal fa-filter pe-2"></i>
+  <span i18n="@@audit.filters.button.title">Filters</span>
+  <ng-container *ngIf="{count: filters | auditLogFiltersCount} as filtersData">
+    <span *ngIf="filtersData.count" class="ms-3 badge num-filters">{{filtersData.count}}</span>
+  </ng-container>
+</button>
 
-  <select-data-input class="form-control p-0 cursor-pointer"
-                     [focus]="true"
-                     [value]="typesDataValue"
-                     [readonly]="!(editingTypes$ | async)"
-                     placeholder="Filter Types"
-                     i18n-placeholder="@@audit.filters.types.placeholder"
-                     (click)="onClickTypes()"
-                     (cancel)="onCancelTypes()"
-                     (save)="onSaveTypes($event)">
-  </select-data-input>
-
-</div>
+<audit-log-filters-dropdown #dropdownComponent
+                            [constraintData]="constraintData"
+                            [filters]="filters"
+                            [origin]="buttonElement"
+                            [viewsMap]="viewsMap"
+                            [collectionsMap]="collectionsMap"
+                            [linkTypesMap]="linkTypesMap"
+                            (filtersChanged)="filtersChanged.emit($event)"
+></audit-log-filters-dropdown>

@@ -21,12 +21,22 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
 import {AuditLogFilters, filterAuditLogs} from '../model/audit-log-filters';
 import {ConstraintData} from '@lumeer/data-filters';
+import {View} from '../../../../../core/store/views/view';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'filterAuditLogs',
 })
 export class FilterAuditLogsPipe implements PipeTransform {
-  public transform(auditLogs: AuditLog[], filters: AuditLogFilters, constraintData: ConstraintData): AuditLog[] {
-    return filterAuditLogs(auditLogs, filters, constraintData);
+  public transform(
+    auditLogs: AuditLog[],
+    filters: AuditLogFilters,
+    constraintData: ConstraintData,
+    viewsMap: Record<string, View>,
+    collectionsMap: Record<string, Collection>,
+    linkTypesMap: Record<string, LinkType>
+  ): AuditLog[] {
+    return filterAuditLogs(auditLogs, filters, constraintData, viewsMap, collectionsMap, linkTypesMap);
   }
 }

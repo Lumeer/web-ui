@@ -41,6 +41,8 @@ import {View} from '../../../../core/store/views/view';
 import {selectViewsDictionary} from '../../../../core/store/views/views.state';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {selectLinkTypesDictionary} from '../../../../core/store/link-types/link-types.state';
 
 @Component({
   selector: 'audit-logs',
@@ -66,6 +68,7 @@ export class AuditLogsComponent implements OnInit {
   public revertingAuditLogs$: Observable<string[]>;
   public viewsMap$: Observable<Record<string, View>>;
   public collectionsMap$: Observable<Record<string, Collection>>;
+  public linkTypesMap$: Observable<Record<string, LinkType>>;
 
   public filters$ = new BehaviorSubject<AuditLogFilters>({users: [], types: []});
 
@@ -79,6 +82,7 @@ export class AuditLogsComponent implements OnInit {
     this.revertingAuditLogs$ = this.store$.pipe(select(selectRevertingAuditLogsIds));
     this.viewsMap$ = this.store$.pipe(select(selectViewsDictionary));
     this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
+    this.linkTypesMap$ = this.store$.pipe(select(selectLinkTypesDictionary));
   }
 
   public trackByAudit(index: number, log: AuditLog): string {

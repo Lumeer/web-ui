@@ -1,5 +1,9 @@
-.filters {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1rem;
+@import '~src/styles/variables';
+
+.filters-button {
+  .num-filters {
+    background: white;
+    color: $info;
+    border-radius: 50%;
+  }
 }

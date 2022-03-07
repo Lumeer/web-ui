@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {ConstraintData, SelectDataValue, UserDataValue} from '@lumeer/data-filters';
-import {AuditLogFilters, auditLogTypeFilterConstraint, auditLogUsersFilterConstraint} from '../model/audit-log-filters';
-import {UserDataInputConfiguration} from '../../../../data-input/data-input-configuration';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ConstraintData} from '@lumeer/data-filters';
+import {AuditLogFilters} from '../model/audit-log-filters';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {View} from '../../../../../core/store/views/view';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'audit-logs-filters',
@@ -29,59 +30,22 @@ import {UserDataInputConfiguration} from '../../../../data-input/data-input-conf
   styleUrls: ['./audit-logs-filters.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuditLogsFiltersComponent implements OnChanges {
+export class AuditLogsFiltersComponent {
   @Input()
   public filters: AuditLogFilters;
 
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public viewsMap: Record<string, View>;
+
+  @Input()
+  public collectionsMap: Record<string, Collection>;
+
+  @Input()
+  public linkTypesMap: Record<string, LinkType>;
+
   @Output()
   public filtersChanged = new EventEmitter<AuditLogFilters>();
-
-  public usersDataValue: UserDataValue;
-  public userConfig: UserDataInputConfiguration = {onlyIcon: true};
-  public typesDataValue: SelectDataValue;
-
-  public editingUsers$ = new BehaviorSubject(false);
-  public editingTypes$ = new BehaviorSubject(false);
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.filters || changes.constraintData) {
-      this.usersDataValue = auditLogUsersFilterConstraint.createDataValue(this.filters?.users, this.constraintData);
-      this.typesDataValue = auditLogTypeFilterConstraint.createDataValue(this.filters?.types, this.constraintData);
-    }
-  }
-
-  public onSaveUsers(data: {dataValue: UserDataValue}) {
-    this.patchFilters('users', data.dataValue.serialize());
-    this.editingUsers$.next(false);
-  }
-
-  public onClickUsers() {
-    this.editingUsers$.next(true);
-  }
-
-  public onCancelUsers() {
-    this.editingUsers$.next(false);
-  }
-
-  public onSaveTypes(data: {dataValue: SelectDataValue}) {
-    this.patchFilters('types', data.dataValue.serialize());
-    this.editingTypes$.next(false);
-  }
-
-  public onClickTypes() {
-    this.editingTypes$.next(true);
-  }
-
-  public onCancelTypes() {
-    this.editingTypes$.next(false);
-  }
-
-  private patchFilters(key: keyof AuditLogFilters, value: any) {
-    const filtersCopy = {...this.filters};
-    filtersCopy[key] = value;
-    this.filtersChanged.emit(filtersCopy);
-  }
 }

@@ -1,12 +1,15 @@
 <ng-container *ngIf="auditLogs?.length; else emptyState">
-  <audit-logs-filters class="d-block pb-5"
-                      [filters]="filters$ | async"
-                      [constraintData]="constraintData$ | async"
-                      (filtersChanged)="onFiltersChanged($event)">
-  </audit-logs-filters>
   <ng-container
-    *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async, revertingIds: revertingAuditLogs$ | async, viewsMap: viewsMap$ | async, collectionsMap: collectionsMap$ | async} as data">
-    <audit-log *ngFor="let auditLog of auditLogs | filterAuditLogs:(filters$ | async): data.constraintData; trackBy:trackByAudit; let first = first; let last = last"
+    *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async, revertingIds: revertingAuditLogs$ | async, viewsMap: viewsMap$ | async, collectionsMap: collectionsMap$ | async, linkTypesMap: linkTypesMap$ | async} as data">
+    <audit-logs-filters class="d-block pb-5"
+                        [filters]="filters$ | async"
+                        [constraintData]="constraintData$ | async"
+                        [viewsMap]="data.viewsMap"
+                        [collectionsMap]="data.collectionsMap"
+                        [linkTypesMap]="data.linkTypesMap"
+                        (filtersChanged)="onFiltersChanged($event)">
+    </audit-logs-filters>
+    <audit-log *ngFor="let auditLog of auditLogs | filterAuditLogs:(filters$ | async): data.constraintData: data.viewsMap: data.collectionsMap: data.linkTypesMap; trackBy:trackByAudit; let first = first; let last = last"
                [auditLog]="auditLog"
                [parent]="auditLog | auditLogParent:parentData"
                [first]="first"
