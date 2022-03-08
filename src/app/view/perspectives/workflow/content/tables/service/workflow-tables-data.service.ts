@@ -304,9 +304,10 @@ export class WorkflowTablesDataService {
           return result;
         }
 
+        const queryByStem = filterQueryByStem(query, stemConfig.stem);
         const {documents: stemDocuments, linkInstances: stemLinkInstances} = getDocumentsAndLinksByStemData(
           data,
-          stemConfig.stem
+          queryByStem
         );
         const linkInstancesMap = objectsByIdMap(stemLinkInstances);
 
@@ -319,7 +320,6 @@ export class WorkflowTablesDataService {
           permissions,
           linkTypesMap
         );
-        const queryByStem = filterQueryByStem(query, stemConfig.stem);
         const {
           columns: collectionColumns,
           actions: collectionActions,

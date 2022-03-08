@@ -8,7 +8,7 @@ cache:
     - ~/.m2
   timeout: 900
 jdk:
-  - openjdk13
+  - openjdk14
 addons:
   apt:
     packages:

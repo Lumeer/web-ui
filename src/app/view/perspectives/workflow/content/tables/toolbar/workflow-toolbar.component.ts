@@ -65,6 +65,9 @@ export class WorkflowToolbarComponent implements OnChanges {
   @Input()
   public currentView: View;
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public configChange = new EventEmitter<WorkflowStemConfig>();
 

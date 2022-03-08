@@ -12,4 +12,4 @@ export JAVA_HOME="~/jdk"
 # shellcheck disable=SC2016
 export PATH="$JAVA_HOME/bin:$PATH"
 # shellcheck disable=2088
-~/bin/install-jdk.sh -f 13 -o linux-x64 --target "$JAVA_HOME" --workspace "$TRAVIS_HOME/.cache/install-jdk" --cacerts
+~/bin/install-jdk.sh -f 14 -o linux-x64 --target "$JAVA_HOME" --workspace "$TRAVIS_HOME/.cache/install-jdk" --cacerts

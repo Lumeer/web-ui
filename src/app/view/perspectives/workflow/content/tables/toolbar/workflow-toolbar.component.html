@@ -1,6 +1,6 @@
 <select-item2 class="d-inline-block me-4 mw-100 text-truncate"
               [class.me-4]="hasAttribute"
-              [disabled]="attributesResourcesOrder?.length <= 1"
+              [disabled]="!editable || attributesResourcesOrder?.length <= 1"
               [items]="stem | queryStemResourcesSelectItems:collections:linkTypes:true"
               [selectedPath]="[config?.collection]"
               (selectPath)="onResourceSelected($event)">
@@ -10,11 +10,12 @@
                               class="d-inline-block mw-100 text-truncate"
                               [attributesResources]="attributesResourcesOrder"
                               [restrictedIds]="[]"
+                              [disabled]="!editable"
                               i18n-emptyValue="@@perspective.workflow.toolbar.groupBy"
                               emptyValue="Group By"
                               [selectedConstraint]="config?.attribute?.constraint"
                               [selectedId]="config | workflowSelectedItem"
-                              [removable]="true"
+                              [removable]="editable"
                               (select)="onAttributeSelected($event)"
                               (remove)="onAttributeRemoved()">
 </select-item-with-constraint2>

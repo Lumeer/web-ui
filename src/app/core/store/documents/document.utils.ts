@@ -65,9 +65,11 @@ export function createDocumentRequestAdditionalData(
 
 export function getDocumentsAndLinksByStemData(
   data: DocumentsAndLinksData,
-  stem: QueryStem
+  query: Query
 ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
-  const stemsData = (data?.dataByStems || []).filter(dataByStem => queryStemsAreSameById(dataByStem.stem, stem));
+  const stemsData = (data?.dataByStems || []).filter(dataByStem =>
+    query.stems?.some(stem => queryStemsAreSameById(dataByStem.stem, stem))
+  );
   return stemsData.reduce(
     (documentsAndLinks, stemData) => {
       documentsAndLinks.documents.push(...stemData.documents);
