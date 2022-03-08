@@ -26,6 +26,7 @@ import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {FileAttachmentsAction} from '../../../../../../../core/store/file-attachments/file-attachments.action';
+import {ViewSettingsService} from '../../../../../../../core/service/view-settings.service';
 
 @Component({
   selector: 'perspective-preview',
@@ -43,11 +44,13 @@ export class PerspectivePreviewComponent implements OnChanges {
   public readonly perspective = Perspective;
   public readonly searchTab = SearchTab;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private viewSettingsService: ViewSettingsService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (objectChanged(changes.view) && this.view) {
       this.store$.dispatch(new FileAttachmentsAction.GetByView({viewId: this.view.id}));
+
+      this.viewSettingsService.checkViewSettings(changes.view.previousValue, changes.view.currentValue);
     }
   }
 }
