@@ -7,14 +7,18 @@ cache:
     - ~/.engine
     - ~/.m2
   timeout: 900
-jdk:
-  - openjdk14
+#jdk:
+#  - openjdk14
 addons:
   apt:
     packages:
       - xvfb
       - psmisc
 before_install:
+  - curl -s "https://get.sdkman.io" | bash
+  - source "$HOME/.sdkman/bin/sdkman-init.sh"
+  - sdk install java 11.0.12-open
+  - sdk use java 11.0.12-open
   - 'sudo apt-get install -y libgconf-2-4'
   - 'nvm install v14.17.4'
   - 'nvm use v14.17.4'
