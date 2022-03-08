@@ -67,7 +67,11 @@ export function addDefaultDashboardTabsIfNotPresent(savedTabs: DashboardTab[]): 
   const tabs = [...(savedTabs || [])];
   for (let i = defaultDashboardTabs.length - 1; i >= 0; i--) {
     const defaultTab = defaultDashboardTabs[i];
-    if (!tabs.some(tab => tab.id === defaultTab.id)) {
+    const tabIndex = tabs.findIndex(tab => tab.id === defaultTab.id);
+    if (tabIndex >= 0) {
+      // we should replace saved title with translated one
+      tabs[tabIndex] = {...tabs[tabIndex], title: defaultTab.title};
+    } else {
       tabs.splice(0, 0, defaultTab);
     }
   }

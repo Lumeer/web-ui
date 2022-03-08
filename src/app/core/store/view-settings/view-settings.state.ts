@@ -25,7 +25,6 @@ import {createSaveViewSettings, viewSettingsChanged} from '../views/view.utils';
 import {selectCurrentView, selectViewQuery} from '../views/views.state';
 import {AppState} from '../app.state';
 import {selectWorkspace} from '../navigation/navigation.state';
-import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 import {viewSettingsIdByView, viewSettingsIdByWorkspace} from './view-settings.util';
 
 export interface ViewSettingsState extends Record<string, ViewSettings> {}

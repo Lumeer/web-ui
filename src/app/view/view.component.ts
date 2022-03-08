@@ -37,7 +37,6 @@ import {
   selectViewQuery,
 } from '../core/store/views/views.state';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
-import {ViewSettingsService} from '../core/service/view-settings.service';
 import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
 import {parseSelectTranslation} from '../shared/utils/translation.utils';
 
@@ -45,7 +44,7 @@ import {parseSelectTranslation} from '../shared/utils/translation.utils';
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [FileAttachmentsService, ViewSettingsService],
+  providers: [FileAttachmentsService],
 })
 export class ViewComponent implements OnInit {
   @ViewChild(ViewControlsComponent)
@@ -57,7 +56,6 @@ export class ViewComponent implements OnInit {
 
   constructor(
     private fileAttachmentsService: FileAttachmentsService,
-    private viewSettingsService: ViewSettingsService,
     private notificationService: NotificationService,
     private store$: Store<AppState>
   ) {}
@@ -67,7 +65,6 @@ export class ViewComponent implements OnInit {
     this.viewsExist$ = this.bindViewsExist();
 
     this.fileAttachmentsService.init();
-    this.viewSettingsService.init();
   }
 
   private bindView(): Observable<View> {

@@ -122,14 +122,19 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
             map(config => ({perspectiveId, config}))
           );
         }
-        return this.checkPerspectiveConfig(perspectiveId, view, this.getDefaultConfig(view.query)).pipe(
+        return this.checkPerspectiveConfig(perspectiveId, view, this.getDefaultConfig(view.query), true).pipe(
           map(config => ({perspectiveId, config}))
         );
       })
     );
   }
 
-  private checkPerspectiveConfig(perspectiveId: string, view?: View, defaultConfig?: T): Observable<T> {
+  private checkPerspectiveConfig(
+    perspectiveId: string,
+    view?: View,
+    defaultConfig?: T,
+    preferStoreConfig?: boolean
+  ): Observable<T> {
     const viewConfig = view && this.getConfig(view.config);
     return this.selectViewQuery$().pipe(
       switchMap(query =>
@@ -145,7 +150,7 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
       ),
       filter(([, , collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
       map(([{query, collections, linkTypes}, config, ,], index) => {
-        const perspectiveConfig = index > 0 ? config || viewConfig : viewConfig || config;
+        const perspectiveConfig = index > 0 || preferStoreConfig ? config || viewConfig : viewConfig || config;
         return this.checkOrTransformConfig(perspectiveConfig || defaultConfig, query, collections, linkTypes);
       })
     );

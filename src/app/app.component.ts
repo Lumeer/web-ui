@@ -50,6 +50,7 @@ import {csLocale, huLocale} from 'ngx-bootstrap/locale';
 import {ModalService} from './shared/modal/modal.service';
 import {selectWorkspace} from './core/store/navigation/navigation.state';
 import {ApplicationTourService} from './core/service/application-tour.service';
+import {ViewSettingsService} from './core/service/view-settings.service';
 
 @Component({
   selector: APP_NAME_SELECTOR,
@@ -70,6 +71,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private tooltipConfig: TooltipConfig,
     private localeService: BsLocaleService,
     private modalService: ModalService,
+    private viewSettingsService: ViewSettingsService,
     private configurationService: ConfigurationService,
     private applicationTourService: ApplicationTourService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
@@ -77,18 +79,19 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.title.setTitle($localize`:@@page.title:Lumeer | Visual, easy project and team management`);
 
     this.storeReferralCookie();
-    this.initPushNotifications();
     this.handleAuthentication();
     this.startAnalyticsTracking();
-    this.setUpExternalServicesUserContext();
-    this.initCheckUserInteraction();
     this.initTooltipConfig();
     this.initLanguage();
-    this.initUserOnboardingCheck();
-    this.initApplicationTour();
   }
 
   public ngOnInit() {
+    this.initPushNotifications();
+    this.setUpExternalServicesUserContext();
+    this.initCheckUserInteraction();
+    this.initApplicationTour();
+    this.initUserOnboardingCheck();
+    this.initViewSettingsService();
     this.subscribeToData();
   }
 
@@ -158,6 +161,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private initApplicationTour() {
     this.applicationTourService.init();
+  }
+
+  private initViewSettingsService() {
+    this.viewSettingsService.init();
   }
 
   private startAnalyticsTracking() {

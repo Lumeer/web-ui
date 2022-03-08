@@ -19,11 +19,11 @@
 
 import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
+import {Subscription, combineLatest} from 'rxjs';
 import {AppState} from '../store/app.state';
 import {selectCurrentView} from '../store/views/views.state';
 import {View} from '../store/views/view';
-import {pairwise, startWith, withLatestFrom} from 'rxjs/operators';
+import {pairwise, startWith, take, withLatestFrom} from 'rxjs/operators';
 import {ViewSettingsAction} from '../store/view-settings/view-settings.action';
 import {viewSettingsChanged} from '../store/views/view.utils';
 import {selectCollectionsDictionary} from '../store/collections/collections.state';
@@ -33,7 +33,7 @@ import {LinkType} from '../store/link-types/link.type';
 import {viewSettingsIdByView} from '../store/view-settings/view-settings.util';
 import {selectViewSettingsState, ViewSettingsState} from '../store/view-settings/view-settings.state';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ViewSettingsService implements OnDestroy {
   private subscriptions = new Subscription();
 
@@ -41,6 +41,18 @@ export class ViewSettingsService implements OnDestroy {
 
   public init() {
     this.subscriptions.add(this.subscribeToView());
+  }
+
+  public checkViewSettings(previousView: View, currentView: View) {
+    combineLatest([
+      this.store$.pipe(select(selectCollectionsDictionary)),
+      this.store$.pipe(select(selectLinkTypesDictionary)),
+      this.store$.pipe(select(selectViewSettingsState)),
+    ])
+      .pipe(take(1))
+      .subscribe(([collectionsMap, linkTypesMap, state]) =>
+        this.checkViewSettingsWithData(previousView, currentView, collectionsMap, linkTypesMap, state)
+      );
   }
 
   private subscribeToView(): Subscription {
@@ -56,11 +68,11 @@ export class ViewSettingsService implements OnDestroy {
         )
       )
       .subscribe(([[previousView, currentView], collectionsMap, linkTypesMap, state]) =>
-        this.checkViewSettings(previousView, currentView, collectionsMap, linkTypesMap, state)
+        this.checkViewSettingsWithData(previousView, currentView, collectionsMap, linkTypesMap, state)
       );
   }
 
-  private checkViewSettings(
+  private checkViewSettingsWithData(
     previousView: View,
     currentView: View,
     collectionsMap: Record<string, Collection>,
