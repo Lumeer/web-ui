@@ -25,11 +25,7 @@ import {catchError, distinctUntilChanged, map, switchMap, take, tap} from 'rxjs/
 import {DialogType} from '../dialog-type';
 import {Project} from '../../../core/store/projects/project';
 import {AppState} from '../../../core/store/app.state';
-import {
-  selectProjectTemplates,
-  selectProjectTemplatesCount,
-  selectReadableProjectsCount,
-} from '../../../core/store/projects/projects.state';
+import {selectProjectTemplatesCount, selectReadableProjectsCount} from '../../../core/store/projects/projects.state';
 import {Organization} from '../../../core/store/organizations/organization';
 import {selectContributeOrganizationsByIds} from '../../../core/store/organizations/organizations.state';
 import {CreateProjectService} from '../../../core/service/create-project.service';
@@ -402,15 +398,7 @@ export class GettingStartedService {
   public onSecondarySubmit() {
     switch (this.stage) {
       case GettingStartedStage.Template:
-        this.store$
-          .pipe(
-            select(selectProjectTemplates),
-            take(1),
-            map(templates => templates.find(t => t.code === EMPTY_TEMPLATE_CODE))
-          )
-          .subscribe(emptyTemplate => {
-            this.checkNextStageFromTemplate(emptyTemplate);
-          });
+        this.checkNextStageFromTemplate();
         break;
       case GettingStartedStage.InviteUsers:
         this.checkNextStageFromInviteUsers();
@@ -527,7 +515,7 @@ export class GettingStartedService {
     this.createProjectService.createProjectInOrganization(organization, code, {
       templateId: template?.id,
       navigationExtras: this.navigationExtras,
-      onSuccess: project => this.onProjectCreated(organization, project, template?.code),
+      onSuccess: project => this.onProjectCreated(organization, project, code),
       onFailure: () => this.onFailure(),
     });
   }

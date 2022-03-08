@@ -45,6 +45,7 @@ import {ProjectSelectionListsComponent} from './project/selection/project-select
 import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 import {ProjectVariablesComponent} from './project/variables/project-variables.component';
 import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
+import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
 
 const workspaceRoutes: Routes = [
   {
@@ -53,6 +54,7 @@ const workspaceRoutes: Routes = [
     canActivate: [AuthGuard, CurrentUserGuard, ProjectSettingsGuard],
     canActivateChild: [ProjectTabGuard],
     resolve: {
+      organizations: OrganizationsProjectsGuard,
       users: UsersGuard,
       groups: GroupsGuard,
       selection: SelectionListsGuard,
