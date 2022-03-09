@@ -31,6 +31,9 @@ import {objectValues, preventEvent} from '../../../../../utils/common.utils';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {View} from '../../../../../../core/store/views/view';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {collectionSelectItems, linkTypesSelectItems} from '../../../../../select/select-item.utils';
+import {createViewSelectItems} from '../../../../../../core/store/views/view.utils';
 
 @Component({
   selector: 'audit-log-filters-dropdown',
@@ -54,6 +57,9 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective {
   @Input()
   public linkTypesMap: Record<string, LinkType>;
 
+  @Input()
+  public filterByResources: boolean;
+
   @Output()
   public filtersChanged = new EventEmitter<AuditLogFilters>();
 
@@ -62,10 +68,15 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective {
   public typesDataValue: SelectDataValue;
 
   public editingUsers$ = new BehaviorSubject(false);
+  public editingResources$ = new BehaviorSubject(false);
   public editingTypes$ = new BehaviorSubject(false);
+  public editingViews$ = new BehaviorSubject(false);
 
-  public views: View[];
-  public collections: Collection[];
+  public viewSelectItems: SelectItemModel[];
+  public resourcesSelectItems: SelectItemModel[];
+
+  private readonly collectionGroupTitle = $localize`:@@audit.filters.collections.title:Tables`;
+  private readonly linkTypesGroupTitle = $localize`:@@audit.filters.linktypes.title:Link Types`;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.filters || changes.constraintData) {
@@ -73,16 +84,30 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective {
       this.typesDataValue = auditLogTypeFilterConstraint.createDataValue(this.filters?.types, this.constraintData);
     }
     if (changes.viewsMap) {
-      this.views = objectValues(this.viewsMap);
+      this.viewSelectItems = createViewSelectItems(objectValues(this.viewsMap));
     }
-    if (changes.collectionsMap) {
-      this.collections = objectValues(this.collectionsMap);
+    if (changes.collectionsMap || changes.linkTypesMap) {
+      this.resourcesSelectItems = [
+        ...collectionSelectItems(objectValues(this.collectionsMap)).map(item => ({
+          ...item,
+          group: this.collectionGroupTitle,
+        })),
+        ...linkTypesSelectItems(objectValues(this.linkTypesMap)).map(item => ({
+          ...item,
+          group: this.linkTypesGroupTitle,
+        })),
+      ];
     }
   }
 
   public onSaveUsers(data: {dataValue: UserDataValue}) {
     this.patchFilters('users', data.dataValue.serialize());
     this.editingUsers$.next(false);
+  }
+
+  public onClearUsers(event: MouseEvent) {
+    preventEvent(event);
+    this.patchFilters('users', []);
   }
 
   public onClickUsers(event: MouseEvent) {
@@ -99,6 +124,11 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective {
     this.editingTypes$.next(false);
   }
 
+  public onClearTypes(event: MouseEvent) {
+    preventEvent(event);
+    this.patchFilters('types', []);
+  }
+
   public onClickTypes(event: MouseEvent) {
     preventEvent(event);
     this.editingTypes$.next(true);
@@ -106,6 +136,50 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective {
 
   public onCancelTypes() {
     this.editingTypes$.next(false);
+  }
+
+  public onSaveResources(ids: string[]) {
+    const collections = ids.filter(id => this.collectionsMap?.[id]);
+    const linkTypes = ids.filter(id => this.linkTypesMap?.[id]);
+
+    const filtersCopy = {...this.filters, collections, linkTypes};
+    this.filtersChanged.emit(filtersCopy);
+
+    this.editingResources$.next(false);
+  }
+
+  public onClearResources(event: MouseEvent) {
+    preventEvent(event);
+    const filtersCopy = {...this.filters, collections: [], linkTypes: []};
+    this.filtersChanged.emit(filtersCopy);
+  }
+
+  public onClickResources(event: MouseEvent) {
+    preventEvent(event);
+    this.editingResources$.next(true);
+  }
+
+  public onCancelResources() {
+    this.editingResources$.next(false);
+  }
+
+  public onSaveViews(ids: string[]) {
+    this.patchFilters('views', ids);
+    this.editingViews$.next(false);
+  }
+
+  public onClearViews(event: MouseEvent) {
+    preventEvent(event);
+    this.patchFilters('views', []);
+  }
+
+  public onClickViews(event: MouseEvent) {
+    preventEvent(event);
+    this.editingViews$.next(true);
+  }
+
+  public onCancelViews() {
+    this.editingViews$.next(false);
   }
 
   private patchFilters(key: keyof AuditLogFilters, value: any) {

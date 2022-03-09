@@ -1,5 +1,6 @@
 <audit-logs class="p-3"
             [auditLogs]="audit$ | async"
             [parentData]="parentData$ | async"
+            [filterByResources]="shouldFilterByResources"
             (revert)="onRevertAudit($event)">
 </audit-logs>

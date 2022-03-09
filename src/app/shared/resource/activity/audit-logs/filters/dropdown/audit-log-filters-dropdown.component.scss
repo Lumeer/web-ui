@@ -1,0 +1,6 @@
+.filter-row {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-gap: 0.75rem;
+  align-items: center;
+}

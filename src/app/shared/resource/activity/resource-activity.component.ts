@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
 import {AuditLog, AuditLogType} from '../../../core/store/audit-logs/audit-log.model';
-import {Observable, of, combineLatest} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {
   selectAuditLogsByCollection,
@@ -63,6 +63,8 @@ export class ResourceActivityComponent implements OnChanges {
   public audit$: Observable<AuditLog[]>;
   public parentData$: Observable<AuditLogParentData>;
 
+  public shouldFilterByResources: boolean;
+
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -72,6 +74,9 @@ export class ResourceActivityComponent implements OnChanges {
   }
 
   private subscribeData() {
+    this.shouldFilterByResources =
+      this.resourceType === ResourceType.Project || this.resourceType === ResourceType.Organization;
+
     if (this.resourceType === ResourceType.Document) {
       this.parentData$ = of({collectionsMap: {[this.parent?.id]: this.parent}});
       this.audit$ = combineLatest([

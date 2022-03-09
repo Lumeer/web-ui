@@ -53,6 +53,12 @@ export const selectLinkTypeByWorkspace = createSelector(
   (linkTypesMap, workspace) => linkTypesMap[workspace?.linkTypeId]
 );
 
+export const selectLinkTypesWithCollections = createSelector(
+  selectAllLinkTypes,
+  selectCollectionsDictionary,
+  (linkTypes, collectionsMap) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap))
+);
+
 export const selectLinkTypeByWorkspaceWithCollections = createSelector(
   selectLinkTypesDictionary,
   selectCollectionsDictionary,

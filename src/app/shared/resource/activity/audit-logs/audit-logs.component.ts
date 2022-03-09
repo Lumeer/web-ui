@@ -38,11 +38,12 @@ import {OrganizationsAction} from '../../../../core/store/organizations/organiza
 import {AuditLogParentData} from './model/audit-log-parent-data';
 import {AuditLogFilters} from './model/audit-log-filters';
 import {View} from '../../../../core/store/views/view';
-import {selectViewsDictionary} from '../../../../core/store/views/views.state';
+import {selectViewsWithComputedData} from '../../../../core/store/views/views.state';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {selectLinkTypesDictionary} from '../../../../core/store/link-types/link-types.state';
+import {selectLinkTypesWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {objectsByIdMap} from '../../../utils/common.utils';
 
 @Component({
   selector: 'audit-logs',
@@ -55,6 +56,9 @@ export class AuditLogsComponent implements OnInit {
 
   @Input()
   public parentData: AuditLogParentData;
+
+  @Input()
+  public filterByResources: boolean;
 
   @Output()
   public revert = new EventEmitter<AuditLog>();
@@ -80,9 +84,15 @@ export class AuditLogsComponent implements OnInit {
     this.organizationPermissions$ = this.store$.pipe(select(selectOrganizationPermissions));
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
     this.revertingAuditLogs$ = this.store$.pipe(select(selectRevertingAuditLogsIds));
-    this.viewsMap$ = this.store$.pipe(select(selectViewsDictionary));
+    this.viewsMap$ = this.store$.pipe(
+      select(selectViewsWithComputedData),
+      map(linkTypes => objectsByIdMap(linkTypes))
+    );
     this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
-    this.linkTypesMap$ = this.store$.pipe(select(selectLinkTypesDictionary));
+    this.linkTypesMap$ = this.store$.pipe(
+      select(selectLinkTypesWithCollections),
+      map(linkTypes => objectsByIdMap(linkTypes))
+    );
   }
 
   public trackByAudit(index: number, log: AuditLog): string {

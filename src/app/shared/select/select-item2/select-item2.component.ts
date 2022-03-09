@@ -77,7 +77,12 @@ export class SelectItem2Component implements OnChanges {
   }
 
   private mapMenuItems(items: SelectItem2Model[]): MenuItem[] {
-    return (items || []).map(item => ({...item, title: item.value, children: this.mapMenuItems(item.children)}));
+    return (items || []).map(item => ({
+      ...item,
+      title: item.value,
+      children: this.mapMenuItems(item.children),
+      group: null,
+    }));
   }
 
   public onSelect(items: SelectItem2Model[]) {

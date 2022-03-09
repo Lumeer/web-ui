@@ -46,6 +46,9 @@ export class AuditLogsFiltersComponent {
   @Input()
   public linkTypesMap: Record<string, LinkType>;
 
+  @Input()
+  public filterByResources: boolean;
+
   @Output()
   public filtersChanged = new EventEmitter<AuditLogFilters>();
 }

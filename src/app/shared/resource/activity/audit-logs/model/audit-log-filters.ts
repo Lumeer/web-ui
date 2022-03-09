@@ -83,7 +83,7 @@ export function filterAuditLogs(
     if (filters.types?.length && !filters.types.includes(log.type)) {
       return false;
     }
-    if (filters.views?.length && !filters.views.includes(log.viewId) && !!viewsMap[log.viewId]) {
+    if (filters.views?.length && (!log.viewId || (!filters.views.includes(log.viewId) && !!viewsMap[log.viewId]))) {
       return false;
     }
     if (
