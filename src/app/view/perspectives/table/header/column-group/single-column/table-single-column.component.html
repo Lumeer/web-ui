@@ -14,11 +14,6 @@
        (contextmenu)="onContextMenu($event)"
        (dblclick)="onDoubleClick()"
        (click)="onClick()"
-       [delay]="700"
-       [tooltip]="descriptionTooltip"
-       placement="bottom"
-       [adaptivePosition]="false"
-       containerClass="bigger-tooltip"
        class="d-flex table-border-right table-border-bottom h-100 w-100 px-1 cell">
     <table-column-input [default]="state.defaultAttribute"
                         [edited]="state.edited"
@@ -72,8 +67,5 @@
                              (split)="onSplit()"
                              (lockSettings)="onLockSettings()">
   </table-column-context-menu>
-  <ng-template #descriptionTooltip>
-    <div [innerHTML]="attribute | attributeTitle:(state.edited ? null : state.lastName):!state.edited | safeHtml"></div>
-  </ng-template>
 </ng-container>
 

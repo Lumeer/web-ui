@@ -40,7 +40,7 @@
           </button>
           <button class="btn btn-sm btn-primary ms-2"
                   data-test="date-time-picker-save-button"
-                  [disabled]="!dateControl.value"
+                  [disabled]="!dateControl.value && !timeControl.value"
                   (click)="onSave($event)">
             <span i18n="@@button.save">Save</span>
           </button>

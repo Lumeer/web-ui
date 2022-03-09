@@ -1,8 +1,14 @@
 <div *ngIf="!edited; else editableInput"
      [class.text-default-attribute]="default"
      class="flex-grow-1 title text-truncate"
+     [delay]="700"
+     [tooltip]="descriptionLongTooltip"
+     placement="bottom"
+     [adaptivePosition]="false"
+     containerClass="bigger-tooltip"
      data-test="table-column-input">{{value}}</div>
-<div class="small" *ngIf="attribute?.description && !edited" [tooltip]="descriptionTooltip" containerClass="bigger-tooltip"
+<div class="small" *ngIf="attribute?.description && !edited" [tooltip]="descriptionTooltip"
+     containerClass="bigger-tooltip"
      [adaptivePosition]="false" placement="bottom"><i class="far fa-question-circle ms-1"></i>
 </div>
 
@@ -10,11 +16,20 @@
   <div [innerHTML]="attribute | attributeTitle | safeHtml"></div>
 </ng-template>
 
+<ng-template #descriptionLongTooltip>
+  <div [innerHTML]="attribute | attributeTitle:(edited ? null : value):!edited | safeHtml"></div>
+</ng-template>
+
 <ng-template #editableInput>
   <input #textInput
          [readonly]="!edited"
          [value]="value"
          [class.text-default-attribute]="default"
+         [delay]="700"
+         [tooltip]="descriptionLongTooltip"
+         placement="bottom"
+         [adaptivePosition]="false"
+         containerClass="bigger-tooltip"
          (blur)="onBlur()"
          (input)="onInput($event)"
          (keydown)="onKeyDown($event)"
