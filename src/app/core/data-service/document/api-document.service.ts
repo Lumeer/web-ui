@@ -235,7 +235,7 @@ export class ApiDocumentService extends BaseService implements DocumentService {
   private apiPrefix(workspace?: Workspace): string {
     const collectionId = this.getOrCurrentCollectionId(workspace);
 
-    return `${this.workspaceApiPrefix(workspace)}/collections/${collectionId}/documentss`;
+    return `${this.workspaceApiPrefix(workspace)}/collections/${collectionId}/documents`;
   }
 
   private workspaceApiPrefix(workspace?: Workspace): string {

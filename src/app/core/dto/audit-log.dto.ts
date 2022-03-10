@@ -26,6 +26,7 @@ export interface AuditLogDto {
   user?: string;
   type?: string;
   viewId?: string;
+  title?: any;
   userName?: string;
   userEmail?: string;
   automation?: string;

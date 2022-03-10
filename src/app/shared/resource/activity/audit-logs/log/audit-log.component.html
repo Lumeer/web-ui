@@ -1,7 +1,7 @@
-<div class="icon me-2 align-self-center" [style.height.px]="20">
-  <user-avatar [avatarSize]="20"
+<div class="icon me-2 align-self-center" [style.height.px]="25">
+  <user-avatar [avatarSize]="25"
                class="d-inline-block"
-               [style.height.px]="20"
+               [style.height.px]="25"
                placement="top"
                [email]="user?.email || auditLog?.userEmail || unknownUserEmail"
                [tooltipText]="updatedByMsg + ' ' + (user?.name || auditLog?.userName || unknownUser)">
@@ -10,17 +10,28 @@
 
 <div class="title d-flex">
   <div class="flex-grow-1 text-truncate">
-    <icons-presenter *ngIf="parent"
-                     class="me-2"
-                     [tooltip]="parent.name"
-                     [colors]="(parent | resourceIconsColors).colors"
-                     [icons]="(parent | resourceIconsColors).icons">
-    </icons-presenter>
-    <span i18n="@@audit.title.data.type">{type, select, Updated {Updated} Created {Created} Deleted {Deleted}}</span>
-    <span *ngIf="auditLog.automation" class="badge bg-info ms-2"
+    <span class="me-2" i18n="@@audit.title.data.type">{type, select, Updated {Updated} Created {Created} Deleted {Deleted}}</span>
+    <ng-container *ngIf="showDetail">
+      <icons-presenter *ngIf="parent"
+                       class="ms-1 me-2"
+                       [tooltip]="parent.name"
+                       [colors]="(parent | resourceIconsColors).colors"
+                       [icons]="(parent | resourceIconsColors).icons">
+      </icons-presenter>
+      <data-input-preview *ngIf="auditLog.title | isNotNullOrUndefined"
+                          class="fw-bold me-2"
+                          [configuration]="titleConfiguration"
+                          [dataValue]="auditLog.title | dataValue:defaultAttribute?.constraint:constraintData"
+                          [cursor]="auditLog.resourceId | dataIdCursor:parent:defaultAttribute?.id:view?.id"
+                          [constraint]="defaultAttribute?.constraint">
+
+      </data-input-preview>
+    </ng-container>
+    <span *ngIf="auditLog.automation" class="badge bg-info"
+          [class.me-2]="view"
           placement="top"
           [tooltip]="auditLog | auditLogAutomationTitle:parent?.attributes">{{auditLog | auditLogAutomationString}}</span>
-    <span *ngIf="view" class="badge ms-2"
+    <span *ngIf="view" class="badge"
           placement="top"
           [style.background-color]="view.color"
           [style.color]="view.color | contrastColor"

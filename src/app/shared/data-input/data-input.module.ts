@@ -77,6 +77,7 @@ import {FileButtonComponent} from './files/file-button/file-button.component';
 import {FileAttachmentTooltipComponent} from './files/button/tooltip/file-attachment-tooltip.component';
 import {AttributeLockFiltersStatsComponent} from './lock-stats/attribute-lock-filters-stats.component';
 import {AttributeLockFilterPreviewComponent} from './lock-stats/preview/attribute-lock-filter-preview.component';
+import {DataIdCursorPipe} from './pipes/data-id-cursor.pipe';
 
 @NgModule({
   imports: [
@@ -114,6 +115,7 @@ import {AttributeLockFilterPreviewComponent} from './lock-stats/preview/attribut
     DurationDataInputComponent,
     FilesDataInputComponent,
     DataCursorPipe,
+    DataIdCursorPipe,
     FileTypeIconPipe,
     FilesDropdownComponent,
     FileAttachmentButtonComponent,
@@ -149,6 +151,7 @@ import {AttributeLockFilterPreviewComponent} from './lock-stats/preview/attribut
     BooleanDataInputComponent,
     UserDataInputComponent,
     DataCursorPipe,
+    DataIdCursorPipe,
     FileAttachmentButtonComponent,
     SelectDataInputComponent,
     TextDataInputComponent,

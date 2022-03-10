@@ -24,6 +24,10 @@ import {AttributesResource} from '../../../../../core/model/resource';
 import {User} from '../../../../../core/store/users/user';
 import {DEFAULT_USER} from '../../../../../core/constants';
 import {View} from '../../../../../core/store/views/view';
+import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
+import {Attribute} from '../../../../../core/store/collections/collection';
+import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
   selector: 'audit-log',
@@ -71,11 +75,13 @@ export class AuditLogComponent implements OnChanges {
   public user: User;
   public view: View;
   public type: AuditLogType;
+  public defaultAttribute: Attribute;
 
   public readonly updatedByMsg: string;
   public readonly updatedOnMsg: string;
   public readonly unknownUser: string;
   public readonly unknownUserEmail = DEFAULT_USER;
+  public readonly titleConfiguration: DataInputConfiguration = {color: {limitWidth: true}};
 
   public hasNewState: boolean;
   public hasOldState: boolean;
@@ -97,6 +103,16 @@ export class AuditLogComponent implements OnChanges {
     }
     if (changes.auditLog || changes.viewsMap) {
       this.view = this.viewsMap?.[this.auditLog.viewId];
+    }
+    if (changes.parent || changes.auditLog) {
+      if (this.auditLog.resourceType === ResourceType.Document) {
+        const defaultAttributeId = getDefaultAttributeId(this.parent);
+        this.defaultAttribute = this.parent?.attributes?.find(attr => attr.id === defaultAttributeId);
+      } else if (this.auditLog.resourceType === ResourceType.Link) {
+        this.defaultAttribute = this.parent?.attributes?.[0];
+      } else {
+        this.defaultAttribute = null;
+      }
     }
   }
 }
