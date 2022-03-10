@@ -149,7 +149,7 @@
       <resource-activity *ngIf="resource && dataResource?.id"
                          [resourceType]="resourceType | attributeResourceTypeToResourceType"
                          [resourceId]="dataResource.id"
-                         [parent]="resource"
+                         [parentId]="resource?.id"
                          [workspace]="data.workspace">
       </resource-activity>
     </ng-container>

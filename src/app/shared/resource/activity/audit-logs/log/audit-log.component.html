@@ -10,17 +10,28 @@
 
 <div class="title d-flex">
   <div class="flex-grow-1 text-truncate">
+    <icons-presenter *ngIf="parent"
+                     class="me-2"
+                     [tooltip]="parent.name"
+                     [colors]="(parent | resourceIconsColors).colors"
+                     [icons]="(parent | resourceIconsColors).icons">
+    </icons-presenter>
     <span i18n="@@audit.title.data.type">{type, select, Updated {Updated} Created {Created} Deleted {Deleted}}</span>
     <span *ngIf="auditLog.automation" class="badge bg-info ms-2"
           placement="top"
           [tooltip]="auditLog | auditLogAutomationTitle:parent?.attributes">{{auditLog | auditLogAutomationString}}</span>
     <span *ngIf="view" class="badge ms-2"
           placement="top"
-          [style.background-color]="view | viewColor:collectionsMap"
-          [style.color]="view | viewColor:collectionsMap | contrastColor"
+          [style.background-color]="view.color"
+          [style.color]="view.color | contrastColor"
           i18n="@@audit.title.changed.view" tooltip="Changed by view"
     ><i [ngClass]="view| viewIcon" class="me-1"></i>&nbsp;{{view.name}}</span>
   </div>
+  <span *ngIf="showDetail" class="clickable ms-2" (click)="detail.emit()"
+        title="Detail"
+        i18n-title="@@audit.action.detail">
+    <i class="far fa-file-search" aria-hidden="true"></i>
+  </span>
   <span *ngIf="allowRevert && !reverting" class="clickable ms-2" (click)="revert.emit()"
         title="Revert"
         i18n-title="@@audit.action.revert">

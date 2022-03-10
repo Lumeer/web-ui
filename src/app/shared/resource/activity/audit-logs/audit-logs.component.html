@@ -2,26 +2,28 @@
   <ng-container
     *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async, revertingIds: revertingAuditLogs$ | async, viewsMap: viewsMap$ | async, collectionsMap: collectionsMap$ | async, linkTypesMap: linkTypesMap$ | async} as data">
     <audit-logs-filters class="d-block pb-5"
+                        *ngIf="data.serviceLimits?.serviceLevel === serviceLevel.BASIC"
                         [filters]="filters$ | async"
                         [constraintData]="constraintData$ | async"
                         [viewsMap]="data.viewsMap"
                         [collectionsMap]="data.collectionsMap"
                         [linkTypesMap]="data.linkTypesMap"
-                        [filterByResources]="filterByResources"
+                        [configuration]="configuration"
                         (filtersChanged)="onFiltersChanged($event)">
     </audit-logs-filters>
     <audit-log *ngFor="let auditLog of auditLogs | filterAuditLogs:(filters$ | async): data.constraintData: data.viewsMap: data.collectionsMap: data.linkTypesMap; trackBy:trackByAudit; let first = first; let last = last"
                [auditLog]="auditLog"
-               [parent]="auditLog | auditLogParent:parentData"
+               [parent]="auditLog | auditLogParent:data.collectionsMap:data.linkTypesMap"
                [first]="first"
                [reverting]="data.revertingIds | includes:auditLog.id"
                [last]="last"
                [constraintData]="data.constraintData"
-               [allowRevert]="first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE) && (auditLog | auditLogRevertable)"
+               [allowRevert]="configuration?.allowRevert && first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE) && (auditLog | auditLogRevertable)"
+               [showDetail]="configuration?.objectDetail"
                [usersMap]="data.usersMap"
                [viewsMap]="data.viewsMap"
-               [collectionsMap]="data.collectionsMap"
-               (revert)="onRevert(auditLog)">
+               (revert)="onRevert(auditLog)"
+               (detail)="onDetail(auditLog)">
     </audit-log>
     <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
          class="py-3 mt-3 d-flex flex-column align-items-center text-center">

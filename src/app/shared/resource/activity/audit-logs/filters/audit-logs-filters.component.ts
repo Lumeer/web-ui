@@ -23,6 +23,7 @@ import {AuditLogFilters} from '../model/audit-log-filters';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {View} from '../../../../../core/store/views/view';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {AuditLogConfiguration} from '../model/audit-log-configuration';
 
 @Component({
   selector: 'audit-logs-filters',
@@ -47,7 +48,7 @@ export class AuditLogsFiltersComponent {
   public linkTypesMap: Record<string, LinkType>;
 
   @Input()
-  public filterByResources: boolean;
+  public configuration: AuditLogConfiguration;
 
   @Output()
   public filtersChanged = new EventEmitter<AuditLogFilters>();

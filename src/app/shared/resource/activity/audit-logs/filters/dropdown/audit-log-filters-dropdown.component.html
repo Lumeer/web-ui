@@ -37,7 +37,7 @@
       <div><i *ngIf="filters?.types?.length" class="fal fa-times text-primary clickable" (click)="onClearTypes($event)"></i></div>
     </div>
 
-    <ng-container *ngIf="filterByResources">
+    <ng-container *ngIf="configuration?.filtersByResource">
       <label class="m-0 mt-3 fw-bold" i18n="@@audit.filters.resources.title">Tables and Link Types</label>
       <div class="filter-row">
         <multi-select-item class="form-control p-0 mt-1 cursor-pointer"

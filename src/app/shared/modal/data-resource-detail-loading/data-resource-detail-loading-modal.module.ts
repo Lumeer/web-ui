@@ -17,9 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesResource} from '../../../../../core/model/resource';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading-modal.component';
+import {DataResourceDetailModalModule} from '../data-resource-detail/data-resource-detail-modal.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {WarningMessageModule} from '../../warning-message/warning-message.module';
 
-export interface AuditLogParentData {
-  collectionsMap?: Record<string, AttributesResource>;
-  linkTypesMap?: Record<string, AttributesResource>;
-}
+@NgModule({
+  declarations: [DataResourceDetailLoadingModalComponent],
+  imports: [CommonModule, DataResourceDetailModalModule, ModalWrapperModule, WarningMessageModule],
+  exports: [DataResourceDetailLoadingModalComponent],
+})
+export class DataResourceDetailLoadingModalModule {}

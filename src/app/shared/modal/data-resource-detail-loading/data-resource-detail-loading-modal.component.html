@@ -1,0 +1,36 @@
+<data-resource-detail-modal *ngIf="dataResource$ | async as dataResource; else loading"
+                            [dataResource]="dataResource"
+                            [resource]="resource$ | async"
+                            [createDirectly]="createDirectly"
+                            [toolbarRef]="toolbarRef"
+                            [viewId]="viewId"
+                            (dataResourceChanged)="dataResourceChanged.emit($event)">
+</data-resource-detail-modal>
+
+<ng-template #loading>
+  <modal-wrapper
+    [dialogType]="dialogType.Primary"
+    (onClose)="onClose()"
+    [customHeader]="true"
+    [showSubmit]="false"
+    [showSecondarySubmit]="false">
+
+    <div class="body p-3 d-flex align-items-center justify-content-center" [style.min-height.vh]="50">
+
+      <div *ngIf="loading$ | async">
+        <span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
+        <span i18n="@@dataResource.detail.loading">Fetching record</span>
+      </div>
+      <empty-state *ngIf="error$ | async" icon="far fa-file-times">
+        <h5 i18n="@@notification.document.notVisible">I am sorry, this record could not be found.</h5>
+      </empty-state>
+
+    </div>
+
+    <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.close">Close</span>
+    </span>
+
+  </modal-wrapper>
+
+</ng-template>

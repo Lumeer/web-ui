@@ -35,7 +35,6 @@ import {selectOrganizationByWorkspace} from '../../../../core/store/organization
 import {first, map} from 'rxjs/operators';
 import {selectRevertingAuditLogsIds} from '../../../../core/store/audit-logs/audit-logs.state';
 import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
-import {AuditLogParentData} from './model/audit-log-parent-data';
 import {AuditLogFilters} from './model/audit-log-filters';
 import {View} from '../../../../core/store/views/view';
 import {selectViewsWithComputedData} from '../../../../core/store/views/views.state';
@@ -44,6 +43,9 @@ import {selectCollectionsDictionary} from '../../../../core/store/collections/co
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {selectLinkTypesWithCollections} from '../../../../core/store/link-types/link-types.state';
 import {objectsByIdMap} from '../../../utils/common.utils';
+import {AuditLogConfiguration} from './model/audit-log-configuration';
+import {ModalService} from '../../../modal/modal.service';
+import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
   selector: 'audit-logs',
@@ -55,10 +57,7 @@ export class AuditLogsComponent implements OnInit {
   public auditLogs: AuditLog[];
 
   @Input()
-  public parentData: AuditLogParentData;
-
-  @Input()
-  public filterByResources: boolean;
+  public configuration: AuditLogConfiguration;
 
   @Output()
   public revert = new EventEmitter<AuditLog>();
@@ -76,7 +75,7 @@ export class AuditLogsComponent implements OnInit {
 
   public filters$ = new BehaviorSubject<AuditLogFilters>({users: [], types: []});
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnInit() {
     this.usersMap$ = this.store$.pipe(select(selectUsersDictionary));
@@ -113,6 +112,14 @@ export class AuditLogsComponent implements OnInit {
 
   public onRevert(auditLog: AuditLog) {
     this.revert.emit(auditLog);
+  }
+
+  public onDetail(auditLog: AuditLog) {
+    if (auditLog.resourceType === ResourceType.Document) {
+      this.modalService.showDocumentDetail(auditLog.resourceId, auditLog.parentId);
+    } else if (auditLog.resourceType === ResourceType.Link) {
+      this.modalService.showLinkInstanceDetail(auditLog.resourceId, auditLog.parentId);
+    }
   }
 
   public onFiltersChanged(filters: AuditLogFilters) {

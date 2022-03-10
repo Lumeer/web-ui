@@ -34,6 +34,7 @@ import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {collectionSelectItems, linkTypesSelectItems} from '../../../../../select/select-item.utils';
 import {createViewSelectItems} from '../../../../../../core/store/views/view.utils';
+import {AuditLogConfiguration} from '../../model/audit-log-configuration';
 
 @Component({
   selector: 'audit-log-filters-dropdown',
@@ -58,7 +59,7 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective {
   public linkTypesMap: Record<string, LinkType>;
 
   @Input()
-  public filterByResources: boolean;
+  public configuration: AuditLogConfiguration;
 
   @Output()
   public filtersChanged = new EventEmitter<AuditLogFilters>();

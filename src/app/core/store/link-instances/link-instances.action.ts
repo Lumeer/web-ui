@@ -83,7 +83,9 @@ export namespace LinkInstancesAction {
   export class GetSingle implements Action {
     public readonly type = LinkInstancesActionType.GET_SINGLE;
 
-    public constructor(public payload: {linkTypeId: string; linkInstanceId: string}) {}
+    public constructor(
+      public payload: {linkTypeId: string; linkInstanceId: string; onSuccess?: () => void; onFailure?: () => void}
+    ) {}
   }
 
   export class GetByIds implements Action {

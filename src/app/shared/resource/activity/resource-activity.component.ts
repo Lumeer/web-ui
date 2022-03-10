@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
 import {AuditLog, AuditLogType} from '../../../core/store/audit-logs/audit-log.model';
-import {combineLatest, Observable, of} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {
   selectAuditLogsByCollection,
@@ -31,16 +31,14 @@ import {
 } from '../../../core/store/audit-logs/audit-logs.state';
 import {Action, select, Store} from '@ngrx/store';
 import * as AuditLogActions from '../../../core/store/audit-logs/audit-logs.actions';
-import {AttributesResource, DataResource} from '../../../core/model/resource';
+import {DataResource} from '../../../core/model/resource';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {AuditLogParentData} from './audit-logs/model/audit-log-parent-data';
-import {selectCollectionById, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {selectLinkTypeById, selectLinkTypesDictionary} from '../../../core/store/link-types/link-types.state';
 import {map} from 'rxjs/operators';
 import {generateId} from '../../utils/resource.utils';
+import {AuditLogConfiguration} from './audit-logs/model/audit-log-configuration';
 
 @Component({
   selector: 'resource-activity',
@@ -55,30 +53,36 @@ export class ResourceActivityComponent implements OnChanges {
   public resourceId: string;
 
   @Input()
-  public parent: AttributesResource;
+  public parentId: string;
 
   @Input()
   public workspace: Workspace;
 
   public audit$: Observable<AuditLog[]>;
-  public parentData$: Observable<AuditLogParentData>;
 
-  public shouldFilterByResources: boolean;
+  public configuration: AuditLogConfiguration;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resourceType || changes.resourceId || changes.parent || changes.workspace) {
+    if (changes.resourceType) {
+      this.configuration = this.createConfiguration();
+    }
+    if (changes.resourceType || changes.resourceId || changes.parentId || changes.workspace) {
       this.subscribeData();
     }
   }
 
-  private subscribeData() {
-    this.shouldFilterByResources =
-      this.resourceType === ResourceType.Project || this.resourceType === ResourceType.Organization;
+  private createConfiguration(): AuditLogConfiguration {
+    if ([ResourceType.Document, ResourceType.Link].includes(this.resourceType)) {
+      return {allowRevert: true};
+    } else {
+      return {filtersByResource: true, objectDetail: true};
+    }
+  }
 
+  private subscribeData() {
     if (this.resourceType === ResourceType.Document) {
-      this.parentData$ = of({collectionsMap: {[this.parent?.id]: this.parent}});
       this.audit$ = combineLatest([
         this.store$.pipe(select(selectAuditLogsByDocument(this.resourceId))),
         this.store$.pipe(select(selectDocumentById(this.resourceId))),
@@ -86,12 +90,11 @@ export class ResourceActivityComponent implements OnChanges {
       this.store$.dispatch(
         AuditLogActions.getByDocument({
           documentId: this.resourceId,
-          collectionId: this.parent.id,
+          collectionId: this.parentId,
           workspace: this.workspace,
         })
       );
     } else if (this.resourceType === ResourceType.Link) {
-      this.parentData$ = of({linkTypesMap: {[this.parent?.id]: this.parent}});
       this.audit$ = combineLatest([
         this.store$.pipe(select(selectAuditLogsByLink(this.resourceId))),
         this.store$.pipe(select(selectLinkInstanceById(this.resourceId))),
@@ -99,15 +102,11 @@ export class ResourceActivityComponent implements OnChanges {
       this.store$.dispatch(
         AuditLogActions.getByLink({
           linkInstanceId: this.resourceId,
-          linkTypeId: this.parent.id,
+          linkTypeId: this.parentId,
           workspace: this.workspace,
         })
       );
     } else if (this.resourceType === ResourceType.Project) {
-      this.parentData$ = combineLatest([
-        this.store$.pipe(select(selectCollectionsDictionary)),
-        this.store$.pipe(select(selectLinkTypesDictionary)),
-      ]).pipe(map(([collectionsMap, linkTypesMap]) => ({collectionsMap, linkTypesMap})));
       this.audit$ = this.store$.pipe(select(selectAuditLogsByProject(this.resourceId)));
       this.store$.dispatch(
         AuditLogActions.getByProject({
@@ -115,10 +114,6 @@ export class ResourceActivityComponent implements OnChanges {
         })
       );
     } else if (this.resourceType === ResourceType.Collection) {
-      this.parentData$ = this.store$.pipe(
-        select(selectCollectionById(this.resourceId)),
-        map(collection => ({collectionsMap: {[collection.id]: collection}}))
-      );
       this.audit$ = this.store$.pipe(select(selectAuditLogsByCollection(this.resourceId)));
       this.store$.dispatch(
         AuditLogActions.getByCollection({
@@ -127,11 +122,6 @@ export class ResourceActivityComponent implements OnChanges {
         })
       );
     } else if (this.resourceType === ResourceType.LinkType) {
-      this.parentData$ = this.store$.pipe(
-        select(selectLinkTypeById(this.resourceId)),
-        map(linkType => ({linkTypesMap: {[linkType.id]: linkType}}))
-      );
-
       this.audit$ = this.store$.pipe(select(selectAuditLogsByLinkType(this.resourceId)));
       this.store$.dispatch(
         AuditLogActions.getByLinkType({
@@ -143,6 +133,9 @@ export class ResourceActivityComponent implements OnChanges {
   }
 
   private appendCreatedLogsIfNeeded(logs: AuditLog[], dataResource: DataResource): AuditLog[] {
+    if (logs.some(log => log.type === AuditLogType.Created)) {
+      return logs;
+    }
     const auditLogCreated = {
       type: AuditLogType.Created,
       changeDate: dataResource.creationDate,

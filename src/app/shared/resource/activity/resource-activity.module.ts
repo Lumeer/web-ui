@@ -37,6 +37,7 @@ import {SelectModule} from '../../select/select.module';
 import {AuditLogFiltersCountPipe} from './audit-logs/pipes/audit-log-filters-count.pipe';
 import {AuditLogFiltersDropdownComponent} from './audit-logs/filters/dropdown/audit-log-filters-dropdown.component';
 import {DropdownModule} from '../../dropdown/dropdown.module';
+import {PresenterModule} from '../../presenter/presenter.module';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import {DropdownModule} from '../../dropdown/dropdown.module';
     TooltipModule,
     DataInputModule,
     SelectModule,
+    PresenterModule,
   ],
   exports: [ResourceActivityComponent],
 })

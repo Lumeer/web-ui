@@ -104,8 +104,11 @@ export class DocumentsEffects {
       mergeMap(action =>
         this.documentService.getDocument(action.payload.collectionId, action.payload.documentId).pipe(
           map(dto => convertDocumentDtoToModel(dto)),
-          map(document => new DocumentsAction.GetSuccess({documents: [document]})),
-          catchError(() => EMPTY)
+          mergeMap(document => [
+            new DocumentsAction.GetSuccess({documents: [document]}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(() => of(...createCallbackActions(action.payload.onFailure)))
         )
       )
     )

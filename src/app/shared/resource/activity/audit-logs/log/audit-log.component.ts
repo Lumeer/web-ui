@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {User} from '../../../../../core/store/users/user';
 import {DEFAULT_USER} from '../../../../../core/constants';
 import {View} from '../../../../../core/store/views/view';
-import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'audit-log',
@@ -46,9 +45,6 @@ export class AuditLogComponent implements OnChanges {
   public viewsMap: Record<string, View>;
 
   @Input()
-  public collectionsMap: Record<string, Collection>;
-
-  @Input()
   public constraintData: ConstraintData;
 
   @Input()
@@ -58,6 +54,9 @@ export class AuditLogComponent implements OnChanges {
   public allowRevert: boolean;
 
   @Input()
+  public showDetail: boolean;
+
+  @Input()
   public first: boolean;
 
   @Input()
@@ -65,6 +64,9 @@ export class AuditLogComponent implements OnChanges {
 
   @Output()
   public revert = new EventEmitter();
+
+  @Output()
+  public detail = new EventEmitter();
 
   public user: User;
   public view: View;

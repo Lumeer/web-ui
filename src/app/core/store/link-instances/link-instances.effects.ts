@@ -94,8 +94,11 @@ export class LinkInstancesEffects {
       mergeMap(action =>
         this.linkInstanceService.getLinkInstance(action.payload.linkTypeId, action.payload.linkInstanceId).pipe(
           map(dto => convertLinkInstanceDtoToModel(dto)),
-          map(linkInstance => new LinkInstancesAction.GetSuccess({linkInstances: [linkInstance]})),
-          catchError(() => EMPTY)
+          mergeMap(linkInstance => [
+            new LinkInstancesAction.GetSuccess({linkInstances: [linkInstance]}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(() => of(...createCallbackActions(action.payload.onFailure)))
         )
       )
     )
