@@ -40,10 +40,12 @@ export enum AuditLogType {
   Created = 'Created',
   Updated = 'Updated',
   Deleted = 'Deleted',
+  Reverted = 'Reverted',
 }
 
 export const auditLogMap: Record<string, AuditLogType> = {
   [AuditLogType.Created]: AuditLogType.Created,
   [AuditLogType.Updated]: AuditLogType.Updated,
   [AuditLogType.Deleted]: AuditLogType.Deleted,
+  [AuditLogType.Reverted]: AuditLogType.Reverted,
 };

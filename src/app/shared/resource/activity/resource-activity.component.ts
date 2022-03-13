@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
 import {AuditLog, AuditLogType} from '../../../core/store/audit-logs/audit-log.model';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {
   selectAuditLogsByCollection,
@@ -36,7 +36,7 @@ import {NotificationsAction} from '../../../core/store/notifications/notificatio
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {map} from 'rxjs/operators';
+import {map, skip} from 'rxjs/operators';
 import {generateId} from '../../utils/resource.utils';
 import {AuditLogConfiguration} from './audit-logs/model/audit-log-configuration';
 
@@ -45,7 +45,7 @@ import {AuditLogConfiguration} from './audit-logs/model/audit-log-configuration'
   templateUrl: './resource-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceActivityComponent implements OnChanges {
+export class ResourceActivityComponent implements OnChanges, OnDestroy {
   @Input()
   public resourceType: ResourceType;
 
@@ -62,6 +62,8 @@ export class ResourceActivityComponent implements OnChanges {
 
   public configuration: AuditLogConfiguration;
 
+  private subscription = new Subscription();
+
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -70,6 +72,8 @@ export class ResourceActivityComponent implements OnChanges {
     }
     if (changes.resourceType || changes.resourceId || changes.parentId || changes.workspace) {
       this.subscribeData();
+      this.loadData(this.resourceId);
+      this.scheduleLoadData();
     }
   }
 
@@ -87,47 +91,75 @@ export class ResourceActivityComponent implements OnChanges {
         this.store$.pipe(select(selectAuditLogsByDocument(this.resourceId))),
         this.store$.pipe(select(selectDocumentById(this.resourceId))),
       ]).pipe(map(([logs, document]) => this.appendCreatedLogsIfNeeded(logs, document)));
-      this.store$.dispatch(
-        AuditLogActions.getByDocument({
-          documentId: this.resourceId,
-          collectionId: this.parentId,
-          workspace: this.workspace,
-        })
-      );
     } else if (this.resourceType === ResourceType.Link) {
       this.audit$ = combineLatest([
         this.store$.pipe(select(selectAuditLogsByLink(this.resourceId))),
         this.store$.pipe(select(selectLinkInstanceById(this.resourceId))),
       ]).pipe(map(([logs, linkInstance]) => this.appendCreatedLogsIfNeeded(logs, linkInstance)));
+    } else if (this.resourceType === ResourceType.Project) {
+      this.audit$ = this.store$.pipe(select(selectAuditLogsByProject(this.resourceId)));
+    } else if (this.resourceType === ResourceType.Collection) {
+      this.audit$ = this.store$.pipe(select(selectAuditLogsByCollection(this.resourceId)));
+    } else if (this.resourceType === ResourceType.LinkType) {
+      this.audit$ = this.store$.pipe(select(selectAuditLogsByLinkType(this.resourceId)));
+    }
+  }
+
+  private loadData(resourceId: string) {
+    if (this.resourceType === ResourceType.Document) {
+      this.store$.dispatch(
+        AuditLogActions.getByDocument({
+          documentId: resourceId,
+          collectionId: this.parentId,
+          workspace: this.workspace,
+        })
+      );
+    } else if (this.resourceType === ResourceType.Link) {
       this.store$.dispatch(
         AuditLogActions.getByLink({
-          linkInstanceId: this.resourceId,
+          linkInstanceId: resourceId,
           linkTypeId: this.parentId,
           workspace: this.workspace,
         })
       );
     } else if (this.resourceType === ResourceType.Project) {
-      this.audit$ = this.store$.pipe(select(selectAuditLogsByProject(this.resourceId)));
       this.store$.dispatch(
         AuditLogActions.getByProject({
           workspace: this.workspace,
         })
       );
     } else if (this.resourceType === ResourceType.Collection) {
-      this.audit$ = this.store$.pipe(select(selectAuditLogsByCollection(this.resourceId)));
       this.store$.dispatch(
         AuditLogActions.getByCollection({
-          collectionId: this.resourceId,
+          collectionId: resourceId,
           workspace: this.workspace,
         })
       );
     } else if (this.resourceType === ResourceType.LinkType) {
-      this.audit$ = this.store$.pipe(select(selectAuditLogsByLinkType(this.resourceId)));
       this.store$.dispatch(
         AuditLogActions.getByLinkType({
-          linkTypeId: this.resourceId,
+          linkTypeId: resourceId,
           workspace: this.workspace,
         })
+      );
+    }
+  }
+
+  private scheduleLoadData() {
+    this.subscription.unsubscribe();
+    this.subscription = new Subscription();
+
+    if (this.resourceType === ResourceType.Document) {
+      this.subscription.add(
+        this.store$
+          .pipe(select(selectDocumentById(this.resourceId)), skip(1))
+          .subscribe(document => this.loadData(document.id))
+      );
+    } else if (this.resourceType === ResourceType.Link) {
+      this.subscription.add(
+        this.store$
+          .pipe(select(selectLinkInstanceById(this.resourceId)), skip(1))
+          .subscribe(link => this.loadData(link.id))
       );
     }
   }
@@ -161,5 +193,9 @@ export class ResourceActivityComponent implements OnChanges {
       auditLogId: auditLog.id,
       workspace: this.workspace,
     });
+  }
+
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
