@@ -35,7 +35,7 @@
           placement="top"
           [style.background-color]="view.color"
           [style.color]="view.color | contrastColor"
-          i18n="@@audit.title.changed.view" tooltip="Changed by view"
+          i18n-tooltip="@@audit.title.changed.view" tooltip="Changed by view"
     ><i [ngClass]="view| viewIcon" class="me-1"></i>&nbsp;{{view.name}}</span>
   </div>
   <span *ngIf="showDetail" class="clickable ms-2" (click)="detail.emit()"
