@@ -4,13 +4,13 @@
                [style.height.px]="25"
                placement="top"
                [email]="user?.email || auditLog?.userEmail || unknownUserEmail"
-               [tooltipText]="updatedByMsg + ' ' + (user?.name || auditLog?.userName || unknownUser)">
+               [tooltipText]="user?.name || auditLog?.userName || unknownUser">
   </user-avatar>
 </div>
 
 <div class="title d-flex">
   <div class="flex-grow-1 text-truncate">
-    <span class="me-2" i18n="@@audit.title.data.type">{type, select, Updated {Updated} Created {Created} Deleted {Deleted} Reverted {Reverted}}</span>
+    <span class="me-2">{{auditLog | auditLogTitle}}</span>
     <ng-container *ngIf="showDetail">
       <icons-presenter *ngIf="parent"
                        class="ms-1 me-2"
@@ -58,7 +58,7 @@
 <div class="content pb-4">
   <short-date class="small text-secondary d-block"
               [date]="auditLog.changeDate"
-              [tooltipText]="updatedOnMsg + ' ' + (auditLog.changeDate | date:'medium')"
+              [tooltipText]="auditLog.changeDate | date:'medium'"
               placement="top">
   </short-date>
   <audit-log-entries class="d-block"

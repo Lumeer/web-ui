@@ -62,7 +62,6 @@ import {AttributeLock} from '@lumeer/data-filters';
 import {GettingStartedModalType} from './getting-started/model/getting-started-modal-type';
 import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
 import {BookProductDemoModalComponent} from './book-product-demo/book-product-demo-modal.component';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading/data-resource-detail-loading-modal.component';
 
 type Options = ModalOptions & {initialState: any};

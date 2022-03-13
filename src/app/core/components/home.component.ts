@@ -109,14 +109,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  private navigateToProject(organization: Organization, project: Project, viewCode?: string) {
+  private navigateToProject(organization: Organization, project: Project, viewCode?: string): Promise<boolean> {
     const path: any[] = ['/', 'w', organization.code, project.code, 'view'];
     if (viewCode) {
       path.push({vc: viewCode});
     } else {
       path.push(Perspective.Search);
     }
-    this.router.navigate(path, {replaceUrl: true});
+    return this.router.navigate(path, {replaceUrl: true});
   }
 
   private getDefaultWorkspace(): Observable<DefaultWorkspace> {

@@ -88,8 +88,6 @@ export class AuditLogComponent implements OnChanges {
 
   constructor() {
     this.unknownUser = $localize`:@@user.unknown:Unknown user`;
-    this.updatedOnMsg = $localize`:@@document.detail.header.updatedOn:Updated on`;
-    this.updatedByMsg = $localize`:@@document.detail.header.updatedBy:Updated by`;
   }
 
   public ngOnChanges(changes: SimpleChanges) {

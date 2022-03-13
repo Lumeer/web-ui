@@ -18,31 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DataCursor} from '../data-cursor';
-import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
-import {getAttributesResourceType} from '../../utils/resource.utils';
+import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Pipe({
-  name: 'dataIdCursor',
+  name: 'auditLogHasDetail',
 })
-export class DataIdCursorPipe implements PipeTransform {
-  public transform(id: string, resource: AttributesResource, attributeId: string, viewId: string): DataCursor {
-    const type = getAttributesResourceType(resource);
-    if (type === AttributesResourceType.Collection) {
-      return {
-        collectionId: resource?.id,
-        documentId: id,
-        attributeId,
-        viewId,
-      };
-    } else if (type === AttributesResourceType.LinkType) {
-      return {
-        linkTypeId: resource?.id,
-        linkInstanceId: id,
-        attributeId,
-        viewId,
-      };
-    }
-    return {};
+export class AuditLogHasDetailPipe implements PipeTransform {
+  public transform(auditLog: AuditLog): boolean {
+    return auditLog.resourceType === ResourceType.Document || auditLog.resourceType === ResourceType.Link;
   }
 }

@@ -19,7 +19,7 @@
                [last]="last"
                [constraintData]="data.constraintData"
                [allowRevert]="configuration?.allowRevert && first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE) && (auditLog | auditLogRevertable)"
-               [showDetail]="configuration?.objectDetail"
+               [showDetail]="configuration?.objectDetail && (auditLog | auditLogHasDetail)"
                [usersMap]="data.usersMap"
                [viewsMap]="data.viewsMap"
                (revert)="onRevert(auditLog)"

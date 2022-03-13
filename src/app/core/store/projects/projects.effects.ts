@@ -182,7 +182,7 @@ export class ProjectsEffects {
 
             actions.push(
               new RouterAction.Go({
-                path: ['w', organization.code, project.code, 'view', 'search'],
+                path: ['w', organization.code, newProject.code, 'view', 'search'],
                 extras: navigationExtras,
                 nextActions,
               })

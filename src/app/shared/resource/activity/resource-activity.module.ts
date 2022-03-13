@@ -38,6 +38,8 @@ import {AuditLogFiltersCountPipe} from './audit-logs/pipes/audit-log-filters-cou
 import {AuditLogFiltersDropdownComponent} from './audit-logs/filters/dropdown/audit-log-filters-dropdown.component';
 import {DropdownModule} from '../../dropdown/dropdown.module';
 import {PresenterModule} from '../../presenter/presenter.module';
+import {AuditLogHasDetailPipe} from './audit-logs/pipes/audit-log-has-detail.pipe';
+import {AuditLogTitlePipe} from './audit-logs/pipes/audit-log-title.pipe';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import {PresenterModule} from '../../presenter/presenter.module';
     AuditLogAutomationTitlePipe,
     AuditLogParentPipe,
     AuditLogRevertablePipe,
+    AuditLogHasDetailPipe,
+    AuditLogTitlePipe,
     FilterAuditLogsPipe,
     AuditLogsFiltersComponent,
     AuditLogFiltersCountPipe,
