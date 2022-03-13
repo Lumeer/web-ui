@@ -51,13 +51,13 @@ import {DataResourcePermissions} from '../../../../core/model/data-resource-perm
 import {ClipboardService} from '../../../../core/service/clipboard.service';
 
 @Component({
-  selector: 'document-detail-header',
-  templateUrl: './document-detail-header.component.html',
-  styleUrls: ['./document-detail-header.component.scss'],
+  selector: 'data-resource-detail-header',
+  templateUrl: './data-resource-detail-header.component.html',
+  styleUrls: ['./data-resource-detail-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestroy {
+export class DataResourceDetailHeaderComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public resource: AttributesResource;
 
@@ -167,7 +167,7 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   }
 
   private renewSubscriptions() {
-    if (this.dataResource && this.resourceType === AttributesResourceType.Collection) {
+    if (this.dataResource) {
       this.createdBy$ = this.store$.pipe(
         select(selectUserById((<DocumentModel>this.dataResource).createdBy)),
         filter(user => !!user),

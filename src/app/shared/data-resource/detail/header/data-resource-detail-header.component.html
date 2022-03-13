@@ -17,8 +17,7 @@
   </div>
 
   <div class="flex-grow-1 flex-lg-grow-0 text-start text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
-    <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates"
-         *ngIf="resourceType === collectionResourceType">
+    <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates">
       <span (click)="versionClick.emit()" class="me-1 text-success cursor-pointer" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
       <span *ngIf="(dataResource.creationDate | isDateValid) && users.createdBy">
         <short-date [date]="dataResource.creationDate" format="ll"

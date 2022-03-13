@@ -4,7 +4,7 @@
   resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async, currentUser: currentUser$ | async} as data">
   <ng-container
     *ngIf="{permissions: resource | resourcePermissions: data.resourcesPermissions} as dataResourceData">
-    <document-detail-header class="d-block mb-4"
+    <data-resource-detail-header class="d-block mb-4"
                             [resource]="resource"
                             [dataResource]="dataResource"
                             [resourceType]="resourceType"
@@ -18,7 +18,7 @@
                             (remove)="onRemove()"
                             (versionClick)="selectTab(detailTabType.Activity)"
                             (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
-    </document-detail-header>
+    </data-resource-detail-header>
 
     <detail-tabs *ngIf="dataResource?.id"
                  [showLinks]="resourceType === collectionResourceType"

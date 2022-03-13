@@ -23,7 +23,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DataInputModule} from '../data-input/data-input.module';
-import {DocumentDetailHeaderComponent} from './detail/header/document-detail-header.component';
+import {DataResourceDetailHeaderComponent} from './detail/header/data-resource-detail-header.component';
 import {AttributeTypeModalModule} from '../modal/attribute/type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute/function/attribute-function-modal.module';
 import {ColorPickerModule} from 'ngx-color-picker';
@@ -67,7 +67,7 @@ import {ResourceActivityModule} from '../resource/activity/resource-activity.mod
   ],
   declarations: [
     DataResourceDetailComponent,
-    DocumentDetailHeaderComponent,
+    DataResourceDetailHeaderComponent,
     DataResourceDataComponent,
     DataResourceDataRowComponent,
     DataResourceDataRowIconsComponent,
