@@ -29,7 +29,7 @@ export class AttributeTitlePipe implements PipeTransform {
     if (isNotNullOrUndefined(attribute)) {
       return attribute.description
         ? skipDescription
-          ? ''
+          ? attribute.name
           : `${attribute.name}: ${attribute.description}`
         : attribute.name;
     }

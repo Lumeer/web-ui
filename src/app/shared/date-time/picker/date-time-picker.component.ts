@@ -149,7 +149,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   private emitDateChange() {
     const saveDate = this.getSaveDate();
-    if (this.value && saveDate && this.value.getTime() !== saveDate.getTime()) {
+    if (saveDate && (!this.value || this.value.getTime() !== saveDate.getTime())) {
       this.valueChange.emit(this.getSaveDate());
     }
   }
@@ -202,14 +202,17 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   private getCurrentDate(): Date {
     const currentDate = <Date>this.dateControl.value;
     const currentTime = <Date>this.timeControl.value;
-    if (isDateValid(currentDate) && isDateValid(currentTime)) {
-      const date = new Date(currentDate);
-      date.setHours(
-        currentTime.getHours(),
-        currentTime.getMinutes(),
-        currentTime.getSeconds(),
-        currentTime.getMilliseconds()
-      );
+
+    if (isDateValid(currentDate) || isDateValid(currentTime)) {
+      const date = isDateValid(currentDate) ? new Date(currentDate) : new Date();
+      if (isDateValid(currentTime)) {
+        date.setHours(
+          currentTime.getHours(),
+          currentTime.getMinutes(),
+          currentTime.getSeconds(),
+          currentTime.getMilliseconds()
+        );
+      }
       return date;
     }
     return currentDate;

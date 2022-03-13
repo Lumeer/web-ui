@@ -132,8 +132,6 @@ import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils'
 import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
 import {CommonAction} from '../../../../../../core/store/common/common.action';
 import {RoleType} from '../../../../../../core/model/role-type';
-import {User} from '../../../../../../core/store/users/user';
-import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/users.state';
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
@@ -147,7 +145,6 @@ export class WorkflowTablesDataService {
   private pendingColumnValues: Record<string, PendingRowUpdate[]> = {}; // grouped by columnId
   private lockedRowIds: Record<string, string[]> = {}; // grouped by tableId
   private currentView: View;
-  private currentUser: User;
   private workflowId: string;
 
   constructor(
@@ -161,7 +158,6 @@ export class WorkflowTablesDataService {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
     );
-    this.store$.pipe(select(selectCurrentUserForWorkspace)).subscribe(user => (this.currentUser = user));
     this.stateService.selectedCell$
       .pipe(
         skip(1),
@@ -836,14 +832,14 @@ export class WorkflowTablesDataService {
           object.document,
           collection,
           collectionPermissions,
-          this.currentUser,
+          constraintData.currentUser,
           constraintData
         );
         const linkInstancePermissions = dataResourcePermissions(
           object.linkInstance,
           linkType,
           linkPermissions,
-          this.currentUser,
+          constraintData.currentUser,
           constraintData
         );
         const row: TableRow = {
