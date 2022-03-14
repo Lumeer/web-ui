@@ -1,0 +1,10 @@
+@import '~src/styles/variables';
+
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min-content;
+  grid-gap: 0.5rem;
+  border: 1px solid $secondary;
+  border-radius: $border-radius-base;
+  padding: 0.5rem;
+}
