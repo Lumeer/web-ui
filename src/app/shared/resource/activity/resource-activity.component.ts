@@ -24,10 +24,15 @@ import {combineLatest, Observable, Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {
   selectAuditLogsByCollection,
+  selectAuditLogsByCollectionLoading,
   selectAuditLogsByDocument,
+  selectAuditLogsByDocumentLoading,
   selectAuditLogsByLink,
+  selectAuditLogsByLinkLoading,
   selectAuditLogsByLinkType,
+  selectAuditLogsByLinkTypeLoading,
   selectAuditLogsByProject,
+  selectAuditLogsByProjectLoading,
 } from '../../../core/store/audit-logs/audit-logs.state';
 import {Action, select, Store} from '@ngrx/store';
 import * as AuditLogActions from '../../../core/store/audit-logs/audit-logs.actions';
@@ -59,6 +64,7 @@ export class ResourceActivityComponent implements OnChanges, OnDestroy {
   public workspace: Workspace;
 
   public audit$: Observable<AuditLog[]>;
+  public loading$: Observable<boolean>;
 
   public configuration: AuditLogConfiguration;
 
@@ -91,17 +97,22 @@ export class ResourceActivityComponent implements OnChanges, OnDestroy {
         this.store$.pipe(select(selectAuditLogsByDocument(this.resourceId))),
         this.store$.pipe(select(selectDocumentById(this.resourceId))),
       ]).pipe(map(([logs, document]) => this.appendCreatedLogsIfNeeded(logs, document)));
+      this.loading$ = this.store$.pipe(select(selectAuditLogsByDocumentLoading(this.resourceId)));
     } else if (this.resourceType === ResourceType.Link) {
       this.audit$ = combineLatest([
         this.store$.pipe(select(selectAuditLogsByLink(this.resourceId))),
         this.store$.pipe(select(selectLinkInstanceById(this.resourceId))),
       ]).pipe(map(([logs, linkInstance]) => this.appendCreatedLogsIfNeeded(logs, linkInstance)));
+      this.loading$ = this.store$.pipe(select(selectAuditLogsByLinkLoading(this.resourceId)));
     } else if (this.resourceType === ResourceType.Project) {
       this.audit$ = this.store$.pipe(select(selectAuditLogsByProject(this.resourceId)));
+      this.loading$ = this.store$.pipe(select(selectAuditLogsByProjectLoading(this.resourceId)));
     } else if (this.resourceType === ResourceType.Collection) {
       this.audit$ = this.store$.pipe(select(selectAuditLogsByCollection(this.resourceId)));
+      this.loading$ = this.store$.pipe(select(selectAuditLogsByCollectionLoading(this.resourceId)));
     } else if (this.resourceType === ResourceType.LinkType) {
       this.audit$ = this.store$.pipe(select(selectAuditLogsByLinkType(this.resourceId)));
+      this.loading$ = this.store$.pipe(select(selectAuditLogsByLinkTypeLoading(this.resourceId)));
     }
   }
 
@@ -125,6 +136,7 @@ export class ResourceActivityComponent implements OnChanges, OnDestroy {
     } else if (this.resourceType === ResourceType.Project) {
       this.store$.dispatch(
         AuditLogActions.getByProject({
+          projectId: resourceId,
           workspace: this.workspace,
         })
       );

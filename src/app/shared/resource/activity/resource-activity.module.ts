@@ -40,6 +40,9 @@ import {DropdownModule} from '../../dropdown/dropdown.module';
 import {PresenterModule} from '../../presenter/presenter.module';
 import {AuditLogHasDetailPipe} from './audit-logs/pipes/audit-log-has-detail.pipe';
 import {AuditLogTitlePipe} from './audit-logs/pipes/audit-log-title.pipe';
+import {AuditLogFilterBadgeComponent} from './audit-logs/filters/badge/audit-log-filter-badge.component';
+import {GravatarModule} from 'ngx-gravatar';
+import {WarningMessageModule} from '../../warning-message/warning-message.module';
 
 @NgModule({
   declarations: [
@@ -57,6 +60,7 @@ import {AuditLogTitlePipe} from './audit-logs/pipes/audit-log-title.pipe';
     AuditLogsFiltersComponent,
     AuditLogFiltersCountPipe,
     AuditLogFiltersDropdownComponent,
+    AuditLogFilterBadgeComponent,
   ],
   imports: [
     CommonModule,
@@ -67,6 +71,8 @@ import {AuditLogTitlePipe} from './audit-logs/pipes/audit-log-title.pipe';
     DataInputModule,
     SelectModule,
     PresenterModule,
+    GravatarModule,
+    WarningMessageModule,
   ],
   exports: [ResourceActivityComponent],
 })

@@ -46,3 +46,11 @@ export function isLinkTypeAuditLog(log: AuditLog, linkTypeId: string) {
     (log.resourceType === ResourceType.Link && log.parentId === linkTypeId)
   );
 }
+
+export function isDocumentAuditLog(log: AuditLog, documentId: string) {
+  return log.resourceType === ResourceType.Document && log.resourceId === documentId;
+}
+
+export function isLinkAuditLog(log: AuditLog, linkInstanceId: string) {
+  return log.resourceType === ResourceType.Link && log.resourceId === linkInstanceId;
+}

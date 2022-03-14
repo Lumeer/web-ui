@@ -35,7 +35,7 @@ export class AuditLogsEffects {
         this.service.getByDocument(action.collectionId, action.documentId, action.workspace).pipe(
           map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
           map(auditLogs => AuditLogActions.getByDocumentSuccess({auditLogs, documentId: action.documentId})),
-          catchError(error => of(AuditLogActions.getByDocumentFailure({error})))
+          catchError(error => of(AuditLogActions.getByDocumentFailure({...action, error})))
         )
       )
     )
@@ -58,10 +58,21 @@ export class AuditLogsEffects {
       mergeMap(action =>
         this.service.getByProject(action.workspace).pipe(
           map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
-          map(auditLogs => AuditLogActions.getByProjectSuccess({auditLogs})),
-          catchError(error => of(AuditLogActions.getFailure({error})))
+          map(auditLogs => AuditLogActions.getByProjectSuccess({...action, auditLogs})),
+          catchError(error => of(AuditLogActions.getByProjectFailure({...action, error})))
         )
       )
+    )
+  );
+
+  public getByProjectFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.getByProjectFailure),
+      tap(action => console.error(action.error)),
+      map(() => {
+        const message = $localize`:@@audit.get.any.fail:Could not get activity logs`;
+        return new NotificationsAction.Error({message});
+      })
     )
   );
 
@@ -72,9 +83,20 @@ export class AuditLogsEffects {
         this.service.getByCollection(action.collectionId, action.workspace).pipe(
           map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
           map(auditLogs => AuditLogActions.getByCollectionSuccess({collectionId: action.collectionId, auditLogs})),
-          catchError(error => of(AuditLogActions.getFailure({error})))
+          catchError(error => of(AuditLogActions.getByCollectionFailure({...action, error})))
         )
       )
+    )
+  );
+
+  public getByCollectionFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.getByCollectionFailure),
+      tap(action => console.error(action.error)),
+      map(() => {
+        const message = $localize`:@@audit.get.any.fail:Could not get activity logs`;
+        return new NotificationsAction.Error({message});
+      })
     )
   );
 
@@ -85,15 +107,15 @@ export class AuditLogsEffects {
         this.service.getByLinkType(action.linkTypeId, action.workspace).pipe(
           map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
           map(auditLogs => AuditLogActions.getByLinkTypeSuccess({linkTypeId: action.linkTypeId, auditLogs})),
-          catchError(error => of(AuditLogActions.getFailure({error})))
+          catchError(error => of(AuditLogActions.getByLinkTypeFailure({...action, error})))
         )
       )
     )
   );
 
-  public getFailure$ = createEffect(() =>
+  public getByLinkTypeFailure$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuditLogActions.getFailure),
+      ofType(AuditLogActions.getByLinkFailure),
       tap(action => console.error(action.error)),
       map(() => {
         const message = $localize`:@@audit.get.any.fail:Could not get activity logs`;
@@ -132,7 +154,7 @@ export class AuditLogsEffects {
         this.service.getByLink(action.linkTypeId, action.linkInstanceId, action.workspace).pipe(
           map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
           map(auditLogs => AuditLogActions.getByLinkSuccess({auditLogs, linkInstanceId: action.linkInstanceId})),
-          catchError(error => of(AuditLogActions.getByLinkFailure({error})))
+          catchError(error => of(AuditLogActions.getByLinkFailure({...action, error})))
         )
       )
     )

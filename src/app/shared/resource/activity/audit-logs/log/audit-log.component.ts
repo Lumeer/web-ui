@@ -81,7 +81,10 @@ export class AuditLogComponent implements OnChanges {
   public readonly updatedOnMsg: string;
   public readonly unknownUser: string;
   public readonly unknownUserEmail = DEFAULT_USER;
-  public readonly titleConfiguration: DataInputConfiguration = {color: {limitWidth: true}};
+  public readonly titleConfiguration: DataInputConfiguration = {
+    common: {inline: true, skipValidation: true, inheritColor: true},
+    color: {limitWidth: true},
+  };
 
   public hasNewState: boolean;
   public hasOldState: boolean;

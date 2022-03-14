@@ -17,13 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, SimpleChanges} from '@angular/core';
-import {
-  AuditLogFilters,
-  auditLogTypeFilterConstraint,
-  auditLogUsersFilterConstraint,
-} from '../../model/audit-log-filters';
-import {ConstraintData, SelectDataValue, UserDataValue} from '@lumeer/data-filters';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, SimpleChanges, OnChanges} from '@angular/core';
+import {AuditLogFilters} from '../../model/audit-log-filters';
+import {SelectDataValue, UserDataValue} from '@lumeer/data-filters';
 import {DropdownDirective} from '../../../../../dropdown/dropdown.directive';
 import {UserDataInputConfiguration} from '../../../../../data-input/data-input-configuration';
 import {BehaviorSubject} from 'rxjs';
@@ -42,12 +38,9 @@ import {AuditLogConfiguration} from '../../model/audit-log-configuration';
   styleUrls: ['./audit-log-filters-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuditLogFiltersDropdownComponent extends DropdownDirective {
+export class AuditLogFiltersDropdownComponent extends DropdownDirective implements OnChanges {
   @Input()
   public filters: AuditLogFilters;
-
-  @Input()
-  public constraintData: ConstraintData;
 
   @Input()
   public viewsMap: Record<string, View>;
@@ -61,12 +54,16 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective {
   @Input()
   public configuration: AuditLogConfiguration;
 
+  @Input()
+  public usersDataValue: UserDataValue;
+
+  @Input()
+  public typesDataValue: SelectDataValue;
+
   @Output()
   public filtersChanged = new EventEmitter<AuditLogFilters>();
 
-  public usersDataValue: UserDataValue;
   public userConfig: UserDataInputConfiguration = {onlyIcon: true};
-  public typesDataValue: SelectDataValue;
 
   public editingUsers$ = new BehaviorSubject(false);
   public editingResources$ = new BehaviorSubject(false);
@@ -80,10 +77,6 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective {
   private readonly linkTypesGroupTitle = $localize`:@@audit.filters.linktypes.title:Link Types`;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.filters || changes.constraintData) {
-      this.usersDataValue = auditLogUsersFilterConstraint.createDataValue(this.filters?.users, this.constraintData);
-      this.typesDataValue = auditLogTypeFilterConstraint.createDataValue(this.filters?.types, this.constraintData);
-    }
     if (changes.viewsMap) {
       this.viewSelectItems = createViewSelectItems(objectValues(this.viewsMap));
     }

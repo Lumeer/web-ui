@@ -18,24 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
-import {ResourceType} from '../../../../../core/model/resource-type';
-import {parseSelectTranslation} from '../../../../utils/translation.utils';
+import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
+import {translateAuditType} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'auditLogTitle',
 })
 export class AuditLogTitlePipe implements PipeTransform {
   public transform(auditLog: AuditLog): string {
-    if (auditLog.resourceType === ResourceType.Project) {
-      if (auditLog.type === AuditLogType.Entered) {
-        return $localize`:@@audit.title.project.enter:Entered Project`;
-      }
-    }
-
-    return parseSelectTranslation(
-      $localize`:@@audit.title.any.type:{type, select, Updated {Updated} Created {Created} Deleted {Deleted} Reverted {Reverted} Entered {Entered}}`,
-      {type: auditLog.type}
-    );
+    return translateAuditType(auditLog.type, auditLog.resourceType);
   }
 }

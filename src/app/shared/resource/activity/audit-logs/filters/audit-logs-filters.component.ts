@@ -17,13 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ConstraintData} from '@lumeer/data-filters';
-import {AuditLogFilters} from '../model/audit-log-filters';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ConstraintData, SelectConstraintOption, SelectDataValue, UserDataValue} from '@lumeer/data-filters';
+import {AuditLogFilters, auditLogTypeFilterConstraint, auditLogUsersFilterConstraint} from '../model/audit-log-filters';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {View} from '../../../../../core/store/views/view';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {AuditLogConfiguration} from '../model/audit-log-configuration';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {User} from '../../../../../core/store/users/user';
+import {removeFromArray} from '../../../../utils/array.utils';
+import {AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
 
 @Component({
   selector: 'audit-logs-filters',
@@ -31,7 +35,7 @@ import {AuditLogConfiguration} from '../model/audit-log-configuration';
   styleUrls: ['./audit-logs-filters.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuditLogsFiltersComponent {
+export class AuditLogsFiltersComponent implements OnChanges {
   @Input()
   public filters: AuditLogFilters;
 
@@ -50,6 +54,69 @@ export class AuditLogsFiltersComponent {
   @Input()
   public configuration: AuditLogConfiguration;
 
+  @Input()
+  public resourceType: ResourceType;
+
   @Output()
   public filtersChanged = new EventEmitter<AuditLogFilters>();
+
+  public usersDataValue: UserDataValue;
+  public typesDataValue: SelectDataValue;
+
+  public users: User[];
+  public types: SelectConstraintOption[];
+  public collections: Collection[];
+  public linkTypes: LinkType[];
+  public views: View[];
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.filters || changes.constraintData || changes.resourceType) {
+      this.usersDataValue = auditLogUsersFilterConstraint.createDataValue(this.filters?.users, this.constraintData);
+      this.users = this.usersDataValue.users;
+
+      this.typesDataValue = auditLogTypeFilterConstraint(this.resourceType).createDataValue(
+        this.filters?.types,
+        this.constraintData
+      );
+      this.types = this.typesDataValue.options;
+    }
+    if (changes.filters || changes.collectionsMap) {
+      this.collections = (this.filters?.collections || [])
+        .map(id => this.collectionsMap?.[id])
+        .filter(collection => !!collection);
+    }
+    if (changes.filters || changes.linkTypesMap) {
+      this.linkTypes = (this.filters?.linkTypes || [])
+        .map(id => this.linkTypesMap?.[id])
+        .filter(linkType => !!linkType);
+    }
+    if (changes.filters || changes.viewsMap) {
+      this.views = (this.filters?.views || []).map(id => this.viewsMap?.[id]).filter(view => !!view);
+    }
+  }
+
+  public onUserRemove(value: string) {
+    const users = removeFromArray(this.filters?.users, value);
+    this.filtersChanged.emit({...this.filters, users});
+  }
+
+  public onTypeRemove(value: AuditLogType) {
+    const types = removeFromArray(this.filters?.types, value);
+    this.filtersChanged.emit({...this.filters, types});
+  }
+
+  public onCollectionRemove(value: string) {
+    const collections = removeFromArray(this.filters?.collections, value);
+    this.filtersChanged.emit({...this.filters, collections});
+  }
+
+  public onLinkTypeRemove(value: string) {
+    const linkTypes = removeFromArray(this.filters?.linkTypes, value);
+    this.filtersChanged.emit({...this.filters, linkTypes});
+  }
+
+  public onViewRemove(value: string) {
+    const views = removeFromArray(this.filters?.views, value);
+    this.filtersChanged.emit({...this.filters, views});
+  }
 }

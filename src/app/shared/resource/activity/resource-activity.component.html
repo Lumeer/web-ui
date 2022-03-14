@@ -1,5 +1,7 @@
 <audit-logs class="p-3"
             [auditLogs]="audit$ | async"
+            [loading]="loading$ | async"
+            [resourceType]="resourceType"
             [configuration]="configuration"
             (revert)="onRevertAudit($event)">
 </audit-logs>

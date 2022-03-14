@@ -9,22 +9,27 @@
                         [collectionsMap]="data.collectionsMap"
                         [linkTypesMap]="data.linkTypesMap"
                         [configuration]="configuration"
+                        [resourceType]="resourceType"
                         (filtersChanged)="onFiltersChanged($event)">
     </audit-logs-filters>
-    <audit-log *ngFor="let auditLog of auditLogs | filterAuditLogs:(filters$ | async): data.constraintData: data.viewsMap: data.collectionsMap: data.linkTypesMap; trackBy:trackByAudit; let first = first; let last = last"
-               [auditLog]="auditLog"
-               [parent]="auditLog | auditLogParent:data.collectionsMap:data.linkTypesMap"
-               [first]="first"
-               [reverting]="data.revertingIds | includes:auditLog.id"
-               [last]="last"
-               [constraintData]="data.constraintData"
-               [allowRevert]="configuration?.allowRevert && first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE) && (auditLog | auditLogRevertable)"
-               [showDetail]="configuration?.objectDetail && (auditLog | auditLogHasDetail)"
-               [usersMap]="data.usersMap"
-               [viewsMap]="data.viewsMap"
-               (revert)="onRevert(auditLog)"
-               (detail)="onDetail(auditLog)">
-    </audit-log>
+    <ng-container *ngIf="auditLogs | filterAuditLogs:(filters$ | async): data.constraintData: data.viewsMap: data.collectionsMap: data.linkTypesMap as filteredAuditLogs">
+      <audit-log *ngFor="let auditLog of filteredAuditLogs; trackBy:trackByAudit; let first = first; let last = last"
+                 [auditLog]="auditLog"
+                 [parent]="auditLog | auditLogParent:data.collectionsMap:data.linkTypesMap"
+                 [first]="first"
+                 [reverting]="data.revertingIds | includes:auditLog.id"
+                 [last]="last"
+                 [constraintData]="data.constraintData"
+                 [allowRevert]="configuration?.allowRevert && first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE) && (auditLog | auditLogRevertable)"
+                 [showDetail]="configuration?.objectDetail && (auditLog | auditLogHasDetail)"
+                 [usersMap]="data.usersMap"
+                 [viewsMap]="data.viewsMap"
+                 (revert)="onRevert(auditLog)"
+                 (detail)="onDetail(auditLog)">
+      </audit-log>
+      <empty-search *ngIf="!filteredAuditLogs.length" [compact]="true" class="px-lg-5 px-3 d-block">
+      </empty-search>
+    </ng-container>
     <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
          class="py-3 mt-3 d-flex flex-column align-items-center text-center">
       <span i18n="@@document.detail.audit.limit">Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <a
@@ -39,7 +44,11 @@
 </ng-container>
 
 <ng-template #emptyState>
-  <div class="text-center p-1 fst-italic" i18n="@@document.detail.activity.empty">
+  <div *ngIf="loading" class="d-flex align-items-center justify-content-center p-lg-5 p-3">
+    <span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
+    <span i18n="@@message.loading">Loading...</span>
+  </div>
+  <div *ngIf="!loading" class="text-center p-1 fst-italic" i18n="@@document.detail.activity.empty">
     No activity yet.
   </div>
 </ng-template>

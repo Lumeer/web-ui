@@ -14,3 +14,9 @@
   height: 100%;
   background: $gray-400;
 }
+
+.title-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min-content;
+  grid-gap: 0.5rem;
+}

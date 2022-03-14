@@ -21,6 +21,7 @@ import {
   ConditionType,
   ConstraintData,
   SelectConstraint,
+  SelectConstraintOption,
   UserConstraint,
   UserConstraintType,
 } from '@lumeer/data-filters';
@@ -45,22 +46,37 @@ export const auditLogUsersFilterConstraint = new UserConstraint({
   type: UserConstraintType.UsersAndTeams,
 });
 
-export const auditLogTypeFilterConstraint = new SelectConstraint({
-  multi: true,
-  options: [
-    {value: AuditLogType.Created, displayValue: translateAuditType(AuditLogType.Created)},
-    {value: AuditLogType.Updated, displayValue: translateAuditType(AuditLogType.Updated)},
-    {value: AuditLogType.Deleted, displayValue: translateAuditType(AuditLogType.Deleted)},
-  ],
-  displayValues: false,
-});
+export function auditLogTypeFilterConstraint(resourceType: ResourceType) {
+  return new SelectConstraint({
+    multi: true,
+    options: [
+      {value: AuditLogType.Created, displayValue: translateAuditType(AuditLogType.Created, resourceType)},
+      {value: AuditLogType.Updated, displayValue: translateAuditType(AuditLogType.Updated, resourceType)},
+      {value: AuditLogType.Deleted, displayValue: translateAuditType(AuditLogType.Deleted, resourceType)},
+      {value: AuditLogType.Reverted, displayValue: translateAuditType(AuditLogType.Reverted, resourceType)},
+      ...auditLogTypeResourceOptions(resourceType),
+    ],
+    displayValues: true,
+  });
+}
 
-function translateAuditType(type: AuditLogType): string {
-  return parseSelectTranslation(
-    '@@audit.title.data.update2:{type, select, Updated {Updated} Created {Created} Deleted {Deleted}}',
-    {
-      type,
+function auditLogTypeResourceOptions(resourceType: ResourceType): SelectConstraintOption[] {
+  if (resourceType === ResourceType.Project) {
+    return [{value: AuditLogType.Entered, displayValue: translateAuditType(AuditLogType.Entered, resourceType)}];
+  }
+  return [];
+}
+
+export function translateAuditType(type: AuditLogType, resourceType: ResourceType): string {
+  if (resourceType === ResourceType.Project) {
+    if (type === AuditLogType.Entered) {
+      return $localize`:@@audit.title.project.enter:Entered Project`;
     }
+  }
+
+  return parseSelectTranslation(
+    $localize`:@@audit.title.any.type:{type, select, Updated {Updated} Created {Created} Deleted {Deleted} Reverted {Reverted} Entered {Entered}}`,
+    {type}
   );
 }
 
@@ -86,23 +102,45 @@ export function filterAuditLogs(
     if (filters.views?.length && (!log.viewId || (!filters.views.includes(log.viewId) && !!viewsMap[log.viewId]))) {
       return false;
     }
-    if (
-      filters.collections?.length &&
-      log.resourceType === ResourceType.Document &&
-      !filters.collections.includes(log.parentId) &&
-      !!collectionsMap[log.parentId]
-    ) {
+    if (!logMeetCollectionFilters(filters, log, collectionsMap)) {
       return false;
     }
-    if (
-      filters.linkTypes?.length &&
-      log.resourceType === ResourceType.Link &&
-      !filters.linkTypes.includes(log.parentId) &&
-      !!linkTypesMap[log.parentId]
-    ) {
+    if (!logMeetLinkTypeFilters(filters, log, linkTypesMap)) {
       return false;
     }
 
     return true;
   });
+}
+
+function logMeetCollectionFilters(filters: AuditLogFilters, log: AuditLog, collectionsMap: Record<string, Collection>) {
+  if (!filters.collections?.length) {
+    return true;
+  }
+
+  if (
+    log.resourceType === ResourceType.Document &&
+    filters.collections.includes(log.parentId) &&
+    !!collectionsMap[log.parentId]
+  ) {
+    return true;
+  }
+
+  return log.resourceType === ResourceType.Link && filters.linkTypes?.length;
+}
+
+function logMeetLinkTypeFilters(filters: AuditLogFilters, log: AuditLog, linkTypesMap: Record<string, LinkType>) {
+  if (!filters.linkTypes?.length) {
+    return true;
+  }
+
+  if (
+    log.resourceType === ResourceType.Link &&
+    filters.linkTypes.includes(log.parentId) &&
+    !!linkTypesMap[log.parentId]
+  ) {
+    return true;
+  }
+
+  return log.resourceType === ResourceType.Document && filters.collections?.length;
 }

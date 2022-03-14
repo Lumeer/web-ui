@@ -57,7 +57,13 @@ export class AuditLogsComponent implements OnInit {
   public auditLogs: AuditLog[];
 
   @Input()
+  public loading: boolean;
+
+  @Input()
   public configuration: AuditLogConfiguration;
+
+  @Input()
+  public resourceType: ResourceType;
 
   @Output()
   public revert = new EventEmitter<AuditLog>();
