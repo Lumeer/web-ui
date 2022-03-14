@@ -1,3 +1,6 @@
-<red-dot *ngIf="(hintsEnabled$ | async) !== false" [title]="title" [footer]="footer">
+<red-dot *ngIf="(hintsEnabled$ | async) !== false"
+         [title]="title"
+         [footer]="footer"
+         (dismissed)="dismissHint.emit()">
   <ng-content></ng-content>
 </red-dot>

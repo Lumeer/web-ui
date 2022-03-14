@@ -57,6 +57,9 @@ export class PostItCollectionComponent implements OnChanges {
   @Input()
   public query: Query;
 
+  @Input()
+  public shouldCollectionDisplayHint: boolean;
+
   @Output()
   public update = new EventEmitter<Collection>();
 
@@ -130,5 +133,9 @@ export class PostItCollectionComponent implements OnChanges {
     // we know that uncreated collection is not in store
     this.collection.icon = data.icon;
     this.collection.color = data.color;
+  }
+
+  public onHintDismissed() {
+    //console.log('Dismissed');
   }
 }

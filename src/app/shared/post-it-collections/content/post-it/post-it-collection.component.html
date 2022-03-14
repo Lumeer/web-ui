@@ -1,8 +1,10 @@
 <a class="card post-it cursor-pointer color-inherit"
    [class.uninitialized]="!collection.id"
    [class.initialized]="collection.id"
+   [class.simulateHover]="shouldCollectionDisplayHint"
    [routerLink]="path"
    [queryParams]="queryParams">
+  <!-- HONZA - tady je potreba doplnit logiku zobrazovani spolu s 'shouldCollectionDisplayHint' a storem -->
   <div class="card-body text-center">
     <div *ngIf="!collection.id"
          class="text-center small text-muted"
@@ -36,7 +38,8 @@
     </div>
 
     <div *ngIf="collection.id"
-         class="document-count opacity-content clickable">
+         class="document-count opacity-content clickable"
+         [class.always-visible]="shouldCollectionDisplayHint">
       <span title="Record Count" i18n-title="@@collection.document.count">
         <i class="far fa-file"
            aria-hidden="true">
@@ -45,7 +48,9 @@
 
     <div *ngIf="collection.id && permissions.roles?.Read"
          class="toggle-favorite opacity-content clickable text-warning"
-         [class.always-visible]="collection.favorite">
+         [class.always-visible]="collection.favorite"
+         [class.first-collection]="shouldCollectionDisplayHint">
+      <!--Honza - lepsi nazev classy first-collection?-->
       <span *ngIf="collection.favorite"
             title="Remove from favorites"
             i18n-title="@@collection.favorite.remove"
@@ -65,14 +70,23 @@
     </div>
 
     <div *ngIf="collection.id"
-         class="buttons opacity-content d-flex flex-column">
+         class="buttons opacity-content d-flex flex-column"
+         [class.always-visible]="shouldCollectionDisplayHint && true">
       <div id="dropdown-{{collection.id}}">
         <a *ngIf="canManageDetail" title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-start"
            [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id]">
-          <i class="fas fa-fw fa-cog" aria-hidden="true"></i>
+          <i class="fas fa-fw fa-cog"
+             aria-hidden="true"></i>
         </a>
+        <div (click)="$event.preventDefault(); $event.stopPropagation();">
+          <hint *ngIf="shouldCollectionDisplayHint && true" title="Table Settings"
+                (dismissHint)="$event.preventDefault(); $event.stopPropagation(); onHintDismissed()">
+            <span>Haha</span>
+          </hint>
+        </div>
       </div>
+
     </div>
     <div *ngIf="!collection.id"
          class="button-remove opacity-content d-flex flex-column">

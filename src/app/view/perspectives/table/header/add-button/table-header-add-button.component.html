@@ -1,13 +1,18 @@
-<button type="button"
-        class="add-part-button cursor-pointer d-flex align-items-center justify-content-center"
-        data-test="table-header-add-button"
-        title="Link table"
-        i18n-title="@@table.header.add-button"
-        aria-haspopup="true"
-        aria-expanded="false"
-        [matMenuTriggerFor]="contextMenu">
-  <i class="far fa-link"></i>
-</button>
+<div class="position-relative">
+  <button type="button"
+          class="add-part-button cursor-pointer d-flex align-items-center justify-content-center"
+          data-test="table-header-add-button"
+          title="Link table"
+          i18n-title="@@table.header.add-button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          [matMenuTriggerFor]="contextMenu">
+    <i class="far fa-link"></i>
+  </button>
+  <hint *ngIf="true" title="Propojeni tabulek">
+    <span>Pomocí tohoto tlačítka můžete vytvářet propojení mezi tabulkami. Své propojení si můžete pojmenovat, což se může často hodit, protože se vám může hodit si vytvořit více propojení mezi stejnými tabulkami. Pokud začnete zadávat data do propojené tabulky, Lumeer Vám bude napovídat z existujících záznamů dané tabulky. Samozřejmě takto můžete vytvořit i nové záznamy, které Lumeer automaticky přidá do tabulky. Počet propojených tabulek není omezen, nicméně doporučujeme propojit nejvýše 3 tabulky, z důvodu přehlednosti.</span>
+  </hint>
+</div>
 
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent

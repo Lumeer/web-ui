@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Observable} from 'rxjs';
@@ -35,6 +35,9 @@ export class HintComponent implements OnInit {
 
   @Input()
   public footer: string;
+
+  @Output()
+  dismissHint = new EventEmitter();
 
   public hintsEnabled$: Observable<boolean>;
 

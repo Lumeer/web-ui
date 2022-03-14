@@ -37,20 +37,30 @@
         </a>
       </li>
       <li role="presentation" class="nav-item" *ngIf="permissions?.roles?.AttributeEdit">
-        <a [routerLink]="['attributes']"
-           routerLinkActive="active"
-           class="nav-link"
-           i18n="@@collection.config.tab.attributes">
-          Attributes
-        </a>
+        <div class="position-relative">
+          <a [routerLink]="['attributes']"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@collection.config.tab.attributes">
+            Attributes
+          </a>
+          <hint *ngIf="true" title="Atributy Tabulky">
+            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex. Sed sit amet ligula sed urna laoreet iaculis in quis lectus. Vestibulum euismod dui ac eleifend volutpat. In nec ante non velit vehicula convallis.</span>
+          </hint>
+        </div>
       </li>
       <li role="presentation" class="nav-item" *ngIf="permissions?.roles?.TechConfig">
+        <div class="position-relative">
         <a [routerLink]="['rules']"
            routerLinkActive="active"
            class="nav-link"
            i18n="@@collection.config.tab.automation">
           Automation
         </a>
+          <hint *ngIf="true" title="Automatizace tabulky">
+            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex. Sed sit amet ligula sed urna laoreet iaculis in quis lectus. Vestibulum euismod dui ac eleifend volutpat. In nec ante non velit vehicula convallis.</span>
+          </hint>
+        </div>
       </li>
       <li role="presentation" class="nav-item">
         <a [routerLink]="['linktypes']"

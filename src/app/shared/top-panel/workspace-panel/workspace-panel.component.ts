@@ -33,6 +33,10 @@ import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
 import {WorkspaceSelectService} from '../../../core/service/workspace-select.service';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {User, UserHintsKeys} from '../../../core/store/users/user';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'workspace-panel',
@@ -56,6 +60,8 @@ export class WorkspacePanelComponent implements OnInit {
   public organizations$: Observable<Organization[]>;
   public projects$: Observable<Project[]>;
 
+  public currentUser$: Observable<User>;
+
   constructor(
     public element: ElementRef<HTMLElement>,
     private router: Router,
@@ -71,6 +77,8 @@ export class WorkspacePanelComponent implements OnInit {
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.organizations$ = this.store$.pipe(select(selectAllOrganizationsSorted));
     this.projects$ = this.store$.pipe(select(selectProjectsForWorkspace));
+
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
   }
 
   public selectOrganization(organization: Organization) {
@@ -87,5 +95,15 @@ export class WorkspacePanelComponent implements OnInit {
 
   public createNewProject(organization: Organization) {
     this.selectService.createNewProject(organization);
+  }
+
+  public onHintDismissed(hintKey: string | UserHintsKeys) {
+    if (hintKey === 'organization') {
+      hintKey = UserHintsKeys.organizationMenuHintDismissed;
+    } else if (hintKey === 'project') {
+      hintKey = UserHintsKeys.projectMenuHintDismissed;
+    }
+
+    this.store$.dispatch(new UsersAction.SetHint({hint: hintKey, value: true}));
   }
 }

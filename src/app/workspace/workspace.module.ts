@@ -58,6 +58,7 @@ import {TopPanelModule} from '../shared/top-panel/top-panel.module';
 import {SequencesModule} from '../shared/sequences/sequences.module';
 import {SliderModule} from '../shared/slider/slider.module';
 import {InputModule} from '../shared/input/input.module';
+import {RedDotModule} from '../shared/red-dot/red-dot.module';
 
 @NgModule({
   imports: [
@@ -77,6 +78,7 @@ import {InputModule} from '../shared/input/input.module';
     SliderModule,
     FormsModule,
     InputModule,
+    RedDotModule,
   ],
   declarations: [
     OrganizationDetailComponent,

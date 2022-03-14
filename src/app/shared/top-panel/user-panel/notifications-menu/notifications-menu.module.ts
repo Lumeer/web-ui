@@ -31,9 +31,10 @@ import {NotificationItemComponent} from './content/dropdown/notification-item/no
 import {NotificationTextComponent} from './content/dropdown/notification-text/notification-text.component';
 import {NotificationIconComponent} from './content/dropdown/notification-icon/notification-icon.component';
 import {NotificationPathComponent} from './content/dropdown/notification-path/notification-path.component';
+import {RedDotModule} from '../../../red-dot/red-dot.module';
 
 @NgModule({
-  imports: [CommonModule, PipesModule, RouterModule, DropdownModule, TooltipModule.forRoot()],
+  imports: [CommonModule, PipesModule, RouterModule, DropdownModule, TooltipModule.forRoot(), RedDotModule],
   declarations: [
     NotificationsMenuComponent,
     NotificationsMenuContentComponent,

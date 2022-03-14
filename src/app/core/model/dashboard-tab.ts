@@ -26,6 +26,9 @@ export interface DashboardTab {
   type?: TabType;
   hidden?: boolean;
   rows?: DashboardRow[];
+
+  hintTitle?: string;
+  hintContent?: string;
 }
 
 export interface DashboardRow {
@@ -95,9 +98,30 @@ export enum TabType {
 
 export const defaultDashboardTabs = [
   {id: TabType.All, title: $localize`:@@search.tab.all:All`, type: TabType.All},
-  {id: TabType.Tasks, title: $localize`:@@search.tab.tasks:Tasks`, type: TabType.Tasks},
-  {id: TabType.Views, title: $localize`:@@search.tab.views:Views`, type: TabType.Views},
-  {id: TabType.Tables, title: $localize`:@@search.tab.collections:Tables`, type: TabType.Tables},
+  {
+    id: TabType.Tasks,
+    title: $localize`:@@search.tab.tasks:Tasks`,
+    type: TabType.Tasks,
+    hintTitle: 'Ukoly',
+    hintContent:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex.',
+  },
+  {
+    id: TabType.Views,
+    title: $localize`:@@search.tab.views:Views`,
+    type: TabType.Views,
+    hintTitle: 'Pohledy',
+    hintContent:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex.',
+  },
+  {
+    id: TabType.Tables,
+    title: $localize`:@@search.tab.collections:Tables`,
+    type: TabType.Tables,
+    hintTitle: 'Tabulky',
+    hintContent:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex.',
+  },
 ];
 
 export function isDashboardTabDefault(tab: DashboardTab): boolean {

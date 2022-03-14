@@ -1,11 +1,18 @@
-<span tooltip="Notifications" i18n-tooltip="@@topPanel.notifications.title" placement="bottom" class="fa-stack ms-1 cursor-pointer" #origin (click)="dropdown.open()">
-  <i class="fa fa-bell fa-stack-1x font-size-15"
-     [class.text-primary]="unreadNotifications?.length > 0"
-     [class.text-secondary]="!unreadNotifications || unreadNotifications.length === 0"></i>
-  <span class="fa-stack-1x" *ngIf="unreadNotifications?.length > 0">
-    <span class="notifications-count">{{unreadNotifications.length}}</span>
+<div class="position-relative">
+  <span tooltip="Notifications" i18n-tooltip="@@topPanel.notifications.title" placement="bottom"
+        class="fa-stack ms-1 cursor-pointer" #origin (click)="dropdown.open()">
+    <i class="fa fa-bell fa-stack-1x font-size-15"
+       [class.text-primary]="unreadNotifications?.length > 0"
+       [class.text-secondary]="!unreadNotifications || unreadNotifications.length === 0"></i>
+    <span class="fa-stack-1x" *ngIf="unreadNotifications?.length > 0">
+      <span class="notifications-count">{{unreadNotifications.length}}</span>
+    </span>
   </span>
-</span>
+
+  <hint *ngIf="true" title="Notifications">
+    <span>Tady uvidíte všechny notifikace z Lumeeru. Tady vás také mimo jiné bude Lumeer upozorňovat, že je nějaký úkol již po termínu dokončení. Oznámení můžete smazat, nebo zobrazovat pouze nová, nepřečtená.</span>
+  </hint>
+</div>
 
 <notifications-menu-dropdown #dropdown
                              [organizations]="organizations"

@@ -13,12 +13,20 @@
   </div>
 </ng-template>
 
-<a *ngIf="link"
-   [routerLink]="link"
-   class="d-flex justify-content-center">
-  <ng-container *ngTemplateOutlet="logo"></ng-container>
-</a>
-<span *ngIf="!link"
-      class="d-flex justify-content-center">
-  <ng-container *ngTemplateOutlet="logo"></ng-container>
-</span>
+<div class="position-relative">
+  <a *ngIf="link"
+     [routerLink]="link"
+     (click)="onHintDismissed()"
+     class="d-flex justify-content-center">
+    <ng-container *ngTemplateOutlet="logo"></ng-container>
+  </a>
+  <hint *ngIf="hintVisible$ | async"
+        title="Lumeer's Icon"
+        (dismissHint)="onHintDismissed()">
+    <span>Vezme Vás zpět domovskou obrazovku PROJEKTU, kde můžete vidět přehled všech svých Úkolů (Tasků), Pohledů (Views) a Tabulek. Je to nejrychlejší způsob, jak se dostat zpátky z pohledu, či tabulky. Tato Ikona je vždy viditelná</span>
+  </hint>
+  <span *ngIf="!link"
+        class="d-flex justify-content-center">
+    <ng-container *ngTemplateOutlet="logo"></ng-container>
+  </span>
+</div>

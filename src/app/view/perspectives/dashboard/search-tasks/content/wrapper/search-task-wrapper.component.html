@@ -18,6 +18,7 @@
                         [collection]="collection"
                         [dataPermissions]="document | dataResourcePermissions:collection:permissions:currentUser:constraintData"
                         [large]="large"
+                        [shouldDisplayHints]="shouldDisplayHints"
                         (detail)="onDetail()"
                         (toggleFavorite)="onToggleFavorite()">
 </search-task-first-line>

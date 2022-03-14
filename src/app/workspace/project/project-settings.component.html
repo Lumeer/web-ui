@@ -37,11 +37,13 @@
         (add)="uploadRawProjectContent($event)">
       </project-upload>
 
-      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger me-3"
+      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger me-3 position-relative"
            *ngIf="data.permissions?.roles?.Manage"
-           (click)="onSampleDataEraseClick()"
            title="Delete sample data from the project" i18n-title="@@project.settings.collections.deleteSampleData">
-        <i class="far fa-eraser" aria-hidden="true"></i>&nbsp;
+        <i class="far fa-eraser cursor-pointer" aria-hidden="true" (click)="onSampleDataEraseClick()"></i>
+        <hint *ngIf="true" title="Delete sample project data">
+          <span>Teď už znáte většinu Lumeerových schopností a možností. Je tedy na čase se pustit do práce! Tímto tlačítkem můžete vymazat ukázková data z projektu, a začít si vyplňovat Vaše opravdová data.</span>
+        </hint>&nbsp;
       </div>
     </resource-header>
 

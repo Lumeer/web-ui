@@ -15,7 +15,7 @@
 
       <search-task-wrapper
         class="detail px-1 py-2 position-relative"
-        *ngFor="let document of (data.truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index; let last = last"
+        *ngFor="let document of (data.truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index; let last = last; let first = first;"
         [class.border-bottom]="data.truncateContent || !last"
         [class.light]="data.truncateContent && last"
         [size]="currentSize"
@@ -27,6 +27,7 @@
         [collection]="collectionsMap[document.collectionId]"
         [attributes]="data.taskAttributes[document.collectionId]"
         [constraintData]="constraintData"
+        [shouldDisplayHints]="first"
         (toggleFavorite)="onFavoriteToggle(document)"
         (click)="toggleDocument(document)"
         (detail)="onDetailClick(document)">

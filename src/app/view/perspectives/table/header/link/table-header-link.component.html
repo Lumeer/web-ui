@@ -8,7 +8,7 @@
                  [style.width.px]="(part | partWidth : canManageConfig) + linkInfoWidth"
                  class="text-truncate flex-grow-0">
   </table-caption>
-  <div class="d-flex flex-grow-1 align-items-stretch">
+  <div class="d-flex flex-grow-1 align-items-stretch position-relative">
     <table-link-info [cursor]="cursor"
                      [canManageView]="canManageConfig"
                      [hidden]="part.columns.length >= 1"
@@ -21,6 +21,9 @@
                      (removePart)="onRemovePart()"
                      class="d-block table-border-top table-border-right table-border-bottom">
     </table-link-info>
+    <hint *ngIf="true" title="Kontextove Menu">
+      <span>V tomto menu si můžete prohodit pořadí tabulek, nebo tabulku odpojit. Můžete také využít možnost si přidat sloupeček do propojení. To se hodí v momentě, kdy chcete uchovávat data, která dávají smysl pouze v tomto propojení a v samotné tabulce by o ničem nevypovídala.</span>
+    </hint>
     <table-column-group [table]="table"
                         [cursor]="cursor"
                         [query]="query"

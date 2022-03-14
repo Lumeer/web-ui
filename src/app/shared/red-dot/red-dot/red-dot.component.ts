@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {PopoverDirective} from 'ngx-bootstrap/popover';
 
 @Component({
   selector: 'red-dot',
@@ -31,4 +32,13 @@ export class RedDotComponent {
 
   @Input()
   public footer: string;
+
+  @Output()
+  private dismissed = new EventEmitter();
+
+  public onDismissClick(pop: PopoverDirective, event: Event) {
+    pop.hide();
+    event.stopPropagation();
+    this.dismissed.emit();
+  }
 }

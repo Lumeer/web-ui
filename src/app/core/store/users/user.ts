@@ -67,6 +67,14 @@ export enum UserHintsKeys {
   organizationTeamsHintDismissed = 'organizationTeamsHintDismissed',
   projectTeamsHintDismissed = 'projectTeamsHintDismissed',
   viewTeamsHintDismissed = 'viewTeamsHintDismissed',
+
+  logoHintDismissed = 'logoHintDismissed',
+  organizationMenuHintDismissed = 'organizationMenuHintDismissed',
+  projectMenuHintDismissed = 'projectMenuHintDismissed',
+
+  tasksHintDismissed = 'tasksHintDismissed',
+  viewsHintDismissed = 'viewsHintDismissed',
+  tablesHintDismissed = 'tablesHintDismissed',
 }
 
 export interface UserHints {
@@ -74,6 +82,14 @@ export interface UserHints {
   organizationTeamsHintDismissed?: boolean;
   projectTeamsHintDismissed?: boolean;
   viewTeamsHintDismissed?: boolean;
+
+  logoHintDismissed?: boolean;
+  organizationMenuHintDismissed?: boolean;
+  projectMenuHintDismissed?: boolean;
+
+  tasksHintDismissed?: boolean;
+  viewsHintDismissed?: boolean;
+  tablesHintDismissed?: boolean;
 }
 
 export interface NotificationsSettings {

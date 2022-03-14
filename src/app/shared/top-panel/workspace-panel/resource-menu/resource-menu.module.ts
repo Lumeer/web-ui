@@ -26,9 +26,10 @@ import {ResourceListComponent} from './resource-list/resource-list.component';
 import {PipesModule} from '../../../pipes/pipes.module';
 import {CanCreateResourcePipe} from './pipes/can-create-resource.pipe';
 import {DropdownModule} from '../../../dropdown/dropdown.module';
+import {RedDotModule} from '../../../red-dot/red-dot.module';
 
 @NgModule({
-  imports: [CommonModule, PipesModule, DropdownModule],
+  imports: [CommonModule, PipesModule, DropdownModule, RedDotModule],
   declarations: [
     ResourceMenuComponent,
     ResourceDetailComponent,

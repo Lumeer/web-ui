@@ -14,12 +14,13 @@
     <div class="grid mt-3" *ngIf="{truncateContent: truncateContent$ | async} as data">
 
       <post-it-collection class="layout-item d-block" @fadeIn
-                          *ngFor="let collection of (data.truncateContent ? (allCollections | slice:0:maxCollections) : allCollections); trackBy:trackByCollection"
+                          *ngFor="let collection of (data.truncateContent ? (allCollections | slice:0:maxCollections) : allCollections); trackBy:trackByCollection; let first = first"
                           [class.selected]="selectedCollections$ | async | includes:(collection.correlationId || collection.id)"
                           [collection]="collection"
                           [workspace]="workspace"
                           [query]="query"
                           [permissions]="collectionsPermissions && collection.id && collectionsPermissions[collection.id]"
+                          [shouldCollectionDisplayHint]="first"
                           (update)="updateCollection($event)"
                           (create)="createCollection($event)"
                           (delete)="deleteCollection(collection)"

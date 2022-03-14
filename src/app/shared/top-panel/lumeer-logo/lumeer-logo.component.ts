@@ -17,7 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit} from '@angular/core';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
+import {Observable} from 'rxjs';
+import {UserHints, UserHintsKeys} from '../../../core/store/users/user';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
+import {UsersAction} from '../../../core/store/users/users.action';
 
 @Component({
   selector: 'lumeer-logo',
@@ -25,7 +32,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/co
   styleUrls: ['./lumeer-logo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LumeerLogoComponent {
+export class LumeerLogoComponent implements OnInit {
   @Input()
   public height: number;
 
@@ -40,7 +47,20 @@ export class LumeerLogoComponent {
 
   public readonly tooltip: string;
 
-  constructor(public element: ElementRef<HTMLElement>) {
+  public hintVisible$: Observable<boolean>;
+
+  constructor(public element: ElementRef<HTMLElement>, private store$: Store<AppState>) {
     this.tooltip = $localize`:@@topPanel.home.title:Back to home screen`;
+  }
+
+  public onHintDismissed() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.logoHintDismissed, value: true}));
+  }
+
+  public ngOnInit(): void {
+    this.hintVisible$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints?.logoHintDismissed)
+    );
   }
 }

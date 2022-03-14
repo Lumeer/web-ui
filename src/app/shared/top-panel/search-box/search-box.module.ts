@@ -43,6 +43,7 @@ import {ShouldShowSettingsPipe} from './settings-button/should-show-settings.pip
 import {SimpleQueryItemComponent} from './query-item/simple/simple-query-item.component';
 import {QueryStemQueryItemComponent} from './query-item/query-stem/query-stem-query-item.component';
 import {QueryStemInputQueryItemComponent} from './query-item/query-stem-input/query-stem-input-query-item.component';
+import {RedDotModule} from '../../red-dot/red-dot.module';
 
 @NgModule({
   imports: [
@@ -59,6 +60,7 @@ import {QueryStemInputQueryItemComponent} from './query-item/query-stem-input/qu
     DropdownModule,
     FilterBuilderModule,
     FilterPreviewModule,
+    RedDotModule,
   ],
   declarations: [
     SearchBoxComponent,

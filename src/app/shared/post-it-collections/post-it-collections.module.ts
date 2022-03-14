@@ -34,6 +34,7 @@ import {PostItCollectionsContentComponent} from './content/post-it-collections-c
 import {PresenterModule} from '../presenter/presenter.module';
 import {DirectivesModule} from '../directives/directives.module';
 import {ButtonModule} from '../button/button.module';
+import {RedDotModule} from '../red-dot/red-dot.module';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import {ButtonModule} from '../button/button.module';
     PipesModule,
     WarningMessageModule,
     ButtonModule,
+    RedDotModule,
   ],
   declarations: [
     PostItCollectionsComponent,

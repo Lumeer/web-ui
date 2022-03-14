@@ -70,7 +70,12 @@ export function addDefaultDashboardTabsIfNotPresent(savedTabs: DashboardTab[]): 
     const tabIndex = tabs.findIndex(tab => tab.id === defaultTab.id);
     if (tabIndex >= 0) {
       // we should replace saved title with translated one
-      tabs[tabIndex] = {...tabs[tabIndex], title: defaultTab.title};
+      tabs[tabIndex] = {
+        ...tabs[tabIndex],
+        title: defaultTab.title,
+        hintTitle: defaultTab.hintTitle,
+        hintContent: defaultTab.hintContent,
+      };
     } else {
       tabs.splice(0, 0, defaultTab);
     }

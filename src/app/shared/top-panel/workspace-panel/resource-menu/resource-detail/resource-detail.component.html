@@ -26,21 +26,36 @@
 
   <div *ngIf="(type | isOrganizationType) && canManageDetail"
        class="text-center mt-2 d-flex flex-row justify-content-center">
-    <button (click)="goToOrganizationSettings('detail')" href="#" class="btn btn-primary btn-sm me-1">
-      <i class="fas fa-cog me-1"></i>
-      <span i18n="@@resource.detail.organization.configure">Configure</span>
-    </button>
-    <button (click)="goToOrganizationSettings('detail')" href="#" class="btn btn-danger btn-sm ms-1">
-      <i class="fas fa-credit-card me-1"></i>
-      <span i18n="@@resource.detail.organization.upgrade">Upgrade Plan</span>
-    </button>
+    <div class="position-relative">
+      <button (click)="goToOrganizationSettings('detail')" href="#" class="btn btn-primary btn-sm me-1">
+        <i class="fas fa-cog me-1"></i>
+        <span i18n="@@resource.detail.organization.configure">Configure</span>
+      </button>
+      <hint *ngIf="true" title="Configure Organization">
+        <span>K podrobnejsimu nastaveni a sprave organizace se dostanete timto tlacitkem.</span>
+      </hint>
+    </div>
+    <div class="position-relative">
+      <button (click)="goToOrganizationSettings('detail')" href="#" class="btn btn-danger btn-sm ms-1">
+        <i class="fas fa-credit-card me-1"></i>
+        <span i18n="@@resource.detail.organization.upgrade">Upgrade Plan</span>
+      </button>
+      <hint *ngIf="true" title="Upgrade Plan">
+        <span>Líbí se Vám Lumeer? Zakupte si Business program a získejte přístup k Týmům, neomezený počet uživatelů, projektů, automatizací a mnoho dalšího!</span>
+      </hint>
+    </div>
   </div>
 
-  <div *ngIf="!(type | isOrganizationType) && canManageDetail" class="text-center mt-2">
-    <button (click)="goToProjectSettings('users')" class="btn btn-primary btn-sm">
-      <i class="fas fa-cog me-1"></i>
-      <span i18n="@@resource.detail.organization.configure">Configure</span>
-    </button>
+  <div *ngIf="!(type | isOrganizationType) && canManageDetail"
+       class="text-center mt-2 d-flex justify-content-center position-relative">
+    <div class="position-relative">
+      <button (click)="goToProjectSettings('users')" class="btn btn-primary btn-sm">
+        <i class="fas fa-cog me-1"></i>
+        <span i18n="@@resource.detail.organization.configure">Configure</span>
+      </button>
+      <hint *ngIf="true" title="Nastaveni Projektu?">
+        <span>K podrobnejsimu nastaveni a sprave projektu se dostanete timto tlacitkem.</span>
+      </hint>
+    </div>
   </div>
-
 </div>

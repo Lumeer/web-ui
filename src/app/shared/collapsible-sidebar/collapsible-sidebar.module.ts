@@ -21,9 +21,10 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {CollapsibleSidebarComponent} from './collapsible-sidebar.component';
 import {CollapsibleSidebarToggleComponent} from './toggle/collapsible-sidebar-toggle.component';
+import {RedDotModule} from '../red-dot/red-dot.module';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, RedDotModule],
   declarations: [CollapsibleSidebarComponent, CollapsibleSidebarToggleComponent],
   exports: [CollapsibleSidebarComponent],
 })

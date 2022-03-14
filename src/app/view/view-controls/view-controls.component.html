@@ -33,6 +33,9 @@
 
           </ng-container>
 
+          <hint *ngIf="true" title="Perspektiva / Zmena typu pohledu">
+            <span>Zde si můžete zvolit jakým způsobem se chcete na data v tabulce dívat. Je možné využít kalendář, časovou osu, graf, mapu, nástěnku a mnoho dalších. Můžete mít dokonce více různých pohledů na stejnou tabulku, a tedy data vidět různými “pohledy”.</span>
+          </hint>
         </div>
 
         <i *ngIf="novice"
@@ -61,28 +64,42 @@
                class="form-control"
                autocomplete="off"
                placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
-        <div class="input-group-append">
-          <button [disabled]="buttonsData.disabled"
-                  class="btn"
-                  [class.btn-primary]="!buttonsData.disabled"
-                  [class.btn-outline-secondary]="buttonsData.disabled"
-                  [class.disabled]="buttonsData.disabled"
-                  type="button"
-                  title="Save" i18n-title="@@button.save"
-                  (click)="onSave(state.permissions.canClone)">
-            <i class="fas fa-save"></i>
-          </button>
-          <button *ngIf="canShareView"
-                  [disabled]="!(view.code && state.permissions.canShare)"
-                  (click)="onShareClick()"
-                  class="btn btn-primary"
-                  type="button">
+        <div class="input-group-append d-flex">
+          <div class="position-relative">
+            <button [disabled]="buttonsData.disabled"
+                    class="btn rounded-0"
+                    [class.btn-primary]="!buttonsData.disabled"
+                    [class.btn-outline-secondary]="buttonsData.disabled"
+                    [class.disabled]="buttonsData.disabled"
+                    type="button"
+                    title="Save" i18n-title="@@button.save"
+                    (click)="onSave(state.permissions.canClone)">
+              <i class="fas fa-save"></i>
+            </button>
+
+            <hint *ngIf="true" title="Save the view">
+              <span>Jednotlivé pohledy si samozřejmě můžete pojmenovávat a přejmenovávat, tak aby se Vám v nich co nejlépe orientovalo. Spolu s úpravou pohledu, dle Vašich představ můžete pohled uložit. Tento, ať už nový, či přejmenovaný pohled pak uvidíte na domovské obrazovce projektu, mezi ostatními pohledy.</span>
+            </hint>
+          </div>
+
+          <div class="position-relative">
+            <button *ngIf="canShareView"
+                    [disabled]="!(view.code && state.permissions.canShare)"
+                    (click)="onShareClick()"
+                    class="btn btn-primary rounded-0 rounded-end"
+                    type="button">
             <span i18n="@@button.share"
                   placement="left"
                   tooltip="To share a view, first set its name and save it using the controls to the left."
                   i18n-tooltip="@@view.share.disabled.tooltip"
                   [isDisabled]="!!view.code || state.permissions.canShare">Share</span>
-          </button>
+            </button>
+
+            <hint *ngIf="true" title="Share the view">
+              <span>Chcete svému kolegovi nastavit stejný pohled, jako jste si tu dle Vašich představ vytvořili? Není nejmenší problém, tímto tlačítkem můžete pohledy nasdílet svým kolegům</span>
+            </hint>
+            <!--Honza - tady ma byt jeste hint na sdileni pohledu, ale aktualne se spatne vykresluji-->
+          </div>
         </div>
       </div>
     </form>

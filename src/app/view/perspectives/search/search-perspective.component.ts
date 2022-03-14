@@ -50,7 +50,10 @@ import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query
 import {convertPerspectiveSettingsToString} from '../../../core/store/navigation/settings/perspective-settings';
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {ModalService} from '../../../shared/modal/modal.service';
-import {DashboardTab} from '../../../core/model/dashboard-tab';
+import {DashboardTab, TabType} from '../../../core/model/dashboard-tab';
+import {UserHints, UserHintsKeys} from '../../../core/store/users/user';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
 
 @Component({
   selector: 'search-perspective',
@@ -252,6 +255,48 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       }),
       map(([[searchTab, search]]) => ({searchTab: searchTab, search}))
     );
+  }
+
+  public onHintDismissed(tabType: TabType) {
+    let hintKey: string;
+
+    switch (tabType) {
+      case TabType.Tasks:
+        hintKey = UserHintsKeys.tasksHintDismissed;
+        break;
+
+      case TabType.Views:
+        hintKey = UserHintsKeys.viewsHintDismissed;
+        break;
+
+      case TabType.Tables:
+        hintKey = UserHintsKeys.tablesHintDismissed;
+        break;
+    }
+
+    this.store$.dispatch(new UsersAction.SetHint({hint: hintKey, value: true}));
+  }
+
+  public shouldDisplayHint(tabType: TabType) {
+    switch (tabType) {
+      case TabType.Tasks:
+        return this.store$.pipe(
+          select(selectCurrentUser),
+          map(user => !user.hints.tasksHintDismissed)
+        );
+
+      case TabType.Views:
+        return this.store$.pipe(
+          select(selectCurrentUser),
+          map(user => !user.hints.viewsHintDismissed)
+        );
+
+      case TabType.Tables:
+        return this.store$.pipe(
+          select(selectCurrentUser),
+          map(user => !user.hints.tablesHintDismissed)
+        );
+    }
   }
 
   public ngOnDestroy() {

@@ -64,6 +64,9 @@ export class SearchTaskWrapperComponent implements OnChanges {
   @Input()
   public currentUser: User;
 
+  @Input()
+  public shouldDisplayHints: boolean;
+
   @Output()
   public detail = new EventEmitter();
 

@@ -55,6 +55,9 @@ export class SearchTaskFirstLineComponent {
   @Input()
   public attributes: TaskAttributes;
 
+  @Input()
+  public shouldDisplayHints: boolean;
+
   @Output()
   public detail = new EventEmitter();
 

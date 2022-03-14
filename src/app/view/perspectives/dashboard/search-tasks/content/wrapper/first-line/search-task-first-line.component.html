@@ -59,15 +59,26 @@
 </div>
 
 <div class="order-3 order-md-4 d-flex justify-content-end">
-  <span *ngIf="dataPermissions?.read" class="clickable ms-3"
-        (click)="$event.stopPropagation(); toggleFavorite.emit()"
-        title="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"
-        i18n-title="@@task.pinned">
-      <i class="fa-thumbtack text-warning" [ngClass]="document.favorite ? 'fas' : 'fal'" aria-hidden="true"></i>
-  </span>
-  <span class="clickable mx-2"
-        (click)="$event.stopPropagation(); detail.emit()"><i class="far fa-file-search" aria-hidden="true"></i>
-  </span>
+  <div class="position-relative">
+    <span *ngIf="dataPermissions?.read" class="clickable ms-3"
+          (click)="$event.stopPropagation(); toggleFavorite.emit()"
+          title="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"
+          i18n-title="@@task.pinned">
+        <i class="fa-thumbtack text-warning" [ngClass]="document.favorite ? 'fas' : 'fal'" aria-hidden="true"></i>
+    </span>
+    <hint *ngIf="shouldDisplayHints && true" title="Pin Task">
+      <span>Pokud je nějaký úkol důležitý a chcete ho mít vždy hned po ruce, můžete si úkol připnout. Připnuté úkoly se zobrazují nad ostatními úkoly.</span>
+    </hint>
+  </div>
+
+  <div class="position-relative">
+    <span class="clickable mx-2"
+          (click)="$event.stopPropagation(); detail.emit()"><i class="far fa-file-search" aria-hidden="true"></i>
+    </span>
+    <hint *ngIf="shouldDisplayHints && true" title="Detail of Task">
+      <span>K zobrazení podrobnějších informací, a popisu úkolu, komentářů využijte Detail.</span>
+    </hint>
+  </div>
 </div>
 
 <ng-template #emptyTitle>
