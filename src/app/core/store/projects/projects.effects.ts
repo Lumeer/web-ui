@@ -63,6 +63,7 @@ import {selectWorkspaceWithIds} from '../common/common.selectors';
 import * as DetailActions from './../details/detail.actions';
 import * as FormActions from './../form/form.actions';
 import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
+import * as AuditLogsActions from './../audit-logs/audit-logs.actions';
 import {ViewSettingsAction} from '../view-settings/view-settings.action';
 
 @Injectable()
@@ -181,7 +182,7 @@ export class ProjectsEffects {
 
             actions.push(
               new RouterAction.Go({
-                path: ['w', organization.code, project.code, 'view', 'search'],
+                path: ['w', organization.code, newProject.code, 'view', 'search'],
                 extras: navigationExtras,
                 nextActions,
               })
@@ -571,6 +572,7 @@ export class ProjectsEffects {
           new SearchesAction.Clear(),
           DashboardDataActions.clear(),
           FormActions.clear(),
+          AuditLogsActions.clear(),
         ];
 
         if (nextAction) {

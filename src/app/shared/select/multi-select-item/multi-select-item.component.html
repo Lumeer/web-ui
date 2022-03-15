@@ -1,0 +1,51 @@
+<div class="d-flex align-items-center h-100 p-1" #wrapperElement
+     *ngIf="selectedOptions$ | async as selectedOptions"
+     [class.flex-wrap]="wrapItems"
+     [ngClass]="readonly ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
+
+  <div class="text-muted px-1" *ngIf="readonly && placeholder && !selectedOptions.length">{{placeholder}}</div>
+
+  <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">
+        <span class="select-tag"
+              [class.m-1]="wrapItems"
+              [style.background]="option.background"
+              [style.color]="option.background | contrastColor"
+              [spellcheck]="false"
+              [class.ms-2]="!first && !wrapItems">
+                      <icons-presenter *ngIf="option.icons && option.iconColors"
+                                       [class.me-1]="(option.displayValue || option.value) | isNotNullOrUndefined"
+                                       [colors]="option.iconColors"
+                                       [icons]="option.icons">
+          </icons-presenter>
+          <span [innerHTML]="option.displayValue || option.value"></span>
+        </span>
+  </ng-container>
+
+  <ng-container *ngIf="!readonly">
+
+    <input #textInput
+           [(ngModel)]="text"
+           (focus)="onFocused()"
+           (blur)="onBlur()"
+           [class.ms-1]="selectedOptions?.length > 0"
+           [spellcheck]="false"
+           autoSizeInput
+           [class.w-100]="!wrapItems"
+           [class.h-100]="!wrapItems"
+           class="border-0 bg-transparent select-input"
+           type="text">
+
+    <options-dropdown [options]="dropdownOptions | filterDropdownOptions:text"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInput"
+                      [multiSelect]="true"
+                      [highlightedText]="text"
+                      [selectedValues]="selectedOptions | dropdownOptionsValues"
+                      [firstItemActive]="false"
+                      (selectOption)="onSelect($event)">
+    </options-dropdown>
+
+  </ng-container>
+
+</div>

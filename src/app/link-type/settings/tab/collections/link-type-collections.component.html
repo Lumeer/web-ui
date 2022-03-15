@@ -1,0 +1,13 @@
+<div class="mt-4 mb-6">
+  <table class="table table-borderless table-sm" *ngIf="{collections: collections$ | async, workspace: workspace$ | async} as data">
+
+    <tbody *ngFor="let collection of data.collections; trackBy:trackByCollection">
+    <tr link-type-collection
+        [collection]="collection"
+        [workspace]="data.workspace">
+    </tr>
+    </tbody>
+
+  </table>
+
+</div>

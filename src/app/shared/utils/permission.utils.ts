@@ -383,6 +383,16 @@ export function userCanManageCollectionDetail(
   return userRoleTypesInResource(organization, project, collection, user).some(role => roles.includes(role));
 }
 
+export function userCanManageLinkTypeDetail(
+  organization: Organization,
+  project: Project,
+  linkType: LinkType,
+  user: User
+): boolean {
+  const roles = [RoleType.Manage, RoleType.AttributeEdit, RoleType.TechConfig];
+  return userRoleTypesInResource(organization, project, linkType, user).some(role => roles.includes(role));
+}
+
 export function permissionsCanManageCollectionDetail(permissions: AllowedPermissions): boolean {
   const roles = [RoleType.Manage, RoleType.AttributeEdit, RoleType.UserConfig, RoleType.TechConfig];
   return roles.some(role => permissions?.roles?.[role]);

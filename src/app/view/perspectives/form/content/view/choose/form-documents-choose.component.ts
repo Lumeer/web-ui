@@ -132,6 +132,6 @@ export class FormDocumentsChooseComponent implements OnChanges {
   }
 
   public showDetailDocument(document: DocumentModel) {
-    this.modalService.showDocumentDetail(document.id, this.view?.id);
+    this.modalService.showDataResourceDetail(document, this.collection, this.view?.id);
   }
 }

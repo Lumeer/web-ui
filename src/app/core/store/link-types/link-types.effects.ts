@@ -59,7 +59,7 @@ export class LinkTypesEffects {
     this.actions$.pipe(
       ofType<LinkTypesAction.GetSingle>(LinkTypesActionType.GET_SINGLE),
       mergeMap(action => {
-        return this.linkTypeService.getLinkType(action.payload.linkTypeId).pipe(
+        return this.linkTypeService.getLinkType(action.payload.linkTypeId, action.payload.workspace).pipe(
           map((dto: LinkTypeDto) => convertLinkTypeDtoToModel(dto)),
           map(linkType => new LinkTypesAction.GetSuccess({linkTypes: [linkType]})),
           catchError(error => of(new LinkTypesAction.GetFailure({error})))
@@ -188,7 +188,7 @@ export class LinkTypesEffects {
         const {linkTypeId} = action.payload;
         const actions: Action[] = [
           new LinkInstancesAction.ClearByLinkType({linkTypeId}),
-          AuditLogActions.clearByLink({linkTypeId}),
+          AuditLogActions.clearByLinkType({linkTypeId}),
         ];
 
         return actions;

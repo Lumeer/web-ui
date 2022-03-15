@@ -79,6 +79,7 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
   public isDuplicate: boolean;
   public deleteTitle: string;
   public codeVisible: boolean;
+  public descriptionVisible: boolean;
   public firstLinePlaceholder: string;
   public secondLinePlaceholder: string;
   public firstLineValue: string;
@@ -90,6 +91,12 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
 
   public hasVisibleCode(): boolean {
     return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);
+  }
+
+  public hasVisibleDescription(): boolean {
+    return [ResourceType.Organization, ResourceType.Project, ResourceType.Collection, ResourceType.View].includes(
+      this.resourceType
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {

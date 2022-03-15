@@ -45,6 +45,7 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
     organizationCode: params['organizationCode'],
     projectCode: params['projectCode'],
     collectionId: params['collectionId'],
+    linkTypeId: params['linkTypeId'],
     viewCode: params['vc'],
   };
 
@@ -73,6 +74,7 @@ function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction
     organizationCode: params['organizationCode'],
     projectCode: params['projectCode'],
     collectionId: params['collectionId'],
+    linkTypeId: params['linkTypeId'],
     viewCode: params['vc'],
   };
 

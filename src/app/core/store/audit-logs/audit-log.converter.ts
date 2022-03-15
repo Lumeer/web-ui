@@ -18,7 +18,7 @@
  */
 
 import {AuditLogDto} from '../../dto/audit-log.dto';
-import {AuditLog, AuditLogType} from './audit-log.model';
+import {AuditLog, auditLogMap, AuditLogType} from './audit-log.model';
 import {resourceTypesMap} from '../../model/resource-type';
 
 export function convertAuditLogDtoToModel(dto: AuditLogDto): AuditLog {
@@ -29,7 +29,9 @@ export function convertAuditLogDtoToModel(dto: AuditLogDto): AuditLog {
     resourceId: dto.resourceId,
     changeDate: dto.changeDate ? new Date(dto.changeDate) : null,
     userId: dto.user,
-    type: AuditLogType.Updated,
+    title: dto.title,
+    viewId: dto.viewId,
+    type: auditLogMap[dto.type] || AuditLogType.Updated,
     userName: dto.userName,
     userEmail: dto.userEmail,
     automation: dto.automation,

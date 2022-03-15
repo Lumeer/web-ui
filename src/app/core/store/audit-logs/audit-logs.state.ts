@@ -21,15 +21,31 @@ import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {AuditLog} from './audit-log.model';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {ResourceType} from '../../model/resource-type';
+import {
+  isCollectionAuditLog,
+  isDocumentAuditLog,
+  isLinkAuditLog,
+  isLinkTypeAuditLog,
+  isProjectAuditLog,
+} from './audit-log.utils';
 
 export interface AuditLogsState extends EntityState<AuditLog> {
+  loadingProjects: string[];
+  loadingCollections: string[];
+  loadingLinkTypes: string[];
+  loadingDocuments: string[];
+  loadingLinkInstances: string[];
   revertingIds: string[];
 }
 
 export const auditLogsAdapter: EntityAdapter<AuditLog> = createEntityAdapter<AuditLog>();
 
 export const initialAuditLogsState: AuditLogsState = auditLogsAdapter.getInitialState({
+  loadingProjects: [],
+  loadingCollections: [],
+  loadingLinkTypes: [],
+  loadingDocuments: [],
+  loadingLinkInstances: [],
   revertingIds: [],
 });
 
@@ -41,15 +57,35 @@ export const selectAuditLogs = createSelector(selectAuditLogsState, selectAll);
 
 export const selectRevertingAuditLogsIds = createSelector(selectAuditLogsState, state => state.revertingIds);
 
+export const selectAuditLogsByProject = (projectId: string) =>
+  createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isProjectAuditLog(log, projectId))));
+
+export const selectAuditLogsByProjectLoading = (projectId: string) =>
+  createSelector(selectAuditLogsState, state => state.loadingProjects.includes(projectId));
+
+export const selectAuditLogsByCollection = (collectionId: string) =>
+  createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isCollectionAuditLog(log, collectionId))));
+
+export const selectAuditLogsByCollectionLoading = (collectionId: string) =>
+  createSelector(selectAuditLogsState, state => state.loadingCollections.includes(collectionId));
+
+export const selectAuditLogsByLinkType = (linkTypeId: string) =>
+  createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isLinkTypeAuditLog(log, linkTypeId))));
+
+export const selectAuditLogsByLinkTypeLoading = (linkTypeId: string) =>
+  createSelector(selectAuditLogsState, state => state.loadingLinkTypes.includes(linkTypeId));
+
 export const selectAuditLogsByDocument = (documentId: string) =>
-  createSelector(selectAuditLogs, logs =>
-    sortByDate(logs.filter(log => log.resourceType === ResourceType.Document && log.resourceId === documentId))
-  );
+  createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isDocumentAuditLog(log, documentId))));
+
+export const selectAuditLogsByDocumentLoading = (documentId: string) =>
+  createSelector(selectAuditLogsState, state => state.loadingDocuments.includes(documentId));
 
 export const selectAuditLogsByLink = (linkInstanceId: string) =>
-  createSelector(selectAuditLogs, logs =>
-    sortByDate(logs.filter(log => log.resourceType === ResourceType.Link && log.resourceId === linkInstanceId))
-  );
+  createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isLinkAuditLog(log, linkInstanceId))));
+
+export const selectAuditLogsByLinkLoading = (linkInstanceId: string) =>
+  createSelector(selectAuditLogsState, state => state.loadingLinkInstances.includes(linkInstanceId));
 
 function sortByDate(logs: AuditLog[], sortDesc = true): AuditLog[] {
   return [...logs].sort((a, b) => {

@@ -1,0 +1,17 @@
+@import '~src/styles/variables';
+
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min-content;
+  grid-gap: 0.5rem;
+  align-items: center;
+  border: 1px solid $secondary;
+  border-radius: 1rem;
+  padding: 0.15rem 0.5rem;
+
+  .content {
+    line-height: 1rem;
+    display: flex;
+    align-items: center;
+  }
+}

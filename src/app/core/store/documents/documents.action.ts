@@ -97,7 +97,9 @@ export namespace DocumentsAction {
   export class GetSingle implements Action {
     public readonly type = DocumentsActionType.GET_SINGLE;
 
-    public constructor(public payload: {collectionId: string; documentId: string}) {}
+    public constructor(
+      public payload: {collectionId: string; documentId: string; onSuccess?: () => void; onFailure?: () => void}
+    ) {}
   }
 
   export class GetByIds implements Action {

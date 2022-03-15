@@ -120,7 +120,7 @@ export class SelectItemComponent implements OnChanges, OnDestroy {
   }
 }
 
-function createDropdownOptions(items: SelectItemModel[]): DropdownOption[] {
+export function createDropdownOptions(items: SelectItemModel[]): DropdownOption[] {
   return (items || []).map(item => ({
     value: item.id,
     displayValue: item.value,
@@ -128,5 +128,6 @@ function createDropdownOptions(items: SelectItemModel[]): DropdownOption[] {
     icons: item.icons,
     classList: item.classList,
     iconColors: item.iconColors,
+    group: item.group,
   }));
 }

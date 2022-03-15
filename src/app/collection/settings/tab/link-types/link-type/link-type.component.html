@@ -1,21 +1,11 @@
-<td class="d-flex flex-row no-wrap align-items-center ps-2">
+<td class="d-flex flex-row no-wrap align-items-center ps-2 py-3">
   <icons-presenter
     [colors]="linkType.collections | colors"
     [icons]="linkType.collections | icons"
     [title]="linkType.name">
   </icons-presenter>
 
-  <input-box
-    class="ms-2 flex-grow-1"
-    innerClass="bg-transparent"
-    [editable]="permissions?.roles?.Manage"
-    [title]="linkType.name"
-    [initialValue]="linkType.name"
-    (newValue)="onNewName($event)"
-    placeholder="Enter link type name"
-    i18n-placeholder="@@collection.tab.linktypes.name.placeholder">
-
-  </input-box>
+  <a class="ms-2 flex-grow-1" [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'l', linkType.id]">{{linkType.name}}</a>
 
 </td>
 

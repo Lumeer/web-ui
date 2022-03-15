@@ -1,0 +1,6 @@
+:host {
+  display: grid;
+  grid-template-columns: min-content min-content 1fr min-content;
+  grid-gap: 1rem;
+  align-items: center;
+}

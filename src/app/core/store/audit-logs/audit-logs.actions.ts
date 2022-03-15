@@ -21,6 +21,51 @@ import {createAction, props} from '@ngrx/store';
 import {AuditLog} from './audit-log.model';
 import {Workspace} from '../navigation/workspace';
 
+export const getByProject = createAction(
+  '[AuditLogs] Get By Project',
+  props<{projectId: string; workspace?: Workspace}>()
+);
+
+export const getByProjectSuccess = createAction(
+  '[AuditLogs] Get By Project : Success',
+  props<{projectId: string; auditLogs: AuditLog[]}>()
+);
+
+export const getByProjectFailure = createAction(
+  '[AuditLogs] Get By Project : Failure',
+  props<{projectId: string; error: any}>()
+);
+
+export const getByCollection = createAction(
+  '[AuditLogs] Get By Collection',
+  props<{collectionId: string; workspace?: Workspace}>()
+);
+
+export const getByCollectionSuccess = createAction(
+  '[AuditLogs] Get By Collection :: Success',
+  props<{collectionId: string; auditLogs: AuditLog[]}>()
+);
+
+export const getByCollectionFailure = createAction(
+  '[AuditLogs] Get By Collection : Failure',
+  props<{collectionId: string; error: any}>()
+);
+
+export const getByLinkType = createAction(
+  '[AuditLogs] Get By LinkType',
+  props<{linkTypeId: string; workspace?: Workspace}>()
+);
+
+export const getByLinkTypeSuccess = createAction(
+  '[AuditLogs] Get By LinkType :: Success',
+  props<{linkTypeId: string; auditLogs: AuditLog[]}>()
+);
+
+export const getByLinkTypeFailure = createAction(
+  '[AuditLogs] Get By LinkType : Failure',
+  props<{linkTypeId: string; error: any}>()
+);
+
 export const getByDocument = createAction(
   '[AuditLogs] Get By Document',
   props<{documentId: string; collectionId: string; workspace?: Workspace}>()
@@ -31,22 +76,16 @@ export const getByDocumentSuccess = createAction(
   props<{auditLogs: AuditLog[]; documentId: string}>()
 );
 
-export const getByDocumentFailure = createAction('[AuditLogs] Get By Document :: Failure', props<{error: any}>());
-
-export const revertDocument = createAction(
-  '[AuditLogs] Revert Document',
-  props<{documentId: string; collectionId: string; auditLogId: string; workspace?: Workspace}>()
+export const getByDocumentFailure = createAction(
+  '[AuditLogs] Get By Document :: Failure',
+  props<{documentId: string; error: any}>()
 );
 
-export const revertDocumentSuccess = createAction(
-  '[AuditLogs] Revert Document :: Success',
-  props<{auditLogId: string}>()
-);
+export const revert = createAction('[AuditLogs] Revert ', props<{auditLogId: string; workspace?: Workspace}>());
 
-export const revertDocumentFailure = createAction(
-  '[AuditLogs] Revert Document :: Failure',
-  props<{error: any; auditLogId: string}>()
-);
+export const revertSuccess = createAction('[AuditLogs] Revert :: Success', props<{auditLogId: string}>());
+
+export const revertFailure = createAction('[AuditLogs] Revert :: Failure', props<{error: any; auditLogId: string}>());
 
 export const getByLink = createAction(
   '[AuditLogs] Get By Link',
@@ -58,20 +97,13 @@ export const getByLinkSuccess = createAction(
   props<{auditLogs: AuditLog[]; linkInstanceId: string}>()
 );
 
-export const getByLinkFailure = createAction('[AuditLogs] Get By Link :: Failure', props<{error: any}>());
-
-export const revertLink = createAction(
-  '[AuditLogs] Revert Link',
-  props<{linkInstanceId: string; linkTypeId: string; auditLogId: string; workspace?: Workspace}>()
-);
-
-export const revertLinkSuccess = createAction('[AuditLogs] Revert Link :: Success', props<{auditLogId: string}>());
-
-export const revertLinkFailure = createAction(
-  '[AuditLogs] Revert Link :: Failure',
-  props<{error: any; auditLogId: string}>()
+export const getByLinkFailure = createAction(
+  '[AuditLogs] Get By Link :: Failure',
+  props<{linkInstanceId: string; error: any}>()
 );
 
 export const clearByCollection = createAction('[AuditLogs] Clear By Collection', props<{collectionId: string}>());
 
-export const clearByLink = createAction('[AuditLogs] Clear By Link', props<{linkTypeId: string}>());
+export const clearByLinkType = createAction('[AuditLogs] Clear By LinkType', props<{linkTypeId: string}>());
+
+export const clear = createAction('[AuditLogs] Clear');

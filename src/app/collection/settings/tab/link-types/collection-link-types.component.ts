@@ -35,6 +35,8 @@ import {LinkTypesAction} from '../../../../core/store/link-types/link-types.acti
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {selectLinkTypesPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './collection-link-types.component.html',
@@ -45,6 +47,7 @@ export class CollectionLinkTypesComponent implements OnInit {
   public linkTypes$: Observable<LinkType[]>;
   public collection$: Observable<Collection>;
   public linkTypesPermissions$: Observable<Record<string, AllowedPermissions>>;
+  public workspace$: Observable<Workspace>;
   public searchString$ = new BehaviorSubject<string>('');
 
   constructor(private notificationService: NotificationService, private store$: Store<AppState>) {}
@@ -63,6 +66,7 @@ export class CollectionLinkTypesComponent implements OnInit {
     this.collection$ = this.store$
       .select(selectCollectionByWorkspace)
       .pipe(filter(collection => isNotNullOrUndefined(collection)));
+    this.workspace$ = this.store$.pipe(select(selectWorkspace));
   }
 
   private selectLinkTypesForCollection(collectionId: string): Observable<LinkType[]> {
@@ -106,11 +110,6 @@ export class CollectionLinkTypesComponent implements OnInit {
 
   public trackByLinkType(index: number, linkType: LinkType): string {
     return linkType.id;
-  }
-
-  public onNewName(linkType: LinkType, name: string) {
-    const newLinkType = {...linkType, name};
-    this.store$.dispatch(new LinkTypesAction.Update({linkType: newLinkType}));
   }
 
   public updateLinkType(linkType: LinkType) {

@@ -23,7 +23,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DataInputModule} from '../data-input/data-input.module';
-import {DocumentDetailHeaderComponent} from './detail/header/document-detail-header.component';
+import {DataResourceDetailHeaderComponent} from './detail/header/data-resource-detail-header.component';
 import {AttributeTypeModalModule} from '../modal/attribute/type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute/function/attribute-function-modal.module';
 import {ColorPickerModule} from 'ngx-color-picker';
@@ -35,20 +35,15 @@ import {DataResourceDataRowComponent} from './detail/data/row/data-resource-data
 import {DirectivesModule} from '../directives/directives.module';
 import {DetailTabsComponent} from './detail/detail-tabs/detail-tabs.component';
 import {LinksModule} from '../links/links.module';
-import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.component';
-import {ResourceActivityComponent} from './detail/activity/resource-activity.component';
-import {AuditLogsComponent} from './detail/activity/audit-logs/audit-logs.component';
-import {AuditLogComponent} from './detail/activity/audit-logs/log/audit-log.component';
-import {AuditLogAutomationTitlePipe} from './detail/activity/audit-logs/pipes/audit-log-automation-title.pipe';
-import {AuditLogEntriesComponent} from './detail/activity/audit-logs/log/entries/audit-log-entries.component';
-import {AuditLogAutomationStringPipe} from './detail/activity/audit-logs/pipes/audit-log-automation-string.pipe';
 import {DetailSettingsButtonComponent} from './detail/header/settings-button/detail-settings-button.component';
 import {DetailSettingsDropdownComponent} from './detail/header/settings-button/dropdown/detail-settings-dropdown.component';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {AttributesSettingsModule} from '../settings/attributes/attributes-settings.module';
 import {ResourcePermissionsPipe} from './detail/pipes/resource-permissions.pipe';
+import {ResourceCommentsModule} from '../resource/comments/resource-comments.module';
+import {ResourceActivityModule} from '../resource/activity/resource-activity.module';
 
 @NgModule({
   imports: [
@@ -68,21 +63,16 @@ import {ResourcePermissionsPipe} from './detail/pipes/resource-permissions.pipe'
     MatMenuModule,
     DropdownModule,
     AttributesSettingsModule,
+    ResourceActivityModule,
   ],
   declarations: [
     DataResourceDetailComponent,
-    DocumentDetailHeaderComponent,
+    DataResourceDetailHeaderComponent,
     DataResourceDataComponent,
     DataResourceDataRowComponent,
     DataResourceDataRowIconsComponent,
     DetailTabsComponent,
     LinksToolbarComponent,
-    ResourceActivityComponent,
-    AuditLogsComponent,
-    AuditLogComponent,
-    AuditLogAutomationTitlePipe,
-    AuditLogAutomationStringPipe,
-    AuditLogEntriesComponent,
     DetailSettingsButtonComponent,
     DetailSettingsDropdownComponent,
     ResourcePermissionsPipe,

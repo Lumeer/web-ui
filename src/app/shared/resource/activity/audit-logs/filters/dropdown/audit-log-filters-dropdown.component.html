@@ -1,0 +1,78 @@
+<dropdown [origin]="origin"
+          [closeOnClickOutside]="true"
+          [closeOnClickOrigin]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false">
+
+  <div class="card p-3 overflow-auto" [style.width.px]="320">
+
+    <label class="m-0 fw-bold" i18n="@@audit.filters.users.title">Users</label>
+    <div class="filter-row">
+      <user-data-input class="form-control mt-1 p-0 cursor-pointer"
+                       [value]="usersDataValue"
+                       [focus]="true"
+                       [readonly]="!(editingUsers$ | async)"
+                       [configuration]="userConfig"
+                       placeholder="Filter Users or Teams"
+                       i18n-placeholder="@@audit.filters.users.placeholder"
+                       (click)="onClickUsers($event)"
+                       (cancel)="onCancelUsers()"
+                       (save)="onSaveUsers($event)">
+      </user-data-input>
+      <div><i *ngIf="filters?.users?.length" class="fal fa-times text-primary clickable" (click)="onClearUsers($event)"></i></div>
+    </div>
+
+    <label class="m-0 mt-3 fw-bold" i18n="@@audit.filters.types.title">Types</label>
+    <div class="filter-row">
+      <select-data-input class="form-control mt-1 p-0 cursor-pointer"
+                         [focus]="true"
+                         [value]="typesDataValue"
+                         [readonly]="!(editingTypes$ | async)"
+                         placeholder="Filter Types"
+                         i18n-placeholder="@@audit.filters.types.placeholder"
+                         (click)="onClickTypes($event)"
+                         (cancel)="onCancelTypes()"
+                         (save)="onSaveTypes($event)">
+      </select-data-input>
+      <div><i *ngIf="filters?.types?.length" class="fal fa-times text-primary clickable" (click)="onClearTypes($event)"></i></div>
+    </div>
+
+    <ng-container *ngIf="configuration?.filtersByResource">
+      <label class="m-0 mt-3 fw-bold" i18n="@@audit.filters.resources.title">Tables and Link Types</label>
+      <div class="filter-row">
+        <multi-select-item class="form-control p-0 mt-1 cursor-pointer"
+                           [readonly]="!(editingResources$ | async)"
+                           [items]="resourcesSelectItems"
+                           [selectedIds]="[filters?.collections, filters?.linkTypes] | concat"
+                           [wrapItems]="true"
+                           placeholder="Filter Tables and Link Types"
+                           i18n-placeholder="@@audit.filters.resources.placeholder"
+                           (click)="onClickResources($event)"
+                           (cancel)="onCancelResources()"
+                           (selectedIdsChange)="onSaveResources($event)">
+        </multi-select-item>
+        <div><i *ngIf="filters?.collections?.length || filters?.linkTypes?.length" class="fal fa-times text-primary clickable" (click)="onClearResources($event)"></i></div>
+      </div>
+
+    </ng-container>
+
+    <label class="m-0 mt-3 fw-bold" i18n="@@audit.filters.views.title">Views</label>
+    <div class="filter-row">
+      <multi-select-item class="form-control p-0 mt-1 cursor-pointer"
+                         [readonly]="!(editingViews$ | async)"
+                         [items]="viewSelectItems"
+                         [selectedIds]="filters?.views || []"
+                         [wrapItems]="true"
+                         placeholder="Filter Views"
+                         i18n-placeholder="@@audit.filters.views.placeholder"
+                         (click)="onClickViews($event)"
+                         (cancel)="onCancelViews()"
+                         (selectedIdsChange)="onSaveViews($event)">
+      </multi-select-item>
+      <div><i *ngIf="filters?.views?.length" class="fal fa-times text-primary clickable" (click)="onClearViews($event)"></i></div>
+    </div>
+
+  </div>
+
+
+</dropdown>

@@ -95,7 +95,9 @@ export class DocumentRedirectComponent implements OnInit {
           query = convertQueryModelToString({stems: [{collectionId: document.collectionId}]});
           path.push(Perspective.Workflow);
         } else if (collection) {
-          this.redirectToHome(() => setTimeout(() => this.modalService.showDocumentDetail(document.id), 1000));
+          this.redirectToHome(() =>
+            setTimeout(() => this.modalService.showDataResourceDetail(document, collection), 1000)
+          );
           return;
         } else {
           const message = $localize`:@@notification.document.notVisible:I am sorry, this record could not be found.`;

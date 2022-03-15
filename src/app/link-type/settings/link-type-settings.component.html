@@ -1,0 +1,45 @@
+<top-panel-wrapper>
+  <div class="col-12 col-lg-11 col-xl-10 container-fluid mx-auto content" *ngIf="{linkType: linkType$ | async, permissions: permissions$ | async} as data">
+    <link-type-header [linkType]="data.linkType"
+                      [permissions]="data.permissions"
+                      [allLinkTypes]="allLinkTypes$ | async"
+                      (onBack)="onBack()">
+    </link-type-header>
+
+    <ul class="nav nav-tabs px-5 pt-3">
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.AttributeEdit">
+        <a [routerLink]="['attributes']"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@collection.config.tab.attributes">
+          Attributes
+        </a>
+      </li>
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.TechConfig">
+        <a [routerLink]="['rules']"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@collection.config.tab.automation">
+          Automation
+        </a>
+      </li>
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.Manage">
+        <a [routerLink]="['tables']"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@linkType.config.tab.tables">
+          Tables
+        </a>
+      </li>
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.Manage">
+        <a [routerLink]="['activity']"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@collection.config.tab.activity">
+          Activity
+        </a>
+      </li>
+    </ul>
+    <router-outlet></router-outlet>
+  </div>
+</top-panel-wrapper>

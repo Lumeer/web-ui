@@ -18,16 +18,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AuditLogService} from './audit-log.service';
-import {Observable} from 'rxjs';
-import {AuditLogDto} from '../../dto/audit-log.dto';
 import {HttpClient} from '@angular/common/http';
+import {Store} from '@ngrx/store';
+import {Observable, of} from 'rxjs';
+import {AuditLogService} from './audit-log.service';
+import {AuditLogDto} from '../../dto/audit-log.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {Workspace} from '../../store/navigation/workspace';
 import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
-import {Store} from '@ngrx/store';
-import {DocumentDto, LinkInstanceDto} from '../../dto';
 
 @Injectable()
 export class ApiAuditLogService extends BaseService implements AuditLogService {
@@ -51,29 +50,30 @@ export class ApiAuditLogService extends BaseService implements AuditLogService {
     });
   }
 
-  public revertDocument(
-    collectionId: string,
-    documentId: string,
-    auditLogId: string,
-    workspace?: Workspace
-  ): Observable<DocumentDto> {
-    return this.httpClient.post<DocumentDto>(
-      `${this.collectionApiPrefix(documentId, {...workspace, collectionId})}/${auditLogId}/revert`,
-      {},
-      {
-        headers: {...this.workspaceHeaders(workspace)},
-      }
-    );
+  public getByCollection(collectionId: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    const api = `${this.workspaceApiPrefix({...workspace, collectionId})}/collections/${collectionId}/audit`;
+    return this.get(api, workspace);
   }
 
-  public revertLink(
-    linkTypeId: string,
-    linkInstanceId: string,
-    auditLogId: string,
-    workspace?: Workspace
-  ): Observable<LinkInstanceDto> {
-    return this.httpClient.post<LinkInstanceDto>(
-      `${this.linkTypeApiPrefix(linkTypeId, linkInstanceId, workspace)}/${auditLogId}/revert`,
+  public getByLinkType(linkTypeId: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    const api = `${this.workspaceApiPrefix(workspace)}/link-types/${linkTypeId}/audit`;
+    return this.get(api, workspace);
+  }
+
+  public getByProject(workspace?: Workspace): Observable<AuditLogDto[]> {
+    const api = `${this.workspaceApiPrefix(workspace)}/audit`;
+    return this.get(api, workspace);
+  }
+
+  private get(api: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    return this.httpClient.get<AuditLogDto[]>(api, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
+  }
+
+  public revert(auditLogId: string, workspace?: Workspace): Observable<any> {
+    return this.httpClient.post<any>(
+      `${this.workspaceApiPrefix(workspace)}/audit/${auditLogId}/revert`,
       {},
       {
         headers: {...this.workspaceHeaders(workspace)},

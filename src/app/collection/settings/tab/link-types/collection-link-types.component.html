@@ -17,26 +17,21 @@
     </tr>
     </thead>
 
-    <ng-container *ngIf="{linkTypes: linkTypes$ | async, permissions: linkTypesPermissions$ | async} as data">
+    <ng-container *ngIf="{linkTypes: linkTypes$ | async, permissions: linkTypesPermissions$ | async, workspace: workspace$ | async} as data">
       <tbody *ngFor="let linkType of data.linkTypes | linkTypeFilter:(searchString$ | async); trackBy:trackByLinkType">
       <tr link-type
           [linkType]="linkType"
           [allLinkTypes]="data.linkTypes"
           [permissions]="data.permissions && data.permissions[linkType.id]"
+          [workspace]="data.workspace"
           (delete)="onDeleteLinkType(linkType, $event)"
-          (newName)="onNewName(linkType, $event)"
           class="border-top">
-      </tr>
-      <tr *ngIf="data.permissions && data.permissions[linkType.id]?.roles?.TechConfig">
-        <td colspan="2">
-          <link-type-rules [linkType]="linkType" (linkTypeUpdate)="updateLinkType($event)"></link-type-rules>
-        </td>
       </tr>
       </tbody>
     </ng-container>
 
     <tr *ngIf="!(linkTypes$ | async)?.length">
-      <td colspan="2" class="align-middle text-center" i18n="@@collection.tab.linkTypes.none">
+      <td colspan="2" class="align-middle text-center py-4" i18n="@@collection.tab.linkTypes.none">
         There are no link types yet.
       </td>
     </tr>
