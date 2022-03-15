@@ -144,3 +144,7 @@ function logMeetLinkTypeFilters(filters: AuditLogFilters, log: AuditLog, linkTyp
 
   return log.resourceType === ResourceType.Document && filters.collections?.length;
 }
+
+export function findFirstAuditLogWithSameResource(log: AuditLog, logs: AuditLog[]): AuditLog {
+  return (logs || []).find(l => l.resourceType === log.resourceType && l.resourceId === log.resourceId);
+}

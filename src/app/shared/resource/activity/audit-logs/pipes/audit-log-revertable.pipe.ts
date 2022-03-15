@@ -19,12 +19,17 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
+import {findFirstAuditLogWithSameResource} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'auditLogRevertable',
 })
 export class AuditLogRevertablePipe implements PipeTransform {
-  public transform(auditLog: AuditLog): boolean {
+  public transform(auditLog: AuditLog, allLogs: AuditLog[]): boolean {
+    const firstAuditLog = findFirstAuditLogWithSameResource(auditLog, allLogs);
+    if (!firstAuditLog || firstAuditLog.id !== auditLog.id) {
+      return false;
+    }
     return auditLog.type === AuditLogType.Updated || auditLog.type === AuditLogType.Deleted;
   }
 }
