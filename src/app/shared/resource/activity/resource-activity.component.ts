@@ -87,7 +87,7 @@ export class ResourceActivityComponent implements OnChanges, OnDestroy {
     if ([ResourceType.Document, ResourceType.Link].includes(this.resourceType)) {
       return {allowRevert: true};
     } else {
-      return {filtersByResource: true, objectDetail: true};
+      return {filtersByResource: true, objectDetail: true, allowRevert: true};
     }
   }
 

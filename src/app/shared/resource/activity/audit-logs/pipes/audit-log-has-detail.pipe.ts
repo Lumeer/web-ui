@@ -18,14 +18,26 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
+import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
 import {ResourceType} from '../../../../../core/model/resource-type';
+import {findFirstAuditLogWithSameResource} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'auditLogHasDetail',
 })
 export class AuditLogHasDetailPipe implements PipeTransform {
-  public transform(auditLog: AuditLog): boolean {
-    return auditLog.resourceType === ResourceType.Document || auditLog.resourceType === ResourceType.Link;
+  public transform(auditLog: AuditLog, allLogs: AuditLog[]): boolean {
+    if (auditLog.resourceType === ResourceType.Document || auditLog.resourceType === ResourceType.Link) {
+      if (auditLog.type === AuditLogType.Deleted) {
+        return false;
+      }
+
+      const firstAuditLog = findFirstAuditLogWithSameResource(auditLog, allLogs);
+
+      // we cannot show detail if document was deleted
+      return firstAuditLog?.type !== AuditLogType.Deleted;
+    }
+
+    return false;
   }
 }
