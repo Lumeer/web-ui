@@ -37,7 +37,7 @@ import {
 } from '../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace';
-import {selectAllUsers} from '../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {Query} from '../../core/store/navigation/query/query';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
@@ -49,6 +49,8 @@ import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectCollectionPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
 import {createCollectionQueryStem} from '../../core/store/navigation/query/query.util';
+import {UserHintsKeys} from '../../core/store/users/user';
+import {UsersAction} from '../../core/store/users/users.action';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -69,6 +71,9 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
+  public displayTableAttributesHint$: Observable<boolean>;
+  public displayTableRulesHint$: Observable<boolean>;
+
   @ViewChild('tableId')
   private tableIdElement: ElementRef<HTMLInputElement>;
 
@@ -82,6 +87,21 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.subscribeToStore();
     this.tableIdLabel = $localize`:@@collection.settings.tableId:Table ID:`;
+
+    const userHints$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => user.hints)
+    );
+
+    this.displayTableAttributesHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.tableAttributesHintDismissed)
+    );
+
+    this.displayTableRulesHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.tableRulesHintDismissed)
+    );
   }
 
   public ngOnDestroy() {
@@ -223,5 +243,18 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['linktypes'], {relativeTo: this.route});
     }
+  }
+
+  public onHintDismissed(hintKey: string | UserHintsKeys) {
+    switch (hintKey) {
+      case 'attributes':
+        hintKey = UserHintsKeys.tableAttributesHintDismissed;
+        break;
+      case 'rules':
+        hintKey = UserHintsKeys.tableRulesHintDismissed;
+        break;
+    }
+
+    this.store$.dispatch(new UsersAction.SetHint({hint: hintKey, value: true}));
   }
 }
