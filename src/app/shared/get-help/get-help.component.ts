@@ -31,6 +31,7 @@ import {ButtonState, rotateAnimation, scaleAnimation, shrinkOutAnimation} from '
 import {NewsletterToggleService} from './model/newsletter-toggle.service';
 import {clickedInsideElement} from '../utils/html-modifier';
 import {UsersAction} from '../../core/store/users/users.action';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'get-help',
@@ -43,6 +44,7 @@ import {UsersAction} from '../../core/store/users/users.action';
 export class GetHelpComponent implements OnInit {
   public link: string;
   public buttonState = ButtonState;
+  public isMobile: boolean;
 
   public mouseEntered$ = new BehaviorSubject(false);
   public extendedContent$ = new BehaviorSubject(false);
@@ -55,8 +57,11 @@ export class GetHelpComponent implements OnInit {
     private wizardService: ApplicationTourService,
     private modalService: ModalService,
     private store$: Store<AppState>,
-    private newsletterToggleService: NewsletterToggleService
-  ) {}
+    private newsletterToggleService: NewsletterToggleService,
+    private deviceService: DeviceDetectorService
+  ) {
+    this.isMobile = deviceService.isMobile();
+  }
 
   public ngOnInit() {
     if (this.configurationService.getConfiguration().locale === LanguageCode.CZ) {
@@ -75,7 +80,6 @@ export class GetHelpComponent implements OnInit {
       select(selectCurrentUser),
       map(currentUser => currentUser?.onboarding?.helpOpened),
       distinctUntilChanged(),
-      // take(1),
       switchMap(helpOpened =>
         combineLatest([this.extendedContent$, this.mouseEntered$]).pipe(
           map(([extended, mouseEntered]) => {
@@ -91,7 +95,11 @@ export class GetHelpComponent implements OnInit {
               }
             }
 
-            return ButtonState.Closed;
+            if (this.isMobile) {
+              return ButtonState.Compact;
+            } else {
+              return ButtonState.Closed;
+            }
           })
         )
       )

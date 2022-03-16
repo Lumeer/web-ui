@@ -1315,7 +1315,7 @@
         </context-group>
       </trans-unit><trans-unit id="search.tabs.settings.dialog.cell.title" datatype="html">
         <source>Title</source><target>Nadpis</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/title/dashboard-cell-title.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="search.tabs.settings.dialog.cell.empty" datatype="html">
         <source>Select an item from the dashboard preview to configure it
 </source><target>Nejdříve vyberte nějakou položku v náhledu, abyste ji nakonfigurovali
@@ -1888,10 +1888,10 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">135</context></context-group></trans-unit><trans-unit id="documents.create.success" datatype="html">
         <source>A record was successfully created.</source><target>Záznam byl úspěšně vytvořen.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">195</context></context-group></trans-unit><trans-unit id="documents.update.success" datatype="html">
         <source>The record was successfully updated.</source><target>Záznam byl úspěšně upraven.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">234</context></context-group></trans-unit>
             <trans-unit id="document.create.fail" datatype="html">
                 <source>Could not create the record</source>
@@ -2204,23 +2204,23 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.ts</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="audit.automation.function" datatype="html">
         <source>Function</source><target>Funkce</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/pipes/audit-log-automation-string.pipe.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="audit.automation.automation" datatype="html">
         <source>Automation</source><target>Automatizace</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/pipes/audit-log-automation-string.pipe.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="audit.title.project.enter" datatype="html">
         <source>Entered Project</source><target>Vstoupil(a) do projektu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/model/audit-log-filters.ts</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="audit.title.any.type" datatype="html">
         <source>{type, select, Updated {Updated} Created {Created} Deleted {Deleted} Reverted {Reverted} Entered {Entered}}</source>
         <target>{type, select, Updated {Upraveno} Created {Vytvořeno} Deleted {Odstraněno} Reverted {Vráceno} Entered {Vstupy}}</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/model/audit-log-filters.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="document.detail.activity.empty" datatype="html">
         <source> No activity yet. </source><target> Zatím neproběhla žádná aktivita. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="audit.filters.button.title" datatype="html">
         <source>Filters</source><target>Filtrování</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/audit-logs-filters.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="audit.filters.users.title" datatype="html">
         <source>Users</source><target>Uživatelé</target>
         <context-group purpose="location">
@@ -2271,16 +2271,16 @@
         </context-group>
       </trans-unit><trans-unit id="audit.filters.collections.title" datatype="html">
         <source>Tables</source><target>Tabulky</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="audit.filters.linktypes.title" datatype="html">
         <source>Link Types</source><target>Typy vazeb</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="audit.title.changed.view" datatype="html">
         <source>Changed by view</source>
-        <target>Upraveno v pohledu</target>        
+        <target>Upraveno v pohledu</target>
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="audit.action.detail" datatype="html">
         <source>Detail</source><target>Detail</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="audit.revert.confirm.title" datatype="html">
         <source>Revert changes?</source><target>Vrátit změny?</target>
 
@@ -3127,13 +3127,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="cron.unit.days.title" datatype="html">
         <source>Days</source><target>Dny</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="cron.unit.weeks.title" datatype="html">
         <source>Weeks</source><target>Týdny</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="cron.unit.months.title" datatype="html">
         <source>Months</source><target>Měsíce</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="cron.daysOfWeek.units" datatype="html">
         <source>M|T|W|T|F|S|S</source><target>P|Ú|S|Č|P|S|N</target>
 
@@ -3567,17 +3567,17 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/workspace-select.service.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="audit.get.document.fail" datatype="html">
         <source>Could not get activity logs for the selected record</source>
         <target>Nemohu načíst záznamy o změnách pro vybraný záznam</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="audit.get.any.fail" datatype="html">
         <source>Could not get activity logs</source><target>Nepodařilo se mi zíkat záznam o aktivitách</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">73</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">97</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="audit.revert.fail" datatype="html">
         <source>Could not revert record</source><target>Nepodařilo se mi vrátit změny</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">144</context></context-group></trans-unit><trans-unit id="audit.get.link.fail" datatype="html">
         <source>Could not get activity logs for the selected link</source>
         <target>Nemohu načíst záznamy o změnách pro vybrané propojení</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">168</context></context-group></trans-unit>
             <trans-unit id="serviceLimits.trial" datatype="html">
                 <source>Free Service</source>
@@ -5859,20 +5859,20 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.every" datatype="html">
         <source>Repeat every</source><target>Opakovat každý/é/ch</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.repeat" datatype="html">
         <source>Repeat on</source><target>Opakovat v</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.run" datatype="html">
         <source>Run on</source><target>Spustit</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.dayInMonth" datatype="html">
         <source>day in month</source><target>den v měsíci</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.monthly" datatype="html">
         <source>If a month has lower count of days, the automation is executed on the last day of month (i.e. enter 31 to always execute at the end of month).</source>
         <target>Pokud je v měsíci méně dní, automatizace se spustí poslední den v měsíci (zadejte 31 a automatizace se spustí vždy poslední den v měsíci).</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.start" datatype="html">
         <source>Starts</source><target>Začít</target>
 
@@ -6337,10 +6337,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="audit.action.revert" datatype="html">
         <source>Revert</source><target>Vrátit zpět</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="user.unknown" datatype="html">
         <source>Unknown user</source><target>Neznámý uživatel</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.ts</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
         <source>Edit Function of</source><target>
       Nastavení funkce atributu
@@ -6377,18 +6377,21 @@
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context>
           <context context-type="linenumber">16,18</context>
         </context-group>
+      </trans-unit><trans-unit id="resource.attribute.lock.action.header" datatype="html">
+        <source>Exceptions</source><target state="final">Výjimky</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
       </trans-unit><trans-unit id="or" datatype="html">
         <source>Or</source><target>Nebo</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/lock-stats/attribute-lock-filters-stats.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.action.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/lock-stats/attribute-lock-filters-stats.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.action.add" datatype="html">
         <source>Add Exception Set
-</source><target>Přidat množinu vyjímek
+</source><target>Přidat množinu výjimek
 </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context>
-          <context context-type="linenumber">35,36</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.attribute.lock.group.type.users.placeholder" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.type.users.placeholder" datatype="html">
         <source>Select Users and Teams</source><target>Vyberte uživatele a týmy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
