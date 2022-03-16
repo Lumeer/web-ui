@@ -23,6 +23,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -37,6 +38,13 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
 import {permissionsCanManageCollectionDetail} from '../../../utils/permission.utils';
 import {createCollectionQueryStem, createOpenCollectionQuery} from '../../../../core/store/navigation/query/query.util';
+import {select, Store} from '@ngrx/store';
+import {selectCurrentUser} from '../../../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
+import {AppState} from '../../../../core/store/app.state';
+import {Observable} from 'rxjs';
+import {UsersAction} from '../../../../core/store/users/users.action';
+import {UserHintsKeys} from '../../../../core/store/users/user';
 
 @Component({
   selector: 'post-it-collection',
@@ -44,7 +52,7 @@ import {createCollectionQueryStem, createOpenCollectionQuery} from '../../../../
   styleUrls: ['./post-it-collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItCollectionComponent implements OnChanges {
+export class PostItCollectionComponent implements OnChanges, OnInit {
   @Input()
   public collection: Collection;
 
@@ -85,6 +93,17 @@ export class PostItCollectionComponent implements OnChanges {
 
   public path: any[];
   public queryParams: any;
+
+  public displayTableSettingsHint$: Observable<boolean>;
+
+  constructor(private store$: Store<AppState>) {}
+
+  ngOnInit(): void {
+    this.displayTableSettingsHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.tableSettingsHintDismissed)
+    );
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.permissions) {
@@ -136,6 +155,6 @@ export class PostItCollectionComponent implements OnChanges {
   }
 
   public onHintDismissed() {
-    //console.log('Dismissed');
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.tableSettingsHintDismissed, value: true}));
   }
 }

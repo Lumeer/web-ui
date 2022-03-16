@@ -5,7 +5,9 @@
         {{ view.title }}
       </div>
       <div class="dismiss">
-        <i class="fa fa-times cursor-pointer" (click)="onDismissClick(pop, $event)"></i>
+        <i class="fa fa-times cursor-pointer"
+           (click)="onDismissClick($event, pop);">
+        </i>
       </div>
     </div>
     <div class="section-text">

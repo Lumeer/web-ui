@@ -36,9 +36,10 @@ export class RedDotComponent {
   @Output()
   private dismissed = new EventEmitter();
 
-  public onDismissClick(pop: PopoverDirective, event: Event) {
+  public onDismissClick($event: Event, pop: PopoverDirective) {
+    $event.preventDefault();
+    $event.stopPropagation();
     pop.hide();
-    event.stopPropagation();
     this.dismissed.emit();
   }
 }

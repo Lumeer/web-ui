@@ -71,7 +71,7 @@
 
     <div *ngIf="collection.id"
          class="buttons opacity-content d-flex flex-column"
-         [class.always-visible]="shouldCollectionDisplayHint && true">
+         [class.always-visible]="shouldCollectionDisplayHint && (displayTableSettingsHint$ | async)">
       <div id="dropdown-{{collection.id}}">
         <a *ngIf="canManageDetail" title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-start"
@@ -79,12 +79,12 @@
           <i class="fas fa-fw fa-cog"
              aria-hidden="true"></i>
         </a>
-        <div (click)="$event.preventDefault(); $event.stopPropagation();">
-          <hint *ngIf="shouldCollectionDisplayHint && true" title="Table Settings"
-                (dismissHint)="$event.preventDefault(); $event.stopPropagation(); onHintDismissed()">
-            <span>Haha</span>
-          </hint>
-        </div>
+        <hint *ngIf="shouldCollectionDisplayHint && (displayTableSettingsHint$ | async)"
+              title="Table Settings"
+              (click)="$event.preventDefault(); $event.stopPropagation();"
+              (dismissHint)="onHintDismissed();">
+          <span>Haha</span>
+        </hint>
       </div>
 
     </div>

@@ -72,6 +72,8 @@ export enum UserHintsKeys {
   organizationMenuHintDismissed = 'organizationMenuHintDismissed',
   projectMenuHintDismissed = 'projectMenuHintDismissed',
 
+  tableSettingsHintDismissed = 'tableSettingsHintDismissed',
+
   tableAttributesHintDismissed = 'tableAttributesHintDismissed',
   tableRulesHintDismissed = 'tableRulesHintDismissed',
 
@@ -89,6 +91,8 @@ export interface UserHints {
   logoHintDismissed?: boolean;
   organizationMenuHintDismissed?: boolean;
   projectMenuHintDismissed?: boolean;
+
+  tableSettingsHintDismissed?: boolean;
 
   tableAttributesHintDismissed?: boolean;
   tableRulesHintDismissed?: boolean;
