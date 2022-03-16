@@ -149,20 +149,29 @@ export class AttributeFunctionModalComponent implements OnInit {
         js: this.form.value.js,
         xml: this.form.value.xml,
       },
-      lock: this.createInitialLockIfNeeded(attribute),
+    };
+    const attributeWithLock = {
+      ...newAttribute,
+      lock: this.checkAttributeLock(newAttribute),
     };
     if (this.collectionId) {
-      this.updateCollectionAttribute(this.collectionId, newAttribute);
+      this.updateCollectionAttribute(this.collectionId, attributeWithLock);
     } else if (this.linkTypeId) {
-      this.updateLinkTypeAttribute(this.linkTypeId, newAttribute);
+      this.updateLinkTypeAttribute(this.linkTypeId, attributeWithLock);
     }
   }
 
-  private createInitialLockIfNeeded(attribute: Attribute): AttributeLock {
-    if (attribute.lock) {
+  private checkAttributeLock(attribute: Attribute): AttributeLock {
+    if (attributeHasFunction(attribute)) {
+      if (!attribute.lock?.exceptionGroups?.length) {
+        return {locked: true, exceptionGroups: []};
+      }
       return attribute.lock;
     }
-    return {locked: true, exceptionGroups: []};
+    if (!attribute.lock?.exceptionGroups?.length) {
+      return {locked: false, exceptionGroups: []};
+    }
+    return attribute.lock;
   }
 
   private updateCollectionAttribute(collectionId: string, attribute: Attribute) {

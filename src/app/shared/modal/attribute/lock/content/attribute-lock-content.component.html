@@ -17,6 +17,8 @@
   Attribute will be editable for everyone (with access rights). You can add multiple exceptions to disable editing for certain users based on other values and conditions.
 </div>
 
+<div class="fw-bold mt-3" i18n="@@resource.attribute.lock.action.header">Exceptions</div>
+
 <ng-container *ngFor="let group of groupsControl?.controls; let index = index; let last = last">
 
   <attribute-lock-exception-group class="d-block mt-3"
