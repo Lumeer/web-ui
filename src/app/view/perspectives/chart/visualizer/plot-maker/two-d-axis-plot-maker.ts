@@ -116,12 +116,15 @@ function createAxisLayout(data: ChartAxisData, formatter: string): Partial<Layou
       axis.tickformat = formatter;
     }
     if (data.ticks?.length) {
+      axis.tickvals = data.ticks.map(t => t.value);
+      axis.ticktext = data.ticks.map(t => formatXValue(t.title));
+
       if (!data.showTicksAsLinear) {
         axis.type = 'category';
         axis.tickmode = 'array';
+        axis.categoryarray = axis.tickvals;
+        axis.categoryorder = 'array';
       }
-      axis.tickvals = data.ticks.map(t => t.value);
-      axis.ticktext = data.ticks.map(t => formatXValue(t.title));
     }
     axis.automargin = true;
     return axis;
