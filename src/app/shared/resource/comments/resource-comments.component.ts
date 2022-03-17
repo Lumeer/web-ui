@@ -40,6 +40,7 @@ import {generateId} from '../../utils/resource.utils';
 import {map, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'resource-comments',
@@ -62,6 +63,9 @@ export class ResourceCommentsComponent implements OnInit, OnChanges {
 
   @Input()
   public startEditing: boolean = false;
+
+  @Input()
+  public workspace: Workspace;
 
   @Output()
   public newCommentClick = new EventEmitter();
@@ -99,9 +103,13 @@ export class ResourceCommentsComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resourceType || changes.resourceId) {
+    if (changes.resourceType || changes.resourceId || changes.workspace) {
       this.store$.dispatch(
-        new ResourceCommentsAction.Get({resourceType: this.resourceType, resourceId: this.resourceId})
+        new ResourceCommentsAction.Get({
+          resourceType: this.resourceType,
+          resourceId: this.resourceId,
+          workspace: this.workspace,
+        })
       );
       this.comments$ = this.store$.pipe(select(selectResourceCommentsByResource(this.resourceType, this.resourceId)));
     }
@@ -114,14 +122,14 @@ export class ResourceCommentsComponent implements OnInit, OnChanges {
       resourceId: this.resourceId,
     };
 
-    this.store$.dispatch(new ResourceCommentsAction.Create({comment}));
+    this.store$.dispatch(new ResourceCommentsAction.Create({comment, workspace: this.workspace}));
 
     this.onSaveComment.emit();
   }
 
   public removeComment(comment: ResourceCommentModel) {
     if (comment.id) {
-      const removeAction = new ResourceCommentsAction.Delete({comment});
+      const removeAction = new ResourceCommentsAction.Delete({comment, workspace: this.workspace});
       const confirmAction = this.createConfirmAction(removeAction);
       this.store$.dispatch(confirmAction);
     } else {
@@ -136,7 +144,7 @@ export class ResourceCommentsComponent implements OnInit, OnChanges {
     return new NotificationsAction.Confirm({title, message, type: 'danger', action});
   }
 
-  public updateComment($event: ResourceCommentModel) {
-    this.store$.dispatch(new ResourceCommentsAction.Update({comment: $event}));
+  public updateComment(comment: ResourceCommentModel) {
+    this.store$.dispatch(new ResourceCommentsAction.Update({comment, workspace: this.workspace}));
   }
 }

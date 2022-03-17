@@ -368,8 +368,13 @@ export class WorkflowTablesStateService {
 
         if (columnIndex !== -1) {
           const columns = [...newTable.columns];
+          const previousColumnWidth = columns[columnIndex].width;
           columns[columnIndex] = setObjectProperties(newTable.columns[columnIndex], properties);
           newTables[i] = {...newTable, columns};
+
+          if (properties.width) {
+            newTables[i].width += properties.width - previousColumnWidth;
+          }
         }
       }
     }

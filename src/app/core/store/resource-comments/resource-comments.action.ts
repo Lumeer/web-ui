@@ -74,6 +74,7 @@ export namespace ResourceCommentsAction {
     public constructor(
       public payload: {
         comment: ResourceCommentModel;
+        workspace?: Workspace;
         onSuccess?: (commentId: string) => void;
         onFailure?: () => void;
       }
@@ -95,7 +96,7 @@ export namespace ResourceCommentsAction {
   export class Update implements Action {
     public readonly type = ResourceCommentsActionType.UPDATE;
 
-    public constructor(public payload: {comment: ResourceCommentModel}) {}
+    public constructor(public payload: {comment: ResourceCommentModel; workspace?: Workspace}) {}
   }
 
   export class UpdateSuccess implements Action {
@@ -113,7 +114,7 @@ export namespace ResourceCommentsAction {
   export class Delete implements Action {
     public readonly type = ResourceCommentsActionType.DELETE;
 
-    public constructor(public payload: {comment: ResourceCommentModel; nextAction?: Action}) {}
+    public constructor(public payload: {comment: ResourceCommentModel; workspace?: Workspace; nextAction?: Action}) {}
   }
 
   export class DeleteUninitialized implements Action {

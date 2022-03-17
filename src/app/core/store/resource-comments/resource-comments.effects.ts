@@ -38,8 +38,8 @@ export class ResourceCommentsEffects {
     this.actions$.pipe(
       ofType<ResourceCommentsAction.Get>(ResourceCommentsActionType.GET),
       mergeMap(action => {
-        const {resourceType, resourceId, pageStart, pageLength} = action.payload;
-        return this.resourceCommentService.getComments(resourceType, resourceId, pageStart, pageLength).pipe(
+        const {resourceType, resourceId, pageStart, pageLength, workspace} = action.payload;
+        return this.resourceCommentService.getComments(resourceType, resourceId, pageStart, pageLength, workspace).pipe(
           map(dtos => dtos.map(dto => convertResourceCommentDtoToModel(dto))),
           map(comments => new ResourceCommentsAction.GetSuccess({resourceComments: comments})),
           catchError(error => of(new ResourceCommentsAction.GetFailure({error})))
@@ -65,7 +65,7 @@ export class ResourceCommentsEffects {
       mergeMap(action => {
         const {correlationId} = action.payload.comment;
         const commentDto = convertResourceCommentModelToDto(action.payload.comment);
-        return this.resourceCommentService.createComment(commentDto).pipe(
+        return this.resourceCommentService.createComment(commentDto, action.payload.workspace).pipe(
           map(dto => convertResourceCommentDtoToModel(dto, correlationId)),
           mergeMap(comment => {
             return [
@@ -112,13 +112,17 @@ export class ResourceCommentsEffects {
     this.actions$.pipe(
       ofType<ResourceCommentsAction.Update>(ResourceCommentsActionType.UPDATE),
       mergeMap(action => {
-        return this.resourceCommentService.updateComment(convertResourceCommentModelToDto(action.payload.comment)).pipe(
-          map(dto => convertResourceCommentDtoToModel(dto)),
-          map(comment => new ResourceCommentsAction.UpdateSuccess({comment, originalComment: action.payload.comment})),
-          catchError(error =>
-            of(new ResourceCommentsAction.UpdateFailure({error, originalComment: action.payload.comment}))
-          )
-        );
+        return this.resourceCommentService
+          .updateComment(convertResourceCommentModelToDto(action.payload.comment), action.payload.workspace)
+          .pipe(
+            map(dto => convertResourceCommentDtoToModel(dto)),
+            map(
+              comment => new ResourceCommentsAction.UpdateSuccess({comment, originalComment: action.payload.comment})
+            ),
+            catchError(error =>
+              of(new ResourceCommentsAction.UpdateFailure({error, originalComment: action.payload.comment}))
+            )
+          );
       })
     )
   );
@@ -138,21 +142,23 @@ export class ResourceCommentsEffects {
     this.actions$.pipe(
       ofType<ResourceCommentsAction.Delete>(ResourceCommentsActionType.DELETE),
       mergeMap(action => {
-        return this.resourceCommentService.removeComment(convertResourceCommentModelToDto(action.payload.comment)).pipe(
-          map(() => action.payload),
-          mergeMap(payload => {
-            const actions: Action[] = [new ResourceCommentsAction.DeleteSuccess({comment: action.payload.comment})];
+        return this.resourceCommentService
+          .removeComment(convertResourceCommentModelToDto(action.payload.comment), action.payload.workspace)
+          .pipe(
+            map(() => action.payload),
+            mergeMap(payload => {
+              const actions: Action[] = [new ResourceCommentsAction.DeleteSuccess({comment: action.payload.comment})];
 
-            if (payload.nextAction) {
-              actions.push(payload.nextAction);
-            }
+              if (payload.nextAction) {
+                actions.push(payload.nextAction);
+              }
 
-            return actions;
-          }),
-          catchError(error =>
-            of(new ResourceCommentsAction.DeleteFailure({error, originalComment: action.payload.comment}))
-          )
-        );
+              return actions;
+            }),
+            catchError(error =>
+              of(new ResourceCommentsAction.DeleteFailure({error, originalComment: action.payload.comment}))
+            )
+          );
       })
     )
   );

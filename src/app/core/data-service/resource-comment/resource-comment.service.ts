@@ -20,18 +20,20 @@
 import {Observable} from 'rxjs';
 import {ResourceCommentDto} from '../../dto/resource-comment.dto';
 import {ResourceType} from '../../model/resource-type';
+import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class ResourceCommentService {
-  public abstract createComment(comment: ResourceCommentDto): Observable<ResourceCommentDto>;
+  public abstract createComment(comment: ResourceCommentDto, workspace?: Workspace): Observable<ResourceCommentDto>;
 
-  public abstract updateComment(comment: ResourceCommentDto): Observable<ResourceCommentDto>;
+  public abstract updateComment(comment: ResourceCommentDto, workspace?: Workspace): Observable<ResourceCommentDto>;
 
-  public abstract removeComment(comment: ResourceCommentDto): Observable<any>;
+  public abstract removeComment(comment: ResourceCommentDto, workspace?: Workspace): Observable<any>;
 
   public abstract getComments(
     resourceType: ResourceType,
     resourceId: string,
     pageStart?: number,
-    pageLength?: number
+    pageLength?: number,
+    workspace?: Workspace
   ): Observable<ResourceCommentDto[]>;
 }
