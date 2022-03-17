@@ -2679,7 +2679,8 @@
         <source>Link Types</source><target state="new">Link Types</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="audit.title.changed.view" datatype="html">
-        <source>Changed by view</source><target state="new"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i [ngClass]=&quot;view| viewIcon&quot; class=&quot;me-1&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> <x id="INTERPOLATION" equiv-text="{{view.name}}"/></target>
+        <source>Changed by view</source>
+		<target>Changed by view</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="audit.action.detail" datatype="html">
         <source>Detail</source><target state="new">Detail</target>
