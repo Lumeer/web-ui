@@ -359,7 +359,7 @@ export class ChartDataConverter {
           ticksMap[tick.value] = tick;
         }
       });
-      ticks = objectValues(ticksMap);
+      ticks = this.sortTicks(objectValues(ticksMap), constraint);
     }
 
     let showTicksAsLinear = false;
@@ -368,6 +368,18 @@ export class ChartDataConverter {
     }
 
     return {constraintType, constraint, formatter, ticks, showTicksAsLinear};
+  }
+
+  private sortTicks(ticks: ChartAxisTick[], constraint: Constraint): ChartAxisTick[] {
+    if (!constraint) {
+      return ticks || [];
+    }
+
+    return (ticks || []).sort((a, b) =>
+      constraint
+        .createDataValue(a.value, this.constraintData)
+        .compareTo(constraint.createDataValue(b.value, this.constraintData))
+    );
   }
 
   private shouldCreateTicks(constraintType: ConstraintType, values: any[], preventScaleAxis: boolean): boolean {
