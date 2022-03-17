@@ -261,7 +261,7 @@ export class DataResourceDetailComponent
       switchMap(([overrideSettings, defaultView, settingsStem]) => {
         if (overrideSettings) {
           return of(overrideSettings);
-        } else if (this.isEmbedded && defaultView?.config?.detail) {
+        } else if (defaultView?.config?.detail) {
           const stemsConfigs = defaultView.config.detail.stemsConfigs || [];
           const stemConfig = stemsConfigs.find(config => config.stem?.collectionId === this.collectionId$.value);
           return of(stemConfig?.attributesSettings);

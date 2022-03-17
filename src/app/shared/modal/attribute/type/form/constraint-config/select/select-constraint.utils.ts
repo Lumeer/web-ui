@@ -32,8 +32,21 @@ export function isSelectConstraintOptionValueRemoved(
 }
 
 export function parseSelectOptionsFromForm(array: FormArray, displayValues: boolean): SelectConstraintOption[] {
-  const options = array.value
-    .filter(option => option.value || option.value === 0)
-    .map(option => ({...option, value: escapeHtml(option.value), displayValue: escapeHtml(option.displayValue)}));
-  return displayValues ? options : options.map(option => ({...option, displayValue: undefined}));
+  return array.value
+    .filter(option => isSelectOptionValid(option, displayValues))
+    .map(option => mapSelectOption(option, displayValues));
+}
+
+function isSelectOptionValid(option: any, displayValues: boolean): boolean {
+  if (displayValues) {
+    return option.value || option.value === 0;
+  }
+  return option.displayValue || option.displayValue === 0;
+}
+
+function mapSelectOption(option: any, displayValues: boolean): SelectConstraintOption {
+  if (displayValues) {
+    return {...option, value: escapeHtml(option.value), displayValue: escapeHtml(option.displayValue)};
+  }
+  return {...option, value: escapeHtml(option.displayValue), displayValue: undefined};
 }

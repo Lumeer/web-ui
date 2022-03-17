@@ -148,10 +148,13 @@ export class SelectConstraintOptionsFormComponent implements OnInit, OnChanges, 
 
   private createOptionForm(index: number, option?: SelectConstraintOption): FormGroup {
     const initialBackground = selectDefaultPalette[index % selectDefaultPalette.length];
+    const value = unescapeHtml(option?.value || '');
+    const displayValue = unescapeHtml(option?.displayValue || '');
+    const displayValues = this.displayValuesControl.value;
     return new FormGroup(
       {
-        [SelectConstraintOptionsFormControl.Value]: new FormControl(unescapeHtml(option?.value || '')),
-        [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl(unescapeHtml(option?.displayValue || '')),
+        [SelectConstraintOptionsFormControl.Value]: new FormControl(displayValues ? value : null),
+        [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl(displayValue || value),
         [SelectConstraintOptionsFormControl.Background]: new FormControl(option?.background || initialBackground),
       },
       this.createRequiredValueValidator()
