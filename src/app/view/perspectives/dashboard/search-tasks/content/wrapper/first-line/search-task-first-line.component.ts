@@ -18,10 +18,9 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ConstraintData} from '@lumeer/data-filters';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
-import {ConstraintData} from '@lumeer/data-filters';
-import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {TaskAttributes} from '../../../model/task-attributes';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
