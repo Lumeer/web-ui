@@ -31,7 +31,7 @@ import {AttributesResourceType} from '../../../../core/model/resource';
 })
 export class CollectionAttributesComponent implements OnInit {
   public collection$: Observable<Collection>;
-  public collectionType = AttributesResourceType.LinkType;
+  public collectionType = AttributesResourceType.Collection;
 
   constructor(private store$: Store<AppState>) {}
 
