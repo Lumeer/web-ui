@@ -13,7 +13,6 @@
           </i>
         </span>
           <ng-container *ngIf="perspective$ | async as perspective">
-
             <button aria-expanded="false" aria-haspopup="true" type="button" #perspectiveElement
                     class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
                     [disabled]="view?.id && !state.permissions.canConfig"
@@ -21,6 +20,12 @@
               <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
               <span class="ms-sm-1 text-nowrap">{{perspective | perspectiveName}}</span>
             </button>
+
+            <hint *ngIf="true"
+                  class="position-relative"
+                  title="Perspektiva / Zmena typu pohledu">
+              <span>Zde si můžete zvolit jakým způsobem se chcete na data v tabulce dívat. Je možné využít kalendář, časovou osu, graf, mapu, nástěnku a mnoho dalších. Můžete mít dokonce více různých pohledů na stejnou tabulku, a tedy data vidět různými “pohledy”.</span>
+            </hint>
 
             <options-dropdown
               [closeOnClickOrigin]="true"
@@ -30,12 +35,7 @@
               [highlightedValue]="perspective"
               (selectOption)="onSelectPerspective($event.value, state.permissions.canConfig)">
             </options-dropdown>
-
           </ng-container>
-
-          <hint *ngIf="true" title="Perspektiva / Zmena typu pohledu">
-            <span>Zde si můžete zvolit jakým způsobem se chcete na data v tabulce dívat. Je možné využít kalendář, časovou osu, graf, mapu, nástěnku a mnoho dalších. Můžete mít dokonce více různých pohledů na stejnou tabulku, a tedy data vidět různými “pohledy”.</span>
-          </hint>
         </div>
 
         <i *ngIf="novice"

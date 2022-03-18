@@ -53,14 +53,14 @@ export class LumeerLogoComponent implements OnInit {
     this.tooltip = $localize`:@@topPanel.home.title:Back to home screen`;
   }
 
-  public onHintDismissed() {
-    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.logoHintDismissed, value: true}));
-  }
-
   public ngOnInit(): void {
     this.hintVisible$ = this.store$.pipe(
       select(selectCurrentUser),
       map(user => !user.hints?.logoHintDismissed)
     );
+  }
+
+  public onHintDismissed() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.logoHintDismissed, value: true}));
   }
 }
