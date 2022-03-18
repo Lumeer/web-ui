@@ -240,7 +240,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
             } else {
               const document = documentsMap[notification.documentId];
               if (document && collection) {
-                this.modalService.showDocumentDetail(document.id);
+                this.modalService.showDataResourceDetail(document, collection);
               } else {
                 const message = $localize`:@@notification.task.notVisible:I am sorry, you can not see selected task`;
                 this.store$.dispatch(new NotificationsAction.Error({message}));

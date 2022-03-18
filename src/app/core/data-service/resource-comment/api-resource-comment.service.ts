@@ -39,18 +39,23 @@ export class ApiResourceCommentService extends BaseService implements ResourceCo
     super(store$);
   }
 
-  public createComment(comment: ResourceCommentDto): Observable<ResourceCommentDto> {
-    return this.httpClient.post<ResourceCommentDto>(this.apiPrefix({}, comment), comment);
+  public createComment(comment: ResourceCommentDto, workspace?: Workspace): Observable<ResourceCommentDto> {
+    return this.httpClient.post<ResourceCommentDto>(this.apiPrefix({}, comment), comment, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
-  public updateComment(comment: ResourceCommentDto): Observable<ResourceCommentDto> {
-    return this.httpClient.put<ResourceCommentDto>(this.apiPrefix({}, comment), comment);
+  public updateComment(comment: ResourceCommentDto, workspace?: Workspace): Observable<ResourceCommentDto> {
+    return this.httpClient.put<ResourceCommentDto>(this.apiPrefix({}, comment), comment, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
-  public removeComment(comment: ResourceCommentDto): Observable<any> {
+  public removeComment(comment: ResourceCommentDto, workspace?: Workspace): Observable<any> {
     return this.httpClient.delete(`${this.apiPrefix({}, comment)}/${comment.id}`, {
       observe: 'response',
       responseType: 'text',
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 
@@ -58,13 +63,15 @@ export class ApiResourceCommentService extends BaseService implements ResourceCo
     resourceType: ResourceType,
     resourceId: string,
     pageStart?: number,
-    pageLength?: number
+    pageLength?: number,
+    workspace?: Workspace
   ): Observable<ResourceCommentDto[]> {
     const queryParams = new HttpParams()
       .set('pageStart', '' + (pageStart || 0))
       .set('pageLength', '' + (pageLength || 0));
     return this.httpClient.get<ResourceCommentDto[]>(this.apiPrefix({}, {resourceType, resourceId}), {
       params: queryParams,
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 

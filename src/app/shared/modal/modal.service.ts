@@ -38,11 +38,10 @@ import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
 import {ResourceAttributeSettings, View} from '../../core/store/views/view';
 import {ShareViewModalComponent} from './view-modal/share/share-view-modal.component';
-import {AttributesResource, DataResource} from '../../core/model/resource';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
 import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
 import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {GettingStartedModalComponent} from './getting-started/getting-started-modal.component';
@@ -63,6 +62,7 @@ import {AttributeLock} from '@lumeer/data-filters';
 import {GettingStartedModalType} from './getting-started/model/getting-started-modal-type';
 import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
 import {BookProductDemoModalComponent} from './book-product-demo/book-product-demo-modal.component';
+import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading/data-resource-detail-loading-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -123,26 +123,21 @@ export class ModalService {
     );
   }
 
-  public showDocumentDetail(id: string, viewId?: string) {
-    this.store$
-      .pipe(
-        select(selectDocumentById(id)),
-        mergeMap(document =>
-          this.store$.pipe(
-            select(selectCollectionById(document?.collectionId)),
-            map(collection => ({collection, document}))
-          )
-        ),
-        take(1)
-      )
-      .subscribe(({document, collection}) => {
-        if (document && collection) {
-          this.showDataResourceDetail(document, collection, viewId);
-        }
-      });
+  public showDocumentDetail(id: string, collectionId: string, viewId?: string): BsModalRef {
+    const config = {
+      initialState: {
+        dataResourceId: id,
+        resourceId: collectionId,
+        resourceType: AttributesResourceType.Collection,
+        viewId,
+      },
+      keyboard: true,
+      class: 'modal-lg',
+    };
+    return this.show(DataResourceDetailLoadingModalComponent, config);
   }
 
-  public showLinkInstanceDetail(id: string, viewId?: string) {
+  public showLinkInstanceDetail(id: string, linkTypeId: string, viewId?: string) {
     this.store$
       .pipe(
         select(selectLinkInstanceById(id)),
@@ -164,7 +159,7 @@ export class ModalService {
   public showDataResourceDetail(
     dataResource: DataResource,
     resource: AttributesResource,
-    viewId: string,
+    viewId?: string,
     createDirectly: boolean = true
   ): BsModalRef {
     const config = {

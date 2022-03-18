@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
@@ -25,7 +25,7 @@ import {uniqueValuesValidator} from '../../../../../../../core/validators/unique
 import {minimumValuesCountValidator} from '../../../../../../../core/validators/mininum-values-count-validator';
 import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {getAttributesResourceType} from '../../../../../../utils/resource.utils';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../../../core/store/app.state';
@@ -48,7 +48,7 @@ import {selectWorkspace} from '../../../../../../../core/store/navigation/naviga
   templateUrl: './select-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
+export class SelectConstraintConfigFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public config: SelectConstraintConfig;
 
@@ -71,6 +71,7 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
   public selectionListsLink$: Observable<string[]>;
 
   private selectionLists: SelectionList[];
+  private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>) {}
 
@@ -139,6 +140,8 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
   private createForm() {
     this.addFormControls();
     this.addOptionsFormArray();
+
+    this.subscriptions.add(this.displayValuesControl.valueChanges.subscribe(() => this.setOptionsValidator()));
   }
 
   private addFormControls() {
@@ -152,19 +155,28 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
   }
 
   private addOptionsFormArray() {
-    this.form.addControl(
-      SelectConstraintFormControl.Options,
-      new FormArray(
-        [],
-        [
-          uniqueValuesValidator(SelectConstraintOptionsFormControl.Value, true),
-          minimumValuesCountValidator(SelectConstraintOptionsFormControl.Value, 1),
-        ]
-      )
-    );
+    this.form.addControl(SelectConstraintFormControl.Options, new FormArray([]));
+
+    this.setOptionsValidator();
+
     if (this.config?.selectionListId) {
       setTimeout(() => this.optionsControl.disable());
     }
+  }
+
+  private setOptionsValidator() {
+    if (this.displayValuesControl.value) {
+      this.optionsControl.setValidators([
+        uniqueValuesValidator(SelectConstraintOptionsFormControl.Value, true),
+        minimumValuesCountValidator(SelectConstraintOptionsFormControl.Value, 1),
+      ]);
+    } else {
+      this.optionsControl.setValidators([
+        uniqueValuesValidator(SelectConstraintOptionsFormControl.DisplayValue, true),
+        minimumValuesCountValidator(SelectConstraintOptionsFormControl.DisplayValue, 1),
+      ]);
+    }
+    this.optionsControl.updateValueAndValidity();
   }
 
   private checkValidSelectedSelection(lists: SelectItemModel[]) {
@@ -213,5 +225,9 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
     this.selectionListControl.setValue(undefined); // custom list
     this.displayValuesControl.enable();
     setTimeout(() => this.optionsControl.enable());
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

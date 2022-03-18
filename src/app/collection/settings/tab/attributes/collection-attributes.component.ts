@@ -17,104 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {switchMap, tap} from 'rxjs/operators';
-import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {CollectionAttributesTableComponent} from './table/collection-attributes-table.component';
-import {ModalService} from '../../../../shared/modal/modal.service';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {selectCollectionPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {AttributesResourceType} from '../../../../core/model/resource';
 
 @Component({
   templateUrl: './collection-attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionAttributesComponent implements OnInit {
-  @ViewChild(CollectionAttributesTableComponent)
-  public tableComponent: CollectionAttributesTableComponent;
-
   public collection$: Observable<Collection>;
-  public permissions$: Observable<AllowedPermissions>;
+  public collectionType = AttributesResourceType.Collection;
 
-  private collection: Collection;
-
-  constructor(
-    private notificationService: NotificationService,
-    private modalService: ModalService,
-    private store$: Store<AppState>
-  ) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.collection$ = this.store$.pipe(
-      select(selectCollectionByWorkspace),
-      tap(collection => (this.collection = collection))
-    );
-    this.permissions$ = this.collection$.pipe(
-      switchMap(collection => this.store$.pipe(select(selectCollectionPermissions(collection?.id))))
-    );
-  }
-
-  public setDefaultAttribute(attribute: Attribute) {
-    if (this.collection?.defaultAttributeId !== attribute.id) {
-      this.store$.dispatch(
-        new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: attribute.id})
-      );
-    }
-  }
-
-  public onCreateAttribute(name: string) {
-    if (this.collection) {
-      const attribute = {name, usageCount: 0};
-      this.store$.dispatch(
-        new CollectionsAction.CreateAttributes({collectionId: this.collection.id, attributes: [attribute]})
-      );
-    }
-  }
-
-  public onNewAttributeName(data: {attribute: Attribute; newName: string}) {
-    if (!data.newName) {
-      this.showAttributeDeleteDialog(data.attribute, () => {
-        this.tableComponent?.resetAttributeName(data.attribute);
-      });
-    } else {
-      const updatedAttribute = {...data.attribute, name: data.newName};
-      this.store$.dispatch(
-        new CollectionsAction.ChangeAttribute({
-          collectionId: this.collection.id,
-          attributeId: data.attribute.id,
-          attribute: updatedAttribute,
-        })
-      );
-    }
-  }
-
-  public onDeleteAttribute(attribute: Attribute) {
-    this.showAttributeDeleteDialog(attribute);
-  }
-
-  public showAttributeDeleteDialog(attribute: Attribute, onCancel?: () => void) {
-    const title = $localize`:@@collection.tab.attributes.delete.title:Delete attribute?`;
-    const message = $localize`:@@collection.tab.attributes.delete.message:Do you really want to delete attribute "${attribute.name}:name:"?`;
-    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteAttribute(attribute), onCancel);
-  }
-
-  public deleteAttribute(attribute: Attribute) {
-    this.store$.dispatch(
-      new CollectionsAction.RemoveAttribute({collectionId: this.collection.id, attributeId: attribute.id})
-    );
-  }
-
-  public onAttributeFunction(attribute: Attribute) {
-    this.modalService.showAttributeFunction(attribute.id, this.collection.id);
-  }
-
-  public onAttributeType(attribute: Attribute) {
-    this.modalService.showAttributeType(attribute.id, this.collection.id);
+    this.collection$ = this.store$.pipe(select(selectCollectionByWorkspace));
   }
 }

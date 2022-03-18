@@ -21,21 +21,9 @@ import {Injectable} from '@angular/core';
 import {AuditLogService} from './audit-log.service';
 import {Observable, of} from 'rxjs';
 import {AuditLogDto} from '../../dto/audit-log.dto';
-import {DocumentDto, LinkInstanceDto} from '../../dto';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../store/app.state';
-import {selectDocumentById} from '../../store/documents/documents.state';
-import {map, take} from 'rxjs/operators';
-import {DocumentModel} from '../../store/documents/document.model';
-import {convertDocumentModelToDto} from '../../store/documents/document.converter';
-import {selectLinkInstanceById} from '../../store/link-instances/link-instances.state';
-import {LinkInstance} from '../../store/link-instances/link.instance';
-import {convertLinkInstanceModelToDto} from '../../store/link-instances/link-instance.converter';
 
 @Injectable()
 export class PublicAuditLogService implements AuditLogService {
-  constructor(private store$: Store<AppState>) {}
-
   public getByDocument(collectionId: string, documentId: string): Observable<AuditLogDto[]> {
     return of([]);
   }
@@ -44,41 +32,19 @@ export class PublicAuditLogService implements AuditLogService {
     return of([]);
   }
 
-  public revertDocument(collectionId: string, documentId: string, auditLogId: string): Observable<DocumentDto> {
-    return this.store$.pipe(
-      select(selectDocumentById(documentId)),
-      take(1),
-      map(model => this.convertDocumentModelToDto(model))
-    );
+  public getByCollection(collectionId: string): Observable<AuditLogDto[]> {
+    return of([]);
   }
 
-  private convertDocumentModelToDto(model: DocumentModel): DocumentDto {
-    return (
-      model && {
-        ...convertDocumentModelToDto(model),
-        creationDate: model.creationDate?.getTime(),
-        dataVersion: model.dataVersion || 0,
-        updateDate: model.updateDate?.getTime(),
-      }
-    );
+  public getByLinkType(linkTypeId: string): Observable<AuditLogDto[]> {
+    return of([]);
   }
 
-  public revertLink(linkTypeId: string, linkInstanceId: string, auditLogId: string): Observable<LinkInstanceDto> {
-    return this.store$.pipe(
-      select(selectLinkInstanceById(linkInstanceId)),
-      take(1),
-      map(model => this.convertLinkInstanceModelToDto(model))
-    );
+  public getByProject(): Observable<AuditLogDto[]> {
+    return of([]);
   }
 
-  private convertLinkInstanceModelToDto(model: LinkInstance): LinkInstanceDto {
-    return (
-      model && {
-        ...convertLinkInstanceModelToDto(model),
-        creationDate: model.creationDate?.getTime(),
-        dataVersion: model.dataVersion || 0,
-        updateDate: model.updateDate?.getTime(),
-      }
-    );
+  public revert(auditLogId: string): Observable<any> {
+    return of(true);
   }
 }

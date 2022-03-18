@@ -37,7 +37,7 @@ export class ProjectTabGuard implements CanActivateChild {
   constructor(private router: Router, private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
-    if (!next.data.role) {
+    if (!next.data?.role) {
       return of(true);
     }
     return this.selectUserAndResources().pipe(
@@ -52,6 +52,8 @@ export class ProjectTabGuard implements CanActivateChild {
           return this.router.createUrlTree([...baseUrl, 'users']);
         } else if (roleTypes.includes(RoleType.TechConfig)) {
           return this.router.createUrlTree([...baseUrl, 'sequences']);
+        } else if (roleTypes.includes(RoleType.Manage)) {
+          return this.router.createUrlTree([...baseUrl, 'activity']);
         }
         return false;
       })

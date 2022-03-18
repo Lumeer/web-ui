@@ -203,9 +203,9 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   public onMarkerDetail(properties: MapMarkerProperties) {
     if (properties.resourceType === AttributesResourceType.Collection) {
-      this.modalService.showDocumentDetail(properties.dataResourceId, this.view?.id);
+      this.modalService.showDocumentDetail(properties.dataResourceId, properties.resourceId, this.view?.id);
     } else if (properties.resourceType === AttributesResourceType.LinkType) {
-      this.modalService.showLinkInstanceDetail(properties.dataResourceId, this.view?.id);
+      this.modalService.showLinkInstanceDetail(properties.dataResourceId, properties.resourceId, this.view?.id);
     }
   }
 

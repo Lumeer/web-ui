@@ -19,12 +19,8 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {InputBoxComponent} from '../../../../../shared/input/input-box/input-box.component';
-import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {AppState} from '../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {containsSameElements} from '../../../../../shared/utils/array.utils';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: '[link-type]',
@@ -41,43 +37,13 @@ export class LinkTypeComponent {
   @Input()
   public permissions: AllowedPermissions;
 
+  @Input()
+  public workspace: Workspace;
+
   @Output()
   public delete = new EventEmitter<number>();
 
-  @Output()
-  public newName = new EventEmitter<string>();
-
-  @ViewChild(InputBoxComponent)
-  public inputBoxComponent: InputBoxComponent;
-
-  constructor(private store$: Store<AppState>) {}
-
   public onDelete() {
     this.delete.emit();
-  }
-
-  public onNewName(name: string) {
-    const trimmedValue = (name || '').trim();
-    if (trimmedValue !== this.linkType?.name) {
-      if (this.nameExist(trimmedValue)) {
-        this.store$.dispatch(new NotificationsAction.ExistingLinkWarning({name: trimmedValue}));
-        this.resetName();
-      } else {
-        this.newName.emit(name);
-      }
-    }
-  }
-
-  private resetName() {
-    this.inputBoxComponent?.setValue(this.linkType.name);
-  }
-
-  private nameExist(name: string): boolean {
-    return (this.allLinkTypes || []).some(
-      linkType =>
-        linkType.id !== this.linkType.id &&
-        linkType.name === name &&
-        containsSameElements(linkType.collectionIds, this.linkType.collectionIds)
-    );
   }
 }

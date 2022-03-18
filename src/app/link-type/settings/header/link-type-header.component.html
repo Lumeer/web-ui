@@ -1,0 +1,33 @@
+<i class="fas fa-chevron-left chevron cursor-pointer clickable"
+   title="Back to App" i18n-title="@@resource.settings.back"
+   (click)="onBack.emit()"></i>
+
+<icons-presenter
+  [colors]="linkType.collections | colors"
+  [icons]="linkType.collections | icons"
+  [title]="linkType.name">
+</icons-presenter>
+
+<input-box
+  innerClass="bg-transparent"
+  [editable]="permissions?.roles?.Manage"
+  [title]="linkType.name"
+  [initialValue]="linkType.name"
+  (newValue)="onNewName($event)"
+  [fontSizeRem]="2"
+  placeholder="Enter link type name"
+  i18n-placeholder="@@collection.tab.linktypes.name.placeholder">
+</input-box>
+
+<div class="d-flex align-items-center text-nowrap">
+
+        <span class="me-3" title="Number of links" i18n-title="@@links.count">
+          <i class="far fa-link me-1" aria-hidden="true"></i>
+          <span>{{linkType.linksCount || 0}}</span>
+        </span>
+
+  <i *ngIf="permissions?.roles?.Manage" class="far fa-fw fa-trash-alt text-danger cursor-pointer delete"
+     (click)="onDelete()"
+     title="Delete" i18n-title="@@delete"
+     aria-hidden="true"></i>
+</div>

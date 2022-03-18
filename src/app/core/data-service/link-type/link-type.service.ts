@@ -25,7 +25,7 @@ import {RuleDto} from '../../dto/rule.dto';
 export abstract class LinkTypeService {
   public abstract createLinkType(linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto>;
 
-  public abstract getLinkType(id: string): Observable<LinkTypeDto>;
+  public abstract getLinkType(id: string, workspace?: Workspace): Observable<LinkTypeDto>;
 
   public abstract updateLinkType(id: string, linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto>;
 

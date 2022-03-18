@@ -25,7 +25,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class ConcatPipe implements PipeTransform {
   public transform<T>(values: T[][]): T[] {
     return (values || []).reduce((arr, val) => {
-      arr.push(...val);
+      arr.push(...(val || []));
       return arr;
     }, []);
   }

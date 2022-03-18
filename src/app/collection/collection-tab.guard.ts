@@ -59,6 +59,9 @@ export class CollectionTabGuard implements CanActivateChild {
         if (roleTypes.includes(RoleType.UserConfig)) {
           return this.router.createUrlTree([...baseUrl, 'users']);
         }
+        if (roleTypes.includes(RoleType.Manage)) {
+          return this.router.createUrlTree([...baseUrl, 'activity']);
+        }
 
         return this.router.createUrlTree([...baseUrl, 'linktypes']);
       })

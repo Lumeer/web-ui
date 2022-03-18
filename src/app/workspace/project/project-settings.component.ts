@@ -207,6 +207,8 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
       case 'users':
       case 'teams':
         return !permissions?.roles?.UserConfig;
+      case 'activity':
+        return !permissions?.roles?.Manage;
       default:
         return false;
     }
@@ -217,6 +219,8 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
       this.router.navigate(['users'], {relativeTo: this.route});
     } else if (permissions?.roles?.TechConfig) {
       this.router.navigate(['sequences'], {relativeTo: this.route});
+    } else if (permissions?.roles?.Manage) {
+      this.router.navigate(['activity'], {relativeTo: this.route});
     } else {
       this.goBack();
     }

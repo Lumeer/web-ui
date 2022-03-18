@@ -59,6 +59,7 @@ export const COLOR_DARK = COLOR_GRAY700;
 
 export const COLOR_QUERY_FULLTEXT = '#faeabb';
 export const COLOR_QUERY_DEFAULT = '#ffffff';
+export const COLOR_LINK_DEFAULT = '#ffffff';
 
 export const DRAG_DELAY = window.matchMedia('(max-width: 767.98px)').matches ? 150 : 0;
 

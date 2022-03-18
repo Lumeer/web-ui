@@ -1,0 +1,18 @@
+@import '../../../../styles/variables';
+
+p.title {
+  font-size: small;
+  font-weight: bold;
+  color: $gray-600;
+}
+
+.detail-card {
+  padding-left: 3rem !important;
+  padding-right: 3rem !important;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 4rem;
+  box-shadow: 0 10px 15px 0 $light;
+  border-radius: 0.5rem;
+  border: 1px solid $light;
+}

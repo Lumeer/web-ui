@@ -4,21 +4,21 @@
   resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async, currentUser: currentUser$ | async} as data">
   <ng-container
     *ngIf="{permissions: resource | resourcePermissions: data.resourcesPermissions} as dataResourceData">
-    <document-detail-header class="d-block mb-4"
-                            [resource]="resource"
-                            [dataResource]="dataResource"
-                            [resourceType]="resourceType"
-                            [view]="data.currentView"
-                            [attributesSettings]="data.attributesSettings"
-                            [constraintData]="data.constraintData"
-                            [permissions]="dataResourceData.permissions"
-                            [workspace]="data.workspace"
-                            [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser:data.constraintData"
-                            (switchToTable)="onSwitchToTable()"
-                            (remove)="onRemove()"
-                            (versionClick)="selectTab(detailTabType.Activity)"
-                            (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
-    </document-detail-header>
+    <data-resource-detail-header class="d-block mb-4"
+                                 [resource]="resource"
+                                 [dataResource]="dataResource"
+                                 [resourceType]="resourceType"
+                                 [view]="data.currentView"
+                                 [attributesSettings]="data.attributesSettings"
+                                 [constraintData]="data.constraintData"
+                                 [permissions]="dataResourceData.permissions"
+                                 [workspace]="data.workspace"
+                                 [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser:data.constraintData"
+                                 (switchToTable)="onSwitchToTable()"
+                                 (remove)="onRemove()"
+                                 (versionClick)="selectTab(detailTabType.Activity)"
+                                 (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
+    </data-resource-detail-header>
 
     <detail-tabs *ngIf="dataResource?.id"
                  [showLinks]="resourceType === collectionResourceType"
@@ -54,13 +54,14 @@
       <div class="my-5">
       </div>
       <ng-container *ngIf="dataResourceData.permissions?.rolesWithView?.CommentContribute">
-        <comments-panel *ngIf="resource && dataResource?.id"
-                        [maxCommentsCount]="1"
-                        [permissions]="dataResourceData.permissions"
-                        [resourceType]="resourceType | attributeResourceTypeToResourceType"
-                        [resourceId]="dataResource.id"
-                        (newCommentClick)="editNewComment()">
-        </comments-panel>
+        <resource-comments *ngIf="resource && dataResource?.id"
+                           [maxCommentsCount]="1"
+                           [permissions]="dataResourceData.permissions"
+                           [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                           [resourceId]="dataResource.id"
+                           [workspace]="data.workspace"
+                           (newCommentClick)="editNewComment()">
+        </resource-comments>
         <div *ngIf="data.commentsCount > 1">
           <button class="btn btn-sm btn-success fw-bold my-3 mx-1"
                   i18n="@@document.detail.detail.comments.seeAll"
@@ -134,14 +135,15 @@
 
     <ng-container
       *ngIf="data.selectedTab === detailTabType.Comments && dataResourceData.permissions?.rolesWithView?.CommentContribute">
-      <comments-panel *ngIf="resource && dataResource?.id"
-                      [permissions]="dataResourceData.permissions"
-                      [resourceType]="resourceType | attributeResourceTypeToResourceType"
-                      [resourceId]="dataResource.id"
-                      [startEditing]="data.startEditing"
-                      (onSaveComment)="startEditing$.next(false)"
-                      (onCancelComment)="startEditing$.next(false)">
-      </comments-panel>
+      <resource-comments *ngIf="resource && dataResource?.id"
+                         [permissions]="dataResourceData.permissions"
+                         [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                         [resourceId]="dataResource.id"
+                         [startEditing]="data.startEditing"
+                         [workspace]="data.workspace"
+                         (onSaveComment)="startEditing$.next(false)"
+                         (onCancelComment)="startEditing$.next(false)">
+      </resource-comments>
     </ng-container>
 
     <ng-container
@@ -149,7 +151,7 @@
       <resource-activity *ngIf="resource && dataResource?.id"
                          [resourceType]="resourceType | attributeResourceTypeToResourceType"
                          [resourceId]="dataResource.id"
-                         [parent]="resource"
+                         [parentId]="resource?.id"
                          [workspace]="data.workspace">
       </resource-activity>
     </ng-container>

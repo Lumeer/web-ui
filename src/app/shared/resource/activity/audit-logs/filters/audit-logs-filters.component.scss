@@ -1,0 +1,9 @@
+@import '~src/styles/variables';
+
+.filters-button {
+  .num-filters {
+    background: white;
+    color: $primary;
+    border-radius: 50%;
+  }
+}

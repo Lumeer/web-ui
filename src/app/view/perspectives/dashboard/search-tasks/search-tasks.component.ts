@@ -48,6 +48,7 @@ import {View} from '../../../../core/store/views/view';
 import {User} from '../../../../core/store/users/user';
 import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {selectCurrentUser} from '../../../../core/store/users/users.state';
 
 const PAGE_SIZE = 50;
 
@@ -102,6 +103,7 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnInit() {
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.query$ = this.overrideView$.pipe(
       switchMap(view => {
         if (view) {

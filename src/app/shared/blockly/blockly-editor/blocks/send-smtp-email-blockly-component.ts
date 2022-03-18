@@ -103,7 +103,9 @@ export class SendSmtpEmailBlocklyComponent extends BlocklyComponent {
 
       return (
         this_.blocklyUtils.getLumeerVariable() +
-        `.sendEmail(${value_email}, ${value_from}, ${value_subject}, ${value_body}, ${value_document}, '${dropdown_attr}', ${value_smtp_config});\n`
+        `.sendEmail(${value_email}, ${value_from}, ${value_subject}, ${value_body}, ${
+          !!value_document ? value_document : null
+        }, '${dropdown_attr}', ${value_smtp_config});\n`
       );
     };
   }

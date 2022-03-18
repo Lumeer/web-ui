@@ -20,6 +20,9 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {MatMenuModule} from '@angular/material/menu';
+
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {PickerModule} from '../picker/picker.module';
 import {PipesModule} from '../pipes/pipes.module';
@@ -42,7 +45,8 @@ import {SelectItemWithConstraint2Component} from './select-constraint-item2/sele
 import {SelectItemsWithConstraint2Pipe} from './select-constraint-item2/select-items-with-constraint2.pipe';
 import {GetSelectedItemsPipe} from './select-item2/get-selected-items.pipe';
 import {MenuModule} from '../menu/menu.module';
-import {MatMenuModule} from '@angular/material/menu';
+import {MultiSelectItemComponent} from './multi-select-item/multi-select-item.component';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -56,6 +60,8 @@ import {MatMenuModule} from '@angular/material/menu';
     DataDropdownModule,
     MenuModule,
     MatMenuModule,
+    DirectivesModule,
+    FormsModule,
   ],
   declarations: [
     SelectItemComponent,
@@ -72,6 +78,7 @@ import {MatMenuModule} from '@angular/material/menu';
     GetSelectDataItemPipe,
     SelectCollectionComponent,
     SelectItemRowComponent,
+    MultiSelectItemComponent,
   ],
   providers: [AreIdsEqualPipe],
   exports: [
@@ -82,6 +89,7 @@ import {MatMenuModule} from '@angular/material/menu';
     SelectDataItemComponent,
     SelectCollectionComponent,
     SelectItemsWithConstraintPipe,
+    MultiSelectItemComponent,
   ],
 })
 export class SelectModule {}

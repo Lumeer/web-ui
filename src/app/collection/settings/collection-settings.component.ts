@@ -182,7 +182,6 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
       this.store$.pipe(select(selectOrganizationByWorkspace)),
       this.store$.pipe(select(selectProjectByWorkspace)),
     ]).pipe(map(([organization, project]) => ({organization, project})));
-    this.store$.pipe(select(selectOrganizationByWorkspace));
     this.subscriptions.add(sub1);
 
     const sub2 = this.store$
@@ -230,6 +229,8 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
       case 'users':
       case 'teams':
         return !permissions?.roles?.UserConfig;
+      case 'activity':
+        return !permissions?.roles?.Manage;
       default:
         return false;
     }
@@ -240,6 +241,8 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
       this.router.navigate(['purpose'], {relativeTo: this.route});
     } else if (permissions?.roles?.AttributeEdit) {
       this.router.navigate(['attributes'], {relativeTo: this.route});
+    } else if (permissions?.roles?.Manage) {
+      this.router.navigate(['activity'], {relativeTo: this.route});
     } else {
       this.router.navigate(['linktypes'], {relativeTo: this.route});
     }

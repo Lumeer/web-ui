@@ -53,7 +53,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {AttributesSettings, View, ViewConfig} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById, selectDocumentsByIds} from '../../../core/store/documents/documents.state';
-import {filter, map, switchMap, tap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, switchMap, tap} from 'rxjs/operators';
 import {
   selectLinkInstanceById,
   selectLinkInstancesByTypesAndDocuments,
@@ -257,11 +257,22 @@ export class DataResourceDetailComponent
       this.collectionId$.next(null);
     }
 
-    this.attributesSettings$ = combineLatest([this.overrideSettings$, this.defaultView$, this.settingsStem$]).pipe(
-      switchMap(([overrideSettings, defaultView, settingsStem]) => {
+    const currentViewId$ = this.store$.pipe(
+      select(selectCurrentView),
+      map(currentView => currentView?.id),
+      distinctUntilChanged()
+    );
+
+    this.attributesSettings$ = combineLatest([
+      this.overrideSettings$,
+      this.defaultView$,
+      this.settingsStem$,
+      currentViewId$,
+    ]).pipe(
+      switchMap(([overrideSettings, defaultView, settingsStem, currentViewId]) => {
         if (overrideSettings) {
           return of(overrideSettings);
-        } else if (this.isEmbedded && defaultView?.config?.detail) {
+        } else if (defaultView?.config?.detail && currentViewId !== defaultView.id) {
           const stemsConfigs = defaultView.config.detail.stemsConfigs || [];
           const stemConfig = stemsConfigs.find(config => config.stem?.collectionId === this.collectionId$.value);
           return of(stemConfig?.attributesSettings);

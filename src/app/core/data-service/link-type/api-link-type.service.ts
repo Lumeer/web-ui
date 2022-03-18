@@ -46,8 +46,8 @@ export class ApiLinkTypeService extends BaseService implements LinkTypeService {
     });
   }
 
-  public getLinkType(id: string): Observable<LinkTypeDto> {
-    return this.httpClient.get<LinkTypeDto>(this.restApiPrefix(id));
+  public getLinkType(id: string, workspace?: Workspace): Observable<LinkTypeDto> {
+    return this.httpClient.get<LinkTypeDto>(this.restApiPrefix(id, workspace));
   }
 
   public updateLinkType(id: string, linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto> {

@@ -26,4 +26,5 @@ export interface SelectItemModel {
   iconColors?: [string, string?];
   disabled?: boolean;
   shortcut?: string;
+  group?: string;
 }

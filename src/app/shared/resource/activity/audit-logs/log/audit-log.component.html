@@ -1,0 +1,80 @@
+<div class="icon me-2 align-self-center" [style.height.px]="25">
+  <user-avatar [avatarSize]="25"
+               class="d-inline-block"
+               [style.height.px]="25"
+               placement="top"
+               [email]="user?.email || auditLog?.userEmail || unknownUserEmail"
+               [tooltipText]="user?.name || auditLog?.userName || unknownUser">
+  </user-avatar>
+</div>
+
+<div class="title title-line">
+  <div class="d-flex align-items-center flex-wrap">
+    <span class="me-2">{{auditLog | auditLogTitle}}</span>
+    <ng-container *ngIf="showDetail">
+      <icons-presenter *ngIf="parent"
+                       class="ms-1 me-2"
+                       [tooltip]="parent.name"
+                       [colors]="(parent | resourceIconsColors).colors"
+                       [icons]="(parent | resourceIconsColors).icons">
+      </icons-presenter>
+      <data-input-preview *ngIf="auditLog.title | isNotNullOrUndefined"
+                          class="fw-bold me-2 d-inline-block text-truncate mw-100"
+                          [configuration]="titleConfiguration"
+                          [dataValue]="auditLog.title | dataValue:defaultAttribute?.constraint:constraintData"
+                          [cursor]="auditLog.resourceId | dataIdCursor:parent:defaultAttribute?.id:view?.id"
+                          [constraint]="defaultAttribute?.constraint">
+
+      </data-input-preview>
+    </ng-container>
+    <span *ngIf="auditLog.automation" class="badge bg-info"
+          [class.me-2]="view"
+          placement="top"
+          [tooltip]="auditLog | auditLogAutomationTitle:parent?.attributes">{{auditLog | auditLogAutomationString}}</span>
+    <span *ngIf="view" class="badge"
+          placement="top"
+          [style.background-color]="view.color"
+          [style.color]="view.color | contrastColor"
+          i18n-tooltip="@@audit.title.changed.view" tooltip="Changed by view"
+    ><i [ngClass]="view| viewIcon" class="me-1"></i>&nbsp;{{view.name}}</span>
+  </div>
+  <div class="d-flex align-items-center flex-nowrap">
+    <span *ngIf="showDetail" class="clickable ms-2" (click)="detail.emit()"
+          title="Detail"
+          i18n-title="@@audit.action.detail">
+      <i class="far fa-file-search" aria-hidden="true"></i>
+    </span>
+    <span *ngIf="allowRevert && !reverting" class="clickable ms-2" (click)="revert.emit()"
+          title="Revert"
+          i18n-title="@@audit.action.revert">
+    <i class="far fa-undo" aria-hidden="true"></i>
+  </span>
+    <span *ngIf="allowRevert && reverting" class="spinner-grow spinner-grow-sm ms-2" role="status" aria-hidden="true"></span>
+  </div>
+</div>
+
+<div class="line pe-2 d-flex justify-content-center py-1">
+  <div *ngIf="!last" class="horizontal-line"></div>
+</div>
+
+<div class="content pb-4">
+  <short-date class="small text-secondary d-block"
+              [date]="auditLog.changeDate"
+              [tooltipText]="auditLog.changeDate | date:'medium'"
+              placement="top">
+  </short-date>
+  <audit-log-entries class="d-block"
+                     *ngIf="hasNewState"
+                     [constraintData]="constraintData"
+                     [parent]="parent"
+                     [changes]="auditLog.newState">
+  </audit-log-entries>
+  <audit-log-entries class="d-block"
+                     *ngIf="hasOldState"
+                     valueClasses="text-line-through"
+                     [constraintData]="constraintData"
+                     [parent]="parent"
+                     [changes]="auditLog.oldState">
+  </audit-log-entries>
+</div>
+

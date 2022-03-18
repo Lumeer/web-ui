@@ -27,6 +27,8 @@ export interface AuditLog {
   changeDate: Date;
   type: AuditLogType;
   userId?: string;
+  title?: any;
+  viewId?: string;
   userName?: string;
   userEmail?: string;
   automation?: string;
@@ -35,6 +37,17 @@ export interface AuditLog {
 }
 
 export enum AuditLogType {
-  Updated = 'updated',
-  Created = 'created',
+  Created = 'Created',
+  Updated = 'Updated',
+  Deleted = 'Deleted',
+  Reverted = 'Reverted',
+  Entered = 'Entered',
 }
+
+export const auditLogMap: Record<string, AuditLogType> = {
+  [AuditLogType.Created]: AuditLogType.Created,
+  [AuditLogType.Updated]: AuditLogType.Updated,
+  [AuditLogType.Deleted]: AuditLogType.Deleted,
+  [AuditLogType.Reverted]: AuditLogType.Reverted,
+  [AuditLogType.Entered]: AuditLogType.Entered,
+};

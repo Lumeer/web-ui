@@ -23,6 +23,7 @@ import {AppState} from '../app.state';
 import {LinkType} from './link.type';
 import {selectCollectionsDictionary} from '../collections/collections.state';
 import {mapLinkTypeCollections} from '../../../shared/utils/link-type.utils';
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface LinkTypesState extends EntityState<LinkType> {
   loaded: boolean;
@@ -45,6 +46,28 @@ export const selectLinkTypesLoaded = createSelector(selectLinkTypesState, linkTy
 
 export const selectLinkTypeById = (linkTypeId: string) =>
   createSelector(selectLinkTypesDictionary, linkTypesMap => linkTypesMap[linkTypeId]);
+
+export const selectLinkTypeByWorkspace = createSelector(
+  selectLinkTypesDictionary,
+  selectWorkspace,
+  (linkTypesMap, workspace) => linkTypesMap[workspace?.linkTypeId]
+);
+
+export const selectLinkTypesWithCollections = createSelector(
+  selectAllLinkTypes,
+  selectCollectionsDictionary,
+  (linkTypes, collectionsMap) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap))
+);
+
+export const selectLinkTypeByWorkspaceWithCollections = createSelector(
+  selectLinkTypesDictionary,
+  selectCollectionsDictionary,
+  selectWorkspace,
+  (linkTypesMap, collectionsMap, workspace) => {
+    const linkType = linkTypesMap[workspace?.linkTypeId];
+    return linkType ? mapLinkTypeCollections(linkType, collectionsMap) : linkType;
+  }
+);
 
 export const selectLinkTypesByIds = (linkTypeIds: string[]) =>
   createSelector(selectLinkTypesDictionary, linkTypesMap =>

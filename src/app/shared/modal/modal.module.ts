@@ -40,6 +40,7 @@ import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.modul
 import {AttributeModalModule} from './attribute/attribute-modal.module';
 import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
 import {BookProductDemoModalModule} from './book-product-demo/book-product-demo-modal.module';
+import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loading/data-resource-detail-loading-modal.module';
 
 @NgModule({
   imports: [
@@ -65,6 +66,7 @@ import {BookProductDemoModalModule} from './book-product-demo/book-product-demo-
     TabsSettingsModalModule,
     GetInTouchModalModule,
     BookProductDemoModalModule,
+    DataResourceDetailLoadingModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -88,6 +90,7 @@ import {BookProductDemoModalModule} from './book-product-demo/book-product-demo-
     AttributeModalModule,
     GetInTouchModalModule,
     BookProductDemoModalModule,
+    DataResourceDetailLoadingModalModule,
   ],
 })
 export class ModalModule {}
