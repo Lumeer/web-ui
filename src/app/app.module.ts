@@ -37,6 +37,7 @@ import {ConfigurationService} from './configuration/configuration.service';
 import {configuration} from '../environments/configuration';
 import {TeamsLoadService} from './core/service/teams-load.service';
 import {LinkTypeModule} from './link-type/link-type.module';
+import {UserModule} from './user/user.module';
 
 export const angularticsSettings: Partial<Angulartics2Settings> = {
   developerMode: !configuration.analytics,
@@ -61,6 +62,7 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     PrintModule,
     ViewModule,
     WorkspaceModule,
+    UserModule,
     AppRoutingModule, // needs to be declared after all other routing modules
     Angulartics2Module.forRoot(angularticsSettings),
   ],

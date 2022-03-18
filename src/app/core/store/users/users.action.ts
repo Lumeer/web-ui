@@ -288,7 +288,7 @@ export namespace UsersAction {
   export class Delete implements Action {
     public readonly type = UsersActionType.DELETE;
 
-    public constructor(public payload: {organizationId: string; userId: string}) {}
+    public constructor(public payload: {organizationId: string; userId: string; onSuccess?: () => void}) {}
   }
 
   export class DeleteSuccess implements Action {

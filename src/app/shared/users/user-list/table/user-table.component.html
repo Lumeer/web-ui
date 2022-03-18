@@ -23,6 +23,7 @@
                 [teams]="teams"
                 [resourceType]="resourceType"
                 [user]="user"
+                [workspace]="workspace"
                 [transitiveRoles]="organization | userTransitiveRoles:project:user:resourceType:permissions"
                 [permissions]="permissions"
                 [deletable]="deletableUserIds | includes:user.id"

@@ -33,6 +33,7 @@ import {RoleType} from '../../../core/model/role-type';
 import {NotificationButton} from '../../../core/notifications/notification-button';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {deepObjectCopy} from '../../utils/common.utils';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'user-list',
@@ -63,6 +64,9 @@ export class UserListComponent implements OnChanges {
 
   @Input()
   public serviceLimits: ServiceLimits;
+
+  @Input()
+  public workspace: Workspace;
 
   @Output()
   public userCreated = new EventEmitter<string>();

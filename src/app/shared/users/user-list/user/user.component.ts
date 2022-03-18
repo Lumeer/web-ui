@@ -17,13 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 import {User} from '../../../../core/store/users/user';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {Team} from '../../../../core/store/teams/team';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {objectChanged} from '../../../utils/common.utils';
 
 @Component({
   selector: 'user-component',
@@ -31,7 +33,7 @@ import {Team} from '../../../../core/store/teams/team';
   styleUrls: ['./user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserComponent {
+export class UserComponent implements OnChanges {
   @Input()
   public resourceType: ResourceType;
 
@@ -62,6 +64,9 @@ export class UserComponent {
   @Input()
   public transitiveRoles: Role[];
 
+  @Input()
+  public workspace: Workspace;
+
   @Output()
   public userUpdated = new EventEmitter<User>();
 
@@ -82,11 +87,26 @@ export class UserComponent {
   private readonly deleteMsg: string;
   private readonly deleteTitleMsg: string;
 
+  public userSettingsUrl: string[];
+
   constructor(private notificationService: NotificationService) {
     this.deleteMsg = $localize`:@@users.user.delete.message:Do you want to permanently remove this user?`;
     this.deleteTitleMsg = $localize`:@@users.user.delete.title:Remove user?`;
     this.cannotChangeRoleMsg = $localize`:@@users.user.changeRoles:You cannot change these rights. Either you are this user, or you are the last manager here, or you do not have sufficient rights.`;
     this.inheritedManagerMsg = $localize`:@@users.user.inheritedManager:This user is a manager of the organization and their rights cannot be changed. Remove organization manage first.`;
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.resourceType || changes.workspace || objectChanged(changes.user)) {
+      this.userSettingsUrl = this.buildSettingsUrl();
+    }
+  }
+
+  private buildSettingsUrl(): string[] {
+    if (this.resourceType === ResourceType.Organization) {
+      return ['/o', this.workspace?.organizationCode, 'u', this.user?.id];
+    }
+    return ['/o', this.workspace?.organizationCode, 'p', this.workspace?.projectCode, 'u', this.user?.id];
   }
 
   public onDelete() {

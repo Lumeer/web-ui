@@ -403,12 +403,22 @@ export function userCanManageProjectDetail(organization: Organization, project: 
   return userRoleTypesInProject(organization, project, user).some(role => roles.includes(role));
 }
 
+export function userCanManageProjectUserDetail(organization: Organization, project: Project, user: User): boolean {
+  const roles = [RoleType.Manage, RoleType.UserConfig];
+  return userRoleTypesInProject(organization, project, user).some(role => roles.includes(role));
+}
+
 export function permissionsCanManageProjectDetail(permissions: AllowedPermissions): boolean {
   const roles = [RoleType.Manage, RoleType.UserConfig, RoleType.TechConfig];
   return roles.some(role => permissions?.roles?.[role]);
 }
 
 export function userCanManageOrganizationDetail(organization: Organization, user: User): boolean {
+  const roles = [RoleType.Manage, RoleType.UserConfig];
+  return userRoleTypesInOrganization(organization, user).some(role => roles.includes(role));
+}
+
+export function userCanManageOrganizationUserDetail(organization: Organization, user: User): boolean {
   const roles = [RoleType.Manage, RoleType.UserConfig];
   return userRoleTypesInOrganization(organization, user).some(role => roles.includes(role));
 }

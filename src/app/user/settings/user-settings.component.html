@@ -1,0 +1,40 @@
+<top-panel-wrapper>
+  <div *ngIf="{user: user$ | async, permissions: permissions$ | async, currentUser: currentUser$ | async} as data"
+       class="col-12 col-lg-11 col-xl-10 container-fluid mx-auto content">
+
+    <ng-container *ngIf="data.user; else emptyUser">
+
+      <user-settings-header [isCurrent]="data.currentUser?.id === data.user?.id"
+                            [user]="data.user"
+                            [permissions]="data.permissions"
+                            (back)="back.emit()"
+                            (delete)="onDelete(data.user)">
+      </user-settings-header>
+
+
+      <ul class="nav nav-tabs mt-3">
+        <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.TechConfig">
+          <a [routerLink]="'resources'"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@user.settings.tab.resources">Resources</a>
+        </li>
+        <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.Manage">
+          <a [routerLink]="'activity'"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@audit.log.activity">Activity</a>
+        </li>
+      </ul>
+      <router-outlet></router-outlet>
+
+    </ng-container>
+  </div>
+
+</top-panel-wrapper>
+
+<ng-template #emptyUser>
+  <div class="p-5 text-center">
+    <h4 i18n="@@user.not.exist">User does not exist</h4>
+  </div>
+</ng-template>

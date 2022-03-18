@@ -84,6 +84,7 @@ function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction
     workspace: deepObjectsEquals(workspace, state.workspace) ? state.workspace : workspace,
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     viewName: queryParams['viewName'],
+    userId: params['userId'],
     viewCursor: deepObjectsEquals(viewCursor, state.viewCursor) ? state.viewCursor : viewCursor,
     searchTab: parseSearchTabFromUrl(url),
     previousUrl: state.url,

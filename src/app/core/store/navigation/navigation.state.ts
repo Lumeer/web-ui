@@ -34,6 +34,7 @@ export interface NavigationState {
   navigatingWorkspace?: Workspace;
   perspective?: Perspective;
   searchTab?: string;
+  userId?: string;
   viewName?: string;
   viewCursor?: ViewCursor;
   perspectiveSettings?: PerspectiveSettings;
