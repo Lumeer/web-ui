@@ -6,21 +6,23 @@
 
   <div class="card p-3 overflow-auto" [style.width.px]="320">
 
-    <label class="m-0 fw-bold" i18n="@@audit.filters.users.title">Users</label>
-    <div class="filter-row">
-      <user-data-input class="form-control mt-1 p-0 cursor-pointer"
-                       [value]="usersDataValue"
-                       [focus]="true"
-                       [readonly]="!(editingUsers$ | async)"
-                       [configuration]="userConfig"
-                       placeholder="Filter Users or Teams"
-                       i18n-placeholder="@@audit.filters.users.placeholder"
-                       (click)="onClickUsers($event)"
-                       (cancel)="onCancelUsers()"
-                       (save)="onSaveUsers($event)">
-      </user-data-input>
-      <div><i *ngIf="filters?.users?.length" class="fal fa-times text-primary clickable" (click)="onClearUsers($event)"></i></div>
-    </div>
+    <ng-container *ngIf="configuration?.filtersByUsers">
+      <label class="m-0 fw-bold" i18n="@@audit.filters.users.title">Users</label>
+      <div class="filter-row">
+        <user-data-input class="form-control mt-1 p-0 cursor-pointer"
+                         [value]="usersDataValue"
+                         [focus]="true"
+                         [readonly]="!(editingUsers$ | async)"
+                         [configuration]="userConfig"
+                         placeholder="Filter Users or Teams"
+                         i18n-placeholder="@@audit.filters.users.placeholder"
+                         (click)="onClickUsers($event)"
+                         (cancel)="onCancelUsers()"
+                         (save)="onSaveUsers($event)">
+        </user-data-input>
+        <div><i *ngIf="filters?.users?.length" class="fal fa-times text-primary clickable" (click)="onClearUsers($event)"></i></div>
+      </div>
+    </ng-container>
 
     <label class="m-0 mt-3 fw-bold" i18n="@@audit.filters.types.title">Types</label>
     <div class="filter-row">

@@ -72,6 +72,9 @@ export class UserTableComponent {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public canManageUserDetail: boolean;
+
   @Output()
   public userUpdated = new EventEmitter<User>();
 

@@ -28,7 +28,13 @@ import {Organization} from '../../../core/store/organizations/organization';
 import {Team} from '../../../core/store/teams/team';
 import {BehaviorSubject} from 'rxjs';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
-import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} from '../../utils/permission.utils';
+import {
+  userCanManageOrganizationUserDetail,
+  userCanManageProjectUserDetail,
+  userHasRoleInOrganization,
+  userHasRoleInProject,
+  userHasRoleInResource,
+} from '../../utils/permission.utils';
 import {RoleType} from '../../../core/model/role-type';
 import {NotificationButton} from '../../../core/notifications/notification-button';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -87,6 +93,7 @@ export class UserListComponent implements OnChanges {
 
   public deletableUserIds: string[];
   public editableUserIds: string[];
+  public canManageUserDetail: boolean;
 
   constructor(private notificationService: NotificationService) {}
 
@@ -96,6 +103,17 @@ export class UserListComponent implements OnChanges {
     }
     if (changes.teams) {
       this.teams$.next(this.teams);
+    }
+    if (changes.organization || changes.project || changes.currentUser) {
+      this.checkManageUserDetail();
+    }
+  }
+
+  private checkManageUserDetail() {
+    if (this.resourceType === ResourceType.Organization) {
+      this.canManageUserDetail = userCanManageOrganizationUserDetail(this.organization, this.currentUser);
+    } else {
+      this.canManageUserDetail = userCanManageProjectUserDetail(this.organization, this.project, this.currentUser);
     }
   }
 

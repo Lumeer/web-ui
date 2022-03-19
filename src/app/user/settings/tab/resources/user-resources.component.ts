@@ -17,12 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, SimpleChanges} from '@angular/core';
+import {Observable, combineLatest} from 'rxjs';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {View} from '../../../../core/store/views/view';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../../core/store/app.state';
+import {selectAllCollections, selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
+import {
+  selectLinkTypesLoaded,
+  selectLinkTypesWithCollections,
+} from '../../../../core/store/link-types/link-types.state';
+import {selectViewsLoaded, selectViewsWithComputedData} from '../../../../core/store/views/views.state';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {Project} from '../../../../core/store/projects/project';
+import {selectOrganizationById} from '../../../../core/store/organizations/organizations.state';
+import {selectProjectById} from '../../../../core/store/projects/projects.state';
+import {User} from '../../../../core/store/users/user';
+import {mapGroupsOnUser, selectUserByWorkspace} from '../../../../core/store/users/users.state';
+import {selectTeamsByOrganization} from '../../../../core/store/teams/teams.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'user-resources',
   templateUrl: './user-resources.component.html',
-  styleUrls: ['./user-resources.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserResourcesComponent {
@@ -31,4 +54,59 @@ export class UserResourcesComponent {
 
   @Input()
   public projectId: string;
+
+  public organization$: Observable<Organization>;
+  public project$: Observable<Project>;
+  public user$: Observable<User>;
+
+  public collections$: Observable<Collection[]>;
+  public collectionsLoaded$: Observable<boolean>;
+
+  public linkTypes$: Observable<LinkType[]>;
+  public linkTypesLoaded$: Observable<boolean>;
+
+  public views$: Observable<View[]>;
+  public viewsLoaded$: Observable<boolean>;
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.collections$ = this.store$.pipe(select(selectAllCollections));
+    this.collectionsLoaded$ = this.store$.pipe(select(selectCollectionsLoaded));
+
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesWithCollections));
+    this.linkTypesLoaded$ = this.store$.pipe(select(selectLinkTypesLoaded));
+
+    this.views$ = this.store$.pipe(select(selectViewsWithComputedData));
+    this.viewsLoaded$ = this.store$.pipe(select(selectViewsLoaded));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.organizationId) {
+      this.organization$ = this.store$.pipe(select(selectOrganizationById(this.organizationId)));
+      this.user$ = combineLatest([
+        this.store$.pipe(select(selectUserByWorkspace)),
+        this.store$.pipe(select(selectTeamsByOrganization(this.organizationId))),
+      ]).pipe(map(([user, teams]) => mapGroupsOnUser(user, teams)));
+    }
+    if (changes.projectId) {
+      this.project$ = this.store$.pipe(select(selectProjectById(this.projectId)));
+    }
+
+    if (changes.organizationId || changes.projectId) {
+      this.fetchData();
+    }
+  }
+
+  private fetchData() {
+    const workspace: Workspace = {organizationId: this.organizationId, projectId: this.projectId};
+
+    this.store$.dispatch(new CollectionsAction.Clear());
+    this.store$.dispatch(new LinkTypesAction.Clear());
+    this.store$.dispatch(new ViewsAction.Clear());
+
+    this.store$.dispatch(new CollectionsAction.Get({workspace}));
+    this.store$.dispatch(new LinkTypesAction.Get({workspace}));
+    this.store$.dispatch(new ViewsAction.Get({workspace}));
+  }
 }

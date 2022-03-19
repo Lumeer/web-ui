@@ -32,6 +32,10 @@ export class PublicAuditLogService implements AuditLogService {
     return of([]);
   }
 
+  public getByUser(userId: string): Observable<AuditLogDto[]> {
+    return of([]);
+  }
+
   public getByCollection(collectionId: string): Observable<AuditLogDto[]> {
     return of([]);
   }

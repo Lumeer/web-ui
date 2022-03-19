@@ -30,6 +30,8 @@ export abstract class AuditLogService {
 
   public abstract getByProject(workspace?: Workspace): Observable<AuditLogDto[]>;
 
+  public abstract getByUser(userId: string, workspace?: Workspace): Observable<AuditLogDto[]>;
+
   public abstract getByCollection(collectionId: string, workspace?: Workspace): Observable<AuditLogDto[]>;
 
   public abstract revert(auditLogId: string, workspace?: Workspace): Observable<any>;

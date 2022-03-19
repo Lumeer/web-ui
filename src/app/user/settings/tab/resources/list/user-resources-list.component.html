@@ -1,0 +1,42 @@
+<ng-container *ngIf="loaded; else loading">
+  <div class="d-flex align-items-center">
+    <span class="h4 m-0 pe-2">{{title}}</span>
+    <span class="badge bg-success">{{data.length}}</span>
+  </div>
+
+  <ng-container *ngIf="data.length; else empty">
+    <div *ngFor="let datum of data; trackBy:trackByDatum; let first = first"
+         [class.mt-3]="first"
+         [class.mt-2]="!first">
+
+      <div class="bigger-font">
+        <icons-presenter [icons]="datum.icons"
+                         [colors]="datum.colors">
+        </icons-presenter>
+        <span class="ps-2 fw-bold">{{datum.name}}</span>
+      </div>
+      <roles class="small mt-1"
+             [resourceType]="resourceType"
+             [editable]="false"
+             [roles]="datum.roles"
+             [transitiveRoles]="datum.transitiveRoles">
+      </roles>
+
+    </div>
+  </ng-container>
+
+</ng-container>
+
+<ng-template #loading>
+  <div class="h4">{{title}}</div>
+  <div class="d-flex align-items-center pt-3">
+    <span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
+    <span i18n="@@message.loading">Loading...</span>
+  </div>
+</ng-template>
+
+<ng-template #empty>
+  <div class="d-flex align-items-center pt-3">
+    <span class="fst-italic">{{emptyTitle}}</span>
+  </div>
+</ng-template>

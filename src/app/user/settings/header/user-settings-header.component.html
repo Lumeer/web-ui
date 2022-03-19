@@ -11,7 +11,7 @@
   <div class="d-flex flex-row flex-nowrap align-items-center ms-auto">
     <ng-content></ng-content>
     <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger">
-      <i *ngIf="!isCurrent && permissions?.roles?.Manage" class="far fa-fw fa-trash-alt"
+      <i *ngIf="!isCurrent && permissions?.roles?.UserConfig" class="far fa-fw fa-trash-alt"
          (click)="onDelete()"
          aria-hidden="true"></i>
     </div>

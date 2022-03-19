@@ -19,6 +19,7 @@
 
 export interface AuditLogConfiguration {
   filtersByResource?: boolean;
+  filtersByUsers?: boolean;
   allowRevert?: boolean;
   objectDetail?: boolean;
 }

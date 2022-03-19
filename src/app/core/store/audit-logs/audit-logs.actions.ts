@@ -36,6 +36,21 @@ export const getByProjectFailure = createAction(
   props<{projectId: string; error: any}>()
 );
 
+export const getByUser = createAction(
+  '[AuditLogs] Get By User',
+  props<{projectId: string; userId: string; workspace?: Workspace}>()
+);
+
+export const getByUserSuccess = createAction(
+  '[AuditLogs] Get By User : Success',
+  props<{projectId: string; userId: string; auditLogs: AuditLog[]}>()
+);
+
+export const getByUserFailure = createAction(
+  '[AuditLogs] Get By User : Failure',
+  props<{projectId: string; userId: string; error: any}>()
+);
+
 export const getByCollection = createAction(
   '[AuditLogs] Get By Collection',
   props<{collectionId: string; workspace?: Workspace}>()

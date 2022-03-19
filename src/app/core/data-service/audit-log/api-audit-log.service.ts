@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {AuditLogService} from './audit-log.service';
 import {AuditLogDto} from '../../dto/audit-log.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
@@ -62,6 +62,11 @@ export class ApiAuditLogService extends BaseService implements AuditLogService {
 
   public getByProject(workspace?: Workspace): Observable<AuditLogDto[]> {
     const api = `${this.workspaceApiPrefix(workspace)}/audit`;
+    return this.get(api, workspace);
+  }
+
+  public getByUser(userId: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    const api = `${this.workspaceApiPrefix(workspace)}/audit/users/${userId}`;
     return this.get(api, workspace);
   }
 

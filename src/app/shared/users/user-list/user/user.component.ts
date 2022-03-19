@@ -67,6 +67,9 @@ export class UserComponent implements OnChanges {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public canManageUserDetail: boolean;
+
   @Output()
   public userUpdated = new EventEmitter<User>();
 

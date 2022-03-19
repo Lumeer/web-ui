@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges} from '@angular/core';
+import {AuditLog} from '../../../../core/store/audit-logs/audit-log.model';
+import {Observable, switchMap} from 'rxjs';
+import {ResourceType} from '../../../../core/model/resource-type';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {AuditLogConfiguration} from '../../../../shared/resource/activity/audit-logs/model/audit-log-configuration';
+import {AppState} from '../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectUserByWorkspace} from '../../../../core/store/users/users.state';
+import {selectAuditLogsByUser, selectAuditLogsByUserLoading} from '../../../../core/store/audit-logs/audit-logs.state';
+import {map, take} from 'rxjs/operators';
+import * as AuditLogsAction from '../../../../core/store/audit-logs/audit-logs.actions';
 
 @Component({
   selector: 'user-activity',
@@ -25,10 +36,50 @@ import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
   styleUrls: ['./user-activity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserActivityComponent {
+export class UserActivityComponent implements OnChanges {
   @Input()
   public organizationId: string;
 
   @Input()
   public projectId: string;
+
+  public readonly resourceType = ResourceType.Project;
+  public readonly configuration: AuditLogConfiguration = {
+    allowRevert: true,
+    objectDetail: true,
+    filtersByResource: true,
+  };
+
+  public auditLog$: Observable<AuditLog[]>;
+  public auditLogsLoading$: Observable<boolean>;
+
+  public workspace: Workspace;
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.organizationId || changes.projectId) {
+      this.subscribeData();
+    }
+  }
+
+  private subscribeData() {
+    this.workspace = {organizationId: this.organizationId, projectId: this.projectId};
+
+    const userId$ = this.store$.pipe(
+      select(selectUserByWorkspace),
+      map(user => user.id)
+    );
+    this.auditLog$ = userId$.pipe(
+      switchMap(userId => this.store$.pipe(select(selectAuditLogsByUser(this.projectId, userId))))
+    );
+    this.auditLogsLoading$ = userId$.pipe(
+      switchMap(userId => this.store$.pipe(select(selectAuditLogsByUserLoading(userId))))
+    );
+
+    this.store$.dispatch(AuditLogsAction.clear());
+    userId$.pipe(take(1)).subscribe(userId => {
+      this.store$.dispatch(AuditLogsAction.getByUser({projectId: this.projectId, userId, workspace: this.workspace}));
+    });
+  }
 }

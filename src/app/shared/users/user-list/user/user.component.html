@@ -1,7 +1,8 @@
 <div>
-  <a [routerLink]="userSettingsUrl">
+  <a [routerLink]="userSettingsUrl" *ngIf="canManageUserDetail">
     <user-stamp class="d-block p-2" [email]="user.email" [userName]="user.name"></user-stamp>
   </a>
+  <user-stamp *ngIf="!canManageUserDetail" class="d-block p-2" [email]="user.email" [userName]="user.name"></user-stamp>
 </div>
 
 <div class="pb-2 pt-3">

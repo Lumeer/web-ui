@@ -39,6 +39,13 @@ import {ProjectUserSettingsGuard} from './project/project-user-settings.guard';
 import {OrganizationUserSettingsGuard} from './organization/organization-user-settings.guard';
 import {OrganizationUserTabGuard} from './organization/organization-user-tab.guard';
 import {ProjectUserTabGuard} from './project/project-user-tab.guard';
+import {UserCollectionsComponent} from './settings/tab/resources/collections/user-collections.component';
+import {UserLinkTypesComponent} from './settings/tab/resources/link-types/user-link-types.component';
+import {UserViewsComponent} from './settings/tab/resources/views/user-views.component';
+import {RolesModule} from '../shared/roles/roles.module';
+import {PresenterModule} from '../shared/presenter/presenter.module';
+import {UserResourcesListComponent} from './settings/tab/resources/list/user-resources-list.component';
+import {ResourceActivityModule} from '../shared/resource/activity/resource-activity.module';
 
 @NgModule({
   declarations: [
@@ -52,8 +59,23 @@ import {ProjectUserTabGuard} from './project/project-user-tab.guard';
     ProjectUserResourcesComponent,
     OrganizationUserResourcesComponent,
     OrganizationUserActivityComponent,
+    UserCollectionsComponent,
+    UserLinkTypesComponent,
+    UserViewsComponent,
+    UserResourcesListComponent,
   ],
-  imports: [CommonModule, UserRoutingModule, GravatarModule, InputModule, TopPanelModule, RouterModule, UsersModule],
+  imports: [
+    CommonModule,
+    UserRoutingModule,
+    GravatarModule,
+    InputModule,
+    TopPanelModule,
+    RouterModule,
+    UsersModule,
+    RolesModule,
+    PresenterModule,
+    ResourceActivityModule,
+  ],
   providers: [OrganizationUserSettingsGuard, OrganizationUserTabGuard, ProjectUserSettingsGuard, ProjectUserTabGuard],
 })
 export class UserModule {}

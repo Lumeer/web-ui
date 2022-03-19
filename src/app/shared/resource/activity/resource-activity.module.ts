@@ -74,6 +74,6 @@ import {WarningMessageModule} from '../../warning-message/warning-message.module
     GravatarModule,
     WarningMessageModule,
   ],
-  exports: [ResourceActivityComponent],
+  exports: [ResourceActivityComponent, AuditLogsComponent],
 })
 export class ResourceActivityModule {}

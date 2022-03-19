@@ -32,6 +32,7 @@ export class RoleGroupService {
       case ResourceType.Project:
         return this.createProjectGroups();
       case ResourceType.Collection:
+      case ResourceType.LinkType:
         return this.createCollectionGroups();
       case ResourceType.View:
         return this.createViewGroups();
