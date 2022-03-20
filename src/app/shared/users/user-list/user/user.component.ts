@@ -91,6 +91,7 @@ export class UserComponent implements OnChanges {
   private readonly deleteTitleMsg: string;
 
   public userSettingsUrl: string[];
+  public userSettingsParams: any;
 
   constructor(private notificationService: NotificationService) {
     this.deleteMsg = $localize`:@@users.user.delete.message:Do you want to permanently remove this user?`;
@@ -102,14 +103,19 @@ export class UserComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resourceType || changes.workspace || objectChanged(changes.user)) {
       this.userSettingsUrl = this.buildSettingsUrl();
+      this.userSettingsParams = this.buildSettingsParams();
     }
   }
 
   private buildSettingsUrl(): string[] {
+    return ['/o', this.workspace?.organizationCode, 'u', this.user?.id];
+  }
+
+  private buildSettingsParams(): any {
     if (this.resourceType === ResourceType.Organization) {
-      return ['/o', this.workspace?.organizationCode, 'u', this.user?.id];
+      return {};
     }
-    return ['/o', this.workspace?.organizationCode, 'p', this.workspace?.projectCode, 'u', this.user?.id];
+    return {projectCode: this.workspace?.projectCode};
   }
 
   public onDelete() {

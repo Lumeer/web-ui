@@ -18,23 +18,36 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Workspace} from '../../../core/store/navigation/workspace';
+import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
+import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
+import {projectSelectItems} from '../../../shared/select/select-item.utils';
 
 @Component({
-  templateUrl: './organization-user-resources.component.html',
-  styleUrls: ['./organization-user-resources.component.scss'],
+  templateUrl: './workspace-user-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrganizationUserResourcesComponent implements OnInit {
+export class WorkspaceUserActivityComponent implements OnInit {
   public workspace$: Observable<Workspace>;
+  public projectItems$: Observable<SelectItemModel[]>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private router: Router, private route: ActivatedRoute) {}
 
   public ngOnInit() {
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
+    this.projectItems$ = this.store$.pipe(
+      select(selectProjectsForWorkspace),
+      map(projects => projectSelectItems(projects, project => project.code))
+    );
+  }
+
+  public onProjectSelect(value: string) {
+    this.router.navigate([], {queryParams: {projectCode: value}, relativeTo: this.route, queryParamsHandling: 'merge'});
   }
 }

@@ -7,6 +7,8 @@
       <user-settings-header [isCurrent]="data.currentUser?.id === data.user?.id"
                             [user]="data.user"
                             [permissions]="data.permissions"
+                            [teams]="teams$ | async"
+                            [serviceLimits]="serviceLimits$ | async"
                             (back)="back.emit()"
                             (delete)="onDelete(data.user)">
       </user-settings-header>
@@ -16,12 +18,14 @@
         <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.TechConfig">
           <a [routerLink]="'resources'"
              routerLinkActive="active"
+             queryParamsHandling="preserve"
              class="nav-link"
              i18n="@@user.settings.tab.resources">Resources</a>
         </li>
         <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.Manage">
           <a [routerLink]="'activity'"
              routerLinkActive="active"
+             queryParamsHandling="preserve"
              class="nav-link"
              i18n="@@audit.log.activity">Activity</a>
         </li>

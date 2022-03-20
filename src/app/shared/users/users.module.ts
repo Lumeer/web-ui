@@ -71,6 +71,13 @@ import {RouterModule} from '@angular/router';
     UserTableComponent,
     UserTransitiveRolesPipe,
   ],
-  exports: [UsersComponent, NewUserComponent, UserStampComponent, UserTableComponent],
+  exports: [
+    UsersComponent,
+    NewUserComponent,
+    UserStampComponent,
+    UserTableComponent,
+    UserTeamsComponent,
+    FilterUserTeamsPipe,
+  ],
 })
 export class UsersModule {}

@@ -36,10 +36,10 @@ import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
 
 @Component({
-  templateUrl: './organization-user.component.html',
+  templateUrl: './workspace-user.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrganizationUserComponent implements OnInit, OnDestroy {
+export class WorkspaceUserComponent implements OnInit, OnDestroy {
   public readonly type = ResourceType.Organization;
 
   private firstProject: Project;

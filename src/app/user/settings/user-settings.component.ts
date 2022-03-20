@@ -17,20 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
-import {ResourceType} from '../../core/model/resource-type';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {User} from '../../core/store/users/user';
 import {AppState} from '../../core/store/app.state';
@@ -41,22 +31,25 @@ import {UsersAction} from '../../core/store/users/users.action';
 import {Organization} from '../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {map, take} from 'rxjs/operators';
+import {Team} from '../../core/store/teams/team';
+import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
+import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
 
 @Component({
   selector: 'user-settings',
   templateUrl: './user-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserSettingsComponent implements OnInit, OnChanges {
-  @Input()
-  public resourceType: ResourceType.Organization | ResourceType.Project;
-
+export class UserSettingsComponent implements OnInit {
   @Output()
   public back = new EventEmitter();
 
   public user$: Observable<User>;
   public currentUser$: Observable<User>;
   public permissions$: Observable<AllowedPermissions>;
+  public teams$: Observable<Team[]>;
+  public serviceLimits$: Observable<ServiceLimits>;
 
   public deletedUser$ = new BehaviorSubject<User>(null);
 
@@ -67,15 +60,8 @@ export class UserSettingsComponent implements OnInit, OnChanges {
       map(([deletedUser, user]) => deletedUser || user)
     );
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resourceType) {
-      this.selectData();
-    }
-  }
-
-  private selectData() {
+    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
+    this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
     this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
   }
 

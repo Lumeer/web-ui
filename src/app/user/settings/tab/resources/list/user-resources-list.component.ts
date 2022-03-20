@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Role} from '../../../../../core/store/permissions/permissions';
 import {ResourceType} from '../../../../../core/model/resource-type';
 
@@ -43,8 +43,23 @@ export class UserResourcesListComponent {
   @Input()
   public resourceType: ResourceType;
 
+  @Input()
+  public selectable: boolean;
+
+  @Input()
+  public selectedId: string;
+
+  @Output()
+  public selected = new EventEmitter<string>();
+
   public trackByDatum(index: number, datum: ResourceRolesData): string {
     return datum.id;
+  }
+
+  public onClick(datum: ResourceRolesData) {
+    if (this.selectable) {
+      this.selected.emit(datum.id);
+    }
   }
 }
 

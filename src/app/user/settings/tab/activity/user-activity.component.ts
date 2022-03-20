@@ -29,6 +29,7 @@ import {selectUserByWorkspace} from '../../../../core/store/users/users.state';
 import {selectAuditLogsByUser, selectAuditLogsByUserLoading} from '../../../../core/store/audit-logs/audit-logs.state';
 import {map, take} from 'rxjs/operators';
 import * as AuditLogsAction from '../../../../core/store/audit-logs/audit-logs.actions';
+import {ResourcesAction} from '../../../../core/store/resources/data-resources.action';
 
 @Component({
   selector: 'user-activity',
@@ -77,9 +78,10 @@ export class UserActivityComponent implements OnChanges {
       switchMap(userId => this.store$.pipe(select(selectAuditLogsByUserLoading(userId))))
     );
 
-    this.store$.dispatch(AuditLogsAction.clear());
     userId$.pipe(take(1)).subscribe(userId => {
       this.store$.dispatch(AuditLogsAction.getByUser({projectId: this.projectId, userId, workspace: this.workspace}));
     });
+
+    this.store$.dispatch(new ResourcesAction.Get({organizationId: this.organizationId, projectId: this.projectId}));
   }
 }

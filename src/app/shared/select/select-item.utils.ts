@@ -23,6 +23,20 @@ import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
 import {getAttributesResourceType} from '../utils/resource.utils';
 import {ConstraintType} from '@lumeer/data-filters';
+import {Project} from '../../core/store/projects/project';
+
+export function projectSelectItems(projects: Project[], id?: (Project) => any): SelectItemModel[] {
+  return projects?.map(project => projectSelectItem(project, id)) || [];
+}
+
+export function projectSelectItem(project: Project, id?: (Project) => any): SelectItemModel {
+  return {
+    id: id?.(project) || project.id,
+    value: project.code,
+    icons: [project.icon],
+    iconColors: [project.color],
+  };
+}
 
 export function collectionSelectItems(collections: Collection[], id?: (Collection) => any): SelectItemModel[] {
   return collections?.map(collection => collectionSelectItem(collection, id)) || [];

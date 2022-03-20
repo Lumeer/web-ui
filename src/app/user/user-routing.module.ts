@@ -26,52 +26,18 @@ import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
 import {RoleType} from '../core/model/role-type';
 import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
-import {OrganizationUserComponent} from './organization/organization-user.component';
-import {ProjectUserComponent} from './project/project-user.component';
-import {OrganizationUserActivityComponent} from './organization/activity/organization-user-activity.component';
-import {OrganizationUserResourcesComponent} from './organization/resources/organization-user-resources.component';
-import {ProjectUserActivityComponent} from './project/activity/project-user-activity.component';
-import {ProjectUserResourcesComponent} from './project/resources/project-user-resources.component';
-import {ProjectUserSettingsGuard} from './project/project-user-settings.guard';
-import {OrganizationUserSettingsGuard} from './organization/organization-user-settings.guard';
-import {OrganizationUserTabGuard} from './organization/organization-user-tab.guard';
-import {ProjectUserTabGuard} from './project/project-user-tab.guard';
+import {WorkspaceUserComponent} from './workspace/workspace-user.component';
+import {WorkspaceUserActivityComponent} from './workspace/activity/workspace-user-activity.component';
+import {WorkspaceUserResourcesComponent} from './workspace/resources/workspace-user-resources.component';
+import {WorkspaceUserSettingsGuard} from './workspace/workspace-user-settings.guard';
+import {WorkspaceUserTabGuard} from './workspace/workspace-user-tab.guard';
 
 const userRoutes: Routes = [
   {
-    path: 'o/:organizationCode/p/:projectCode/u/:userId',
-    component: ProjectUserComponent,
-    canActivate: [AuthGuard, CurrentUserGuard, ProjectUserSettingsGuard],
-    canActivateChild: [ProjectUserTabGuard],
-    resolve: {
-      organizations: OrganizationsProjectsGuard,
-      users: UsersGuard,
-      groups: GroupsGuard,
-      limits: ServiceLimitsGuard,
-    },
-    children: [
-      {
-        path: 'activity',
-        component: ProjectUserActivityComponent,
-        data: {role: RoleType.Manage},
-      },
-      {
-        path: 'resources',
-        component: ProjectUserResourcesComponent,
-        data: {role: RoleType.UserConfig},
-      },
-      {
-        path: '',
-        redirectTo: 'resources',
-        pathMatch: 'full',
-      },
-    ],
-  },
-  {
     path: 'o/:organizationCode/u/:userId',
-    component: OrganizationUserComponent,
-    canActivate: [AuthGuard, CurrentUserGuard, OrganizationUserSettingsGuard],
-    canActivateChild: [OrganizationUserTabGuard],
+    component: WorkspaceUserComponent,
+    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceUserSettingsGuard],
+    canActivateChild: [WorkspaceUserTabGuard],
     resolve: {
       organizations: OrganizationsProjectsGuard,
       limits: ServiceLimitsGuard,
@@ -81,12 +47,12 @@ const userRoutes: Routes = [
     children: [
       {
         path: 'activity',
-        component: OrganizationUserActivityComponent,
+        component: WorkspaceUserActivityComponent,
         data: {role: RoleType.Manage},
       },
       {
         path: 'resources',
-        component: OrganizationUserResourcesComponent,
+        component: WorkspaceUserResourcesComponent,
         data: {role: RoleType.UserConfig},
       },
       {

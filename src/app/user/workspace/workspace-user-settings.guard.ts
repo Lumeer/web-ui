@@ -18,23 +18,23 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {catchError, map, mergeMap, take, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {userCanManageProjectUserDetail} from '../../shared/utils/permission.utils';
 import {WorkspaceService} from '../../workspace/workspace.service';
 import {User} from '../../core/store/users/user';
-import {OrganizationConverter} from '../../core/store/organizations/organization.converter';
-import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {UserService} from '../../core/data-service';
 import {convertUserDtoToModel} from '../../core/store/users/user.converter';
+import {UserService} from '../../core/data-service';
+import {Organization} from '../../core/store/organizations/organization';
+import {Project} from '../../core/store/projects/project';
 
 @Injectable()
-export class ProjectUserSettingsGuard implements CanActivate {
+export class WorkspaceUserSettingsGuard implements CanActivate {
   public constructor(
     private router: Router,
     private workspaceService: WorkspaceService,
@@ -42,12 +42,13 @@ export class ProjectUserSettingsGuard implements CanActivate {
     private userService: UserService
   ) {}
 
-  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     const organizationCode = next.paramMap.get('organizationCode');
     const projectCode = next.paramMap.get('projectCode');
+    const projectCodeQueryParam = next.queryParamMap.get('projectCode');
     const userId = next.paramMap.get('userId');
 
-    return this.workspaceService.selectOrGetUserAndWorkspace(organizationCode, projectCode).pipe(
+    return this.selectOrGetUserAndWorkspace(organizationCode, projectCode || projectCodeQueryParam).pipe(
       mergeMap(data => this.getUser(data, data.organization?.id, userId)),
       mergeMap(({user, organization, project, workspaceUser}) => {
         if (!organization) {
@@ -74,10 +75,33 @@ export class ProjectUserSettingsGuard implements CanActivate {
           return of(false);
         }
 
-        return this.workspaceService.switchWorkspace(organization, project);
+        return this.workspaceService.switchWorkspace(organization, project).pipe(
+          map(() => {
+            if (projectCodeQueryParam === project.code) {
+              return true;
+            }
+            return this.router.createUrlTree(
+              next.url.map(segment => segment.path),
+              {queryParams: {projectCode: project.code}}
+            );
+          })
+        );
       }),
       take(1),
       catchError(() => of(false))
+    );
+  }
+
+  private selectOrGetUserAndWorkspace(
+    organizationCode: string,
+    projectCode: string
+  ): Observable<{user?: User; organization?: Organization; project?: Project}> {
+    return this.workspaceService.selectOrGetUserAndOrganizationAndProjects(organizationCode).pipe(
+      map(({organization, projects, user}) => ({
+        organization,
+        user,
+        project: projects?.find(project => project.code === projectCode) || projects?.[0],
+      }))
     );
   }
 

@@ -17,23 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {Observable} from 'rxjs';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {Action} from '@ngrx/store';
 
-@Component({
-  templateUrl: './project-user-resources.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class ProjectUserResourcesComponent implements OnInit {
-  public workspace$: Observable<Workspace>;
+export enum ResourcesActionType {
+  GET = '[Resources] Get',
+  GET_SUCCESS = '[Resources] Get :: Success',
+  CLEAR = '[Resources] Clear',
+}
 
-  constructor(private store$: Store<AppState>) {}
+export namespace ResourcesAction {
+  export class Get implements Action {
+    public readonly type = ResourcesActionType.GET;
 
-  public ngOnInit() {
-    this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
+    public constructor(public payload: {organizationId: string; projectId: string}) {}
   }
+
+  export class GetSuccess implements Action {
+    public readonly type = ResourcesActionType.GET_SUCCESS;
+
+    public constructor(public payload: {organizationId: string; projectId: string}) {}
+  }
+
+  export class Clear implements Action {
+    public readonly type = ResourcesActionType.CLEAR;
+  }
+
+  export type All = GetSuccess | Clear;
 }

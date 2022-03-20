@@ -19,8 +19,7 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OrganizationUserComponent} from './organization/organization-user.component';
-import {ProjectUserComponent} from './project/project-user.component';
+import {WorkspaceUserComponent} from './workspace/workspace-user.component';
 import {UserSettingsComponent} from './settings/user-settings.component';
 import {UserSettingsHeaderComponent} from './settings/header/user-settings-header.component';
 import {GravatarModule} from 'ngx-gravatar';
@@ -31,14 +30,10 @@ import {UserRoutingModule} from './user-routing.module';
 import {UserResourcesComponent} from './settings/tab/resources/user-resources.component';
 import {UserActivityComponent} from './settings/tab/activity/user-activity.component';
 import {UsersModule} from '../shared/users/users.module';
-import {ProjectUserActivityComponent} from './project/activity/project-user-activity.component';
-import {ProjectUserResourcesComponent} from './project/resources/project-user-resources.component';
-import {OrganizationUserResourcesComponent} from './organization/resources/organization-user-resources.component';
-import {OrganizationUserActivityComponent} from './organization/activity/organization-user-activity.component';
-import {ProjectUserSettingsGuard} from './project/project-user-settings.guard';
-import {OrganizationUserSettingsGuard} from './organization/organization-user-settings.guard';
-import {OrganizationUserTabGuard} from './organization/organization-user-tab.guard';
-import {ProjectUserTabGuard} from './project/project-user-tab.guard';
+import {WorkspaceUserResourcesComponent} from './workspace/resources/workspace-user-resources.component';
+import {WorkspaceUserActivityComponent} from './workspace/activity/workspace-user-activity.component';
+import {WorkspaceUserSettingsGuard} from './workspace/workspace-user-settings.guard';
+import {WorkspaceUserTabGuard} from './workspace/workspace-user-tab.guard';
 import {UserCollectionsComponent} from './settings/tab/resources/collections/user-collections.component';
 import {UserLinkTypesComponent} from './settings/tab/resources/link-types/user-link-types.component';
 import {UserViewsComponent} from './settings/tab/resources/views/user-views.component';
@@ -46,19 +41,17 @@ import {RolesModule} from '../shared/roles/roles.module';
 import {PresenterModule} from '../shared/presenter/presenter.module';
 import {UserResourcesListComponent} from './settings/tab/resources/list/user-resources-list.component';
 import {ResourceActivityModule} from '../shared/resource/activity/resource-activity.module';
+import {SelectModule} from '../shared/select/select.module';
 
 @NgModule({
   declarations: [
     UserSettingsComponent,
-    OrganizationUserComponent,
-    ProjectUserComponent,
+    WorkspaceUserComponent,
     UserSettingsHeaderComponent,
     UserResourcesComponent,
     UserActivityComponent,
-    ProjectUserActivityComponent,
-    ProjectUserResourcesComponent,
-    OrganizationUserResourcesComponent,
-    OrganizationUserActivityComponent,
+    WorkspaceUserResourcesComponent,
+    WorkspaceUserActivityComponent,
     UserCollectionsComponent,
     UserLinkTypesComponent,
     UserViewsComponent,
@@ -75,7 +68,8 @@ import {ResourceActivityModule} from '../shared/resource/activity/resource-activ
     RolesModule,
     PresenterModule,
     ResourceActivityModule,
+    SelectModule,
   ],
-  providers: [OrganizationUserSettingsGuard, OrganizationUserTabGuard, ProjectUserSettingsGuard, ProjectUserTabGuard],
+  providers: [WorkspaceUserSettingsGuard, WorkspaceUserTabGuard],
 })
 export class UserModule {}

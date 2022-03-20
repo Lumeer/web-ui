@@ -30,10 +30,6 @@ import {
   selectLinkTypesWithCollections,
 } from '../../../../core/store/link-types/link-types.state';
 import {selectViewsLoaded, selectViewsWithComputedData} from '../../../../core/store/views/views.state';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
-import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {ViewsAction} from '../../../../core/store/views/views.action';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
 import {selectOrganizationById} from '../../../../core/store/organizations/organizations.state';
@@ -42,6 +38,7 @@ import {User} from '../../../../core/store/users/user';
 import {mapGroupsOnUser, selectUserByWorkspace} from '../../../../core/store/users/users.state';
 import {selectTeamsByOrganization} from '../../../../core/store/teams/teams.state';
 import {map} from 'rxjs/operators';
+import {ResourcesAction} from '../../../../core/store/resources/data-resources.action';
 
 @Component({
   selector: 'user-resources',
@@ -99,14 +96,6 @@ export class UserResourcesComponent {
   }
 
   private fetchData() {
-    const workspace: Workspace = {organizationId: this.organizationId, projectId: this.projectId};
-
-    this.store$.dispatch(new CollectionsAction.Clear());
-    this.store$.dispatch(new LinkTypesAction.Clear());
-    this.store$.dispatch(new ViewsAction.Clear());
-
-    this.store$.dispatch(new CollectionsAction.Get({workspace}));
-    this.store$.dispatch(new LinkTypesAction.Get({workspace}));
-    this.store$.dispatch(new ViewsAction.Get({workspace}));
+    this.store$.dispatch(new ResourcesAction.Get({organizationId: this.organizationId, projectId: this.projectId}));
   }
 }

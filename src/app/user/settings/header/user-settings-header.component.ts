@@ -21,6 +21,8 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {User} from '../../../core/store/users/user';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
+import {Team} from '../../../core/store/teams/team';
 
 @Component({
   selector: 'user-settings-header',
@@ -36,6 +38,12 @@ export class UserSettingsHeaderComponent {
 
   @Input()
   public permissions: AllowedPermissions;
+
+  @Input()
+  public serviceLimits: ServiceLimits;
+
+  @Input()
+  public teams: Team[];
 
   @Output()
   public delete = new EventEmitter();

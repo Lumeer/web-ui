@@ -18,3 +18,9 @@
   </div>
 
 </div>
+
+<user-teams class="d-block mt-3"
+            [editable]="serviceLimits?.groups && permissions?.roles?.UserConfig"
+            [selectedTeamIds]="user | filterUserTeams:teams"
+            [teams]="teams">
+</user-teams>

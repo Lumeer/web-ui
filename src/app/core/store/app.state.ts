@@ -59,6 +59,7 @@ import {DashboardDataState, initialDashboardDataState} from './dashboard-data/da
 import {FormsState, initialFormsState} from './form/form.state';
 import {initialResourceVariablesState, ResourceVariablesState} from './resource-variables/resource-variables.state';
 import {AppPropertiesState, initialAppPropertiesState} from './app-properties/app-properties.state';
+import {initialResourcesState, ResourcesState} from './resources/data-resources.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -102,6 +103,7 @@ export interface AppState {
   dashboardData: DashboardDataState;
   variables: ResourceVariablesState;
   properties: AppPropertiesState;
+  resources: ResourcesState;
 }
 
 export function initialAppState(): AppState {
@@ -147,5 +149,6 @@ export function initialAppState(): AppState {
     dashboardData: initialDashboardDataState,
     variables: initialResourceVariablesState,
     properties: initialAppPropertiesState,
+    resources: initialResourcesState,
   };
 }

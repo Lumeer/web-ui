@@ -1,0 +1,11 @@
+<user-activity *ngIf="workspace$ | async as workspace"
+               [organizationId]="workspace.organizationId"
+               [projectId]="workspace.projectId">
+  <select-item class="d-inline-block me-3"
+               [selectedId]="workspace.projectCode"
+               [fitParent]="false"
+               [items]="projectItems$ | async"
+               [removable]="false"
+               (selected)="onProjectSelect($event)">
+  </select-item>
+</user-activity>

@@ -6,8 +6,10 @@
 
   <ng-container *ngIf="data.length; else empty">
     <div *ngFor="let datum of data; trackBy:trackByDatum; let first = first"
-         [class.mt-3]="first"
-         [class.mt-2]="!first">
+         class="card p-3" [class.mt-3]="first" [class.mt-2]="!first"
+         [class.active]="selectable && selectedId === datum.id"
+         [class.cursor-pointer]="selectable"
+         (click)="onClick(datum)">
 
       <div class="bigger-font">
         <icons-presenter [icons]="datum.icons"

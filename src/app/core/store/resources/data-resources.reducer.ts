@@ -17,23 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {initialResourcesState, ResourcesState} from './data-resources.state';
+import {ResourcesAction, ResourcesActionType} from './data-resources.action';
 
-@Component({
-  templateUrl: './project-user-activity.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class ProjectUserActivityComponent implements OnInit {
-  public workspace$: Observable<Workspace>;
-
-  constructor(private store$: Store<AppState>) {}
-
-  public ngOnInit() {
-    this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
+export function resourcesReducer(
+  state: ResourcesState = initialResourcesState,
+  action: ResourcesAction.All
+): ResourcesState {
+  switch (action.type) {
+    case ResourcesActionType.GET_SUCCESS:
+      return {
+        ...state,
+        organizationId: action.payload.organizationId,
+        projectId: action.payload.projectId,
+      };
+    case ResourcesActionType.CLEAR:
+      return initialResourcesState;
+    default:
+      return state;
   }
 }

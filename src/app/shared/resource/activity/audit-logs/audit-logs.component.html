@@ -1,17 +1,18 @@
-<ng-container *ngIf="auditLogs?.length; else emptyState">
-  <ng-container
-    *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async, revertingIds: revertingAuditLogs$ | async, viewsMap: viewsMap$ | async, collectionsMap: collectionsMap$ | async, linkTypesMap: linkTypesMap$ | async} as data">
-    <audit-logs-filters class="d-block pb-5"
-                        *ngIf="data.serviceLimits?.serviceLevel === serviceLevel.BASIC"
-                        [filters]="filters$ | async"
-                        [constraintData]="constraintData$ | async"
-                        [viewsMap]="data.viewsMap"
-                        [collectionsMap]="data.collectionsMap"
-                        [linkTypesMap]="data.linkTypesMap"
-                        [configuration]="configuration"
-                        [resourceType]="resourceType"
-                        (filtersChanged)="onFiltersChanged($event)">
-    </audit-logs-filters>
+<ng-container
+  *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async, revertingIds: revertingAuditLogs$ | async, viewsMap: viewsMap$ | async, collectionsMap: collectionsMap$ | async, linkTypesMap: linkTypesMap$ | async} as data">
+  <audit-logs-filters class="d-block pb-5"
+                      *ngIf="data.serviceLimits?.serviceLevel === serviceLevel.BASIC"
+                      [filters]="filters$ | async"
+                      [constraintData]="constraintData$ | async"
+                      [viewsMap]="data.viewsMap"
+                      [collectionsMap]="data.collectionsMap"
+                      [linkTypesMap]="data.linkTypesMap"
+                      [configuration]="configuration"
+                      [resourceType]="resourceType"
+                      (filtersChanged)="onFiltersChanged($event)">
+    <ng-content></ng-content>
+  </audit-logs-filters>
+  <ng-container *ngIf="auditLogs?.length; else emptyState">
     <ng-container *ngIf="auditLogs | filterAuditLogs:(filters$ | async): data.constraintData: data.viewsMap: data.collectionsMap: data.linkTypesMap as filteredAuditLogs">
       <audit-log *ngFor="let auditLog of filteredAuditLogs; trackBy:trackByAudit; let first = first; let last = last"
                  [auditLog]="auditLog"
@@ -30,17 +31,17 @@
       <empty-search *ngIf="!filteredAuditLogs.length" [compact]="true" class="px-lg-5 px-3 d-block">
       </empty-search>
     </ng-container>
-    <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
-         class="py-3 mt-3 d-flex flex-column align-items-center text-center">
+  </ng-container>
+  <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
+       class="py-3 mt-3 d-flex flex-column align-items-center text-center">
       <span i18n="@@document.detail.audit.limit">Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <a
         href="https://www.lumeer.io/contact/" target="_blank">contact us.</a></span>
-      <button *ngIf="organizationPermissions$ | async | canEnterOrganizationSettings"
-              (click)="openServiceOrder()"
-              class="btn btn-success mt-2">
-        <span i18n="@@collection.config.tab.rules.upgradePlan">Upgrade to Business Plan!</span>
-      </button>
-    </div>
-  </ng-container>
+    <button *ngIf="organizationPermissions$ | async | canEnterOrganizationSettings"
+            (click)="openServiceOrder()"
+            class="btn btn-success mt-2">
+      <span i18n="@@collection.config.tab.rules.upgradePlan">Upgrade to Business Plan!</span>
+    </button>
+  </div>
 </ng-container>
 
 <ng-template #emptyState>

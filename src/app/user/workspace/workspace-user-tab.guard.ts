@@ -29,17 +29,18 @@ import {RoleType} from '../../core/model/role-type';
 import {User} from '../../core/store/users/user';
 import {Organization} from '../../core/store/organizations/organization';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
-import {Project} from '../../core/store/projects/project';
 import {WorkspaceService} from '../../workspace/workspace.service';
+import {Project} from '../../core/store/projects/project';
 
 @Injectable()
-export class ProjectUserTabGuard implements CanActivateChild {
+export class WorkspaceUserTabGuard implements CanActivateChild {
   constructor(private router: Router, private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
-    if (!next.data?.role) {
+    if (!next.data.role) {
       return of(true);
     }
+
     return this.selectUserAndResources().pipe(
       map(data => {
         const roleTypes = userRoleTypesInProject(data.organization, data.project, data.user);
@@ -47,11 +48,13 @@ export class ProjectUserTabGuard implements CanActivateChild {
           return true;
         }
 
-        const baseUrl = ['/o', data.organization?.code, 'p', data.project?.code, 'u', next.parent.params['userId']];
+        const baseUrl = ['/o', data.organization?.code, 'u', next.parent.params['userId']];
+
+        const queryParams = {projectCode: data.project.code};
         if (roleTypes.includes(RoleType.UserConfig)) {
-          return this.router.createUrlTree([...baseUrl, 'resources']);
+          return this.router.createUrlTree([...baseUrl, 'resources'], {queryParams});
         } else if (roleTypes.includes(RoleType.Manage)) {
-          return this.router.createUrlTree([...baseUrl, 'activity']);
+          return this.router.createUrlTree([...baseUrl, 'activity'], {queryParams});
         }
 
         return false;
