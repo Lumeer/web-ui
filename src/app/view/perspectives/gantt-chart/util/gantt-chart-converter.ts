@@ -583,7 +583,7 @@ function isTaskValid(start: string, end: string, endConstraint: Constraint): boo
 }
 
 function areDatesValid(start: string, end: string, endConstraint: Constraint): boolean {
-  return isDateValidRange(start) && (isDateValidRange(end) || endConstraint.type === ConstraintType.Duration);
+  return isDateValidRange(start) && (isDateValidRange(end) || (end && endConstraint.type === ConstraintType.Duration));
 }
 
 function isDateValidRange(dateString: string): boolean {
