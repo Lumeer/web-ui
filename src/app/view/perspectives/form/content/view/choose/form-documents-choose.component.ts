@@ -95,9 +95,9 @@ export class FormDocumentsChooseComponent implements OnChanges {
   }
 
   private subscribeToDocuments() {
-    const collectionQuery = filterStemsForCollection(this.collection.id, this.query);
+    const collectionQuery = filterStemsForCollection(this.collection?.id, this.query);
     this.documents$ = combineLatest([
-      this.store$.pipe(select(selectDocumentsByCollectionAndQuery(this.collection.id, collectionQuery, this.view))),
+      this.store$.pipe(select(selectDocumentsByCollectionAndQuery(this.collection?.id, collectionQuery, this.view))),
       this.store$.pipe(select(selectDocumentsByIds(this.createdDocuments || []))),
       this.currentDocument$,
     ]).pipe(
