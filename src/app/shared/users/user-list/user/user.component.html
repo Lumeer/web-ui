@@ -21,7 +21,10 @@
   </roles>
 </div>
 
-<div>
+<div class="d-flex align-items-center">
+  <a [routerLink]="userSettingsUrl" [queryParams]="userSettingsParams" *ngIf="canManageUserDetail">
+    <i class="fas fa-fw fa-cog m-1 cursor-pointer" aria-hidden="true"></i>
+  </a>
   <i class="far fa-fw fa-trash-alt text-danger m-1 cursor-pointer"
      *ngIf="deletable"
      aria-hidden="true"

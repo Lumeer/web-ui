@@ -2,7 +2,7 @@
                      [resourceType]="resourceType.Project"
                      [loaded]="true"
                      [data]="data"
-                     [selectable]="data.length > 0"
+                     [selectable]="data.length > 1"
                      [selectedId]="(workspace$ | async).projectCode"
                      (selected)="onProjectSelect($event)"
                      title="Projects"

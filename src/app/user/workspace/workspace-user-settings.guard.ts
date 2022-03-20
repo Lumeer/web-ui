@@ -20,9 +20,9 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {catchError, map, mergeMap, take} from 'rxjs/operators';
+import {catchError, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {userCanManageProjectUserDetail} from '../../shared/utils/permission.utils';
@@ -32,6 +32,7 @@ import {convertUserDtoToModel} from '../../core/store/users/user.converter';
 import {UserService} from '../../core/data-service';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
+import {selectCurrentUser} from '../../core/store/users/users.state';
 
 @Injectable()
 export class WorkspaceUserSettingsGuard implements CanActivate {
@@ -97,10 +98,18 @@ export class WorkspaceUserSettingsGuard implements CanActivate {
     projectCode: string
   ): Observable<{user?: User; organization?: Organization; project?: Project}> {
     return this.workspaceService.selectOrGetUserAndOrganizationAndProjects(organizationCode).pipe(
-      map(({organization, projects, user}) => ({
+      withLatestFrom(this.store$.pipe(select(selectCurrentUser))),
+      map(([{organization, projects, user}, currentUser]) => ({
         organization,
         user,
-        project: projects?.find(project => project.code === projectCode) || projects?.[0],
+        project:
+          projects?.find(project => project.code === projectCode) ||
+          projects?.find(
+            project =>
+              project.id === currentUser?.defaultWorkspace?.projectId &&
+              project.organizationId === currentUser?.defaultWorkspace?.organizationId
+          ) ||
+          projects?.[0],
       }))
     );
   }

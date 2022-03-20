@@ -62,7 +62,7 @@ export class WorkspaceUserComponent implements OnInit, OnDestroy {
       new NavigationAction.NavigateToPreviousUrl({
         previousUrl: replaceWorkspacePathInUrl(this.previousUrl, this.workspace),
         organizationCode: this.workspace?.organizationCode,
-        projectCode: this.firstProject?.code,
+        projectCode: this.workspace?.projectCode || this.firstProject?.code,
       })
     );
   }

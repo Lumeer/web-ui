@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnInit, OnChanges} from '@angular/core';
 import {Observable, combineLatest} from 'rxjs';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -39,13 +39,14 @@ import {mapGroupsOnUser, selectUserByWorkspace} from '../../../../core/store/use
 import {selectTeamsByOrganization} from '../../../../core/store/teams/teams.state';
 import {map} from 'rxjs/operators';
 import {ResourcesAction} from '../../../../core/store/resources/data-resources.action';
+import {sortResourcesByFavoriteAndLastUsed} from '../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'user-resources',
   templateUrl: './user-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserResourcesComponent {
+export class UserResourcesComponent implements OnInit, OnChanges {
   @Input()
   public organizationId: string;
 
@@ -68,13 +69,19 @@ export class UserResourcesComponent {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectAllCollections));
+    this.collections$ = this.store$.pipe(
+      select(selectAllCollections),
+      map(collections => sortResourcesByFavoriteAndLastUsed(collections))
+    );
     this.collectionsLoaded$ = this.store$.pipe(select(selectCollectionsLoaded));
 
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesWithCollections));
     this.linkTypesLoaded$ = this.store$.pipe(select(selectLinkTypesLoaded));
 
-    this.views$ = this.store$.pipe(select(selectViewsWithComputedData));
+    this.views$ = this.store$.pipe(
+      select(selectViewsWithComputedData),
+      map(views => sortResourcesByFavoriteAndLastUsed(views))
+    );
     this.viewsLoaded$ = this.store$.pipe(select(selectViewsLoaded));
   }
 
