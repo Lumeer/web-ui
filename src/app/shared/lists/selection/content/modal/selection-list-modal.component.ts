@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {SelectionList} from '../../selection-list';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
 import {AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {DialogType} from '../../../../modal/dialog-type';
 import {minLengthValidator} from '../../../../../core/validators/custom-validators';
 import {uniqueValuesValidator} from '../../../../../core/validators/unique-values-validator';
@@ -39,7 +39,7 @@ import {selectSelectionListsByProjectSorted} from '../../../../../core/store/sel
   templateUrl: './selection-list-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectionListModalComponent implements OnInit {
+export class SelectionListModalComponent implements OnInit, OnDestroy {
   @Input()
   public list: SelectionList;
 
@@ -54,6 +54,7 @@ export class SelectionListModalComponent implements OnInit {
   public form: FormGroup;
   public performingAction$ = new BehaviorSubject(false);
   public invalid$: Observable<boolean>;
+  private subscriptions = new Subscription();
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: FormBuilder) {}
 
@@ -65,19 +66,31 @@ export class SelectionListModalComponent implements OnInit {
     this.form = this.fb.group({
       name: [this.list.name, minLengthValidator(1), this.uniqueName(this.list?.id)],
       displayValues: [this.list.displayValues],
-      options: this.fb.array(
-        [],
-        [
-          uniqueValuesValidator(SelectConstraintOptionsFormControl.Value, true),
-          minimumValuesCountValidator(SelectConstraintOptionsFormControl.Value, 1),
-        ]
-      ),
+      options: this.fb.array([]),
     });
+
+    this.setOptionsValidator();
 
     this.invalid$ = this.form.statusChanges.pipe(
       map(() => this.form.invalid),
       distinctUntilChanged()
     );
+    this.subscriptions.add(this.displayValuesControl.valueChanges.subscribe(() => this.setOptionsValidator()));
+  }
+
+  private setOptionsValidator() {
+    if (this.displayValuesControl.value) {
+      this.optionsControl.setValidators([
+        uniqueValuesValidator(SelectConstraintOptionsFormControl.Value, true),
+        minimumValuesCountValidator(SelectConstraintOptionsFormControl.Value, 1),
+      ]);
+    } else {
+      this.optionsControl.setValidators([
+        uniqueValuesValidator(SelectConstraintOptionsFormControl.DisplayValue, true),
+        minimumValuesCountValidator(SelectConstraintOptionsFormControl.DisplayValue, 1),
+      ]);
+    }
+    this.optionsControl.updateValueAndValidity();
   }
 
   public uniqueName(excludeId?: string): AsyncValidatorFn {
@@ -138,10 +151,22 @@ export class SelectionListModalComponent implements OnInit {
     this.bsModalRef.hide();
   }
 
+  public get displayValuesControl(): AbstractControl {
+    return this.form.get('displayValues');
+  }
+
+  public get optionsControl(): AbstractControl {
+    return this.form.get('options');
+  }
+
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }
