@@ -1,19 +1,14 @@
-<div class="position-relative">
-  <input #searchInput
-         [value]="text"
-         [placeholder]="queryItems.length === 0 ? emptyPlaceholder : placeholder"
-         (blur)="onBlur()"
-         [disabled]="readonly"
-         (focus)="onFocus()"
-         (input)="onInput($event)"
-         (keydown)="onKeyDown($event)"
-         (keyup.enter)="onEnterKeyUp()"
-         autoSizeInput
-         class="mw-100 py-1 px-2"/>
-  <hint *ngIf="true" title="Vyhledavani / Filtrovani">
-    <span>DSfskvnsdfkjvnfdk</span>
-  </hint>
-</div>
+<input #searchInput
+       [value]="text"
+       [placeholder]="queryItems.length === 0 ? emptyPlaceholder : placeholder"
+       (blur)="onBlur()"
+       [disabled]="readonly"
+       (focus)="onFocus()"
+       (input)="onInput($event)"
+       (keydown)="onKeyDown($event)"
+       (keyup.enter)="onEnterKeyUp()"
+       autoSizeInput
+       class="mw-100 py-1 px-2"/>
 <search-suggestions [queryItems]="queryItems"
                     class="cursor-default"
                     [origin]="hostElement"

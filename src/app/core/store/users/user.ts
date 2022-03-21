@@ -80,10 +80,13 @@ export enum UserHintsKeys {
   tasksHintDismissed = 'tasksHintDismissed',
   viewsHintDismissed = 'viewsHintDismissed',
   tablesHintDismissed = 'tablesHintDismissed',
+  dashboardSettingsHintDismissed = 'dashboardSettingsHintDismissed',
 
   perspectiveHintDismissed = 'perspectiveHintDismissed',
   saveViewHintDismissed = 'saveViewHintDismissed',
   shareViewHintDismissed = 'shareViewHintDismissed',
+
+  searchHintDismissed = 'searchHintDismissed',
 }
 
 export interface UserHints {
@@ -104,10 +107,13 @@ export interface UserHints {
   tasksHintDismissed?: boolean;
   viewsHintDismissed?: boolean;
   tablesHintDismissed?: boolean;
+  dashboardSettingsHintDismissed?: boolean;
 
   perspectiveHintDismissed?: boolean;
   saveViewHintDismissed?: boolean;
   shareViewHintDismissed?: boolean;
+
+  searchHintDismissed?: boolean;
 }
 
 export interface NotificationsSettings {

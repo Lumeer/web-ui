@@ -41,8 +41,8 @@ import {
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {isQueryItemEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
-import {selectAllUsers} from '../../../core/store/users/users.state';
-import {User} from '../../../core/store/users/user';
+import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
+import {User, UserHintsKeys} from '../../../core/store/users/user';
 import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Organization} from '../../../core/store/organizations/organization';
@@ -65,6 +65,7 @@ import {
 } from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {SearchBoxData, SearchBoxService} from './util/search-box.service';
+import {UsersAction} from '../../../core/store/users/users.action';
 
 const ALLOW_AUTOMATIC_SUBMISSION = true;
 
@@ -85,6 +86,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public canManageConfig$: Observable<boolean>;
   public canChangeQuery$: Observable<boolean>;
   public searchBoxData$: Observable<SearchBoxData>;
+
+  public displaySearchHint$: Observable<boolean>;
 
   public queryItemsControl: FormArray;
 
@@ -114,6 +117,11 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.canChangeQuery$ = this.store$.pipe(select(selectCanChangeViewQuery));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageCurrentViewConfig));
     this.searchBoxData$ = this.searchBoxService.data$;
+
+    this.displaySearchHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints?.searchHintDismissed)
+    );
   }
 
   private subscribeViewData() {
@@ -176,6 +184,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public onHintDismissed() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.searchHintDismissed, value: true}));
   }
 
   public onToggleExpandStem(stemId: string) {

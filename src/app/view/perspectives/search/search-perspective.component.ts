@@ -51,7 +51,7 @@ import {convertPerspectiveSettingsToString} from '../../../core/store/navigation
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {ModalService} from '../../../shared/modal/modal.service';
 import {DashboardTab, TabType} from '../../../core/model/dashboard-tab';
-import {UserHints, UserHintsKeys} from '../../../core/store/users/user';
+import {UserHintsKeys} from '../../../core/store/users/user';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 
@@ -66,6 +66,8 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   public queryParams$: Observable<Record<string, string>>;
   public tabs$: Observable<DashboardTab[]>;
 
+  public displayDashboardSettingsHint$: Observable<boolean>;
+
   private initialSearchTab: string;
   private searchId: string;
   private subscriptions = new Subscription();
@@ -78,6 +80,11 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
     this.subscribeToNavigation();
     this.subscribeToConfig();
     this.subscribeToSearchTab();
+
+    this.displayDashboardSettingsHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints?.dashboardSettingsHintDismissed)
+    );
   }
 
   private subscribeToNavigation() {
@@ -257,20 +264,21 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
     );
   }
 
-  public onHintDismissed(tabType: TabType) {
+  public onHintDismissed(tabType: TabType | string) {
     let hintKey: string;
 
     switch (tabType) {
       case TabType.Tasks:
         hintKey = UserHintsKeys.tasksHintDismissed;
         break;
-
       case TabType.Views:
         hintKey = UserHintsKeys.viewsHintDismissed;
         break;
-
       case TabType.Tables:
         hintKey = UserHintsKeys.tablesHintDismissed;
+        break;
+      case 'dashboard_settings':
+        hintKey = UserHintsKeys.dashboardSettingsHintDismissed;
         break;
     }
 

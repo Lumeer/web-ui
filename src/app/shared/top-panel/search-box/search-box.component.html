@@ -1,4 +1,4 @@
-<div class="form-control w-100 h-auto p-0"
+<div class="form-control w-100 h-auto p-0 position-relative"
      data-tour="search-box">
   <form *ngIf="form$ | async as form"
         [formGroup]="form"
@@ -46,4 +46,9 @@
                    [disabled]="!form.valid">
     </search-button>
   </form>
+  <hint *ngIf="displaySearchHint$ | async"
+        (dismissHint)="onHintDismissed()"
+        title="Vyhledavani / Filtrovani">
+    <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</span>
+  </hint>
 </div>
