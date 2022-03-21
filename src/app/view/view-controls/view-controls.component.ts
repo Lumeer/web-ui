@@ -80,6 +80,9 @@ import {
 } from '../../core/store/navigation/settings/perspective-settings';
 import {DashboardTab} from '../../core/model/dashboard-tab';
 import {createSearchPerspectiveTabsByView} from '../../core/store/views/view.utils';
+import {UserHintsKeys} from '../../core/store/users/user';
+import {UsersAction} from '../../core/store/users/users.action';
+import {selectCurrentUser} from '../../core/store/users/users.state';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -117,6 +120,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public collectionsPermissions$: Observable<AllowedPermissionsMap>;
   public viewsPermissions$: Observable<AllowedPermissionsMap>;
 
+  public displayPerspectiveHint$: Observable<boolean>;
+  public displaySaveViewHint$: Observable<boolean>;
+  public displayShareViewHint$: Observable<boolean>;
+
   private configChanged: boolean;
   private queryChanged: boolean;
   private currentPerspective: Perspective;
@@ -147,6 +154,21 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
     this.collectionsPermissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.viewsPermissions$ = this.store$.pipe(select(selectViewsPermissions));
+
+    this.displayPerspectiveHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.perspectiveHintDismissed)
+    );
+
+    this.displaySaveViewHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.saveViewHintDismissed)
+    );
+
+    this.displayShareViewHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.shareViewHintDismissed)
+    );
   }
 
   private subscribeToWorkspace(): Subscription {
@@ -169,6 +191,22 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.nameChanged$.next(false);
       this.bindViewChanged();
     }
+  }
+
+  public onHintDismissed(hintKey: string) {
+    switch (hintKey) {
+      case 'perspective':
+        hintKey = UserHintsKeys.perspectiveHintDismissed;
+        break;
+      case 'save':
+        hintKey = UserHintsKeys.saveViewHintDismissed;
+        break;
+      case 'share':
+        hintKey = UserHintsKeys.shareViewHintDismissed;
+        break;
+    }
+
+    this.store$.dispatch(new UsersAction.SetHint({hint: hintKey, value: true}));
   }
 
   private bindViewChanged() {

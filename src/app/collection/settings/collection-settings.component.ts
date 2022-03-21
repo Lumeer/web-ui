@@ -88,11 +88,6 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     this.subscribeToStore();
     this.tableIdLabel = $localize`:@@collection.settings.tableId:Table ID:`;
 
-    const userHints$ = this.store$.pipe(
-      select(selectCurrentUser),
-      map(user => user.hints)
-    );
-
     this.displayTableAttributesHint$ = this.store$.pipe(
       select(selectCurrentUser),
       map(user => !user.hints.tableAttributesHintDismissed)
@@ -248,7 +243,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onHintDismissed(hintKey: string | UserHintsKeys) {
+  public onHintDismissed(hintKey: string) {
     switch (hintKey) {
       case 'attributes':
         hintKey = UserHintsKeys.tableAttributesHintDismissed;

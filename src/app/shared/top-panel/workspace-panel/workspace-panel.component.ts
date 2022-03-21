@@ -97,11 +97,14 @@ export class WorkspacePanelComponent implements OnInit {
     this.selectService.createNewProject(organization);
   }
 
-  public onHintDismissed(hintKey: string | UserHintsKeys) {
-    if (hintKey === 'organization') {
-      hintKey = UserHintsKeys.organizationMenuHintDismissed;
-    } else if (hintKey === 'project') {
-      hintKey = UserHintsKeys.projectMenuHintDismissed;
+  public onHintDismissed(hintKey: string) {
+    switch (hintKey) {
+      case 'organization':
+        hintKey = UserHintsKeys.organizationMenuHintDismissed;
+        break;
+      case 'project':
+        hintKey = UserHintsKeys.projectMenuHintDismissed;
+        break;
     }
 
     this.store$.dispatch(new UsersAction.SetHint({hint: hintKey, value: true}));
