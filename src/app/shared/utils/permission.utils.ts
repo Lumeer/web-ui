@@ -374,6 +374,9 @@ export function userTransitiveRoles(
   resourceType: ResourceType,
   permissions: Permissions
 ): Role[] {
+  if (!user) {
+    return [];
+  }
   const userTeamIds = user.teams?.map(team => team.id) || [];
   const userTeamsRoles = (permissions?.groups || []).reduce((roles, team) => {
     if (userTeamIds.includes(team.id)) {

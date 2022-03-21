@@ -1,15 +1,11 @@
-<user-resources-list *ngIf="projectsData$ | async as data" class="d-block mt-4"
-                     [resourceType]="resourceType.Project"
-                     [loaded]="true"
-                     [data]="data"
-                     [selectable]="data.length > 1"
-                     [selectedId]="(workspace$ | async).projectCode"
-                     (selected)="onProjectSelect($event)"
-                     title="Projects"
-                     emptyTitle="No Project has rights or is visible">
-</user-resources-list>
+<ng-container *ngIf="workspace$ | async as workspace">
+  <user-projects [workspace]="workspace"
+                 [projectsData]="projectsData$ | async"
+                 [selectedDatum]="selectedDatum$ | async"
+                 (selected)="onProjectSelect($event.name)">
+  </user-projects>
 
-<user-resources *ngIf="workspace$ | async as workspace"
-                [organizationId]="workspace.organizationId"
-                [projectId]="workspace.projectId">
-</user-resources>
+  <user-resources [organizationId]="workspace.organizationId"
+                  [projectId]="workspace.projectId">
+  </user-resources>
+</ng-container>

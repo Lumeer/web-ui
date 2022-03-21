@@ -42,6 +42,8 @@ import {PresenterModule} from '../shared/presenter/presenter.module';
 import {UserResourcesListComponent} from './settings/tab/resources/list/user-resources-list.component';
 import {ResourceActivityModule} from '../shared/resource/activity/resource-activity.module';
 import {SelectModule} from '../shared/select/select.module';
+import {UserProjectsComponent} from './workspace/resources/projects/user-projects.component';
+import {WorkspaceUserCleanUpGuard} from './workspace/workspace-user-clean-up.guard';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import {SelectModule} from '../shared/select/select.module';
     UserLinkTypesComponent,
     UserViewsComponent,
     UserResourcesListComponent,
+    UserProjectsComponent,
   ],
   imports: [
     CommonModule,
@@ -70,6 +73,6 @@ import {SelectModule} from '../shared/select/select.module';
     ResourceActivityModule,
     SelectModule,
   ],
-  providers: [WorkspaceUserSettingsGuard, WorkspaceUserTabGuard],
+  providers: [WorkspaceUserSettingsGuard, WorkspaceUserTabGuard, WorkspaceUserCleanUpGuard],
 })
 export class UserModule {}

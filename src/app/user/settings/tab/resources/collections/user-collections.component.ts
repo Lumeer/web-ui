@@ -24,7 +24,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {User} from '../../../../../core/store/users/user';
 import {userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
 import {ResourceType} from '../../../../../core/model/resource-type';
-import {ResourceRolesData} from '../list/user-resources-list.component';
+import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
 
 @Component({
   selector: 'user-collections',
@@ -47,21 +47,28 @@ export class UserCollectionsComponent implements OnChanges {
   @Input()
   public loaded: boolean;
 
+  @Input()
+  public isCurrentUser: boolean;
+
   public readonly resourceType = ResourceType.Collection;
 
-  public data: ResourceRolesData[];
+  public data: ResourceRolesData;
 
   public ngOnChanges(changes: SimpleChanges) {
     this.filter();
   }
 
   private filter() {
-    this.data = (this.collections || [])
+    const objects = (this.collections || [])
       .map(collection => this.computeData(collection))
       .filter(datum => datum.roles.length || datum.transitiveRoles.length);
+
+    const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.Collection, this.isCurrentUser);
+
+    this.data = {objects, emptyTitle};
   }
 
-  private computeData(collection: Collection): ResourceRolesData {
+  private computeData(collection: Collection): ResourceRolesDatum {
     const transitiveRoles = userTransitiveRoles(
       this.organization,
       this.project,

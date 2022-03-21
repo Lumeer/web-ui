@@ -22,9 +22,9 @@ import {Organization} from '../../../../../core/store/organizations/organization
 import {Project} from '../../../../../core/store/projects/project';
 import {User} from '../../../../../core/store/users/user';
 import {ResourceType} from '../../../../../core/model/resource-type';
-import {ResourceRolesData} from '../list/user-resources-list.component';
 import {linkTypePermissions, userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
 
 @Component({
   selector: 'user-link-types',
@@ -47,21 +47,28 @@ export class UserLinkTypesComponent implements OnChanges {
   @Input()
   public loaded: boolean;
 
+  @Input()
+  public isCurrentUser: boolean;
+
   public readonly resourceType = ResourceType.LinkType;
 
-  public data: ResourceRolesData[];
+  public data: ResourceRolesData;
 
   public ngOnChanges(changes: SimpleChanges) {
     this.filter();
   }
 
   private filter() {
-    this.data = (this.linkTypes || [])
+    const objects = (this.linkTypes || [])
       .map(linkType => this.computeData(linkType))
       .filter(datum => datum.roles.length || datum.transitiveRoles.length);
+
+    const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.LinkType, this.isCurrentUser);
+
+    this.data = {objects, emptyTitle};
   }
 
-  private computeData(linkType: LinkType): ResourceRolesData {
+  private computeData(linkType: LinkType): ResourceRolesDatum {
     const permissions = linkTypePermissions(linkType);
     const transitiveRoles = userTransitiveRoles(
       this.organization,

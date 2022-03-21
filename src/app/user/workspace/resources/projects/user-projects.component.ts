@@ -17,45 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ResourceType} from '../../../../../core/model/resource-type';
-import {ResourceRolesData, ResourceRolesDatum} from './resource-roles-data';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {ResourceType} from '../../../../core/model/resource-type';
+import {ResourceRolesData, ResourceRolesDatum} from '../../../settings/tab/resources/list/resource-roles-data';
 
 @Component({
-  selector: 'user-resources-list',
-  templateUrl: './user-resources-list.component.html',
-  styleUrls: ['./user-resources-list.component.scss'],
+  selector: 'user-projects',
+  templateUrl: './user-projects.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserResourcesListComponent {
+export class UserProjectsComponent {
   @Input()
-  public title: string;
+  public projectsData: ResourceRolesData;
 
   @Input()
-  public data: ResourceRolesData;
+  public workspace: Workspace;
 
   @Input()
-  public loaded: boolean;
-
-  @Input()
-  public resourceType: ResourceType;
-
-  @Input()
-  public selectable: boolean;
-
-  @Input()
-  public selectedId: string;
+  public selectedDatum: ResourceRolesDatum;
 
   @Output()
-  public selected = new EventEmitter<string>();
+  public selected = new EventEmitter<ResourceRolesDatum>();
+
+  public readonly resourceType = ResourceType;
 
   public trackByDatum(index: number, datum: ResourceRolesDatum): string {
     return datum.id;
-  }
-
-  public onClick(datum: ResourceRolesDatum) {
-    if (this.selectable) {
-      this.selected.emit(datum.id);
-    }
   }
 }

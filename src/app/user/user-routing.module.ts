@@ -31,12 +31,14 @@ import {WorkspaceUserActivityComponent} from './workspace/activity/workspace-use
 import {WorkspaceUserResourcesComponent} from './workspace/resources/workspace-user-resources.component';
 import {WorkspaceUserSettingsGuard} from './workspace/workspace-user-settings.guard';
 import {WorkspaceUserTabGuard} from './workspace/workspace-user-tab.guard';
+import {WorkspaceUserCleanUpGuard} from './workspace/workspace-user-clean-up.guard';
 
 const userRoutes: Routes = [
   {
     path: 'o/:organizationCode/u/:userId',
     component: WorkspaceUserComponent,
     canActivate: [AuthGuard, CurrentUserGuard, WorkspaceUserSettingsGuard],
+    canDeactivate: [WorkspaceUserCleanUpGuard],
     canActivateChild: [WorkspaceUserTabGuard],
     resolve: {
       organizations: OrganizationsProjectsGuard,

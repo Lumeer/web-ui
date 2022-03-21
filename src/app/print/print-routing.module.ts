@@ -22,7 +22,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
-import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up-guard.service';
+import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up.guard';
 import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {PrintComponent} from './print/print.component';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';

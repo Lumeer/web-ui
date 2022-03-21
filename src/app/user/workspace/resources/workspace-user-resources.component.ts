@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {Observable, combineLatest} from 'rxjs';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {combineLatest, Observable} from 'rxjs';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {ResourceType} from '../../../core/model/resource-type';
-import {ResourceRolesData} from '../../settings/tab/resources/list/user-resources-list.component';
-import {selectUserByWorkspace} from '../../../core/store/users/users.state';
+import {selectCurrentUser, selectUserByWorkspace} from '../../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
 import {map} from 'rxjs/operators';
@@ -34,16 +33,21 @@ import {Organization} from '../../../core/store/organizations/organization';
 import {User} from '../../../core/store/users/user';
 import {Project} from '../../../core/store/projects/project';
 import {ActivatedRoute, Router} from '@angular/router';
+import {
+  ResourceRolesData,
+  resourceRolesDataEmptyTitle,
+  ResourceRolesDatum,
+} from '../../settings/tab/resources/list/resource-roles-data';
 
 @Component({
   templateUrl: './workspace-user-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-block mt-4'},
 })
 export class WorkspaceUserResourcesComponent implements OnInit {
-  public readonly resourceType = ResourceType;
-
   public workspace$: Observable<Workspace>;
-  public projectsData$: Observable<ResourceRolesData[]>;
+  public projectsData$: Observable<ResourceRolesData>;
+  public selectedDatum$: Observable<ResourceRolesDatum>;
 
   constructor(private store$: Store<AppState>, private router: Router, private route: ActivatedRoute) {}
 
@@ -53,23 +57,31 @@ export class WorkspaceUserResourcesComponent implements OnInit {
       this.store$.pipe(select(selectUserByWorkspace)),
       this.store$.pipe(select(selectOrganizationByWorkspace)),
       this.store$.pipe(select(selectProjectsForWorkspace)),
+      this.store$.pipe(select(selectCurrentUser)),
     ]).pipe(
-      map(([user, organization, projects]) =>
-        projects
+      map(([user, organization, projects, currentUser]) => {
+        const objects = projects
           .map(project => this.computeData(project, organization, user))
-          .filter(datum => datum.roles.length || datum.transitiveRoles.length)
-      )
+          .filter(datum => datum.roles.length || datum.transitiveRoles.length);
+
+        const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.Project, user.id === currentUser?.id);
+        return {objects, emptyTitle};
+      })
+    );
+
+    this.selectedDatum$ = combineLatest([this.projectsData$, this.workspace$]).pipe(
+      map(([data, workspace]) => data.objects.find(datum => datum.id === workspace?.projectId))
     );
   }
 
-  private computeData(project: Project, organization: Organization, user: User): ResourceRolesData {
+  private computeData(project: Project, organization: Organization, user: User): ResourceRolesDatum {
     const transitiveRoles = userTransitiveRoles(organization, project, user, ResourceType.Project, project.permissions);
     const roles = project.permissions?.users?.find(role => role.id === user.id)?.roles || [];
 
     return {
       roles,
       transitiveRoles,
-      id: project.code,
+      id: project.id,
       name: project.code,
       colors: [project.color],
       icons: [project.icon],

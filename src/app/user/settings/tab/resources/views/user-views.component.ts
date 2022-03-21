@@ -22,9 +22,9 @@ import {Organization} from '../../../../../core/store/organizations/organization
 import {Project} from '../../../../../core/store/projects/project';
 import {User} from '../../../../../core/store/users/user';
 import {ResourceType} from '../../../../../core/model/resource-type';
-import {ResourceRolesData} from '../list/user-resources-list.component';
 import {userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
 import {View} from '../../../../../core/store/views/view';
+import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
 
 @Component({
   selector: 'user-views',
@@ -47,21 +47,28 @@ export class UserViewsComponent implements OnChanges {
   @Input()
   public loaded: boolean;
 
+  @Input()
+  public isCurrentUser: boolean;
+
   public readonly resourceType = ResourceType.View;
 
-  public data: ResourceRolesData[];
+  public data: ResourceRolesData;
 
   public ngOnChanges(changes: SimpleChanges) {
     this.filter();
   }
 
   private filter() {
-    this.data = (this.views || [])
+    const objects = (this.views || [])
       .map(view => this.computeData(view))
       .filter(datum => datum.roles.length || datum.transitiveRoles.length);
+
+    const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.View, this.isCurrentUser);
+
+    this.data = {objects, emptyTitle};
   }
 
-  private computeData(view: View): ResourceRolesData {
+  private computeData(view: View): ResourceRolesDatum {
     const transitiveRoles = userTransitiveRoles(
       this.organization,
       this.project,

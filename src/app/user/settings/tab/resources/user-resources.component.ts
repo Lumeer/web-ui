@@ -35,7 +35,7 @@ import {Project} from '../../../../core/store/projects/project';
 import {selectOrganizationById} from '../../../../core/store/organizations/organizations.state';
 import {selectProjectById} from '../../../../core/store/projects/projects.state';
 import {User} from '../../../../core/store/users/user';
-import {mapGroupsOnUser, selectUserByWorkspace} from '../../../../core/store/users/users.state';
+import {mapGroupsOnUser, selectCurrentUser, selectUserByWorkspace} from '../../../../core/store/users/users.state';
 import {selectTeamsByOrganization} from '../../../../core/store/teams/teams.state';
 import {map} from 'rxjs/operators';
 import {ResourcesAction} from '../../../../core/store/resources/data-resources.action';
@@ -56,6 +56,7 @@ export class UserResourcesComponent implements OnInit, OnChanges {
   public organization$: Observable<Organization>;
   public project$: Observable<Project>;
   public user$: Observable<User>;
+  public isCurrentUser$: Observable<boolean>;
 
   public collections$: Observable<Collection[]>;
   public collectionsLoaded$: Observable<boolean>;
@@ -83,6 +84,11 @@ export class UserResourcesComponent implements OnInit, OnChanges {
       map(views => sortResourcesByFavoriteAndLastUsed(views))
     );
     this.viewsLoaded$ = this.store$.pipe(select(selectViewsLoaded));
+
+    this.isCurrentUser$ = combineLatest([
+      this.store$.pipe(select(selectUserByWorkspace)),
+      this.store$.pipe(select(selectCurrentUser)),
+    ]).pipe(map(([user, currentUser]) => user?.id === currentUser?.id));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

@@ -1,8 +1,9 @@
-<ng-container *ngIf="{user: user$ | async, organization: organization$ | async, project: project$ | async} as data">
+<ng-container *ngIf="{user: user$ | async, organization: organization$ | async, project: project$ | async, isCurrentUser: isCurrentUser$ | async} as data">
   <user-views class="d-block mt-4"
               [user]="data.user"
               [organization]="data.organization"
               [project]="data.project"
+              [isCurrentUser]="data.isCurrentUser"
               [views]="views$ | async"
               [loaded]="viewsLoaded$ | async">
   </user-views>
@@ -10,6 +11,7 @@
                     [user]="data.user"
                     [organization]="data.organization"
                     [project]="data.project"
+                    [isCurrentUser]="data.isCurrentUser"
                     [collections]="collections$ | async"
                     [loaded]="collectionsLoaded$ | async">
   </user-collections>
@@ -17,6 +19,7 @@
                    [user]="data.user"
                    [organization]="data.organization"
                    [project]="data.project"
+                   [isCurrentUser]="data.isCurrentUser"
                    [linkTypes]="linkTypes$ | async"
                    [loaded]="linkTypesLoaded$ | async">
   </user-link-types>
