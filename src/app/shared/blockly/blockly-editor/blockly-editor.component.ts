@@ -109,6 +109,10 @@ import {GetVariableBlocklyComponent} from './blocks/get-variable-blockly-compone
 import {GetSmtpConfigurationBlocklyComponent} from './blocks/get-smtp-configuration-blockly-component';
 import {SendSmtpEmailBlocklyComponent} from './blocks/send-smtp-email-blockly-component';
 import {ReplacePatternBlocklyComponent} from './blocks/replace-pattern-blockly-component';
+import {GetViewNameBlocklyComponent} from './blocks/get-view-name-blockly-component';
+import {RemoveDocumentsInViewBlocklyComponent} from './blocks/remove-documents-in-view-blockly-component';
+import {MergeArraysBlocklyComponent} from './blocks/merge-arrays-blockly-component';
+import {NavigateSearchBlocklyComponent} from './blocks/navigate-search-blockly-component';
 
 declare var Blockly: any;
 
@@ -220,9 +224,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new LinkDocumentsNoReturnBlocklyComponent(this.blocklyUtils, this.linkTypes),
       new LinkDocumentsReturnBlocklyComponent(this.blocklyUtils, this.linkTypes),
       new ReadDocumentsBlocklyComponent(this.blocklyUtils, this.views),
+      new GetViewNameBlocklyComponent(this.blocklyUtils, this.views),
+      new RemoveDocumentsInViewBlocklyComponent(this.blocklyUtils, this.views),
       new SendEmailBlocklyComponent(this.blocklyUtils),
       new NavigateBlocklyComponent(this.blocklyUtils, this.views),
       new NavigateByIdBlocklyComponent(this.blocklyUtils),
+      new NavigateSearchBlocklyComponent(this.blocklyUtils, this.views),
       new ShareViewBlocklyComponent(this.blocklyUtils),
       new GetSiblingsBlocklyComponent(this.blocklyUtils, this.linkTypes),
       new GetParentDocumentBlocklyComponent(this.blocklyUtils),
@@ -251,6 +258,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetSmtpConfigurationBlocklyComponent(this.blocklyUtils),
       new SendSmtpEmailBlocklyComponent(this.blocklyUtils),
       new ReplacePatternBlocklyComponent(this.blocklyUtils),
+      new MergeArraysBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
