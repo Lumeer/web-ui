@@ -2,7 +2,7 @@
   <strong>{{data.index | previewRangeString:(numVisibleRows$ | async):dataResources.length}}</strong>
   &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{dataResources.length}}
 </div>
-<div class="position-relative table-wrapper" [id]="resource.id" [style.height.px]="tableHeight">
+<div class="position-relative table-wrapper" [id]="resource?.id" [style.height.px]="tableHeight">
   <preview-results-alternative-header *ngIf="hasData"
                                       [columns]="columns"
                                       [columnWidth]="columnWidth$ | async"
@@ -27,7 +27,7 @@
       </thead>
       <tbody>
       <tr *ngIf="!hasData">
-        <td [attr.colspan]="resource.attributes.length" class="text-center fw-bold">
+        <td [attr.colspan]="resource?.attributes?.length" class="text-center fw-bold">
           <h4 class="pt-3" i18n="@@shared.preview.results.noResults">No records found.</h4>
         </td>
       </tr>
@@ -53,7 +53,7 @@
 <div *ngIf="resizeable && hasData" resizer class="lmr-resizer mb-3 w-100"
      tagName="lmr-table"
      [minHeight]="100"
-     [reference]="resource.id"
+     [reference]="resource?.id"
      (onResize)="onTableResize(table, $event)"
      i18n-title="@@perspective.workflow.table.resize"
      title="Resize table">

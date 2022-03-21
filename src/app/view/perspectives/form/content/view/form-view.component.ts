@@ -184,7 +184,7 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
 
   private observeDocument() {
     const collectionId$ = this.collection$.pipe(
-      map(collection => collection.id),
+      map(collection => collection?.id),
       distinctUntilChanged()
     );
     this.document$ = combineLatest([this.selectedDocumentIds$, this.data$, collectionId$]).pipe(
