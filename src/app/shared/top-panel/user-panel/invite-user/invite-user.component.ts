@@ -23,10 +23,12 @@ import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {ModalService} from '../../../modal/modal.service';
-import {selectUsersForWorkspace} from '../../../../core/store/users/users.state';
+import {selectCurrentUser, selectUsersForWorkspace} from '../../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {UsersAction} from '../../../../core/store/users/users.action';
+import {UserHintsKeys} from '../../../../core/store/users/user';
 
 @Component({
   selector: 'invite-user',
@@ -39,7 +41,9 @@ export class InviteUserComponent implements OnInit {
   public mobile: boolean;
 
   public projectPermissions$: Observable<AllowedPermissions>;
+
   public projectUsers$: Observable<number>;
+  public displayInviteUsersHint$: Observable<boolean>;
 
   constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
@@ -49,9 +53,18 @@ export class InviteUserComponent implements OnInit {
       select(selectUsersForWorkspace),
       map(users => users?.length)
     );
+
+    this.displayInviteUsersHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.inviteUsersHintDismissed)
+    );
   }
 
   public onInviteUser() {
     this.modalService.show(InviteUserModalComponent, {keyboard: true, backdrop: 'static', initialState: {}});
+  }
+
+  public onHintDismissed() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.inviteUsersHintDismissed, value: true}));
   }
 }

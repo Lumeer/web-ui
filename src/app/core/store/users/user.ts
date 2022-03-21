@@ -87,6 +87,10 @@ export enum UserHintsKeys {
   shareViewHintDismissed = 'shareViewHintDismissed',
 
   searchHintDismissed = 'searchHintDismissed',
+
+  inviteUsersHintDismissed = 'inviteUsersHintDismissed',
+
+  addNewTaskHintDismissed = 'addNewTaskHintDismissed',
 }
 
 export interface UserHints {
@@ -114,6 +118,10 @@ export interface UserHints {
   shareViewHintDismissed?: boolean;
 
   searchHintDismissed?: boolean;
+
+  inviteUsersHintDismissed?: boolean;
+
+  addNewTaskHintDismissed?: boolean;
 }
 
 export interface NotificationsSettings {

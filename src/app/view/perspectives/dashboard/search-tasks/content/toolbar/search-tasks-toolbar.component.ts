@@ -17,11 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit} from '@angular/core';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {CreateDocumentModalComponent} from '../../../../../../shared/modal/create-document/create-document-modal.component';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../../../../core/store/app.state';
+import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
+import {UsersAction} from '../../../../../../core/store/users/users.action';
+import {UserHintsKeys} from '../../../../../../core/store/users/user';
 
 @Component({
   selector: 'search-tasks-toolbar',
@@ -29,7 +36,7 @@ import {ModalService} from '../../../../../../shared/modal/modal.service';
   styleUrls: ['./search-tasks-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTasksToolbarComponent {
+export class SearchTasksToolbarComponent implements OnInit {
   @Input()
   public size: SizeType;
 
@@ -45,7 +52,16 @@ export class SearchTasksToolbarComponent {
   @Output()
   public sizeChange = new EventEmitter<SizeType>();
 
-  constructor(private modalService: ModalService) {}
+  public displayNewTaskHint$: Observable<boolean>;
+
+  constructor(private modalService: ModalService, private store$: Store<AppState>) {}
+
+  public ngOnInit(): void {
+    this.displayNewTaskHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.addNewTaskHintDismissed)
+    );
+  }
 
   public onSizeChange(size: SizeType) {
     this.sizeChange.emit(size);
@@ -56,5 +72,9 @@ export class SearchTasksToolbarComponent {
       const initialState = {purpose: CollectionPurposeType.Tasks, viewId: this.viewId};
       this.modalService.showStaticDialog(initialState, CreateDocumentModalComponent);
     }
+  }
+
+  public onHintDismissed() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.addNewTaskHintDismissed, value: true}));
   }
 }
