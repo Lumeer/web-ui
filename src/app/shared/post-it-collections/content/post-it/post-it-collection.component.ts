@@ -95,6 +95,7 @@ export class PostItCollectionComponent implements OnChanges, OnInit {
   public queryParams: any;
 
   public displayTableSettingsHint$: Observable<boolean>;
+  public applicationHintsEnabled$: Observable<boolean>;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -102,6 +103,11 @@ export class PostItCollectionComponent implements OnChanges, OnInit {
     this.displayTableSettingsHint$ = this.store$.pipe(
       select(selectCurrentUser),
       map(user => !user.hints.tableSettingsHintDismissed)
+    );
+
+    this.applicationHintsEnabled$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => user.hints.applicationHints)
     );
   }
 

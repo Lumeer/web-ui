@@ -1,7 +1,10 @@
 <a class="card post-it cursor-pointer color-inherit"
+   *ngIf="{displayTableSettingsHint: shouldCollectionDisplayHint
+                                      && (displayTableSettingsHint$ | async)
+                                      && (applicationHintsEnabled$ | async)} as data"
    [class.uninitialized]="!collection.id"
    [class.initialized]="collection.id"
-   [class.simulateHover]="shouldCollectionDisplayHint && (displayTableSettingsHint$ | async)"
+   [class.simulateHover]="data.displayTableSettingsHint"
    [routerLink]="path"
    [queryParams]="queryParams">
   <div class="card-body text-center">
@@ -38,7 +41,7 @@
 
     <div *ngIf="collection.id"
          class="document-count opacity-content clickable"
-         [class.always-visible]="shouldCollectionDisplayHint && (displayTableSettingsHint$ | async)">
+         [class.always-visible]="data.displayTableSettingsHint">
       <span title="Record Count" i18n-title="@@collection.document.count">
         <i class="far fa-file"
            aria-hidden="true">
@@ -48,7 +51,7 @@
     <div *ngIf="collection.id && permissions.roles?.Read"
          class="toggle-favorite opacity-content clickable text-warning"
          [class.always-visible]="collection.favorite"
-         [class.first-collection]="shouldCollectionDisplayHint && (displayTableSettingsHint$ | async)">
+         [class.first-collection]="data.displayTableSettingsHint">
       <!--Honza - lepsi nazev classy first-collection?-->
       <span *ngIf="collection.favorite"
             title="Remove from favorites"
@@ -70,7 +73,7 @@
 
     <div *ngIf="collection.id"
          class="buttons opacity-content d-flex flex-column"
-         [class.always-visible]="shouldCollectionDisplayHint && (displayTableSettingsHint$ | async)">
+         [class.always-visible]="data.displayTableSettingsHint">
       <div id="dropdown-{{collection.id}}">
         <a *ngIf="canManageDetail" title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-start"
@@ -78,7 +81,7 @@
           <i class="fas fa-fw fa-cog"
              aria-hidden="true"></i>
         </a>
-        <hint *ngIf="shouldCollectionDisplayHint && (displayTableSettingsHint$ | async)"
+        <hint *ngIf="data.displayTableSettingsHint"
               title="Table Settings"
               (click)="$event.preventDefault(); $event.stopPropagation();"
               (dismissHint)="onHintDismissed();">
