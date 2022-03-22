@@ -2879,16 +2879,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="search.views.empty.subtitle.task" datatype="html">
         <source>Views are the most important part of Lumeer that boosts your productivity and saves your time.</source><target state="final">Views are the most important part of Lumeer that boosts your productivity and saves your time.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="search.tab.all" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="all" datatype="html">
         <source>All</source><target state="final">All</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="search.tab.tasks" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="tasks" datatype="html">
         <source>Tasks</source><target state="final">Tasks</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="search.tab.collections" datatype="html">
-        <source>Tables</source><target state="final">Tables</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
         <source>I am sorry but you do not have permissions to add tables. </source><target state="final">I am sorry but you do not have permissions to add tables. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/warning-message/empty-data/empty-data.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.notab" datatype="html">

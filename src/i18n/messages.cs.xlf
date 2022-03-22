@@ -293,19 +293,14 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit>
 
-            <trans-unit id="search.tab.all" datatype="html">
+            <trans-unit id="all" datatype="html">
                 <source>All</source>
                 <target>Vše</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="search.tab.tasks" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="tasks" datatype="html">
         <source>Tasks</source><target>Úkoly</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
-            <trans-unit id="search.tab.collections" datatype="html">
-                <source>Tables</source>
-                <target>Tabulky</target>
-
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">100</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">98</context></context-group>
          <trans-unit id="collections.empty.subtitle.norights" datatype="html">
         <source>I am sorry but you do not have permissions to add tables. </source><target>Je mi líto, ale nemáte oprávnění přidávat tabulky.</target>
 

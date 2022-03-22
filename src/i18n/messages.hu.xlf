@@ -5313,15 +5313,11 @@
 					<source>See More</source>
 					<target>Bővebben</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/button/see-more/see-more-button.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit>
-				<trans-unit datatype="html" id="search.tab.all">
+				<trans-unit datatype="html" id="all">
 					<source>All</source>
 					<target>Minden</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">97</context></context-group></trans-unit>
-				<trans-unit datatype="html" id="search.tab.collections">
-					<source>Tables</source>
-					<target>Táblázatok</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">100</context></context-group></trans-unit>
-				<trans-unit datatype="html" id="search.tab.tasks">
+				<trans-unit datatype="html" id="tasks">
 					<source>Tasks</source>
 					<target>Feladatok</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
