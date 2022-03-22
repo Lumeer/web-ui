@@ -333,6 +333,38 @@
           <context context-type="sourcefile">src/app/user/settings/header/user-settings-header.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
+      </trans-unit><trans-unit id="user.resources.collections.title" datatype="html">
+        <source>Tables</source><target>Tabulky</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="user.resources.linkTypes.title" datatype="html">
+        <source>Link Types</source><target>Typy vazeb</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/link-types/user-link-types.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="user.resources.empty.current" datatype="html">
+        <source>You do not not have right to see nor access any {type, select, project {project} collection {table} view {view} link_type {link type}}</source>
+        <target>Nemáte oprávnění vidět ani přistupovat k {type, select, project {žádnému projektu} collection {žádné tabulce} view {žádnému pohledu} link_type {žádnému typu vazby}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/list/resource-roles-data.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="user.resources.empty.other" datatype="html">
+        <source>This user does not have right to see nor access any {type, select, project {project} collection {table} view {view} link_type {link type}}</source>
+        <target>Tento uživatel nemá oprávnění vidět ani přistupovat k {type, select, project {žádnému projektu} collection {žádné tabulce} view {žádnému pohledu} link_type {žádnému typu vazby}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/list/resource-roles-data.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit><trans-unit id="user.resources.views.title" datatype="html">
+        <source>Views</source><target>Pohledy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
       </trans-unit><trans-unit id="user.settings.tab.resources" datatype="html">
         <source>Resources</source><target>Zdroje</target>
         <context-group purpose="location">
@@ -341,21 +373,18 @@
         </context-group>
       </trans-unit><trans-unit id="user.not.exist" datatype="html">
         <source>User does not exist</source><target>Uživatel neexistuje</target>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="user.resources.projects.title" datatype="html">
+        <source>Projects</source><target>Projekty</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="sourcefile">src/app/user/workspace/resources/projects/user-projects.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="user.permission.missing" datatype="html">
         <source>You do not have permission to access this user</source><target>Nemáte oprávnění přistupovat k tomuto uživateli</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.favorite" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="view.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/></target>
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="views.folders.number.views" datatype="html">
         <source>Number of views</source><target>Počet pohledů</target>
@@ -2174,7 +2203,7 @@
                 <source>Organization does not exist</source>
                 <target state="final">Organizace neexistuje</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
             <trans-unit id="organization.permission.missing" datatype="html">
                 <source>You do not have permission to access this organization</source>
                 <target state="final">Nemáte přístupové právo k této organizaci</target>
@@ -3505,12 +3534,12 @@
                 <source>Table does not exist</source>
                 <target>Tabulka neexistuje</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">116</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">117</context></context-group></trans-unit>
             <trans-unit id="file.permission.missing" datatype="html">
                 <source>You do not have permission to access this table</source>
                 <target>Nemáte oprávnění přistupovat k této tabulce</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">121</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
             <trans-unit id="collection.tab.attributes.delete.message" datatype="html">
                 <source>Do you really want to delete attribute "<x id="name" equiv-text="attribute.name"/>"?</source>
                 <target>Chcete skutečně smazat atribut "<x id="name" equiv-text="{{name}}"/>"?</target>
@@ -4119,7 +4148,7 @@
                 <source>Project does not exist</source>
                 <target>Projekt neexistuje</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
             <trans-unit id="project.permission.missing" datatype="html">
                 <source>You do not have permission to access this project</source>
                 <target>Nemáte oprávnění přistupovat k tomuto projektu</target>
@@ -4250,7 +4279,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/teams/user-teams.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="users.actions.delete" datatype="html">
         <source>Delete User</source><target>Odstranit uživatele</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit>
 
 
             <trans-unit id="users.header.search.placeholder" datatype="html">
@@ -4283,7 +4312,7 @@
                 <source>Remove User</source>
                 <target>Odstranit uživatele</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit>
             <trans-unit id="users.add.button" datatype="html">
                 <source>Invite user</source>
                 <target>Pozvat uživatele</target>

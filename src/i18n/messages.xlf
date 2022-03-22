@@ -157,7 +157,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
@@ -184,7 +184,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
@@ -195,14 +195,14 @@
         <source>Table does not exist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="file.permission.missing" datatype="html">
         <source>You do not have permission to access this table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.settings.users.count" datatype="html">
@@ -8821,14 +8821,14 @@
         <source>Delete User</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.actions.remove" datatype="html">
         <source>Remove User</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.user.delete.message" datatype="html">
@@ -8927,6 +8927,41 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="user.resources.collections.title" datatype="html">
+        <source>Tables</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="user.resources.linkTypes.title" datatype="html">
+        <source>Link Types</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/link-types/user-link-types.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="user.resources.empty.current" datatype="html">
+        <source>You do not not have right to see nor access any {type, select, project {project} collection {table} view {view} link_type {link type}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/list/resource-roles-data.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="user.resources.empty.other" datatype="html">
+        <source>This user does not have right to see nor access any {type, select, project {project} collection {table} view {view} link_type {link type}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/list/resource-roles-data.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="user.resources.views.title" datatype="html">
+        <source>Views</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="user.settings.tab.resources" datatype="html">
         <source>Resources</source>
         <context-group purpose="location">
@@ -8942,14 +8977,21 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="user.resources.projects.title" datatype="html">
+        <source>Projects</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/workspace/resources/projects/user-projects.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.permission.missing" datatype="html">
         <source>You do not have permission to access this user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.calendar.config.position.save" datatype="html">
