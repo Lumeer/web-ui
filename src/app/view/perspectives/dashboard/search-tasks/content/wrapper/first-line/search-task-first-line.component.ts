@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {ConstraintData} from '@lumeer/data-filters';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -25,6 +25,13 @@ import {TaskAttributes} from '../../../model/task-attributes';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 import {View} from '../../../../../../../core/store/views/view';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {Observable} from 'rxjs';
+import {selectCurrentUser} from '../../../../../../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
+import {UserHintsKeys} from '../../../../../../../core/store/users/user';
+import {UsersAction} from '../../../../../../../core/store/users/users.action';
 
 @Component({
   selector: 'search-task-first-line',
@@ -32,7 +39,7 @@ import {View} from '../../../../../../../core/store/views/view';
   styleUrls: ['./search-task-first-line.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTaskFirstLineComponent {
+export class SearchTaskFirstLineComponent implements OnInit {
   @Input()
   public collection: Collection;
 
@@ -55,13 +62,30 @@ export class SearchTaskFirstLineComponent {
   public attributes: TaskAttributes;
 
   @Input()
-  public shouldDisplayHints: boolean;
+  public IsFirstCollection: boolean;
 
   @Output()
   public detail = new EventEmitter();
 
   @Output()
   public toggleFavorite = new EventEmitter();
+
+  public displayPinTaskHint$: Observable<boolean>;
+  public displayTaskDetailHint$: Observable<boolean>;
+
+  constructor(private store$: Store<AppState>) {}
+
+  ngOnInit(): void {
+    this.displayPinTaskHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.pinTaskHintDismissed)
+    );
+
+    this.displayTaskDetailHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.detailTaskHintDismissed)
+    );
+  }
 
   public readonly configuration: DataInputConfiguration = {
     common: {inline: true},
@@ -74,4 +98,17 @@ export class SearchTaskFirstLineComponent {
     ...this.configuration,
     user: {allowCenterOnlyIcon: true, onlyIcon: true},
   };
+
+  public onHintDismissed(hintKey: string) {
+    switch (hintKey) {
+      case 'pin':
+        hintKey = UserHintsKeys.pinTaskHintDismissed;
+        break;
+      case 'detail':
+        hintKey = UserHintsKeys.detailTaskHintDismissed;
+        break;
+    }
+
+    this.store$.dispatch(new UsersAction.SetHint({hint: hintKey, value: true}));
+  }
 }

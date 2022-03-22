@@ -89,8 +89,11 @@ export enum UserHintsKeys {
   searchHintDismissed = 'searchHintDismissed',
 
   inviteUsersHintDismissed = 'inviteUsersHintDismissed',
+  notificationsHintDismissed = 'notificationsHintDismissed',
 
   addNewTaskHintDismissed = 'addNewTaskHintDismissed',
+  pinTaskHintDismissed = 'pinTaskHintDismissed',
+  detailTaskHintDismissed = 'detailTaskHintDismissed',
 }
 
 export interface UserHints {
@@ -120,8 +123,11 @@ export interface UserHints {
   searchHintDismissed?: boolean;
 
   inviteUsersHintDismissed?: boolean;
+  notificationsHintDismissed?: boolean;
 
   addNewTaskHintDismissed?: boolean;
+  pinTaskHintDismissed?: boolean;
+  detailTaskHintDismissed?: boolean;
 }
 
 export interface NotificationsSettings {

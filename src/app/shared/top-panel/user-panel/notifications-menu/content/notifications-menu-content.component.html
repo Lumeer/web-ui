@@ -9,19 +9,21 @@
     </span>
   </span>
 
-  <hint *ngIf="true" title="Notifications">
+  <hint *ngIf="displayNotificationsHint$ | async"
+        (dismissHint)="onHintDismissed()"
+        title="Notifications">
     <span>Tady uvidíte všechny notifikace z Lumeeru. Tady vás také mimo jiné bude Lumeer upozorňovat, že je nějaký úkol již po termínu dokončení. Oznámení můžete smazat, nebo zobrazovat pouze nová, nepřečtená.</span>
   </hint>
-</div>
 
-<notifications-menu-dropdown #dropdown
-                             [organizations]="organizations"
-                             [allNotifications]="allNotifications"
-                             [unreadNotifications]="unreadNotifications"
-                             [unreadOnly]="unreadOnly"
-                             [origin]="origin"
-                             (clickNotification)="clickNotification.emit($event)"
-                             (deleteNotification)="deleteNotification.emit($event)"
-                             (readNotification)="readNotification.emit($event)"
-                             (toggleUnread)="toggleUnread.emit($event)">
-</notifications-menu-dropdown>
+  <notifications-menu-dropdown #dropdown
+                               [organizations]="organizations"
+                               [allNotifications]="allNotifications"
+                               [unreadNotifications]="unreadNotifications"
+                               [unreadOnly]="unreadOnly"
+                               [origin]="origin"
+                               (clickNotification)="clickNotification.emit($event)"
+                               (deleteNotification)="deleteNotification.emit($event)"
+                               (readNotification)="readNotification.emit($event)"
+                               (toggleUnread)="toggleUnread.emit($event)">
+  </notifications-menu-dropdown>
+</div>

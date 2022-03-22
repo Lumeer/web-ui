@@ -17,10 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit} from '@angular/core';
 import {UserNotification} from '../../../../../core/model/user-notification';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Dictionary} from '@ngrx/entity';
+import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../../../core/store/app.state';
+import {selectCurrentUser} from '../../../../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
+import {UsersAction} from '../../../../../core/store/users/users.action';
+import {UserHintsKeys} from '../../../../../core/store/users/user';
 
 @Component({
   selector: 'notifications-menu-content',
@@ -28,7 +35,7 @@ import {Dictionary} from '@ngrx/entity';
   styleUrls: ['./notifications-menu-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationsMenuContentComponent {
+export class NotificationsMenuContentComponent implements OnInit {
   @Input()
   public unreadNotifications: UserNotification[];
 
@@ -52,4 +59,19 @@ export class NotificationsMenuContentComponent {
 
   @Output()
   public clickNotification = new EventEmitter<UserNotification>();
+
+  public displayNotificationsHint$: Observable<boolean>;
+
+  constructor(private store$: Store<AppState>) {}
+
+  ngOnInit(): void {
+    this.displayNotificationsHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.notificationsHintDismissed)
+    );
+  }
+
+  onHintDismissed() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.notificationsHintDismissed, value: true}));
+  }
 }
