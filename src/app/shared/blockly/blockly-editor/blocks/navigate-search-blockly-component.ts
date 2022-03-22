@@ -56,7 +56,7 @@ export class NavigateSearchBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.NAVIGATE_TO_VIEW_SEARCH,
-          message0: 'navigate to view %1 %2 in %3 browser tab %4 with the sidebar %5 %6 with search query %7', //'%{BKY_BLOCK_NAVIGATE_TO_VIEW_SEARCH}', // navigate to view %1 %2 in %3 browser tab %4 with the sidebar %5 %6 with search query %7
+          message0: '%{BKY_BLOCK_NAVIGATE_TO_VIEW_SEARCH}', // navigate to view %1 %2 in %3 browser tab %4 with the sidebar %5 %6 with search query %7
           args0: [
             {
               type: 'field_dropdown',

@@ -44,7 +44,7 @@ export class GetViewNameBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.GET_VIEW_NAME,
-          message0: 'get view name from id %1', //'%{BKY_BLOCK_GET_VIEW_NAME}', // get view name from id %1
+          message0: '%{BKY_BLOCK_GET_VIEW_NAME}', // get view name from id %1
           args0: [
             {
               type: 'input_value',

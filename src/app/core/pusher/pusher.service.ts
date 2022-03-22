@@ -21,14 +21,14 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import Pusher from 'pusher-js';
 import {of, timer} from 'rxjs';
-import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, combineLatest, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationDto, ProjectDto} from '../dto';
 import {ResourceType, resourceTypesMap} from '../model/resource-type';
 import {AppState} from '../store/app.state';
 import {convertCollectionDtoToModel} from '../store/collections/collection.converter';
 import {CollectionsAction} from '../store/collections/collections.action';
-import {selectCollectionsDictionary} from '../store/collections/collections.state';
+import {selectCollectionById, selectCollectionsDictionary} from '../store/collections/collections.state';
 import {selectWorkspaceModels} from '../store/common/common.selectors';
 import {convertDocumentDtoToModel} from '../store/documents/document.converter';
 import {DocumentsAction} from '../store/documents/documents.action';
@@ -76,7 +76,7 @@ import {AppIdService} from '../service/app-id.service';
 import {NotificationButton} from '../notifications/notification-button';
 import {Router} from '@angular/router';
 import {LocationStrategy} from '@angular/common';
-import {convertQueryModelToString} from '../store/navigation/query/query.converter';
+import {addFiltersToQuery, convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
 import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {ConfigurationService} from '../../configuration/configuration.service';
@@ -90,6 +90,7 @@ import {convertSelectionListDtoToModel} from '../store/selection-lists/selection
 import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
 import {convertDashboardDataDtoToModel} from '../store/dashboard-data/dashboard-data.converter';
 import {convertResourceVariableDtoToModel} from '../store/resource-variables/resource-variable.converter';
+import {Query} from '../store/navigation/query/query';
 
 @Injectable({
   providedIn: 'root',
@@ -442,44 +443,49 @@ export class PusherService implements OnDestroy {
     });
   }
 
+  private navigateAction(dataObject: any, view: View, replacementQuery: Query = null) {
+    const encodedQuery = convertQueryModelToString(replacementQuery ? replacementQuery : view.query);
+    const encodedCursor = isNotNullOrUndefined(dataObject.documentId)
+      ? convertViewCursorToString({
+          collectionId: dataObject.collectionId,
+          documentId: dataObject.documentId,
+          attributeId: dataObject.attributeId,
+          sidebar: dataObject.sidebar,
+        })
+      : '';
+
+    if (dataObject.newWindow) {
+      const a = document.createElement('a');
+      a.href = `${this.locationStrategy.getBaseHref()}w/${dataObject.organizationCode}/${
+        dataObject.projectCode
+      }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
+
+      if (dataObject.newWindow) {
+        a.target = '_blank';
+      }
+
+      a.click();
+    } else {
+      this.router.navigate(
+        ['/w', dataObject.organizationCode, dataObject.projectCode, 'view', {vc: view.code}, view.perspective],
+        {queryParams: {q: encodedQuery, c: encodedCursor}}
+      );
+    }
+  }
+
   private bindNavigateEvents() {
     this.channel.bind('NavigationRequest', data => {
       if (this.isCurrentWorkspace(data) && this.isCurrentAppTab(data)) {
         this.store$.pipe(select(selectViewById(data.object.viewId)), take(1)).subscribe(view => {
           if (view) {
-            const encodedQuery = convertQueryModelToString(view.query);
-            const encodedCursor = isNotNullOrUndefined(data.object.documentId)
-              ? convertViewCursorToString({
-                  collectionId: data.object.collectionId,
-                  documentId: data.object.documentId,
-                  attributeId: data.object.attributeId,
-                  sidebar: data.object.sidebar,
-                })
-              : '';
-
-            if (data.object.newWindow) {
-              const a = document.createElement('a');
-              a.href = `${this.locationStrategy.getBaseHref()}w/${data.object.organizationCode}/${
-                data.object.projectCode
-              }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
-
-              if (data.object.newWindow) {
-                a.target = '_blank';
-              }
-
-              a.click();
+            if (data.object.search && view.query?.stems?.length > 0) {
+              this.store$
+                .pipe(select(selectCollectionById(view.query.stems[0].collectionId)), take(1))
+                .subscribe(collection => {
+                  this.navigateAction(data.object, view, addFiltersToQuery(view.query, data.object.search, collection));
+                });
             } else {
-              this.router.navigate(
-                [
-                  '/w',
-                  data.object.organizationCode,
-                  data.object.projectCode,
-                  'view',
-                  {vc: view.code},
-                  view.perspective,
-                ],
-                {queryParams: {q: encodedQuery, c: encodedCursor}}
-              );
+              this.navigateAction(data.object, view);
             }
           }
         });

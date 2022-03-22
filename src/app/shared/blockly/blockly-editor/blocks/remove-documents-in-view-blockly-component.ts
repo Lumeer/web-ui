@@ -53,7 +53,7 @@ export class RemoveDocumentsInViewBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.REMOVE_DOCUMENTS_IN_VIEW,
-          message0: 'remove documents in view %1', //'%{BKY_BLOCK_REMOVE_DOCUMENTS_IN_VIEW}', // read records from %1
+          message0: '%{BKY_BLOCK_REMOVE_DOCUMENTS_IN_VIEW}', // remove documents in view %1
           args0: [
             {
               type: 'input_value',

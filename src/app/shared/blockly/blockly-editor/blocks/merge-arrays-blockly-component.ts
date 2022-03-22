@@ -44,7 +44,7 @@ export class MergeArraysBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.MERGE_ARRAYS,
-          message0: 'merge array %1 and array %2 using delimiter %3', //'%{BKY_BLOCK_MERGE_ARRAYS}', // merge array %1 and array %2 using delimiter %3
+          message0: '%{BKY_BLOCK_MERGE_ARRAYS}', // merge array %1 and array %2 using delimiter %3
           args0: [
             {
               type: 'input_value',
