@@ -23,7 +23,7 @@
 
 <div class="d-flex align-items-center">
   <a [routerLink]="userSettingsUrl" [queryParams]="userSettingsParams" *ngIf="canManageUserDetail">
-    <i class="fas fa-fw fa-user-lock m-1 cursor-pointer" aria-hidden="true" title="Review user rights" i18n-title="@@user.actions.review.rights"></i>
+    <i class="fas fa-fw fa-user-gear m-1 cursor-pointer" aria-hidden="true" title="Review user rights, teams, and activities" i18n-title="@@user.actions.review.rights"></i>
   </a>
   <i class="far fa-fw fa-trash-alt text-danger m-1 cursor-pointer"
      *ngIf="deletable"
