@@ -3,7 +3,7 @@
   <span class="badge bg-success">{{projectsData.objects.length}}</span>
 </div>
 
-<ul class="nav nav-tabs mt-2" *ngIf="projectsData.objects.length; else empty">
+<ul class="nav nav-tabs mt-3" *ngIf="projectsData.objects.length; else empty">
   <li *ngFor="let datum of projectsData.objects; trackBy: trackByDatum; let last = last"
       role="presentation" class="nav-item">
     <div class="nav-link cursor-pointer" [class.active]="datum.id === workspace.projectId" (click)="selected.emit(datum)">

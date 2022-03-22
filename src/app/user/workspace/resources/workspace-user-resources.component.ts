@@ -42,7 +42,7 @@ import {
 @Component({
   templateUrl: './workspace-user-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-block mt-4'},
+  host: {class: 'd-block px-3', style: 'margin-top: 2.25rem'},
 })
 export class WorkspaceUserResourcesComponent implements OnInit {
   public workspace$: Observable<Workspace>;
