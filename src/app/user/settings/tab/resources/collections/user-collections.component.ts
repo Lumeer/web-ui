@@ -22,9 +22,10 @@ import {Organization} from '../../../../../core/store/organizations/organization
 import {Project} from '../../../../../core/store/projects/project';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {User} from '../../../../../core/store/users/user';
-import {userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
+import {userRolesInProject, userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
+import {RoleType} from '../../../../../core/model/role-type';
 
 @Component({
   selector: 'user-collections',
@@ -69,14 +70,19 @@ export class UserCollectionsComponent implements OnChanges {
   }
 
   private computeData(collection: Collection): ResourceRolesDatum {
-    const transitiveRoles = userTransitiveRoles(
-      this.organization,
-      this.project,
-      this.user,
-      ResourceType.Collection,
-      collection.permissions
-    );
-    const roles = collection.permissions?.users?.find(role => role.id === this.user.id)?.roles || [];
+    const projectRoles = userRolesInProject(this.organization, this.project, this.user);
+    let transitiveRoles = [];
+    let roles = [];
+    if (projectRoles.some(role => role.type === RoleType.Read)) {
+      transitiveRoles = userTransitiveRoles(
+        this.organization,
+        this.project,
+        this.user,
+        ResourceType.Collection,
+        collection.permissions
+      );
+      roles = collection.permissions?.users?.find(role => role.id === this.user.id)?.roles || [];
+    }
 
     return {
       roles,

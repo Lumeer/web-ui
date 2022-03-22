@@ -109,6 +109,8 @@ export class UserResourcesComponent implements OnInit, OnChanges {
   }
 
   private fetchData() {
-    this.store$.dispatch(new ResourcesAction.Get({organizationId: this.organizationId, projectId: this.projectId}));
+    if (this.organizationId && this.projectId) {
+      this.store$.dispatch(new ResourcesAction.Get({organizationId: this.organizationId, projectId: this.projectId}));
+    }
   }
 }

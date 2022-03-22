@@ -20,19 +20,16 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {catchError, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {userCanManageProjectUserDetail} from '../../shared/utils/permission.utils';
+import {userCanManageOrganizationUserDetail} from '../../shared/utils/permission.utils';
 import {WorkspaceService} from '../../workspace/workspace.service';
 import {User} from '../../core/store/users/user';
 import {convertUserDtoToModel} from '../../core/store/users/user.converter';
 import {UserService} from '../../core/data-service';
-import {Organization} from '../../core/store/organizations/organization';
-import {Project} from '../../core/store/projects/project';
-import {selectCurrentUser} from '../../core/store/users/users.state';
 
 @Injectable()
 export class WorkspaceUserSettingsGuard implements CanActivate {
@@ -45,21 +42,13 @@ export class WorkspaceUserSettingsGuard implements CanActivate {
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     const organizationCode = next.paramMap.get('organizationCode');
-    const projectCode = next.paramMap.get('projectCode');
-    const projectCodeQueryParam = next.queryParamMap.get('projectCode');
     const userId = next.paramMap.get('userId');
 
-    return this.selectOrGetUserAndWorkspace(organizationCode, projectCode || projectCodeQueryParam).pipe(
+    return this.workspaceService.selectOrGetUserAndOrganization(organizationCode).pipe(
       mergeMap(data => this.getUser(data, data.organization?.id, userId)),
-      mergeMap(({user, organization, project, workspaceUser}) => {
+      mergeMap(({user, organization, workspaceUser}) => {
         if (!organization) {
           const message = $localize`:@@organization.not.exist:Organization does not exist`;
-          this.dispatchErrorActions(message);
-          return of(false);
-        }
-
-        if (!project) {
-          const message = $localize`:@@project.not.exist:Project does not exist`;
           this.dispatchErrorActions(message);
           return of(false);
         }
@@ -70,47 +59,16 @@ export class WorkspaceUserSettingsGuard implements CanActivate {
           return of(false);
         }
 
-        if (!userCanManageProjectUserDetail(organization, project, user)) {
+        if (!userCanManageOrganizationUserDetail(organization, user)) {
           const message = $localize`:@@user.permission.missing:You do not have permission to access this user`;
           this.dispatchErrorActions(message);
           return of(false);
         }
 
-        return this.workspaceService.switchWorkspace(organization, project).pipe(
-          map(() => {
-            if (projectCodeQueryParam === project.code) {
-              return true;
-            }
-            return this.router.createUrlTree(
-              next.url.map(segment => segment.path),
-              {queryParams: {projectCode: project.code}}
-            );
-          })
-        );
+        return of(true);
       }),
       take(1),
       catchError(() => of(false))
-    );
-  }
-
-  private selectOrGetUserAndWorkspace(
-    organizationCode: string,
-    projectCode: string
-  ): Observable<{user?: User; organization?: Organization; project?: Project}> {
-    return this.workspaceService.selectOrGetUserAndOrganizationAndProjects(organizationCode).pipe(
-      withLatestFrom(this.store$.pipe(select(selectCurrentUser))),
-      map(([{organization, projects, user}, currentUser]) => ({
-        organization,
-        user,
-        project:
-          projects?.find(project => project.code === projectCode) ||
-          projects?.find(
-            project =>
-              project.id === currentUser?.defaultWorkspace?.projectId &&
-              project.organizationId === currentUser?.defaultWorkspace?.organizationId
-          ) ||
-          projects?.[0],
-      }))
     );
   }
 

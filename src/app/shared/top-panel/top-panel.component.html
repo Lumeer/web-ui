@@ -2,7 +2,7 @@
   <div class="logo">
     <lumeer-logo [height]="36"
                  [style.height.px]="firstLineHeight"
-                 [link]="state.workspace | workspaceDefaultUrl"
+                 [link]="state.workspace | workspaceDefaultUrl:(currentUser$ | async)"
                  [showTooltip]="true"
                  [text]="!(state.workspace | workspaceSet) ? 'Lumeer' : null"
                  class="d-flex align-items-center">

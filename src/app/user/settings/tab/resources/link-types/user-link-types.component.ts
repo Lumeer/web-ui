@@ -22,9 +22,14 @@ import {Organization} from '../../../../../core/store/organizations/organization
 import {Project} from '../../../../../core/store/projects/project';
 import {User} from '../../../../../core/store/users/user';
 import {ResourceType} from '../../../../../core/model/resource-type';
-import {linkTypePermissions, userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
+import {
+  linkTypePermissions,
+  userRolesInProject,
+  userTransitiveRoles,
+} from '../../../../../shared/utils/permission.utils';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
+import {RoleType} from '../../../../../core/model/role-type';
 
 @Component({
   selector: 'user-link-types',
@@ -69,15 +74,20 @@ export class UserLinkTypesComponent implements OnChanges {
   }
 
   private computeData(linkType: LinkType): ResourceRolesDatum {
-    const permissions = linkTypePermissions(linkType);
-    const transitiveRoles = userTransitiveRoles(
-      this.organization,
-      this.project,
-      this.user,
-      ResourceType.LinkType,
-      permissions
-    );
-    const roles = permissions?.users?.find(role => role.id === this.user.id)?.roles || [];
+    const projectRoles = userRolesInProject(this.organization, this.project, this.user);
+    let transitiveRoles = [];
+    let roles = [];
+    if (projectRoles.some(role => role.type === RoleType.Read)) {
+      const permissions = linkTypePermissions(linkType);
+      transitiveRoles = userTransitiveRoles(
+        this.organization,
+        this.project,
+        this.user,
+        ResourceType.LinkType,
+        permissions
+      );
+      roles = permissions?.users?.find(role => role.id === this.user.id)?.roles || [];
+    }
 
     const colors = linkType.collections?.map(c => c.color);
     const icons = linkType.collections?.map(c => c.icon);

@@ -424,7 +424,7 @@ export function userHasAnyRoleInResource(resource: Resource, user: User): boolea
   return userRolesInResource(resource, user, teamIds).length > 0;
 }
 
-function userRolesInResource(resource: Resource, user: User, teams: string[]): Role[] {
+export function userRolesInResource(resource: Resource, user: User, teams: string[]): Role[] {
   return userRolesInPermissions(resource?.permissions || {users: [], groups: []}, user, teams);
 }
 

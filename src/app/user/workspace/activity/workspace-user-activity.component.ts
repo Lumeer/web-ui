@@ -17,25 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, Subscription, combineLatest} from 'rxjs';
+import {debounceTime, map} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
 import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
 import {projectSelectItems} from '../../../shared/select/select-item.utils';
+import {Project} from '../../../core/store/projects/project';
+import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './workspace-user-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkspaceUserActivityComponent implements OnInit {
+export class WorkspaceUserActivityComponent implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
   public projectItems$: Observable<SelectItemModel[]>;
+
+  private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private router: Router, private route: ActivatedRoute) {}
 
@@ -45,9 +49,26 @@ export class WorkspaceUserActivityComponent implements OnInit {
       select(selectProjectsForWorkspace),
       map(projects => projectSelectItems(projects, project => project.code))
     );
+
+    this.subscriptions.add(
+      combineLatest([this.workspace$, this.projectItems$, this.store$.pipe(select(selectNavigatingToOtherWorkspace))])
+        .pipe(debounceTime(100))
+        .subscribe(([workspace, projects, navigating]) => !navigating && this.checkSelection(workspace, projects))
+    );
+  }
+
+  private checkSelection(workspace: Workspace, items: SelectItemModel[]) {
+    const selectedProject = items.find(item => item.id === workspace?.projectCode);
+    if (!selectedProject && items.length) {
+      this.onProjectSelect(items[0].id);
+    }
   }
 
   public onProjectSelect(value: string) {
     this.router.navigate([], {queryParams: {projectCode: value}, relativeTo: this.route, queryParamsHandling: 'merge'});
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

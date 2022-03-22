@@ -23,14 +23,13 @@ import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, U
 import {Observable, of} from 'rxjs';
 import {map, switchMap, take} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
-import {userRoleTypesInProject} from '../../shared/utils/permission.utils';
+import {userRoleTypesInOrganization} from '../../shared/utils/permission.utils';
 import {AppState} from '../../core/store/app.state';
 import {RoleType} from '../../core/model/role-type';
 import {User} from '../../core/store/users/user';
 import {Organization} from '../../core/store/organizations/organization';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {WorkspaceService} from '../../workspace/workspace.service';
-import {Project} from '../../core/store/projects/project';
 
 @Injectable()
 export class WorkspaceUserTabGuard implements CanActivateChild {
@@ -43,14 +42,14 @@ export class WorkspaceUserTabGuard implements CanActivateChild {
 
     return this.selectUserAndResources().pipe(
       map(data => {
-        const roleTypes = userRoleTypesInProject(data.organization, data.project, data.user);
+        const roleTypes = userRoleTypesInOrganization(data.organization, data.user);
         if (roleTypes.includes(next.data.role)) {
           return true;
         }
 
         const baseUrl = ['/o', data.organization?.code, 'u', next.parent.params['userId']];
 
-        const queryParams = {projectCode: data.project.code};
+        const queryParams = {projectCode: next.queryParamMap.get('projectCode')};
         if (roleTypes.includes(RoleType.UserConfig)) {
           return this.router.createUrlTree([...baseUrl, 'resources'], {queryParams});
         } else if (roleTypes.includes(RoleType.Manage)) {
@@ -62,14 +61,12 @@ export class WorkspaceUserTabGuard implements CanActivateChild {
     );
   }
 
-  private selectUserAndResources(): Observable<{user?: User; organization?: Organization; project?: Project}> {
+  private selectUserAndResources(): Observable<{user?: User; organization?: Organization}> {
     return this.store$.pipe(
       select(selectNavigation),
       map(navigation => navigation.navigatingWorkspace),
       take(1),
-      switchMap(workspace =>
-        this.workspaceService.selectOrGetUserAndWorkspace(workspace?.organizationCode, workspace?.projectCode)
-      ),
+      switchMap(workspace => this.workspaceService.selectOrGetUserAndOrganization(workspace?.organizationCode)),
       take(1)
     );
   }

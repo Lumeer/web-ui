@@ -5,7 +5,7 @@
               [project]="data.project"
               [isCurrentUser]="data.isCurrentUser"
               [views]="views$ | async"
-              [loaded]="viewsLoaded$ | async">
+              [loaded]="!projectId || (viewsLoaded$ | async)">
   </user-views>
   <user-collections class="d-block mt-4"
                     [user]="data.user"
@@ -13,7 +13,7 @@
                     [project]="data.project"
                     [isCurrentUser]="data.isCurrentUser"
                     [collections]="collections$ | async"
-                    [loaded]="collectionsLoaded$ | async">
+                    [loaded]="!projectId || (collectionsLoaded$ | async)">
   </user-collections>
   <user-link-types class="d-block mt-4 mb-6"
                    [user]="data.user"
@@ -21,6 +21,6 @@
                    [project]="data.project"
                    [isCurrentUser]="data.isCurrentUser"
                    [linkTypes]="linkTypes$ | async"
-                   [loaded]="linkTypesLoaded$ | async">
+                   [loaded]="!projectId || (linkTypesLoaded$ | async)">
   </user-link-types>
 </ng-container>

@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {debounceTime, map} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
@@ -29,7 +29,7 @@ import {ResourceType} from '../../../core/model/resource-type';
 import {selectCurrentUser, selectUserByWorkspace} from '../../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
-import {userTransitiveRoles} from '../../../shared/utils/permission.utils';
+import {userRolesInOrganization, userTransitiveRoles} from '../../../shared/utils/permission.utils';
 import {Organization} from '../../../core/store/organizations/organization';
 import {User} from '../../../core/store/users/user';
 import {Project} from '../../../core/store/projects/project';
@@ -38,15 +38,19 @@ import {
   resourceRolesDataEmptyTitle,
   ResourceRolesDatum,
 } from '../../settings/tab/resources/list/resource-roles-data';
+import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
+import {RoleType} from '../../../core/model/role-type';
 
 @Component({
   templateUrl: './workspace-user-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkspaceUserResourcesComponent implements OnInit {
+export class WorkspaceUserResourcesComponent implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
   public projectsData$: Observable<ResourceRolesData>;
   public selectedDatum$: Observable<ResourceRolesDatum>;
+
+  private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private router: Router, private route: ActivatedRoute) {}
 
@@ -71,11 +75,29 @@ export class WorkspaceUserResourcesComponent implements OnInit {
     this.selectedDatum$ = combineLatest([this.projectsData$, this.workspace$]).pipe(
       map(([data, workspace]) => data.objects.find(datum => datum.id === workspace?.projectId))
     );
+
+    this.subscriptions.add(
+      combineLatest([this.workspace$, this.projectsData$, this.store$.pipe(select(selectNavigatingToOtherWorkspace))])
+        .pipe(debounceTime(100))
+        .subscribe(([workspace, data, navigating]) => !navigating && this.checkSelection(workspace, data))
+    );
+  }
+
+  private checkSelection(workspace: Workspace, data: ResourceRolesData) {
+    const selectedDatum = data.objects.find(object => object.name === workspace?.projectCode);
+    if (!selectedDatum && data.objects.length) {
+      this.onProjectSelect(data.objects[0].name);
+    }
   }
 
   private computeData(project: Project, organization: Organization, user: User): ResourceRolesDatum {
-    const transitiveRoles = userTransitiveRoles(organization, project, user, ResourceType.Project, project.permissions);
-    const roles = project.permissions?.users?.find(role => role.id === user.id)?.roles || [];
+    const organizationRoles = userRolesInOrganization(organization, user);
+    let transitiveRoles = [];
+    let roles = [];
+    if (organizationRoles.some(role => role.type === RoleType.Read)) {
+      transitiveRoles = userTransitiveRoles(organization, project, user, ResourceType.Project, project.permissions);
+      roles = project.permissions?.users?.find(role => role.id === user.id)?.roles || [];
+    }
 
     return {
       roles,
@@ -89,5 +111,9 @@ export class WorkspaceUserResourcesComponent implements OnInit {
 
   public onProjectSelect(value: string) {
     this.router.navigate([], {queryParams: {projectCode: value}, relativeTo: this.route, queryParamsHandling: 'merge'});
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

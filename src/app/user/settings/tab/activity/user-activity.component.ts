@@ -78,10 +78,12 @@ export class UserActivityComponent implements OnChanges {
       switchMap(userId => this.store$.pipe(select(selectAuditLogsByUserLoading(userId))))
     );
 
-    userId$.pipe(take(1)).subscribe(userId => {
-      this.store$.dispatch(AuditLogsAction.getByUser({projectId: this.projectId, userId, workspace: this.workspace}));
-    });
+    if (this.projectId) {
+      userId$.pipe(take(1)).subscribe(userId => {
+        this.store$.dispatch(AuditLogsAction.getByUser({projectId: this.projectId, userId, workspace: this.workspace}));
+      });
 
-    this.store$.dispatch(new ResourcesAction.Get({organizationId: this.organizationId, projectId: this.projectId}));
+      this.store$.dispatch(new ResourcesAction.Get({organizationId: this.organizationId, projectId: this.projectId}));
+    }
   }
 }
