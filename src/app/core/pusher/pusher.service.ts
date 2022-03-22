@@ -21,14 +21,14 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import Pusher from 'pusher-js';
 import {of, timer} from 'rxjs';
-import {catchError, combineLatest, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationDto, ProjectDto} from '../dto';
 import {ResourceType, resourceTypesMap} from '../model/resource-type';
 import {AppState} from '../store/app.state';
 import {convertCollectionDtoToModel} from '../store/collections/collection.converter';
 import {CollectionsAction} from '../store/collections/collections.action';
-import {selectCollectionById, selectCollectionsDictionary} from '../store/collections/collections.state';
+import {selectCollectionsDictionary} from '../store/collections/collections.state';
 import {selectWorkspaceModels} from '../store/common/common.selectors';
 import {convertDocumentDtoToModel} from '../store/documents/document.converter';
 import {DocumentsAction} from '../store/documents/documents.action';
@@ -476,19 +476,25 @@ export class PusherService implements OnDestroy {
   private bindNavigateEvents() {
     this.channel.bind('NavigationRequest', data => {
       if (this.isCurrentWorkspace(data) && this.isCurrentAppTab(data)) {
-        this.store$.pipe(select(selectViewById(data.object.viewId)), take(1)).subscribe(view => {
-          if (view) {
-            if (data.object.search && view.query?.stems?.length > 0) {
-              this.store$
-                .pipe(select(selectCollectionById(view.query.stems[0].collectionId)), take(1))
-                .subscribe(collection => {
-                  this.navigateAction(data.object, view, addFiltersToQuery(view.query, data.object.search, collection));
-                });
-            } else {
-              this.navigateAction(data.object, view);
+        this.store$
+          .pipe(
+            select(selectViewById(data.object.viewId)),
+            take(1),
+            withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary)))
+          )
+          .subscribe(([view, collections]) => {
+            if (view) {
+              if (data.object.search && view.query?.stems?.length > 0) {
+                this.navigateAction(
+                  data.object,
+                  view,
+                  addFiltersToQuery(view.query, data.object.search, collections[view.query.stems[0].collectionId])
+                );
+              } else {
+                this.navigateAction(data.object, view);
+              }
             }
-          }
-        });
+          });
       }
     });
   }
