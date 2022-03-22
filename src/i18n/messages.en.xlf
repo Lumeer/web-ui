@@ -705,17 +705,7 @@
         <source>Links</source><target state="final">Links</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="document.detail.tabs.tables" datatype="html">
-        <source>Tables</source><target state="final">Tables</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="document.detail.tabs.comments" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="document.detail.tabs.comments" datatype="html">
         <source>Comments</source><target state="final">Comments</target>
 
 
@@ -725,8 +715,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="audit.log.activity" datatype="html">
         <source>Activity</source><target state="final">Activity</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="perspective.detail.linkType.add" datatype="html">
         <source>Create New Link</source><target state="final">Create New Link</target>
 
@@ -1015,12 +1005,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
           <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.status.line.projects" datatype="html">
-        <source>Projects</source><target state="final">Projects</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
-          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="collection" datatype="html">
         <source>Table</source><target state="final">Table</target>
@@ -1331,7 +1315,7 @@
         </context-group>
       </trans-unit><trans-unit id="search.tabs.settings.dialog.cell.title" datatype="html">
         <source>Title</source><target state="final">Title</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/title/dashboard-cell-title.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="search.tabs.settings.dialog.cell.empty" datatype="html">
         <source>Select an item from the dashboard preview to configure it
 </source><target state="final">Select an item from the dashboard preview to configure it
@@ -2185,10 +2169,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="audit.action.revert" datatype="html">
         <source>Revert</source><target state="final">Revert</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="user.unknown" datatype="html">
         <source>Unknown user</source><target state="final">Unknown user</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.ts</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
         <source>Edit Function of</source><target state="final">Edit Function of</target>
 
@@ -2236,7 +2220,7 @@
         <source>Add Exception Set
 </source><target state="final">Add Exception Set
 </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.type.users.placeholder" datatype="html">
         <source>Select Users and Teams</source><target state="final">Select Users and Teams</target>
         <context-group purpose="location">
@@ -2617,13 +2601,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="cron.unit.days.title" datatype="html">
         <source>Days</source><target state="final">Days</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="cron.unit.weeks.title" datatype="html">
         <source>Weeks</source><target state="final">Weeks</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="cron.unit.months.title" datatype="html">
         <source>Months</source><target state="final">Months</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="cron.daysOfWeek.units" datatype="html">
         <source>M|T|W|T|F|S|S</source><target state="final">M|T|W|T|F|S|S</target>
 
@@ -2904,10 +2888,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="search.tab.collections" datatype="html">
         <source>Tables</source><target state="final">Tables</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="search.tab.views" datatype="html">
-        <source>Views</source><target state="final">Views</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
         <source>I am sorry but you do not have permissions to add tables. </source><target state="final">I am sorry but you do not have permissions to add tables. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/warning-message/empty-data/empty-data.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.notab" datatype="html">
@@ -2928,13 +2909,13 @@
           <context context-type="sourcefile">src/app/user/settings/header/user-settings-header.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="user.resources.collections.title" datatype="html">
+      </trans-unit><trans-unit id="collections" datatype="html">
         <source>Tables</source><target state="final">Tables</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="user.resources.linkTypes.title" datatype="html">
+      </trans-unit><trans-unit id="linkTypes" datatype="html">
         <source>Link Types</source><target state="final">Link Types</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/tab/resources/link-types/user-link-types.component.html</context>
@@ -2952,13 +2933,13 @@
           <context context-type="sourcefile">src/app/user/settings/tab/resources/list/resource-roles-data.ts</context>
           <context context-type="linenumber">46</context>
         </context-group>
-      </trans-unit><trans-unit id="user.resources.views.title" datatype="html">
+      </trans-unit><trans-unit id="views" datatype="html">
         <source>Views</source><target state="final">Views</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="user.settings.tab.resources" datatype="html">
+      </trans-unit><trans-unit id="resources" datatype="html">
         <source>Resources</source><target state="final">Resources</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context>
@@ -2966,9 +2947,9 @@
         </context-group>
       </trans-unit><trans-unit id="user.not.exist" datatype="html">
         <source>User does not exist</source><target state="final">User does not exist</target>
-        
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="user.resources.projects.title" datatype="html">
+
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="projects" datatype="html">
         <source>Projects</source><target state="final">Projects</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/resources/projects/user-projects.component.html</context>
@@ -2976,7 +2957,7 @@
         </context-group>
       </trans-unit><trans-unit id="user.permission.missing" datatype="html">
         <source>You do not have permission to access this user</source><target state="final">You do not have permission to access this user</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="view.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target state="final"><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></target>
 
@@ -3102,19 +3083,19 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.every" datatype="html">
         <source>Repeat every</source><target state="final">Repeat every</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.repeat" datatype="html">
         <source>Repeat on</source><target state="final">Repeat on</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.run" datatype="html">
         <source>Run on</source><target state="final">Run on</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.dayInMonth" datatype="html">
         <source>day in month</source><target state="final">day in month</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.monthly" datatype="html">
         <source>If a month has lower count of days, the automation is executed on the last day of month (i.e. enter 31 to always execute at the end of month).</source><target state="final">If a month has lower count of days, the automation is executed on the last day of month (i.e. enter 31 to always execute at the end of month).</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.start" datatype="html">
         <source>Starts</source><target state="final">Starts</target>
 
@@ -3605,16 +3586,16 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/workspace-select.service.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="audit.get.document.fail" datatype="html">
         <source>Could not get activity logs for the selected record</source><target state="final">Could not get activity logs for the selected record</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="audit.get.any.fail" datatype="html">
         <source>Could not get activity logs</source><target state="final">Could not get activity logs</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">73</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">97</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">121</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">145</context></context-group></trans-unit><trans-unit id="audit.revert.fail" datatype="html">
         <source>Could not revert record</source><target state="final">Could not revert record</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">168</context></context-group></trans-unit><trans-unit id="audit.get.link.fail" datatype="html">
         <source>Could not get activity logs for the selected link</source><target state="final">Could not get activity logs for the selected link</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context><context context-type="linenumber">192</context></context-group></trans-unit>
       <trans-unit id="collections.get.fail" datatype="html">
         <source>Could not get tables</source><target state="final">Could not get tables</target>
@@ -3707,10 +3688,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">135</context></context-group></trans-unit><trans-unit id="documents.create.success" datatype="html">
         <source>A record was successfully created.</source><target state="final">A record was successfully created.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">195</context></context-group></trans-unit><trans-unit id="documents.update.success" datatype="html">
         <source>The record was successfully updated.</source><target state="final">The record was successfully updated.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">234</context></context-group></trans-unit>
       <trans-unit id="document.create.serviceLimits" datatype="html">
         <source>You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?</source><target state="final">You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?</target>
@@ -4599,58 +4580,49 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.ts</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="audit.automation.function" datatype="html">
         <source>Function</source><target state="final">Function</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/pipes/audit-log-automation-string.pipe.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="audit.automation.automation" datatype="html">
         <source>Automation</source><target state="final">Automation</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/pipes/audit-log-automation-string.pipe.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="audit.title.project.enter" datatype="html">
         <source>Entered Project</source><target state="final">Entered Project</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/model/audit-log-filters.ts</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="audit.title.any.type" datatype="html">
         <source>{type, select, Updated {Updated} Created {Created} Deleted {Deleted} Reverted {Reverted} Entered {Entered}}</source><target state="final">{type, select, Updated {Updated} Created {Created} Deleted {Deleted} Reverted {Reverted} Entered {Entered}}</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/model/audit-log-filters.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="document.detail.activity.empty" datatype="html">
         <source> No activity yet. </source><target state="final"> No activity yet. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="audit.filters.button.title" datatype="html">
         <source>Filters</source><target state="final">Filters</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/audit-logs-filters.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="audit.filters.users.title" datatype="html">
         <source>Users</source><target state="final">Users</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="audit.filters.users.placeholder" datatype="html">
         <source>Filter Users or Teams</source><target state="final">Filter Users or Teams</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="audit.filters.types.title" datatype="html">
         <source>Types</source><target state="final">Types</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="audit.filters.types.placeholder" datatype="html">
         <source>Filter Types</source><target state="final">Filter Types</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="audit.filters.resources.title" datatype="html">
         <source>Tables and Link Types</source><target state="final">Tables and Link Types</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="audit.filters.resources.placeholder" datatype="html">
         <source>Filter Tables and Link Types</source><target state="final">Filter Tables and Link Types</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="audit.filters.views.title" datatype="html">
-        <source>Views</source><target state="final">Views</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="audit.filters.views.placeholder" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="audit.filters.views.placeholder" datatype="html">
         <source>Filter Views</source><target state="final">Filter Views</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="audit.filters.collections.title" datatype="html">
-        <source>Tables</source><target state="final">Tables</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="audit.filters.linktypes.title" datatype="html">
-        <source>Link Types</source><target state="final">Link Types</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="audit.title.changed.view" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="audit.title.changed.view" datatype="html">
         <source>Changed by view</source><target state="final">Changed by view</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="audit.action.detail" datatype="html">
         <source>Detail</source><target state="final">Detail</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="audit.revert.confirm.title" datatype="html">
         <source>Revert changes?</source><target state="final">Revert changes?</target>
 
@@ -5466,7 +5438,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/attributes/table/resource-attributes-table.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="collection.config.tab.link.types" datatype="html">
         <source> Link Types </source><target state="final"> Link Types </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="linkType" datatype="html">
         <source>Link Type</source><target state="final">Link Type</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.search.placeholder" datatype="html">

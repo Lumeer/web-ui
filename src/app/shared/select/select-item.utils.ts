@@ -39,7 +39,7 @@ export function projectSelectItem(project: Project, id?: (Project) => any): Sele
 }
 
 export function collectionSelectItems(collections: Collection[], id?: (Collection) => any): SelectItemModel[] {
-  return collections?.map(collection => collectionSelectItem(collection, id)) || [];
+  return (collections || []).map(collection => collectionSelectItem(collection, id)) || [];
 }
 
 export function collectionSelectItem(collection: Collection, id?: (Collection) => any): SelectItemModel {
@@ -53,12 +53,12 @@ export function collectionSelectItem(collection: Collection, id?: (Collection) =
 
 export function linkTypesSelectItems(linkTypes: LinkType[], id?: any): SelectItemModel[] {
   return (
-    linkTypes?.map(linkType => {
+    (linkTypes || []).map(linkType => {
       return {
         id: id?.() || linkType.id,
         value: linkType.name,
-        icons: [linkType.collections?.[0].icon, linkType.collections[1].icon],
-        iconColors: [linkType.collections[0].color, linkType.collections[1].color],
+        icons: [linkType.collections?.[0]?.icon, linkType.collections[1]?.icon],
+        iconColors: [linkType.collections[0]?.color, linkType.collections[1]?.color],
       };
     }) || []
   );

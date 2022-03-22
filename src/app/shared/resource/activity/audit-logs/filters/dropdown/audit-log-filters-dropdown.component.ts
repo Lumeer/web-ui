@@ -73,8 +73,8 @@ export class AuditLogFiltersDropdownComponent extends DropdownDirective implemen
   public viewSelectItems: SelectItemModel[];
   public resourcesSelectItems: SelectItemModel[];
 
-  private readonly collectionGroupTitle = $localize`:@@audit.filters.collections.title:Tables`;
-  private readonly linkTypesGroupTitle = $localize`:@@audit.filters.linktypes.title:Link Types`;
+  private readonly collectionGroupTitle = $localize`:@@collections:Tables`;
+  private readonly linkTypesGroupTitle = $localize`:@@linkTypes:Link Types`;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.viewsMap) {

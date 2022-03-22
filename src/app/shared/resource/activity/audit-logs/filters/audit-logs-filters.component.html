@@ -1,60 +1,61 @@
-<div class="d-flex align-items-center flex-wrap">
-  <ng-content></ng-content>
-  <ng-container *ngIf="{count: filters | auditLogFiltersCount} as filtersData">
+<ng-container *ngIf="{count: filters | auditLogFiltersCount} as filtersData">
+  <div class="d-flex align-items-center flex-wrap">
+    <ng-content></ng-content>
     <button #buttonElement class="btn btn-primary text-nowrap filters-button" (click)="dropdownComponent.toggle()">
       <i class="fal fa-filter pe-2"></i>
       <span i18n="@@audit.filters.button.title">Filters</span>
       <span *ngIf="filtersData.count" class="ms-3 badge num-filters">{{filtersData.count}}</span>
     </button>
-
-    <div class="d-flex flex-wrap" [class.mt-1]="filtersData.count">
-
-      <audit-log-filter-badge *ngFor="let user of users" class="me-2 mt-2" (close)="onUserRemove(user.email)">
-        <img ngx-gravatar
-             [email]="user.email"
-             [size]="16"
-             [style.min-width.px]="16"
-             [style.min-height.px]="16">
-        <span class="ps-2 small">{{user.name || user.email}}</span>
-      </audit-log-filter-badge>
-
-      <audit-log-filter-badge *ngFor="let type of types" class="me-2 mt-2" (close)="onTypeRemove(type.value)">
-        <div class="small">{{type.displayValue}}</div>
-      </audit-log-filter-badge>
-
-      <audit-log-filter-badge *ngFor="let collection of collections" class="me-2 mt-2" (close)="onCollectionRemove(collection.id)">
-        <icons-presenter [icons]="[collection.icon]"
-                         [colors]="[collection.color]">
-        </icons-presenter>
-        <span class="ps-2 small">{{collection.name}}</span>
-      </audit-log-filter-badge>
+  </div>
 
 
-      <audit-log-filter-badge *ngFor="let linkType of linkTypes" class="me-2 mt-2" (close)="onLinkTypeRemove(linkType.id)">
-        <icons-presenter [icons]="(linkType | resourceIconsColors).icons"
-                         [colors]="(linkType | resourceIconsColors).colors">
-        </icons-presenter>
-        <span class="ps-2 small">{{linkType.name}}</span>
-      </audit-log-filter-badge>
+  <div class="d-flex flex-wrap" [class.mt-1]="filtersData.count">
 
-      <audit-log-filter-badge *ngFor="let view of views" class="me-2 mt-2" (close)="onViewRemove(view.id)">
-        <icons-presenter [icons]="[view.icon]"
-                         [colors]="[view.color]">
-        </icons-presenter>
-        <span class="ps-2 small">{{view.name}}</span>
-      </audit-log-filter-badge>
-    </div>
+    <audit-log-filter-badge *ngFor="let user of users" class="me-2 mt-2" (close)="onUserRemove(user.email)">
+      <img ngx-gravatar
+           [email]="user.email"
+           [size]="16"
+           [style.min-width.px]="16"
+           [style.min-height.px]="16">
+      <span class="ps-2 small">{{user.name || user.email}}</span>
+    </audit-log-filter-badge>
 
-    <audit-log-filters-dropdown #dropdownComponent
-                                [usersDataValue]="usersDataValue"
-                                [typesDataValue]="typesDataValue"
-                                [filters]="filters"
-                                [origin]="buttonElement"
-                                [viewsMap]="viewsMap"
-                                [collectionsMap]="collectionsMap"
-                                [configuration]="configuration"
-                                [linkTypesMap]="linkTypesMap"
-                                (filtersChanged)="filtersChanged.emit($event)"
-    ></audit-log-filters-dropdown>
-  </ng-container>
-</div>
+    <audit-log-filter-badge *ngFor="let type of types" class="me-2 mt-2" (close)="onTypeRemove(type.value)">
+      <div class="small">{{type.displayValue}}</div>
+    </audit-log-filter-badge>
+
+    <audit-log-filter-badge *ngFor="let collection of collections" class="me-2 mt-2" (close)="onCollectionRemove(collection.id)">
+      <icons-presenter [icons]="[collection.icon]"
+                       [colors]="[collection.color]">
+      </icons-presenter>
+      <span class="ps-2 small">{{collection.name}}</span>
+    </audit-log-filter-badge>
+
+
+    <audit-log-filter-badge *ngFor="let linkType of linkTypes" class="me-2 mt-2" (close)="onLinkTypeRemove(linkType.id)">
+      <icons-presenter [icons]="(linkType | resourceIconsColors).icons"
+                       [colors]="(linkType | resourceIconsColors).colors">
+      </icons-presenter>
+      <span class="ps-2 small">{{linkType.name}}</span>
+    </audit-log-filter-badge>
+
+    <audit-log-filter-badge *ngFor="let view of views" class="me-2 mt-2" (close)="onViewRemove(view.id)">
+      <icons-presenter [icons]="[view.icon]"
+                       [colors]="[view.color]">
+      </icons-presenter>
+      <span class="ps-2 small">{{view.name}}</span>
+    </audit-log-filter-badge>
+  </div>
+
+  <audit-log-filters-dropdown #dropdownComponent
+                              [usersDataValue]="usersDataValue"
+                              [typesDataValue]="typesDataValue"
+                              [filters]="filters"
+                              [origin]="buttonElement"
+                              [viewsMap]="viewsMap"
+                              [collectionsMap]="collectionsMap"
+                              [configuration]="configuration"
+                              [linkTypesMap]="linkTypesMap"
+                              (filtersChanged)="filtersChanged.emit($event)">
+  </audit-log-filters-dropdown>
+</ng-container>

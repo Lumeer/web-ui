@@ -18,21 +18,21 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {combineLatest, Observable} from 'rxjs';
-import {Workspace} from '../../../core/store/navigation/workspace';
+import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
+import {combineLatest, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {ResourceType} from '../../../core/model/resource-type';
 import {selectCurrentUser, selectUserByWorkspace} from '../../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
-import {map} from 'rxjs/operators';
 import {userTransitiveRoles} from '../../../shared/utils/permission.utils';
 import {Organization} from '../../../core/store/organizations/organization';
 import {User} from '../../../core/store/users/user';
 import {Project} from '../../../core/store/projects/project';
-import {ActivatedRoute, Router} from '@angular/router';
 import {
   ResourceRolesData,
   resourceRolesDataEmptyTitle,
@@ -42,7 +42,6 @@ import {
 @Component({
   templateUrl: './workspace-user-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-block px-3', style: 'margin-top: 2.25rem'},
 })
 export class WorkspaceUserResourcesComponent implements OnInit {
   public workspace$: Observable<Workspace>;

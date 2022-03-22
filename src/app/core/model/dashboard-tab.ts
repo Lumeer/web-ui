@@ -96,7 +96,7 @@ export enum TabType {
 export const defaultDashboardTabs = [
   {id: TabType.All, title: $localize`:@@search.tab.all:All`, type: TabType.All},
   {id: TabType.Tasks, title: $localize`:@@search.tab.tasks:Tasks`, type: TabType.Tasks},
-  {id: TabType.Views, title: $localize`:@@search.tab.views:Views`, type: TabType.Views},
+  {id: TabType.Views, title: $localize`:@@views:Views`, type: TabType.Views},
   {id: TabType.Tables, title: $localize`:@@search.tab.collections:Tables`, type: TabType.Tables},
 ];
 

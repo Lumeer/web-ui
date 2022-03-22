@@ -21,17 +21,20 @@ import {Component, ChangeDetectionStrategy, OnInit, OnDestroy} from '@angular/co
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import {filter, take, takeUntil} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 import {Project} from '../../core/store/projects/project';
 import {Workspace} from '../../core/store/navigation/workspace';
-import {Organization} from '../../core/store/organizations/organization';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
-import {selectNavigatingToOtherWorkspace, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {
+  selectNavigatingToOtherWorkspace,
+  selectPreviousUrl,
+  selectWorkspace,
+} from '../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
 
@@ -89,6 +92,8 @@ export class WorkspaceUserComponent implements OnInit, OnDestroy {
         )
         .subscribe(permissions => this.checkCurrentTab(permissions))
     );
+
+    this.store$.pipe(select(selectPreviousUrl), take(1)).subscribe(url => (this.previousUrl = url));
   }
 
   private checkCurrentTab(permissions: AllowedPermissions) {

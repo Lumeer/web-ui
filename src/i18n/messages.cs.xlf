@@ -306,12 +306,7 @@
                 <target>Tabulky</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">100</context></context-group></trans-unit>
-
-            <trans-unit id="search.tab.views" datatype="html">
-                <source>Views</source>
-                <target>Pohledy</target>
-
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
+         <trans-unit id="collections.empty.subtitle.norights" datatype="html">
         <source>I am sorry but you do not have permissions to add tables. </source><target>Je mi líto, ale nemáte oprávnění přidávat tabulky.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/warning-message/empty-data/empty-data.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.notab" datatype="html">
@@ -333,13 +328,13 @@
           <context context-type="sourcefile">src/app/user/settings/header/user-settings-header.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="user.resources.collections.title" datatype="html">
+      </trans-unit><trans-unit id="collections" datatype="html">
         <source>Tables</source><target>Tabulky</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="user.resources.linkTypes.title" datatype="html">
+      </trans-unit><trans-unit id="linkTypes" datatype="html">
         <source>Link Types</source><target>Typy vazeb</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/tab/resources/link-types/user-link-types.component.html</context>
@@ -359,13 +354,13 @@
           <context context-type="sourcefile">src/app/user/settings/tab/resources/list/resource-roles-data.ts</context>
           <context context-type="linenumber">46</context>
         </context-group>
-      </trans-unit><trans-unit id="user.resources.views.title" datatype="html">
+      </trans-unit><trans-unit id="views" datatype="html">
         <source>Views</source><target>Pohledy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="user.settings.tab.resources" datatype="html">
+      </trans-unit><trans-unit id="resources" datatype="html">
         <source>Resources</source><target>Zdroje</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context>
@@ -373,9 +368,9 @@
         </context-group>
       </trans-unit><trans-unit id="user.not.exist" datatype="html">
         <source>User does not exist</source><target>Uživatel neexistuje</target>
-        
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="user.resources.projects.title" datatype="html">
+
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="projects" datatype="html">
         <source>Projects</source><target>Projekty</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/resources/projects/user-projects.component.html</context>
@@ -383,7 +378,7 @@
         </context-group>
       </trans-unit><trans-unit id="user.permission.missing" datatype="html">
         <source>You do not have permission to access this user</source><target>Nemáte oprávnění přistupovat k tomuto uživateli</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="view.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/></target>
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="views.folders.number.views" datatype="html">
@@ -2280,35 +2275,26 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/audit-logs-filters.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="audit.filters.users.title" datatype="html">
         <source>Users</source><target>Uživatelé</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="audit.filters.users.placeholder" datatype="html">
         <source>Filter Users or Teams</source><target>Filtrovat uživatele a týmy</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="audit.filters.types.title" datatype="html">
         <source>Types</source><target>Typy</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="audit.filters.types.placeholder" datatype="html">
         <source>Filter Types</source><target>Typy filtrů</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="audit.filters.resources.title" datatype="html">
         <source>Tables and Link Types</source><target>Tabulky a typy vazeb</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="audit.filters.resources.placeholder" datatype="html">
         <source>Filter Tables and Link Types</source><target>Filtrovat tabulky a vazby</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="audit.filters.views.title" datatype="html">
-        <source>Views</source><target>Pohledy</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="audit.filters.views.placeholder" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="audit.filters.views.placeholder" datatype="html">
         <source>Filter Views</source><target>Filtrovat pohledy</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="audit.filters.collections.title" datatype="html">
-        <source>Tables</source><target>Tabulky</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="audit.filters.linktypes.title" datatype="html">
-        <source>Link Types</source><target>Typy vazeb</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="audit.title.changed.view" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="audit.title.changed.view" datatype="html">
         <source>Changed by view</source>
         <target>Upraveno v pohledu</target>
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="audit.action.detail" datatype="html">
@@ -4447,12 +4433,6 @@
           <context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.status.line.projects" datatype="html">
-        <source>Projects</source><target>Projekty</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
       </trans-unit><trans-unit id="collection" datatype="html">
         <source>Table</source><target>Tabulka</target>
 
@@ -5198,17 +5178,7 @@
         <source>Links</source><target>Propojení</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="document.detail.tabs.tables" datatype="html">
-        <source>Tables</source><target>Tabulky</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="document.detail.tabs.comments" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="document.detail.tabs.comments" datatype="html">
         <source>Comments</source><target>Komentáře</target>
 
 
@@ -5220,8 +5190,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="audit.log.activity" datatype="html">
         <source>Activity</source><target>Aktivita</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="perspective.detail.linkType.add" datatype="html">
         <source>Create New Link</source><target>Vytvořit nové propojení</target>
 
@@ -6590,7 +6560,7 @@
           Propojení
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="linkType" datatype="html">
         <source>Link Type</source><target>Typ propojení</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.search.placeholder" datatype="html">
