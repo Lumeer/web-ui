@@ -828,13 +828,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/copy-text-box/copy-text-box.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="document.detail.detail.comments.seeAll" datatype="html">
         <source> See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}"/> > </source><target state="final"> See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}"/> > </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</source><target state="final">{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</source><target state="final">{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source><target state="final">Only organization and project managers can invite colleagues, please ask them.</target>
 
         <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
@@ -1721,7 +1721,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="constraint.select.lists.custom" datatype="html">
         <source>Custom</source><target state="final">Custom</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit><trans-unit id="constraint.select.displayValues.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="constraint.select.displayValues.label" datatype="html">
         <source>Distinguish display values</source><target state="final">Distinguish display values</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="constraint.select.displayValues.help" datatype="html">
@@ -3473,16 +3473,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.success" datatype="html">
         <source>Success</source><target state="final">Success</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
         <source>Information</source><target state="final">Information</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
         <source>Warning</source><target state="final">Warning</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
         <source>Error</source><target state="final">Error</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="template.create.limitsExceeded" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="template.create.limitsExceeded" datatype="html">
         <source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source><target state="final">I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/choose-organization/choose-organization.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="template.create.empty" datatype="html">
@@ -3762,7 +3762,7 @@
         <source>OK</source><target state="final">OK</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">127</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">128</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source><target state="final">{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">232</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
@@ -4068,10 +4068,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">105</context></context-group></trans-unit><trans-unit id="resourceComment.update.fail" datatype="html">
         <source>Could not update the comment</source><target state="final">Could not update the comment</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="resourceComment.delete.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">135</context></context-group></trans-unit><trans-unit id="resourceComment.delete.fail" datatype="html">
         <source>Could not delete the comment</source><target state="final">Could not delete the comment</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">178</context></context-group></trans-unit><trans-unit id="resource.variables.get.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">184</context></context-group></trans-unit><trans-unit id="resource.variables.get.fail" datatype="html">
         <source>Could not read variables</source><target state="final">Could not read variables</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="resource.variables.create.fail" datatype="html">
@@ -4255,6 +4255,12 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-variable-blockly-component.ts</context>
           <context context-type="linenumber">39</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getViewNameBlock" datatype="html">
+        <source>Gets the name of the view specified by ID (as read from an attribute of type View).</source><target state="final">Gets the name of the view specified by ID (as read from an attribute of type View).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-view-name-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.isArray" datatype="html">
         <source>Returns true if the input is an array (incl. an empty array).</source><target state="final">Returns true if the input is an array (incl. an empty array).</target>
         <context-group purpose="location">
@@ -4306,7 +4312,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-break-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.loopContinueBlock" datatype="html">
         <source>Continues the for cycle.</source><target state="final">Continues the for cycle.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-continue-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-continue-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.mergeArraysBlock" datatype="html">
+        <source>Merge two lists ([A1, A2, ...] + [B1, B2, ...] => [A1DB1, A2DB2, ...], where D is a delimiter). The values can be separated with a delimiter. Strings are also treated as arrays.</source><target state="final">Merge two lists ([A1, A2, ...] + [B1, B2, ...] => [A1DB1, A2DB2, ...], where D is a delimiter). The values can be separated with a delimiter. Strings are also treated as arrays.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/merge-arrays-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
         <source>Gets current date as object for further function calls.</source><target state="final">Gets current date as object for further function calls.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/current-date-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.currentLocaleBlock" datatype="html">
@@ -4423,13 +4435,25 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/ms-to-unit-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.navigateBlock" datatype="html">
         <source>Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source><target state="final">Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="blockly.dropdown.window.navigateBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.dropdown.window.navigateBlock" datatype="html">
         <source>the same,a new</source><target state="final">the same,a new</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="blockly.dropdown.sidebar.navigateBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-search-blockly-component.ts</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="blockly.dropdown.sidebar.navigateBlock" datatype="html">
         <source>closed,opened</source><target state="final">closed,opened</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="blockly.tooltip.parseDateBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-search-blockly-component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="blockly.tooltip.navigateByIdBlock" datatype="html">
+        <source>Opens the given view (specified by ID, as read from an attribute of type View) and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source><target state="final">Opens the given view (specified by ID, as read from an attribute of type View) and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.navigateSearchBlock" datatype="html">
+        <source>Opens the given view with additional query parameters. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source><target state="final">Opens the given view with additional query parameters. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-search-blockly-component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.parseDateBlock" datatype="html">
         <source>Parses a string date using given format returning milliseconds since epoch (Unix time).</source><target state="final">Parses a string date using given format returning milliseconds since epoch (Unix time).</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/parse-date-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.printAttributeBlock" datatype="html">
@@ -4444,7 +4468,13 @@
       </trans-unit><trans-unit id="blockly.tooltip.readDocumentsBlock" datatype="html">
         <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="limit"/> records are returned.</source><target state="final">Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="limit"/> records are returned.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.replacePatternBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.removeDocumentsInViewBlock" datatype="html">
+        <source>Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="final">Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/remove-documents-in-view-blockly-component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.replacePatternBlock" datatype="html">
         <source>Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}.</source><target state="final">Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/replace-pattern-blockly-component.ts</context>
@@ -4710,10 +4740,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it-collections-content.component.ts</context><context context-type="linenumber">230</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.title" datatype="html">
         <source>Delete this comment?</source><target state="final">Delete this comment?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/resource-comments.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/resource-comments.component.ts</context><context context-type="linenumber">141</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.message" datatype="html">
         <source>Do you really want to delete this comment?</source><target state="final">Do you really want to delete this comment?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/resource-comments.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/resource-comments.component.ts</context><context context-type="linenumber">142</context></context-group></trans-unit>
       <trans-unit id="resource.postit.code" datatype="html">
         <source>Set code</source><target state="final">Set code</target>
 

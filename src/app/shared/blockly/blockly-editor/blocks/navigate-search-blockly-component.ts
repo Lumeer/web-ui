@@ -20,18 +20,26 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_AMBER} from '../../../../core/constants';
+import {View} from '../../../../core/store/views/view';
 
 declare var Blockly: any;
 
-export class NavigateByIdBlocklyComponent extends BlocklyComponent {
+export class NavigateSearchBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
+  private viewOptions = [];
   private windowOptions: string[];
   private sidebarOptions: string[];
 
-  public constructor(public blocklyUtils: BlocklyUtils) {
+  public constructor(public blocklyUtils: BlocklyUtils, private views: View[]) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.navigateByIdBlock:Opens the given view (specified by ID, as read from an attribute of type View) and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.`;
+    views.forEach(view => this.viewOptions.push([view.name.replace(/ /g, '\u00A0'), view.id]));
+
+    if (this.viewOptions.length === 0) {
+      this.viewOptions.push(['?', '']);
+    }
+
+    this.tooltip = $localize`:@@blockly.tooltip.navigateSearchBlock:Opens the given view with additional query parameters. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.`;
 
     this.windowOptions = $localize`:@@blockly.dropdown.window.navigateBlock:the same,a new`.split(',');
     this.sidebarOptions = $localize`:@@blockly.dropdown.sidebar.navigateBlock:closed,opened`.split(',');
@@ -44,15 +52,19 @@ export class NavigateByIdBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any) {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID] = {
+    Blockly.Blocks[BlocklyUtils.NAVIGATE_TO_VIEW_SEARCH] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID,
-          message0: '%{BKY_BLOCK_NAVIGATE_TO_VIEW_BY_ID}', // navigate to view %1 in %2 browser tab %3 with the sidebar %4 %5 and focus on record %6
+          type: BlocklyUtils.NAVIGATE_TO_VIEW_SEARCH,
+          message0: '%{BKY_BLOCK_NAVIGATE_TO_VIEW_SEARCH}', // navigate to view %1 %2 in %3 browser tab %4 with the sidebar %5 %6 with search query %7
           args0: [
             {
-              type: 'input_value',
+              type: 'field_dropdown',
               name: 'VIEW_ID',
+              options: this_.viewOptions,
+            },
+            {
+              type: 'input_dummy',
               align: 'RIGHT',
             },
             {
@@ -81,7 +93,7 @@ export class NavigateByIdBlocklyComponent extends BlocklyComponent {
             },
             {
               type: 'input_value',
-              name: 'DOCUMENT',
+              name: 'SEARCH',
               align: 'RIGHT',
             },
           ],
@@ -93,17 +105,17 @@ export class NavigateByIdBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID] = function (block) {
-      const viewId = Blockly.JavaScript.valueToCode(block, 'VIEW_ID', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+    Blockly.JavaScript[BlocklyUtils.NAVIGATE_TO_VIEW_SEARCH] = function (block) {
+      const viewId = block.getFieldValue('VIEW_ID') || null;
       const newWindow = block.getFieldValue('NEW_WINDOW') || false;
       const sidebar = block.getFieldValue('SIDEBAR') || false;
-      const document = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const search = Blockly.JavaScript.valueToCode(block, 'SEARCH', Blockly.JavaScript.ORDER_ASSIGNMENT) || '';
 
-      if (!document || !viewId) {
+      if (!viewId) {
         return '';
       }
 
-      return this_.blocklyUtils.getLumeerVariable() + `.navigate(${viewId}, ${document}, ${sidebar}, ${newWindow});\n`;
+      return this_.blocklyUtils.getLumeerVariable() + `.navigate('${viewId}', ${search}, ${sidebar}, ${newWindow});\n`;
     };
   }
 }

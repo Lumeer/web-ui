@@ -58,7 +58,7 @@
 			<trans-unit datatype="html" id="4608931d14dacf46c6e70c357d1bb3f9e62b6043">
 				<source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</source>
 				<target>{VAR_PLURAL, plural, =2 {Összes} =3 {Összes} =4 {Összes} other {Összes} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="4be44482feb952b217f702aaf0bad3536a4d03ad">
 				<source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source>
 				<target>A minimális szöveghossznak
@@ -79,7 +79,7 @@
 			<trans-unit datatype="html" id="69f13ce4389d17c6a63e46717c0692901221b2eb">
 				<source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</source>
 				<target>{VAR_PLURAL, select, =2 {Megjegyzések} =3 {Megjegyzések} =4 {Megjegyzések} other {Megjegyzések} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5">
 				<source>{VAR_SELECT, select, organization {Organization} project {Project} other {}}</source>
 				<target>{VAR_SELECT, select, organization {Szervezet} project ({Projekt} other {} }</target>
@@ -284,6 +284,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-variable-blockly-component.ts</context>
           <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getViewNameBlock" datatype="html">
+        <source>Gets the name of the view specified by ID (as read from an attribute of type View).</source><target state="new">Gets the name of the view specified by ID (as read from an attribute of type View).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-view-name-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.isArray" datatype="html">
         <source>Returns true if the input is an array (incl. an empty array).</source><target>Igaz értéket ad vissza, ha a bemenet tömb (beleértve egy üres tömböt).</target>
@@ -575,7 +581,7 @@
 			<trans-unit datatype="html" id="button.ok">
 				<source>OK</source>
 				<target>Oké</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">127</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">128</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source><target state="new">{type, select, Read {Read} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">232</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
@@ -1914,7 +1920,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="constraint.select.lists.custom" datatype="html">
         <source>Custom</source><target state="new">Custom</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.select.option.background">
 				<source>Choose background color</source>
 				<target>Háttérszín kiválasztása</target>
@@ -2559,11 +2565,11 @@
 			<trans-unit datatype="html" id="document.detail.comments.commentRemove.message">
 				<source>Do you really want to delete this comment?</source>
 				<target>Biztosan törli ezt a megjegyzést?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/resource-comments.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/resource-comments.component.ts</context><context context-type="linenumber">142</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.comments.commentRemove.title">
 				<source>Delete this comment?</source>
 				<target>Törli ezt a megjegyzést?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/resource-comments.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/resource-comments.component.ts</context><context context-type="linenumber">141</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.comments.empty">
 				<source> No comments yet. Write the first one! </source>
 				<target>Még nincs hozzászólás. Írd meg az elsőt!</target>
@@ -2583,7 +2589,7 @@
 					<x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
 					<x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/>
 					></target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.favorite.add">
 				<source>Add to favorites</source>
 				<target>Hozzáadás a kedvencekhez</target>
@@ -5199,7 +5205,7 @@
 				<trans-unit datatype="html" id="resourceComment.delete.fail">
 					<source>Could not delete the comment</source>
 					<target>A megjegyzés nem törölhető</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">178</context></context-group></trans-unit><trans-unit id="resource.variables.get.fail" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">184</context></context-group></trans-unit><trans-unit id="resource.variables.get.fail" datatype="html">
         <source>Could not read variables</source><target state="new">Could not read variables</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="resource.variables.create.fail" datatype="html">
@@ -5242,7 +5248,7 @@
 				<trans-unit datatype="html" id="resourceComment.update.fail">
 					<source>Could not update the comment</source>
 					<target>Nem lehetett frissíteni a megjegyzést</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">131</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">135</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resourceComments.get.fail">
 					<source>Could not read comments</source>
 					<target>Nem olvashatóak a megjegyzések</target>
@@ -5250,19 +5256,19 @@
 				<trans-unit datatype="html" id="rules.blockly.action.message.error">
 					<source>Error</source>
 					<target>Hiba</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.info">
 					<source>Information</source>
 					<target>Információ</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.success">
 					<source>Success</source>
 					<target>Siker</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">121</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.warning">
 					<source>Warning</source>
 					<target>Figyelmeztetés</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="search.all.collections">
 					<source> Tables </source>
 					<target>Táblázatok</target>
@@ -6415,7 +6421,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-break-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.loopContinueBlock" datatype="html">
         <source>Continues the for cycle.</source><target>Folytatja a for ciklust.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-continue-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-continue-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.mergeArraysBlock" datatype="html">
+        <source>Merge two lists ([A1, A2, ...] + [B1, B2, ...] => [A1DB1, A2DB2, ...], where D is a delimiter). The values can be separated with a delimiter. Strings are also treated as arrays.</source><target state="new">Merge two lists ([A1, A2, ...] + [B1, B2, ...] => [A1DB1, A2DB2, ...], where D is a delimiter). The values can be separated with a delimiter. Strings are also treated as arrays.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/merge-arrays-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.deleteDocumentBlock">
 					<source>Deletes an existing record. To prevent large damage, only up to <x id="limit" equiv-text="limit"/> documents can be deleted within a single sequence of automations and functions.</source>
 					<target>Meglévő rekord törlése. A nagy károk elkerülése érdekében csak
@@ -6440,21 +6452,39 @@
 				<trans-unit datatype="html" id="blockly.tooltip.navigateBlock">
 					<source>Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source>
 					<target>Megnyitja a megadott nézetet és rekordot. Megnyithatja a nézetet ugyanazon a böngésző lapon vagy egy újban. Ahol lehetséges (pl. Munkafolyamat), oldalsáv nyitható.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="blockly.dropdown.window.navigateBlock">
 					<source>the same,a new</source>
 					<target>ugyanaz, egy új</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-search-blockly-component.ts</context><context context-type="linenumber">44</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="blockly.dropdown.sidebar.navigateBlock">
 					<source>closed,opened</source>
 					<target>bezárt, nyitott</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-search-blockly-component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="blockly.tooltip.navigateByIdBlock" datatype="html">
+        <source>Opens the given view (specified by ID, as read from an attribute of type View) and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source><target state="new">Opens the given view (specified by ID, as read from an attribute of type View) and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-by-id-blockly-component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.navigateSearchBlock" datatype="html">
+        <source>Opens the given view with additional query parameters. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source><target state="new">Opens the given view with additional query parameters. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-search-blockly-component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.readDocumentsBlock">
 					<source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="limit"/> records are returned.</source>
 					<target>A kiválasztott nézetből visszaküldött rekordok olvasása. Ha több táblázatot vagy linket használ, csak az első táblázat rekordjai kerülnek vissza. Legfeljebb
 						<x id="limit" equiv-text="{{limit}}"/>
 						rekord kerül visszaadásra.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.replacePatternBlock" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.removeDocumentsInViewBlock" datatype="html">
+        <source>Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="new">Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/remove-documents-in-view-blockly-component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.replacePatternBlock" datatype="html">
         <source>Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}.</source><target state="new">Replaces patterns specified as an array, hash map, object, or string in a given string. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/replace-pattern-blockly-component.ts</context>
