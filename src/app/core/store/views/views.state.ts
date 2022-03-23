@@ -23,7 +23,7 @@ import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../view/perspectives/pe
 import {AppState} from '../app.state';
 import {selectCalendarConfig} from '../calendars/calendars.state';
 import {selectChartConfig} from '../charts/charts.state';
-import {selectCollectionsDictionary} from '../collections/collections.state';
+import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
 import {selectKanbanConfig} from '../kanbans/kanban.state';
@@ -82,7 +82,7 @@ export const selectViewByCode = (code: string) =>
 export const selectViewById = (id: string) => createSelector(selectViewsDictionary, viewsMap => viewsMap[id]);
 
 export const selectViewsDictionaryByCode = createSelector(selectAllViews, views =>
-  views.reduce((map, view) => ({...map, [view.code]: view}), {})
+  views.reduce<Record<string, View>>((map, view) => ({...map, [view.code]: view}), {})
 );
 
 export const selectCurrentView = createSelector(selectViewCode, selectAllViews, (viewCode, views) =>
@@ -90,12 +90,20 @@ export const selectCurrentView = createSelector(selectViewCode, selectAllViews, 
 );
 
 export const selectDefaultDocumentView = (purpose: CollectionPurpose) =>
-  createSelector(selectAllViews, views => {
+  createSelector(selectViewsDictionaryByCode, viewsDictionary => {
     if (purpose?.type === CollectionPurposeType.Tasks && purpose.metaData?.defaultViewCode) {
-      return views.find(view => view.code === purpose.metaData.defaultViewCode);
+      return viewsDictionary[purpose.metaData.defaultViewCode];
     }
     return null;
   });
+
+export const selectDefaultDocumentViews = (type: CollectionPurposeType) =>
+  createSelector(selectViewsDictionaryByCode, selectAllCollections, (viewsDictionary, collections) =>
+    collections
+      .filter(collection => collection.purpose?.type === type)
+      .map(collection => viewsDictionary[collection.purpose.metaData?.defaultViewCode])
+      .filter(view => !!view)
+  );
 
 export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
 

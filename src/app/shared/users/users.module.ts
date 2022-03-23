@@ -41,6 +41,7 @@ import {FilterUserTeamsPipe} from './pipes/filter-user-teams.pipe';
 import {UserTableComponent} from './user-list/table/user-table.component';
 import {UserTransitiveRolesPipe} from './pipes/user-transitive-roles.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     RolesModule,
     DropdownModule,
     TooltipModule,
+    RouterModule,
   ],
   declarations: [
     UserFilterPipe,
@@ -69,6 +71,13 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     UserTableComponent,
     UserTransitiveRolesPipe,
   ],
-  exports: [UsersComponent, NewUserComponent, UserStampComponent, UserTableComponent],
+  exports: [
+    UsersComponent,
+    NewUserComponent,
+    UserStampComponent,
+    UserTableComponent,
+    UserTeamsComponent,
+    FilterUserTeamsPipe,
+  ],
 })
 export class UsersModule {}

@@ -90,23 +90,18 @@ export class UsersEffects {
       mergeMap(action =>
         this.userService.getCurrentUser().pipe(
           map(user => convertUserDtoToModel(user)),
-          mergeMap(user => {
-            const actions: Action[] = [
-              new UsersAction.GetCurrentUserSuccess({user}),
-              new UsersAction.SetPending({pending: false}),
-            ];
-            if (action.payload?.onSuccess) {
-              actions.push(new CommonAction.ExecuteCallback({callback: action.payload.onSuccess}));
-            }
-            return actions;
-          }),
+          mergeMap(user => [
+            new UsersAction.GetCurrentUserSuccess({user}),
+            new UsersAction.SetPending({pending: false}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
           catchError(() => {
-            if (action.payload?.onFailure) {
-              action.payload.onFailure();
-            }
-
             const message = $localize`:@@currentUser.get.fail:Could not get user details`;
-            return from([new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message})]);
+            return of(
+              ...createCallbackActions(action.payload.onFailure),
+              new UsersAction.SetPending({pending: false}),
+              new NotificationsAction.Error({message})
+            );
           })
         )
       )
@@ -118,20 +113,10 @@ export class UsersEffects {
       ofType<UsersAction.ResendVerificationEmail>(UsersActionType.RESEND_VERIFICATION_EMAIL),
       mergeMap(action =>
         this.userService.resendVerificationEmail().pipe(
-          mergeMap(() => {
-            const actions: Action[] = [];
-            if (action.payload?.onSuccess) {
-              actions.push(new CommonAction.ExecuteCallback({callback: action.payload.onSuccess}));
-            }
-            return actions;
-          }),
+          mergeMap(() => [...createCallbackActions(action.payload.onSuccess)]),
           catchError(() => {
-            if (action.payload?.onFailure) {
-              action.payload.onFailure();
-            }
-
             const message = $localize`:@@currentUser.resendVerificationEmail.fail:Could not request another verification email`;
-            return from([new NotificationsAction.Error({message})]);
+            return of(...createCallbackActions(action.payload.onFailure), new NotificationsAction.Error({message}));
           })
         )
       )
@@ -151,7 +136,7 @@ export class UsersEffects {
           ]),
           catchError(() => {
             const message = $localize`:@@currentUser.get.fail:Could not get user details`;
-            return from([new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message})]);
+            return of(new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message}));
           })
         )
       )
@@ -342,7 +327,10 @@ export class UsersEffects {
       ofType<UsersAction.Delete>(UsersActionType.DELETE),
       mergeMap(action =>
         this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
-          map(() => new UsersAction.DeleteSuccess(action.payload)),
+          mergeMap(() => [
+            new UsersAction.DeleteSuccess(action.payload),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
           catchError(error => of(new UsersAction.DeleteFailure({error})))
         )
       )

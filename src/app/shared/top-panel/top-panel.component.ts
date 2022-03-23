@@ -43,6 +43,8 @@ import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.compone
 import {ResizeObserver} from '../resize-observer';
 import {selectTopPanelOpened} from '../../core/store/app-properties/app-properties.state';
 import {AppPropertiesAction} from '../../core/store/app-properties/app-properties.action';
+import {User} from '../../core/store/users/user';
+import {selectCurrentUser} from '../../core/store/users/users.state';
 
 declare let ResizeObserver: ResizeObserver;
 
@@ -72,6 +74,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
 
   public controlsShown$: Observable<boolean>;
   public workspace$: Observable<Workspace>;
+  public currentUser$: Observable<User>;
 
   private resizeObserver: ResizeObserver;
 
@@ -81,6 +84,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
 
   public ngOnInit() {
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
 
     if (window['ResizeObserver']) {
       this.resizeObserver = new ResizeObserver(() =>

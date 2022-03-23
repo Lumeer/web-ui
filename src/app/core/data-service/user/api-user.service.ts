@@ -64,6 +64,10 @@ export class ApiUserService implements UserService {
     return this.httpClient.get<UserDto[]>(this.organizationUsersApiPrefix(organizationId));
   }
 
+  public getUser(organizationId: string, userId: string): Observable<UserDto> {
+    return this.httpClient.get<UserDto>(this.organizationUsersApiPrefix(organizationId, userId));
+  }
+
   private organizationApiPrefix(organizationId: string): string {
     return `${this.usersApiPrefix()}/organizations/${organizationId}/`;
   }

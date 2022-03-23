@@ -32,7 +32,7 @@ import {Router} from '@angular/router';
 import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {checkSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
-import {Collection} from '../../../../../core/store/collections/collection';
+import {Collection, CollectionPurposeType} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {SizeType} from '../../../../../shared/slider/size/size-type';
@@ -53,11 +53,12 @@ import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 import {selectTasksCollections} from '../../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../../core/store/views/view';
 import {User} from '../../../../../core/store/users/user';
-import {selectHasVisibleSearchTab} from '../../../../../core/store/views/views.state';
+import {selectDefaultDocumentViews, selectHasVisibleSearchTab} from '../../../../../core/store/views/views.state';
 import {
   defaultSearchPerspectiveConfiguration,
   SearchPerspectiveConfiguration,
 } from '../../../perspective-configuration';
+import {selectViewsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'search-tasks-content',
@@ -120,6 +121,8 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public currentSize: SizeType;
   public collectionsMap: Record<string, Collection>;
   public allTasksCollections$: Observable<Collection[]>;
+  public defaultTasksViews$: Observable<View[]>;
+  public tasksPermissions$: Observable<AllowedPermissionsMap>;
   public truncateContent$ = new BehaviorSubject(false);
 
   private hasTasksTab: boolean;
@@ -136,6 +139,8 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
     this.allTasksCollections$ = this.store$.pipe(select(selectTasksCollections));
+    this.defaultTasksViews$ = this.store$.pipe(select(selectDefaultDocumentViews(CollectionPurposeType.Tasks)));
+    this.tasksPermissions$ = this.store$.pipe(select(selectViewsPermissions));
 
     this.subscription = this.store$
       .pipe(select(selectHasVisibleSearchTab(SearchTab.Tasks)))

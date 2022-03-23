@@ -55,6 +55,11 @@ export const selectReadableProjects = createSelector(
   (projects, permissions) => projects.filter(project => permissions?.[project.id]?.roles?.Read)
 );
 
+export const selectReadableProjectsForOrganization = organizationId =>
+  createSelector(selectReadableProjects, projects =>
+    projects.filter(project => project.organizationId === organizationId)
+  );
+
 export const selectReadableProjectsCount = createSelector(selectReadableProjects, projects => projects?.length || 0);
 
 export const selectProjectsDictionary = createSelector(

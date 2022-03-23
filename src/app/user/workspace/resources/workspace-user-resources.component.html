@@ -1,0 +1,13 @@
+<ng-container *ngIf="workspace$ | async as workspace">
+  <user-projects class="d-block px-3 mt-3-5"
+                 [workspace]="workspace"
+                 [projectsData]="projectsData$ | async"
+                 [selectedDatum]="selectedDatum$ | async"
+                 (selected)="onProjectSelect($event.name)">
+  </user-projects>
+
+  <user-resources class="d-block px-3"
+                  [organizationId]="workspace.organizationId"
+                  [projectId]="workspace.projectId">
+  </user-resources>
+</ng-container>

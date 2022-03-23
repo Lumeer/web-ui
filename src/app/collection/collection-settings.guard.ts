@@ -77,7 +77,8 @@ export class CollectionSettingsGuard implements CanActivate {
 
   private selectCollection(organization: Organization, project: Project, collectionId: string): Observable<Collection> {
     return this.loadCollections(organization, project).pipe(
-      mergeMap(() => this.store$.pipe(select(selectCollectionById(collectionId))))
+      mergeMap(() => this.store$.pipe(select(selectCollectionById(collectionId)))),
+      take(1)
     );
   }
 

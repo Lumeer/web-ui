@@ -1,7 +1,7 @@
 <div class="d-flex flex-row flex-nowrap align-items-center"
-     *ngIf="collections?.length || documentsCount">
+     *ngIf="collections?.length || views?.length || documentsCount">
 
-  <button *ngIf="collections?.length"
+  <button *ngIf="collections?.length || views?.length"
           type="button"
           class="btn btn-sm btn-primary cursor-pointer"
           title="Add Task"

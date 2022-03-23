@@ -30,7 +30,11 @@ import {selectAllOrganizations} from '../core/store/organizations/organizations.
 import {ProjectConverter} from '../core/store/projects/project.converter';
 import {Project} from '../core/store/projects/project';
 import {ProjectsAction} from '../core/store/projects/projects.action';
-import {selectReadableProjects} from '../core/store/projects/projects.state';
+import {
+  selectProjectsByOrganizationId,
+  selectProjectsLoadedForOrganization,
+  selectReadableProjectsForOrganization,
+} from '../core/store/projects/projects.state';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.utils';
 import {User} from '../core/store/users/user';
 import {CommonAction} from '../core/store/common/common.action';
@@ -39,6 +43,8 @@ import {selectCurrentUserForOrganization} from '../core/store/users/users.state'
 import {selectTeamsByOrganization, selectTeamsLoadedForOrganization} from '../core/store/teams/teams.state';
 import {TeamsAction} from '../core/store/teams/teams.action';
 import {Team} from '../core/store/teams/team';
+import {userHasRoleInProject} from '../shared/utils/permission.utils';
+import {RoleType} from '../core/model/role-type';
 
 @Injectable()
 export class WorkspaceService {
@@ -70,6 +76,16 @@ export class WorkspaceService {
         this.selectUserTeamsAndProject(organization, projectCode).pipe(
           map(({user, project}) => ({user, organization, project}))
         )
+      )
+    );
+  }
+
+  public selectOrGetUserAndOrganizationAndProjects(
+    organizationCode: string
+  ): Observable<{user?: User; organization?: Organization; projects?: Project[]}> {
+    return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
+      mergeMap(organization =>
+        this.selectUserTeamsAndProjects(organization).pipe(map(({user, projects}) => ({user, organization, projects})))
       )
     );
   }
@@ -117,6 +133,15 @@ export class WorkspaceService {
         this.selectUser(organization),
         this.getProjectFromStoreOrApi(organization.id, projectCode),
       ]).pipe(map(([user, project]) => ({user, project})));
+    }
+    return of({});
+  }
+
+  private selectUserTeamsAndProjects(organization: Organization): Observable<{user?: User; projects?: Project[]}> {
+    if (organization) {
+      return this.selectUser(organization).pipe(
+        switchMap(user => this.getProjects(organization, user).pipe(map(projects => ({user, projects}))))
+      );
     }
     return of({});
   }
@@ -185,8 +210,8 @@ export class WorkspaceService {
 
   private getProjectFromStore(organizationId: string, code: string): Observable<Project> {
     return this.store$.pipe(
-      select(selectReadableProjects),
-      map(projects => projects.find(proj => proj.organizationId === organizationId && proj.code === code)),
+      select(selectReadableProjectsForOrganization(organizationId)),
+      map(projects => projects.find(proj => proj.code === code)),
       take(1)
     );
   }
@@ -196,6 +221,30 @@ export class WorkspaceService {
       map(project => ProjectConverter.fromDto(project, orgId)),
       tap(project => this.store$.dispatch(new ProjectsAction.GetOneSuccess({project}))),
       catchError(() => of(undefined))
+    );
+  }
+
+  private getProjects(organization: Organization, user: User): Observable<Project[]> {
+    return this.store$.select(selectProjectsLoadedForOrganization(organization.id)).pipe(
+      tap(loaded => {
+        if (!loaded) {
+          this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
+        }
+      }),
+      skipWhile(loaded => !loaded),
+      mergeMap(() =>
+        this.store$.pipe(
+          select(selectProjectsByOrganizationId(organization.id)),
+          map(projects =>
+            projects.filter(
+              project =>
+                project.organizationId === organization.id &&
+                userHasRoleInProject(organization, project, user, RoleType.Read)
+            )
+          )
+        )
+      ),
+      first()
     );
   }
 }

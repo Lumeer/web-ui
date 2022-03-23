@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Collection, CollectionPurposeType} from '../../../core/store/collections/collection';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
   checkTasksCollectionsQuery,
+  getBaseCollectionIdsFromQuery,
   getQueryFiltersForCollection,
 } from '../../../core/store/navigation/query/query.util';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
@@ -32,8 +33,16 @@ import {selectContributeCollectionsByView} from '../../../core/store/common/perm
 import {map, switchMap, take, tap} from 'rxjs/operators';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {View} from '../../../core/store/views/view';
-import {selectCurrentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectDefaultDocumentView,
+  selectDefaultDocumentViews,
+  selectViewById,
+  selectViewQuery,
+} from '../../../core/store/views/views.state';
 import {Query} from '../../../core/store/navigation/query/query';
+import {selectCollectionById, selectCollectionsByIds} from '../../../core/store/collections/collections.state';
+import {uniqueValues} from '../../utils/array.utils';
+import {mergeCollections} from '../../../core/store/collections/collection.util';
 
 @Component({
   selector: 'create-document-modal',
@@ -57,15 +66,35 @@ export class CreateDocumentModalComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.view$ = this.store$.pipe(
-      select(selectViewById(this.viewId)),
-      switchMap(view => {
-        if (view) {
-          return of(view);
-        }
-        return this.store$.pipe(select(selectCurrentView));
-      })
-    );
+    if (this.viewId) {
+      this.view$ = this.store$.pipe(select(selectViewById(this.viewId)));
+
+      this.collections$ = this.view$.pipe(
+        switchMap(view => this.selectContributeTasksCollections(view)),
+        tap(collections => this.checkSelectedCollection(collections))
+      );
+    } else {
+      const collection$ = this.collectionId$.pipe(
+        switchMap(collectionId => this.store$.pipe(select(selectCollectionById(collectionId))))
+      );
+      this.view$ = collection$.pipe(
+        switchMap(collection => this.store$.pipe(select(selectDefaultDocumentView(collection?.purpose))))
+      );
+
+      this.collections$ = this.store$.pipe(
+        select(selectDefaultDocumentViews(CollectionPurposeType.Tasks)),
+        map(views => views.reduce((ids, view) => [...ids, ...getBaseCollectionIdsFromQuery(view.query)], [])),
+        map(collectionIds => uniqueValues(collectionIds)),
+        switchMap(collectionIds =>
+          combineLatest([
+            this.selectContributeTasksCollections(),
+            this.store$.pipe(select(selectCollectionsByIds(collectionIds))),
+          ])
+        ),
+        map(([c1, c2]) => mergeCollections(c1, c2)),
+        tap(collections => this.checkSelectedCollection(collections))
+      );
+    }
     this.query$ = this.view$.pipe(
       switchMap(view => {
         if (view) {
@@ -74,16 +103,12 @@ export class CreateDocumentModalComponent implements OnInit {
         return this.store$.pipe(select(selectViewQuery));
       })
     );
-    this.collections$ = this.view$.pipe(
-      switchMap(view =>
-        this.store$.pipe(
-          select(selectContributeCollectionsByView(view)),
-          map(collections =>
-            this.purpose ? collections.filter(coll => coll.purpose?.type === this.purpose) : collections
-          ),
-          tap(collections => this.checkSelectedCollection(collections))
-        )
-      )
+  }
+
+  private selectContributeTasksCollections(view?: View): Observable<Collection[]> {
+    return this.store$.pipe(
+      select(selectContributeCollectionsByView(view)),
+      map(collections => (this.purpose ? collections.filter(coll => coll.purpose?.type === this.purpose) : collections))
     );
   }
 

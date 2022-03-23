@@ -27,9 +27,11 @@ import {
   isLinkAuditLog,
   isLinkTypeAuditLog,
   isProjectAuditLog,
+  isProjectAuditLogByUser,
 } from './audit-log.utils';
 
 export interface AuditLogsState extends EntityState<AuditLog> {
+  loadingUsers: string[];
   loadingProjects: string[];
   loadingCollections: string[];
   loadingLinkTypes: string[];
@@ -41,6 +43,7 @@ export interface AuditLogsState extends EntityState<AuditLog> {
 export const auditLogsAdapter: EntityAdapter<AuditLog> = createEntityAdapter<AuditLog>();
 
 export const initialAuditLogsState: AuditLogsState = auditLogsAdapter.getInitialState({
+  loadingUsers: [],
   loadingProjects: [],
   loadingCollections: [],
   loadingLinkTypes: [],
@@ -62,6 +65,14 @@ export const selectAuditLogsByProject = (projectId: string) =>
 
 export const selectAuditLogsByProjectLoading = (projectId: string) =>
   createSelector(selectAuditLogsState, state => state.loadingProjects.includes(projectId));
+
+export const selectAuditLogsByUser = (projectId: string, userId: string) =>
+  createSelector(selectAuditLogs, logs =>
+    sortByDate(logs.filter(log => isProjectAuditLogByUser(log, projectId, userId)))
+  );
+
+export const selectAuditLogsByUserLoading = (userId: string) =>
+  createSelector(selectAuditLogsState, state => state.loadingUsers.includes(userId));
 
 export const selectAuditLogsByCollection = (collectionId: string) =>
   createSelector(selectAuditLogs, logs => sortByDate(logs.filter(log => isCollectionAuditLog(log, collectionId))));

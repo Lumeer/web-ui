@@ -1,6 +1,7 @@
 <ng-container *ngIf="{collections: collections$ | async} as data">
   <document-detail-modal [collection]="data.collections | collectionById:(collectionId$ | async)"
                          [document]="document$ | async"
+                         [viewId]="(view$ | async)?.id"
                          [toolbarRef]="toolbar">
   </document-detail-modal>
 

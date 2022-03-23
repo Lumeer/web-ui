@@ -45,6 +45,8 @@ import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/ser
 import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
 import {Team} from '../../core/store/teams/team';
 import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'users',
@@ -62,6 +64,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   public organization$ = new BehaviorSubject<Organization>(null);
   public project$ = new BehaviorSubject<Project>(null);
   public resource$: Observable<Resource>;
+  public workspace$: Observable<Workspace>;
 
   private currentResourceId: string;
   private subscriptions = new Subscription();
@@ -155,6 +158,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace), map(this.sortUsers));
     this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
+    this.workspace$ = this.store$.pipe(select(selectWorkspace));
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
 

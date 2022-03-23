@@ -19,10 +19,15 @@
 
 import {createReducer, on} from '@ngrx/store';
 import * as AuditLogActions from './audit-logs.actions';
-import {auditLogsAdapter, AuditLogsState, initialAuditLogsState} from './audit-logs.state';
-import {ResourceType} from '../../model/resource-type';
+import {auditLogsAdapter, initialAuditLogsState} from './audit-logs.state';
 import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
-import {isCollectionAuditLog, isDocumentAuditLog, isLinkAuditLog, isLinkTypeAuditLog} from './audit-log.utils';
+import {
+  isCollectionAuditLog,
+  isDocumentAuditLog,
+  isLinkAuditLog,
+  isLinkTypeAuditLog,
+  isProjectAuditLogByUser,
+} from './audit-log.utils';
 
 export const auditLogsReducer = createReducer(
   initialAuditLogsState,
@@ -39,6 +44,24 @@ export const auditLogsReducer = createReducer(
   on(AuditLogActions.getByProjectFailure, (state, action) => ({
     ...state,
     loadingProjects: removeFromArray(state.loadingProjects, action.projectId),
+  })),
+
+  on(AuditLogActions.getByUser, (state, action) => ({
+    ...state,
+    loadingUsers: appendToArray(state.loadingUsers, action.userId),
+  })),
+  on(AuditLogActions.getByUserSuccess, (state, action) =>
+    auditLogsAdapter.upsertMany(
+      action.auditLogs,
+      auditLogsAdapter.removeMany(log => isProjectAuditLogByUser(log, action.projectId, action.userId), {
+        ...state,
+        loadingUsers: removeFromArray(state.loadingUsers, action.userId),
+      })
+    )
+  ),
+  on(AuditLogActions.getByUserFailure, (state, action) => ({
+    ...state,
+    loadingUsers: removeFromArray(state.loadingUsers, action.userId),
   })),
 
   on(AuditLogActions.getByCollection, (state, action) => ({

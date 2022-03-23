@@ -94,6 +94,8 @@ import {formsReducer} from './form/form.reducer';
 import {resourceVariablesReducer} from './resource-variables/resource-variables.reducer';
 import {ResourceVariablesEffects} from './resource-variables/resource-variables.effects';
 import {appPropertiesReducer} from './app-properties/app-properties.reducer';
+import {resourcesReducer} from './resources/data-resources.reducer';
+import {ResourcesEffects} from './resources/data-resources.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -137,6 +139,7 @@ const reducers: ActionReducerMap<AppState> = {
   dashboardData: dashboardDataReducer,
   variables: resourceVariablesReducer,
   properties: appPropertiesReducer,
+  resources: resourcesReducer,
 };
 
 const effects = [
@@ -170,6 +173,7 @@ const effects = [
   SelectionListsEffects,
   DashboardDataEffects,
   ResourceVariablesEffects,
+  ResourcesEffects,
 ];
 
 @NgModule({

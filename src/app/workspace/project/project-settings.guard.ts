@@ -62,7 +62,6 @@ export class ProjectSettingsGuard implements CanActivate {
           return of(false);
         }
 
-        this.dispatchDataEvents(organization, project);
         return this.workspaceService.switchWorkspace(organization, project);
       }),
       take(1),
@@ -78,9 +77,5 @@ export class ProjectSettingsGuard implements CanActivate {
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
-  }
-
-  private dispatchDataEvents(organization: Organization, project: Project) {
-    this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
   }
 }

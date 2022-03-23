@@ -34,10 +34,9 @@ import {
   selectAuditLogsByProject,
   selectAuditLogsByProjectLoading,
 } from '../../../core/store/audit-logs/audit-logs.state';
-import {Action, select, Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import * as AuditLogActions from '../../../core/store/audit-logs/audit-logs.actions';
 import {DataResource} from '../../../core/model/resource';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
@@ -85,9 +84,9 @@ export class ResourceActivityComponent implements OnChanges, OnDestroy {
 
   private createConfiguration(): AuditLogConfiguration {
     if ([ResourceType.Document, ResourceType.Link].includes(this.resourceType)) {
-      return {allowRevert: true};
+      return {filtersByUsers: true, allowRevert: true};
     } else {
-      return {filtersByResource: true, objectDetail: true, allowRevert: true};
+      return {filtersByUsers: true, filtersByResource: true, objectDetail: true, allowRevert: true};
     }
   }
 
@@ -188,23 +187,6 @@ export class ResourceActivityComponent implements OnChanges, OnDestroy {
     };
 
     return [...logs, auditLogCreated];
-  }
-
-  public onRevertAudit(auditLog: AuditLog) {
-    const action = this.revertAuditAction(auditLog);
-    if (action) {
-      const title = $localize`:@@audit.revert.confirm.title:Revert changes?`;
-      const message = $localize`:@@audit.revert.confirm.message:Do you really want to revert the latest changes?`;
-
-      this.store$.dispatch(new NotificationsAction.Confirm({title, message, type: 'info', action}));
-    }
-  }
-
-  public revertAuditAction(auditLog: AuditLog): Action {
-    return AuditLogActions.revert({
-      auditLogId: auditLog.id,
-      workspace: this.workspace,
-    });
   }
 
   public ngOnDestroy() {

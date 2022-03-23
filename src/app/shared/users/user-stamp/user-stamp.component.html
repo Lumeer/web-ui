@@ -4,7 +4,7 @@
        [size]="size"
        class="">
   <div class="flex-column align-self-center user-name ms-3 text-truncate">
-    <div class="flex-nowrap text-truncate">{{userName || email}}</div>
+    <div class="flex-nowrap text-truncate" [ngClass]="titleClasses">{{userName || email}}</div>
     <div *ngIf="userName && userName !== email" class="text-muted">{{email}}</div>
   </div>
 </div>

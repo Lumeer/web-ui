@@ -55,6 +55,10 @@ export class PublicUserService implements UserService {
     return of([]);
   }
 
+  public getUser(organizationId: string, userId: string): Observable<UserDto> {
+    return this.getCurrentUser();
+  }
+
   public getCurrentUser(): Observable<UserDto> {
     return of({
       agreement: true,

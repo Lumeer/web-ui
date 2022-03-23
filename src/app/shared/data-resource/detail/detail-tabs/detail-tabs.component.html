@@ -21,9 +21,9 @@
     <a class="nav-link text-truncate"
        [class.active]="activeTab === detailTabTypes.Tables"
        title="Tables"
-       i18n-title="@@document.detail.tabs.tables"
+       i18n-title="@@collections"
        (click)="onTabSelect.emit(detailTabTypes.Tables)">
-      <span i18n="@@document.detail.tabs.tables">Tables</span>
+      <span i18n="@@collections">Tables</span>
       <span class="small">{{documentsCount ? ' (' + documentsCount + ')' : ''}}</span>
     </a>
   </li>

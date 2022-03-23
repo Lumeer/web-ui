@@ -39,11 +39,11 @@ import {convertStringToViewCursor} from './view-cursor/view-cursor';
 import {convertStringToPerspectiveSettings} from './settings/perspective-settings';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
-  const {params} = action.payload.routerState;
+  const {params, queryParams} = action.payload.routerState;
 
   const navigatingWorkspace = {
     organizationCode: params['organizationCode'],
-    projectCode: params['projectCode'],
+    projectCode: params['projectCode'] || queryParams['projectCode'],
     collectionId: params['collectionId'],
     linkTypeId: params['linkTypeId'],
     viewCode: params['vc'],
@@ -72,7 +72,7 @@ function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction
 
   const workspace = {
     organizationCode: params['organizationCode'],
-    projectCode: params['projectCode'],
+    projectCode: params['projectCode'] || queryParams['projectCode'],
     collectionId: params['collectionId'],
     linkTypeId: params['linkTypeId'],
     viewCode: params['vc'],
@@ -84,6 +84,7 @@ function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction
     workspace: deepObjectsEquals(workspace, state.workspace) ? state.workspace : workspace,
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     viewName: queryParams['viewName'],
+    userId: params['userId'],
     viewCursor: deepObjectsEquals(viewCursor, state.viewCursor) ? state.viewCursor : viewCursor,
     searchTab: parseSearchTabFromUrl(url),
     previousUrl: state.url,
