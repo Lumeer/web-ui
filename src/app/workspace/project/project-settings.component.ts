@@ -36,7 +36,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
 import {Project} from '../../core/store/projects/project';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectProjectByWorkspace, selectProjectsCodesForOrganization} from '../../core/store/projects/projects.state';
-import {selectAllUsers} from '../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 import {SearchTab} from '../../core/store/navigation/search-tab';
@@ -50,6 +50,8 @@ import {ProjectService} from '../../core/data-service';
 import {FileApiService} from '../../core/service/file-api.service';
 import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
+import {UsersAction} from '../../core/store/users/users.action';
+import {UserHintsKeys} from '../../core/store/users/user';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -61,6 +63,8 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
   public project$ = new BehaviorSubject<Project>(null);
   public permissions$: Observable<AllowedPermissions>;
   public uploadProgress$ = new BehaviorSubject<number>(null);
+
+  public displayDeleteSampleDataHint$: Observable<boolean>;
 
   public readonly projectType = ResourceType.Project;
 
@@ -89,6 +93,11 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
     this.deleteSamplesDescription = $localize`:@@project.deleteSamples.dialog.description:All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.`;
     this.deleteSamplesTitle = $localize`:@@project.deleteSamples.dialog.title:Do you want to erase all sample data in the project?`;
     this.deleteSamplesPlaceholder = $localize`:@@project.deleteSamples.dialog.placeholder:PERMANENTLY CLEAN`;
+
+    this.displayDeleteSampleDataHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => !user.hints.deleteSampleDataHintDismissed)
+    );
   }
 
   public ngOnDestroy() {
@@ -301,5 +310,9 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  public onHintDismissed() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.deleteSampleDataHintDismissed, value: true}));
   }
 }

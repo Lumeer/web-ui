@@ -94,6 +94,8 @@ export enum UserHintsKeys {
   addNewTaskHintDismissed = 'addNewTaskHintDismissed',
   pinTaskHintDismissed = 'pinTaskHintDismissed',
   detailTaskHintDismissed = 'detailTaskHintDismissed',
+
+  deleteSampleDataHintDismissed = 'deleteSampleDataHintDismissed',
 }
 
 export interface UserHints {
@@ -128,6 +130,8 @@ export interface UserHints {
   addNewTaskHintDismissed?: boolean;
   pinTaskHintDismissed?: boolean;
   detailTaskHintDismissed?: boolean;
+
+  deleteSampleDataHintDismissed?: boolean;
 }
 
 export interface NotificationsSettings {
