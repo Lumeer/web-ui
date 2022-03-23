@@ -16,6 +16,8 @@
             [editableGroups]="(resourceType | isOrganizationType) && serviceLimits?.groups"
             [deletableUserIds]="deletableUserIds"
             [editableUserIds]="editableUserIds"
+            [workspace]="workspace"
+            [canManageUserDetail]="canManageUserDetail"
             (userTeamsChange)="onUserTeamsChange($event)"
             (userRolesChange)="userRolesChange.emit($event)"
             (userDeleted)="userDeleted.emit($event)"

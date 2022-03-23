@@ -1,0 +1,8 @@
+<audit-logs class="d-block mt-4 mb-6"
+            [auditLogs]="auditLog$ | async"
+            [loading]="auditLogsLoading$ | async"
+            [resourceType]="resourceType"
+            [workspace]="workspace"
+            [configuration]="configuration">
+  <ng-content></ng-content>
+</audit-logs>

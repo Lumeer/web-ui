@@ -23,7 +23,7 @@ import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, U
 import {Observable, of} from 'rxjs';
 import {map, switchMap, take} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
-import {userRoleTypesInOrganization, userRoleTypesInProject} from '../../shared/utils/permission.utils';
+import {userRoleTypesInProject} from '../../shared/utils/permission.utils';
 import {WorkspaceService} from '../workspace.service';
 import {AppState} from '../../core/store/app.state';
 import {RoleType} from '../../core/model/role-type';

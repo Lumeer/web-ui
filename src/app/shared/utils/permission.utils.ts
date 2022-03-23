@@ -46,6 +46,7 @@ import {
   userCanReadDataResource,
 } from '@lumeer/data-filters';
 import {Perspective} from '../../view/perspectives/perspective';
+import {ResourceType} from '../../core/model/resource-type';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -326,12 +327,104 @@ export function userRoleTypesInPermissions(
   return uniqueValues(roleTypes);
 }
 
+export function linkTypePermissions(linkType: LinkType): Permissions {
+  if (linkType.permissionsType === PermissionsType.Custom) {
+    return linkType.permissions;
+  }
+  const collection1 = linkType.collections?.[0];
+  const collection2 = linkType.collections?.[1];
+  if (!collection1 || !collection2) {
+    return null;
+  }
+
+  const users = mergePermissions(collection1.permissions?.users, collection2.permissions?.users);
+  const groups = mergePermissions(collection1.permissions?.groups, collection2?.permissions?.groups);
+  return {users, groups};
+}
+
+function mergePermissions(p1: Permission[], p2: Permission[]): Permission[] {
+  const p1Map = objectsByIdMap(p1);
+  const p2Map = objectsByIdMap(p1);
+  const finalArray: Permission[] = [];
+  Object.keys(p1Map).forEach(id => {
+    const p1Roles = p1Map[id].roles;
+    const p2Roles = p2Map[id].roles;
+
+    const roles = [...p1Roles, ...p2Roles].reduce<Role[]>((allRoles, role) => {
+      const index = allRoles.findIndex(r => r.type === role.type);
+      if (index >= 0) {
+        allRoles[index] = {...allRoles[index], transitive: allRoles[index].transitive || role.transitive};
+      } else {
+        allRoles.push(role);
+      }
+
+      return allRoles;
+    }, []);
+
+    finalArray.push({id, roles});
+  });
+
+  return finalArray;
+}
+
+export function userTransitiveRoles(
+  organization: Organization,
+  project: Project,
+  user: User,
+  resourceType: ResourceType,
+  permissions: Permissions
+): Role[] {
+  if (!user) {
+    return [];
+  }
+  const userTeamIds = user.teams?.map(team => team.id) || [];
+  const userTeamsRoles = (permissions?.groups || []).reduce((roles, team) => {
+    if (userTeamIds.includes(team.id)) {
+      roles.push(...(team.roles || []));
+    }
+    return roles;
+  }, []);
+
+  switch (resourceType) {
+    case ResourceType.Organization: {
+      return userTeamsRoles;
+    }
+    case ResourceType.Project: {
+      return [
+        ...userRolesInOrganization(organization, user).filter(role => role.transitive),
+        ...userRolesInOrganization(organization, user)
+          .filter(role => role.transitive)
+          .map(role => ({
+            ...role,
+            transitive: false,
+          })),
+        ...userTeamsRoles,
+      ];
+    }
+    case ResourceType.View:
+    case ResourceType.Collection:
+    case ResourceType.LinkType: {
+      return [
+        ...userRolesInProject(organization, project, user)
+          .filter(role => role.transitive)
+          .map(role => ({
+            ...role,
+            transitive: false,
+          })),
+        ...userTeamsRoles,
+      ];
+    }
+    default:
+      return [];
+  }
+}
+
 export function userHasAnyRoleInResource(resource: Resource, user: User): boolean {
   const teamIds = (user.teams || []).map(team => team.id);
   return userRolesInResource(resource, user, teamIds).length > 0;
 }
 
-function userRolesInResource(resource: Resource, user: User, teams: string[]): Role[] {
+export function userRolesInResource(resource: Resource, user: User, teams: string[]): Role[] {
   return userRolesInPermissions(resource?.permissions || {users: [], groups: []}, user, teams);
 }
 
@@ -403,12 +496,22 @@ export function userCanManageProjectDetail(organization: Organization, project: 
   return userRoleTypesInProject(organization, project, user).some(role => roles.includes(role));
 }
 
+export function userCanManageProjectUserDetail(organization: Organization, project: Project, user: User): boolean {
+  const roles = [RoleType.Manage, RoleType.UserConfig];
+  return userRoleTypesInProject(organization, project, user).some(role => roles.includes(role));
+}
+
 export function permissionsCanManageProjectDetail(permissions: AllowedPermissions): boolean {
   const roles = [RoleType.Manage, RoleType.UserConfig, RoleType.TechConfig];
   return roles.some(role => permissions?.roles?.[role]);
 }
 
 export function userCanManageOrganizationDetail(organization: Organization, user: User): boolean {
+  const roles = [RoleType.Manage, RoleType.UserConfig];
+  return userRoleTypesInOrganization(organization, user).some(role => roles.includes(role));
+}
+
+export function userCanManageOrganizationUserDetail(organization: Organization, user: User): boolean {
   const roles = [RoleType.Manage, RoleType.UserConfig];
   return userRoleTypesInOrganization(organization, user).some(role => roles.includes(role));
 }

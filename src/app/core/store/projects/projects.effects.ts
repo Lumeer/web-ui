@@ -528,18 +528,32 @@ export class ProjectsEffects {
   public switchWorkspace$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ProjectsAction.SwitchWorkspace>(ProjectsActionType.SWITCH_WORKSPACE),
-      withLatestFrom(this.store$.pipe(select(selectCurrentUser))),
-      mergeMap(([action, user]) => {
+      withLatestFrom(this.store$.pipe(select(selectCurrentUser)), this.store$.pipe(select(selectWorkspaceWithIds))),
+      mergeMap(([action, user, currentWorkspace]) => {
         const {organizationId, projectId, nextAction} = action.payload;
-        const workspace = user.defaultWorkspace;
-        if (workspace && workspace.organizationId === organizationId && workspace.projectId === projectId) {
-          return (nextAction && [nextAction]) || [];
+        const userWorkspace = user.defaultWorkspace;
+        const actions: Action[] = [];
+
+        if (
+          !userWorkspace ||
+          userWorkspace.organizationId !== organizationId ||
+          userWorkspace.projectId !== projectId
+        ) {
+          actions.push(new UsersAction.SaveDefaultWorkspace({defaultWorkspace: {organizationId, projectId}}));
         }
 
-        const actions: Action[] = [
-          new UsersAction.SaveDefaultWorkspace({defaultWorkspace: {organizationId, projectId}}),
-          new ProjectsAction.ClearWorkspaceData({nextAction}),
-        ];
+        const nextActionUsed = false;
+        if (
+          !currentWorkspace ||
+          currentWorkspace.organizationId !== organizationId ||
+          currentWorkspace.projectId !== projectId
+        ) {
+          actions.push(new ProjectsAction.ClearWorkspaceData({nextAction}));
+        }
+
+        if (!!nextAction && !nextActionUsed) {
+          actions.push(nextAction);
+        }
 
         return actions;
       }),

@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {AuditLog} from '../../../../core/store/audit-logs/audit-log.model';
 import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {User} from '../../../../core/store/users/user';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {selectUsersDictionary} from '../../../../core/store/users/users.state';
@@ -46,6 +46,9 @@ import {objectsByIdMap} from '../../../utils/common.utils';
 import {AuditLogConfiguration} from './model/audit-log-configuration';
 import {ModalService} from '../../../modal/modal.service';
 import {ResourceType} from '../../../../core/model/resource-type';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import * as AuditLogActions from '../../../../core/store/audit-logs/audit-logs.actions';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'audit-logs',
@@ -65,8 +68,8 @@ export class AuditLogsComponent implements OnInit {
   @Input()
   public resourceType: ResourceType;
 
-  @Output()
-  public revert = new EventEmitter<AuditLog>();
+  @Input()
+  public workspace: Workspace;
 
   public readonly serviceLevel = ServiceLevelType;
 
@@ -116,10 +119,6 @@ export class AuditLogsComponent implements OnInit {
       });
   }
 
-  public onRevert(auditLog: AuditLog) {
-    this.revert.emit(auditLog);
-  }
-
   public onDetail(auditLog: AuditLog) {
     if (auditLog.resourceType === ResourceType.Document) {
       this.modalService.showDocumentDetail(auditLog.resourceId, auditLog.parentId);
@@ -130,5 +129,22 @@ export class AuditLogsComponent implements OnInit {
 
   public onFiltersChanged(filters: AuditLogFilters) {
     this.filters$.next(filters);
+  }
+
+  public onRevert(auditLog: AuditLog) {
+    const action = this.revertAuditAction(auditLog);
+    if (action) {
+      const title = $localize`:@@audit.revert.confirm.title:Revert changes?`;
+      const message = $localize`:@@audit.revert.confirm.message:Do you really want to revert the latest changes?`;
+
+      this.store$.dispatch(new NotificationsAction.Confirm({title, message, type: 'info', action}));
+    }
+  }
+
+  public revertAuditAction(auditLog: AuditLog): Action {
+    return AuditLogActions.revert({
+      auditLogId: auditLog.id,
+      workspace: this.workspace,
+    });
   }
 }

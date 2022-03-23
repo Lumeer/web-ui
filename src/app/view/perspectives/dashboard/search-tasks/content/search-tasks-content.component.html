@@ -5,7 +5,8 @@
                         [size]="currentSize"
                         [documentsCount]="documents?.length"
                         [viewId]="view?.id"
-                        [collections]="collections | filterWritableTasksCollections:permissions"
+                        [collections]="collections | filterContributeTasksCollections:permissions"
+                        [views]="defaultTasksViews$ | async | filterContributeViews:(tasksPermissions$ | async)"
                         (sizeChange)="onSizeChange($event)">
   </search-tasks-toolbar>
 

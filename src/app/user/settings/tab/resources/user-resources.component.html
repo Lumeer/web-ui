@@ -1,0 +1,26 @@
+<ng-container *ngIf="{user: user$ | async, organization: organization$ | async, project: project$ | async, isCurrentUser: isCurrentUser$ | async} as data">
+  <user-views class="d-block mt-4"
+              [user]="data.user"
+              [organization]="data.organization"
+              [project]="data.project"
+              [isCurrentUser]="data.isCurrentUser"
+              [views]="views$ | async"
+              [loaded]="!projectId || (viewsLoaded$ | async)">
+  </user-views>
+  <user-collections class="d-block mt-4"
+                    [user]="data.user"
+                    [organization]="data.organization"
+                    [project]="data.project"
+                    [isCurrentUser]="data.isCurrentUser"
+                    [collections]="collections$ | async"
+                    [loaded]="!projectId || (collectionsLoaded$ | async)">
+  </user-collections>
+  <user-link-types class="d-block mt-4 mb-6"
+                   [user]="data.user"
+                   [organization]="data.organization"
+                   [project]="data.project"
+                   [isCurrentUser]="data.isCurrentUser"
+                   [linkTypes]="linkTypes$ | async"
+                   [loaded]="!projectId || (linkTypesLoaded$ | async)">
+  </user-link-types>
+</ng-container>

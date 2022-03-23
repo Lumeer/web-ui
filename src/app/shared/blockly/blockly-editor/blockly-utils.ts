@@ -95,6 +95,9 @@ export class BlocklyUtils {
   public static readonly LINK_DOCUMENTS_NO_RETURN = 'link_documents_no_return';
   public static readonly LINK_DOCUMENTS_RETURN = 'link_documents_return';
   public static readonly READ_DOCUMENTS = 'read_documents';
+  public static readonly REMOVE_DOCUMENTS_IN_VIEW = 'remove_documents_in_view';
+  public static readonly GET_VIEW_NAME = 'get_view_name';
+  public static readonly MERGE_ARRAYS = 'merge_arrays';
   public static readonly GET_SIBLINGS = 'get_siblings';
   public static readonly GET_HIERARCHY_SIBLINGS = 'get_hierarchy_siblings';
   public static readonly GET_PARENT_DOCUMENT = 'get_parent_document';
@@ -114,6 +117,7 @@ export class BlocklyUtils {
   public static readonly SEND_SMTP_EMAIL = 'send_smtp_email';
   public static readonly NAVIGATE_TO_VIEW = 'navigate_to_view';
   public static readonly NAVIGATE_TO_VIEW_BY_ID = 'navigate_to_view_by_id';
+  public static readonly NAVIGATE_TO_VIEW_SEARCH = 'navigate_to_view_search';
   public static readonly SHARE_VIEW = 'share_view';
   public static readonly GET_RESOURCE_VARIABLE = 'get_resource_variable';
   public static readonly GET_SMTP_CONFIGURATION = 'get_smtp_configuration';

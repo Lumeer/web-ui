@@ -23,9 +23,23 @@ import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
 import {getAttributesResourceType} from '../utils/resource.utils';
 import {ConstraintType} from '@lumeer/data-filters';
+import {Project} from '../../core/store/projects/project';
+
+export function projectSelectItems(projects: Project[], id?: (Project) => any): SelectItemModel[] {
+  return projects?.map(project => projectSelectItem(project, id)) || [];
+}
+
+export function projectSelectItem(project: Project, id?: (Project) => any): SelectItemModel {
+  return {
+    id: id?.(project) || project.id,
+    value: project.code,
+    icons: [project.icon],
+    iconColors: [project.color],
+  };
+}
 
 export function collectionSelectItems(collections: Collection[], id?: (Collection) => any): SelectItemModel[] {
-  return collections?.map(collection => collectionSelectItem(collection, id)) || [];
+  return (collections || []).map(collection => collectionSelectItem(collection, id)) || [];
 }
 
 export function collectionSelectItem(collection: Collection, id?: (Collection) => any): SelectItemModel {
@@ -39,12 +53,12 @@ export function collectionSelectItem(collection: Collection, id?: (Collection) =
 
 export function linkTypesSelectItems(linkTypes: LinkType[], id?: any): SelectItemModel[] {
   return (
-    linkTypes?.map(linkType => {
+    (linkTypes || []).map(linkType => {
       return {
         id: id?.() || linkType.id,
         value: linkType.name,
-        icons: [linkType.collections?.[0].icon, linkType.collections[1].icon],
-        iconColors: [linkType.collections[0].color, linkType.collections[1].color],
+        icons: [linkType.collections?.[0]?.icon, linkType.collections[1]?.icon],
+        iconColors: [linkType.collections[0]?.color, linkType.collections[1]?.color],
       };
     }) || []
   );

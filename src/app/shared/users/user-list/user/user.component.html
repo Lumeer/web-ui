@@ -1,5 +1,8 @@
 <div>
-  <user-stamp class="d-block p-2" [email]="user.email" [userName]="user.name" [size]="32"></user-stamp>
+  <a [routerLink]="userSettingsUrl" [queryParams]="userSettingsParams" *ngIf="canManageUserDetail">
+    <user-stamp class="d-block p-2" [email]="user.email" [userName]="user.name"></user-stamp>
+  </a>
+  <user-stamp *ngIf="!canManageUserDetail" class="d-block p-2" [email]="user.email" [userName]="user.name"></user-stamp>
 </div>
 
 <div class="pb-2 pt-3">
@@ -18,7 +21,10 @@
   </roles>
 </div>
 
-<div>
+<div class="d-flex align-items-center">
+  <a [routerLink]="userSettingsUrl" [queryParams]="userSettingsParams" *ngIf="canManageUserDetail">
+    <i class="fas fa-fw fa-user-cog m-1 cursor-pointer" aria-hidden="true" title="Review user rights, teams, and activities" i18n-title="@@user.actions.review.rights"></i>
+  </a>
   <i class="far fa-fw fa-trash-alt text-danger m-1 cursor-pointer"
      *ngIf="deletable"
      aria-hidden="true"

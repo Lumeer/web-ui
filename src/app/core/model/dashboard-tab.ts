@@ -97,10 +97,10 @@ export enum TabType {
 }
 
 export const defaultDashboardTabs = [
-  {id: TabType.All, title: $localize`:@@search.tab.all:All`, type: TabType.All},
+  {id: TabType.All, title: $localize`:@@all:All`, type: TabType.All},
   {
     id: TabType.Tasks,
-    title: $localize`:@@search.tab.tasks:Tasks`,
+    title: $localize`:@@tasks:Tasks`,
     type: TabType.Tasks,
     hintTitle: 'Ukoly',
     hintContent:
@@ -108,7 +108,7 @@ export const defaultDashboardTabs = [
   },
   {
     id: TabType.Views,
-    title: $localize`:@@search.tab.views:Views`,
+    title: $localize`:@@views:Views`,
     type: TabType.Views,
     hintTitle: 'Pohledy',
     hintContent:
@@ -116,7 +116,7 @@ export const defaultDashboardTabs = [
   },
   {
     id: TabType.Tables,
-    title: $localize`:@@search.tab.collections:Tables`,
+    title: $localize`:@@collections:Tables`,
     type: TabType.Tables,
     hintTitle: 'Tabulky',
     hintContent:

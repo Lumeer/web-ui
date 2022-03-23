@@ -1,0 +1,26 @@
+<div class="d-flex flex-row justify-content-start align-items-center">
+  <i class="fas fa-chevron-left chevron me-2-5 cursor-pointer clickable"
+     title="Back" i18n-title="@@back"
+     (click)="onBack()"></i>
+
+  <user-stamp [email]="user?.email"
+              [userName]="user?.name"
+              titleClasses="h4 m-0 fw-bold">
+  </user-stamp>
+
+  <div class="d-flex flex-row flex-nowrap align-items-center ms-auto">
+    <ng-content></ng-content>
+    <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger">
+      <i *ngIf="!isCurrent && permissions?.roles?.UserConfig" class="far fa-fw fa-trash-alt"
+         (click)="onDelete()"
+         aria-hidden="true"></i>
+    </div>
+  </div>
+
+</div>
+
+<user-teams class="d-block mt-3"
+            [editable]="serviceLimits?.groups && permissions?.roles?.UserConfig"
+            [selectedTeamIds]="user | filterUserTeams:teams"
+            [teams]="teams">
+</user-teams>

@@ -25,7 +25,7 @@ import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
 import {ViewsGuard} from '../core/guards/data/views.guard';
-import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up-guard.service';
+import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up.guard';
 import {ViewRedirectGuard} from '../core/guards/view-redirect.guard';
 import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {Perspective} from './perspectives/perspective';

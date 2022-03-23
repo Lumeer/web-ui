@@ -76,7 +76,7 @@ import {AppIdService} from '../service/app-id.service';
 import {NotificationButton} from '../notifications/notification-button';
 import {Router} from '@angular/router';
 import {LocationStrategy} from '@angular/common';
-import {convertQueryModelToString} from '../store/navigation/query/query.converter';
+import {addFiltersToQuery, convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
 import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {ConfigurationService} from '../../configuration/configuration.service';
@@ -90,6 +90,7 @@ import {convertSelectionListDtoToModel} from '../store/selection-lists/selection
 import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
 import {convertDashboardDataDtoToModel} from '../store/dashboard-data/dashboard-data.converter';
 import {convertResourceVariableDtoToModel} from '../store/resource-variables/resource-variable.converter';
+import {Query} from '../store/navigation/query/query';
 
 @Injectable({
   providedIn: 'root',
@@ -442,47 +443,58 @@ export class PusherService implements OnDestroy {
     });
   }
 
+  private navigateAction(dataObject: any, view: View, replacementQuery: Query = null) {
+    const encodedQuery = convertQueryModelToString(replacementQuery ? replacementQuery : view.query);
+    const encodedCursor = isNotNullOrUndefined(dataObject.documentId)
+      ? convertViewCursorToString({
+          collectionId: dataObject.collectionId,
+          documentId: dataObject.documentId,
+          attributeId: dataObject.attributeId,
+          sidebar: dataObject.sidebar,
+        })
+      : '';
+
+    if (dataObject.newWindow) {
+      const a = document.createElement('a');
+      a.href = `${this.locationStrategy.getBaseHref()}w/${dataObject.organizationCode}/${
+        dataObject.projectCode
+      }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
+
+      if (dataObject.newWindow) {
+        a.target = '_blank';
+      }
+
+      a.click();
+    } else {
+      this.router.navigate(
+        ['/w', dataObject.organizationCode, dataObject.projectCode, 'view', {vc: view.code}, view.perspective],
+        {queryParams: {q: encodedQuery, c: encodedCursor}}
+      );
+    }
+  }
+
   private bindNavigateEvents() {
     this.channel.bind('NavigationRequest', data => {
       if (this.isCurrentWorkspace(data) && this.isCurrentAppTab(data)) {
-        this.store$.pipe(select(selectViewById(data.object.viewId)), take(1)).subscribe(view => {
-          if (view) {
-            const encodedQuery = convertQueryModelToString(view.query);
-            const encodedCursor = isNotNullOrUndefined(data.object.documentId)
-              ? convertViewCursorToString({
-                  collectionId: data.object.collectionId,
-                  documentId: data.object.documentId,
-                  attributeId: data.object.attributeId,
-                  sidebar: data.object.sidebar,
-                })
-              : '';
-
-            if (data.object.newWindow) {
-              const a = document.createElement('a');
-              a.href = `${this.locationStrategy.getBaseHref()}w/${data.object.organizationCode}/${
-                data.object.projectCode
-              }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
-
-              if (data.object.newWindow) {
-                a.target = '_blank';
+        this.store$
+          .pipe(
+            select(selectViewById(data.object.viewId)),
+            take(1),
+            withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary)))
+          )
+          .subscribe(([view, collections]) => {
+            if (view) {
+              if (data.object.search && view.query?.stems?.length > 0) {
+                this.navigateAction(
+                  data.object,
+                  view,
+                  addFiltersToQuery(view.query, data.object.search, collections[view.query.stems[0].collectionId])
+                );
+              } else {
+                this.navigateAction(data.object, view);
               }
-
-              a.click();
-            } else {
-              this.router.navigate(
-                [
-                  '/w',
-                  data.object.organizationCode,
-                  data.object.projectCode,
-                  'view',
-                  {vc: view.code},
-                  view.perspective,
-                ],
-                {queryParams: {q: encodedQuery, c: encodedCursor}}
-              );
             }
-          }
-        });
+          });
       }
     });
   }

@@ -24,6 +24,7 @@ import {Permissions, Role} from '../../../../core/store/permissions/permissions'
 import {ResourceType} from '../../../../core/model/resource-type';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'user-table',
@@ -67,6 +68,12 @@ export class UserTableComponent {
 
   @Input()
   public emitAllChanges: boolean;
+
+  @Input()
+  public workspace: Workspace;
+
+  @Input()
+  public canManageUserDetail: boolean;
 
   @Output()
   public userUpdated = new EventEmitter<User>();

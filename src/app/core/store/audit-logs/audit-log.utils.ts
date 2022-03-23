@@ -20,6 +20,10 @@
 import {AuditLog} from './audit-log.model';
 import {ResourceType} from '../../model/resource-type';
 
+export function isProjectAuditLogByUser(log: AuditLog, projectId: string, userId: string) {
+  return log.userId === userId && isProjectAuditLog(log, projectId);
+}
+
 export function isProjectAuditLog(log: AuditLog, projectId: string) {
   return (
     (log.resourceType === ResourceType.Project && log.resourceId === projectId) ||

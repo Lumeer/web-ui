@@ -22,6 +22,7 @@ import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {CreateDocumentModalComponent} from '../../../../../../shared/modal/create-document/create-document-modal.component';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {View} from '../../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../../core/store/app.state';
@@ -33,7 +34,6 @@ import {UserHintsKeys} from '../../../../../../core/store/users/user';
 @Component({
   selector: 'search-tasks-toolbar',
   templateUrl: './search-tasks-toolbar.component.html',
-  styleUrls: ['./search-tasks-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchTasksToolbarComponent implements OnInit {
@@ -45,6 +45,9 @@ export class SearchTasksToolbarComponent implements OnInit {
 
   @Input()
   public collections: Collection[];
+
+  @Input()
+  public views: View[];
 
   @Input()
   public viewId: string;
@@ -68,7 +71,7 @@ export class SearchTasksToolbarComponent implements OnInit {
   }
 
   public onAdd() {
-    if (this.collections?.length) {
+    if (this.collections?.length || this.views?.length) {
       const initialState = {purpose: CollectionPurposeType.Tasks, viewId: this.viewId};
       this.modalService.showStaticDialog(initialState, CreateDocumentModalComponent);
     }

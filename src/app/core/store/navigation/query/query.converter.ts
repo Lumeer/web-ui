@@ -20,16 +20,18 @@
 import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {QueryDto} from '../../../dto';
 import {QueryStemDto} from '../../../dto/query.dto';
-import {Query, QueryStem} from './query';
+import {CollectionAttributeFilter, Query, QueryStem} from './query';
 import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
 import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
-import {AttributeFilter} from '@lumeer/data-filters';
+import {AttributeFilter, ConditionType} from '@lumeer/data-filters';
 import {
   convertCollectionAttributeFilterDtoToModel,
   convertCollectionAttributeFilterModelToDto,
   convertLinkAttributeFilterModelToDto,
   convertLinkAttributeFilterDtoToModel,
 } from '../../../dto/attribute-filter.dto';
+import {Collection} from '../../collections/collection';
+import {findAttributeByName} from '../../../../shared/utils/attribute.utils';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return (
@@ -77,6 +79,82 @@ function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
 
 export function convertQueryModelToString(query: Query): string {
   return encodeQueryParam(stringifyQuery(shortenQuery(query)));
+}
+
+export function addFiltersToQuery(query: Query, filters: string, collection: Collection): Query {
+  if (!!query.stems && query.stems.length > 0) {
+    // copy the parts that are going to be updated
+    const res = {...query};
+    res.stems = [...res.stems];
+    res.stems[0] = {...res.stems[0]};
+
+    const additionalFilters = parseStringFilters(filters, collection);
+    res.stems[0].filters = !!res.stems[0].filters ? [...res.stems[0].filters, ...additionalFilters] : additionalFilters;
+
+    return res;
+  }
+
+  return query;
+}
+
+function parseStringFilters(filtersStr: string, collection: Collection): CollectionAttributeFilter[] {
+  const filters: CollectionAttributeFilter[] = [];
+
+  const re = /[^\\];/g;
+  let m;
+  const indexes = [];
+  while ((m = re.exec(filtersStr)) != null) {
+    indexes.push(m.index + 1);
+  }
+  indexes.push(filtersStr.length);
+
+  let prevIndex = 0;
+  for (let i = 0; i < indexes.length; i++) {
+    const f = filtersStr.substring(prevIndex, indexes[i]);
+    prevIndex = indexes[i] + 1;
+
+    const opMatch = /[^\\][=<>!\?]+([^=<>!\?]|$)/.exec(f);
+    const hasValue = opMatch[0].search(/[=<>!\?]$/) < 0;
+    const opIndex = opMatch.index + 1;
+    const opLength = opMatch[0].length - (hasValue ? 2 : 1);
+    const attrName = f.substring(0, opIndex)?.trim().replace(/\\/g, '');
+    const opStr = f.substring(opIndex, opIndex + opLength) || '';
+    const value = f.substring(opIndex + opLength)?.replace(/\\/g, '');
+
+    if (!!attrName) {
+      const op = stringOperatorToEnum(opStr);
+      const attr = findAttributeByName(collection.attributes, attrName);
+
+      if (!!attr && !!op) {
+        filters.push({collectionId: collection.id, attributeId: attr.id, conditionValues: [{value}], condition: op});
+      }
+    }
+  }
+
+  return filters;
+}
+
+function stringOperatorToEnum(op: string) {
+  switch (op) {
+    case '=':
+      return ConditionType.Equals;
+    case '<':
+      return ConditionType.LowerThan;
+    case '<=':
+      return ConditionType.LowerThanEquals;
+    case '>':
+      return ConditionType.GreaterThan;
+    case '>=':
+      return ConditionType.GreaterThanEquals;
+    case '!=':
+      return ConditionType.NotEquals;
+    case '!':
+      return ConditionType.NotEmpty;
+    case '?':
+      return ConditionType.IsEmpty;
+    default:
+      return '';
+  }
 }
 
 function stringifyQuery(query: ShortenedQuery): string {

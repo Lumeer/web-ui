@@ -31,7 +31,7 @@ export class NavigateByIdBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.navigateBlock:Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.`;
+    this.tooltip = $localize`:@@blockly.tooltip.navigateByIdBlock:Opens the given view (specified by ID, as read from an attribute of type View) and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.`;
 
     this.windowOptions = $localize`:@@blockly.dropdown.window.navigateBlock:the same,a new`.split(',');
     this.sidebarOptions = $localize`:@@blockly.dropdown.sidebar.navigateBlock:closed,opened`.split(',');
@@ -103,9 +103,7 @@ export class NavigateByIdBlocklyComponent extends BlocklyComponent {
         return '';
       }
 
-      return (
-        this_.blocklyUtils.getLumeerVariable() + `.navigate('${viewId}', ${document}, ${sidebar}, ${newWindow});\n`
-      );
+      return this_.blocklyUtils.getLumeerVariable() + `.navigate(${viewId}, ${document}, ${sidebar}, ${newWindow});\n`;
     };
   }
 }

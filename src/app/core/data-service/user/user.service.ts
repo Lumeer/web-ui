@@ -39,6 +39,8 @@ export abstract class UserService {
 
   public abstract getUsers(organizationId: string): Observable<UserDto[]>;
 
+  public abstract getUser(organizationId: string, userId: string): Observable<UserDto>;
+
   public abstract getCurrentUser(): Observable<UserDto>;
 
   public abstract setTeams(organizationId: string, userId: string, teams: string[]): Observable<any>;

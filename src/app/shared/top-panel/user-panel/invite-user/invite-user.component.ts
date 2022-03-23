@@ -27,6 +27,7 @@ import {selectCurrentUser, selectUsersForWorkspace} from '../../../../core/store
 import {map} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {UsersAction} from '../../../../core/store/users/users.action';
 import {UserHintsKeys} from '../../../../core/store/users/user';
 
@@ -41,6 +42,7 @@ export class InviteUserComponent implements OnInit {
   public mobile: boolean;
 
   public projectPermissions$: Observable<AllowedPermissions>;
+  public isWorkspaceDefined$: Observable<boolean>;
 
   public projectUsers$: Observable<number>;
   public displayInviteUsersHint$: Observable<boolean>;
@@ -49,6 +51,10 @@ export class InviteUserComponent implements OnInit {
 
   public ngOnInit() {
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
+    this.isWorkspaceDefined$ = this.store$.pipe(
+      select(selectWorkspaceWithIds),
+      map(workspace => !!workspace?.organizationId && !!workspace?.projectId)
+    );
     this.projectUsers$ = this.store$.pipe(
       select(selectUsersForWorkspace),
       map(users => users?.length)

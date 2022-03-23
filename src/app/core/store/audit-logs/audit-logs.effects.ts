@@ -76,6 +76,30 @@ export class AuditLogsEffects {
     )
   );
 
+  public getByUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.getByUser),
+      mergeMap(action =>
+        this.service.getByUser(action.userId, action.workspace).pipe(
+          map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
+          map(auditLogs => AuditLogActions.getByUserSuccess({...action, auditLogs})),
+          catchError(error => of(AuditLogActions.getByUserFailure({...action, error})))
+        )
+      )
+    )
+  );
+
+  public getByUserFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.getByUserFailure),
+      tap(action => console.error(action.error)),
+      map(() => {
+        const message = $localize`:@@audit.get.any.fail:Could not get activity logs`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
   public getByCollection$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuditLogActions.getByCollection),

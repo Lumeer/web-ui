@@ -1,21 +1,22 @@
 <div class="d-flex flex-row flex-nowrap align-items-center"
-     *ngIf="collections?.length || documentsCount">
-  <div class="position-relative">
-    <button *ngIf="collections?.length"
-            type="button"
-            class="btn btn-sm btn-primary cursor-pointer"
-            title="Add Task"
-            i18n-title="@@create.new.task"
-            (click)="onAdd()">
-      <i class="fa fa-plus-circle me-1" aria-hidden="true"></i>
-      <span class="fw-bold" i18n="@@create.new.task">Add Task</span>
-    </button>
-    <hint *ngIf="displayNewTaskHint$ | async"
+     *ngIf="collections?.length || views?.length || documentsCount">
+
+  <button *ngIf="collections?.length || views?.length"
+          type="button"
+          class="btn btn-sm btn-primary cursor-pointer"
+          title="Add Task"
+          i18n-title="@@create.new.task"
+          (click)="onAdd()">
+    <i class="fa fa-plus-circle me-1" aria-hidden="true"></i>
+    <span class="fw-bold" i18n="@@create.new.task">Add Task</span>
+  </button>
+  
+  <hint *ngIf="displayNewTaskHint$ | async"
           (dismissHint)="onHintDismissed()"
           title="Add New Task">
       <span>Pomocí tohoto tlačítka můžete založit nový úkol. Nastavit data, přiřadit uživatele k úkolu, prioritu a popis. Pokud máte v projektu více tabulek s úkoly, tak můžete zvolit, do které z nich se úkol přidá.</span>
-    </hint>
-  </div>
+  </hint>
+    
   <size-slider *ngIf="documentsCount"
                class="ms-auto"
                [defaultSize]="size"

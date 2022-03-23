@@ -18,18 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection, CollectionPurposeType} from '../../../../../core/store/collections/collection';
 import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
+import {View} from '../../../../../core/store/views/view';
 
 @Pipe({
-  name: 'filterWritableTasksCollections',
+  name: 'filterContributeViews',
 })
-export class FilterWritableTasksCollectionsPipe implements PipeTransform {
-  public transform(collections: Collection[], permissions: AllowedPermissionsMap): Collection[] {
-    return (collections || []).filter(
-      collection =>
-        collection.purpose?.type === CollectionPurposeType.Tasks &&
-        permissions?.[collection.id]?.rolesWithView?.DataContribute
-    );
+export class FilterContributeViewsPipe implements PipeTransform {
+  public transform(views: View[], permissions: AllowedPermissionsMap): View[] {
+    return (views || []).filter(view => permissions?.[view.id]?.roles?.DataContribute);
   }
 }

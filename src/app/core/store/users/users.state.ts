@@ -26,6 +26,7 @@ import {User} from './user';
 import {filterUsersByOrganization} from './user.filters';
 import {Organization} from '../organizations/organization';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {selectNavigation} from '../navigation/navigation.state';
 
 export interface UsersState extends EntityState<User> {
   pending: boolean;
@@ -85,9 +86,18 @@ export const selectUsersForWorkspace = createSelector(
   }
 );
 
+export const selectUserByWorkspace = createSelector(
+  selectUsersDictionary,
+  selectNavigation,
+  selectTeamsForWorkspace,
+  (usersMap, navigation, teams) => mapGroupsOnUser(usersMap[navigation.userId], teams)
+);
+
 export function mapGroupsOnUser(user: User, groups: Team[]): User {
-  return {
-    ...user,
-    teams: groups.filter(group => group.users?.includes(user.id)),
-  };
+  return (
+    user && {
+      ...user,
+      teams: groups.filter(group => group.users?.includes(user.id)),
+    }
+  );
 }

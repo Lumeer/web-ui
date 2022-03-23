@@ -33,5 +33,8 @@ export class UserStampComponent {
   public email: string;
 
   @Input()
-  public size = 48;
+  public size = 32;
+
+  @Input()
+  public titleClasses: string;
 }
