@@ -1,9 +1,9 @@
 <div class="d-inline-flex align-items-center px-2 py-1">
   <i class="fas me-2" [ngClass]="lock?.locked ? 'fa-lock color-danger' : 'fa-lock-open color-success'"></i>
-  <span *ngIf="lock?.locked" i18n="@@constraint.action.lock.disabled.short">Always locked</span>&nbsp;<span *ngIf="lock?.locked && stats.groups?.length" i18n="@@constraint.action.lock.disabled.short.until">until</span>
-  <span *ngIf="!lock?.locked" i18n="@@constraint.action.lock.enabled.short">Always editable</span>&nbsp;<span *ngIf="!lock?.locked && stats.groups?.length" i18n="@@constraint.action.lock.enabled.short.unless">unless</span>
+  <span *ngIf="lock?.locked" i18n="@@constraint.action.lock.disabled.short">Always locked</span>&nbsp;<span *ngIf="lock?.locked && stats?.groups?.length" i18n="@@constraint.action.lock.disabled.short.until">until</span>
+  <span *ngIf="!lock?.locked" i18n="@@constraint.action.lock.enabled.short">Always editable</span>&nbsp;<span *ngIf="!lock?.locked && stats?.groups?.length" i18n="@@constraint.action.lock.enabled.short.unless">unless</span>
 </div>
-<ng-container *ngIf="stats.groups?.length">
+<ng-container *ngIf="stats?.groups?.length">
   <div class="content-grid mt-2" *ngIf="{attributesMap: attributesMap$ | async} as data">
     <ng-container *ngFor="let group of stats.groups; trackBy: trackByIndex; let last = last">
 
