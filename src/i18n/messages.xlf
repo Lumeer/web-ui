@@ -157,7 +157,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
@@ -181,10 +181,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context>
           <context context-type="linenumber">60</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
@@ -750,6 +746,44 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
           <context context-type="linenumber">98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="views" datatype="html">
+        <source>Views</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collections" datatype="html">
+        <source>Tables</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="language.czech" datatype="html">
@@ -2837,7 +2871,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
@@ -3343,7 +3377,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.tooltip.removeDocumentsInViewBlock" datatype="html">
-        <source>Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source>
+        <source>Remove records in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/remove-documents-in-view-blockly-component.ts</context>
           <context context-type="linenumber">42</context>
@@ -4434,7 +4468,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="selection.lists.modal.add" datatype="html">
@@ -6952,6 +6986,17 @@
           <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="linkTypes" datatype="html">
+        <source>Link Types</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/link-types/user-link-types.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="audit.title.changed.view" datatype="html">
         <source>Changed by view</source>
         <context-group purpose="location">
@@ -8619,6 +8664,17 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="projects" datatype="html">
+        <source>Projects</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/workspace/resources/projects/user-projects.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="collection" datatype="html">
         <source>Table</source>
         <context-group purpose="location">
@@ -8920,20 +8976,6 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections" datatype="html">
-        <source>Tables</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="linkTypes" datatype="html">
-        <source>Link Types</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/settings/tab/resources/link-types/user-link-types.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="user.resources.empty.current" datatype="html">
         <source>You do not not have right to see nor access any {type, select, project {project} collection {table} view {view} link_type {link type}}</source>
         <context-group purpose="location">
@@ -8946,13 +8988,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/tab/resources/list/resource-roles-data.ts</context>
           <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="views" datatype="html">
-        <source>Views</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context>
-          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resources" datatype="html">
@@ -8970,21 +9005,21 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="projects" datatype="html">
-        <source>Projects</source>
+      <trans-unit id="user.activity.project.select" datatype="html">
+        <source>Select Project</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/workspace/resources/projects/user-projects.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="sourcefile">src/app/user/workspace/activity/workspace-user-activity.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.permission.missing" datatype="html">
         <source>You do not have permission to access this user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.calendar.config.position.save" datatype="html">

@@ -39,7 +39,7 @@ export class RemoveDocumentsInViewBlocklyComponent extends BlocklyComponent {
     }
 
     const limit = BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT;
-    this.tooltip = $localize`:@@blockly.tooltip.removeDocumentsInViewBlock:Remove documents in the view specified by ID (as read from an attribute of type View). At most ${limit}:limit: records are deleted at once.`;
+    this.tooltip = $localize`:@@blockly.tooltip.removeDocumentsInViewBlock:Remove records in the view specified by ID (as read from an attribute of type View). At most ${limit}:limit: records are deleted at once.`;
   }
 
   public getVisibility(): MasterBlockType[] {
