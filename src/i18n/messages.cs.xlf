@@ -109,15 +109,12 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="document.detail.detail.comments.seeAll" datatype="html">
-                <source> See
-                <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}" />
-                <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}" />
-                <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}" /> > </source>
+                <source> See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}"/> > </source>
                 <target>
                     Zobrazit
-                    <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}" />
-                    <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}" />
-                    <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}" /> >
+                    <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/>
+                    <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
+                    <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> >
                 </target>
 
                 <context-group purpose="location">
@@ -323,13 +320,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.taskAssignedPrefix" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
-                </source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/></source>
                 <target>Byl Vám přidělen nový úkol
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                 </target>
 
                 <context-group purpose="location">
@@ -342,11 +336,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.taskAssignedMiddle" datatype="html">
-                <source> with due date
-                <x id="INTERPOLATION" equiv-text="{{taskDueDate}}" />
-                </source>
+                <source> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
                 <target> s termínem dokončení
-                    <x id="INTERPOLATION" equiv-text="{{taskDueDate}}" />
+                    <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>
                 </target>
 
                 <context-group purpose="location">
@@ -376,14 +368,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.dueDateSoon" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has due date soon –
-                <x id="INTERPOLATION" equiv-text="{{taskDueDate}}" />.</source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date soon – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
                 <target>Úkolu
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> se blíží termín dokončení –
-                    <x id="INTERPOLATION" equiv-text="{{taskDueDate}}" />.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se blíží termín dokončení –
+                    <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</target>
 
 
                 <context-group purpose="location">
@@ -393,14 +382,11 @@
             </trans-unit>
 
             <trans-unit id="userNotifications.pastDueDate" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> is past due date
-                <x id="INTERPOLATION" equiv-text="{{taskDueDate}}" />.</source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
                 <target>Úkol
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> je již po termínu dokončení
-                    <x id="INTERPOLATION" equiv-text="{{taskDueDate}}" />.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> je již po termínu dokončení
+                    <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -408,12 +394,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.dueDateChangedPrefix" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has a changed due date</source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a changed due date</source>
                 <target>Úkol
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> má změněný termín dokončení</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> má změněný termín dokončení</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -421,11 +405,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.dueDateChangedMiddle" datatype="html">
-                <source> –
-                <x id="INTERPOLATION" equiv-text="{{taskDueDate}}" />
-                </source>
+                <source> – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/></source>
                 <target> –
-                    <x id="INTERPOLATION" equiv-text="{{taskDueDate}}" />
+                    <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>
                 </target>
 
 
@@ -453,18 +435,13 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.stateUpdate" datatype="html">
-                <source>The state of task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has been updated to
-                <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>" />
-                <x id="INTERPOLATION" equiv-text="{{taskState}}" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />.</source>
+                <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskState}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
                 <target>Stav úkolu
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> se změnil na
-                    <x id="START_EMPHASISED_TEXT_1" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="INTERPOLATION" equiv-text="{{taskState}}" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se změnil na
+                    <x id="START_EMPHASISED_TEXT_1" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="INTERPOLATION" equiv-text="{{taskState}}"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -472,14 +449,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.stateUpdate.len1" datatype="html">
-                <source>The state of task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has been updated to
-                <x id="INTERPOLATION" equiv-text="{{taskState}}" />.</source>
+                <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="INTERPOLATION" equiv-text="{{taskState}}"/>.</source>
                 <target>Stav úkolu
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> se změnil na
-                    <x id="INTERPOLATION" equiv-text="{{taskState}}" />.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se změnil na
+                    <x id="INTERPOLATION" equiv-text="{{taskState}}"/>.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -487,16 +461,12 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.stateUpdate.len0" datatype="html">
-                <source>The state of task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has been updated to
-                <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>" />none
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />.</source>
+                <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>"/>none<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
                 <target>Stav úkolu
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> se změnil na
-                    <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>" />žádný
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se změnil na
+                    <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>"/>žádný
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -504,12 +474,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.taskUpdated" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has been updated.</source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</source>
                 <target>Úkol
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> byl upraven.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl upraven.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -517,24 +485,20 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.taskChanged" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has been changed.</source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been changed.</source>
                 <target>Úkol
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> byl změněn.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl změněn.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
                     <context context-type="linenumber">56</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.taskRemoved" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has been removed.</source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</source>
                 <target>Úkol
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> byl odstraněn.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl odstraněn.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -542,12 +506,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.taskUnassigned" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has been unassigned from you.</source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source>
                 <target>Úkol
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> Vám byl odebrán.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> Vám byl odebrán.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -555,12 +517,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.taskCommented" datatype="html">
-                <source>The task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> has a new comment.</source>
+                <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a new comment.</source>
                 <target>Úkol
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> má nový komentář.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> má nový komentář.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -568,12 +528,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="userNotifications.taskMentioned" datatype="html">
-                <source>You have been mentioned in a comment of the task
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>" />
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />.</source>
+                <source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
                 <target>Někdo Vás zmínil v komentáři u úkolu
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />.</target>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -744,11 +702,9 @@
 
 
             <trans-unit id="collection.document.favorite" datatype="html">
-                <source>
-                <x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}" />
-                </source>
+                <source><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source>
                 <target>
-                    <x id="INTERPOLATION" equiv-text="{{data.document.favorite ?  'Odstranit z oblíbených' : 'Přidat do oblíbených'}}" />
+                    <x id="INTERPOLATION" equiv-text="{{data.document.favorite ?  'Odstranit z oblíbených' : 'Přidat do oblíbených'}}"/>
                 </target>
 
                 <context-group purpose="location">
@@ -945,11 +901,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="view.favorite" datatype="html">
-                <source>
-                <x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}" />
-                </source>
+                <source><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source>
                 <target>
-                    <x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}" />
+                    <x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-views/common/view-detail/view-detail.component.html</context>
@@ -1081,12 +1035,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="templates.empty.subtitle" datatype="html">
-                <source>You can still
-                <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>" />create an empty project
-                <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>" /> by clicking on the button below.</source>
+                <source>You can still <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>create an empty project<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> by clicking on the button below.</source>
                 <target>Můžete však pokračovat
-                    <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>" />vytvořením prázdného projektu
-                    <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>" /> pomocí tlačítka níže</target>
+                    <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>vytvořením prázdného projektu
+                    <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> pomocí tlačítka níže</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
@@ -1463,13 +1415,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="constraint.select.lists.create" datatype="html">
-                <source> Create or edit custom lists in
-                <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>" />Project settings
-                <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />
-                </source>
+                <source> Create or edit custom lists in <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>Project settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
                 <target> Vytvořte nebo upravte vlastní seznamy v
-                    <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>" />nastavení projektu
-                    <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />
+                    <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>nastavení projektu
+                    <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
                 </target>
 
                 <context-group purpose="location">
@@ -1582,7 +1531,7 @@
             </trans-unit>
             <trans-unit id="constraint.select.options.unique" datatype="html">
                 <source> Values must be unique!
-                </source>
+</source>
                 <target>
                     Jednotlivé hodnoty nesmí být stejné!
                 </target>
@@ -1594,7 +1543,7 @@
             </trans-unit>
             <trans-unit id="constraint.select.options.twoValues" datatype="html">
                 <source> Please enter at least one value.
-                </source>
+</source>
                 <target>
                     Prosím zadejte alespoň dva řádky.
                 </target>
@@ -1894,7 +1843,7 @@
             </trans-unit>
             <trans-unit id="constraint.address.description" datatype="html">
                 <source> Suggests addresses in the specified format when entering the value. Drag the fields you want to use to the right.
-                </source>
+</source>
                 <target>
                     Navrhuje adresy ve zvoleném formátu. Doprava přetáhněte políčka, která chcete použít.
                 </target>
@@ -1924,7 +1873,7 @@
             </trans-unit>
             <trans-unit id="form.errors.emptyFields" datatype="html">
                 <source> Please select at least one address field.
-                </source>
+</source>
                 <target>
                     Vyberte prosím alespoň jednu položku adresy.
                 </target>
@@ -1935,11 +1884,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="constraint.address.part" datatype="html">
-                <source>
-                <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}" />
-                </source>
+                <source> <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}"/> </source>
                 <target>
-                    <x id="ICU" equiv-text="{default, select, street {...} zip {...} city {...} county {...} state {...} country {...} continent {...}}" />
+                    <x id="ICU" equiv-text="{default, select, street {...} zip {...} city {...} county {...} state {...} country {...} continent {...}}"/>
                 </target>
 
                 <context-group purpose="location">
@@ -1999,11 +1946,9 @@
                     <context context-type="linenumber">86</context>
                 </context-group>
             </trans-unit>&lt;<trans-unit id="constraint.duration.unit.description" datatype="html">
-                <source>
-                <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }" />
-                </source>
+                <source> <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }"/> </source>
                 <target>
-                    <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}" />
+                    <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
                 </target>
 
                 <context-group purpose="location">
@@ -2021,11 +1966,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="constraint.duration.unit.conversion" datatype="html">
-                <source>
-                <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }" />
-                </source>
+                <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
                 <target>
-                    <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}" />
+                    <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
                 </target>
 
                 <context-group purpose="location">
@@ -2734,7 +2677,7 @@
             </trans-unit>
             <trans-unit id="resource.variables.validation.duplicate" datatype="html">
                 <source> This variable name already exists.
-                </source>
+</source>
                 <target> Proměnná s tímto názvem již existuje.
                 </target>
 
@@ -2794,10 +2737,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.variables.validation.duplication.name" datatype="html">
-                <source>Variable with name '
-                <x id="PH" equiv-text="key" />' already exists.</source>
+                <source>Variable with name '<x id="PH" equiv-text="key"/>' already exists.</source>
                 <target>Proměnná s názvem '
-                    <x id="PH" equiv-text="key" />' již existuje.</target>
+                    <x id="PH" equiv-text="key"/>' již existuje.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.ts</context>
                     <context context-type="linenumber">69</context>
@@ -2947,7 +2889,7 @@
             </trans-unit>
             <trans-unit id="search.tabs.settings.dialog.error.empty" datatype="html">
                 <source> There must be at least one visible tab in the dashboard.
-                </source>
+</source>
                 <target> Dashboard musí mít alespoň jednu viditelnou záložku.
                 </target>
 
@@ -3117,10 +3059,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="referralDialog.referrencedUsers.count" datatype="html">
-                <source>{VAR_PLURAL, plural, =0 {no users} =1 {a single user} =2 {2 users} =3 {3 users} =4 {4 users} other {
-                <x id="INTERPOLATION" /> users}}</source>
+                <source>{VAR_PLURAL, plural, =0 {no users} =1 {a single user} =2 {2 users} =3 {3 users} =4 {4 users} other {<x id="INTERPOLATION"/> users}}</source>
                 <target>{VAR_PLURAL, plural, =0 {zatím nikdo} =1 {pouze jeden} =2 {2 uživatelé} =3 {3 uživatelé} =4 {4 uživatelé} other {
-                    <x id="INTERPOLATION" equiv-text="{{data.ref?.registeredUsers}}" /> uživatelů} }</target>
+                    <x id="INTERPOLATION" equiv-text="{{data.ref?.registeredUsers}}"/> uživatelů} }</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
@@ -3209,19 +3150,15 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="referralsDialog.instructions" datatype="html">
-                <source> The minimal requirement is that your referee get at least one year long license.
-                <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" /> The payment must be initiated by the person that you have referred.
-                <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" /> You are free to use our
-                <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://drive.google.com/open?id=1wqIAeLDmT4-to5u9BWZvVvCAyucF0EdG&quot; target=&quot;_blank&quot;>" />Marketing Kit
-                <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />. </source>
+                <source> The minimal requirement is that your referee get at least one year long license.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/> The payment must be initiated by the person that you have referred.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/> You are free to use our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://drive.google.com/open?id=1wqIAeLDmT4-to5u9BWZvVvCAyucF0EdG&quot; target=&quot;_blank&quot;>"/>Marketing Kit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>. </source>
                 <target>
                     Uživatel doporučený vámi musí získat licenci alespoň na jeden rok.
-                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" />
+                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
                     Platba musí být provedena uživatelem, kterého jste doporučili.
-                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" />
+                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
                     Můžete taky využít naši
-                    <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>" />sadu marketingových materiálů
-                    <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />.
+                    <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>sadu marketingových materiálů
+                    <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.
                 </target>
 
                 <context-group purpose="location">
@@ -3279,7 +3216,7 @@
             </trans-unit>
             <trans-unit id="search.tabs.settings.dialog.cell.empty" datatype="html">
                 <source>Select an item from the dashboard preview to configure it
-                </source>
+</source>
                 <target>Nejdříve vyberte nějakou položku v náhledu, abyste ji nakonfigurovali
                 </target>
                 <context-group purpose="location">
@@ -3289,7 +3226,7 @@
             </trans-unit>
             <trans-unit id="search.tabs.settings.dialog.cell.disabled.empty" datatype="html">
                 <source>Select an item from the dashboard preview to see its configuration.
-                </source>
+</source>
                 <target>Vyberte položku z náhledu dashboardu, abyste viděli její nastavení.
                 </target>
                 <context-group purpose="location">
@@ -3586,12 +3523,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="view.modal.settings.priority.invalidRange" datatype="html">
-                <source>Number is not from valid range (
-                <x id="INTERPOLATION" equiv-text="{{minInteger}}" /> -
-                <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}" />)</source>
+                <source>Number is not from valid range (<x id="INTERPOLATION" equiv-text="{{minInteger}}"/> - <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</source>
                 <target>Číslo není v platném rozsahu (
-                    <x id="INTERPOLATION" equiv-text="{{minInteger}}" /> -
-                    <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}" />)</target>
+                    <x id="INTERPOLATION" equiv-text="{{minInteger}}"/> -
+                    <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
@@ -4053,7 +3988,7 @@
             </trans-unit>
             <trans-unit id="teams.name.duplicate" datatype="html">
                 <source> This team already exists. Try another name please.
-                </source>
+</source>
                 <target> Takový tým již eixstuje. Zkuste prosím jiný název.
                 </target>
 
@@ -4213,8 +4148,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="team.description.placeholder" datatype="html">
-                <source>Enter '
-                <x id="INTERPOLATION" equiv-text="{{team.name}}" />' description</source>
+                <source>Enter '<x id="INTERPOLATION" equiv-text="{{team.name}}"/>' description</source>
                 <target>Zadejte popis týmu</target>
 
                 <context-group purpose="location">
@@ -5438,10 +5372,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="constraint.action.confirmation.placeholder" datatype="html">
-                <source>Are you sure to perform
-                <x id="PH" equiv-text="buttonTitle" />?</source>
+                <source>Are you sure to perform <x id="PH" equiv-text="buttonTitle"/>?</source>
                 <target>Chcete skutečně provést
-                    <x id="PH" equiv-text="buttonTitle" />?</target>
+                    <x id="PH" equiv-text="buttonTitle"/>?</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint.utils.ts</context>
@@ -5495,11 +5428,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.value.error.duplicity" datatype="html">
-                <source> This
-                <x id="ICU" equiv-text="{resourceType, select, organization {code} project {code} collection {name}}" /> is already taken. Try another one!
-                </source>
+                <source> This <x id="ICU" equiv-text="{resourceType, select, organization {code} project {code} collection {name}}"/> is already taken. Try another one!
+</source>
                 <target>
-                    <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}" /> je již použité, zkuste něco jiného!
+                    <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> je již použité, zkuste něco jiného!
                 </target>
 
                 <context-group purpose="location">
@@ -5722,8 +5654,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="modal.links.modify.selected" datatype="html">
-                <source>
-                <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source><target>
+                <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source><target>
           <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
         </target>
 
@@ -9516,7 +9447,7 @@
         <target>Načte záznamy z daného pohledu. Pokud pohled obsahuje více tabulek, nebo vazeb, vrátí záznamy jen z první tabulky. Vrátí nejvýše <x id="limit" equiv-text="{{limit}}"/> záznamů.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.removeDocumentsInViewBlock" datatype="html">
-        <source>Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="new">Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
+        <source>Remove records in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="new">Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/remove-documents-in-view-blockly-component.ts</context>
           <context context-type="linenumber">42</context>

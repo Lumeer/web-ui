@@ -52,10 +52,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="4be44482feb952b217f702aaf0bad3536a4d03ad" datatype="html">
-                <source>Minimal text length must be
-                <x id="INTERPOLATION" equiv-text="{{minLength}}" /> characters. </source>
-                <target state="final">Minimal text length must be
-                    <x id="INTERPOLATION" equiv-text="{{minLength}}" /> characters. </target>
+                <source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source>
+                <target state="final">Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </target>
 
                 <note priority="1" from="description">textEditor.minLength</note>
                 <context-group purpose="location">
@@ -64,10 +62,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="81a825c813cc67a514bb711507b538569209cd79" datatype="html">
-                <source>Maximal text length can be
-                <x id="INTERPOLATION" equiv-text="{{maxLength}}" /> characters.</source>
-                <target state="final">Maximal text length can be
-                    <x id="INTERPOLATION" equiv-text="{{maxLength}}" /> characters.</target>
+                <source>Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</source>
+                <target state="final">Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</target>
 
                 <note priority="1" from="description">textEditor.maxLength</note>
                 <context-group purpose="location">
@@ -452,12 +448,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="document.detail.version" datatype="html">
-                <source>Version
-                <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}" />
-                </source>
-                <target state="final">Version
-                    <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}" />
-                </target>
+                <source>Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></source>
+                <target state="final">Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
@@ -816,54 +808,40 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.text.length" datatype="html">
-                <source>Number of characters must be
-                <x id="PH" equiv-text="textConfig.minLength" />.</source>
-                <target state="final">Number of characters must be
-                    <x id="PH" equiv-text="textConfig.minLength" />.</target>
+                <source>Number of characters must be <x id="PH" equiv-text="textConfig.minLength"/>.</source>
+                <target state="final">Number of characters must be <x id="PH" equiv-text="textConfig.minLength"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">191</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.text.range" datatype="html">
-                <source>Number of characters must be from range
-                <x id="PH" equiv-text="textConfig.minLength" />-
-                <x id="PH_1" equiv-text="textConfig.maxLength" />
-                </source>
-                <target state="final">Number of characters must be from range
-                    <x id="PH" equiv-text="textConfig.minLength" />-
-                    <x id="PH_1" equiv-text="textConfig.maxLength" />
-                </target>
+                <source>Number of characters must be from range <x id="PH" equiv-text="textConfig.minLength"/>-<x id="PH_1" equiv-text="textConfig.maxLength"/></source>
+                <target state="final">Number of characters must be from range <x id="PH" equiv-text="textConfig.minLength"/>-<x id="PH_1" equiv-text="textConfig.maxLength"/></target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">195</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.text.minimum" datatype="html">
-                <source>Number of characters must be at least
-                <x id="PH" equiv-text="textConfig.minLength" />.</source>
-                <target state="final">Number of characters must be at least
-                    <x id="PH" equiv-text="textConfig.minLength" />.</target>
+                <source>Number of characters must be at least <x id="PH" equiv-text="textConfig.minLength"/>.</source>
+                <target state="final">Number of characters must be at least <x id="PH" equiv-text="textConfig.minLength"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">199</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.text.maximum" datatype="html">
-                <source>Number of characters must be at most
-                <x id="PH" equiv-text="textConfig.maxLength" />.</source>
-                <target state="final">Number of characters must be at most
-                    <x id="PH" equiv-text="textConfig.maxLength" />.</target>
+                <source>Number of characters must be at most <x id="PH" equiv-text="textConfig.maxLength"/>.</source>
+                <target state="final">Number of characters must be at most <x id="PH" equiv-text="textConfig.maxLength"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">203</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.numeric.length" datatype="html">
-                <source>Value must be
-                <x id="PH" equiv-text="minFormatted" />.</source>
-                <target state="final">Value must be
-                    <x id="PH" equiv-text="minFormatted" />.</target>
+                <source>Value must be <x id="PH" equiv-text="minFormatted"/>.</source>
+                <target state="final">Value must be <x id="PH" equiv-text="minFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">217</context>
@@ -874,14 +852,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.numeric.range" datatype="html">
-                <source>Value must be from range
-                <x id="PH" equiv-text="minFormatted" /> -
-                <x id="PH_1" equiv-text="maxFormatted" />
-                </source>
-                <target state="final">Value must be from range
-                    <x id="PH" equiv-text="minFormatted" /> -
-                    <x id="PH_1" equiv-text="maxFormatted" />
-                </target>
+                <source>Value must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></source>
+                <target state="final">Value must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">221</context>
@@ -892,10 +864,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.numeric.minimum" datatype="html">
-                <source>Value must be equal to or greater than
-                <x id="PH" equiv-text="minFormatted" />.</source>
-                <target state="final">Value must be equal to or greater than
-                    <x id="PH" equiv-text="minFormatted" />.</target>
+                <source>Value must be equal to or greater than <x id="PH" equiv-text="minFormatted"/>.</source>
+                <target state="final">Value must be equal to or greater than <x id="PH" equiv-text="minFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">225</context>
@@ -906,10 +876,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.numeric.maximum" datatype="html">
-                <source>Value must be equal to or lower than
-                <x id="PH" equiv-text="maxFormatted" />.</source>
-                <target state="final">Value must be equal to or lower than
-                    <x id="PH" equiv-text="maxFormatted" />.</target>
+                <source>Value must be equal to or lower than <x id="PH" equiv-text="maxFormatted"/>.</source>
+                <target state="final">Value must be equal to or lower than <x id="PH" equiv-text="maxFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">229</context>
@@ -920,74 +888,56 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.date.length" datatype="html">
-                <source>Date must be
-                <x id="PH" equiv-text="minFormatted" />.</source>
-                <target state="final">Date must be
-                    <x id="PH" equiv-text="minFormatted" />.</target>
+                <source>Date must be <x id="PH" equiv-text="minFormatted"/>.</source>
+                <target state="final">Date must be <x id="PH" equiv-text="minFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">269</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.date.range" datatype="html">
-                <source>Date must be from range
-                <x id="PH" equiv-text="minFormatted" /> -
-                <x id="PH_1" equiv-text="maxFormatted" />
-                </source>
-                <target state="final">Date must be from range
-                    <x id="PH" equiv-text="minFormatted" /> -
-                    <x id="PH_1" equiv-text="maxFormatted" />
-                </target>
+                <source>Date must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></source>
+                <target state="final">Date must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">273</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.date.minimum" datatype="html">
-                <source>Date must be on or later than
-                <x id="PH" equiv-text="minFormatted" />.</source>
-                <target state="final">Date must be on or later than
-                    <x id="PH" equiv-text="minFormatted" />.</target>
+                <source>Date must be on or later than <x id="PH" equiv-text="minFormatted"/>.</source>
+                <target state="final">Date must be on or later than <x id="PH" equiv-text="minFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">277</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.date.maximum" datatype="html">
-                <source>Date must be on or earlier than
-                <x id="PH" equiv-text="maxFormatted" />.</source>
-                <target state="final">Date must be on or earlier than
-                    <x id="PH" equiv-text="maxFormatted" />.</target>
+                <source>Date must be on or earlier than <x id="PH" equiv-text="maxFormatted"/>.</source>
+                <target state="final">Date must be on or earlier than <x id="PH" equiv-text="maxFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">281</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.link.exact" datatype="html">
-                <source>Number of links must be
-                <x id="PH" equiv-text="config.minLinks" />.</source>
-                <target state="final">Number of links must be
-                    <x id="PH" equiv-text="config.minLinks" />.</target>
+                <source>Number of links must be <x id="PH" equiv-text="config.minLinks"/>.</source>
+                <target state="final">Number of links must be <x id="PH" equiv-text="config.minLinks"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">308</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.link.minimum" datatype="html">
-                <source>Number of links must be equal to or greater than
-                <x id="PH" equiv-text="config.minLinks" />.</source>
-                <target state="final">Number of links must be equal to or greater than
-                    <x id="PH" equiv-text="config.minLinks" />.</target>
+                <source>Number of links must be equal to or greater than <x id="PH" equiv-text="config.minLinks"/>.</source>
+                <target state="final">Number of links must be equal to or greater than <x id="PH" equiv-text="config.minLinks"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">314</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.link.maximum" datatype="html">
-                <source>Number of links must be equal to or lower than
-                <x id="PH" equiv-text="config.maxLinks" />.</source>
-                <target state="final">Number of links must be equal to or lower than
-                    <x id="PH" equiv-text="config.maxLinks" />.</target>
+                <source>Number of links must be equal to or lower than <x id="PH" equiv-text="config.maxLinks"/>.</source>
+                <target state="final">Number of links must be equal to or lower than <x id="PH" equiv-text="config.maxLinks"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">320</context>
@@ -1012,12 +962,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="kanban.perspective.footer.cards" datatype="html">
-                <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {
-                <x id="INTERPOLATION" /> cards} other {
-                <x id="INTERPOLATION" /> cards}}</source>
-                <target state="final">{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {
-                    <x id="INTERPOLATION" /> cards} other {
-                    <x id="INTERPOLATION" /> cards}}</target>
+                <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION"/> cards} other {<x id="INTERPOLATION"/> cards}}</source>
+                <target state="final">{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION"/> cards} other {<x id="INTERPOLATION"/> cards}}</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context>
@@ -1054,8 +1000,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="modal.links.modify.selected" datatype="html">
-                <source>
-                <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source><target state="final"> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </target>
+                <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source><target state="final"> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source><target state="final">{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</target>
@@ -5142,7 +5087,7 @@
         <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="limit"/> records are returned.</source><target state="final">Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="limit"/> records are returned.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.removeDocumentsInViewBlock" datatype="html">
-        <source>Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="final">Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
+        <source>Remove records in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="final">Remove records in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/remove-documents-in-view-blockly-component.ts</context>
           <context context-type="linenumber">42</context>

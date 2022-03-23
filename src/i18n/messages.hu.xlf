@@ -112,10 +112,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="4be44482feb952b217f702aaf0bad3536a4d03ad">
-                <source>Minimal text length must be
-                <x id="INTERPOLATION" equiv-text="{{minLength}}" /> characters. </source>
+                <source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source>
                 <target>A minimális szöveghossznak
-                    <x id="INTERPOLATION" equiv-text="{{minLength}}" />
+                    <x id="INTERPOLATION" equiv-text="{{minLength}}"/>
                     karakternek kell lennie.</target>
                 <note from="description" priority="1">textEditor.minLength</note>
                 <context-group purpose="location">
@@ -175,10 +174,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="81a825c813cc67a514bb711507b538569209cd79">
-                <source>Maximal text length can be
-                <x id="INTERPOLATION" equiv-text="{{maxLength}}" /> characters.</source>
+                <source>Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</source>
                 <target>A maximális szöveghossz
-                    <x id="INTERPOLATION" equiv-text="{{maxLength}}" />
+                    <x id="INTERPOLATION" equiv-text="{{maxLength}}"/>
                     karakter lehet.</target>
                 <note from="description" priority="1">textEditor.maxLength</note>
                 <context-group purpose="location">
@@ -578,10 +576,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="blockly.tooltip.createDocumentBlock2">
-                <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to
-                <x id="limit" equiv-text="limit" /> documents can be created within a single sequence of automations and functions.</source>
+                <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="limit"/> documents can be created within a single sequence of automations and functions.</source>
                 <target>Új rekordot hoz létre. Rendeld hozzá egy változóhoz a tulajdonságai megváltoztatásához. A végtelen hurkok elkerülése érdekében csak
-                    <x id="limit" equiv-text="{{limit}}" />
+                    <x id="limit" equiv-text="{{limit}}"/>
                     dokumentumokat lehet létrehozni az automatizálások és funkciók egyetlen sorozatában.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
@@ -912,10 +909,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="blockly.tooltip.showMessageBlock">
-                <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most
-                <x id="limit" equiv-text="limit" /> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
+                <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="limit" equiv-text="limit"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
                 <target>Üzenetet mutat a felhasználónak. Csak akkor működik, ha az automatizálást Műveletgombon keresztül indítja el. A legtöbb
-                    <x id="limit" equiv-text="{{limit}}" />
+                    <x id="limit" equiv-text="{{limit}}"/>
                     üzenet egyetlen automatizálásból és függvénysorozat-végrehajtásból mutatható ki, hogy megakadályozza a kapcsolódási pont eltömődését.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
@@ -1154,7 +1150,7 @@
             </trans-unit>
             <trans-unit id="selection.lists.introduction" datatype="html">
                 <source> Selection lists are used in selection attribute types. They can be shared among multiple tables. You can create a selection list once, and reuse anywhere.
-                </source>
+</source>
                 <target state="new"> Selection lists are used in selection attribute types. They can be shared among multiple tables. You can create a selection list once, and reuse anywhere.
                 </target>
                 <context-group purpose="location">
@@ -2041,12 +2037,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="view.modal.settings.priority.invalidRange" datatype="html">
-                <source>Number is not from valid range (
-                <x id="INTERPOLATION" equiv-text="{{minInteger}}" /> -
-                <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}" />)</source>
+                <source>Number is not from valid range (<x id="INTERPOLATION" equiv-text="{{minInteger}}"/> - <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</source>
                 <target>A szám nem az érvényes tartományba esik (
-                    <x id="INTERPOLATION" equiv-text="{{minInteger}}" /> -
-                    <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}" />)</target>
+                    <x id="INTERPOLATION" equiv-text="{{minInteger}}"/> -
+                    <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
@@ -2249,11 +2243,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="document.detail.audit.limit" datatype="html">
-                <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history,
-                <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-        href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>" />contact us.
-                <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />
-                </source>
+                <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+        href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
                 <target>3 rekordra korlátozva. Aktiválja a Lumeer Business programot, és látni fogja az elmúlt 2 hét rekordjait. Hosszabb előzményekért vegye fel velünk a kapcsolatot.</target>
 
                 <context-group purpose="location">
@@ -2695,11 +2686,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="collection.config.tab.rules.autoLink.selectFrom">
-                <source>Select from
-                <x id="collection" equiv-text="this.collection.name" />
-                </source>
+                <source>Select from <x id="collection" equiv-text="this.collection.name"/></source>
                 <target>Kiválaszt a
-                    <x id="collection" equiv-text="{{collection}}" />
+                    <x id="collection" equiv-text="{{collection}}"/>
                     -ből</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context>
@@ -2776,7 +2765,7 @@
             </trans-unit>
             <trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
                 <source> An automation executed regularly according to the timer settings.
-                </source>
+</source>
                 <target state="new"> An automation executed regularly according to the timer settings.
                 </target>
 
@@ -3277,11 +3266,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="collection.document.favorite">
-                <source>
-                <x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}" />
-                </source>
+                <source><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source>
                 <target>
-                    <x id="INTERPOLATION" equiv-text="{{ favorite ?  'Eltávolítás a kedvencekből' : 'Hozzáadás a kedvencekhez'}}" />
+                    <x id="INTERPOLATION" equiv-text="{{ favorite ?  'Eltávolítás a kedvencekből' : 'Hozzáadás a kedvencekhez'}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/post-it/header/post-it-header.component.html</context>
@@ -3480,7 +3467,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="collection.tab.attributes.create.notUnique">
                 <source> Attribute name must be unique!
-                </source>
+</source>
                 <target>A tulajdonság nevének egyedinek kell lennie!</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/attributes/add/add-resource-attribute.component.html</context>
@@ -3488,10 +3475,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="collection.tab.attributes.delete.message">
-                <source>Do you really want to delete attribute "
-                <x id="name" equiv-text="attribute.name" />"?</source>
+                <source>Do you really want to delete attribute "<x id="name" equiv-text="attribute.name"/>"?</source>
                 <target>Biztosan törölni szeretnéd a "
-                    <x id="name" equiv-text="{{name}}" />
+                    <x id="name" equiv-text="{{name}}"/>
                     tulajdonságot?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/attributes/resource-attributes.component.ts</context>
@@ -3515,10 +3501,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="collection.tab.linktypes.delete.message">
-                <source>Do you really want to delete the link type "
-                <x id="name" equiv-text="linkType.name" />" and all its usages?</source>
+                <source>Do you really want to delete the link type "<x id="name" equiv-text="linkType.name"/>" and all its usages?</source>
                 <target>Biztosan törölni szeretnéd a "
-                    <x id="name" equiv-text="{{name}}" />" hivatkozástípust és annak összes használatát?</target>
+                    <x id="name" equiv-text="{{name}}"/>" hivatkozástípust és annak összes használatát?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
                     <context context-type="linenumber">103</context>
@@ -3699,13 +3684,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="collections.tab.purpose.assignee.help">
-                <source> Which attribute specifies who the assignee is? Works best with the
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />User
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> attribute type. </source>
+                <source> Which attribute specifies who the assignee is? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source>
                 <target>Melyik tulajdonság határozza meg, hogy ki az engedményes? A felhasználói
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     tulajdonságtípussal
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     működik a legjobban.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
@@ -3730,7 +3713,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="collections.tab.purpose.description.generic">
                 <source> A generic table to store any type of information you might have. The possibilities are limitless.
-                </source>
+</source>
                 <target>Általános táblázat bármilyen típusú információ tárolására. A lehetőségek határtalanok.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.html</context>
@@ -3739,7 +3722,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="collections.tab.purpose.description.tasks">
                 <source> This table stores tasks. There are assignees, due dates, and states. Lumeer automatically notifies people about important changes.
-                </source>
+</source>
                 <target>Ez a táblázat a feladatokat tárolja. Vannak engedményezettek, határidők és állapotok. Lumeer automatikusan értesíti az embereket a fontos változásokról.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.html</context>
@@ -3747,13 +3730,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="collections.tab.purpose.dueDate.help">
-                <source> Which attribute specifies the due date of a task? Works only with the
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />Date
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> attribute type. </source>
+                <source> Which attribute specifies the due date of a task? Works only with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Date<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source>
                 <target>Melyik tulajdonság adja meg a tevékenység esedékesség dátumát? Csak a Dátum
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     attribútumtípussal
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     tulajdonsággal működik.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
@@ -3777,13 +3758,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="collections.tab.purpose.observer.help">
-                <source> Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />User
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> attribute type. </source>
+                <source> Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source>
                 <target>Melyik tulajdonság határozza meg, hogy az engedményezetten kívül kit kell értesíteni a tevékenységek frissítéseiről? A
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     attribútumtípussal
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     tulajdonság típussal működik a legjobban.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
@@ -3831,13 +3810,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="collections.tab.purpose.state.help">
-                <source> Which attribute specifies the state of a task? Works best with the
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />Selection
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> attribute type. </source>
+                <source> Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source>
                 <target>Melyik tulajdonság határozza meg a tevékenység állapotát? Legjobban a
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     attribútumtípussal
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     tulajdonság típussal működik.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
@@ -3918,7 +3895,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="color-picker.select.icon">
                 <source>1. Choose color
-                </source>
+</source>
                 <target>1. Válassz színt</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.html</context>
@@ -4025,10 +4002,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="constraint.action.confirmation.placeholder" datatype="html">
-                <source>Are you sure to perform
-                <x id="PH" equiv-text="buttonTitle" />?</source>
+                <source>Are you sure to perform <x id="PH" equiv-text="buttonTitle"/>?</source>
                 <target>Biztosan végrehajtja a
-                    <x id="PH" equiv-text="buttonTitle" />?</target>
+                    <x id="PH" equiv-text="buttonTitle"/>?</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/action-constraint.utils.ts</context>
@@ -4066,7 +4042,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="constraint.address.description">
                 <source> Suggests addresses in the specified format when entering the value. Drag the fields you want to use to the right.
-                </source>
+</source>
                 <target>Az érték beírásakor megadott formátumú címeket javasol. Húzd a használni kívánt mezőket jobbra.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/address/address-constraint-config-form.component.html</context>
@@ -4090,11 +4066,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="constraint.address.part">
-                <source>
-                <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}" />
-                </source>
+                <source> <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}"/> </source>
                 <target>
-                    <x id="ICU" equiv-text="{default, select, houseNumber {...} street {...} postalCode {...} city {...} county {...} state {...} country {...} continent {...}}" />
+                    <x id="ICU" equiv-text="{default, select, houseNumber {...} street {...} postalCode {...} city {...} county {...} state {...} country {...} continent {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/address/address-constraint-config-form.component.html</context>
@@ -4222,11 +4196,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="constraint.duration.unit.conversion">
-                <source>
-                <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }" />
-                </source>
+                <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
                 <target>
-                    <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}" />
+                    <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
@@ -4234,11 +4206,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="constraint.duration.unit.description">
-                <source>
-                <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }" />
-                </source>
+                <source> <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }"/> </source>
                 <target>
-                    <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}" />
+                    <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
@@ -4531,13 +4501,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="constraint.select.lists.create" datatype="html">
-                <source> Create or edit custom lists in
-                <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>" />Project settings
-                <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />
-                </source>
+                <source> Create or edit custom lists in <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>Project settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
                 <target state="new"> Create or edit custom lists in
-                    <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>" />Project settings
-                    <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />
+                    <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>Project settings
+                    <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
                 </target>
 
                 <context-group purpose="location">
@@ -4620,7 +4587,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="constraint.select.options.twoValues">
                 <source> Please enter at least one value.
-                </source>
+</source>
                 <target>Adj meg legalább egy értéket.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
@@ -4629,7 +4596,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="constraint.select.options.unique">
                 <source> Values must be unique!
-                </source>
+</source>
                 <target>Az értékeknek egyedinek kell lenniük!</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
@@ -5158,23 +5125,19 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.text.length" datatype="html">
-                <source>Number of characters must be
-                <x id="PH" equiv-text="textConfig.minLength" />.</source>
+                <source>Number of characters must be <x id="PH" equiv-text="textConfig.minLength"/>.</source>
                 <target state="new">Number of characters must be
-                    <x id="PH" equiv-text="textConfig.minLength" />.</target>
+                    <x id="PH" equiv-text="textConfig.minLength"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">191</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.text.range" datatype="html">
-                <source>Number of characters must be from range
-                <x id="PH" equiv-text="textConfig.minLength" />-
-                <x id="PH_1" equiv-text="textConfig.maxLength" />
-                </source>
+                <source>Number of characters must be from range <x id="PH" equiv-text="textConfig.minLength"/>-<x id="PH_1" equiv-text="textConfig.maxLength"/></source>
                 <target state="new">Number of characters must be from range
-                    <x id="PH" equiv-text="textConfig.minLength" />-
-                    <x id="PH_1" equiv-text="textConfig.maxLength" />
+                    <x id="PH" equiv-text="textConfig.minLength"/>-
+                    <x id="PH_1" equiv-text="textConfig.maxLength"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
@@ -5182,30 +5145,27 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.text.minimum" datatype="html">
-                <source>Number of characters must be at least
-                <x id="PH" equiv-text="textConfig.minLength" />.</source>
+                <source>Number of characters must be at least <x id="PH" equiv-text="textConfig.minLength"/>.</source>
                 <target state="new">Number of characters must be greater than
-                    <x id="PH" equiv-text="textConfig.minLength" />.</target>
+                    <x id="PH" equiv-text="textConfig.minLength"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">199</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.text.maximum" datatype="html">
-                <source>Number of characters must be at most
-                <x id="PH" equiv-text="textConfig.maxLength" />.</source>
+                <source>Number of characters must be at most <x id="PH" equiv-text="textConfig.maxLength"/>.</source>
                 <target state="new">Number of characters must be lower than
-                    <x id="PH" equiv-text="textConfig.maxLength" />.</target>
+                    <x id="PH" equiv-text="textConfig.maxLength"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">203</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.numeric.length" datatype="html">
-                <source>Value must be
-                <x id="PH" equiv-text="minFormatted" />.</source>
+                <source>Value must be <x id="PH" equiv-text="minFormatted"/>.</source>
                 <target state="new">Value must be
-                    <x id="PH" equiv-text="minFormatted" />.</target>
+                    <x id="PH" equiv-text="minFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">217</context>
@@ -5216,13 +5176,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.numeric.range" datatype="html">
-                <source>Value must be from range
-                <x id="PH" equiv-text="minFormatted" /> -
-                <x id="PH_1" equiv-text="maxFormatted" />
-                </source>
+                <source>Value must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></source>
                 <target state="new">Value must be from range
-                    <x id="PH" equiv-text="minFormatted" /> -
-                    <x id="PH_1" equiv-text="maxFormatted" />
+                    <x id="PH" equiv-text="minFormatted"/> -
+                    <x id="PH_1" equiv-text="maxFormatted"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
@@ -5234,10 +5191,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.numeric.minimum" datatype="html">
-                <source>Value must be equal to or greater than
-                <x id="PH" equiv-text="minFormatted" />.</source>
+                <source>Value must be equal to or greater than <x id="PH" equiv-text="minFormatted"/>.</source>
                 <target state="new">Value must be greater than
-                    <x id="PH" equiv-text="minFormatted" />.</target>
+                    <x id="PH" equiv-text="minFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">225</context>
@@ -5248,10 +5204,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.numeric.maximum" datatype="html">
-                <source>Value must be equal to or lower than
-                <x id="PH" equiv-text="maxFormatted" />.</source>
+                <source>Value must be equal to or lower than <x id="PH" equiv-text="maxFormatted"/>.</source>
                 <target state="new">Value must be lower than
-                    <x id="PH" equiv-text="maxFormatted" />.</target>
+                    <x id="PH" equiv-text="maxFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">229</context>
@@ -5262,23 +5217,19 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.date.length" datatype="html">
-                <source>Date must be
-                <x id="PH" equiv-text="minFormatted" />.</source>
+                <source>Date must be <x id="PH" equiv-text="minFormatted"/>.</source>
                 <target state="new">Date must be
-                    <x id="PH" equiv-text="minFormatted" />.</target>
+                    <x id="PH" equiv-text="minFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">269</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.date.range" datatype="html">
-                <source>Date must be from range
-                <x id="PH" equiv-text="minFormatted" /> -
-                <x id="PH_1" equiv-text="maxFormatted" />
-                </source>
+                <source>Date must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></source>
                 <target state="new">Date must be from range
-                    <x id="PH" equiv-text="minFormatted" /> -
-                    <x id="PH_1" equiv-text="maxFormatted" />
+                    <x id="PH" equiv-text="minFormatted"/> -
+                    <x id="PH_1" equiv-text="maxFormatted"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
@@ -5286,50 +5237,45 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.date.minimum" datatype="html">
-                <source>Date must be on or later than
-                <x id="PH" equiv-text="minFormatted" />.</source>
+                <source>Date must be on or later than <x id="PH" equiv-text="minFormatted"/>.</source>
                 <target state="new">Date must be greater than
-                    <x id="PH" equiv-text="minFormatted" />.</target>
+                    <x id="PH" equiv-text="minFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">277</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.attribute.date.maximum" datatype="html">
-                <source>Date must be on or earlier than
-                <x id="PH" equiv-text="maxFormatted" />.</source>
+                <source>Date must be on or earlier than <x id="PH" equiv-text="maxFormatted"/>.</source>
                 <target state="new">Date must be lower than
-                    <x id="PH" equiv-text="maxFormatted" />.</target>
+                    <x id="PH" equiv-text="maxFormatted"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">281</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.link.exact" datatype="html">
-                <source>Number of links must be
-                <x id="PH" equiv-text="config.minLinks" />.</source>
+                <source>Number of links must be <x id="PH" equiv-text="config.minLinks"/>.</source>
                 <target state="new">Number of links must be
-                    <x id="PH" equiv-text="config.minLinks" />.</target>
+                    <x id="PH" equiv-text="config.minLinks"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">308</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.link.minimum" datatype="html">
-                <source>Number of links must be equal to or greater than
-                <x id="PH" equiv-text="config.minLinks" />.</source>
+                <source>Number of links must be equal to or greater than <x id="PH" equiv-text="config.minLinks"/>.</source>
                 <target state="new">Number of links must be greater than
-                    <x id="PH" equiv-text="config.minLinks" />.</target>
+                    <x id="PH" equiv-text="config.minLinks"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">314</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.form.view.validation.link.maximum" datatype="html">
-                <source>Number of links must be equal to or lower than
-                <x id="PH" equiv-text="config.maxLinks" />.</source>
+                <source>Number of links must be equal to or lower than <x id="PH" equiv-text="config.maxLinks"/>.</source>
                 <target state="new">Number of links must be lower than
-                    <x id="PH" equiv-text="config.maxLinks" />.</target>
+                    <x id="PH" equiv-text="config.maxLinks"/>.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
                     <context context-type="linenumber">320</context>
@@ -5523,7 +5469,7 @@
             </trans-unit>
             <trans-unit id="resource.attribute.lock.info.locked" datatype="html">
                 <source> Attribute will be locked for everyone (even for users with access rights). You can add multiple exceptions to enable editing for certain users based on other values and conditions.
-                </source>
+</source>
                 <target state="new"> Attribute will be locked for everyone. You can add multiple exceptions to enable editing for certain users and by defined filters.
                 </target>
                 <context-group purpose="location">
@@ -5533,7 +5479,7 @@
             </trans-unit>
             <trans-unit id="resource.attribute.lock.info.editable" datatype="html">
                 <source> Attribute will be editable for everyone (with access rights). You can add multiple exceptions to disable editing for certain users based on other values and conditions.
-                </source>
+</source>
                 <target state="new"> Attribute will be editable for everyone. You can add multiple exceptions to disable editing for certain users and by defined filters.
                 </target>
                 <context-group purpose="location">
@@ -5564,7 +5510,7 @@
             </trans-unit>
             <trans-unit id="resource.attribute.lock.action.add" datatype="html">
                 <source>Add Exception Set
-                </source>
+</source>
                 <target state="new">Add Exception Set
                 </target>
 
@@ -5889,14 +5835,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="document.detail.detail.comments.seeAll">
-                <source> See
-                <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}" />
-                <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}" />
-                <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}" /> > </source>
+                <source> See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}"/> > </source>
                 <target>Lásd:
-                    <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}" />
-                    <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}" />
-                    <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}" />
+                    <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/>
+                    <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
+                    <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/>
                     ></target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
@@ -6228,11 +6171,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="document.detail.version">
-                <source>Version
-                <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}" />
-                </source>
+                <source>Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></source>
                 <target>Változat
-                    <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}" />
+                    <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
@@ -6396,10 +6337,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="file.upload.max.size.error">
-                <source>Cannot process files bigger than
-                <x id="size" equiv-text="size" /> MB. Please upload smaller file.</source>
+                <source>Cannot process files bigger than <x id="size" equiv-text="size"/> MB. Please upload smaller file.</source>
                 <target>
-                    <x id="size" equiv-text="{{size}}" />
+                    <x id="size" equiv-text="{{size}}"/>
                     MB-nál nagyobb fájlok nem dolgozhatóak fel. Tölts fel kisebb fájlokat.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context>
@@ -6460,7 +6400,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="form.errors.emptyFields">
                 <source> Please select at least one address field.
-                </source>
+</source>
                 <target>Jelölj ki legalább egy címmezőt.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/address/address-constraint-config-form.component.html</context>
@@ -6573,7 +6513,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="icon-picker.select.icon">
                 <source>2. Choose icon
-                </source>
+</source>
                 <target>2. Válassz ikont</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/picker/icon-color/icon/icon-choose.component.html</context>
@@ -6889,13 +6829,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="kanban.perspective.footer.cards">
-                <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {
-                <x id="INTERPOLATION" /> cards} other {
-                <x id="INTERPOLATION" /> cards}}</source>
+                <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION"/> cards} other {<x id="INTERPOLATION"/> cards}}</source>
                 <target>{VAR_PLURAL, plural, =0 {nincs kártya} one {1 kártya} few {
-                    <x id="INTERPOLATION" equiv-text="{{count}}" />
+                    <x id="INTERPOLATION" equiv-text="{{count}}"/>
                     cards} other {
-                    <x id="INTERPOLATION" equiv-text="{{count}}" />
+                    <x id="INTERPOLATION" equiv-text="{{count}}"/>
                     cards} }</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context>
@@ -6911,35 +6849,25 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="label.newsletter.end">
-                <source>increasing
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />revenue
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />, saving
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />time
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />, improving
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />communication
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" /> and
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />efficiency
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" /> via a Newsletter.
-                <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" />
-                </source>
+                <source>increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source>
                 <target>increasing
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
                     revenue
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                     , saving
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
                     time
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                     , improving
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
                     communication
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                     and
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
                     efficiency
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                     via a Newsletter.
-                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" />
+                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/auth/agreement/agreement.component.html</context>
@@ -6947,11 +6875,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="label.newsletter.secondChance">
-                <source>Please subscribe me to the Newsletter with all its benefits!
-                <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" />
-                </source>
+                <source>Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source>
                 <target>Kérlek, iratkoztass fel a hírlevélre annak minden előnyével együtt!
-                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" />
+                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/auth/agreement/agreement.component.html</context>
@@ -6959,11 +6885,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="label.newsletter.start">
-                <source>Send me free ebooks and materials on:
-                <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" />
-                </source>
+                <source>Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source>
                 <target>Küldj ingyenes e-könyveket és anyagokat:
-                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>" />
+                    <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/auth/agreement/agreement.component.html</context>
@@ -7185,10 +7109,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="lumeer.advice.percentage">
-                <source>I suggest to set the column type of
-                <x id="attributeName" equiv-text="attribute.name" /> to percentage. Do you agree?</source>
+                <source>I suggest to set the column type of <x id="attributeName" equiv-text="attribute.name"/> to percentage. Do you agree?</source>
                 <target>Azt javaslom, hogy állítsd be az oszlop típusát
-                    <x id="attributeName" equiv-text="{{attrName}}" />
+                    <x id="attributeName" equiv-text="{{attrName}}"/>
                     százalékra. Egyetért?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
@@ -7708,14 +7631,12 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organization.payments.paidWarning.text">
-                <source>Your current subscription lasts until
-                <x id="validUntil" equiv-text="validUntil" />. Are you sure you want to proceed with an order with earlier start date of
-                <x id="start" equiv-text="start" />? In case you want to add more users, please contact support@lumeer.io.</source>
+                <source>Your current subscription lasts until <x id="validUntil" equiv-text="validUntil"/>. Are you sure you want to proceed with an order with earlier start date of <x id="start" equiv-text="start"/>? In case you want to add more users, please contact support@lumeer.io.</source>
                 <target>
                     A jelenlegi előfizetésed
-                    <x id="validUntil" equiv-text="{{0}}" /> végéig tart.
+                    <x id="validUntil" equiv-text="{{0}}"/> végéig tart.
                     Biztosan egy korábbi kezdési dátummal
-                    <x id="start" equiv-text="{{1}}" /> rendelkező rendeléssel folytatod?
+                    <x id="start" equiv-text="{{1}}"/> rendelkező rendeléssel folytatod?
                     Ha további felhasználókat szeretnél hozzáadni, kérjük, fordulj a support@lumeer.io -hoz.
                 </target>
                 <context-group purpose="location">
@@ -7815,11 +7736,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.basic.active">
-                <source>Subscription is active until
-                <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}" />
-                </source>
+                <source>Subscription is active until <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/></source>
                 <target>Az előfizetés addig aktív, amíg
-                    <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}" />
+                    <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -7827,18 +7746,13 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.basic.allInclusive">
-                <source>
-                <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;far faw fa-list-ul me-2&quot;>" />
-                <x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>" />
-                <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>" />All features included
-                <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>" />
-                </source>
+                <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;far faw fa-list-ul me-2&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/>All features included<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source>
                 <target>
-                    <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i>" />
-                    <x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>" />
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span;" />
+                    <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i>"/>
+                    <x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/>
+                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span;"/>
                     Az összes funkció tartalmazza
-                    <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span;" />
+                    <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span;"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8006,17 +7920,13 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.order.activeUntil">
-                <source>Subscription is active until
-                <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}" />.
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />Extend it today!
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
-                </source>
+                <source>Subscription is active until <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/>. <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Extend it today!<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/></source>
                 <target>Az előfizetés eddig
-                    <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}" />
+                    <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/>
                     aktív.
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
                     érvényes. Hosszabbítsd meg még ma!
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context>
@@ -8073,13 +7983,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.order.onBusiness">
-                <source>Congratulations,
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />Business
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" /> program active!</source>
+                <source>Congratulations, <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> program active!</source>
                 <target>Gratulálunk, a
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
                     Üzleti
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                     program aktív!</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8087,28 +7995,18 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.order.orderBtn">
-                <source> Get Lumeer for only
-                <x id="START_TAG_DEL" ctype="x-del" equiv-text="&lt;del *ngIf=&quot;discountAmount > 0&quot;>" />
-                <x id="INTERPOLATION" equiv-text="{{prefix}}" />
-                <x id="INTERPOLATION_1" equiv-text="{{discountInfo | number:'1.2-2'}}" />
-                <x id="INTERPOLATION_2" equiv-text="{{suffix}}" />
-                <x id="CLOSE_TAG_DEL" ctype="x-del" equiv-text="&lt;/del>" />
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
-                <x id="INTERPOLATION" equiv-text="{{prefix}}" />
-                <x id="INTERPOLATION_3" equiv-text="{{price | number:'1.2-2'}}" />
-                <x id="INTERPOLATION_2" equiv-text="{{suffix}}" />
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />! </source>
+                <source> Get Lumeer for only <x id="START_TAG_DEL" ctype="x-del" equiv-text="&lt;del *ngIf=&quot;discountAmount > 0&quot;>"/><x id="INTERPOLATION" equiv-text="{{prefix}}"/><x id="INTERPOLATION_1" equiv-text="{{discountInfo | number:'1.2-2'}}"/><x id="INTERPOLATION_2" equiv-text="{{suffix}}"/><x id="CLOSE_TAG_DEL" ctype="x-del" equiv-text="&lt;/del>"/><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/><x id="INTERPOLATION" equiv-text="{{prefix}}"/><x id="INTERPOLATION_3" equiv-text="{{price | number:'1.2-2'}}"/><x id="INTERPOLATION_2" equiv-text="{{suffix}}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>! </source>
                 <target>Szerezd meg Lumeer-t csak a
-                    <x id="START_TAG_DEL" ctype="x-del" equiv-text="&lt;del>" />
-                    <x id="INTERPOLATION" equiv-text="{{prefix}}" />
-                    <x id="INTERPOLATION_1" equiv-text="{{discountInfo | number:'1.2-2'}}" />
-                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}" />
-                    <x id="CLOSE_TAG_DEL" ctype="x-del" equiv-text="&lt;/del>" />
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
-                    <x id="INTERPOLATION" equiv-text="{{prefix}}" />
-                    <x id="INTERPOLATION_3" equiv-text="{{price | number:'1.2-2'}}" />
-                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}" />
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="START_TAG_DEL" ctype="x-del" equiv-text="&lt;del>"/>
+                    <x id="INTERPOLATION" equiv-text="{{prefix}}"/>
+                    <x id="INTERPOLATION_1" equiv-text="{{discountInfo | number:'1.2-2'}}"/>
+                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}"/>
+                    <x id="CLOSE_TAG_DEL" ctype="x-del" equiv-text="&lt;/del>"/>
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
+                    <x id="INTERPOLATION" equiv-text="{{prefix}}"/>
+                    <x id="INTERPOLATION_3" equiv-text="{{price | number:'1.2-2'}}"/>
+                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}"/>
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                     -ra !</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context>
@@ -8165,12 +8063,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.order.users.invalidMax">
-                <source> For orders of more than 99 users please contact our
-                <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;mailto:support@lumeer.io&quot;>" />support
-                <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />. </source>
+                <source> For orders of more than 99 users please contact our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;mailto:support@lumeer.io&quot;>"/>support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>. </source>
                 <target>Több mint 99 felhasználó megrendelése esetén fordulj
-                    <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>" />
-                    <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>" />
+                    <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>
+                    <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
                     ügyfélszolgálatunkhoz.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context>
@@ -8218,13 +8114,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.payments.giveItATry">
-                <source>You've never had a chance to see Lumeer for
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />Business
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />. Give it a try today!</source>
+                <source>You've never had a chance to see Lumeer for <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>. Give it a try today!</source>
                 <target>Még soha nem volt esélyed arra, hogy lásd Lumeer-t
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
                     Business
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                     . Próbáld ki!</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-list/payments-list.component.html</context>
@@ -8360,14 +8254,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.state.backupAndRecovery">
-                <source>Data backup and
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />next business day recovery
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
-                </source>
+                <source>Data backup and <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>next business day recovery<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/></source>
                 <target>Az adatok biztonsági mentése és
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     a következő munkanap helyreállítása
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8399,10 +8290,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.state.dataLimit.warn">
-                <source>Now you have only
-                <x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}" /> records available.</source>
+                <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}"/> records available.</source>
                 <target>Most már csak
-                    <x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}" />
+                    <x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}"/>
                     rekordok állnak rendelkezésre.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8418,13 +8308,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.state.newFeature">
-                <source>
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />Verified
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> updates and new features</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Verified<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> updates and new features</source>
                 <target>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     Ellenőrzött
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     frissítések és új funkciók</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8444,13 +8332,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.state.nextDaySupport">
-                <source>
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />Next business day
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> e-mail support</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Next business day<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> e-mail support</source>
                 <target>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     A következő
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     e-mail támogatás</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8470,13 +8356,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.state.powerfulServer">
-                <source>
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />Powerful
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> shared server resources</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Powerful<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> shared server resources</source>
                 <target>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     Hatékony
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     megosztott kiszolgálói erőforrások</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8496,13 +8380,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.state.trial">
-                <source>You are on the
-                <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />Free
-                <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" /> program now.</source>
+                <source>You are on the <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> program now.</source>
                 <target>A
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>" />
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
                     szabad
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>" />
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                     programban vagy most.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8510,13 +8392,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.state.unlimitedProjects">
-                <source>
-                <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />Unlimited
-                <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" /> projects, users, tables, automations and functions</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> projects, users, tables, automations and functions</source>
                 <target>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>" />
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
                     Korlátlan
-                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>" />
+                    <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     projektek, felhasználók, táblázatok, automatizálások és funkciók</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8528,22 +8408,17 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.state.unlimitedProjects.warn">
-                <source>Now you have only
-                <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}" /> users,
-                <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}" /> projects,
-                <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}" /> tables,
-                <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}" />+
-                <x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}" /> automation and function per table.</source>
+                <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> automation and function per table.</source>
                 <target>Most már csak
-                    <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}" />
+                    <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/>
                     felhasználóid,
-                    <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}" />
+                    <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/>
                     projektjeid,
-                    <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}" />
+                    <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/>
                     táblázataid,
-                    <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}" />
+                    <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>
                     + automatizálásod és
-                    <x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}" />
+                    <x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/>
                     funkcióid vannak táblázatonként.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
@@ -8771,11 +8646,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="perspective.chart.config.axis.header">
-                <source>
-                <x id="ICU" equiv-text="{yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}" />
-                </source>
+                <source> <x id="ICU" equiv-text="{yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}"/>
+</source>
                 <target>
-                    <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}" />
+                    <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
@@ -8820,7 +8694,7 @@
             </trans-unit>
             <trans-unit datatype="html" id="perspective.chart.config.main.header">
                 <source> Main settings
-                </source>
+</source>
                 <target>Fő beállítások</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-config.component.html</context>
@@ -11372,7 +11246,7 @@
 						<x id="limit" equiv-text="{{limit}}"/>
 						rekord kerül visszaadásra.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.removeDocumentsInViewBlock" datatype="html">
-        <source>Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="new">Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
+        <source>Remove records in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="new">Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/remove-documents-in-view-blockly-component.ts</context>
           <context context-type="linenumber">42</context>
