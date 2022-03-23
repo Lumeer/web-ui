@@ -28,7 +28,6 @@ import {selectWorkspaceWithIds} from '../../../core/store/common/common.selector
 import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
 import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
 import {projectSelectItems} from '../../../shared/select/select-item.utils';
-import {Project} from '../../../core/store/projects/project';
 import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 
 @Component({
@@ -65,7 +64,12 @@ export class WorkspaceUserActivityComponent implements OnInit, OnDestroy {
   }
 
   public onProjectSelect(value: string) {
-    this.router.navigate([], {queryParams: {projectCode: value}, relativeTo: this.route, queryParamsHandling: 'merge'});
+    this.router.navigate([], {
+      queryParams: {projectCode: value},
+      relativeTo: this.route,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   public ngOnDestroy() {

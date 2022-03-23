@@ -110,7 +110,12 @@ export class WorkspaceUserResourcesComponent implements OnInit, OnDestroy {
   }
 
   public onProjectSelect(value: string) {
-    this.router.navigate([], {queryParams: {projectCode: value}, relativeTo: this.route, queryParamsHandling: 'merge'});
+    this.router.navigate([], {
+      queryParams: {projectCode: value},
+      relativeTo: this.route,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   public ngOnDestroy() {

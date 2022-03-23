@@ -27,7 +27,7 @@ import {SearchTaskWrapperComponent} from './content/wrapper/search-task-wrapper.
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
 import {DataValueEntriesPipe} from './pipes/data-value-entries.pipe';
 import {SearchTasksContentComponent} from './content/search-tasks-content.component';
-import {FilterWritableTasksCollectionsPipe} from './pipes/filter-writable-tasks-collections.pipe';
+import {FilterContributeTasksCollectionsPipe} from './pipes/filter-contribute-tasks-collections.pipe';
 import {DataInputModule} from '../../../../shared/data-input/data-input.module';
 import {SearchTasksToolbarComponent} from './content/toolbar/search-tasks-toolbar.component';
 import {CollectionsTaskAttributesPipe} from './pipes/collections-task-attributes.pipe';
@@ -37,6 +37,7 @@ import {EmptyTasksCollectionsComponent} from './content/empty/collections/empty-
 import {EmptyTasksCollectionsWithoutRightsComponent} from './content/empty/collections-without-rights/empty-tasks-collections-without-rights.component';
 import {SearchTaskFirstLineComponent} from './content/wrapper/first-line/search-task-first-line.component';
 import {SearchTaskSecondLineComponent} from './content/wrapper/second-line/search-task-second-line.component';
+import {FilterContributeViewsPipe} from './pipes/filter-contribute-views.pipe';
 
 @NgModule({
   imports: [CommonModule, SharedModule, DataInputModule],
@@ -47,7 +48,8 @@ import {SearchTaskSecondLineComponent} from './content/wrapper/second-line/searc
     IsDocumentOpenedPipe,
     DataValueEntriesPipe,
     SearchTasksContentComponent,
-    FilterWritableTasksCollectionsPipe,
+    FilterContributeTasksCollectionsPipe,
+    FilterContributeViewsPipe,
     SearchTasksToolbarComponent,
     CollectionsTaskAttributesPipe,
     EmptyTasksQueryComponent,
