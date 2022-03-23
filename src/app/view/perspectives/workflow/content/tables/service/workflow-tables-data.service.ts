@@ -473,7 +473,7 @@ export class WorkflowTablesDataService {
             minHeight,
             height,
             width: columnsWidth + 1, // + 1 for border
-            newRow: newRow ? {...newRow, tableId, cellsMap: newRow.cellsMap || newRowCellsMap} : undefined,
+            newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
             linkingCollectionId,
           };
