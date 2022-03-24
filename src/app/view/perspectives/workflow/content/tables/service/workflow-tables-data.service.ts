@@ -31,7 +31,7 @@ import {DocumentsAction} from '../../../../../../core/store/documents/documents.
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, map, mergeMap, skip, take} from 'rxjs/operators';
-import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {Attribute, Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
@@ -418,6 +418,7 @@ export class WorkflowTablesDataService {
               const minHeight = computeTableHeight(rows, newRow, 1);
               const maxHeight = computeTableHeight(rows, newRow);
               const height = tableSettings?.height || computeTableHeight(rows, newRow, 5);
+              const actionTitle = this.tableNewRowTitle(collection);
               const workflowTable: WorkflowTable = {
                 id: tableId,
                 columns: columns.map(column => ({...column, tableId})),
@@ -435,7 +436,7 @@ export class WorkflowTablesDataService {
                 height,
                 bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
                 width: columnsWidth + 1, // + 1 for border
-                newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated} : undefined,
+                newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated, actionTitle} : undefined,
                 linkingDocumentIds:
                   !linkingCollectionId && createAggregatedLinkingDocumentsIds(aggregatedDataItem, childItem),
                 linkingCollectionId,
@@ -463,6 +464,7 @@ export class WorkflowTablesDataService {
           const minHeight = computeTableHeight(rows, newRow, 1);
           const maxHeight = computeTableHeight(rows, newRow);
           const height = tableSettings?.height || maxHeight;
+          const actionTitle = this.tableNewRowTitle(collection);
           const workflowTable: WorkflowTable = {
             id: tableId,
             columns: columns.map(column => ({...column, tableId})),
@@ -473,7 +475,7 @@ export class WorkflowTablesDataService {
             minHeight,
             height,
             width: columnsWidth + 1, // + 1 for border
-            newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap} : undefined,
+            newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap, actionTitle} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
             linkingCollectionId,
           };
@@ -487,6 +489,13 @@ export class WorkflowTablesDataService {
       },
       {tables: [], actions: []}
     );
+  }
+
+  private tableNewRowTitle(collection: Collection): string {
+    if (collection.purpose?.type === CollectionPurposeType.Tasks) {
+      return $localize`:@@perspective.workflow.row.new.task:Add new task`;
+    }
+    return null;
   }
 
   private createNewRowCellsMap(

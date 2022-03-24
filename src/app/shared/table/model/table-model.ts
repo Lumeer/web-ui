@@ -33,8 +33,12 @@ export interface TableModel {
   linkTypeId?: string;
   columns: TableColumn[];
   rows: TableRow[];
-  newRow?: TableRow;
+  newRow?: TableNewRow;
   bottomToolbar: boolean;
+}
+
+export interface TableNewRow extends TableRow {
+  actionTitle?: string;
 }
 
 export interface SelectedTableCell extends TableCell {}

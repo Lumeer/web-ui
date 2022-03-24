@@ -34,7 +34,6 @@ import {ResourcesAction} from '../../../../core/store/resources/data-resources.a
 @Component({
   selector: 'user-activity',
   templateUrl: './user-activity.component.html',
-  styleUrls: ['./user-activity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserActivityComponent implements OnChanges {

@@ -62,6 +62,7 @@
   </cdk-virtual-scroll-viewport>
   <div *ngIf="tableModel?.bottomToolbar" class="more-content" [style.height.px]="toolbarHeight">
     <table-new-row *ngIf="tableModel?.newRow"
+                   [actionTitle]="tableModel.newRow.actionTitle"
                    class="d-inline-block h-100 new-row"
                    #tableNewRow
                    (onNewRowClick)="rowNewClick.emit()">

@@ -21,6 +21,7 @@ import {Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, Ele
 import {DataRowHiddenComponent} from '../../data/data-row-component';
 import {escapeHtml} from '../../utils/common.utils';
 import {keyboardEventCode, KeyCode} from '../../key-code';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'hidden-input',
@@ -37,14 +38,24 @@ export class HiddenInputComponent implements DataRowHiddenComponent {
   @ViewChild('hiddenInput')
   public hiddenInput: ElementRef<HTMLInputElement>;
 
+  private readonly isInputEnabled: boolean;
+
+  constructor(private deviceService: DeviceDetectorService) {
+    this.isInputEnabled = !(deviceService.isMobile() || deviceService.isTablet());
+  }
+
   private skipCompose = false;
 
   public focus() {
-    this.hiddenInput?.nativeElement?.focus();
+    if (this.isInputEnabled) {
+      this.hiddenInput?.nativeElement?.focus();
+    }
   }
 
   public blur() {
-    this.hiddenInput?.nativeElement?.blur();
+    if (this.isInputEnabled) {
+      this.hiddenInput?.nativeElement?.blur();
+    }
   }
 
   public onClick(event: MouseEvent) {
