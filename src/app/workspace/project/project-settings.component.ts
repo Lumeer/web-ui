@@ -96,7 +96,7 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
 
     this.displayDeleteSampleDataHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.deleteSampleDataHintDismissed)
+      map(user => user.hints.notificationsHintDismissed && !user.hints.deleteSampleDataHintDismissed)
     );
   }
 

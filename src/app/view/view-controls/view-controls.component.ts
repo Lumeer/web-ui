@@ -157,17 +157,17 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
     this.displayPerspectiveHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.perspectiveHintDismissed)
+      map(user => user.hints.viewsHintDismissed && !user.hints.perspectiveHintDismissed)
     );
 
     this.displaySaveViewHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.saveViewHintDismissed)
+      map(user => user.hints.perspectiveHintDismissed && !user.hints.saveViewHintDismissed)
     );
 
     this.displayShareViewHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.shareViewHintDismissed)
+      map(user => user.hints.saveViewHintDismissed && !user.hints.shareViewHintDismissed)
     );
   }
 

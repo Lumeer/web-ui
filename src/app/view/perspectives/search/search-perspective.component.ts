@@ -83,7 +83,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
     this.displayDashboardSettingsHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints?.dashboardSettingsHintDismissed)
+      map(user => user.hints.tableRulesHintDismissed && !user.hints.dashboardSettingsHintDismissed)
     );
   }
 
@@ -285,24 +285,24 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new UsersAction.SetHint({hint: hintKey, value: true}));
   }
 
-  public shouldDisplayHint(tabType: TabType) {
+  public shouldDisplayTabHint(tabType: TabType) {
     switch (tabType) {
       case TabType.Tasks:
         return this.store$.pipe(
           select(selectCurrentUser),
-          map(user => !user.hints.tasksHintDismissed)
+          map(user => user.hints.projectMenuHintDismissed && !user.hints.tasksHintDismissed)
         );
 
       case TabType.Views:
         return this.store$.pipe(
           select(selectCurrentUser),
-          map(user => !user.hints.viewsHintDismissed)
+          map(user => user.hints.pinTaskHintDismissed && !user.hints.viewsHintDismissed)
         );
 
       case TabType.Tables:
         return this.store$.pipe(
           select(selectCurrentUser),
-          map(user => !user.hints.tablesHintDismissed)
+          map(user => user.hints.shareViewHintDismissed && !user.hints.tablesHintDismissed)
         );
     }
   }

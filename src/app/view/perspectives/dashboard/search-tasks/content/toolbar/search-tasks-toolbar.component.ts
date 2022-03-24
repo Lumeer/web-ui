@@ -62,7 +62,7 @@ export class SearchTasksToolbarComponent implements OnInit {
   public ngOnInit(): void {
     this.displayNewTaskHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.addNewTaskHintDismissed)
+      map(user => user.hints.tasksHintDismissed && !user.hints.addNewTaskHintDismissed)
     );
   }
 

@@ -90,12 +90,12 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
     this.displayTableAttributesHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.tableAttributesHintDismissed)
+      map(user => user.hints.tableSettingsHintDismissed && !user.hints.tableAttributesHintDismissed)
     );
 
     this.displayTableRulesHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.tableRulesHintDismissed)
+      map(user => user.hints.tableAttributesHintDismissed && !user.hints.tableRulesHintDismissed)
     );
   }
 

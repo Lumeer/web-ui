@@ -47,16 +47,16 @@ export class LumeerLogoComponent implements OnInit {
 
   public readonly tooltip: string;
 
-  public hintVisible$: Observable<boolean>;
+  public displayLogoHint$: Observable<boolean>;
 
   constructor(public element: ElementRef<HTMLElement>, private store$: Store<AppState>) {
     this.tooltip = $localize`:@@topPanel.home.title:Back to home screen`;
   }
 
   public ngOnInit(): void {
-    this.hintVisible$ = this.store$.pipe(
+    this.displayLogoHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints?.logoHintDismissed)
+      map(user => !user.hints.logoHintDismissed)
     );
   }
 

@@ -20,7 +20,7 @@
      class="d-flex justify-content-center">
     <ng-container *ngTemplateOutlet="logo"></ng-container>
   </a>
-  <hint *ngIf="hintVisible$ | async"
+  <hint *ngIf="displayLogoHint$ | async"
         title="Lumeer's Icon"
         (dismissHint)="onHintDismissed()">
     <span>Vezme Vás zpět domovskou obrazovku PROJEKTU, kde můžete vidět přehled všech svých Úkolů (Tasků), Pohledů (Views) a Tabulek. Je to nejrychlejší způsob, jak se dostat zpátky z pohledu, či tabulky. Tato Ikona je vždy viditelná</span>

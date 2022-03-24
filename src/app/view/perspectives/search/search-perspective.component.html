@@ -8,7 +8,8 @@
              [queryParams]="data.queryParams"
              routerLinkActive="active"
              class="nav-link">{{tab.title}}</a>
-          <hint *ngIf="shouldDisplayHint(tab.type) | async" (dismissHint)="onHintDismissed(tab.type)"
+          <hint *ngIf="shouldDisplayTabHint(tab.type) | async"
+                (dismissHint)="onHintDismissed(tab.type)"
                 title="{{tab.hintTitle}}">
             <span>{{tab.hintContent}}</span>
           </hint>

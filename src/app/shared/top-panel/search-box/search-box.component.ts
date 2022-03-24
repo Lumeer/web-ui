@@ -120,7 +120,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
     this.displaySearchHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints?.searchHintDismissed)
+      map(user => user.hints.dashboardSettingsHintDismissed && !user.hints.searchHintDismissed)
     );
   }
 

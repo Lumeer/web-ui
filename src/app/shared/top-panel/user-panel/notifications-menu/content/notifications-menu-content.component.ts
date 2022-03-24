@@ -67,7 +67,7 @@ export class NotificationsMenuContentComponent implements OnInit {
   ngOnInit(): void {
     this.displayNotificationsHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.notificationsHintDismissed)
+      map(user => user.hints.inviteUsersHintDismissed && !user.hints.notificationsHintDismissed)
     );
   }
 

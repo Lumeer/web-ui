@@ -78,12 +78,12 @@ export class SearchTaskFirstLineComponent implements OnInit {
   ngOnInit(): void {
     this.displayPinTaskHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.pinTaskHintDismissed)
+      map(user => user.hints.detailTaskHintDismissed && !user.hints.pinTaskHintDismissed)
     );
 
     this.displayTaskDetailHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.detailTaskHintDismissed)
+      map(user => user.hints.addNewTaskHintDismissed && !user.hints.detailTaskHintDismissed)
     );
   }
 

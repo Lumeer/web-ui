@@ -100,14 +100,14 @@ export class PostItCollectionComponent implements OnChanges, OnInit {
   constructor(private store$: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.displayTableSettingsHint$ = this.store$.pipe(
-      select(selectCurrentUser),
-      map(user => !user.hints.tableSettingsHintDismissed)
-    );
-
     this.applicationHintsEnabled$ = this.store$.pipe(
       select(selectCurrentUser),
       map(user => user.hints.applicationHints)
+    );
+
+    this.displayTableSettingsHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => user.hints.tablesHintDismissed && !user.hints.tableSettingsHintDismissed)
     );
   }
 

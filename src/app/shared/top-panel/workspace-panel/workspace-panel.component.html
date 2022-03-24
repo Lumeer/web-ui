@@ -16,7 +16,7 @@
         </i>
         &nbsp;{{data.organization?.code}}
       </div>
-      <hint *ngIf="!data.currentUser.hints.organizationMenuHintDismissed"
+      <hint *ngIf="data.currentUser.hints.logoHintDismissed && !data.currentUser.hints.organizationMenuHintDismissed"
             (dismissHint)="onHintDismissed('organization')"
             title="Organization Menu">
         <span>Zde je vidět jednoduchý přehled Vaší organizace. Je zde rychle vidět počet členů a projektů v dané organizaci. Je tu také možnost přizvat uživatele, nebo zakoupit Business verzi Aplikace. Mimo to, jako uživatel můžete být členem několika organizací - a pokud byste patřili do nějaké další organizace, byla by tu uvedena a mohli byste aktivní organizaci jednoduše přepnout.</span>
@@ -47,7 +47,7 @@
         <i [class]="data.project?.icon" [style.color]="data.project?.color"></i>
         &nbsp;{{data.project?.code}}
       </div>
-      <hint *ngIf="!data.currentUser.hints.projectMenuHintDismissed"
+      <hint *ngIf="data.currentUser.hints.organizationMenuHintDismissed && !data.currentUser.hints.projectMenuHintDismissed"
             (dismissHint)="onHintDismissed('project')"
             title="Project Menu">
         <span>Podobně jako u nabídky organizace - můžete zde vidět název projektu, popis, počet tabulek a záznamů. V případě více projektů budou ve spodní části taky vypsané další dostupné projekty, mezi kterými se můžete přepínat. Dále se tu pak nachází možnost vytvořit nový projekt, kde si můžete některou z mnoha existujících šablon, nebo začít s prázdným projektem.</span>

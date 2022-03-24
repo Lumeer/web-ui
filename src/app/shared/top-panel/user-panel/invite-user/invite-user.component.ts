@@ -62,7 +62,7 @@ export class InviteUserComponent implements OnInit {
 
     this.displayInviteUsersHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user.hints.inviteUsersHintDismissed)
+      map(user => user.hints.searchHintDismissed && !user.hints.inviteUsersHintDismissed)
     );
   }
 
