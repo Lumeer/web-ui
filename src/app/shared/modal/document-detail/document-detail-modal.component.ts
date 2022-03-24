@@ -25,10 +25,10 @@ import {
   OnDestroy,
   HostListener,
   TemplateRef,
-  Output,
-  EventEmitter,
   OnChanges,
   SimpleChanges,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -46,6 +46,7 @@ import {AttributesResourceType} from '../../../core/model/resource';
 import {selectCurrentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
 import {View} from '../../../core/store/views/view';
 import {switchMap} from 'rxjs/operators';
+import {objectChanged} from '../../utils/common.utils';
 
 @Component({
   selector: 'document-detail-modal',
@@ -67,7 +68,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public toolbarRef: TemplateRef<any>;
 
   @Output()
-  public documentChanged = new EventEmitter<DocumentModel>();
+  public documentCreated = new EventEmitter();
 
   public readonly dialogType = DialogType;
   public readonly resourceType = AttributesResourceType.Collection;
@@ -75,13 +76,12 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public onCancel$ = new Subject();
 
   public query$: Observable<Query>;
-  public collection$: Observable<Collection>;
-  public document$: Observable<DocumentModel>;
   public view$: Observable<View>;
 
+  public collection$ = new BehaviorSubject<Collection>(null);
+  public document$ = new BehaviorSubject<DocumentModel>(null);
   public performingAction$ = new BehaviorSubject(false);
 
-  private currentDocument: DocumentModel;
   private dataExistSubscription = new Subscription();
   private initialModalsCount: number;
 
@@ -92,14 +92,14 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   ) {}
 
   public ngOnInit() {
-    this.initData();
+    this.selectCollectionAndDocument(this.collection, this.document);
 
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection || changes.document) {
-      this.initData();
+    if (objectChanged(changes.collection) || objectChanged(changes.document)) {
+      this.selectCollectionAndDocument(this.collection, this.document);
     }
 
     this.view$ = this.viewId
@@ -119,13 +119,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
     );
   }
 
-  private initData() {
-    this.collection$ = of(this.collection);
-    this.document$ = of(this.document);
-
-    this.subscribeExist(this.collection, this.document);
-  }
-
   private subscribeExist(collection: Collection, document: DocumentModel) {
     this.dataExistSubscription.unsubscribe();
     this.dataExistSubscription = combineLatest([
@@ -136,20 +129,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
         this.hideDialog();
       }
     });
-  }
-
-  public onSubmit() {
-    this.performingAction$.next(true);
-    const document = this.currentDocument || this.document;
-
-    this.store$.dispatch(
-      new DocumentsAction.Create({
-        document,
-        workspace: {viewId: this.viewId},
-        onSuccess: () => this.hideDialog(),
-        onFailure: () => this.performingAction$.next(false),
-      })
-    );
   }
 
   public onClose() {
@@ -165,11 +144,17 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
     this.dataExistSubscription.unsubscribe();
   }
 
-  public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
-    this.collection$ = of(data.collection);
-    this.document$ = of(data.document);
-    this.subscribeExist(data.collection, data.document);
-    this.currentDocument = data.document;
+  public selectDocument(document: DocumentModel) {
+    this.document$.next(document);
+
+    this.subscribeExist(this.collection, document);
+  }
+
+  public selectCollectionAndDocument(collection: Collection, document: DocumentModel) {
+    this.collection$.next(collection);
+    this.document$.next(document);
+
+    this.subscribeExist(collection, document);
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -185,7 +170,25 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onDocumentChanged(documentModel: DocumentModel) {
-    this.documentChanged.emit(documentModel);
-    this.currentDocument = documentModel;
+    if (!documentModel.id) {
+      this.createDocument(documentModel);
+    }
+  }
+
+  public createDocument(document: DocumentModel) {
+    this.performingAction$.next(true);
+
+    this.store$.dispatch(
+      new DocumentsAction.Create({
+        document,
+        workspace: {viewId: this.viewId},
+        afterSuccess: document => {
+          this.selectDocument(document);
+          this.performingAction$.next(false);
+          this.documentCreated.emit();
+        },
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
   }
 }

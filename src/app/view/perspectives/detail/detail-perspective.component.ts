@@ -66,6 +66,7 @@ import {createFlatResourcesSettingsQuery, modifyDetailPerspectiveQuery} from '..
 import {DataQuery} from '../../../core/model/data-query';
 import {defaultDetailPerspectiveConfiguration, DetailPerspectiveConfiguration} from '../perspective-configuration';
 import {selectCurrentView} from '../../../core/store/views/views.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'detail-perspective',
@@ -97,6 +98,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   private query: Query;
   private currentView: View;
   private collection: Collection;
+  private constraintData: ConstraintData;
   private createdDocuments: string[] = [];
   private subscriptions = new Subscription();
 
@@ -159,6 +161,10 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
         ),
         this.query$,
       ]).subscribe(([viewId, query]) => this.onQueryChanged(query, viewId))
+    );
+
+    this.subscriptions.add(
+      this.store$.pipe(select(selectConstraintData)).subscribe(constraintData => (this.constraintData = constraintData))
     );
   }
 
@@ -300,7 +306,8 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
   public onCreatedDocument(document: DocumentModel) {
     this.createdDocuments.push(document.id);
-    this.selectDocument(document);
+    this.emit(this.collection, document);
+    this.selected$ = of({collection: this.collection, document});
   }
 
   public selectDocument(document: DocumentModel) {
@@ -345,29 +352,30 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   public addDocument() {
     const collection = this.collection;
     if (collection) {
-      combineLatest([this.query$, this.store$.pipe(select(selectConstraintData)), this.currentView$])
-        .pipe(take(1))
-        .subscribe(([query, constraintData, view]) => {
-          const queryFilters = getQueryFiltersForCollection(query, collection.id);
-          const data = generateDocumentData(collection, queryFilters, constraintData, true);
-          const document = {data, collectionId: collection.id};
-
-          this.creatingDocument$.next(true);
-
-          this.store$.dispatch(
-            new DocumentsAction.Create({
-              document,
-              workspace: {viewId: view?.id},
-              onSuccess: () => this.creatingDocument$.next(false),
-              onFailure: () => this.creatingDocument$.next(false),
-              afterSuccess: createdDocument => this.onCreatedDocument(createdDocument),
-            })
-          );
-        });
+      const queryFilters = getQueryFiltersForCollection(this.query, collection.id);
+      const data = generateDocumentData(collection, queryFilters, this.constraintData, true);
+      const document = {data, collectionId: collection.id};
+      this.selected$ = of({collection, document});
     }
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public onDocumentChanged(document: DocumentModel) {
+    if (!document?.id) {
+      this.creatingDocument$.next(true);
+
+      this.store$.dispatch(
+        new DocumentsAction.Create({
+          document,
+          workspace: {viewId: this.currentView?.id},
+          onSuccess: () => this.creatingDocument$.next(false),
+          onFailure: () => this.creatingDocument$.next(false),
+          afterSuccess: createdDocument => this.onCreatedDocument(createdDocument),
+        })
+      );
+    }
   }
 }

@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Collection, CollectionPurposeType} from '../../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subject} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
   checkTasksCollectionsQuery,
@@ -30,7 +30,7 @@ import {generateDocumentData} from '../../../core/store/documents/document.utils
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectContributeCollectionsByView} from '../../../core/store/common/permissions.selectors';
-import {map, switchMap, take, tap} from 'rxjs/operators';
+import {map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {View} from '../../../core/store/views/view';
 import {
@@ -57,6 +57,7 @@ export class CreateDocumentModalComponent implements OnInit {
   @Input()
   public viewId: string;
 
+  public documentCreated$ = new Subject();
   public collectionId$ = new BehaviorSubject(null);
   public collections$: Observable<Collection[]>;
   public document$: Observable<DocumentModel>;
@@ -135,7 +136,8 @@ export class CreateDocumentModalComponent implements OnInit {
         const queryFilters = getQueryFiltersForCollection(tasksQuery, collectionId);
         const data = generateDocumentData(collection, queryFilters, constraintData, true);
         return {data, collectionId};
-      })
+      }),
+      takeUntil(this.documentCreated$)
     );
   }
 }

@@ -117,6 +117,9 @@ export class DataResourceDetailComponent
   @Input()
   public isEmbedded: boolean;
 
+  @Input()
+  public editable = true;
+
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
 

@@ -17,16 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnInit,
-  Output,
-  TemplateRef,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, TemplateRef} from '@angular/core';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {keyboardEventCode, KeyCode} from '../../key-code';
@@ -78,9 +69,6 @@ export class DataResourceDetailModalComponent implements OnInit {
   @Input()
   public createDirectly: boolean;
 
-  @Output()
-  public dataResourceChanged = new EventEmitter<DataResource>();
-
   public readonly dialogType = DialogType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
@@ -93,11 +81,12 @@ export class DataResourceDetailModalComponent implements OnInit {
   public query$: Observable<Query>;
   public settingsQuery$: Observable<Query>;
   public resource$: Observable<AttributesResource>;
-  public dataResource$: Observable<DataResource>;
+  public dataResource$ = new BehaviorSubject<DataResource>(null);
   public currentView$: Observable<View>;
 
   public detailSettingsQueryStem: QueryStem;
 
+  private dataResourceSubscription = new Subscription();
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
   private initialModalsCount: number;
@@ -126,7 +115,7 @@ export class DataResourceDetailModalComponent implements OnInit {
   private setData(resource: AttributesResource, dataResource: DataResource) {
     this.resourceType = getAttributesResourceType(resource);
     this.resource$ = this.selectResource$(resource.id);
-    this.dataResource$ = dataResource?.id ? this.selectDataResource$(dataResource.id) : of(dataResource);
+    this.subscribeDataResource(dataResource);
 
     if (this.viewId) {
       this.currentView$ = this.store$.pipe(select(selectViewById(this.viewId)));
@@ -149,6 +138,17 @@ export class DataResourceDetailModalComponent implements OnInit {
 
     this.subscribeExist(resource, dataResource);
     this.currentDataResource = dataResource;
+  }
+
+  private subscribeDataResource(dataResource: DataResource) {
+    if (dataResource?.id) {
+      this.dataResourceSubscription.unsubscribe();
+      this.dataResourceSubscription = this.selectDataResource$(dataResource.id).subscribe(dataResource =>
+        this.dataResource$.next(dataResource)
+      );
+    } else {
+      this.dataResource$.next(dataResource);
+    }
   }
 
   private subscribeExist(resource: AttributesResource, dataResource: DataResource) {
@@ -179,37 +179,51 @@ export class DataResourceDetailModalComponent implements OnInit {
 
   public onSubmit() {
     const dataResource = this.currentDataResource || this.dataResource;
-    if (this.createDirectly) {
-      this.performingAction$.next(true);
+    if (!this.createDirectly) {
+      this.onSubmit$.next(dataResource);
+      this.hideDialog();
+    }
+  }
 
+  public onDataResourceChanged(dataResource: DataResource) {
+    if (!dataResource.id && this.createDirectly) {
       if (this.resourceType === AttributesResourceType.Collection) {
         this.createDocument(<DocumentModel>dataResource);
       } else {
         this.createLink(<LinkInstance>dataResource);
       }
     } else {
-      this.onSubmit$.next(dataResource);
-      this.hideDialog();
+      this.currentDataResource = dataResource;
     }
   }
 
   private createDocument(document: DocumentModel) {
+    this.performingAction$.next(true);
+
     this.store$.dispatch(
       new DocumentsAction.Create({
         document,
         workspace: this.currentWorkspace(),
-        onSuccess: () => this.hideDialog(),
+        afterSuccess: document => {
+          this.subscribeDataResource(document);
+          this.performingAction$.next(false);
+        },
         onFailure: () => this.performingAction$.next(false),
       })
     );
   }
 
   private createLink(linkInstance: LinkInstance) {
+    this.performingAction$.next(true);
+
     this.store$.dispatch(
       new LinkInstancesAction.Create({
         linkInstance,
         workspace: this.currentWorkspace(),
-        onSuccess: () => this.hideDialog(),
+        afterSuccess: linkInstance => {
+          this.subscribeDataResource(linkInstance);
+          this.performingAction$.next(false);
+        },
         onFailure: () => this.performingAction$.next(false),
       })
     );
@@ -238,11 +252,6 @@ export class DataResourceDetailModalComponent implements OnInit {
     ) {
       this.onClose();
     }
-  }
-
-  public onDataResourceChanged(dataResource: DataResource) {
-    this.dataResourceChanged.emit(dataResource);
-    this.currentDataResource = dataResource;
   }
 
   public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
