@@ -1,12 +1,24 @@
-<div class="d-flex flex-row justify-content-start align-items-center">
-  <i class="fas fa-chevron-left chevron me-2-5 cursor-pointer clickable"
+<div class="content">
+  <i class="fas fa-chevron-left chevron cursor-pointer clickable"
      title="Back" i18n-title="@@back"
      (click)="onBack()"></i>
 
-  <user-stamp [email]="user?.email"
-              [userName]="user?.name"
-              titleClasses="h4 m-0 fw-bold">
-  </user-stamp>
+  <img ngxGravatar
+       [email]="user?.email"
+       [size]="32">
+
+  <input-box
+    class="w-100 px-2 d-block"
+    [initialValue]="user?.name"
+    [canStayEmpty]="true"
+    [emitAllChanges]="false"
+    [fontSizeRem]="1.2"
+    [maxLines]="1"
+    [editable]="permissions?.roles?.UserConfig"
+    placeholder="Enter user name (e.g. John Doe)"
+    i18n-placeholder="@@user.settings.name.placeholder"
+    (newValue)="onNewName($event)">
+  </input-box>
 
   <div class="d-flex flex-row flex-nowrap align-items-center ms-auto">
     <ng-content></ng-content>
@@ -17,10 +29,20 @@
     </div>
   </div>
 
+  <div></div>
+  <div></div>
+
+  <div class="mx-2 px-2">
+    <div class="fw-bold h4 m-0">{{user?.email}}</div>
+
+    <user-teams class="d-block mt-3"
+                [editable]="serviceLimits?.groups && permissions?.roles?.UserConfig"
+                [selectedTeamIds]="user | filterUserTeams:teams"
+                [teams]="teams">
+    </user-teams>
+  </div>
+
+
 </div>
 
-<user-teams class="d-block mt-3"
-            [editable]="serviceLimits?.groups && permissions?.roles?.UserConfig"
-            [selectedTeamIds]="user | filterUserTeams:teams"
-            [teams]="teams">
-</user-teams>
+

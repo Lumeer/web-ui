@@ -55,8 +55,31 @@ export class ResizerDirective {
     this.oldY = event.clientY;
   }
 
+  @HostListener('touchmove', ['$event'])
+  public onTouchMove(event: TouchEvent) {
+    if (!this.resizingElement) {
+      return;
+    }
+
+    if (event.touches?.length) {
+      const clientY = event.touches.item(0).clientY;
+      this.resize(clientY - this.oldY);
+      this.oldY = clientY;
+    }
+  }
+
   @HostListener('document:mouseup', ['$event'])
   public onMouseUp(event: MouseEvent) {
+    if (this.height && this.height !== this.initialHeight) {
+      this.onResize.emit(this.height);
+    }
+    this.resizingElement = null;
+    this.height = null;
+    this.initialHeight = null;
+  }
+
+  @HostListener('touchend', ['$event'])
+  public onTouchEnd(event: TouchEvent) {
     if (this.height && this.height !== this.initialHeight) {
       this.onResize.emit(this.height);
     }
@@ -84,6 +107,18 @@ export class ResizerDirective {
     this.height = this.resizingElement?.offsetHeight;
     this.initialHeight = this.height;
     this.oldY = event.clientY;
+  }
+
+  @HostListener('touchstart', ['$event'])
+  public onTouchStart(event: TouchEvent) {
+    event.preventDefault();
+
+    if (event.touches?.length) {
+      this.resizingElement = this.findResizingElement();
+      this.height = this.resizingElement?.offsetHeight;
+      this.initialHeight = this.height;
+      this.oldY = event.touches.item(0).clientY;
+    }
   }
 
   private findResizingElement(): HTMLElement {

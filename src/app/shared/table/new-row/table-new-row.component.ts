@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'table-new-row',
@@ -25,6 +25,9 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableNewRowComponent {
+  @Input()
+  public actionTitle: string;
+
   @Output()
   public onNewRowClick = new EventEmitter();
 }
