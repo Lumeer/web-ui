@@ -1,0 +1,25 @@
+<ng-container [ngSwitch]="constraint.type">
+  <boolean-data-input *ngSwitchCase="constraintType.Boolean"
+                      [label]="configuration?.boolean?.additionalLabel"
+                      [class.justify-content-center]="configuration?.boolean?.center"
+                      [readonly]="true"
+                      [editableInReadonly]="true"
+                      [value]="dataValue"
+                      (save)="save.emit($event.dataValue)">
+  </boolean-data-input>
+
+  <select-data-input-compact *ngSwitchCase="constraintType.Select"
+                             [configuration]="configuration?.select"
+                             [value]="dataValue"
+                             [placeholder]="placeholder"
+                             (save)="save.emit($event)">
+  </select-data-input-compact>
+
+  <data-input-preview *ngSwitchDefault
+                      [configuration]="configuration"
+                      [constraint]="constraint"
+                      [cursor]="cursor"
+                      [dataValue]="dataValue">
+  </data-input-preview>
+
+</ng-container>

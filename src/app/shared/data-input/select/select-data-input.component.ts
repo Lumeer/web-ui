@@ -38,7 +38,8 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration, SelectDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {BehaviorSubject} from 'rxjs';
-import {ConstraintType, SelectConstraintConfig, SelectConstraintOption, SelectDataValue} from '@lumeer/data-filters';
+import {ConstraintType, SelectConstraintOption, SelectDataValue} from '@lumeer/data-filters';
+import {createSelectDataInputDropdownOptions} from './select-data-input-utils';
 
 @Component({
   selector: 'select-data-input',
@@ -113,7 +114,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     }
     if (changes.value && this.value) {
       this.selectedOptions$.next(this.value.options || []);
-      this.dropdownOptions = this.createDropdownOptions(this.value.config);
+      this.dropdownOptions = createSelectDataInputDropdownOptions(this.value);
       this.text = this.value.inputValue || '';
       this.multi = this.value.config?.multi;
     }
@@ -139,30 +140,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.element.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
     }
     this.mouseDownListener = null;
-  }
-
-  private createDropdownOptions(config: SelectConstraintConfig): DropdownOption[] {
-    const options = [...(config?.options || [])];
-    const optionsValues = new Set(options.map(option => option.value));
-    (this.value?.options || []).forEach(option => {
-      if (!optionsValues.has(option.value)) {
-        options.push(option);
-        optionsValues.add(option.value);
-      }
-    });
-
-    const invalidValues = this.value?.constraintData?.invalidValuesMap?.[ConstraintType.Select];
-    invalidValues?.forEach(value => {
-      if (!optionsValues.has(value)) {
-        options.push({value});
-        optionsValues.add(value);
-      }
-    });
-    return options.map(option => ({
-      ...option,
-      value: option.value,
-      displayValue: config.displayValues ? option.displayValue || option.value : option.value,
-    }));
   }
 
   public ngAfterViewChecked() {

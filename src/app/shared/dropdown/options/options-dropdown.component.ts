@@ -103,6 +103,9 @@ export class OptionsDropdownComponent implements OnChanges {
   @Output()
   public selectOption = new EventEmitter<DropdownOption>();
 
+  @Output()
+  public onClose = new EventEmitter();
+
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
