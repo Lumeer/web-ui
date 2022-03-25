@@ -2,8 +2,7 @@
                             [dataResource]="dataResource$ | async"
                             [toolbarRef]="toolbar"
                             [viewId]="view?.id"
-                            [createDirectly]="true"
-                            (dataResourceChanged)="onDataResourceChanged($event)">
+                            [createDirectly]="true">
 </data-resource-detail-modal>
 
 <ng-template #toolbar>
@@ -23,20 +22,6 @@
                  [selectedId]="stemIndex$ | async"
                  (selected)="onStemIndexSelect($event)">
     </select-item>
-
-    <div class="form-check"
-         *ngIf="config | canToggleAllDay:data.stemIndex:data.collections:data.linkTypes:data.permissions">
-      <input id="allDayCheckbox"
-             [attr.checked]="allDay$ | async"
-             [checked]="allDay$ | async"
-             (change)="onAllDayChecked($event.target.checked)"
-             type="checkbox"
-             class="form-check-input">
-      <label for="allDayCheckbox"
-             class="form-check-label">
-      </label>
-      <span i18n="@@dialog.create.calendar.event.allDay">All day event</span>
-    </div>
 
   </div>
 </ng-template>

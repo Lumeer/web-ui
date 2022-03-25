@@ -61,6 +61,4 @@ export class UserSettingsHeaderComponent {
   public onDelete() {
     this.delete.emit();
   }
-
-  public onNewName(name: string) {}
 }

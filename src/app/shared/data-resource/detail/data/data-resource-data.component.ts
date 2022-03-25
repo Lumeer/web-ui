@@ -99,6 +99,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   public editableKeys = false;
 
   @Input()
+  public editableValues = true;
+
+  @Input()
   public attributeSettings: ResourceAttributeSettings[];
 
   @Output()
@@ -144,7 +147,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
       const currentDataResource = this.getCurrentDataResource();
       const unusedAttributes = filterUnusedAttributes(this.resource?.attributes, currentDataResource?.data);
       this.unusedAttributes$.next(unusedAttributes);
-      this.dataResourceChanged.emit(currentDataResource);
     });
     this.subscriptions.add(subscription);
   }
@@ -166,7 +168,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private focusFirstDataInput() {
-    setTimeout(() => this.rows?.first?.onValueFocus());
+    if (!this.dataRowFocusService.isFocusing() && !this.dataRowFocusService.isEditing()) {
+      setTimeout(() => this.rows?.first?.onValueFocus());
+    }
   }
 
   private selectResource$(): Observable<AttributesResource> {
@@ -203,6 +207,12 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
 
   public onNewValue(value: any, row: DataRow, index: number) {
     this.dataRowService.updateRow(index, null, value);
+    this.emitDataChange();
+  }
+
+  private emitDataChange() {
+    const currentDataResource = this.getCurrentDataResource();
+    this.dataResourceChanged.emit(currentDataResource);
   }
 
   public ngOnDestroy() {

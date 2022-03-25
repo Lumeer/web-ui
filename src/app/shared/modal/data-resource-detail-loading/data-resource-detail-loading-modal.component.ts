@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -55,9 +55,6 @@ export class DataResourceDetailLoadingModalComponent implements OnInit {
 
   @Input()
   public createDirectly: boolean;
-
-  @Output()
-  public dataResourceChanged = new EventEmitter<DataResource>();
 
   public readonly dialogType = DialogType;
 

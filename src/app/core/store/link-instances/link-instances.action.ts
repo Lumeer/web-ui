@@ -114,7 +114,7 @@ export namespace LinkInstancesAction {
         linkInstance: LinkInstance;
         onSuccess?: (linkInstanceId: string) => void;
         onFailure?: () => void;
-        afterSuccess?: (linkInstanceId: string) => void;
+        afterSuccess?: (linkInstance: LinkInstance) => void;
         workspace?: Workspace;
       }
     ) {}

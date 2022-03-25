@@ -163,11 +163,11 @@ export class DataRowFocusService {
     this.moveFocus(x, y);
   }
 
-  private isFocusing(): boolean {
+  public isFocusing(): boolean {
     return this.focused && isNotNullOrUndefined(this.focused.row) && isNotNullOrUndefined(this.focused.column);
   }
 
-  private isEditing(): boolean {
+  public isEditing(): boolean {
     return this.edited && isNotNullOrUndefined(this.edited.row) && isNotNullOrUndefined(this.edited.column);
   }
 

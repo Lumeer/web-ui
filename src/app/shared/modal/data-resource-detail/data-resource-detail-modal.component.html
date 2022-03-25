@@ -1,7 +1,7 @@
 <modal-wrapper
   [dialogType]="dialogType.Primary"
   (onClose)="onClose()"
-  [showSubmit]="!dataResource.id"
+  [showSubmit]="!dataResource.id && !createDirectly"
   [performingAction]="performingAction$ | async"
   [showHeader]="false"
   (onSubmit)="onSubmit()">
@@ -17,6 +17,7 @@
                           [settingsStem]="detailSettingsQueryStem"
                           [settingsQuery]="settingsQuery$ | async"
                           [toolbarRef]="toolbarRef"
+                          [editable]="!(performingAction$ | async)"
                           (dataResourceChanged)="onDataResourceChanged($event)"
                           (routingPerformed)="onClose()"
                           (documentSelect)="selectCollectionAndDocument($event)">
