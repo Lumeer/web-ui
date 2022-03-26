@@ -1,0 +1,27 @@
+:host::ng-deep {
+  & > *:not(action-data-input) > * {
+    padding: 0 !important;
+  }
+
+  & > select-data-input > * {
+    padding: 0 4px !important;
+    margin: 0 -4px !important;
+    width: calc(100% + 8px) !important;
+  }
+
+  & > user-data-input img:first-child {
+    margin-left: 0 !important;
+  }
+
+  .ql-editor {
+    margin: 0 !important;
+  }
+
+  p {
+    margin: 0 !important;
+  }
+}
+
+.white-space-normal {
+  white-space: normal;
+}

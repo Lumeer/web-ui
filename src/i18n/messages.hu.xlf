@@ -106,11 +106,8 @@
             <trans-unit datatype="html" id="4608931d14dacf46c6e70c357d1bb3f9e62b6043">
                 <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</source>
                 <target>{VAR_PLURAL, plural, =2 {Összes} =3 {Összes} =4 {Összes} other {Összes} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-                    <context context-type="linenumber">69</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
             <trans-unit datatype="html" id="4be44482feb952b217f702aaf0bad3536a4d03ad">
                 <source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source>
                 <target>A minimális szöveghossznak
@@ -142,11 +139,8 @@
             <trans-unit datatype="html" id="69f13ce4389d17c6a63e46717c0692901221b2eb">
                 <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</source>
                 <target>{VAR_PLURAL, select, =2 {Megjegyzések} =3 {Megjegyzések} =4 {Megjegyzések} other {Megjegyzések} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-                    <context context-type="linenumber">70</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit>
             <trans-unit datatype="html" id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5">
                 <source>{VAR_SELECT, select, organization {Organization} project {Project} other {}}</source>
                 <target>{VAR_SELECT, select, organization {Szervezet} project ({Projekt} other {} }</target>
@@ -1062,31 +1056,13 @@
             <trans-unit datatype="html" id="button.close">
                 <source>Close</source>
                 <target>Bezár</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-                    <context context-type="linenumber">43</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context>
-                    <context context-type="linenumber">6</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context>
-                    <context context-type="linenumber">31</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-                    <context context-type="linenumber">27</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-                    <context context-type="linenumber">24</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
-                    <context context-type="linenumber">63</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
             <trans-unit datatype="html" id="button.continue">
                 <source>Continue</source>
                 <target>Folytat</target>
@@ -1102,27 +1078,12 @@
             <trans-unit datatype="html" id="button.create">
                 <source>Create</source>
                 <target>Létrehoz</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context>
-                    <context context-type="linenumber">20</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
-                    <context context-type="linenumber">24</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context>
-                    <context context-type="linenumber">24</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-                    <context context-type="linenumber">31</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-                    <context context-type="linenumber">28</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
             <trans-unit id="selection.lists.modal.add" datatype="html">
                 <source>Add a new list</source>
                 <target state="new">Add list</target>
@@ -3076,19 +3037,10 @@
                 <target>Sajnálom, de ez a rekord nem található.</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context>
-                    <context context-type="linenumber">69</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context>
-                    <context context-type="linenumber">103</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context>
-                    <context context-type="linenumber">25</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.config.tab.rules.run.title">
                 <source>Run the Automation</source>
                 <target>A szabály futtatása</target>
@@ -5322,7 +5274,13 @@
                     <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context>
                     <context context-type="linenumber">11</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="task.state.placeholder" datatype="html">
+        <source>Select state</source><target state="new">Select state</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="currency.abbreviations">
                 <source>k|m|b|t</source>
                 <target>k|m|b|t</target>
@@ -5623,22 +5581,12 @@
                     <context context-type="linenumber">49</context>
                 </context-group>
             </trans-unit>
-            <trans-unit datatype="html" id="dialog.create.calendar.event.allDay">
-                <source>All day event</source>
-                <target>Egész napos esemény</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context>
-                    <context context-type="linenumber">38</context>
-                </context-group>
-            </trans-unit>
+            
             <trans-unit datatype="html" id="dialog.create.calendar.event.default.title">
                 <source>New event</source>
                 <target>Új esemény</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.ts</context>
-                    <context context-type="linenumber">238</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.ts</context><context context-type="linenumber">196</context></context-group></trans-unit>
 
 
 
@@ -5841,11 +5789,8 @@
                     <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
                     <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/>
                     ></target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-                    <context context-type="linenumber">68</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit>
             <trans-unit datatype="html" id="document.detail.favorite.add">
                 <source>Add to favorites</source>
                 <target>Hozzáadás a kedvencekhez</target>
@@ -9061,7 +9006,7 @@
 				<trans-unit datatype="html" id="perspective.workflow.table.resize">
 					<source>Resize table</source>
 					<target>Táblázat átméretezése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.workflow.toolbar.groupBy">
 					<source>Group By</source>
 					<target>Csoportosítás szerint</target>
@@ -9728,11 +9673,8 @@
 					<target>A szervezetedből hiányzik egy projekt. A folytatáshoz hozz létre egyet.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="dataResource.detail.loading" datatype="html">
         <source>Fetching record</source><target state="new">Fetching record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit><trans-unit id="go.back" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="go.back" datatype="html">
         <source>Go back</source><target>Visszamegyek</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/detail/data-resources-detail.component.html</context>
@@ -10299,11 +10241,11 @@
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1242</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1251</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.title">
 					<source>Delete this column?</source>
 					<target>Törlöd ezt az oszlopot?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1241</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1250</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.add-button">
 					<source>Link table</source>
 					<target>Hivatkozási tábla</target>
@@ -10402,6 +10344,12 @@
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/sidebar/workflow-sidebar.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.workflow.row.new.task" datatype="html">
+        <source>Add new task</source><target state="new">Add new task</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
+          <context context-type="linenumber">496</context>
+        </context-group>
       </trans-unit>
 				<trans-unit datatype="html" id="table.header.show.all">
 					<source>All columns</source>
@@ -10466,7 +10414,7 @@
 				<trans-unit datatype="html" id="tasks.empty.title">
 					<source>Empty title</source>
 					<target>Üres cím</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="tasks.get.fail">
 					<source>Could not get tasks</source>
 					<target>Nem lehet feladatokat kérni</target>
@@ -11178,7 +11126,7 @@
 				<trans-unit datatype="html" id="workflow.table.empty">
 					<source> There are no rows to display and you are not allowed to create any. </source>
 					<target>Nincsenek megjelenítendő sorok, és nem hozhatsz létre ilyeneket.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.linkDocumentsNoReturnBlock">
 					<source>Links two records using the selected link type.</source>
 					<target>Két rekordot összekapcsol a kiválasztott linktípus segítségével.</target>
@@ -11271,7 +11219,7 @@
 				<trans-unit datatype="html" id="task.pinned">
 					<source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"/></source>
 					<target><x id="INTERPOLATION" equiv-text="{{document.favorite? 'Feloldani a feladat rögzítését felülről': 'Feladat rögzítése felülre'}}"/></target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="collection.config.tab.rules.btn.duplicate">
 					<source>Duplicate automation</source>
 					<target>Automatizálás megkettőzése</target>

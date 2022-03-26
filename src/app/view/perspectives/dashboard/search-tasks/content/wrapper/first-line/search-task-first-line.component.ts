@@ -18,13 +18,16 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DataValue} from '@lumeer/data-filters';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {TaskAttributes} from '../../../model/task-attributes';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 import {View} from '../../../../../../../core/store/views/view';
+import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'search-task-first-line',
@@ -71,4 +74,19 @@ export class SearchTaskFirstLineComponent {
     ...this.configuration,
     user: {allowCenterOnlyIcon: true, onlyIcon: true},
   };
+
+  constructor(private store$: Store<AppState>) {}
+
+  public onSaveState(dataValue: DataValue) {
+    if (this.document) {
+      const patchDocument = {
+        collectionId: this.document.collectionId,
+        id: this.document.id,
+        data: {[this.attributes.state.id]: dataValue.serialize()},
+      };
+      this.store$.dispatch(
+        new DocumentsAction.PatchData({document: patchDocument, workspace: {viewId: this.view?.id}})
+      );
+    }
+  }
 }

@@ -36,13 +36,15 @@
   </ng-container>
 
   <ng-container *ngIf="document | dataValueByAttribute:attributes?.state: constraintData as stateDataValue">
-    <data-input-preview class="data-input-preview text-truncate ms-3 py-1"
-                        *ngIf="stateDataValue | formatDataValue"
+    <data-input-compact class="data-input-preview text-truncate ms-3 py-1"
                         [constraint]="attributes.state.constraint"
                         [cursor]="document | dataCursor:attributes.state.id:view?.id"
                         [configuration]="stateConfiguration"
-                        [dataValue]="stateDataValue">
-    </data-input-preview>
+                        [dataValue]="stateDataValue"
+                        placeholder="Select state"
+                        i18n-placeholder="@@task.state.placeholder"
+                        (save)="onSaveState($event)">
+    </data-input-compact>
   </ng-container>
 
   <ng-container

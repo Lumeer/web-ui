@@ -20,6 +20,8 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
+
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 import {ColorPickerModule} from 'ngx-color-picker';
@@ -56,7 +58,7 @@ import {SelectOptionsValuesPipe} from './select/pipes/select-options-values.pipe
 import {SelectedValuesPipe} from './user/pipes/users-emails.pipe';
 import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
 import {UsersNamesPipe} from './user/pipes/users-names.pipe';
-import {DataInputPreviewComponent} from './data-input-preview/data-input-preview.component';
+import {DataInputPreviewComponent} from './preview/data-input-preview.component';
 import {ConstraintAsTextPipe} from './pipes/constraint-as-text.pipe';
 import {UserIsValidPipe} from './user/pipes/user-is-valid.pipe';
 import {ConstraintClassPipe} from './pipes/constraint-class.pipe';
@@ -70,7 +72,6 @@ import {ProgressModule} from '../progress/progress.module';
 import {ViewDataInputComponent} from './view/view-data-input.component';
 import {FilterViewsPipe} from './view/pipes/filter-views.pipe';
 import {ViewsIdsPipe} from './view/pipes/views-ids.pipe';
-import {RouterModule} from '@angular/router';
 import {FilterValidViewsPipe} from './view/pipes/filter-valid-views.pipe';
 import {UsersAndTeamsNamesPipe} from './user/pipes/users-and-teams-names.pipe';
 import {FileButtonComponent} from './files/file-button/file-button.component';
@@ -78,6 +79,8 @@ import {FileAttachmentTooltipComponent} from './files/button/tooltip/file-attach
 import {AttributeLockFiltersStatsComponent} from './lock-stats/attribute-lock-filters-stats.component';
 import {AttributeLockFilterPreviewComponent} from './lock-stats/preview/attribute-lock-filter-preview.component';
 import {DataIdCursorPipe} from './pipes/data-id-cursor.pipe';
+import {DataInputCompactComponent} from './compact/data-input-compact.component';
+import {SelectDataInputCompactComponent} from './compact/select/select-data-input-compact.component';
 
 @NgModule({
   imports: [
@@ -110,6 +113,7 @@ import {DataIdCursorPipe} from './pipes/data-id-cursor.pipe';
     ColorDataInputComponent,
     UserDataInputComponent,
     SelectDataInputComponent,
+    SelectDataInputCompactComponent,
     CoordinatesDataInputComponent,
     AddressDataInputComponent,
     DurationDataInputComponent,
@@ -130,6 +134,7 @@ import {DataIdCursorPipe} from './pipes/data-id-cursor.pipe';
     UsersNamesPipe,
     UsersAndTeamsNamesPipe,
     DataInputPreviewComponent,
+    DataInputCompactComponent,
     ConstraintAsTextPipe,
     ConstraintClassPipe,
     SelectOptionsJoinedPipe,
@@ -148,6 +153,7 @@ import {DataIdCursorPipe} from './pipes/data-id-cursor.pipe';
   exports: [
     DataInputComponent,
     DataInputPreviewComponent,
+    DataInputCompactComponent,
     BooleanDataInputComponent,
     UserDataInputComponent,
     DataCursorPipe,
