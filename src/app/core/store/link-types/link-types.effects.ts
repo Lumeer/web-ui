@@ -217,7 +217,7 @@ export class LinkTypesEffects {
           return correlationMap;
         }, {});
 
-        const {linkTypeId, onSuccess, onFailure, nextAction} = action.payload;
+        const {linkTypeId, onSuccess, onFailure, nextAction, otherActions} = action.payload;
         return this.linkTypeService.createAttributes(linkTypeId, attributesDto).pipe(
           map(attributes => attributes.map(attr => convertAttributeDtoToModel(attr, correlationIdsMap[attr.name]))),
           mergeMap(attributes => {
@@ -226,6 +226,7 @@ export class LinkTypesEffects {
               actions.push(updateCreateAttributesNextAction(nextAction, attributes));
             }
 
+            actions.push(...(otherActions || []));
             actions.push(...createCallbackActions(onSuccess, attributes));
             return actions;
           }),

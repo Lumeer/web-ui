@@ -1,12 +1,17 @@
-<div *ngIf="!edited; else editableInput"
-     [class.text-default-attribute]="default"
-     class="flex-grow-1 title text-truncate"
-     [delay]="700"
-     [tooltip]="descriptionLongTooltip"
-     placement="bottom"
-     [adaptivePosition]="false"
-     containerClass="bigger-tooltip"
-     data-test="table-column-input">{{value}}</div>
+<ng-container *ngIf="!edited; else editableInput">
+  <div *ngIf="initialized"
+       [class.text-default-attribute]="default"
+       class="flex-grow-1 title text-truncate"
+       [delay]="700"
+       [tooltip]="descriptionLongTooltip"
+       placement="bottom"
+       [adaptivePosition]="false"
+       containerClass="bigger-tooltip"
+       data-test="table-column-input">{{value}}</div>
+  <div *ngIf="!initialized"
+       class="flex-grow-1 title text-truncate"
+       data-test="table-column-input">{{placeholder}}</div>
+</ng-container>
 <div class="small" *ngIf="attribute?.description && !edited" [tooltip]="descriptionTooltip"
      containerClass="bigger-tooltip"
      [adaptivePosition]="false" placement="bottom"><i class="far fa-question-circle ms-1"></i>
@@ -27,6 +32,7 @@
          [class.text-default-attribute]="default"
          [delay]="700"
          [tooltip]="descriptionLongTooltip"
+         [tooltipEnable]="initialized"
          placement="bottom"
          [adaptivePosition]="false"
          containerClass="bigger-tooltip"
