@@ -9,7 +9,7 @@
                        [scrollId]="scrollId">
   </table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize
-                               class="invisible-scroll-y h-100"
+                               class="h-100"
                                [id]="scrollId"
                                (scroll)="onScroll()"
                                [disabled]="scrollDisabled$ | async"
@@ -60,7 +60,10 @@
       </tbody>
     </table>
   </cdk-virtual-scroll-viewport>
-  <div *ngIf="tableModel?.bottomToolbar" class="more-content" [style.height.px]="toolbarHeight">
+  <div *ngIf="tableModel?.bottomToolbar" class="more-content"
+       [style.height.px]="toolbarHeight"
+       [style.bottom.px]="toolbarMarginBottom"
+       [style.right.px]="toolbarMarginRight">
     <table-new-row *ngIf="tableModel?.newRow"
                    [actionTitle]="tableModel.newRow.actionTitle"
                    class="d-inline-block h-100 new-row"
