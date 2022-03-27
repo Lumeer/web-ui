@@ -20,24 +20,24 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {first, map, mergeMap, skipWhile, tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {first, mergeMap, switchMap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../../store/app.state';
 import {View} from '../../store/views/view';
-import {ViewsAction} from '../../store/views/views.action';
-import {selectViewByCode, selectViewsLoaded} from '../../store/views/views.state';
 import {selectViewsByRead} from '../../store/common/permissions.selectors';
 import {Project} from '../../store/projects/project';
 import {Organization} from '../../store/organizations/organization';
 import {WorkspaceService} from '../../../workspace/workspace.service';
 import {Perspective} from '../../../view/perspectives/perspective';
+import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
 
 @Injectable()
 export class ViewsGuard implements Resolve<View[]> {
   constructor(
     private notificationService: NotificationService,
     private workspaceService: WorkspaceService,
+    private resourcesGuardService: ResourcesGuardService,
     private router: Router,
     private store$: Store<AppState>
   ) {}
@@ -53,30 +53,18 @@ export class ViewsGuard implements Resolve<View[]> {
   }
 
   private resolveView(organization: Organization, project: Project, viewCode: string): Observable<View[]> {
-    return this.store$.pipe(
-      select(selectViewsLoaded),
-      tap(loaded => {
-        if (!loaded) {
-          const workspace = {organizationId: organization.id, projectId: project.id};
-          this.store$.dispatch(new ViewsAction.Get({workspace}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => {
+    return this.resourcesGuardService.selectViewByCode$(organization, project, viewCode).pipe(
+      switchMap(view => {
         if (!viewCode) {
           return this.store$.pipe(select(selectViewsByRead));
         }
 
-        return this.store$.pipe(select(selectViewByCode(viewCode))).pipe(
-          map(view => {
-            if (view) {
-              return [view];
-            }
+        if (view) {
+          return of([view]);
+        }
 
-            this.onViewNotFound(organization.code, project.code);
-            return [];
-          })
-        );
+        this.onViewNotFound(organization.code, project.code);
+        return of([]);
       }),
       first()
     );

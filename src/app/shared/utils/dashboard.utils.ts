@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DashboardCell, DashboardTab, defaultDashboardTabs} from '../../core/model/dashboard-tab';
+import {DashboardCell, DashboardTab} from '../../core/model/dashboard-tab';
+import {removeAccentFromString} from '@lumeer/data-filters';
 import {View} from '../../core/store/views/view';
 import {Perspective} from '../../view/perspectives/perspective';
 import {searchTabsMap} from '../../core/store/navigation/search-tab';
-import {removeAccentFromString} from '@lumeer/data-filters';
 import {Dashboard} from '../../core/store/searches/search';
 
 export function getAllDashboardCells(dashboard: Dashboard): DashboardCell[] {
@@ -63,16 +63,21 @@ export function findRealDashboardCellIndexByValidIndex(cells: DashboardCell[], i
   return -1;
 }
 
-export function addDefaultDashboardTabsIfNotPresent(savedTabs: DashboardTab[]): DashboardTab[] {
+export function addDefaultDashboardTabsIfNotPresent(
+  savedTabs: DashboardTab[],
+  defaultDashboardTabs: DashboardTab[]
+): DashboardTab[] {
   const tabs = [...(savedTabs || [])];
-  for (let i = defaultDashboardTabs.length - 1; i >= 0; i--) {
+  for (let i = 0; i < defaultDashboardTabs.length; i++) {
     const defaultTab = defaultDashboardTabs[i];
+    const previousTab = defaultDashboardTabs[i - 1];
     const tabIndex = tabs.findIndex(tab => tab.id === defaultTab.id);
+    const previousTabIndex = previousTab ? tabs.findIndex(tab => tab.id === previousTab.id) + 1 : 0;
     if (tabIndex >= 0) {
       // we should replace saved title with translated one
       tabs[tabIndex] = {...tabs[tabIndex], title: defaultTab.title};
     } else {
-      tabs.splice(0, 0, defaultTab);
+      tabs.splice(previousTabIndex, 0, defaultTab);
     }
   }
   return tabs;

@@ -28,7 +28,6 @@ import {TabsSettingsContentComponent} from './content/tabs-settings-content.comp
 import {
   selectCurrentView,
   selectDefaultSearchPerspectiveDashboardViewId,
-  selectSearchPerspectiveTabsByView,
   selectViewById,
 } from '../../../core/store/views/views.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -39,7 +38,10 @@ import {distinctUntilChanged, map, pairwise, startWith, switchMap, take, withLat
 import {Dashboard, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {View} from '../../../core/store/views/view';
-import {selectViewsByReadWithComputedData} from '../../../core/store/common/permissions.selectors';
+import {
+  selectSearchPerspectiveTabsByView,
+  selectViewsByReadWithComputedData,
+} from '../../../core/store/common/permissions.selectors';
 import {AllowedPermissions, completeAllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectViewPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 

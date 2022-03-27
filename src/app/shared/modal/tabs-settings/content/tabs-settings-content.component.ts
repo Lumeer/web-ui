@@ -27,7 +27,7 @@ import {
   SimpleChanges,
   EventEmitter,
 } from '@angular/core';
-import {DashboardTab, defaultDashboardTabs, TabType} from '../../../../core/model/dashboard-tab';
+import {DashboardTab, TabType} from '../../../../core/model/dashboard-tab';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {generateId} from '../../../utils/resource.utils';
@@ -64,7 +64,7 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   @Output()
   public copySelectedView = new EventEmitter();
 
-  public tabs$ = new BehaviorSubject<DashboardTab[]>(defaultDashboardTabs);
+  public tabs$ = new BehaviorSubject<DashboardTab[]>([]);
   public selectedTabId$ = new BehaviorSubject<string>(null);
   public draggedTabIdSubject$ = new BehaviorSubject(null);
   public dragging$ = new BehaviorSubject(false);

@@ -42,9 +42,9 @@ import {SearchTab} from '../../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../../core/store/navigation/query/query.converter';
 import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectHasVisibleSearchTab} from '../../../../../../core/store/views/views.state';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {SearchPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {selectHasVisibleSearchTab} from '../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'views-preview-content',

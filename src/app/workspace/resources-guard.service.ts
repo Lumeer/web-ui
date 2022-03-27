@@ -19,232 +19,108 @@
 
 import {Injectable} from '@angular/core';
 
-import {of, Observable, combineLatest} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {catchError, filter, first, map, mergeMap, skipWhile, switchMap, take, tap} from 'rxjs/operators';
+import {first, map, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {AppState} from '../core/store/app.state';
-import {OrganizationConverter} from '../core/store/organizations/organization.converter';
 import {Organization} from '../core/store/organizations/organization';
-import {OrganizationsAction} from '../core/store/organizations/organizations.action';
-import {selectAllOrganizations} from '../core/store/organizations/organizations.state';
-import {ProjectConverter} from '../core/store/projects/project.converter';
 import {Project} from '../core/store/projects/project';
-import {ProjectsAction} from '../core/store/projects/projects.action';
+import {DefaultViewConfig, View} from '../core/store/views/view';
 import {
-  selectProjectsByOrganizationId,
-  selectProjectsLoadedForOrganization,
-  selectReadableProjectsForOrganization,
-} from '../core/store/projects/projects.state';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.utils';
+  selectAllViews,
+  selectDefaultViewConfig,
+  selectDefaultViewConfigsLoaded,
+  selectViewsLoaded,
+} from '../core/store/views/views.state';
+import {ViewsAction} from '../core/store/views/views.action';
+import {selectAllCollections, selectCollectionsLoaded} from '../core/store/collections/collections.state';
+import {CollectionsAction} from '../core/store/collections/collections.action';
+import {Collection} from '../core/store/collections/collection';
 import {User} from '../core/store/users/user';
-import {CommonAction} from '../core/store/common/common.action';
-import {OrganizationService, ProjectService} from '../core/data-service';
-import {selectCurrentUserForOrganization} from '../core/store/users/users.state';
-import {selectTeamsByOrganization, selectTeamsLoadedForOrganization} from '../core/store/teams/teams.state';
-import {TeamsAction} from '../core/store/teams/teams.action';
-import {Team} from '../core/store/teams/team';
-import {userHasRoleInProject} from '../shared/utils/permission.utils';
+import {DashboardTab, filterDefaultDashboardTabs} from '../core/model/dashboard-tab';
+import {userHasRoleInResource, userPermissionsInProject} from '../shared/utils/permission.utils';
 import {RoleType} from '../core/model/role-type';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../view/perspectives/perspective';
 
 @Injectable()
-export class WorkspaceService {
-  constructor(
-    private organizationService: OrganizationService,
-    private projectService: ProjectService,
-    private store$: Store<AppState>
-  ) {}
+export class ResourcesGuardService {
+  constructor(private store$: Store<AppState>) {}
 
-  public selectOrGetUserAndOrganization(
-    organizationCode: string
-  ): Observable<{user?: User; organization?: Organization}> {
-    return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      mergeMap(organization => {
-        if (organization) {
-          return this.selectUser(organization).pipe(map(user => ({organization, user})));
+  public selectViewByCode$(organization: Organization, project: Project, code: string): Observable<View> {
+    return this.selectViews$(organization, project).pipe(map(views => views.find(view => view.code === code)));
+  }
+
+  public selectViews$(organization: Organization, project: Project): Observable<View[]> {
+    return this.store$.pipe(
+      select(selectViewsLoaded),
+      tap(loaded => {
+        if (!loaded) {
+          const workspace = {organizationId: organization.id, projectId: project.id};
+          this.store$.dispatch(new ViewsAction.Get({workspace}));
         }
-        return of({});
-      })
+      }),
+      skipWhile(loaded => !loaded),
+      mergeMap(() => this.store$.pipe(select(selectAllViews))),
+      first()
     );
   }
 
-  public selectOrGetUserAndWorkspace(
-    organizationCode: string,
-    projectCode: string
-  ): Observable<{user?: User; organization?: Organization; project?: Project}> {
-    return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      mergeMap(organization =>
-        this.selectUserTeamsAndProject(organization, projectCode).pipe(
-          map(({user, project}) => ({user, organization, project}))
-        )
-      )
-    );
-  }
-
-  public selectOrGetUserAndOrganizationAndProjects(
-    organizationCode: string
-  ): Observable<{user?: User; organization?: Organization; projects?: Project[]}> {
-    return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      mergeMap(organization =>
-        this.selectUserTeamsAndProjects(organization).pipe(map(({user, projects}) => ({user, organization, projects})))
-      )
-    );
-  }
-
-  public selectOrGetWorkspace(
-    organizationCode: string,
-    projectCode: string
-  ): Observable<{organization?: Organization; project?: Project}> {
-    return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      mergeMap(organization => {
-        if (organization) {
-          return this.getProjectFromStoreOrApi(organization.id, projectCode).pipe(
-            map(project => ({organization, project}))
-          );
+  public selectCollections$(organization: Organization, project: Project): Observable<Collection[]> {
+    return this.store$.select(selectCollectionsLoaded).pipe(
+      tap(loaded => {
+        if (!loaded) {
+          const workspace = {organizationId: organization.id, projectId: project.id};
+          this.store$.dispatch(new CollectionsAction.Get({workspace}));
         }
-        return of({});
-      })
+      }),
+      skipWhile(loaded => !loaded),
+      mergeMap(() => this.store$.pipe(select(selectAllCollections))),
+      first()
     );
   }
 
-  public switchWorkspace(organization: Organization, project: Project): Observable<boolean> {
-    return new Observable(observer => {
-      const callback = () => {
-        observer.next(true);
-        observer.complete();
-      };
-
-      const callbackAction = new CommonAction.ExecuteCallback({callback});
-      this.store$.dispatch(
-        new ProjectsAction.SwitchWorkspace({
-          organizationId: organization.id,
-          projectId: project.id,
-          nextAction: callbackAction,
-        })
-      );
-    });
+  public selectDefaultViewConfig$(organization: Organization, project: Project): Observable<DefaultViewConfig> {
+    return this.store$.pipe(
+      select(selectDefaultViewConfigsLoaded),
+      tap(loaded => {
+        if (!loaded) {
+          const workspace = {organizationId: organization.id, projectId: project.id};
+          this.store$.dispatch(new ViewsAction.GetDefaultConfigs({workspace}));
+        }
+      }),
+      skipWhile(loaded => !loaded),
+      mergeMap(() => this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID)))),
+      first()
+    );
   }
 
-  private selectUserTeamsAndProject(
+  public selectDefaultSearchTabs(
     organization: Organization,
-    projectCode: string
-  ): Observable<{user?: User; project?: Project}> {
-    if (organization) {
-      return combineLatest([
-        this.selectUser(organization),
-        this.getProjectFromStoreOrApi(organization.id, projectCode),
-      ]).pipe(map(([user, project]) => ({user, project})));
-    }
-    return of({});
-  }
+    project: Project,
+    user: User
+  ): Observable<{
+    tabs: DashboardTab[];
+    defaultViewConfig: DefaultViewConfig;
+    views: View[];
+    collections: Collection[];
+  }> {
+    return forkJoin([
+      this.selectViews$(organization, project),
+      this.selectCollections$(organization, project),
+      this.selectDefaultViewConfig$(organization, project),
+    ]).pipe(
+      map(([views, collections, defaultViewConfig]) => {
+        const readableCollectionsCount = collections.filter(collection =>
+          userHasRoleInResource(organization, project, collection, user, RoleType.Read)
+        ).length;
+        const readableViewsCount = views.filter(view =>
+          userHasRoleInResource(organization, project, view, user, RoleType.Read)
+        ).length;
+        const permissions = userPermissionsInProject(organization, project, user);
 
-  private selectUserTeamsAndProjects(organization: Organization): Observable<{user?: User; projects?: Project[]}> {
-    if (organization) {
-      return this.selectUser(organization).pipe(
-        switchMap(user => this.getProjects(organization, user).pipe(map(projects => ({user, projects}))))
-      );
-    }
-    return of({});
-  }
-
-  private selectUser(organization: Organization): Observable<User> {
-    return this.selectTeams(organization).pipe(
-      switchMap(() =>
-        this.store$.pipe(
-          select(selectCurrentUserForOrganization(organization)),
-          filter(user => isNotNullOrUndefined(user))
-        )
-      )
-    );
-  }
-
-  private selectTeams(organization: Organization): Observable<Team[]> {
-    return this.store$.select(selectTeamsLoadedForOrganization(organization.id)).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new TeamsAction.Get({organizationId: organization.id}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectTeamsByOrganization(organization.id)))),
-      first()
-    );
-  }
-
-  private getOrganizationFromStoreOrApi(code: string): Observable<Organization> {
-    return this.getOrganizationFromStore(code).pipe(
-      mergeMap(organization => {
-        if (isNotNullOrUndefined(organization)) {
-          return of(organization);
-        }
-        return this.getOrganizationFromApi(code);
+        const tabs = filterDefaultDashboardTabs(permissions, readableCollectionsCount, readableViewsCount);
+        return {tabs, views, collections, defaultViewConfig};
       })
-    );
-  }
-
-  private getOrganizationFromStore(code: string): Observable<Organization> {
-    return this.store$.pipe(
-      select(selectAllOrganizations),
-      map(organizations => organizations.find(org => org.code === code)),
-      take(1)
-    );
-  }
-
-  private getOrganizationFromApi(code: string): Observable<Organization> {
-    return this.organizationService.getOrganizationByCode(code).pipe(
-      map(organization => OrganizationConverter.fromDto(organization)),
-      tap(organization => this.store$.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
-      catchError(() => of(undefined))
-    );
-  }
-
-  private getProjectFromStoreOrApi(orgId: string, projCode: string): Observable<Project> {
-    return this.getProjectFromStore(orgId, projCode).pipe(
-      mergeMap(project => {
-        if (!isNullOrUndefined(project)) {
-          return of(project);
-        }
-        return this.getProjectFromApi(orgId, projCode);
-      })
-    );
-  }
-
-  private getProjectFromStore(organizationId: string, code: string): Observable<Project> {
-    return this.store$.pipe(
-      select(selectReadableProjectsForOrganization(organizationId)),
-      map(projects => projects.find(proj => proj.code === code)),
-      take(1)
-    );
-  }
-
-  private getProjectFromApi(orgId: string, projCode: string): Observable<Project> {
-    return this.projectService.getProjectByCode(orgId, projCode).pipe(
-      map(project => ProjectConverter.fromDto(project, orgId)),
-      tap(project => this.store$.dispatch(new ProjectsAction.GetOneSuccess({project}))),
-      catchError(() => of(undefined))
-    );
-  }
-
-  private getProjects(organization: Organization, user: User): Observable<Project[]> {
-    return this.store$.select(selectProjectsLoadedForOrganization(organization.id)).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() =>
-        this.store$.pipe(
-          select(selectProjectsByOrganizationId(organization.id)),
-          map(projects =>
-            projects.filter(
-              project =>
-                project.organizationId === organization.id &&
-                userHasRoleInProject(organization, project, user, RoleType.Read)
-            )
-          )
-        )
-      ),
-      first()
     );
   }
 }

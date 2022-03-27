@@ -21,15 +21,9 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, NavigationExtras, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {map, mergeMap, skipWhile, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {map, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {convertQueryModelToString} from '../store/navigation/query/query.converter';
-import {ViewsAction} from '../store/views/views.action';
-import {
-  selectDefaultSearchPerspectiveDashboardTabs,
-  selectViewByCode,
-  selectViewsLoaded,
-} from '../store/views/views.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {WorkspaceService} from '../../workspace/workspace.service';
 import {Organization} from '../store/organizations/organization';
@@ -40,17 +34,17 @@ import {selectSearchById} from '../store/searches/searches.state';
 import {QueryParam} from '../store/navigation/query-param';
 import {createSearchPerspectiveTabsByView} from '../store/views/view.utils';
 import {cleanQueryFromHiddenAttributes} from '../store/navigation/query/query.util';
-import {selectViewsPermissions} from '../store/user-permissions/user-permissions.state';
-import {selectWorkspaceModels} from '../store/common/common.selectors';
-import {selectCurrentUser} from '../store/users/users.state';
 import {userPermissionsInView} from '../../shared/utils/permission.utils';
+import {ResourcesGuardService} from '../../workspace/resources-guard.service';
+import {User} from '../store/users/user';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
   public constructor(
     private router: Router,
     private store$: Store<AppState>,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
+    private resourcesGuardService: ResourcesGuardService
   ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
@@ -60,29 +54,21 @@ export class ViewRedirectGuard implements CanActivate {
     const cursor = next.queryParamMap.get(QueryParam.ViewCursor);
 
     return this.workspaceService
-      .selectOrGetWorkspace(organizationCode, projectCode)
-      .pipe(mergeMap(({organization, project}) => this.canActivateView(organization, project, viewCode, cursor)));
+      .selectOrGetUserAndWorkspace(organizationCode, projectCode)
+      .pipe(
+        mergeMap(({organization, project, user}) => this.canActivateView(organization, project, user, viewCode, cursor))
+      );
   }
 
   private canActivateView(
     organization: Organization,
     project: Project,
+    user: User,
     viewCode: string,
     cursor: string
   ): Observable<any> {
-    return this.store$.pipe(
-      select(selectViewsLoaded),
-      tap(loaded => {
-        if (!loaded) {
-          const workspace = {organizationId: organization.id, projectId: project.id};
-          this.store$.dispatch(new ViewsAction.Get({workspace}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      switchMap(() => this.store$.pipe(select(selectViewByCode(viewCode)))),
-      take(1),
-      withLatestFrom(this.store$.pipe(select(selectCurrentUser))),
-      mergeMap(([view, user]) => {
+    return this.resourcesGuardService.selectViewByCode$(organization, project, viewCode).pipe(
+      mergeMap(view => {
         const permissions = view && userPermissionsInView(organization, project, view, user);
         const perspective = view?.perspective ? view.perspective : Perspective.Search;
         const query = view
@@ -99,7 +85,7 @@ export class ViewRedirectGuard implements CanActivate {
 
         const extras: NavigationExtras = {queryParams: {[QueryParam.Query]: query, [QueryParam.ViewCursor]: cursor}};
         if (perspective === Perspective.Search) {
-          return this.redirectToSearchPerspective(view, viewPath, extras);
+          return this.redirectToSearchPerspective(organization, project, user, view, viewPath, extras);
         }
 
         this.router.navigate(viewPath, extras);
@@ -108,26 +94,36 @@ export class ViewRedirectGuard implements CanActivate {
     );
   }
 
-  private redirectToSearchPerspective(view: View, viewPath: any[], extras?: NavigationExtras): Observable<any> {
+  private redirectToSearchPerspective(
+    organization: Organization,
+    project: Project,
+    user: User,
+    view: View,
+    viewPath: any[],
+    extras?: NavigationExtras
+  ): Observable<any> {
     return this.store$.pipe(
       select(selectSearchById(view?.code)),
       take(1),
-      withLatestFrom(this.store$.pipe(select(selectDefaultSearchPerspectiveDashboardTabs))),
-      map(([search, defaultTabs]) => {
-        const tabs = createSearchPerspectiveTabsByView(view, defaultTabs).filter(tab => !tab.hidden);
-        const desiredTab = search?.config?.searchTab || view?.config?.search?.searchTab || SearchTab.All;
-        if (tabs.some(tab => tab.id === desiredTab)) {
-          return [...viewPath, desiredTab];
-        }
-        if (tabs.length) {
-          return [...viewPath, tabs[0].id];
-        }
-        return viewPath;
-      }),
-      map(path => {
-        this.router.navigate(path, extras);
-        return false;
-      })
+      mergeMap(search =>
+        this.resourcesGuardService.selectDefaultSearchTabs(organization, project, user).pipe(
+          map(({tabs: defaultTabs}) => {
+            const tabs = createSearchPerspectiveTabsByView(view, defaultTabs).filter(tab => !tab.hidden);
+            const desiredTab = search?.config?.searchTab || view?.config?.search?.searchTab || SearchTab.All;
+            if (tabs.some(tab => tab.id === desiredTab)) {
+              return [...viewPath, desiredTab];
+            }
+            if (tabs.length) {
+              return [...viewPath, tabs[0].id];
+            }
+            return viewPath;
+          }),
+          map(path => {
+            this.router.navigate(path, extras);
+            return false;
+          })
+        )
+      )
     );
   }
 }

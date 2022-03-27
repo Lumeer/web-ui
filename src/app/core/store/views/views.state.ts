@@ -34,23 +34,13 @@ import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
-import {
-  canChangeViewQuery,
-  createSearchPerspectiveTabs,
-  createSearchPerspectiveTabsByView,
-  getViewColor,
-  getViewIcon,
-  isViewConfigChanged,
-  viewAdditionalQueries,
-} from './view.utils';
-import {selectSearchConfig, selectSearchesDictionary} from '../searches/searches.state';
+import {canChangeViewQuery, getViewColor, getViewIcon, isViewConfigChanged, viewAdditionalQueries} from './view.utils';
+import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
 import {appendQueryFiltersByVisibleAttributes} from '../navigation/query/query.util';
 import {selectDetailConfig} from '../details/detail.state';
 import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
-import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../../../shared/utils/dashboard.utils';
-import {SearchConfig} from '../searches/search';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 import {selectFormConfig} from '../form/form.state';
 
@@ -246,11 +236,6 @@ export const selectDefaultSearchPerspectiveConfig = createSelector(selectViewsSt
   return searchConfigs?.[DEFAULT_PERSPECTIVE_ID]?.config?.search;
 });
 
-export const selectDefaultSearchPerspectiveDashboardTabs = createSelector(
-  selectDefaultSearchPerspectiveConfig,
-  config => addDefaultDashboardTabsIfNotPresent(config?.dashboard?.tabs)
-);
-
 export const selectDefaultSearchPerspectiveDashboardViewId = createSelector(
   selectDefaultSearchPerspectiveConfig,
   config => config?.dashboard?.viewId
@@ -261,57 +246,6 @@ export const selectDefaultSearchPerspectiveDashboardView = createSelector(
   selectViewsDictionary,
   (viewId, map) => viewId && map[viewId]
 );
-
-export const selectDefaultSearchPerspectiveVisibleTabs = createSelector(
-  selectDefaultSearchPerspectiveDashboardTabs,
-  tabs => tabs.filter(tab => !tab.hidden)
-);
-
-export const selectSearchPerspectiveTabs = createSelector(
-  selectDefaultSearchPerspectiveDashboardTabs,
-  selectSearchesDictionary,
-  selectDefaultSearchPerspectiveDashboardView,
-  selectCurrentView,
-  (defaultTabs, searchesMap, dashboardView, currentView) => {
-    if (currentView) {
-      const search = searchesMap[currentView.code];
-      if (search?.config) {
-        return createSearchPerspectiveTabs(search?.config, defaultTabs);
-      }
-      return createSearchPerspectiveTabsByView(currentView, defaultTabs);
-    }
-
-    if (isViewValidForDashboard(dashboardView)) {
-      const search = searchesMap[dashboardView.code];
-      if (search?.config) {
-        return createSearchPerspectiveTabs(search?.config, defaultTabs);
-      }
-      return createSearchPerspectiveTabsByView(dashboardView, defaultTabs);
-    }
-
-    return createSearchPerspectiveTabs(searchesMap[DEFAULT_PERSPECTIVE_ID]?.config, defaultTabs);
-  }
-);
-
-export const selectSearchPerspectiveTabsByView = (view: View, defaultConfig?: SearchConfig) =>
-  createSelector(selectDefaultSearchPerspectiveDashboardTabs, selectSearchesDictionary, (defaultTabs, searchesMap) => {
-    if (isViewValidForDashboard(view)) {
-      const search = searchesMap[view.code];
-      if (search?.config) {
-        return createSearchPerspectiveTabs(search?.config, defaultTabs);
-      }
-      return createSearchPerspectiveTabsByView(view, defaultTabs);
-    }
-
-    return createSearchPerspectiveTabs(defaultConfig || searchesMap[DEFAULT_PERSPECTIVE_ID]?.config, defaultTabs);
-  });
-
-export const selectSearchPerspectiveVisibleTabs = createSelector(selectSearchPerspectiveTabs, tabs =>
-  tabs.filter(tab => !tab.hidden)
-);
-
-export const selectHasVisibleSearchTab = (tabId: string) =>
-  createSelector(selectSearchPerspectiveVisibleTabs, tabs => tabs.some(tab => tab.id === tabId));
 
 export const selectDefaultViewConfigs = (perspective: Perspective, keys: string[]) =>
   createSelector(selectViewsState, state => {
