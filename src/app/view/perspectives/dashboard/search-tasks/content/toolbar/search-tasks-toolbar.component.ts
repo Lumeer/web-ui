@@ -57,7 +57,7 @@ export class SearchTasksToolbarComponent {
   public onAdd() {
     if (this.collections?.length || this.views?.length) {
       const initialState = {purpose: CollectionPurposeType.Tasks, viewId: this.viewId};
-      this.modalService.showStaticDialog(initialState, CreateDocumentModalComponent);
+      this.modalService.showStaticDialog(initialState, CreateDocumentModalComponent, 'modal-lg modal-h-100');
     }
   }
 }
