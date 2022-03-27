@@ -49,6 +49,7 @@ export enum TablesActionType {
   MOVE_COLUMN = '[Tables] Move Column',
   RESIZE_COLUMN = '[Tables] Resize Column',
   REMOVE_COLUMN = '[Tables] Remove Column',
+  REMOVE_COLUMN_BY_CORRELATION_ID = '[Tables] Remove Column By Correlation Id',
   REMOVE_EMPTY_COLUMNS = '[Tables] Remove Empty Columns',
   SYNC_COLUMNS = '[Tables] Sync Columns',
   UPDATE_COLUMNS = '[Tables] Update Columns',
@@ -186,6 +187,12 @@ export namespace TablesAction {
     public readonly type = TablesActionType.REMOVE_COLUMN;
 
     public constructor(public payload: {cursor: TableHeaderCursor}) {}
+  }
+
+  export class RemoveColumnByCorrelationId implements Action {
+    public readonly type = TablesActionType.REMOVE_COLUMN_BY_CORRELATION_ID;
+
+    public constructor(public payload: {tableId: string; partIndex: number; correlationId: string}) {}
   }
 
   export class MoveColumn implements TableCursorAction {

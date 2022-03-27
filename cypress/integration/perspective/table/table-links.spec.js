@@ -22,7 +22,7 @@ describe('Table perspective :: Links', () => {
       cy.visitTable(collection.id);
     });
 
-    cy.get('[data-test="table-column-input"]', {timeout: 10000}).last().should('have.text', 'A');
+    cy.get('[data-test="table-column-input"]', {timeout: 10000}).last().should('have.text', 'Add Column');
 
     cy.get('.text-input').should('not.exist');
 
@@ -34,7 +34,7 @@ describe('Table perspective :: Links', () => {
     cy.wait('@createDocument').its('status').should('eq', 200);
 
     cy.get('[data-test="table-column-input"].text-default-attribute').first().should('have.text', 'A');
-    cy.get('[data-test="table-column-input"]').last().should('have.text', 'B');
+    cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
     cy.get('.text-input').should('have.length', 1);
 
     cy.get('.text-input').eq(2).should('not.exist');
@@ -58,7 +58,7 @@ describe('Table perspective :: Links', () => {
     cy.get('[data-test="table-caption-name"]').should('contain', 'second');
 
     cy.get('[data-test="table-column-input"]').should('have.length', 3).first().should('have.text', 'A');
-    cy.get('[data-test="table-column-input"]').should('have.length', 3).last().should('have.text', 'A');
+    cy.get('[data-test="table-column-input"]').should('have.length', 3).last().should('have.text', 'Add Column');
 
     cy.get('.text-input').should('have.length', 2);
     cy.get('[data-test="table-data-cell"]').should('have.length', 9);
@@ -71,7 +71,7 @@ describe('Table perspective :: Links', () => {
     cy.wait('@createDocument').its('status').should('eq', 200);
     cy.wait('@createLinkInstance').its('status').should('eq', 200);
 
-    cy.get('[data-test="table-column-input"]').should('have.length', 4).last().should('have.text', 'B');
+    cy.get('[data-test="table-column-input"]').should('have.length', 4).last().should('have.text', 'Add Column');
     cy.get('.text-input').should('have.length', 3);
 
     cy.get('[data-test="table-data-cell"]').eq(6).click({force: true});

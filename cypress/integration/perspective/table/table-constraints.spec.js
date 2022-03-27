@@ -49,7 +49,7 @@ describe('Table perspective :: Constraints', () => {
       .eq(1)
       .should('have.text', 'Active')
       .should('not.have.text', 'B');
-    cy.get('[data-test="table-column-input"]').last().should('have.text', 'A');
+    cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
 
     // enter value into the second cell
 
@@ -71,7 +71,7 @@ describe('Table perspective :: Constraints', () => {
 
     cy.wait('@createAttribute').its('status').should('eq', 200);
     cy.wait('@patchDocumentData').its('status').should('eq', 200);
-    cy.get('[data-test="table-column-input"]').should('have.length', 4).last().should('have.text', 'B');
+    cy.get('[data-test="table-column-input"]').should('have.length', 4).last().should('have.text', 'Add Column');
     cy.get('.text-input').should('have.length', 3);
 
     // rename third column
@@ -108,7 +108,7 @@ describe('Table perspective :: Constraints', () => {
       .should('have.text', 'Number of flights')
       .should('not.have.text', 'A');
     cy.get('.text-input').should('have.length', 3);
-    cy.get('[data-test="table-column-input"]').last().should('have.text', 'A');
+    cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
 
     // enter value into the fourth cell
 

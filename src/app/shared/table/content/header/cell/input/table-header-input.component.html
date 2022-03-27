@@ -1,9 +1,11 @@
 <input *ngIf="!edited; else editableInput"
        [value]="value"
        [tooltip]="descriptionTooltip"
+       [tooltipEnable]="!!column?.attribute"
        placement="bottom"
        [delay]="700"
        [class.text-default-attribute]="default"
+       [placeholder]="column?.attribute ? null : placeholder"
        class="w-100 p-0"
        readonly>
 
@@ -13,6 +15,7 @@
          [value]="value"
          [delay]="700"
          [tooltip]="descriptionTooltip"
+         [tooltipEnable]="!!column?.attribute"
          placement="bottom"
          [adaptivePosition]="false"
          containerClass="bigger-tooltip"

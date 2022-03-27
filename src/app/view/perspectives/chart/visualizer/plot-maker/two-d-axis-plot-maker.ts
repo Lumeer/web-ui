@@ -124,6 +124,7 @@ function createAxisLayout(data: ChartAxisData, formatter: string): Partial<Layou
         axis.tickmode = 'array';
         axis.categoryarray = axis.tickvals;
         axis.categoryorder = 'array';
+        axis.range = [-0.5, data.ticks.length - 0.5];
       }
     }
     axis.automargin = true;

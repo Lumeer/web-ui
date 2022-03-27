@@ -75,10 +75,14 @@ export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
   @ViewChild('textInput')
   public textInput: ElementRef<HTMLInputElement>;
 
+  public readonly placeholder: string;
+
   private preventSave: boolean;
   private setFocus: boolean;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {
+    this.placeholder = $localize`:@@column.add.placeholder:Add Column`;
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.edited && this.edited) {

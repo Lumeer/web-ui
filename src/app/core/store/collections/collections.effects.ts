@@ -452,7 +452,7 @@ export class CollectionsEffects {
           return acc;
         }, {});
 
-        const {onSuccess, onFailure, nextAction, collectionId} = action.payload;
+        const {onSuccess, onFailure, nextAction, otherActions, collectionId} = action.payload;
         return this.collectionService.createAttributes(collectionId, attributesDto).pipe(
           map(attributes => attributes.map(attr => convertAttributeDtoToModel(attr, correlationIdMap[attr.name]))),
           withLatestFrom(this.store$.pipe(select(selectCollectionById(collectionId)))),
@@ -472,6 +472,7 @@ export class CollectionsEffects {
                 actions.push(setDefaultAttributeAction);
               }
             }
+            actions.push(...(otherActions || []));
             actions.push(...createCallbackActions(onSuccess, attributes));
             return actions;
           }),

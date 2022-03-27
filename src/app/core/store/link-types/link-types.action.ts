@@ -166,6 +166,7 @@ export namespace LinkTypesAction {
         linkTypeId: string;
         attributes: Attribute[];
         nextAction?: LinkInstancesAction.All;
+        otherActions?: Action[];
         onSuccess?: (attributes: Attribute[]) => void;
         onFailure?: (error: any) => void;
       }

@@ -62,6 +62,7 @@ import {
   DurationConstraint,
   NumberConstraint,
   PercentageConstraint,
+  SelectConstraint,
   UnknownConstraint,
   userCanEditDataResource,
 } from '@lumeer/data-filters';
@@ -353,13 +354,7 @@ export class ChartDataConverter {
     const allValues = uniqueValues([...(helperData?.values || []), ...(helperData2?.values || [])]);
     let ticks: ChartAxisTick[] = null;
     if (this.shouldCreateTicks(constraintType, allValues, preventScaleAxis)) {
-      const ticksMap = (helperData?.ticks || []).reduce((map, tick) => ({...map, [tick.value]: tick}), {});
-      helperData2?.ticks.forEach(tick => {
-        if (!ticksMap[tick.value]) {
-          ticksMap[tick.value] = tick;
-        }
-      });
-      ticks = this.sortTicks(objectValues(ticksMap), constraint);
+      ticks = this.createTicks(helperData, helperData2, constraint);
     }
 
     let showTicksAsLinear = false;
@@ -368,6 +363,23 @@ export class ChartDataConverter {
     }
 
     return {constraintType, constraint, formatter, ticks, showTicksAsLinear};
+  }
+
+  private createTicks(h1: ChartAxisHelperData, h2: ChartAxisHelperData, constraint: Constraint): ChartAxisTick[] {
+    if (constraint?.type === ConstraintType.Select) {
+      const selectConstraint = <SelectConstraint>constraint;
+      return (selectConstraint.config?.options || []).map(option => ({
+        title: option.displayValue || option.value,
+        value: option.value,
+      }));
+    }
+    const ticksMap = (h1?.ticks || []).reduce((map, tick) => ({...map, [tick.value]: tick}), {});
+    h2?.ticks.forEach(tick => {
+      if (!ticksMap[tick.value]) {
+        ticksMap[tick.value] = tick;
+      }
+    });
+    return this.sortTicks(objectValues(ticksMap), constraint);
   }
 
   private sortTicks(ticks: ChartAxisTick[], constraint: Constraint): ChartAxisTick[] {

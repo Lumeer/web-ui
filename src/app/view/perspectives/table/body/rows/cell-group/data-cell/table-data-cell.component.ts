@@ -67,7 +67,11 @@ import {
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../../../shared/key-code';
-import {isAttributeConstraintType, isAttributeEditable} from '../../../../../../../shared/utils/attribute.utils';
+import {
+  generateAttributeNameFromAttributes,
+  isAttributeConstraintType,
+  isAttributeEditable,
+} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 import {
@@ -552,10 +556,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public updateData(value: any) {
     if (this.document) {
-      this.updateDocumentData(this.column.attributeIds[0], this.column.attributeName, value);
+      this.updateDocumentData(this.column.attributeIds[0], this.getAttributeName(), value);
     } else if (this.linkInstance) {
-      this.updateLinkInstanceData(this.column.attributeIds[0], this.column.attributeName, value);
+      this.updateLinkInstanceData(this.column.attributeIds[0], this.getAttributeName(), value);
     }
+  }
+
+  private getAttributeName(): string {
+    return this.column?.attributeName || generateAttributeNameFromAttributes(this.resource?.attributes);
   }
 
   private updateDocumentData(attributeId: string, attributeName: string, value: any) {
@@ -593,13 +601,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       workspace: this.currentWorkspace(),
       onSuccess: this.createLinkInstanceCallback(table),
     });
-    const newAttribute = {name: attributeName};
-
+    const newAttribute: Attribute = {name: attributeName, correlationId: this.column?.correlationId};
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
         collectionId: this.document.collectionId,
         attributes: [newAttribute],
         nextAction: createDocumentAction,
+        otherActions: [this.removeColumnByCorrelationIdAction()],
       })
     );
   }
@@ -661,12 +669,12 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     };
     const patchDocumentAction = new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()});
     const newAttribute = {name: attributeName};
-
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
         collectionId: this.document.collectionId,
         attributes: [newAttribute],
         nextAction: patchDocumentAction,
+        otherActions: [this.removeColumnByCorrelationIdAction()],
       })
     );
   }
@@ -817,9 +825,18 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       new LinkTypesAction.CreateAttributes({
         linkTypeId: this.linkInstance.linkTypeId,
         attributes: [{name: attributeName}],
+        otherActions: [this.removeColumnByCorrelationIdAction()],
         onSuccess: ([attribute]) => onSuccess(attribute),
       })
     );
+  }
+
+  private removeColumnByCorrelationIdAction(): TablesAction.RemoveColumnByCorrelationId {
+    return new TablesAction.RemoveColumnByCorrelationId({
+      tableId: this.cursor.tableId,
+      partIndex: this.cursor.partIndex,
+      correlationId: this.column?.correlationId,
+    });
   }
 
   public onEdit() {
