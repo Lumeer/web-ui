@@ -59,6 +59,7 @@ import {SequencesModule} from '../shared/sequences/sequences.module';
 import {SliderModule} from '../shared/slider/slider.module';
 import {InputModule} from '../shared/input/input.module';
 import {ProjectActivityComponent} from './project/activity/project-activity.component';
+import {ResourcesGuardService} from './resources-guard.service';
 
 @NgModule({
   imports: [
@@ -104,6 +105,7 @@ import {ProjectActivityComponent} from './project/activity/project-activity.comp
   exports: [],
   providers: [
     WorkspaceService,
+    ResourcesGuardService,
     OrganizationSettingsGuard,
     OrganizationTabGuard,
     ProjectSettingsGuard,

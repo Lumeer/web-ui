@@ -28,6 +28,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  Renderer2,
   SimpleChanges,
   ViewChild,
   ViewChildren,
@@ -177,6 +178,8 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public scrollDisabled$ = new BehaviorSubject(false);
   public detailColumnId: string;
   public scrollOffsetLeft: number;
+  public toolbarMarginBottom = 0;
+  public toolbarMarginRight = 0;
   public rows: TableRow[];
 
   private scrollOffsetTop: number;
@@ -184,7 +187,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   private tableScrollService: TableScrollService;
   private scrollCheckSubject = new Subject();
 
-  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef<HTMLElement>) {
+  constructor(
+    private scrollDispatcher: ScrollDispatcher,
+    private element: ElementRef<HTMLElement>,
+    private renderer: Renderer2
+  ) {
     this.tableScrollService = new TableScrollService(() => this.viewPort);
   }
 
@@ -209,6 +216,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         this.rows = this.tableModel?.rows;
       }
+      setTimeout(() => this.setScrollbarMargin());
     }
     if (changes.tableModel || changes.detailPanel) {
       this.detailColumnId =
@@ -240,6 +248,12 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       }
       this.scrollOffsetTop = top;
     });
+  }
+
+  private setScrollbarMargin() {
+    const element = this.viewPort.elementRef.nativeElement;
+    this.toolbarMarginBottom = element.offsetHeight - element.clientHeight;
+    this.toolbarMarginRight = element.offsetWidth - element.clientWidth;
   }
 
   private subscribeHorizontalScrolling(): Subscription {
