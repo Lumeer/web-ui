@@ -23,13 +23,13 @@ import {COLOR_CYAN} from '../../../../core/constants';
 
 declare var Blockly: any;
 
-export class GetUserTeamsBlocklyComponent extends BlocklyComponent {
+export class GetUserTeamIdsBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.getUserTeamsBlock:Get teams the specified user is member of. Returns list, use "make text from list" to display or store the value. The user is specified using their email.`;
+    this.tooltip = $localize`:@@blockly.tooltip.getUserTeamIdsBlock:Get team IDs the specified user is member of. The user is specified using their email.`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -39,11 +39,11 @@ export class GetUserTeamsBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any) {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.GET_USER_TEAMS] = {
+    Blockly.Blocks[BlocklyUtils.GET_USER_TEAM_IDS] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.GET_USER_TEAMS,
-          message0: 'get user teams %1', //'%{BKY_BLOCK_GET_USER_TEAMS}', // current teams
+          type: BlocklyUtils.GET_USER_TEAM_IDS,
+          message0: 'get user team IDs %1', //'%{BKY_BLOCK_GET_USER_TEAM_IDS}', // current teams
           args0: [
             {
               type: 'input_value',
@@ -57,11 +57,11 @@ export class GetUserTeamsBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_USER_TEAMS] = function (block) {
+    Blockly.JavaScript[BlocklyUtils.GET_USER_TEAM_IDS] = function (block) {
       const argument0 =
         Blockly.JavaScript.valueToCode(block, 'USER_EMAIL', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
-      const code = this_.blocklyUtils.getLumeerVariable() + `.getUserTeams(${argument0})`;
+      const code = this_.blocklyUtils.getLumeerVariable() + `.getUserTeamIds(${argument0})`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

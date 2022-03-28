@@ -3912,7 +3912,7 @@
                     <context context-type="linenumber">20</context>
                 </context-group>
             </trans-unit><trans-unit id="column.add.placeholder" datatype="html">
-        <source>Add Column</source><target state="new">Add Column</target>
+        <source>Add Column</source><target>Přidat sloupec</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/table/content/header/cell/input/table-header-input.component.ts</context>
           <context context-type="linenumber">84</context>
@@ -9134,6 +9134,13 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-smtp-configuration-blockly-component.ts</context>
           <context context-type="linenumber">34</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getUserTeamsBlock" datatype="html">
+        <source>Get teams the specified user is member of. Returns list, use "make text from list" to display or store the value. The user is specified using their email.</source>
+        <target>Vrátí týmy, jichž je daný uživatel členem. Vrací seznam, použijte "udělat ze seznamu text" k zobrazení nebo k uložení hodnoty. Uživatel je zadán pomocí emailu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-user-teams-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.getVariableBlock" datatype="html">
         <source>Gets the value of a project variable (including hidden secured variables).</source><target>Vrátí hodnotu projektové proměnné (včetně zabezpečených skrytých hodnot).</target>
         <context-group purpose="location">
@@ -9141,7 +9148,8 @@
           <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.getViewNameBlock" datatype="html">
-        <source>Gets the name of the view specified by ID (as read from an attribute of type View).</source><target state="new">Gets the name of the view specified by ID (as read from an attribute of type View).</target>
+        <source>Gets the name of the view specified by ID (as read from an attribute of type View).</source>
+        <target>Vrátí název pohledu zadaného pomocí jeho ID (tak, jak je přečteno z atributu typu Pohled).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-view-name-blockly-component.ts</context>
           <context context-type="linenumber">33</context>
@@ -9203,7 +9211,8 @@
         <source>Continues the for cycle.</source><target>Pokračuje dalším krokem for cyklu.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-continue-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.mergeArraysBlock" datatype="html">
-        <source>Merge two lists ([A1, A2, ...] + [B1, B2, ...] => [A1DB1, A2DB2, ...], where D is a delimiter). The values can be separated with a delimiter. Strings are also treated as arrays.</source><target state="new">Merge two lists ([A1, A2, ...] + [B1, B2, ...] => [A1DB1, A2DB2, ...], where D is a delimiter). The values can be separated with a delimiter. Strings are also treated as arrays.</target>
+        <source>Merge two lists ([A1, A2, ...] + [B1, B2, ...] => [A1DB1, A2DB2, ...], where D is a delimiter). The values can be separated with a delimiter. Strings are also treated as arrays.</source>
+        <target>Spojí dva seznamy ([A1, A2, ...] + [B1, B2, ...] => [A1DB1, A2DB2, ...], kde D je oddělovač). Hodnoty mohou být odděleny oddělovačem. Řetězce jsou zpracovány jako seznamy znaků.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/merge-arrays-blockly-component.ts</context>
           <context context-type="linenumber">33</context>
@@ -9360,7 +9369,8 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.navigateSearchBlock" datatype="html">
-        <source>Opens the given view with additional query parameters. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source><target state="new">Opens the given view with additional query parameters. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</target>
+        <source>Opens the given view with additional query parameters. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source>
+        <target>Otevře daný pohled s dalšími filtry navíc. Může otevřít pohled ve stejném nebo novém okně prohlížeče. Kde je to možné (např. Workflow), lze zvolit otevření posranního panelu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-search-blockly-component.ts</context>
           <context context-type="linenumber">42</context>
@@ -9384,7 +9394,8 @@
         <target>Načte záznamy z daného pohledu. Pokud pohled obsahuje více tabulek, nebo vazeb, vrátí záznamy jen z první tabulky. Vrátí nejvýše <x id="limit" equiv-text="{{limit}}"/> záznamů.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.removeDocumentsInViewBlock" datatype="html">
-        <source>Remove records in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source><target state="new">Remove documents in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</target>
+        <source>Remove records in the view specified by ID (as read from an attribute of type View). At most <x id="limit" equiv-text="limit"/> records are deleted at once.</source>
+        <target>Odstraní záznamy v pohledu zadaném pomocí jeho ID (tak, jak je načteno z atributu typu Pohled). Odstraní nanejvýš <x id="limit" equiv-text="limit"/> záznamů naráz.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/remove-documents-in-view-blockly-component.ts</context>
           <context context-type="linenumber">42</context>
