@@ -74,7 +74,7 @@ import {selectResourceCommentsDictionary} from '../store/resource-comments/resou
 import {NotificationService} from '../notifications/notification.service';
 import {AppIdService} from '../service/app-id.service';
 import {NotificationButton} from '../notifications/notification-button';
-import {Router} from '@angular/router';
+import {NavigationExtras, Router} from '@angular/router';
 import {LocationStrategy} from '@angular/common';
 import {addFiltersToQuery, convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
@@ -91,6 +91,7 @@ import {SelectionListsAction} from '../store/selection-lists/selection-lists.act
 import {convertDashboardDataDtoToModel} from '../store/dashboard-data/dashboard-data.converter';
 import {convertResourceVariableDtoToModel} from '../store/resource-variables/resource-variable.converter';
 import {Query} from '../store/navigation/query/query';
+import {ModalsAction} from '../store/modals/modals.action';
 
 @Injectable({
   providedIn: 'root',
@@ -466,11 +467,16 @@ export class PusherService implements OnDestroy {
 
       a.click();
     } else {
-      this.router.navigate(
+      this.navigate(
         ['/w', dataObject.organizationCode, dataObject.projectCode, 'view', {vc: view.code}, view.perspective],
         {queryParams: {q: encodedQuery, c: encodedCursor}}
       );
     }
+  }
+
+  private navigate(commands: any[], extras: NavigationExtras) {
+    this.store$.dispatch(new ModalsAction.Hide());
+    this.router.navigate(commands, extras);
   }
 
   private bindNavigateEvents() {
