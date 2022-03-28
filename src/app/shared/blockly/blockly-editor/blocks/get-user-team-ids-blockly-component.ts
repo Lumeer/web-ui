@@ -43,7 +43,7 @@ export class GetUserTeamIdsBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.GET_USER_TEAM_IDS,
-          message0: 'get user team IDs %1', //'%{BKY_BLOCK_GET_USER_TEAM_IDS}', // current teams
+          message0: '%{BKY_BLOCK_GET_USER_TEAM_IDS}', // get user team IDs %1
           args0: [
             {
               type: 'input_value',
