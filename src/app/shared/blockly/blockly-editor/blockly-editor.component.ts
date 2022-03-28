@@ -113,6 +113,7 @@ import {GetViewNameBlocklyComponent} from './blocks/get-view-name-blockly-compon
 import {RemoveDocumentsInViewBlocklyComponent} from './blocks/remove-documents-in-view-blockly-component';
 import {MergeArraysBlocklyComponent} from './blocks/merge-arrays-blockly-component';
 import {NavigateSearchBlocklyComponent} from './blocks/navigate-search-blockly-component';
+import {GetUserTeamsBlocklyComponent} from './blocks/get-user-teams-blockly-component';
 
 declare var Blockly: any;
 
@@ -252,6 +253,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetDocumentUpdatedDateBlocklyComponent(this.blocklyUtils),
       new GetDocumentUpdatedAuthorBlocklyComponent(this.blocklyUtils),
       new CurrentTeamsBlocklyComponent(this.blocklyUtils),
+      new GetUserTeamsBlocklyComponent(this.blocklyUtils),
       new IsUserInTeamBlocklyComponent(this.blocklyUtils),
       new GeneratePdfBlocklyComponent(this.blocklyUtils),
       new GetVariableBlocklyComponent(this.blocklyUtils, this.variableNames),
