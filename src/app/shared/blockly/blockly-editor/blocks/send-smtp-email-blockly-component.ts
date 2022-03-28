@@ -101,12 +101,13 @@ export class SendSmtpEmailBlocklyComponent extends BlocklyComponent {
       const value_from = Blockly.JavaScript.valueToCode(block, 'FROM', Blockly.JavaScript.ORDER_ATOMIC);
       const value_smtp_config = Blockly.JavaScript.valueToCode(block, 'SMTP_CONFIG', Blockly.JavaScript.ORDER_ATOMIC);
 
-      return (
-        this_.blocklyUtils.getLumeerVariable() +
-        `.sendEmail(${value_email}, ${value_from}, ${value_subject}, ${value_body}, ${
-          !!value_document ? value_document : null
-        }, '${dropdown_attr}', ${value_smtp_config});\n`
-      );
+      return !!value_document
+        ? '  ' +
+            this_.blocklyUtils.getLumeerVariable() +
+            `.sendEmail(${value_email}, ${value_from}, ${value_subject}, ${value_body}, ${value_document}, '${dropdown_attr}', ${value_smtp_config});\n`
+        : '  ' +
+            this_.blocklyUtils.getLumeerVariable() +
+            `.sendEmail(${value_email}, ${value_from}, ${value_subject}, ${value_body}, ${value_smtp_config});\n`;
     };
   }
 }
