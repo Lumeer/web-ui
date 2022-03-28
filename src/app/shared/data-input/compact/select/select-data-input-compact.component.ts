@@ -76,7 +76,9 @@ export class SelectDataInputCompactComponent implements OnChanges {
   public onDropdownClosed() {
     if (this.dropdownOpened$.value) {
       this.dropdownOpened$.next(false);
-      this.saveValue(this.dropdown.getActiveOption());
+      if (this.multi) {
+        this.saveValue();
+      }
     }
   }
 
