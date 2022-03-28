@@ -493,7 +493,7 @@ export class WorkflowTablesDataService {
 
   private tableNewRowTitle(collection: Collection): string {
     if (collection.purpose?.type === CollectionPurposeType.Tasks) {
-      return $localize`:@@perspective.workflow.row.new.task:Add new task`;
+      return $localize`:@@create.new.task:Add new task`;
     }
     return null;
   }

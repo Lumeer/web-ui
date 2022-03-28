@@ -708,20 +708,14 @@
                 <source>All</source>
                 <target>Vše</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
-                    <context context-type="linenumber">97</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">102</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">114</context></context-group></trans-unit>
             <trans-unit id="tasks" datatype="html">
                 <source>Tasks</source>
                 <target>Úkoly</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
-                    <context context-type="linenumber">98</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
             <trans-unit id="collections.empty.subtitle.norights" datatype="html">
                 <source>I am sorry but you do not have permissions to add tables. </source>
                 <target>Je mi líto, ale nemáte oprávnění přidávat tabulky.</target>
@@ -769,27 +763,12 @@
                 <source>Tables</source>
                 <target>Tabulky</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
-                    <context context-type="linenumber">100</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
-                    <context context-type="linenumber">23</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
-                    <context context-type="linenumber">26</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context>
-                    <context context-type="linenumber">76</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context>
-                    <context context-type="linenumber">4</context>
-                </context-group>
-            </trans-unit>
+
+
+
+
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">105</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">119</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit>
             <trans-unit id="linkTypes" datatype="html">
                 <source>Link Types</source>
                 <target>Typy vazeb</target>
@@ -823,19 +802,10 @@
                 <source>Views</source>
                 <target>Pohledy</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
-                    <context context-type="linenumber">99</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context>
-                    <context context-type="linenumber">61</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context>
-                    <context context-type="linenumber">4</context>
-                </context-group>
-            </trans-unit>
+
+
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">104</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">122</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit>
             <trans-unit id="resources" datatype="html">
                 <source>Resources</source>
                 <target>Zdroje</target>
@@ -3788,13 +3758,7 @@
                     <context context-type="sourcefile">src/app/view/perspectives/workflow/content/sidebar/workflow-sidebar.component.html</context>
                     <context context-type="linenumber">5</context>
                 </context-group>
-            </trans-unit><trans-unit id="perspective.workflow.row.new.task" datatype="html">
-        <source>Add new task</source><target state="new">Add new task</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">496</context>
-        </context-group>
-      </trans-unit>
+            </trans-unit>
             <trans-unit id="modal.kanban.chooseDocument.title" datatype="html">
                 <source>Choose a record</source>
                 <target>Vyberte záznam</target>
@@ -3947,7 +3911,17 @@
                     <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/hidden-column/table-hidden-column.component.html</context>
                     <context context-type="linenumber">20</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="column.add.placeholder" datatype="html">
+        <source>Add Column</source><target state="new">Add Column</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/table/content/header/cell/input/table-header-input.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/input/table-column-input.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="perspective.workflow.row.new" datatype="html">
                 <source>Add new row</source>
                 <target>Přidat nový řádek</target>
@@ -4411,38 +4385,26 @@
                 <source>Could not change the attribute</source>
                 <target state="translated">Atribut nelze změnit</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">537</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">538</context></context-group></trans-unit>
             <trans-unit id="collection.remove.attribute.fail" datatype="html">
                 <source>Could not delete the attribute</source>
                 <target state="translated">Atribut nelze smazat</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">577</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">578</context></context-group></trans-unit>
             <trans-unit id="collection.change.permission.fail" datatype="html">
                 <source>Could not change the table permissions</source>
                 <target>Nelze nastavit přístupová práva k tabulce</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">623</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">624</context></context-group></trans-unit>
             <trans-unit id="collection.runRule.fail" datatype="html">
                 <source>Could not run the selected automation for the whole table</source>
                 <target>Nemohu spustit vybranou automatizaci na všech řádcích v tabulce</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">648</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">649</context></context-group></trans-unit>
             <trans-unit id="dashboard.data.get.fail" datatype="html">
                 <source>Could not read dashboard data</source>
                 <target>Nepodařilo se mi načíst údaje o dashboardu</target>
@@ -4939,14 +4901,14 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1250</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1245</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.message" datatype="html">
                 <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
                 <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v tabulce.</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1251</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1246</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.changeAttribute" datatype="html">
                 <source>Attribute settings...</source>
                 <target>Nastavení attributu...</target>
@@ -6731,7 +6693,7 @@
                 <source>View not found</source>
                 <target>Pohled nenalezen</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/views.guard.ts</context><context context-type="linenumber">87</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/views.guard.ts</context><context context-type="linenumber">75</context></context-group></trans-unit>
 
             <trans-unit id="notification.service.Success" datatype="html">
                 <source>Success</source>
@@ -6816,7 +6778,7 @@
                 <source>Could not create attributes</source>
                 <target>Nelze vytvořit atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">491</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">492</context></context-group></trans-unit>
             <trans-unit id="document.create.serviceLimits" datatype="html">
                 <source>You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?</source>
                 <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje vytvořit jen omezené množství záznamů. Chcete aktivovat program Lumeer Business, který tato omezení nemá?</target>
@@ -8878,10 +8840,10 @@
         <source>Empty title</source><target>Prázdný popis</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
-        <source>Add Task</source><target>Vytvořit nový úkol</target>
+        <source>Add new task</source><target>Vytvořit nový úkol</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="task.state.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">496</context></context-group></trans-unit><trans-unit id="task.state.placeholder" datatype="html">
         <source>Select state</source><target state="final">Vyberte stav</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
@@ -9512,7 +9474,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="table.data.cell.linked.row.uninitialized" datatype="html">
         <source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source><target>Nemám kam navázat zadanou hodnotu, musíte něco zadat do předchozí části tabulky.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">511</context></context-group></trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">515</context></context-group></trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
         <source>The view was changed. Do you want to save the changes?</source><target>Pohled se změnil. Uložte změny, nebo je zahoďte.</target>
 
 

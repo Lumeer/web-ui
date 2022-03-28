@@ -4,11 +4,11 @@
   <button *ngIf="collections?.length || views?.length"
           type="button"
           class="btn btn-sm btn-primary cursor-pointer"
-          title="Add Task"
+          title="Add new task"
           i18n-title="@@create.new.task"
           (click)="onAdd()">
     <i class="fa fa-plus-circle me-1" aria-hidden="true"></i>
-    <span class="fw-bold" i18n="@@create.new.task">Add Task</span>
+    <span class="fw-bold" i18n="@@create.new.task">Add new task</span>
   </button>
 
   <size-slider *ngIf="documentsCount"

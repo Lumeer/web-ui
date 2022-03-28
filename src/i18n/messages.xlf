@@ -724,7 +724,7 @@
         <source>View not found</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/guards/data/views.guard.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="page.not.found" datatype="html">
@@ -738,21 +738,33 @@
         <source>All</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
+          <context context-type="linenumber">114</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tasks" datatype="html">
         <source>Tasks</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
+          <context context-type="linenumber">115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="views" datatype="html">
         <source>Views</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context>
@@ -767,7 +779,11 @@
         <source>Tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
@@ -1759,35 +1775,35 @@
         <source>Could not create attributes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">491</context>
+          <context context-type="linenumber">492</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.change.attribute.fail" datatype="html">
         <source>Could not change the attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">537</context>
+          <context context-type="linenumber">538</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.remove.attribute.fail" datatype="html">
         <source>Could not delete the attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">577</context>
+          <context context-type="linenumber">578</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.change.permission.fail" datatype="html">
         <source>Could not change the table permissions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">623</context>
+          <context context-type="linenumber">624</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.runRule.fail" datatype="html">
         <source>Could not run the selected automation for the whole table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">648</context>
+          <context context-type="linenumber">649</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboard.data.get.fail" datatype="html">
@@ -7782,6 +7798,17 @@
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="column.add.placeholder" datatype="html">
+        <source>Add Column</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/table/content/header/cell/input/table-header-input.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/input/table-column-input.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="perspective.workflow.row.new" datatype="html">
         <source>Add new row</source>
         <context-group purpose="location">
@@ -9359,7 +9386,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="create.new.task" datatype="html">
-        <source>Add Task</source>
+        <source>Add new task</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context>
           <context context-type="linenumber">7</context>
@@ -9367,6 +9394,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context>
           <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
+          <context context-type="linenumber">496</context>
         </context-group>
       </trans-unit>
       <trans-unit id="task.state.placeholder" datatype="html">
@@ -10625,7 +10656,7 @@
         <source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context>
-          <context context-type="linenumber">511</context>
+          <context context-type="linenumber">515</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.row.noResults" datatype="html">
@@ -10817,7 +10848,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1250</context>
+          <context context-type="linenumber">1245</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
@@ -10828,7 +10859,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1251</context>
+          <context context-type="linenumber">1246</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.add.link.column" datatype="html">
@@ -10857,13 +10888,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/sidebar/workflow-sidebar.component.html</context>
           <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="perspective.workflow.row.new.task" datatype="html">
-        <source>Add new task</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">496</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.changeAttribute" datatype="html">
