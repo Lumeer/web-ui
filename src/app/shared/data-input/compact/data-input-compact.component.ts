@@ -44,8 +44,14 @@ export class DataInputCompactComponent {
   @Input()
   public placeholder: string;
 
+  @Input()
+  public readonly: boolean;
+
   @Output()
   public save = new EventEmitter<DataValue>();
+
+  @Output()
+  public cancel = new EventEmitter();
 
   public readonly constraintType = ConstraintType;
 }

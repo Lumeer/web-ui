@@ -40,7 +40,7 @@ export class UserPanelComponent implements OnInit {
   public controlsVisible: boolean;
 
   @Input()
-  public mobile: boolean;
+  public compact: boolean;
 
   @Input()
   public contentHeight: number;

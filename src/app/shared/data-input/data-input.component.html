@@ -112,32 +112,54 @@
                     class="d-block w-100">
   </color-data-input>
 
-  <select-data-input *ngSwitchCase="constraintType.Select"
+  <ng-container *ngSwitchCase="constraintType.Select">
+    <select-data-input-compact *ngIf="!isMobile"
+                               [commonConfiguration]="configuration?.common"
+                               [value]="dataValue"
+                               [readonly]="readonly"
+                               [configuration]="configuration?.select"
+                               (save)="onSaveValue($event)"
+                               (cancel)="onCancel()">
+    </select-data-input-compact>
+    <select-data-input *ngIf="isMobile"
+                       [focus]="focus"
+                       [readonly]="readonly"
+                       [value]="dataValue"
+                       (keydown)="onDataKeyDown($event)"
+                       [configuration]="configuration?.select"
+                       [commonConfiguration]="configuration?.common"
+                       (valueChange)="onValueChange($event)"
+                       (save)="onSaveValueWithAction($event)"
+                       (cancel)="onCancel()"
+                       class="d-block w-100">
+    </select-data-input>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="constraintType.User">
+
+    <user-data-input-compact *ngIf="!isMobile"
+                             [configuration]="configuration?.user"
+                             [readonly]="readonly"
+                             [commonConfiguration]="configuration?.common"
+                             [value]="dataValue"
+                             (save)="onSaveValue($event)"
+                             (cancel)="onCancel()">
+    </user-data-input-compact>
+
+    <user-data-input *ngIf="isMobile"
                      [focus]="focus"
                      [readonly]="readonly"
+                     [configuration]="configuration?.user"
                      [value]="dataValue"
-                     (keydown)="onDataKeyDown($event)"
-                     [configuration]="configuration?.select"
                      [commonConfiguration]="configuration?.common"
+                     (keydown)="onDataKeyDown($event)"
                      (valueChange)="onValueChange($event)"
                      (save)="onSaveValueWithAction($event)"
                      (cancel)="onCancel()"
+                     (enterInvalid)="enterInvalid.emit()"
                      class="d-block w-100">
-  </select-data-input>
-
-  <user-data-input *ngSwitchCase="constraintType.User"
-                   [focus]="focus"
-                   [readonly]="readonly"
-                   [configuration]="configuration?.user"
-                   [value]="dataValue"
-                   [commonConfiguration]="configuration?.common"
-                   (keydown)="onDataKeyDown($event)"
-                   (valueChange)="onValueChange($event)"
-                   (save)="onSaveValueWithAction($event)"
-                   (cancel)="onCancel()"
-                   (enterInvalid)="enterInvalid.emit()"
-                   class="d-block w-100">
-  </user-data-input>
+    </user-data-input>
+  </ng-container>
 
   <view-data-input *ngSwitchCase="constraintType.View"
                    [focus]="focus"

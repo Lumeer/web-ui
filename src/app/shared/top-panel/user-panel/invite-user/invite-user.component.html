@@ -1,6 +1,6 @@
 <div class="panel-item invite ms-2 me-1 position-relative"
      *ngIf="(isWorkspaceDefined$ | async) && (projectPermissions$ | async)?.roles?.UserConfig">
-  <button *ngIf="!mobile; else mobileIcon"
+  <button *ngIf="!compact; else compactIcon"
           class="btn btn-success btn-sm align-baseline fw-bold"
           tooltip="Invite a colleague"
           i18n-tooltip="@@inviteUser.button.title"
@@ -15,7 +15,7 @@
   </hint>
 </div>
 
-<ng-template #mobileIcon>
+<ng-template #compactIcon>
   <i class="fas fa-user-plus me-2 text-success align-baseline cursor-pointer"
      tooltip="Invite a colleague"
      i18n-tooltip="@@inviteUser.button.title"

@@ -179,7 +179,9 @@ export class DataResourceDetailModalComponent implements OnInit {
 
   public onSubmit() {
     const dataResource = this.currentDataResource || this.dataResource;
-    if (!this.createDirectly) {
+    if (this.dataResource?.id || this.createDirectly) {
+      this.onClose();
+    } else {
       this.onSubmit$.next(dataResource);
       this.hideDialog();
     }

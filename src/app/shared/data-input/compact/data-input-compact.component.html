@@ -12,8 +12,19 @@
                              [configuration]="configuration?.select"
                              [value]="dataValue"
                              [placeholder]="placeholder"
-                             (save)="save.emit($event)">
+                             [readonly]="readonly"
+                             (save)="save.emit($event)"
+                             (cancel)="cancel.emit()">
   </select-data-input-compact>
+
+  <user-data-input-compact *ngSwitchCase="constraintType.User"
+                           [configuration]="configuration?.user"
+                           [value]="dataValue"
+                           [readonly]="readonly"
+                           [placeholder]="placeholder"
+                           (save)="save.emit($event)"
+                           (cancel)="cancel.emit()">
+  </user-data-input-compact>
 
   <data-input-preview *ngSwitchDefault
                       [configuration]="configuration"

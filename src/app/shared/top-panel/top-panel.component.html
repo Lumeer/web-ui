@@ -9,7 +9,7 @@
     </lumeer-logo>
   </div>
 
-  <div class="controls-toggle" *ngIf="mobile">
+  <div class="controls-toggle" *ngIf="compact">
     <controls-toggle [style.height.px]="firstLineHeight"
                      class="d-flex align-items-center"
                      (toggle)="onToggleControls()">
@@ -23,9 +23,9 @@
   </workspace-panel>
 
   <user-panel [workspace]="state.workspace"
-              [controlsVisible]="!mobile || (controlsShown$ | async)"
+              [controlsVisible]="!compact || (controlsShown$ | async)"
               [contentHeight]="firstLineHeight"
-              [mobile]="mobile"
+              [compact]="compact"
               class="user-panel">
   </user-panel>
 

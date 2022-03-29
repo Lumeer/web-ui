@@ -31,6 +31,7 @@ import {Router} from '@angular/router';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {selectPublicShowTopPanel} from '../../../core/store/public-data/public-data.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'top-panel-wrapper',
@@ -43,8 +44,9 @@ export class TopPanelWrapperComponent implements OnInit {
   public searchBoxShown: boolean;
 
   public readonly showHelp: boolean;
+  public readonly isMobile: boolean;
 
-  public mobile$ = new BehaviorSubject(true);
+  public compactMode$ = new BehaviorSubject(true);
 
   public workspace$: Observable<Workspace>;
   public showTopPanel$: Observable<boolean>;
@@ -54,7 +56,8 @@ export class TopPanelWrapperComponent implements OnInit {
     private element: ElementRef,
     private store$: Store<AppState>,
     private router: Router,
-    private configurationService: ConfigurationService
+    private configurationService: ConfigurationService,
+    private deviceService: DeviceDetectorService
   ) {
     this.showHelp = !this.configurationService.getConfiguration().publicView;
   }
@@ -104,7 +107,7 @@ export class TopPanelWrapperComponent implements OnInit {
   }
 
   private detectMobileResolution() {
-    this.mobile$.next(window.matchMedia('(max-width: 767.98px)').matches);
+    this.compactMode$.next(this.deviceService.isMobile() || window.matchMedia('(max-width: 767.98px)').matches);
   }
 
   public onBack() {

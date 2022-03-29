@@ -50,6 +50,7 @@ import {
   userDataValueParseTeamValue,
 } from '@lumeer/data-filters';
 import {Team} from '../../../core/store/teams/team';
+import {createUserDataInputTeams, createUserDataInputUsers} from './user-data-input-utils';
 
 @Component({
   selector: 'user-data-input',
@@ -125,8 +126,8 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     if (changes.value && this.value) {
       this.selectedUsers$.next(this.value.users || []);
       this.selectedTeams$.next(this.value.teams || []);
-      this.users = this.bindUsers();
-      this.teams = this.bindTeams();
+      this.users = createUserDataInputUsers(this.value);
+      this.teams = createUserDataInputTeams(this.value);
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
     }
@@ -158,40 +159,6 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.element.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
     }
     this.mouseDownListener = null;
-  }
-
-  private bindUsers(): User[] {
-    const type = this.value?.config?.type;
-
-    let users: User[] = [];
-    if (type !== UserConstraintType.Teams) {
-      users = [...(this.value?.constraintData?.users || [])];
-    }
-
-    const usersEmails = new Set(users.map(user => user.email));
-    (this.value?.users || []).forEach(user => {
-      if (!usersEmails.has(user.email)) {
-        users.push(user);
-        usersEmails.add(user.email);
-      }
-    });
-
-    const invalidEmails = this.value?.constraintData?.invalidValuesMap?.[ConstraintType.User];
-    invalidEmails?.forEach(email => {
-      if (!usersEmails.has(email)) {
-        users.push({email});
-        usersEmails.add(email);
-      }
-    });
-    return users;
-  }
-
-  private bindTeams(): Team[] {
-    const type = this.value?.config?.type;
-    if ([UserConstraintType.Teams, UserConstraintType.UsersAndTeams].includes(type)) {
-      return this.value?.constraintData?.teams || [];
-    }
-    return this.value?.teams || [];
   }
 
   public ngAfterViewChecked() {

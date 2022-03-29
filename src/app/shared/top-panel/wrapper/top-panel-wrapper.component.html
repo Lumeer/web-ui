@@ -1,7 +1,7 @@
 <div #topPanel
      class="px-2 px-sm-3 py-2 w-100">
   <top-panel *ngIf="showTopPanel$ | async"
-             [mobile]="mobile$ | async"
+             [compact]="compactMode$ | async"
              [searchBoxShown]="searchBoxShown">
     <ng-content select=".controls"></ng-content>
   </top-panel>
