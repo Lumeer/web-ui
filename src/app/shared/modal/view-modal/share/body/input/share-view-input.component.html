@@ -21,7 +21,7 @@
 </div>
 
 <options-dropdown *ngIf="text.length && availableUsers.length"
-                  [options]="availableUsers | filterUsers:text"
+                  [options]="availableUsers | filterUsersAndTeams:text"
                   [showBackdrop]="false"
                   [closeOnClickOutside]="false"
                   [origin]="element"

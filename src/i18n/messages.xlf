@@ -885,35 +885,35 @@
         <source>Success</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.info" datatype="html">
         <source>Information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.warning" datatype="html">
         <source>Warning</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.error" datatype="html">
         <source>Error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.ok" datatype="html">
         <source>OK</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
@@ -2884,10 +2884,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
           <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
@@ -5834,6 +5830,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/preview/data-resources-preview.component.html</context>
           <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="button.done" datatype="html">
+        <source>Done</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dialog.getInTouch.title" datatype="html">

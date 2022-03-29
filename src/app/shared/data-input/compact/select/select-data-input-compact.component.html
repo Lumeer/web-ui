@@ -1,7 +1,8 @@
 <div class="d-flex align-items-center h-100 p-1 cursor-pointer" #wrapperElement
      *ngIf="selectedOptions$ | async as selectedOptions"
      [class.flex-wrap]="configuration?.wrapItems"
-     [title]="selectedOptions | selectOptionsJoined | unescapeHtml" (click)="onClick($event)">
+     [title]="selectedOptions | selectOptionsJoined | unescapeHtml"
+     [ngClass]="!multi ? 'invisible-scroll-y' : 'overflow-hidden w-100'">
 
   <div class="text-muted px-1" *ngIf="placeholder && !selectedOptions.length">{{placeholder}}</div>
 
@@ -17,7 +18,7 @@
         </span>
   </ng-container>
 
-  <ng-container *ngIf="(dropdownOpened$ | async)">
+  <ng-container *ngIf="!readonly">
 
     <options-dropdown [options]="dropdownOptions"
                       [showBackdrop]="false"

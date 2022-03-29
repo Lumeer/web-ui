@@ -4,7 +4,10 @@ describe('Table perspective :: Columns', () => {
     cy.createCollection('columns', 'fas fa-columns', '#0000ff').then(collection => cy.visitTable(collection.id));
 
     // select first column
-    cy.get('[data-test="table-column-input"]', {timeout: 10000}).should('have.text', 'Add Column').click({force: true});
+    cy.get('[data-test="table-column-input"]')
+      .should('be.visible')
+      .should('have.text', 'Add Column')
+      .click({force: true});
 
     // rename first column
     cy.focused().trigger('keydown', {code: 'Backspace'}).type('F');
@@ -80,7 +83,10 @@ describe('Table perspective :: Columns', () => {
     cy.createCollection('first', 'fas fa-columns', '#00ff00').then(collection => cy.visitTable(collection.id));
 
     // select first column
-    cy.get('[data-test="table-column-input"]', {timeout: 10000}).should('have.text', 'Add Column').click({force: true});
+    cy.get('[data-test="table-column-input"]')
+      .should('be.visible')
+      .should('have.text', 'Add Column')
+      .click({force: true});
 
     // init first column
     cy.focused().trigger('keydown', {code: 'Enter'}).type('A');

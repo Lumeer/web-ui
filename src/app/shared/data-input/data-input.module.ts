@@ -52,7 +52,7 @@ import {RichTextDataInputComponent} from './rich-text/rich-text-data-input.compo
 import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.module';
 import {QuillModule} from 'ngx-quill';
 import {FilterDataSuggestionsPipe} from './pipes/filter-data-suggestions.pipe';
-import {FilterUsersPipe} from './user/pipes/filter-users.pipe';
+import {FilterUsersAndTeamsPipe} from './user/pipes/filter-users-and-teams.pipe';
 import {SelectOptionIsValidPipe} from './select/pipes/select-option-is-valid.pipe';
 import {SelectOptionsValuesPipe} from './select/pipes/select-options-values.pipe';
 import {SelectedValuesPipe} from './user/pipes/users-emails.pipe';
@@ -81,6 +81,7 @@ import {AttributeLockFilterPreviewComponent} from './lock-stats/preview/attribut
 import {DataIdCursorPipe} from './pipes/data-id-cursor.pipe';
 import {DataInputCompactComponent} from './compact/data-input-compact.component';
 import {SelectDataInputCompactComponent} from './compact/select/select-data-input-compact.component';
+import {UserDataInputCompactComponent} from './compact/user/user-data-input-compact.component';
 
 @NgModule({
   imports: [
@@ -112,6 +113,7 @@ import {SelectDataInputCompactComponent} from './compact/select/select-data-inpu
     PercentageDataInputComponent,
     ColorDataInputComponent,
     UserDataInputComponent,
+    UserDataInputCompactComponent,
     SelectDataInputComponent,
     SelectDataInputCompactComponent,
     CoordinatesDataInputComponent,
@@ -125,7 +127,7 @@ import {SelectDataInputCompactComponent} from './compact/select/select-data-inpu
     FileAttachmentButtonComponent,
     RichTextDataInputComponent,
     FilterDataSuggestionsPipe,
-    FilterUsersPipe,
+    FilterUsersAndTeamsPipe,
     SelectOptionIsValidPipe,
     SelectOptionsValuesPipe,
     SelectedValuesPipe,
@@ -156,6 +158,7 @@ import {SelectDataInputCompactComponent} from './compact/select/select-data-inpu
     DataInputCompactComponent,
     BooleanDataInputComponent,
     UserDataInputComponent,
+    UserDataInputCompactComponent,
     DataCursorPipe,
     DataIdCursorPipe,
     FileAttachmentButtonComponent,
@@ -164,7 +167,7 @@ import {SelectDataInputCompactComponent} from './compact/select/select-data-inpu
     RichTextDataInputComponent,
     ConstraintAsTextPipe,
     ConstraintClassPipe,
-    FilterUsersPipe,
+    FilterUsersAndTeamsPipe,
     ActionDataInputComponent,
     ViewDataInputComponent,
     AttributeLockFiltersStatsComponent,

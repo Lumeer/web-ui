@@ -1074,7 +1074,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
             <trans-unit datatype="html" id="button.continue">
                 <source>Continue</source>
                 <target>Folytat</target>
@@ -1313,15 +1313,9 @@
             <trans-unit datatype="html" id="button.ok">
                 <source>OK</source>
                 <target>Oké</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-                    <context context-type="linenumber">128</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
-                    <context context-type="linenumber">64</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit>
             <trans-unit id="organization.permission.role.title" datatype="html">
                 <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source>
                 <target state="new">{type, select, Read {Read} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</target>
@@ -9653,6 +9647,12 @@
           <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/preview/data-resources-preview.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
+      </trans-unit><trans-unit id="button.done" datatype="html">
+        <source>Done</source><target state="new">Done</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
       </trans-unit>
 
 				<trans-unit datatype="html" id="resource.new.dialog.title">
@@ -9934,19 +9934,19 @@
 				<trans-unit datatype="html" id="rules.blockly.action.message.error">
 					<source>Error</source>
 					<target>Hiba</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">126</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.info">
 					<source>Information</source>
 					<target>Információ</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.success">
 					<source>Success</source>
 					<target>Siker</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.warning">
 					<source>Warning</source>
 					<target>Figyelmeztetés</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="search.all.collections">
 					<source> Tables </source>
 					<target>Táblázatok</target>

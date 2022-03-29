@@ -56,7 +56,7 @@ declare let ResizeObserver: ResizeObserver;
 })
 export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
-  public mobile: boolean;
+  public compact: boolean;
 
   @Input()
   public searchBoxShown: boolean;
@@ -108,8 +108,8 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.mobile) {
-      this.store$.dispatch(new AppPropertiesAction.SetTopPanelOpened({opened: !this.mobile}));
+    if (changes.compact) {
+      this.store$.dispatch(new AppPropertiesAction.SetTopPanelOpened({opened: !this.compact}));
     }
   }
 
@@ -140,7 +140,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   }
 
   private setTopPanelSideWidth() {
-    if (this.mobile || !this.logo) {
+    if (this.compact || !this.logo) {
       return;
     }
 

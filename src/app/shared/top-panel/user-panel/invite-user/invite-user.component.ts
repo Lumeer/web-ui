@@ -37,7 +37,7 @@ import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selec
 })
 export class InviteUserComponent implements OnInit {
   @Input()
-  public mobile: boolean;
+  public compact: boolean;
 
   public projectPermissions$: Observable<AllowedPermissions>;
   public isWorkspaceDefined$: Observable<boolean>;

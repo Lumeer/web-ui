@@ -53,19 +53,27 @@ export class SelectDataInputCompactComponent implements OnChanges {
   @Input()
   public placeholder: string;
 
+  @Input()
+  public readonly: boolean;
+
   @Output()
   public save = new EventEmitter<SelectDataValue>();
+
+  @Output()
+  public cancel = new EventEmitter();
 
   @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
   public dropdownOptions: DropdownOption[] = [];
   public selectedOptions$ = new BehaviorSubject<SelectConstraintOption[]>([]);
-  public dropdownOpened$ = new BehaviorSubject(false);
 
   public multi: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.readonly) {
+      this.checkDropdownState();
+    }
     if (changes.value && this.value) {
       this.selectedOptions$.next(this.value.options || []);
       this.dropdownOptions = createSelectDataInputDropdownOptions(this.value);
@@ -73,12 +81,18 @@ export class SelectDataInputCompactComponent implements OnChanges {
     }
   }
 
+  private checkDropdownState() {
+    if (this.readonly && this.dropdown?.isOpen()) {
+      this.saveValue();
+      this.dropdown.close();
+    } else if (!this.readonly && (!this.dropdown || !this.dropdown?.isOpen())) {
+      setTimeout(() => this.dropdown.open());
+    }
+  }
+
   public onDropdownClosed() {
-    if (this.dropdownOpened$.value) {
-      this.dropdownOpened$.next(false);
-      if (this.multi) {
-        this.saveValue();
-      }
+    if (!this.readonly) {
+      this.saveValue();
     }
   }
 
@@ -88,9 +102,11 @@ export class SelectDataInputCompactComponent implements OnChanges {
       const optionValues = uniqueValues(options.map(option => option.value));
       const dataValue = this.value.copy(optionValues);
       this.save.emit(dataValue);
-    } else {
-      const dataValue = this.value.copy(activeOption ? activeOption.value : '');
+    } else if (activeOption) {
+      const dataValue = this.value.copy(activeOption ? activeOption?.value : '');
       this.save.emit(dataValue);
+    } else {
+      this.cancel.emit();
     }
   }
 
@@ -99,7 +115,6 @@ export class SelectDataInputCompactComponent implements OnChanges {
       this.toggleOption(option);
       this.dropdown?.resetActiveOption();
     } else {
-      this.dropdownOpened$.next(false);
       this.saveValue(option);
     }
   }
@@ -119,13 +134,5 @@ export class SelectDataInputCompactComponent implements OnChanges {
 
   public trackByOption(index: number, option: SelectConstraintOption): string {
     return option.value;
-  }
-
-  public onClick(event: MouseEvent) {
-    if (!this.dropdownOpened$.value) {
-      this.dropdownOpened$.next(true);
-
-      setTimeout(() => this.dropdown?.open());
-    }
   }
 }

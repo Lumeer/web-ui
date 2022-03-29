@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-end align-items-center"
      [style.height.px]="contentHeight">
-  <invite-user *ngIf="showControls" [mobile]="mobile"></invite-user>
+  <invite-user *ngIf="showControls" [compact]="compact"></invite-user>
   <notifications-menu *ngIf="showControls"></notifications-menu>
   <user-menu *ngIf="showControls"
              [workspace]="workspace"
