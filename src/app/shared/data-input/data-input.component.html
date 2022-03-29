@@ -113,7 +113,7 @@
   </color-data-input>
 
   <ng-container *ngSwitchCase="constraintType.Select">
-    <select-data-input-compact *ngIf="!isMobile"
+    <select-data-input-compact *ngIf="isMobile"
                                [commonConfiguration]="configuration?.common"
                                [value]="dataValue"
                                [readonly]="readonly"
@@ -121,7 +121,7 @@
                                (save)="onSaveValue($event)"
                                (cancel)="onCancel()">
     </select-data-input-compact>
-    <select-data-input *ngIf="isMobile"
+    <select-data-input *ngIf="!isMobile"
                        [focus]="focus"
                        [readonly]="readonly"
                        [value]="dataValue"
@@ -137,7 +137,7 @@
 
   <ng-container *ngSwitchCase="constraintType.User">
 
-    <user-data-input-compact *ngIf="!isMobile"
+    <user-data-input-compact *ngIf="isMobile"
                              [configuration]="configuration?.user"
                              [readonly]="readonly"
                              [commonConfiguration]="configuration?.common"
@@ -146,7 +146,7 @@
                              (cancel)="onCancel()">
     </user-data-input-compact>
 
-    <user-data-input *ngIf="isMobile"
+    <user-data-input *ngIf="!isMobile"
                      [focus]="focus"
                      [readonly]="readonly"
                      [configuration]="configuration?.user"
