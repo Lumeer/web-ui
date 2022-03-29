@@ -41,9 +41,12 @@
                         [cursor]="document | dataCursor:attributes.state.id:view?.id"
                         [configuration]="stateConfiguration"
                         [dataValue]="stateDataValue"
+                        [readonly]="!(editing$ | async)"
                         placeholder="Select state"
                         i18n-placeholder="@@task.state.placeholder"
-                        (save)="onSaveState($event)">
+                        (click)="onStateClick()"
+                        (save)="onStateSave($event)"
+                        (cancel)="onStateCancel()">
     </data-input-compact>
   </ng-container>
 

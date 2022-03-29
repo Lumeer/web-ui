@@ -86,13 +86,17 @@ export class UserDataInputCompactComponent implements OnChanges {
   public multi: boolean;
   public onlyIcon: boolean;
 
+  private preventInitUsers: boolean;
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly) {
       this.checkDropdownState();
     }
     if (changes.value && this.value) {
-      this.selectedUsers$.next(this.value.users || []);
-      this.selectedTeams$.next(this.value.teams || []);
+      if (!this.preventInitUsers) {
+        this.selectedUsers$.next(this.value.users || []);
+        this.selectedTeams$.next(this.value.teams || []);
+      }
       this.users = createUserDataInputUsers(this.value);
       this.teams = createUserDataInputTeams(this.value);
       this.multi = this.value.config?.multi;
@@ -103,7 +107,9 @@ export class UserDataInputCompactComponent implements OnChanges {
   }
 
   private checkDropdownState() {
+    this.preventInitUsers = false;
     if (this.readonly && this.dropdown?.isOpen()) {
+      this.preventInitUsers = true;
       this.saveValue();
       this.dropdown.close();
     } else if (!this.readonly && (!this.dropdown || !this.dropdown?.isOpen())) {

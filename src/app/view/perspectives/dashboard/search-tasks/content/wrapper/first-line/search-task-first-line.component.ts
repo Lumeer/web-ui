@@ -28,6 +28,7 @@ import {View} from '../../../../../../../core/store/views/view';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'search-task-first-line',
@@ -75,9 +76,22 @@ export class SearchTaskFirstLineComponent {
     user: {allowCenterOnlyIcon: true, onlyIcon: true},
   };
 
+  public editing$ = new BehaviorSubject(false);
+
   constructor(private store$: Store<AppState>) {}
 
-  public onSaveState(dataValue: DataValue) {
+  public onStateClick() {
+    if (!this.editing$.value) {
+      this.editing$.next(true);
+    }
+  }
+
+  public onStateCancel() {
+    this.editing$.next(false);
+  }
+
+  public onStateSave(dataValue: DataValue) {
+    this.editing$.next(false);
     if (this.document) {
       const patchDocument = {
         collectionId: this.document.collectionId,
