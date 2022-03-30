@@ -831,7 +831,7 @@ export function modifyAttributeForQueryBuilder(attribute: Attribute, condition: 
       const userConstraint = <UserConstraint>attribute.constraint;
       return {
         ...attributeWithoutLock,
-        constraint: new UserConstraint({...userConstraint, type: UserConstraintType.UsersAndTeams}),
+        constraint: new UserConstraint({...userConstraint.config, type: UserConstraintType.UsersAndTeams}),
       };
     default:
       return attributeWithoutLock;

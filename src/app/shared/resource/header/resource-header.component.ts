@@ -107,6 +107,7 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
 
   private checkValues() {
     this.codeVisible = this.hasVisibleCode();
+    this.descriptionVisible = this.hasVisibleDescription();
     if (this.codeVisible) {
       this.firstLinePlaceholder = this.getCodePlaceholder();
       this.secondLinePlaceholder = this.getNamePlaceholder();
