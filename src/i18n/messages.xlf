@@ -2882,10 +2882,6 @@
           <context context-type="linenumber">30</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
@@ -3919,14 +3915,14 @@
       <trans-unit id="user.constraint.type.teams" datatype="html">
         <source>Teams</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users.pipe.ts</context>
+          <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context>
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.constraint.type.users" datatype="html">
         <source>Users</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users.pipe.ts</context>
+          <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context>
           <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
@@ -4490,7 +4486,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="selection.lists.modal.add" datatype="html">
@@ -5818,6 +5814,17 @@
           <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="button.done" datatype="html">
+        <source>Done</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="go.back" datatype="html">
         <source>Go back</source>
         <context-group purpose="location">
@@ -5830,13 +5837,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/preview/data-resources-preview.component.html</context>
           <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.done" datatype="html">
-        <source>Done</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dialog.getInTouch.title" datatype="html">
@@ -9421,21 +9421,21 @@
         <source>Select state</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="task.pinned" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Unpin task from top&apos; : &apos;Pin task to top&apos;}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tasks.empty.title" datatype="html">
         <source>Empty title</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.views.empty.title" datatype="html">

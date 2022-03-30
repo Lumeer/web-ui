@@ -6599,7 +6599,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source><target>Pomoc</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="help.functionsAndRules" datatype="html">
@@ -7635,12 +7635,9 @@
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="button.done" datatype="html">
-        <source>Done</source><target state="new">Done</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit><trans-unit id="dialog.attribute.description.title" datatype="html">
+        <source>Done</source><target>Hotovo</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="dialog.attribute.description.title" datatype="html">
         <source>Edit Description of</source><target>Upravit popis</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/description/header/attribute-description-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
@@ -8190,7 +8187,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="selection.lists.modal.add" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="selection.lists.modal.add" datatype="html">
         <source>Add a new list</source><target>Přidat nový seznam</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="selection.lists.modal.adding.sample" datatype="html">
@@ -8833,17 +8830,14 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
         <source>Empty title</source><target>Prázdný popis</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
         <source>Add new task</source><target>Vytvořit nový úkol</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">496</context></context-group></trans-unit><trans-unit id="task.state.placeholder" datatype="html">
         <source>Select state</source><target state="final">Vyberte stav</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit><trans-unit id="tasks.empty.query.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="tasks.empty.query.title" datatype="html">
         <source>All your tasks are done!</source><target>Všechny Vaše úkoly jsou hotové!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/empty/query/empty-tasks-query.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="tasks.empty.query.message" datatype="html">
@@ -8869,7 +8863,7 @@
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"/></source>
         <target><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Odepnout úkol' : 'Připnout úkol nahoru'}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source><target>Roztáhnout tabulku</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
@@ -9525,17 +9519,11 @@
         </context-group>
       </trans-unit><trans-unit id="user.constraint.type.teams" datatype="html">
         <source>Teams</source><target>Týmy</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users.pipe.ts</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit><trans-unit id="user.constraint.type.users" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="user.constraint.type.users" datatype="html">
         <source>Users</source><target>Uživatelé</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users.pipe.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit><trans-unit id="document.detail.audit.limit" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="document.detail.audit.limit" datatype="html">
         <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
         href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
         <target>Omezeno na 3 záznamy. Aktivujte si program Lumeer Business a uvidíte záznamy za poslední 2 týdny. Pro delší historii nás kontaktujte.</target>

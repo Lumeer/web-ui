@@ -1074,7 +1074,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
             <trans-unit datatype="html" id="button.continue">
                 <source>Continue</source>
                 <target>Folytat</target>
@@ -1095,7 +1095,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
             <trans-unit id="selection.lists.modal.add" datatype="html">
                 <source>Add a new list</source>
                 <target state="new">Add list</target>
@@ -2172,19 +2172,13 @@
             <trans-unit id="user.constraint.type.teams" datatype="html">
                 <source>Teams</source>
                 <target state="new">Teams</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users.pipe.ts</context>
-                    <context context-type="linenumber">34</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">34</context></context-group></trans-unit>
             <trans-unit id="user.constraint.type.users" datatype="html">
                 <source>Users</source>
                 <target state="new">Users</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users.pipe.ts</context>
-                    <context context-type="linenumber">46</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">46</context></context-group></trans-unit>
             <trans-unit id="document.detail.audit.limit" datatype="html">
                 <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
         href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
@@ -5237,11 +5231,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">496</context></context-group></trans-unit><trans-unit id="task.state.placeholder" datatype="html">
         <source>Select state</source><target state="new">Select state</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
             <trans-unit datatype="html" id="currency.abbreviations">
                 <source>k|m|b|t</source>
                 <target>k|m|b|t</target>
@@ -9649,11 +9640,8 @@
         </context-group>
       </trans-unit><trans-unit id="button.done" datatype="html">
         <source>Done</source><target state="new">Done</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
 
 				<trans-unit datatype="html" id="resource.new.dialog.title">
 					<source> Create a new <x id="ICU" equiv-text="{resourceType, select, organization {Organization} project {Project}}"/> </source>
@@ -10385,7 +10373,7 @@
 				<trans-unit datatype="html" id="tasks.empty.title">
 					<source>Empty title</source>
 					<target>Üres cím</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="tasks.get.fail">
 					<source>Could not get tasks</source>
 					<target>Nem lehet feladatokat kérni</target>
@@ -11190,7 +11178,7 @@
 				<trans-unit datatype="html" id="task.pinned">
 					<source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"/></source>
 					<target><x id="INTERPOLATION" equiv-text="{{document.favorite? 'Feloldani a feladat rögzítését felülről': 'Feladat rögzítése felülre'}}"/></target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="collection.config.tab.rules.btn.duplicate">
 					<source>Duplicate automation</source>
 					<target>Automatizálás megkettőzése</target>
