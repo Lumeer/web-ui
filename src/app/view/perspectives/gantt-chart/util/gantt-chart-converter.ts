@@ -151,7 +151,7 @@ export class GanttChartConverter {
         (a, b) => this.compareTasks(a, b)
       );
     } else {
-      tasks = tasks.sort((t1, t2) => this.compareTasks(t1, t2));
+      tasks = tasks.sort((t1, t2) => this.compareTasksByStartDate(t1, t2));
     }
 
     const options = this.createGanttOptions(config, permissions);
@@ -164,11 +164,15 @@ export class GanttChartConverter {
     const t2Swimlanes = t2.swimlanes?.map(s => s?.value) || [];
 
     if (areArraysSame(t1Swimlanes, t2Swimlanes)) {
-      const t1Start = moment(t1.start, GANTT_DATE_FORMAT);
-      const t2Start = moment(t2.start, GANTT_DATE_FORMAT);
-      return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
+      return this.compareTasksByStartDate(t1, t2);
     }
     return 0;
+  }
+
+  private compareTasksByStartDate(t1: GanttTask, t2: GanttTask): number {
+    const t1Start = moment(t1.start, GANTT_DATE_FORMAT);
+    const t2Start = moment(t2.start, GANTT_DATE_FORMAT);
+    return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
   }
 
   private createGanttOptions(config: GanttChartConfig, permissions: ResourcesPermissions): GanttOptions {
