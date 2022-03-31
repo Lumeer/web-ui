@@ -26,9 +26,9 @@ import {Team} from '../../../../core/store/teams/team';
 import {COLOR_INFO} from '../../../../core/constants';
 
 @Pipe({
-  name: 'filterUsers',
+  name: 'filterUsersAndTeams',
 })
-export class FilterUsersPipe implements PipeTransform {
+export class FilterUsersAndTeamsPipe implements PipeTransform {
   public transform(users: User[], text: string, teams?: Team[]): DropdownOption[] {
     const textWithoutAccent = removeAccentFromString(text);
     const teamsGroup = $localize`:@@user.constraint.type.teams:Teams`;

@@ -4,7 +4,7 @@ describe('Table perspective :: Single cell', () => {
     cy.createCollection('empty', 'fas fa-empty-set', '#cccccc').then(collection => cy.visitTable(collection.id));
 
     // check if there is only a single column called 'A'
-    cy.get('[data-test="table-column-input"]', {timeout: 10000}).last().should('have.text', 'A');
+    cy.get('[data-test="table-column-input"]', {timeout: 10000}).last().should('have.text', 'Add Column');
 
     // select the only table body cell
     cy.get('.text-input').should('not.exist');
@@ -35,7 +35,7 @@ describe('Table perspective :: Single cell', () => {
     cy.get('[data-test="table-column-input"].text-default-attribute').first().should('have.text', 'A');
 
     // check if the second column has been added
-    cy.get('[data-test="table-column-input"]').last().should('have.text', 'B');
+    cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
 
     // check if the table has only one cell (other are empty and not in DOM)
     cy.get('[data-test="table-data-input"]').should('have.length', 1);

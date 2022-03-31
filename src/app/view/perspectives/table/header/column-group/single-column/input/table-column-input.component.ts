@@ -70,7 +70,13 @@ export class TableColumnInputComponent implements OnChanges {
   @ViewChild('textInput')
   public textInput: ElementRef<HTMLInputElement>;
 
+  public readonly placeholder: string;
+
   private preventSave: boolean;
+
+  constructor() {
+    this.placeholder = $localize`:@@column.add.placeholder:Add Column`;
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.edited && this.edited) {

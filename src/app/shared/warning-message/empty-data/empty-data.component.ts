@@ -32,7 +32,7 @@ import {QueryAction} from '../../../core/model/query-action';
 import {Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {selectHasVisibleSearchTab} from '../../../core/store/views/views.state';
+import {selectHasVisibleSearchTab} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'empty-data',

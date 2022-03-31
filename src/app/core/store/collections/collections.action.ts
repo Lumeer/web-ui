@@ -301,6 +301,7 @@ export namespace CollectionsAction {
         collectionId: string;
         attributes: Attribute[];
         nextAction?: DocumentsAction.All;
+        otherActions?: Action[];
         onSuccess?: (attributes: Attribute[]) => void;
         onFailure?: () => void;
       }

@@ -261,15 +261,15 @@ export function createSearchPerspectiveTabsByView(view?: View, defaultTabs: Dash
   if (view?.perspective === Perspective.Search) {
     return createSearchPerspectiveTabs(view?.config?.search, defaultTabs);
   }
-  return addDefaultDashboardTabsIfNotPresent(defaultTabs);
+  return addDefaultDashboardTabsIfNotPresent(defaultTabs, defaultTabs);
 }
 
 export function createSearchPerspectiveTabs(config?: SearchConfig, defaultTabs: DashboardTab[] = []): DashboardTab[] {
   const tabs = config?.dashboard?.tabs;
   if (isNotNullOrUndefined(tabs)) {
-    return addDefaultDashboardTabsIfNotPresent(tabs);
+    return addDefaultDashboardTabsIfNotPresent(tabs, defaultTabs);
   }
-  return addDefaultDashboardTabsIfNotPresent(defaultTabs);
+  return addDefaultDashboardTabsIfNotPresent(defaultTabs, defaultTabs);
 }
 
 export function canChangeViewQuery(view: View, permissions: Record<string, AllowedPermissions>) {

@@ -27,6 +27,7 @@ import {Team} from '../../../core/store/teams/team';
 @Component({
   selector: 'user-settings-header',
   templateUrl: './user-settings-header.component.html',
+  styleUrls: ['user-settings-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserSettingsHeaderComponent {

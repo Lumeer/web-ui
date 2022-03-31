@@ -37,7 +37,7 @@ export class FormCellLockStatsPipe implements PipeTransform {
     if (cell?.type === FormCellType.Attribute) {
       const config = <FormAttributeCellConfig>cell.config;
       const attribute = findAttribute(collection?.attributes, config?.attributeId);
-      return computeAttributeLockStats(document, collection, attribute?.lock, constraintData);
+      return computeAttributeLockStats(document || {id: null, data: {}}, collection, attribute?.lock, constraintData);
     }
     return null;
   }

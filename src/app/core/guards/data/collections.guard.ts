@@ -20,37 +20,30 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
 import {Collection} from '../../store/collections/collection';
-import {CollectionsAction} from '../../store/collections/collections.action';
-import {selectAllCollections, selectCollectionsLoaded} from '../../store/collections/collections.state';
 import {WorkspaceService} from '../../../workspace/workspace.service';
+import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
 
 @Injectable()
 export class CollectionsGuard implements Resolve<Collection[]> {
-  constructor(private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private workspaceService: WorkspaceService,
+    private resourcesGuardService: ResourcesGuardService
+  ) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Collection[]> {
     const organizationCode = route.paramMap.get('organizationCode');
     const projectCode = route.paramMap.get('projectCode');
 
-    return this.workspaceService.selectOrGetWorkspace(organizationCode, projectCode).pipe(
-      mergeMap(({organization, project}) => {
-        return this.store$.select(selectCollectionsLoaded).pipe(
-          tap(loaded => {
-            if (!loaded) {
-              const workspace = {organizationId: organization.id, projectId: project.id};
-              this.store$.dispatch(new CollectionsAction.Get({workspace}));
-            }
-          }),
-          skipWhile(loaded => !loaded),
-          mergeMap(() => this.store$.pipe(select(selectAllCollections))),
-          first()
-        );
-      })
-    );
+    return this.workspaceService
+      .selectOrGetWorkspace(organizationCode, projectCode)
+      .pipe(
+        mergeMap(({organization, project}) => this.resourcesGuardService.selectCollections$(organization, project))
+      );
   }
 }

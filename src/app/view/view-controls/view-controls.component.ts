@@ -47,7 +47,6 @@ import {RouterAction} from '../../core/store/router/router.action';
 import {View} from '../../core/store/views/view';
 import {
   selectCurrentView,
-  selectDefaultSearchPerspectiveVisibleTabs,
   selectViewConfigChanged,
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
@@ -80,6 +79,7 @@ import {
 } from '../../core/store/navigation/settings/perspective-settings';
 import {DashboardTab} from '../../core/model/dashboard-tab';
 import {createSearchPerspectiveTabsByView} from '../../core/store/views/view.utils';
+import {selectDefaultSearchPerspectiveVisibleTabs} from '../../core/store/common/permissions.selectors';
 import {UserHintsKeys} from '../../core/store/users/user';
 import {UsersAction} from '../../core/store/users/users.action';
 import {selectCurrentUser} from '../../core/store/users/users.state';

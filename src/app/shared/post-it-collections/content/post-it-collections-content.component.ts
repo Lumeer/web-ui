@@ -49,7 +49,7 @@ import {ConfigurationService} from '../../../configuration/configuration.service
 import {createEmptyCollection} from '../../../core/store/collections/collection.util';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectHasVisibleSearchTab} from '../../../core/store/views/views.state';
+import {selectHasVisibleSearchTab} from '../../../core/store/common/permissions.selectors';
 
 const UNCREATED_THRESHOLD = 5;
 

@@ -30,10 +30,12 @@
                             [query]="data.query"
                             [defaultView]="currentView$ | async"
                             [isEmbedded]="isEmbedded"
+                            [editable]="!(data.creatingDocument)"
                             [allowSelectDocument]="perspectiveConfiguration?.selectDocuments"
                             [settingsQuery]="settingsQuery$ | async"
                             [settingsStem]="data.selected?.collection | detailQueryStem"
-                            (documentSelect)="selectCollectionAndDocument($event)">
+                            (documentSelect)="selectCollectionAndDocument($event)"
+                            (dataResourceChanged)="onDocumentChanged($event)">
       </data-resource-detail>
     </div>
 

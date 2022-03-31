@@ -21,7 +21,6 @@ import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.
 import {
   filterDirectAttributeChildren,
   findAttributeByName,
-  generateAttributeName,
   splitAttributeName,
 } from '../../../shared/utils/attribute.utils';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
@@ -190,17 +189,14 @@ function createColumnsFromConfig(
   const columns = columnsConfig.reduce<TableConfigColumn[]>((preparedColumns, column) => {
     if (column.type === TableColumnType.COMPOUND) {
       const attributeId = column.attributeIds[0];
-      const attributeName = column.attributeName;
       const attribute = attributes.find(attr => attr.id === attributeId);
-      if (!attribute && !attributeName) {
-        return preparedColumns;
-      }
 
       // TODO should children not in config really appear instead of just parent?
       return preparedColumns.concat({
         ...column,
         children: attribute ? createTableColumnsFromAttributes(allAttributes, attribute, column.children) : [],
         width: column.width || DEFAULT_COLUMN_WIDTH,
+        correlationId: column.correlationId || generateCorrelationId(),
       });
     }
 
@@ -357,19 +353,11 @@ export function createEmptyColumn(
   columns: TableConfigColumn[],
   parentName?: string
 ): TableConfigColumn {
-  const uninitializedAttributeNames = columns.reduce((names, column) => {
-    if (column.attributeName) {
-      names.push(column.attributeName);
-    }
-    return names;
-  }, []);
-
-  const attributeNames = (attributes || []).map(attr => attr.name);
-  const attributeName = generateAttributeName([...attributeNames, ...uninitializedAttributeNames], parentName);
   return {
     type: TableColumnType.COMPOUND,
+    correlationId: generateCorrelationId(),
     attributeIds: [],
-    attributeName,
+    attributeName: '',
     children: [],
     width: DEFAULT_COLUMN_WIDTH,
   };
@@ -679,13 +667,13 @@ export function filterTableColumnsByAttributesMap(
 ): TableConfigColumn[] {
   return columns.reduce((filteredColumns, column) => {
     if (column.type === TableColumnType.COMPOUND) {
-      if (column.attributeIds.length === 0 && column.attributeName) {
-        filteredColumns.push(column);
-      } else if (attributesMap[column.attributeIds[0]]) {
+      if (attributesMap[column.attributeIds[0]]) {
         filteredColumns.push({
           ...column,
           children: filterTableColumnsByAttributesMap(column.children, attributesMap),
         });
+      } else if (column.attributeIds.length === 0) {
+        filteredColumns.push(column);
       }
     }
     if (column.type === TableColumnType.HIDDEN) {

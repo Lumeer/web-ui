@@ -50,10 +50,13 @@ import {select, Store} from '@ngrx/store';
 import {ConstraintData} from '@lumeer/data-filters';
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
-import {selectTasksCollections} from '../../../../../core/store/common/permissions.selectors';
+import {
+  selectHasVisibleSearchTab,
+  selectTasksCollections,
+} from '../../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../../core/store/views/view';
 import {User} from '../../../../../core/store/users/user';
-import {selectDefaultDocumentViews, selectHasVisibleSearchTab} from '../../../../../core/store/views/views.state';
+import {selectDefaultDocumentViews} from '../../../../../core/store/views/views.state';
 import {
   defaultSearchPerspectiveConfiguration,
   SearchPerspectiveConfiguration,

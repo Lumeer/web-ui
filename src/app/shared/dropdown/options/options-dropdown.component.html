@@ -6,7 +6,8 @@
           [pushOnScreen]="true"
           [minWidth]="minWidth || 100"
           [positions]="dropdownPositions"
-          (positionChange)="onPositionChange($event)">
+          (positionChange)="onPositionChange($event)"
+          (onClose)="onClose.emit()">
   <div *ngIf="options?.length > 0"
        class="card overflow-auto" [class.w-100]="fitParent">
 

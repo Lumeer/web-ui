@@ -27,27 +27,21 @@ import {
   UrlSerializer,
   UrlTree,
 } from '@angular/router';
-import {combineLatest, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {
-  selectDefaultViewConfig,
-  selectDefaultViewConfigsLoaded,
-  selectSearchPerspectiveTabs,
-  selectViewByCode,
-  selectViewsLoaded,
-} from '../../../core/store/views/views.state';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
-import {map, mergeMap, skipWhile, take, tap, withLatestFrom} from 'rxjs/operators';
+import {map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
-import {ViewsAction} from '../../../core/store/views/views.action';
 import {WorkspaceService} from '../../../workspace/workspace.service';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
 import {DashboardTab} from '../../../core/model/dashboard-tab';
 import {selectSearchConfigById} from '../../../core/store/searches/searches.state';
 import {createSearchPerspectiveTabs} from '../../../core/store/views/view.utils';
+import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
+import {User} from '../../../core/store/users/user';
 
 @Injectable()
 export class SearchPerspectiveRedirectGuard implements CanActivate {
@@ -55,6 +49,7 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
     private router: Router,
     private store$: Store<AppState>,
     private workspaceService: WorkspaceService,
+    private resourcesGuardService: ResourcesGuardService,
     private serializer: UrlSerializer
   ) {}
 
@@ -62,10 +57,10 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
     const {organizationCode, projectCode, viewCode} = this.getParams(next);
 
     return this.workspaceService
-      .selectOrGetWorkspace(organizationCode, projectCode)
+      .selectOrGetUserAndWorkspace(organizationCode, projectCode)
       .pipe(
-        mergeMap(({organization, project}) =>
-          this.resolveSearchTab(organization, project, viewCode, next.queryParams, state.url)
+        mergeMap(({organization, project, user}) =>
+          this.resolveSearchTab(organization, project, user, viewCode, next.queryParams, state.url)
         )
       );
   }
@@ -73,16 +68,14 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
   private resolveSearchTab(
     organization: Organization,
     project: Project,
+    user: User,
     viewCode: string,
     queryParams: Params,
     currentUrl: string
   ): Observable<any> {
-    return combineLatest([
-      this.selectDefaultViewConfig$(organization, project),
-      this.selectViewAndSearchTabs$(organization, project, viewCode),
-    ]).pipe(
+    return this.selectViewAndSearchTabs$(organization, project, user, viewCode).pipe(
       take(1),
-      map(([defaultConfig, {tabs, view}]) => {
+      map(({defaultViewConfig, tabs, view}) => {
         const viewPath: any[] = ['/w', organization.code, project.code, 'view'];
         if (viewCode) {
           viewPath.push({vc: viewCode});
@@ -91,8 +84,9 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
 
         const desiredSearchTab = parseSearchTabFromUrl(currentUrl);
         let selectedTab = desiredSearchTab && tabs.find(tab => tab.id === desiredSearchTab);
+
         if (!selectedTab) {
-          const configSearchTab = view?.config?.search?.searchTab || defaultConfig?.config?.search?.searchTab;
+          const configSearchTab = view?.config?.search?.searchTab || defaultViewConfig?.config?.search?.searchTab;
           selectedTab = (configSearchTab && tabs.find(tab => tab.id === configSearchTab)) || tabs[0];
         }
 
@@ -111,48 +105,25 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
     );
   }
 
-  private selectDefaultViewConfig$(organization: Organization, project: Project): Observable<DefaultViewConfig> {
-    return this.store$.pipe(
-      select(selectDefaultViewConfigsLoaded),
-      tap(loaded => {
-        if (!loaded) {
-          const workspace = {organizationId: organization.id, projectId: project.id};
-          this.store$.dispatch(new ViewsAction.GetDefaultConfigs({workspace}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID))))
-    );
-  }
-
-  private selectViewsByCode$(organization: Organization, project: Project, code: string): Observable<View> {
-    return this.store$.pipe(
-      select(selectViewsLoaded),
-      tap(loaded => {
-        if (!loaded) {
-          const workspace = {organizationId: organization.id, projectId: project.id};
-          this.store$.dispatch(new ViewsAction.Get({workspace}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectViewByCode(code))))
-    );
-  }
-
   private selectViewAndSearchTabs$(
     organization: Organization,
     project: Project,
+    user: User,
     viewCode: string
-  ): Observable<{view: View; tabs: DashboardTab[]}> {
-    return this.selectViewsByCode$(organization, project, viewCode).pipe(
-      withLatestFrom(
-        this.store$.pipe(select(selectSearchPerspectiveTabs)),
-        this.store$.pipe(select(selectSearchConfigById(viewCode || DEFAULT_PERSPECTIVE_ID)))
-      ),
-      map(([view, defaultTabs, searchConfig]) => ({
-        view,
-        tabs: createSearchPerspectiveTabs(searchConfig || view?.config?.search, defaultTabs).filter(tab => !tab.hidden),
-      }))
+  ): Observable<{view: View; tabs: DashboardTab[]; defaultViewConfig: DefaultViewConfig}> {
+    return this.resourcesGuardService.selectDefaultSearchTabs(organization, project, user).pipe(
+      withLatestFrom(this.store$.pipe(select(selectSearchConfigById(viewCode || DEFAULT_PERSPECTIVE_ID)))),
+      map(([{views, tabs, defaultViewConfig}, searchConfig]) => {
+        const view = viewCode ? views.find(v => v.code === viewCode) : null;
+        return {
+          view,
+          defaultViewConfig,
+          tabs: createSearchPerspectiveTabs(
+            searchConfig || view?.config?.search || defaultViewConfig?.config?.search,
+            tabs
+          ).filter(tab => !tab.hidden),
+        };
+      })
     );
   }
 

@@ -141,6 +141,11 @@ export function splitAttributeName(name: string): {parentName: string; lastName:
   };
 }
 
+export function generateAttributeNameFromAttributes(attributes: Attribute[]): string {
+  const names = (attributes || []).map(attribute => attribute.name);
+  return generateAttributeName(names);
+}
+
 export function generateAttributeName(existingNames: string[], parentName?: string): string {
   const prefix = parentName ? `${parentName}.` : '';
 

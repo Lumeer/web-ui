@@ -1,415 +1,988 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en" datatype="plaintext" original="ng2.template" target-language="en">
-    <body>
-      <trans-unit id="button.close" datatype="html">
-        <source>Close</source><target state="final">Close</target>
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
-        <source>Help</source><target state="final">Help</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="help.functionsAndRules" datatype="html">
-        <source>https://www.lumeer.io/functions-and-rules</source><target state="final">https://www.lumeer.io/functions-and-rules</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="4be44482feb952b217f702aaf0bad3536a4d03ad" datatype="html">
-        <source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source><target state="final">Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </target>
-
-        <note priority="1" from="description">textEditor.minLength</note>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="81a825c813cc67a514bb711507b538569209cd79" datatype="html">
-        <source>Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</source><target state="final">Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</target>
-
-        <note priority="1" from="description">textEditor.maxLength</note>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="collection.name.placeholder" datatype="html">
-        <source>Click to set name</source><target state="final">Click to set name</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/collection-name/post-it-collection-name.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="collection.document.icon.set" datatype="html">
-        <source>Click icon to set it </source><target state="final">Click icon to set it </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="button.cancel" datatype="html">
-        <source>Cancel</source><target state="final">Cancel</target>
-
-
-
-
-
-
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/attribute-function-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">360</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
-        <source>Select</source><target state="final">Select</target>
-
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="button.clear" datatype="html">
-        <source>Clear</source><target state="final">Clear</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="collection.document.count" datatype="html">
-        <source>Record Count</source><target state="final">Record Count</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="collection.favorite.remove" datatype="html">
-        <source>Remove from favorites</source><target state="final">Remove from favorites</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="collection.favorite.add" datatype="html">
-        <source>Add to favorites</source><target state="final">Add to favorites</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="collection.button.configure" datatype="html">
-        <source>Configure</source><target state="final">Configure</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="collection.button.remove" datatype="html">
-        <source>Delete Table</source><target state="final">Delete Table</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="search.result.more" datatype="html">
-        <source>See More</source><target state="final">See More</target>
-
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/button/see-more/see-more-button.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="query.item.button.remove" datatype="html">
-        <source>Delete query item</source><target state="final">Remove query item</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/query-stem/query-stem-query-item.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/simple/simple-query-item.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="query.item.stem.expand" datatype="html">
-        <source>Expand links and filters</source><target state="final">Expand links and filters</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/query-stem/query-stem-query-item.component.html</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit><trans-unit id="query.item.stem.collapse" datatype="html">
-        <source>Collapse links and filters</source><target state="final">Collapse links and filters</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/query-stem/query-stem-query-item.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="tag.remove" datatype="html">
-        <source>Remove tag</source><target state="final">Remove tag</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/tags/input-tags.component.ts</context><context context-type="linenumber">79</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/tag/tag.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.title2" datatype="html">
-        <source>Just Join</source><target state="final">Just Join</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.readOnly.title2" datatype="html">
-        <source>View</source><target state="final">View</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.write.title2" datatype="html">
-        <source>Collaborate</source><target state="final">Collaborate</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.manage.title2" datatype="html">
-        <source>Create</source><target state="final">Create</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="document.detail.remove" datatype="html">
-        <source>Remove Record</source><target state="final">Remove Record</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="link.detail.unlink" datatype="html">
-        <source>Unlink</source><target state="final">Unlink</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">89</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="document.detail.favorite.remove" datatype="html">
-        <source>Remove from favorites</source><target state="final">Remove from favorites</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="document.detail.favorite.add" datatype="html">
-        <source>Add to favorites</source><target state="final">Add to favorites</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">71</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="document.detail.version" datatype="html">
-        <source>Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></source><target state="final">Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="document.detail.switch.table" datatype="html">
-        <source>Switch to Table perspective</source><target state="final">Switch to Table perspective</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="create.new.document" datatype="html">
-        <source>Create New Record</source><target state="final">Create New Record</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/detail/detail-perspective.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="perspective.form.editor.buttons.description" datatype="html">
-        <source>Configure form buttons for adding a new record and for updating an existing record</source><target state="final">Configure form buttons for adding a new record and for updating an existing record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.buttons.create.label" datatype="html">
-        <source>Create Button</source><target state="final">Create Button</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.buttons.update.label" datatype="html">
-        <source>Update Button</source><target state="final">Update Button</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.editor.createOnly.label" datatype="html">
-        <source>Only allow creation of new records</source><target state="final">Only allow creation of new records</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.createOnly.hint" datatype="html">
-        <source>When you switch off the designer mode, a table with existing records is shown here. This allows you to select and update the records. You can hide this table and allow only adding new records.</source><target state="final">When you switch off the designer mode, a table with existing records is shown here. This allows you to select and update the records. You can hide this table and allow only adding new records.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.section.action.add" datatype="html">
-        <source>Add a Section</source><target state="final">Add a Section</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.mandatory" datatype="html">
-        <source>This input is mandatory</source><target state="final">This input is mandatory</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/attribute/form-editor-cell-attribute-actions.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.optional" datatype="html">
-        <source>This input is optional</source><target state="final">This input is optional</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/attribute/form-editor-cell-attribute-actions.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.range.tooltip" datatype="html">
-        <source>Minimum and maximum number of links</source><target state="final">Minimum and maximum number of links</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.displayed.tooltip" datatype="html">
-        <source>Attribute used to represent the linked record</source><target state="final">Attribute used to represent the linked record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.filter" datatype="html">
-        <source>Configure filtering of records that are possible to link</source><target state="final">Configure filtering of records that are possible to link</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.range.minimum" datatype="html">
-        <source>Minimal links count</source><target state="final">Minimal links count</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/range/form-link-range-dropdown.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.range.maximum" datatype="html">
-        <source>Maximal links count</source><target state="final">Maximal links count</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/range/form-link-range-dropdown.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.title" datatype="html">
-        <source>Field title</source><target state="final">Field title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.select.empty" datatype="html">
-        <source>Select input field</source><target state="final">Select input field</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.description" datatype="html">
-        <source>Add a description for this input field or leave blank for no description</source><target state="final">Add a description for this input field or leave blank for no description</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.attribute.empty" datatype="html">
-        <source>No Attributes found</source><target state="final">No Attributes found</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context><context context-type="linenumber">138</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.attribute" datatype="html">
-        <source>Attribute</source><target state="final">Attribute</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context><context context-type="linenumber">144</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.link.empty" datatype="html">
-        <source>No Link Types found</source><target state="final">No Link Types found</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context><context context-type="linenumber">163</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.link" datatype="html">
-        <source>Link Type</source><target state="final">Link Type</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context><context context-type="linenumber">169</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.action.layout" datatype="html">
-        <source>Change the row layout</source><target state="final">Change the row layout</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/form-editor-row.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.action.delete" datatype="html">
-        <source>Remove this row</source><target state="final">Remove this row</target>
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/form-editor-row.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="perspective.form.editor.section.title" datatype="html">
-        <source>Add a section title or leave blank for no title</source><target state="final">Add a section title or leave blank for no title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.section.description" datatype="html">
-        <source>Add instructions for filling this section or leave blank</source><target state="final">Add instructions for filling this section or leave blank</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.action.add" datatype="html">
-        <source>Add a Form Row</source><target state="final">Add a Form Row</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="perspective.form.editor.section.action.delete" datatype="html">
-        <source>Remove This Section</source><target state="final">Remove This Section</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="perspective.form.view.mode.designer.label" datatype="html">
-        <source>Designer Mode</source><target state="final">Designer Mode</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.mode.designer.tooltip" datatype="html">
-        <source>Active designer mode allows you to change the form fields and layout</source><target state="final">Active designer mode allows you to change the form fields and layout</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="perspective.form.view.mode.empty" datatype="html">
-        <source>I am sorry, but you could not create/update records or build the form.</source><target state="final">I am sorry, but you could not create/update records or build the form.</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="perspective.form.view.documents.new" datatype="html">
-        <source>Add a new row</source><target state="final">Add a new row</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.view.documents.new.adding" datatype="html">
-        <source>Adding a new row</source><target state="final">Adding a new row</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.title" datatype="html">
-        <source>Unconfirmed changes</source><target state="final">Unconfirmed changes</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">448</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
-        <source>There are some changes in form that was not saved. Are you sure to select another record?</source><target state="final">There are some changes in form that was not saved. Are you sure to select another record?</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">449</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
-        <source>Yes, Select Record</source><target state="final">Yes, Select Record</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">450</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
-        <source>No, Keep Editing</source><target state="final">No, Keep Editing</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">451</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.delete" datatype="html">
-        <source>Delete This Record</source><target state="final">Delete This Record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/submit/form-view-submit.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.mandatory" datatype="html">
-        <source>Field is mandatory</source><target state="final">Field is mandatory</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">147</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.invalid" datatype="html">
-        <source>Value is not valid.</source><target state="final">Value is not valid.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">159</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.text.length" datatype="html">
-        <source>Number of characters must be <x id="PH" equiv-text="textConfig.minLength"/>.</source><target state="final">Number of characters must be <x id="PH" equiv-text="textConfig.minLength"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">191</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.text.range" datatype="html">
-        <source>Number of characters must be from range <x id="PH" equiv-text="textConfig.minLength"/>-<x id="PH_1" equiv-text="textConfig.maxLength"/></source><target state="final">Number of characters must be from range <x id="PH" equiv-text="textConfig.minLength"/>-<x id="PH_1" equiv-text="textConfig.maxLength"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">195</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.text.minimum" datatype="html">
-        <source>Number of characters must be at least <x id="PH" equiv-text="textConfig.minLength"/>.</source><target state="final">Number of characters must be at least <x id="PH" equiv-text="textConfig.minLength"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">199</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.text.maximum" datatype="html">
-        <source>Number of characters must be at most <x id="PH" equiv-text="textConfig.maxLength"/>.</source><target state="final">Number of characters must be at most <x id="PH" equiv-text="textConfig.maxLength"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">203</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.numeric.length" datatype="html">
-        <source>Value must be <x id="PH" equiv-text="minFormatted"/>.</source><target state="final">Value must be <x id="PH" equiv-text="minFormatted"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">217</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">243</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.numeric.range" datatype="html">
-        <source>Value must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></source><target state="final">Value must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">221</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">247</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.numeric.minimum" datatype="html">
-        <source>Value must be equal to or greater than <x id="PH" equiv-text="minFormatted"/>.</source><target state="final">Value must be equal to or greater than <x id="PH" equiv-text="minFormatted"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">225</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">251</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.numeric.maximum" datatype="html">
-        <source>Value must be equal to or lower than <x id="PH" equiv-text="maxFormatted"/>.</source><target state="final">Value must be equal to or lower than <x id="PH" equiv-text="maxFormatted"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">229</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">255</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.date.length" datatype="html">
-        <source>Date must be <x id="PH" equiv-text="minFormatted"/>.</source><target state="final">Date must be <x id="PH" equiv-text="minFormatted"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">269</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.date.range" datatype="html">
-        <source>Date must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></source><target state="final">Date must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">273</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.date.minimum" datatype="html">
-        <source>Date must be on or later than <x id="PH" equiv-text="minFormatted"/>.</source><target state="final">Date must be on or later than <x id="PH" equiv-text="minFormatted"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">277</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.attribute.date.maximum" datatype="html">
-        <source>Date must be on or earlier than <x id="PH" equiv-text="maxFormatted"/>.</source><target state="final">Date must be on or earlier than <x id="PH" equiv-text="maxFormatted"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">281</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.link.exact" datatype="html">
-        <source>Number of links must be <x id="PH" equiv-text="config.minLinks"/>.</source><target state="final">Number of links must be <x id="PH" equiv-text="config.minLinks"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">308</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.link.minimum" datatype="html">
-        <source>Number of links must be equal to or greater than <x id="PH" equiv-text="config.minLinks"/>.</source><target state="final">Number of links must be equal to or greater than <x id="PH" equiv-text="config.minLinks"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">314</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.validation.link.maximum" datatype="html">
-        <source>Number of links must be equal to or lower than <x id="PH" equiv-text="config.maxLinks"/>.</source><target state="final">Number of links must be equal to or lower than <x id="PH" equiv-text="config.maxLinks"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
-          <context context-type="linenumber">320</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.buttons.create.title.default" datatype="html">
-        <source>Create Record</source><target state="final">Create Record</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="perspective.form.editor.buttons.update.title.default" datatype="html">
-        <source>Update Record</source><target state="final">Update Record</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
-        <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION"/> cards} other {<x id="INTERPOLATION"/> cards}}</source><target state="final">{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION"/> cards} other {<x id="INTERPOLATION"/> cards}}</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
-        <source>No records found.</source><target state="final">No records found.</target>
-
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/body/links-list-table-body.component.html</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/results-table/results-table.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="modal.links.modify.title" datatype="html">
-        <source>Select Linked Records</source><target state="final">Select Linked Records</target>
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="modal.links.modify.selected" datatype="html">
-        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source><target state="final"> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </target>
+    <file source-language="en" datatype="plaintext" original="ng2.template" target-language="en">
+
+        <body>
+            <trans-unit id="button.close" datatype="html">
+                <source>Close</source>
+                <target state="final">Close</target>
+
+
+
+
+
+
+
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
+            <trans-unit id="button.help" datatype="html">
+                <source>Help</source>
+                <target state="final">Help</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
+                    <context context-type="linenumber">11</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="help.functionsAndRules" datatype="html">
+                <source>https://www.lumeer.io/functions-and-rules</source>
+                <target state="final">https://www.lumeer.io/functions-and-rules</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
+                    <context context-type="linenumber">14</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="4be44482feb952b217f702aaf0bad3536a4d03ad" datatype="html">
+                <source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source>
+                <target state="final">Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </target>
+
+                <note priority="1" from="description">textEditor.minLength</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context>
+                    <context context-type="linenumber">24</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="81a825c813cc67a514bb711507b538569209cd79" datatype="html">
+                <source>Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</source>
+                <target state="final">Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</target>
+
+                <note priority="1" from="description">textEditor.maxLength</note>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context>
+                    <context context-type="linenumber">25</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="collection.name.placeholder" datatype="html">
+                <source>Click to set name</source>
+                <target state="final">Click to set name</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/collection-name/post-it-collection-name.component.html</context>
+                    <context context-type="linenumber">6</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="collection.document.icon.set" datatype="html">
+                <source>Click icon to set it </source>
+                <target state="final">Click icon to set it </target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
+                    <context context-type="linenumber">9</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="button.cancel" datatype="html">
+                <source>Cancel</source>
+                <target state="final">Cancel</target>
+
+
+
+
+
+
+
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context>
+                    <context context-type="linenumber">64</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context>
+                    <context context-type="linenumber">39</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context>
+                    <context context-type="linenumber">18</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context>
+                    <context context-type="linenumber">22</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/attribute/function/attribute-function-modal.component.html</context>
+                    <context context-type="linenumber">27</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context>
+                    <context context-type="linenumber">26</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context>
+                    <context context-type="linenumber">26</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context>
+                    <context context-type="linenumber">14</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
+                    <context context-type="linenumber">40</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
+                    <context context-type="linenumber">22</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context>
+                    <context context-type="linenumber">23</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context>
+                    <context context-type="linenumber">42</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context>
+                    <context context-type="linenumber">12</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context>
+                    <context context-type="linenumber">33</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
+                    <context context-type="linenumber">360</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+                    <context context-type="linenumber">55</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context>
+                    <context context-type="linenumber">27</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context>
+                    <context context-type="linenumber">30</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context>
+                    <context context-type="linenumber">21</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context>
+                    <context context-type="linenumber">19</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context>
+                    <context context-type="linenumber">25</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context>
+                    <context context-type="linenumber">27</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context>
+                    <context context-type="linenumber">24</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context>
+                    <context context-type="linenumber">61</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context>
+                    <context context-type="linenumber">31</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/resource/comments/new-comment/new-comment.component.html</context>
+                    <context context-type="linenumber">38</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
+                    <context context-type="linenumber">81</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context>
+                    <context context-type="linenumber">178</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+                    <context context-type="linenumber">93</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
+                    <context context-type="linenumber">157</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="button.select" datatype="html">
+                <source>Select</source>
+                <target state="final">Select</target>
+
+
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context>
+                    <context context-type="linenumber">60</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context>
+                    <context context-type="linenumber">35</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="button.clear" datatype="html">
+                <source>Clear</source>
+                <target state="final">Clear</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context>
+                    <context context-type="linenumber">28</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="collection.document.count" datatype="html">
+                <source>Record Count</source>
+                <target state="final">Record Count</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
+                    <context context-type="linenumber">40</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="collection.favorite.remove" datatype="html">
+                <source>Remove from favorites</source>
+                <target state="final">Remove from favorites</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
+                    <context context-type="linenumber">50</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="collection.favorite.add" datatype="html">
+                <source>Add to favorites</source>
+                <target state="final">Add to favorites</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
+                    <context context-type="linenumber">58</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="collection.button.configure" datatype="html">
+                <source>Configure</source>
+                <target state="final">Configure</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
+                    <context context-type="linenumber">70</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="collection.button.remove" datatype="html">
+                <source>Delete Table</source>
+                <target state="final">Delete Table</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
+                    <context context-type="linenumber">81</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="search.result.more" datatype="html">
+                <source>See More</source>
+                <target state="final">See More</target>
+
+
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/button/see-more/see-more-button.component.html</context>
+                    <context context-type="linenumber">2</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="query.item.button.remove" datatype="html">
+                <source>Delete query item</source>
+                <target state="final">Remove query item</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/query-stem/query-stem-query-item.component.html</context>
+                    <context context-type="linenumber">26</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/simple/simple-query-item.component.html</context>
+                    <context context-type="linenumber">33</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="query.item.stem.expand" datatype="html">
+                <source>Expand links and filters</source>
+                <target state="final">Expand links and filters</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/query-stem/query-stem-query-item.component.html</context>
+                    <context context-type="linenumber">32</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="query.item.stem.collapse" datatype="html">
+                <source>Collapse links and filters</source>
+                <target state="final">Collapse links and filters</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/query-stem/query-stem-query-item.component.html</context>
+                    <context context-type="linenumber">38</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="tag.remove" datatype="html">
+                <source>Remove tag</source>
+                <target state="final">Remove tag</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/input/tags/input-tags.component.ts</context>
+                    <context context-type="linenumber">79</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/tag/tag.component.html</context>
+                    <context context-type="linenumber">6</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="inviteUser.dialog.readOnlyNoAccess.title2" datatype="html">
+                <source>Just Join</source>
+                <target state="final">Just Join</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+                    <context context-type="linenumber">4</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+                    <context context-type="linenumber">37</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="inviteUser.dialog.readOnly.title2" datatype="html">
+                <source>View</source>
+                <target state="final">View</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+                    <context context-type="linenumber">8</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+                    <context context-type="linenumber">43</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="inviteUser.dialog.write.title2" datatype="html">
+                <source>Collaborate</source>
+                <target state="final">Collaborate</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+                    <context context-type="linenumber">12</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+                    <context context-type="linenumber">49</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="inviteUser.dialog.manage.title2" datatype="html">
+                <source>Create</source>
+                <target state="final">Create</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
+                    <context context-type="linenumber">16</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
+                    <context context-type="linenumber">55</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="document.detail.remove" datatype="html">
+                <source>Remove Record</source>
+                <target state="final">Remove Record</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">80</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">82</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="link.detail.unlink" datatype="html">
+                <source>Unlink</source>
+                <target state="final">Unlink</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">89</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">91</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="document.detail.favorite.remove" datatype="html">
+                <source>Remove from favorites</source>
+                <target state="final">Remove from favorites</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">64</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">66</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="document.detail.favorite.add" datatype="html">
+                <source>Add to favorites</source>
+                <target state="final">Add to favorites</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">71</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">73</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="document.detail.version" datatype="html">
+                <source>Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></source>
+                <target state="final">Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">21</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="document.detail.switch.table" datatype="html">
+                <source>Switch to Table perspective</source>
+                <target state="final">Switch to Table perspective</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">56</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.html</context>
+                    <context context-type="linenumber">58</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="create.new.document" datatype="html">
+                <source>Create New Record</source>
+                <target state="final">Create New Record</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/detail/detail-perspective.component.html</context>
+                    <context context-type="linenumber">23</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context>
+                    <context context-type="linenumber">5</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.buttons.description" datatype="html">
+                <source>Configure form buttons for adding a new record and for updating an existing record</source>
+                <target state="final">Configure form buttons for adding a new record and for updating an existing record</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context>
+                    <context context-type="linenumber">1</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.buttons.create.label" datatype="html">
+                <source>Create Button</source>
+                <target state="final">Create Button</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context>
+                    <context context-type="linenumber">6</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.buttons.update.label" datatype="html">
+                <source>Update Button</source>
+                <target state="final">Update Button</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/buttons/form-editor-buttons.component.html</context>
+                    <context context-type="linenumber">14</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.createOnly.label" datatype="html">
+                <source>Only allow creation of new records</source>
+                <target state="final">Only allow creation of new records</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
+                    <context context-type="linenumber">2</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.createOnly.hint" datatype="html">
+                <source>When you switch off the designer mode, a table with existing records is shown here. This allows you to select and update the records. You can hide this table and allow only adding new records.</source>
+                <target state="final">When you switch off the designer mode, a table with existing records is shown here. This allows you to select and update the records. You can hide this table and allow only adding new records.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
+                    <context context-type="linenumber">4</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.section.action.add" datatype="html">
+                <source>Add a Section</source>
+                <target state="final">Add a Section</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/form-editor.component.html</context>
+                    <context context-type="linenumber">26</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.actions.mandatory" datatype="html">
+                <source>This input is mandatory</source>
+                <target state="final">This input is mandatory</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/attribute/form-editor-cell-attribute-actions.component.html</context>
+                    <context context-type="linenumber">2</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.actions.optional" datatype="html">
+                <source>This input is optional</source>
+                <target state="final">This input is optional</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/attribute/form-editor-cell-attribute-actions.component.html</context>
+                    <context context-type="linenumber">7</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.actions.range.tooltip" datatype="html">
+                <source>Minimum and maximum number of links</source>
+                <target state="final">Minimum and maximum number of links</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context>
+                    <context context-type="linenumber">3</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.actions.displayed.tooltip" datatype="html">
+                <source>Attribute used to represent the linked record</source>
+                <target state="final">Attribute used to represent the linked record</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context>
+                    <context context-type="linenumber">17</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.actions.filter" datatype="html">
+                <source>Configure filtering of records that are possible to link</source>
+                <target state="final">Configure filtering of records that are possible to link</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context>
+                    <context context-type="linenumber">49</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.actions.range.minimum" datatype="html">
+                <source>Minimal links count</source>
+                <target state="final">Minimal links count</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/range/form-link-range-dropdown.component.html</context>
+                    <context context-type="linenumber">9</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.actions.range.maximum" datatype="html">
+                <source>Maximal links count</source>
+                <target state="final">Maximal links count</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/range/form-link-range-dropdown.component.html</context>
+                    <context context-type="linenumber">15</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.title" datatype="html">
+                <source>Field title</source>
+                <target state="final">Field title</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.html</context>
+                    <context context-type="linenumber">2</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.select.empty" datatype="html">
+                <source>Select input field</source>
+                <target state="final">Select input field</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.html</context>
+                    <context context-type="linenumber">24</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.description" datatype="html">
+                <source>Add a description for this input field or leave blank for no description</source>
+                <target state="final">Add a description for this input field or leave blank for no description</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.html</context>
+                    <context context-type="linenumber">31</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.attribute.empty" datatype="html">
+                <source>No Attributes found</source>
+                <target state="final">No Attributes found</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context>
+                    <context context-type="linenumber">138</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.attribute" datatype="html">
+                <source>Attribute</source>
+                <target state="final">Attribute</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context>
+                    <context context-type="linenumber">144</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.link.empty" datatype="html">
+                <source>No Link Types found</source>
+                <target state="final">No Link Types found</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context>
+                    <context context-type="linenumber">163</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.cell.link" datatype="html">
+                <source>Link Type</source>
+                <target state="final">Link Type</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/form-editor-cell.component.ts</context>
+                    <context context-type="linenumber">169</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.action.layout" datatype="html">
+                <source>Change the row layout</source>
+                <target state="final">Change the row layout</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/form-editor-row.component.html</context>
+                    <context context-type="linenumber">18</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.action.delete" datatype="html">
+                <source>Remove this row</source>
+                <target state="final">Remove this row</target>
+
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/form-editor-row.component.html</context>
+                    <context context-type="linenumber">23</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.section.title" datatype="html">
+                <source>Add a section title or leave blank for no title</source>
+                <target state="final">Add a section title or leave blank for no title</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context>
+                    <context context-type="linenumber">3</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.section.description" datatype="html">
+                <source>Add instructions for filling this section or leave blank</source>
+                <target state="final">Add instructions for filling this section or leave blank</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context>
+                    <context context-type="linenumber">12</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.row.action.add" datatype="html">
+                <source>Add a Form Row</source>
+                <target state="final">Add a Form Row</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context>
+                    <context context-type="linenumber">45</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.section.action.delete" datatype="html">
+                <source>Remove This Section</source>
+                <target state="final">Remove This Section</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/section/form-editor-section.component.html</context>
+                    <context context-type="linenumber">51</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.mode.designer.label" datatype="html">
+                <source>Designer Mode</source>
+                <target state="final">Designer Mode</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
+                    <context context-type="linenumber">5</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.mode.designer.tooltip" datatype="html">
+                <source>Active designer mode allows you to change the form fields and layout</source>
+                <target state="final">Active designer mode allows you to change the form fields and layout</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
+                    <context context-type="linenumber">7</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.mode.empty" datatype="html">
+                <source>I am sorry, but you could not create/update records or build the form.</source>
+                <target state="final">I am sorry, but you could not create/update records or build the form.</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/mode/form-mode.component.html</context>
+                    <context context-type="linenumber">17</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.documents.new" datatype="html">
+                <source>Add a new row</source>
+                <target state="final">Add a new row</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context>
+                    <context context-type="linenumber">14</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.documents.new.adding" datatype="html">
+                <source>Adding a new row</source>
+                <target state="final">Adding a new row</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/choose/form-documents-choose.component.html</context>
+                    <context context-type="linenumber">14</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.submit.warning.data.title" datatype="html">
+                <source>Unconfirmed changes</source>
+                <target state="final">Unconfirmed changes</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
+                    <context context-type="linenumber">448</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
+                <source>There are some changes in form that was not saved. Are you sure to select another record?</source>
+                <target state="final">There are some changes in form that was not saved. Are you sure to select another record?</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
+                    <context context-type="linenumber">449</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
+                <source>Yes, Select Record</source>
+                <target state="final">Yes, Select Record</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
+                    <context context-type="linenumber">450</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
+                <source>No, Keep Editing</source>
+                <target state="final">No, Keep Editing</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
+                    <context context-type="linenumber">451</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.submit.delete" datatype="html">
+                <source>Delete This Record</source>
+                <target state="final">Delete This Record</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/submit/form-view-submit.component.html</context>
+                    <context context-type="linenumber">7</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.mandatory" datatype="html">
+                <source>Field is mandatory</source>
+                <target state="final">Field is mandatory</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">147</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.invalid" datatype="html">
+                <source>Value is not valid.</source>
+                <target state="final">Value is not valid.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">159</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.text.length" datatype="html">
+                <source>Number of characters must be <x id="PH" equiv-text="textConfig.minLength"/>.</source>
+                <target state="final">Number of characters must be <x id="PH" equiv-text="textConfig.minLength"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">191</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.text.range" datatype="html">
+                <source>Number of characters must be from range <x id="PH" equiv-text="textConfig.minLength"/>-<x id="PH_1" equiv-text="textConfig.maxLength"/></source>
+                <target state="final">Number of characters must be from range <x id="PH" equiv-text="textConfig.minLength"/>-<x id="PH_1" equiv-text="textConfig.maxLength"/></target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">195</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.text.minimum" datatype="html">
+                <source>Number of characters must be at least <x id="PH" equiv-text="textConfig.minLength"/>.</source>
+                <target state="final">Number of characters must be at least <x id="PH" equiv-text="textConfig.minLength"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">199</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.text.maximum" datatype="html">
+                <source>Number of characters must be at most <x id="PH" equiv-text="textConfig.maxLength"/>.</source>
+                <target state="final">Number of characters must be at most <x id="PH" equiv-text="textConfig.maxLength"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">203</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.numeric.length" datatype="html">
+                <source>Value must be <x id="PH" equiv-text="minFormatted"/>.</source>
+                <target state="final">Value must be <x id="PH" equiv-text="minFormatted"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">217</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">243</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.numeric.range" datatype="html">
+                <source>Value must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></source>
+                <target state="final">Value must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">221</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">247</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.numeric.minimum" datatype="html">
+                <source>Value must be equal to or greater than <x id="PH" equiv-text="minFormatted"/>.</source>
+                <target state="final">Value must be equal to or greater than <x id="PH" equiv-text="minFormatted"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">225</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">251</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.numeric.maximum" datatype="html">
+                <source>Value must be equal to or lower than <x id="PH" equiv-text="maxFormatted"/>.</source>
+                <target state="final">Value must be equal to or lower than <x id="PH" equiv-text="maxFormatted"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">229</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">255</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.date.length" datatype="html">
+                <source>Date must be <x id="PH" equiv-text="minFormatted"/>.</source>
+                <target state="final">Date must be <x id="PH" equiv-text="minFormatted"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">269</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.date.range" datatype="html">
+                <source>Date must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></source>
+                <target state="final">Date must be from range <x id="PH" equiv-text="minFormatted"/> - <x id="PH_1" equiv-text="maxFormatted"/></target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">273</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.date.minimum" datatype="html">
+                <source>Date must be on or later than <x id="PH" equiv-text="minFormatted"/>.</source>
+                <target state="final">Date must be on or later than <x id="PH" equiv-text="minFormatted"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">277</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.attribute.date.maximum" datatype="html">
+                <source>Date must be on or earlier than <x id="PH" equiv-text="maxFormatted"/>.</source>
+                <target state="final">Date must be on or earlier than <x id="PH" equiv-text="maxFormatted"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">281</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.link.exact" datatype="html">
+                <source>Number of links must be <x id="PH" equiv-text="config.minLinks"/>.</source>
+                <target state="final">Number of links must be <x id="PH" equiv-text="config.minLinks"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">308</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.link.minimum" datatype="html">
+                <source>Number of links must be equal to or greater than <x id="PH" equiv-text="config.minLinks"/>.</source>
+                <target state="final">Number of links must be equal to or greater than <x id="PH" equiv-text="config.minLinks"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">314</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.view.validation.link.maximum" datatype="html">
+                <source>Number of links must be equal to or lower than <x id="PH" equiv-text="config.maxLinks"/>.</source>
+                <target state="final">Number of links must be equal to or lower than <x id="PH" equiv-text="config.maxLinks"/>.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/content/view/validation/form-validation.service.ts</context>
+                    <context context-type="linenumber">320</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.buttons.create.title.default" datatype="html">
+                <source>Create Record</source>
+                <target state="final">Create Record</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context>
+                    <context context-type="linenumber">91</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="perspective.form.editor.buttons.update.title.default" datatype="html">
+                <source>Update Record</source>
+                <target state="final">Update Record</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context>
+                    <context context-type="linenumber">96</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="kanban.perspective.footer.cards" datatype="html">
+                <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION"/> cards} other {<x id="INTERPOLATION"/> cards}}</source>
+                <target state="final">{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION"/> cards} other {<x id="INTERPOLATION"/> cards}}</target>
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context>
+                    <context context-type="linenumber">19</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="shared.preview.results.noResults" datatype="html">
+                <source>No records found.</source>
+                <target state="final">No records found.</target>
+
+
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/links/links-list/table/body/links-list-table-body.component.html</context>
+                    <context context-type="linenumber">8</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/modify-document-links/results-table/results-table.component.html</context>
+                    <context context-type="linenumber">37</context>
+                </context-group>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context>
+                    <context context-type="linenumber">31</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="modal.links.modify.title" datatype="html">
+                <source>Select Linked Records</source>
+                <target state="final">Select Linked Records</target>
+
+
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+                    <context context-type="linenumber">10</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="modal.links.modify.selected" datatype="html">
+                <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source><target state="final"> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source><target state="final">{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</target>
@@ -818,13 +1391,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/copy-text-box/copy-text-box.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="document.detail.detail.comments.seeAll" datatype="html">
         <source> See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}"/> > </source><target state="final"> See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}"/> > </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</source><target state="final">{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</source><target state="final">{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source><target state="final">Only organization and project managers can invite colleagues, please ask them.</target>
 
         <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
@@ -1239,10 +1812,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="constraint.files.modify.constraint.message" datatype="html">
         <source>Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</source><target state="final">Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">259</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
-        <source>All day event</source><target state="final">All day event</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="referralsDialog.affiliateProgram.dialogTitle" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">259</context></context-group></trans-unit><trans-unit id="referralsDialog.affiliateProgram.dialogTitle" datatype="html">
         <source>Make money with Lumeer</source><target state="final">Make money with Lumeer</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="referralsDialog.affiliateProgram.header" datatype="html">
@@ -1496,7 +2066,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="selection.lists.modal.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="selection.lists.modal.add" datatype="html">
         <source>Add a new list</source><target state="final">Add a new list</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="selection.lists.modal.adding.sample" datatype="html">
@@ -1940,11 +2510,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="dataResource.detail.loading" datatype="html">
         <source>Fetching record</source><target state="final">Fetching record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit><trans-unit id="go.back" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="go.back" datatype="html">
         <source>Go back</source><target state="final">Go back</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/detail/data-resources-detail.component.html</context>
@@ -1956,7 +2523,10 @@
           <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/preview/data-resources-preview.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-      </trans-unit><trans-unit id="dialog.attribute.description.title" datatype="html">
+      </trans-unit><trans-unit id="button.done" datatype="html">
+        <source>Done</source><target state="final">Done</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="dialog.attribute.description.title" datatype="html">
         <source>Edit Description of</source><target state="final">Edit Description of</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/description/header/attribute-description-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
@@ -2152,17 +2722,11 @@
         </context-group>
       </trans-unit><trans-unit id="user.constraint.type.teams" datatype="html">
         <source>Teams</source><target state="final">Teams</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users.pipe.ts</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit><trans-unit id="user.constraint.type.users" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="user.constraint.type.users" datatype="html">
         <source>Users</source><target state="final">Users</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users.pipe.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit><trans-unit id="document.detail.audit.limit" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="document.detail.audit.limit" datatype="html">
         <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
         href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source><target state="final">Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
         href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></target>
@@ -2882,10 +3446,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="all" datatype="html">
         <source>All</source><target state="final">All</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="tasks" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">102</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="tasks" datatype="html">
         <source>Tasks</source><target state="final">Tasks</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
         <source>I am sorry but you do not have permissions to add tables. </source><target state="final">I am sorry but you do not have permissions to add tables. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/warning-message/empty-data/empty-data.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.notab" datatype="html">
@@ -2908,10 +3472,10 @@
         </context-group>
       </trans-unit><trans-unit id="collections" datatype="html">
         <source>Tables</source><target state="final">Tables</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">100</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="linkTypes" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">105</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">119</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/collections/user-collections.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="linkTypes" datatype="html">
         <source>Link Types</source><target state="final">Link Types</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.ts</context><context context-type="linenumber">77</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/link-types/user-link-types.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="user.resources.empty.current" datatype="html">
         <source>You do not not have right to see nor access any {type, select, project {project} collection {table} view {view} link_type {link type}}</source><target state="final">You do not not have right to see nor access any {type, select, project {project} collection {table} view {view} link_type {link type}}</target>
         <context-group purpose="location">
@@ -2926,8 +3490,8 @@
         </context-group>
       </trans-unit><trans-unit id="views" datatype="html">
         <source>Views</source><target state="final">Views</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">99</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="resources" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">104</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/model/dashboard-tab.ts</context><context context-type="linenumber">122</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/filters/dropdown/audit-log-filters-dropdown.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/views/user-views.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="resources" datatype="html">
         <source>Resources</source><target state="final">Resources</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context>
@@ -2945,7 +3509,7 @@
         </context-group>
       </trans-unit><trans-unit id="projects" datatype="html">
         <source>Projects</source><target state="final">Projects</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/resources/projects/user-projects.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="user.permission.missing" datatype="html">
         <source>You do not have permission to access this user</source><target state="final">You do not have permission to access this user</target>
 
@@ -3127,11 +3691,14 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">271</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
         <source>Empty title</source><target state="final">Empty title</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
-        <source>Add Task</source><target state="final">Add Task</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
+        <source>Add new task</source><target state="final">Add Task</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="tasks.empty.query.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">496</context></context-group></trans-unit><trans-unit id="task.state.placeholder" datatype="html">
+        <source>Select state</source><target state="final">Select state</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="tasks.empty.query.title" datatype="html">
         <source>All your tasks are done!</source><target state="final">All your tasks are done!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/empty/query/empty-tasks-query.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="tasks.empty.query.message" datatype="html">
@@ -3155,13 +3722,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="task.pinned" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"/></source><target state="final"><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source><target state="final">Resize table</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
         <source> There are no rows to display and you are not allowed to create any. </source><target state="final"> There are no rows to display and you are not allowed to create any. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="perspective.workflow.toolbar.groupBy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="perspective.workflow.toolbar.groupBy" datatype="html">
         <source>Group By</source><target state="final">Group By</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="table.header.menu.edit" datatype="html">
@@ -3288,7 +3855,17 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/hidden-column/table-hidden-column.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="table.header.show.all" datatype="html">
         <source>All columns</source><target state="final">All columns</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/hidden-menu/table-header-hidden-menu.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/hidden-column/table-hidden-column.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="perspective.workflow.row.new" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/hidden-menu/table-header-hidden-menu.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/hidden-column/table-hidden-column.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="column.add.placeholder" datatype="html">
+        <source>Add Column</source><target state="final">Add Column</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/table/content/header/cell/input/table-header-input.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/input/table-column-input.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.workflow.row.new" datatype="html">
         <source>Add new row</source><target state="final">Add new row</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/new-row/table-new-row.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="team.add.placeholder" datatype="html">
@@ -3500,16 +4077,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.success" datatype="html">
         <source>Success</source><target state="final">Success</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
         <source>Information</source><target state="final">Information</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
         <source>Warning</source><target state="final">Warning</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
         <source>Error</source><target state="final">Error</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="template.create.limitsExceeded" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">126</context></context-group></trans-unit><trans-unit id="template.create.limitsExceeded" datatype="html">
         <source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source><target state="final">I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/choose-organization/choose-organization.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="template.create.empty" datatype="html">
@@ -3520,7 +4097,7 @@
       <trans-unit id="view.not.found" datatype="html">
         <source>View not found</source><target state="final">View not found</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/views.guard.ts</context><context context-type="linenumber">87</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/views.guard.ts</context><context context-type="linenumber">75</context></context-group></trans-unit>
       <trans-unit id="page.not.found" datatype="html">
         <source>Page not found</source><target state="final">Page not found</target>
 
@@ -3643,22 +4220,22 @@
       <trans-unit id="collection.create.attributes.fail" datatype="html">
         <source>Could not create attributes</source><target state="final">Could not create attributes</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">491</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">492</context></context-group></trans-unit>
       <trans-unit id="collection.change.attribute.fail" datatype="html">
         <source>Could not change the attribute</source><target state="final">Could not change the attribute</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">537</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">538</context></context-group></trans-unit>
       <trans-unit id="collection.remove.attribute.fail" datatype="html">
         <source>Could not delete the attribute</source><target state="final">Could not delete the attribute</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">577</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">578</context></context-group></trans-unit>
       <trans-unit id="collection.change.permission.fail" datatype="html">
         <source>Could not change the table permissions</source><target state="final">Could not change the table permissions</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">623</context></context-group></trans-unit><trans-unit id="collection.runRule.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">624</context></context-group></trans-unit><trans-unit id="collection.runRule.fail" datatype="html">
         <source>Could not run the selected automation for the whole table</source><target state="final">Could not run the selected automation for the whole table</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">648</context></context-group></trans-unit><trans-unit id="dashboard.data.get.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">649</context></context-group></trans-unit><trans-unit id="dashboard.data.get.fail" datatype="html">
         <source>Could not read dashboard data</source><target state="final">Could not read dashboard data</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/dashboard-data/dashboard-data.effects.ts</context>
@@ -3789,7 +4366,7 @@
         <source>OK</source><target state="final">OK</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">128</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source><target state="final">{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">233</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
@@ -4276,6 +4853,18 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-smtp-configuration-blockly-component.ts</context>
           <context context-type="linenumber">34</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getUserTeamIdsBlock" datatype="html">
+        <source>Get team IDs the specified user is member of. The user is specified using their email.</source><target state="final">Get team IDs the specified user is member of. The user is specified using their email.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-user-team-ids-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getUserTeamsBlock" datatype="html">
+        <source>Get teams the specified user is member of. Returns list, use "make text from list" to display or store the value. The user is specified using their email.</source><target state="final">Get teams the specified user is member of. Returns list, use "make text from list" to display or store the value. The user is specified using their email.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-user-teams-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.getVariableBlock" datatype="html">
         <source>Gets the value of a project variable (including hidden secured variables).</source><target state="final">Gets the value of a project variable (including hidden secured variables).</target>
         <context-group purpose="location">
@@ -4671,7 +5260,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/confirmation/action-constraint-confirmation-form.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.default.title" datatype="html">
         <source>New event</source><target state="final">New event</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.ts</context><context context-type="linenumber">238</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.ts</context><context context-type="linenumber">196</context></context-group></trans-unit>
 
       <trans-unit id="file.attachment.download.failure" datatype="html">
         <source>Could not download the file attachment. Please try again later.</source><target state="final">Could not download the file attachment. Please try again later.</target>
@@ -5315,15 +5904,15 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="table.data.cell.linked.row.uninitialized" datatype="html">
         <source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source><target state="final">I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">511</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">515</context></context-group></trans-unit>
       <trans-unit id="table.delete.column.dialog.title" datatype="html">
         <source>Delete this column?</source><target state="final">Delete this column?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1241</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1245</context></context-group></trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
         <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source><target state="final">Do you really want to delete the column? This will permanently remove the attribute and all its data.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1242</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1246</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
         <source>Attribute settings...</source><target state="final">Attribute settings...</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">267</context></context-group></trans-unit><trans-unit id="table.header.menu.add.linkColumn" datatype="html">
@@ -5535,7 +6124,7 @@
         <source>I am sorry, this record could not be found.</source><target state="final">I am sorry, this record could not be found.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
         <source>Zapier Automation</source><target state="final">Zapier Automation</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">

@@ -24,7 +24,7 @@ import {DashboardTab} from '../../../../core/model/dashboard-tab';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {selectSearchTab} from '../../../../core/store/navigation/navigation.state';
-import {selectSearchPerspectiveVisibleTabs} from '../../../../core/store/views/views.state';
+import {selectSearchPerspectiveVisibleTabs} from '../../../../core/store/common/permissions.selectors';
 
 @Component({
   templateUrl: './dashboard-tab.component.html',

@@ -38,6 +38,7 @@ import {KeyCode} from '../key-code';
 import {DataInputSaveAction} from './data-input-save-action';
 import {Constraint, ConstraintType, DataValue} from '@lumeer/data-filters';
 import {Workspace} from '../../core/store/navigation/workspace';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'data-input',
@@ -94,11 +95,19 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   @Output()
   public enterInvalid = new EventEmitter();
 
-  private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
+  public readonly isMobile: boolean;
+
+  private tempElement: HTMLElement;
   public notNullConstraintType: ConstraintType;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
+  constructor(
+    private renderer: Renderer2,
+    private elementRef: ElementRef,
+    private deviceService: DeviceDetectorService
+  ) {
+    this.isMobile = deviceService.isMobile();
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.dataValue && this.resizeToContent) {

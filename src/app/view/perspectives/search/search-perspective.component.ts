@@ -30,12 +30,7 @@ import {
   selectSearchTab,
 } from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {
-  selectCurrentView,
-  selectDefaultViewConfig,
-  selectSearchPerspectiveVisibleTabs,
-  selectViewQuery,
-} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
@@ -51,6 +46,7 @@ import {convertPerspectiveSettingsToString} from '../../../core/store/navigation
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {ModalService} from '../../../shared/modal/modal.service';
 import {DashboardTab, TabType} from '../../../core/model/dashboard-tab';
+import {selectSearchPerspectiveVisibleTabs} from '../../../core/store/common/permissions.selectors';
 import {UserHintsKeys} from '../../../core/store/users/user';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {selectCurrentUser} from '../../../core/store/users/users.state';

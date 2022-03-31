@@ -18,6 +18,7 @@
  */
 
 import {RowLayoutType} from '../../shared/layout/row-layout/row-layout';
+import {AllowedPermissions} from './allowed-permissions';
 
 export interface DashboardTab {
   id?: string;
@@ -96,7 +97,11 @@ export enum TabType {
   Custom = 'custom',
 }
 
-export const defaultDashboardTabs = [
+export function isDashboardTabDefault(tab: DashboardTab): boolean {
+  return tab && defaultDashboardTabs.some(t => t.id === tab.id);
+}
+
+const defaultDashboardTabs: DashboardTab[] = [
   {id: TabType.All, title: $localize`:@@all:All`, type: TabType.All},
   {
     id: TabType.Tasks,
@@ -124,6 +129,22 @@ export const defaultDashboardTabs = [
   },
 ];
 
-export function isDashboardTabDefault(tab: DashboardTab): boolean {
-  return tab && defaultDashboardTabs.some(t => t.id === tab.id);
+export function filterDefaultDashboardTabs(
+  permissions: AllowedPermissions,
+  collectionsCount: number,
+  viewsCount: number
+): DashboardTab[] {
+  const tabs = [
+    {id: TabType.All, title: $localize`:@@all:All`, type: TabType.All},
+    {id: TabType.Tasks, title: $localize`:@@tasks:Tasks`, type: TabType.Tasks},
+  ];
+
+  if (permissions?.roles?.CollectionContribute || collectionsCount > 0) {
+    tabs.push({id: TabType.Tables, title: $localize`:@@collections:Tables`, type: TabType.Tables});
+  }
+  if (permissions?.roles?.ViewContribute || viewsCount > 0) {
+    tabs.push({id: TabType.Views, title: $localize`:@@views:Views`, type: TabType.Views});
+  }
+
+  return tabs;
 }

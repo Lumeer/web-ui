@@ -39,7 +39,7 @@ import {UserHintsKeys} from '../../../../core/store/users/user';
 })
 export class InviteUserComponent implements OnInit {
   @Input()
-  public mobile: boolean;
+  public compact: boolean;
 
   public projectPermissions$: Observable<AllowedPermissions>;
   public isWorkspaceDefined$: Observable<boolean>;

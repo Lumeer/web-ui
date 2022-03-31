@@ -68,10 +68,10 @@
 
 </div>
 
-<div class="pt-3 px-3 d-flex" *ngIf="descriptionVisible">
+<div class="pt-3 px-3 d-flex ms-2-5" *ngIf="descriptionVisible">
   <i class="fas fa-2x fa-quote-right pe-2 mt-2"></i>
   <input-box
-    class="d-flex pb-3 pt-1"
+    class="d-flex pb-3 pt-1 ms-1"
     [initialValue]="resource.description"
     [canStayEmpty]="true"
     [editable]="permissions?.roles?.Manage"

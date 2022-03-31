@@ -58,7 +58,7 @@
            class="border-0 w-100 h-100 bg-transparent"
            type="text">
 
-    <options-dropdown [options]="users | filterUsers:name:teams"
+    <options-dropdown [options]="users | filterUsersAndTeams:name:teams"
                       [showBackdrop]="false"
                       [closeOnClickOutside]="false"
                       [origin]="textInput"

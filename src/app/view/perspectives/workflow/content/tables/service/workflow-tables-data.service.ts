@@ -31,7 +31,7 @@ import {DocumentsAction} from '../../../../../../core/store/documents/documents.
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, map, mergeMap, skip, take} from 'rxjs/operators';
-import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {Attribute, Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
@@ -52,7 +52,6 @@ import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {findAttribute, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {createAttributesSettingsOrder} from '../../../../../../shared/settings/settings.util';
 import {HeaderMenuId, WorkflowTablesMenuService} from './workflow-tables-menu.service';
-import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
@@ -137,6 +136,7 @@ import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configur
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
+import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -418,6 +418,7 @@ export class WorkflowTablesDataService {
               const minHeight = computeTableHeight(rows, newRow, 1);
               const maxHeight = computeTableHeight(rows, newRow);
               const height = tableSettings?.height || computeTableHeight(rows, newRow, 5);
+              const actionTitle = this.tableNewRowTitle(collection);
               const workflowTable: WorkflowTable = {
                 id: tableId,
                 columns: columns.map(column => ({...column, tableId})),
@@ -435,7 +436,7 @@ export class WorkflowTablesDataService {
                 height,
                 bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
                 width: columnsWidth + 1, // + 1 for border
-                newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated} : undefined,
+                newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated, actionTitle} : undefined,
                 linkingDocumentIds:
                   !linkingCollectionId && createAggregatedLinkingDocumentsIds(aggregatedDataItem, childItem),
                 linkingCollectionId,
@@ -463,6 +464,7 @@ export class WorkflowTablesDataService {
           const minHeight = computeTableHeight(rows, newRow, 1);
           const maxHeight = computeTableHeight(rows, newRow);
           const height = tableSettings?.height || maxHeight;
+          const actionTitle = this.tableNewRowTitle(collection);
           const workflowTable: WorkflowTable = {
             id: tableId,
             columns: columns.map(column => ({...column, tableId})),
@@ -473,7 +475,7 @@ export class WorkflowTablesDataService {
             minHeight,
             height,
             width: columnsWidth + 1, // + 1 for border
-            newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap} : undefined,
+            newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap, actionTitle} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
             linkingCollectionId,
           };
@@ -487,6 +489,13 @@ export class WorkflowTablesDataService {
       },
       {tables: [], actions: []}
     );
+  }
+
+  private tableNewRowTitle(collection: Collection): string {
+    if (collection.purpose?.type === CollectionPurposeType.Tasks) {
+      return $localize`:@@create.new.task:Add new task`;
+    }
+    return null;
   }
 
   private createNewRowCellsMap(
@@ -669,7 +678,6 @@ export class WorkflowTablesDataService {
     }, []);
 
     const syncActions = [];
-    const columnNames = (resource.attributes || []).map(attribute => attribute.name);
     for (let i = 0; i < currentColumns?.length; i++) {
       const column = {...currentColumns[i], color: newColumnColor};
       if (!column.attribute) {
@@ -690,7 +698,6 @@ export class WorkflowTablesDataService {
           }
         }
       }
-      columnNames.push(column.name || column.attribute?.name);
     }
 
     if (
@@ -701,7 +708,7 @@ export class WorkflowTablesDataService {
     ) {
       const lastColumn: TableColumn = {
         id: generateId(),
-        name: generateAttributeName(columnNames),
+        name: '',
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
         editableFilters: this.editableFilters,
@@ -763,13 +770,10 @@ export class WorkflowTablesDataService {
       this.stateService.permissions,
       this.stateService.linkTypesMap
     );
-    const columnNames = table.columns
-      .filter(column => column.linkTypeId)
-      .map(column => column.attribute?.name || column.name);
     if (linkType && permissions?.roles?.AttributeEdit) {
       const lastColumn: TableColumn = {
         id: generateId(),
-        name: generateAttributeName(columnNames),
+        name: '',
         linkTypeId: linkType.id,
         editableFilters: this.editableFilters,
         permissions,
@@ -1262,7 +1266,7 @@ export class WorkflowTablesDataService {
       this.setPendingRowValue(row, column, value);
 
       if (!this.isColumnCreating(column)) {
-        this.createAttribute(column, column.name);
+        this.createAttribute(column, this.getColumnName(column));
       }
     }
   }
@@ -1275,9 +1279,21 @@ export class WorkflowTablesDataService {
       this.setPendingRowValue(row, column, value);
 
       if (!this.isColumnCreating(column)) {
-        this.createAttribute(column, column.name);
+        this.createAttribute(column, this.getColumnName(column));
       }
     }
+  }
+
+  private getColumnName(column: TableColumn): string {
+    if (column.name) {
+      return column.name;
+    }
+
+    const columnNames = this.stateService
+      .columns(column.tableId)
+      .map(column => column.attribute?.name || column.name)
+      .filter(name => !!name);
+    return generateAttributeName(columnNames);
   }
 
   private createDocument(row: TableRow, column: TableColumn, value: any) {
@@ -1429,7 +1445,6 @@ export class WorkflowTablesDataService {
   }
 
   public copyTableColumn(table: TableModel, column: TableColumn): TableColumn {
-    const columnNames = table?.columns.map(col => col.name || col.attribute?.name) || [];
     const copiedColumn = {
       ...column,
       id: generateId(),
@@ -1437,7 +1452,7 @@ export class WorkflowTablesDataService {
       creating: undefined,
       default: false,
       hidden: false,
-      name: generateAttributeName(columnNames),
+      name: '',
       menuItems: [],
     };
     const permissions = this.stateService.getColumnPermissions(column);

@@ -1,6 +1,6 @@
 <i *ngIf="size !== sizeType.L" class="fa fa-fw text-primary clickable chevron first-line-element mt-1"
    [ngClass]="isOpened ? 'fa-caret-down' : 'fa-caret-right'"
-   aria-hidden="true">
+   aria-hidden="true" (click)="toggleOpen.emit()">
 </i>
 
 <i *ngIf="size === sizeType.L" class="fa fa-none chevron me-2"></i>

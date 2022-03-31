@@ -59,7 +59,13 @@ import {
 } from '../navigation/query/query.util';
 import {View, ViewSettings} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
-import {selectAllViews, selectCurrentView, selectViewQuery} from '../views/views.state';
+import {
+  selectAllViews,
+  selectCurrentView,
+  selectDefaultSearchPerspectiveConfig,
+  selectDefaultSearchPerspectiveDashboardView,
+  selectViewQuery,
+} from '../views/views.state';
 import {LinkInstance} from '../link-instances/link.instance';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {
@@ -74,12 +80,19 @@ import {groupLinkInstancesByLinkTypes, sortLinkInstances} from '../link-instance
 import {
   selectCollectionsPermissions,
   selectLinkTypesPermissions,
+  selectProjectPermissions,
   selectResourcesPermissions,
   selectViewsPermissions,
 } from '../user-permissions/user-permissions.state';
 import {Collection, CollectionPurposeType} from '../collections/collection';
 import {selectCurrentUserForWorkspace} from '../users/users.state';
-import {canChangeViewQuery, getViewColor, getViewIcon} from '../views/view.utils';
+import {
+  canChangeViewQuery,
+  createSearchPerspectiveTabs,
+  createSearchPerspectiveTabsByView,
+  getViewColor,
+  getViewIcon,
+} from '../views/view.utils';
 import {LinkType} from '../link-types/link.type';
 import {AllowedPermissionsMap, ResourcesPermissions} from '../../model/allowed-permissions';
 import {DataQuery} from '../../model/data-query';
@@ -94,11 +107,19 @@ import {
 import {User} from '../users/user';
 import {filterVisibleAttributesBySettings} from '../../../shared/utils/attribute.utils';
 import {mapLinkTypeCollections} from '../../../shared/utils/link-type.utils';
+import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../../../shared/utils/dashboard.utils';
+import {filterDefaultDashboardTabs} from '../../model/dashboard-tab';
+import {selectSearchesDictionary} from '../searches/searches.state';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
+import {SearchConfig} from '../searches/search';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
     collections.filter(collection => roleTypes.some(role => permissions?.[collection.id]?.rolesWithView?.[role]))
   );
+
+const selectCollectionsCountByPermission = (roleTypes: RoleType[]) =>
+  createSelector(selectCollectionsByPermission(roleTypes), collections => collections.length);
 
 const selectCollectionsByViewAndPermission = (view: View, roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissionsByView(view), selectAllCollections, (permissions, collections) =>
@@ -106,6 +127,8 @@ const selectCollectionsByViewAndPermission = (view: View, roleTypes: RoleType[])
   );
 
 export const selectReadableCollections = selectCollectionsByPermission([RoleType.Read]);
+
+export const selectReadableCollectionsCount = selectCollectionsCountByPermission([RoleType.Read]);
 
 export const selectReadableCollectionsByView = (view: View) =>
   selectCollectionsByViewAndPermission(view, [RoleType.Read]);
@@ -633,6 +656,8 @@ export const selectViewsByRead = createSelector(selectAllViews, selectViewsPermi
   views.filter(view => permissions?.[view.id]?.roles?.Read)
 );
 
+export const selectViewsByReadCount = createSelector(selectViewsByRead, views => views.length);
+
 export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views): View[] =>
   sortResourcesByFavoriteAndLastUsed<View>(views)
 );
@@ -778,3 +803,70 @@ export const selectLinkTypePermissionsByView = (view: View, linkTypeId: string) 
         user
       )
   );
+
+/*
+ * Dashboard tabs
+ */
+
+export const selectDefaultSearchPerspectiveDashboardTabs = createSelector(
+  selectDefaultSearchPerspectiveConfig,
+  selectProjectPermissions,
+  selectReadableCollectionsCount,
+  selectViewsByReadCount,
+  (config, permissions, collectionsCount, viewsCount) =>
+    addDefaultDashboardTabsIfNotPresent(
+      config?.dashboard?.tabs,
+      filterDefaultDashboardTabs(permissions, collectionsCount, viewsCount)
+    )
+);
+
+export const selectDefaultSearchPerspectiveVisibleTabs = createSelector(
+  selectDefaultSearchPerspectiveDashboardTabs,
+  tabs => tabs.filter(tab => !tab.hidden)
+);
+
+export const selectSearchPerspectiveTabs = createSelector(
+  selectDefaultSearchPerspectiveDashboardTabs,
+  selectSearchesDictionary,
+  selectDefaultSearchPerspectiveDashboardView,
+  selectCurrentView,
+  (defaultTabs, searchesMap, dashboardView, currentView) => {
+    if (currentView) {
+      const search = searchesMap[currentView.code];
+      if (search?.config) {
+        return createSearchPerspectiveTabs(search?.config, defaultTabs);
+      }
+      return createSearchPerspectiveTabsByView(currentView, defaultTabs);
+    }
+
+    if (isViewValidForDashboard(dashboardView)) {
+      const search = searchesMap[dashboardView.code];
+      if (search?.config) {
+        return createSearchPerspectiveTabs(search?.config, defaultTabs);
+      }
+      return createSearchPerspectiveTabsByView(dashboardView, defaultTabs);
+    }
+
+    return createSearchPerspectiveTabs(searchesMap[DEFAULT_PERSPECTIVE_ID]?.config, defaultTabs);
+  }
+);
+
+export const selectSearchPerspectiveTabsByView = (view: View, defaultConfig?: SearchConfig) =>
+  createSelector(selectDefaultSearchPerspectiveDashboardTabs, selectSearchesDictionary, (defaultTabs, searchesMap) => {
+    if (isViewValidForDashboard(view)) {
+      const search = searchesMap[view.code];
+      if (search?.config) {
+        return createSearchPerspectiveTabs(search?.config, defaultTabs);
+      }
+      return createSearchPerspectiveTabsByView(view, defaultTabs);
+    }
+
+    return createSearchPerspectiveTabs(defaultConfig || searchesMap[DEFAULT_PERSPECTIVE_ID]?.config, defaultTabs);
+  });
+
+export const selectSearchPerspectiveVisibleTabs = createSelector(selectSearchPerspectiveTabs, tabs =>
+  tabs.filter(tab => !tab.hidden)
+);
+
+export const selectHasVisibleSearchTab = (tabId: string) =>
+  createSelector(selectSearchPerspectiveVisibleTabs, tabs => tabs.some(tab => tab.id === tabId));

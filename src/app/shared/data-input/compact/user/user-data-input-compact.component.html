@@ -1,0 +1,58 @@
+<div class="d-flex align-items-center h-100 p-1 text-nowrap" #wrapperElement
+     *ngIf="{selectedUsers: selectedUsers$ | async, selectedTeams: selectedTeams$ | async} as data"
+     [title]="data.selectedUsers | usersAndTeamsNames:data.selectedTeams"
+     [class.justify-content-center]="onlyIcon && configuration?.allowCenterOnlyIcon"
+     [ngClass]="multi ? 'invisible-scroll-y' : 'overflow-hidden w-100'">
+
+  <div class="text-muted px-1" *ngIf="placeholder && !data.selectedUsers.length && !data.selectedTeams.length">{{placeholder}}</div>
+
+    <div *ngFor="let team of data.selectedTeams; trackBy: trackByTeam"
+         class="badge badge-lg rounded-pill badge-outline-info me-2 team-tag">{{team.name}}</div>
+
+    <img ngxGravatar
+         *ngFor="let user of data.selectedUsers; trackBy:trackByUser; let first = first"
+         [email]="user.email"
+         [size]="avatarSize"
+         [style.min-width.px]="avatarSize"
+         [style.min-height.px]="avatarSize"
+         [style.margin-left.rem]="!first ? -0.5 : 0.25">
+
+    <span *ngIf="!onlyIcon && data.selectedUsers?.length && (data.selectedUsers | usersAreValid:users:value.config)"
+          [ngClass]="inputClass"
+          class="d-inline-block ms-2 text-nowrap user">
+        {{data.selectedUsers | usersNames | join}}
+      </span>
+
+    <ng-container *ngIf="!onlyIcon && !(data.selectedUsers | usersAreValid:users:value.config)">
+
+      <ng-container
+        *ngFor="let user of data.selectedUsers; trackBy:trackByUser; let first = first; let last = last">
+
+        <span data-test="user-data-input"
+              [class.invalid-value]="!commonConfiguration?.skipValidation && !(user | userIsValid:users:value.config:data.selectedUsers.length)"
+              [class.ms-2]="first"
+              class="d-inline-block user">
+          {{user.name || user.email}}
+        </span>
+        <span class="user" *ngIf="!last">,&nbsp;</span>
+
+      </ng-container>
+
+    </ng-container>
+
+  <ng-container *ngIf="!readonly">
+
+    <options-dropdown [options]="users | filterUsersAndTeams:'':teams"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="true"
+                      [closeOnClickOrigin]="true"
+                      [origin]="wrapperElement"
+                      [multiSelect]="multi"
+                      [selectedValues]="multi ? (data.selectedUsers | selectedValues:data.selectedTeams) : []"
+                      [firstItemActive]="false"
+                      (selectOption)="onSelect($event)"
+                      (onClose)="onDropdownClosed()">
+    </options-dropdown>
+  </ng-container>
+
+</div>

@@ -139,7 +139,7 @@ export class LinkInstancesEffects {
           mergeMap(linkInstance => [
             ...createCallbackActions(action.payload.onSuccess, linkInstance.id),
             new LinkInstancesAction.CreateSuccess({linkInstance}),
-            ...createCallbackActions(action.payload.afterSuccess, linkInstance.id),
+            ...createCallbackActions(action.payload.afterSuccess, linkInstance),
           ]),
           catchError(error =>
             of(...createCallbackActions(action.payload.onFailure), new LinkInstancesAction.CreateFailure({error}))

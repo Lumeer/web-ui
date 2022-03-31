@@ -46,6 +46,7 @@ export interface TableConfigPart {
 
 export interface TableConfigColumn {
   type: TableColumnType;
+  correlationId?: string;
   attributeIds: string[];
   attributeName?: string;
   width?: number;

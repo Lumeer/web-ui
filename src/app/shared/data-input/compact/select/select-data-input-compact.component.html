@@ -1,0 +1,37 @@
+<div class="d-flex align-items-center h-100 p-1 cursor-pointer" #wrapperElement
+     *ngIf="selectedOptions$ | async as selectedOptions"
+     [class.flex-wrap]="configuration?.wrapItems"
+     [title]="selectedOptions | selectOptionsJoined | unescapeHtml"
+     [ngClass]="!multi ? 'invisible-scroll-y' : 'overflow-hidden w-100'">
+
+  <div class="text-muted px-1" *ngIf="placeholder && !selectedOptions.length">{{placeholder}}</div>
+
+  <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">
+        <span class="select-tag"
+              [class.m-1]="configuration?.wrapItems"
+              [style.background]="option.background"
+              [style.color]="option.background | contrastColor"
+              [class.invalid-value]="!commonConfiguration?.skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions?.length)"
+              [spellcheck]="false"
+              [innerHTML]="option.displayValue || option.value"
+              [class.ms-2]="!first && !configuration?.wrapItems">
+        </span>
+  </ng-container>
+
+  <ng-container *ngIf="!readonly">
+
+    <options-dropdown [options]="dropdownOptions"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="true"
+                      [closeOnClickOrigin]="true"
+                      [origin]="wrapperElement"
+                      [multiSelect]="multi"
+                      [selectedValues]="multi ? (selectedOptions | selectOptionsValues) : []"
+                      [firstItemActive]="false"
+                      (selectOption)="onSelect($event)"
+                      (onClose)="onDropdownClosed()">
+    </options-dropdown>
+
+  </ng-container>
+
+</div>

@@ -24,22 +24,13 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
-import {map, take, tap} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../core/store/calendars/calendar';
-import {isAllDayEvent, isAllDayEventSingle} from '../../../view/perspectives/calendar/util/calendar-util';
 import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import * as moment from 'moment';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../../core/model/resource';
-import {
-  constraintContainsHoursInConfig,
-  parseDateTimeByConstraint,
-  subtractDatesToDurationCountsMap,
-} from '../../utils/date.utils';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../utils/date.utils';
 import {selectAllLinkTypes, selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
 import {toNumber} from '../../utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -53,8 +44,6 @@ import {
 } from '@lumeer/data-filters';
 import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
 import {View} from '../../../core/store/views/view';
-
-const DEFAULT_EVENT_DURATION = 60;
 
 @Component({
   templateUrl: './calendar-event-detail-modal.component.html',
@@ -95,11 +84,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   public linkTypes$: Observable<LinkType[]>;
   public permissions$: Observable<ResourcesPermissions>;
 
-  public allDay$ = new BehaviorSubject(false);
   public stemIndex$ = new BehaviorSubject<number>(0);
-
-  private currentResource: AttributesResource;
-  private currentDataResource: DataResource;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -115,34 +100,9 @@ export class CalendarEventDetailModalComponent implements OnInit {
     if (this.dataResource && this.resource) {
       this.dataResource$ = of(this.dataResource);
       this.resource$ = of(this.resource);
-      this.checkIsAllDay(this.stemIndex, this.dataResource, this.resource);
-
       this.stemIndex$.next(this.stemIndex);
     } else {
       this.onStemIndexSelect(0);
-      this.allDay$.next(this.end ? isAllDayEvent(this.start, this.end) : isAllDayEventSingle(this.start));
-    }
-  }
-
-  private checkIsAllDay(stemIndex: number, dataResource: DataResource, resource: AttributesResource) {
-    const stemConfig = this.getStemConfig(stemIndex);
-    if (stemConfig) {
-      const startProperty = stemConfig.start;
-      const endProperty = stemConfig.end;
-
-      const start =
-        startProperty &&
-        parseDateTimeByConstraint(
-          dataResource.data?.[startProperty.attributeId],
-          findAttributeConstraint(resource?.attributes, startProperty.attributeId)
-        );
-      const end =
-        endProperty &&
-        parseDateTimeByConstraint(
-          dataResource.data?.[endProperty.attributeId],
-          findAttributeConstraint(resource?.attributes, endProperty.attributeId)
-        );
-      this.allDay$.next(end ? isAllDayEvent(start, end) : isAllDayEventSingle(start));
     }
   }
 
@@ -165,7 +125,6 @@ export class CalendarEventDetailModalComponent implements OnInit {
 
   private selectNewDataResource$(stemIndex: number): Observable<DataResource> {
     return this.selectResourceByStemIndex$(stemIndex).pipe(
-      tap(resource => (this.currentResource = resource)),
       map(resource => {
         const stemConfig = this.getStemConfig(stemIndex);
         const dataModel = stemConfig?.name || stemConfig?.start;
@@ -217,8 +176,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
           linkTypeId: dataModel?.resourceType === AttributesResourceType.LinkType ? resource?.id : undefined,
         };
       }),
-      take(1),
-      tap(dataResource => (this.currentDataResource = dataResource))
+      take(1)
     );
   }
 
@@ -238,105 +196,9 @@ export class CalendarEventDetailModalComponent implements OnInit {
     return $localize`:@@dialog.create.calendar.event.default.title:New event`;
   }
 
-  public onDataResourceChanged(dataResource: DataResource) {
-    this.checkIsAllDay(this.stemIndex, dataResource, this.currentResource);
-    this.currentDataResource = dataResource;
-  }
-
-  public onAllDayChecked(allDay: boolean) {
-    const data = {};
-    const stemConfig = this.getStemConfig(this.stemIndex$.value);
-    if (stemConfig) {
-      const end = <Date>this.end;
-      const startProperty = stemConfig.start;
-      const endProperty = stemConfig.end;
-      let newStart = null;
-      if (startProperty) {
-        if (allDay) {
-          const start = this.currentDataResource?.data?.[startProperty.attributeId];
-          newStart = start && this.cleanDateWhenAllDay(start, startProperty);
-          data[startProperty.attributeId] = newStart;
-        } else if (endProperty ? isAllDayEvent(this.start, end) : isAllDayEventSingle(this.start)) {
-          const cleaned = this.cleanDateWhenAllDay(this.start, startProperty);
-          cleaned.setHours(9);
-          newStart = cleaned;
-          data[startProperty.attributeId] = cleaned;
-        } else if (this.start) {
-          newStart = this.start;
-          data[startProperty.attributeId] = this.start;
-        }
-      }
-
-      if (endProperty) {
-        const currentEnd = this.currentDataResource?.data?.[endProperty.attributeId];
-        if (allDay) {
-          if (this.end) {
-            data[endProperty.attributeId] = this.cleanDateWhenAllDay(this.end, endProperty);
-          } else {
-            data[endProperty.attributeId] = currentEnd && this.cleanDateWhenAllDay(currentEnd, endProperty);
-          }
-        } else if (isAllDayEvent(this.start, currentEnd)) {
-          data[endProperty.attributeId] = moment(newStart).add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
-        } else if (this.end) {
-          data[endProperty.attributeId] = this.end;
-        } else if (newStart) {
-          data[endProperty.attributeId] = moment(newStart).add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
-        }
-      }
-
-      if (Object.keys(data).length) {
-        this.allDay$.next(allDay);
-
-        Object.keys(data).forEach(key => {
-          data[key] = moment(data[key]).toISOString();
-        });
-
-        this.emitNewDataResource(this.currentDataResource, data, this.stemConfigResourceType(stemConfig));
-      }
-    }
-  }
-
-  private stemConfigResourceType(stemConfig: CalendarStemConfig): AttributesResourceType {
-    return (stemConfig.name || stemConfig.start).resourceType;
-  }
-
-  private emitNewDataResource(
-    dataResource: DataResource,
-    patchData: DataResourceData,
-    resourceType: AttributesResourceType
-  ) {
-    if (dataResource.id) {
-      if (resourceType === AttributesResourceType.Collection) {
-        this.store$.dispatch(
-          new DocumentsAction.PatchData({
-            document: {
-              ...(dataResource as DocumentModel),
-              data: patchData,
-            },
-          })
-        );
-      } else if (resourceType === AttributesResourceType.LinkType) {
-        this.store$.dispatch(
-          new LinkInstancesAction.PatchData({
-            linkInstance: {
-              ...(dataResource as LinkInstance),
-              data: patchData,
-            },
-          })
-        );
-      }
-    } else {
-      this.dataResource$ = of({...dataResource, data: {...dataResource.data, ...patchData}});
-    }
-  }
-
   public onStemIndexSelect(index: number) {
     this.resource$ = this.selectResourceByStemIndex$(index);
     this.dataResource$ = this.selectNewDataResource$(index);
     this.stemIndex$.next(index);
-  }
-
-  private cleanDateWhenAllDay(date: any, property: CalendarBar): Date {
-    return moment(date).hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
   }
 }

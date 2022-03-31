@@ -73,6 +73,9 @@ export class SearchTaskWrapperComponent implements OnChanges {
   @Output()
   public toggleFavorite = new EventEmitter();
 
+  @Output()
+  public toggleOpen = new EventEmitter();
+
   public readonly collectionType = ResourceType.Collection;
   public readonly sizeType = SizeType;
   public readonly readRole = RoleType.Read;

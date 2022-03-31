@@ -12,7 +12,7 @@
                           [cursor]="dataResource | dataCursor:row.attribute?.id:view?.id"
                           [constraintData]="constraintData"
                           [lockStats]="data.resource | attributeLockStats :dataResource: row.attribute:constraintData"
-                          [readonly]="!data.writable"
+                          [readonly]="!editableValues || !data.writable"
                           [unusedAttributes]="unusedAttributes$ | async"
                           [preventEventBubble]="preventEventBubble"
                           [workspace]="workspace"

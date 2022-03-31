@@ -43,6 +43,7 @@
                           [view]="data.currentView"
                           [user]="data.currentUser"
                           [toolbarRef]="toolbarRef"
+                          [editableValues]="editable"
                           [preventEventBubble]="preventEventBubble"
                           [attributeSettings]="data.attributesSettings | resourceAttributesSettings:resourceType:resource.id"
                           (attributeTypeClick)="onAttributeTypeClick($event)"

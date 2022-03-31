@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, EMPTY, Observable, of} from 'rxjs';
+import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -66,7 +66,7 @@ import {Query} from '../navigation/query/query';
 import {convertQueryModelToString} from '../navigation/query/query.converter';
 import {isSingleCollectionQuery} from '../navigation/query/query.util';
 import {RouterAction} from '../router/router.action';
-import {moveTableCursor, TableBodyCursor, TableCursor} from './table-cursor';
+import {moveTableCursor, TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
 import {
   TableColumnType,
   TableConfig,
@@ -557,6 +557,23 @@ export class TablesEffects {
               actions.push(new LinkTypesAction.DeleteAttribute({linkTypeId: part.linkTypeId, attributeId}));
             }
             return actions;
+          })
+        )
+      )
+    )
+  );
+
+  public removeColumnByCorrelationId$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.RemoveColumnByCorrelationId>(TablesActionType.REMOVE_COLUMN_BY_CORRELATION_ID),
+      mergeMap(action =>
+        this.store$.select(selectTableById(action.payload.tableId)).pipe(
+          first(),
+          mergeMap(table => {
+            const part = table.config.parts[action.payload.partIndex];
+            const columnIndex = part.columns.findIndex(column => column.correlationId === action.payload.correlationId);
+            const cursor: TableHeaderCursor = {...action.payload, columnPath: [columnIndex]};
+            return [new TablesAction.ReplaceColumns({cursor, deleteCount: 1})];
           })
         )
       )

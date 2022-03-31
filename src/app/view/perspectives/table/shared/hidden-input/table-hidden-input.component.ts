@@ -35,6 +35,7 @@ import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils'
 import {ConstraintData} from '@lumeer/data-filters';
 import {TableDataPermissionsService} from '../../service/table-data-permissions.service';
 import {View} from '../../../../../core/store/views/view';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'table-hidden-input',
@@ -65,6 +66,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   private skipCompose = false;
+  private readonly isInputEnabled: boolean;
 
   private constraintData: ConstraintData;
 
@@ -72,8 +74,11 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private actions$: Actions,
     private store$: Store<AppState>,
-    private dataPermissionsService: TableDataPermissionsService
-  ) {}
+    private dataPermissionsService: TableDataPermissionsService,
+    private deviceService: DeviceDetectorService
+  ) {
+    this.isInputEnabled = !(deviceService.isMobile() || deviceService.isTablet());
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToTableCursorActions());
@@ -89,14 +94,24 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
         filter(action => !action.payload.cursor || action.payload.cursor.tableId === this.tableId)
       )
       .subscribe(action => {
-        const element = this.hiddenInput.nativeElement;
-
         if (action.payload.cursor) {
-          element.focus();
+          this.focus();
         } else {
-          element.blur();
+          this.blur();
         }
       });
+  }
+
+  private focus() {
+    if (this.isInputEnabled) {
+      this.hiddenInput?.nativeElement?.focus();
+    }
+  }
+
+  private blur() {
+    if (this.isInputEnabled) {
+      this.hiddenInput?.nativeElement?.blur();
+    }
   }
 
   public ngOnDestroy() {

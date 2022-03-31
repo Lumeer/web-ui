@@ -18,16 +18,17 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DataValue} from '@lumeer/data-filters';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {TaskAttributes} from '../../../model/task-attributes';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 import {View} from '../../../../../../../core/store/views/view';
-import {select, Store} from '@ngrx/store';
+import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {selectCurrentUser} from '../../../../../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
 import {UserHintsKeys} from '../../../../../../../core/store/users/user';
@@ -98,6 +99,32 @@ export class SearchTaskFirstLineComponent implements OnInit {
     ...this.configuration,
     user: {allowCenterOnlyIcon: true, onlyIcon: true},
   };
+
+  public editing$ = new BehaviorSubject(false);
+
+  public onStateClick() {
+    if (!this.editing$.value) {
+      this.editing$.next(true);
+    }
+  }
+
+  public onStateCancel() {
+    this.editing$.next(false);
+  }
+
+  public onStateSave(dataValue: DataValue) {
+    this.editing$.next(false);
+    if (this.document) {
+      const patchDocument = {
+        collectionId: this.document.collectionId,
+        id: this.document.id,
+        data: {[this.attributes.state.id]: dataValue.serialize()},
+      };
+      this.store$.dispatch(
+        new DocumentsAction.PatchData({document: patchDocument, workspace: {viewId: this.view?.id}})
+      );
+    }
+  }
 
   public onHintDismissed(hintKey: string) {
     switch (hintKey) {
