@@ -22,6 +22,13 @@ import {SelectItemModel} from '../../../../../../shared/select/select-item/selec
 import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {collectionPurposesIcons, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {parseSelectTranslation} from '../../../../../../shared/utils/translation.utils';
+import {select, Store} from '@ngrx/store';
+import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {AppState} from '../../../../../../core/store/app.state';
+import {UsersAction} from '../../../../../../core/store/users/users.action';
+import {UserHintsKeys} from '../../../../../../core/store/users/user';
 
 @Component({
   selector: 'collection-purpose-select',
@@ -40,8 +47,17 @@ export class CollectionPurposeSelectComponent implements OnInit {
 
   public items: SelectItemModel[];
 
+  public displayWorkflowHint$: Observable<boolean>;
+
+  constructor(private store$: Store<AppState>) {}
+
   public ngOnInit() {
     this.items = this.createSelectItems();
+
+    this.displayWorkflowHint$ = this.store$.pipe(
+      select(selectCurrentUser),
+      map(user => user.hints.tableSettingsHintDismissed && !user.hints.tableWorkflowHintDismissed)
+    );
   }
 
   private createSelectItems(): SelectItemModel[] {
@@ -64,5 +80,9 @@ export class CollectionPurposeSelectComponent implements OnInit {
 
   public onSelect(type: CollectionPurposeType) {
     this.typeChange.emit(type);
+  }
+
+  public onHintDismissed() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.tableWorkflowHintDismissed, value: true}));
   }
 }

@@ -22,3 +22,25 @@
     border-bottom: 0;
   }
 }
+
+hint.dashboard-hint {
+  position: absolute;
+  top: 38px;
+  right: 5px;
+}
+
+@media screen and (max-width: 767px) {
+  hint.tab-hint {
+    position: absolute;
+    top: 30px;
+    right: 6px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  hint.tab-hint {
+    position: absolute;
+    top: 30px;
+    right: 25px;
+  }
+}

@@ -103,30 +103,9 @@ export function isDashboardTabDefault(tab: DashboardTab): boolean {
 
 const defaultDashboardTabs: DashboardTab[] = [
   {id: TabType.All, title: $localize`:@@all:All`, type: TabType.All},
-  {
-    id: TabType.Tasks,
-    title: $localize`:@@tasks:Tasks`,
-    type: TabType.Tasks,
-    hintTitle: 'Ukoly',
-    hintContent:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex.',
-  },
-  {
-    id: TabType.Views,
-    title: $localize`:@@views:Views`,
-    type: TabType.Views,
-    hintTitle: 'Pohledy',
-    hintContent:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex.',
-  },
-  {
-    id: TabType.Tables,
-    title: $localize`:@@collections:Tables`,
-    type: TabType.Tables,
-    hintTitle: 'Tabulky',
-    hintContent:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex.',
-  },
+  {id: TabType.Tasks, title: $localize`:@@tasks:Tasks`, type: TabType.Tasks},
+  {id: TabType.Views, title: $localize`:@@views:Views`, type: TabType.Views},
+  {id: TabType.Tables, title: $localize`:@@collections:Tables`, type: TabType.Tables},
 ];
 
 export function filterDefaultDashboardTabs(
@@ -136,14 +115,35 @@ export function filterDefaultDashboardTabs(
 ): DashboardTab[] {
   const tabs = [
     {id: TabType.All, title: $localize`:@@all:All`, type: TabType.All},
-    {id: TabType.Tasks, title: $localize`:@@tasks:Tasks`, type: TabType.Tasks},
+    {
+      id: TabType.Tasks,
+      title: $localize`:@@tasks:Tasks`,
+      type: TabType.Tasks,
+      hintTitle: 'Ukoly',
+      hintContent:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac.',
+    },
   ];
 
   if (permissions?.roles?.CollectionContribute || collectionsCount > 0) {
-    tabs.push({id: TabType.Tables, title: $localize`:@@collections:Tables`, type: TabType.Tables});
+    tabs.push({
+      id: TabType.Tables,
+      title: $localize`:@@collections:Tables`,
+      type: TabType.Tables,
+      hintTitle: 'Tabulky',
+      hintContent:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex.',
+    });
   }
   if (permissions?.roles?.ViewContribute || viewsCount > 0) {
-    tabs.push({id: TabType.Views, title: $localize`:@@views:Views`, type: TabType.Views});
+    tabs.push({
+      id: TabType.Views,
+      title: $localize`:@@views:Views`,
+      type: TabType.Views,
+      hintTitle: 'Pohledy',
+      hintContent:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac.',
+    });
   }
 
   return tabs;

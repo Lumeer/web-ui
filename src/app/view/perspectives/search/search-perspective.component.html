@@ -1,30 +1,32 @@
 <div class="container-fluid d-block col-12 col-lg-10 col-xl-9" *ngIf="{queryParams: queryParams$ | async} as data">
-  <div class="content position-relative">
+  <div class="content">
     <ul class="nav nav-tabs">
-      <li *ngFor="let tab of tabs$ | async; trackBy: trackByTab" role="presentation" class="nav-item"
+      <li *ngFor="let tab of tabs$ | async; trackBy: trackByTab" role="presentation" class="nav-item position-relative"
           [attr.data-tour]="'tab-' + tab.id">
-        <div class="position-relative">
-          <a [routerLink]="tab.id"
-             [queryParams]="data.queryParams"
-             routerLinkActive="active"
-             class="nav-link">{{tab.title}}</a>
-          <hint *ngIf="shouldDisplayTabHint(tab.type) | async"
-                (dismissHint)="onHintDismissed(tab.type)"
-                title="{{tab.hintTitle}}">
-            <span>{{tab.hintContent}}</span>
-          </hint>
-        </div>
+        <a [routerLink]="tab.id"
+           [queryParams]="data.queryParams"
+           routerLinkActive="active"
+           class="nav-link">{{tab.title}}</a>
+        <hint *ngIf="shouldDisplayTabHint(tab.type) | async"
+              class="tab-hint"
+              (dismissHint)="onHintDismissed(tab.type)"
+              title="{{tab.hintTitle}}">
+          <span>{{tab.hintContent}}</span>
+        </hint>
       </li>
     </ul>
+    <div class="position-relative">
       <i class="fas fa-cog text-primary clickable me-2 py-3" tooltip="Tabs and Dashboards Configuration"
          i18n-tooltip="@@search.tabs.settings.button.title" placement="start"
          (click)="onSettingsClick()">
       </i>
       <hint *ngIf="displayDashboardSettingsHint$ | async"
+            class="dashboard-hint"
             (dismissHint)="onHintDismissed('dashboard_settings')"
             title="Dashboard Settings">
         <span>Zde si můžete zvolit, které ze záložek chcete na úvodní obrazovce vidět, přejmenovat již existující záložky, či dokonce přidat zcela vlastní záložku.</span>
       </hint>
     </div>
+  </div>
   <router-outlet></router-outlet>
 </div>

@@ -74,6 +74,7 @@ export enum UserHintsKeys {
 
   tableSettingsHintDismissed = 'tableSettingsHintDismissed',
 
+  tableWorkflowHintDismissed = 'tableWorkflowHintDismissed',
   tableAttributesHintDismissed = 'tableAttributesHintDismissed',
   tableRulesHintDismissed = 'tableRulesHintDismissed',
 
@@ -110,6 +111,7 @@ export interface UserHints {
 
   tableSettingsHintDismissed?: boolean;
 
+  tableWorkflowHintDismissed?: boolean;
   tableAttributesHintDismissed?: boolean;
   tableRulesHintDismissed?: boolean;
 

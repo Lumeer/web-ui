@@ -3,6 +3,12 @@
     <div class="text-center py-2"><i class="fa-2x" [ngClass]="item.icons[0]"></i></div>
     <div class="text-center py-2">{{item.value}}</div>
   </a>
+  <hint *ngIf="displayWorkflowHint$ | async"
+        class="position-relative"
+        title="14 Workflow"
+        (dismissHint)="onHintDismissed()">
+    <span>Lorem Ipsum, dolor sit amet. Jedi joshua amestuys mine workflow.</span>
+  </hint>
 </div>
 
 <div *ngIf="type === types.None" i18n="@@collections.tab.purpose.description.generic">

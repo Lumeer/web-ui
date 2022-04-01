@@ -54,6 +54,7 @@ import {UsersAction} from '../../core/store/users/users.action';
 
 @Component({
   templateUrl: './collection-settings.component.html',
+  styleUrls: ['./collection-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionSettingsComponent implements OnInit, OnDestroy {
@@ -90,7 +91,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
     this.displayTableAttributesHint$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => user.hints.tableSettingsHintDismissed && !user.hints.tableAttributesHintDismissed)
+      map(user => user.hints.tableWorkflowHintDismissed && !user.hints.tableAttributesHintDismissed)
     );
 
     this.displayTableRulesHint$ = this.store$.pipe(
