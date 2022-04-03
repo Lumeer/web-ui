@@ -135,7 +135,7 @@ export interface CronRuleConfiguration extends BlocklyRuleConfiguration {
   startsOn?: Date;
   endsOn?: Date;
   executionsLeft?: number;
-  lastRun?: string;
+  lastRun?: Date;
   viewId: string;
   language: LanguageCode;
 }

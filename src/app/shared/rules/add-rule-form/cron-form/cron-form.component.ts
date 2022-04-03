@@ -40,6 +40,7 @@ import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/stor
 @Component({
   selector: 'cron-form',
   templateUrl: './cron-form.component.html',
+  styleUrls: ['./cron-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CronFormComponent implements OnInit {

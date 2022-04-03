@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CronRuleConfiguration, Rule, RuleType} from '../../core/model/rule';
+import {CronRule, CronRuleConfiguration, Rule, RuleType} from '../../core/model/rule';
 import {createRange} from './array.utils';
-import {bitSet, bitTest} from './common.utils';
+import {bitSet, bitTest, isNotNullOrUndefined, isNullOrUndefined} from './common.utils';
 
 export enum RuleOffsetType {
   Up = 'up',
@@ -80,4 +80,19 @@ function offsetCronDaysOfMonth(dayOfMonth: number, offset: number): number {
   }
 
   return dayOfMonth + offset;
+}
+
+export function computeCronRuleNextExecution(rule: CronRule, time: Date = new Date()): Date {
+  if (!checkCronRuneWillRun(rule)) {
+    return null;
+  }
+}
+
+function checkCronRuneWillRun(rule: CronRule): boolean {
+  return (
+    rule?.configuration &&
+    isNotNullOrUndefined(rule.configuration.startsOn) &&
+    (isNullOrUndefined(rule.configuration.executionsLeft) || rule.configuration.executionsLeft > 0) &&
+    (isNullOrUndefined(rule.configuration.endsOn) || rule.configuration.endsOn < new Date())
+  );
 }

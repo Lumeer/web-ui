@@ -1,0 +1,8 @@
+<div class="layout text-start">
+  <div i18n="@@rule.run.info.last">Last run:</div>
+  <div *ngIf="lastRun" class="fw-bold">{{lastRun | date:'full'}}</div>
+  <div *ngIf="!lastRun" class="fst-italic" i18n="@@never">Never</div>
+  <div i18n="@@rule.run.info.next">Next run:</div>
+  <div *ngIf="nextRun" class="fw-bold">{{nextRun | date:'full'}}</div>
+  <div *ngIf="!nextRun" class="fst-italic" i18n="@@never">Never</div>
+</div>
