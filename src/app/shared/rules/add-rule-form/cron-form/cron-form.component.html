@@ -4,10 +4,10 @@
                            [collection]="collection"
                            [linkType]="linkType">
   </cron-configuration-form>
-  <div class="card px-3 py-1 run-info">
+  <div class="card px-3 py-1 run-info" *ngIf="rule | ruleRunInfo as ruleRunInfo">
     <i class="far fa-clock"></i>
-    <rule-run-info [lastRun]="null"
-                   [nextRun]="null">
+    <rule-run-info [lastRun]="ruleRunInfo.lastRun"
+                   [nextRun]="ruleRunInfo.nextRun">
     </rule-run-info>
   </div>
   <div class="d-flex flex-wrap align-items-center justify-content-start my-3">

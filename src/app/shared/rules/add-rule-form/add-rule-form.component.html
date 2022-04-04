@@ -69,6 +69,7 @@
     </blockly-form>
     <cron-form
       *ngSwitchCase="ruleType.Cron"
+      [rule]="rule"
       [form]="configCron"
       [collection]="collection"
       [linkType]="linkType">
