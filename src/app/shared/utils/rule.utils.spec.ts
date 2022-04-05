@@ -45,12 +45,12 @@ describe('computeCronRuleNextExecution daily', () => {
 
   it('should run after starts on and before ends on', () => {
     const endsOn = moment.utc().startOf('day').add(15, 'days').toDate();
-    const startsOnMoment = moment.utc().startOf('day').add(5, 'days');
+    const startsOn = moment.utc().startOf('day').add(5, 'days').toDate();
     const rule = createCronRule({
       interval: 3,
       hour: '9',
       unit: ChronoUnit.Days,
-      startsOn: startsOnMoment.toDate(),
+      startsOn,
       endsOn,
     });
     const today = moment.utc().toDate();
@@ -74,7 +74,7 @@ describe('computeCronRuleNextExecution daily', () => {
   });
 });
 
-fdescribe('computeCronRuleNextExecution weekly', () => {
+describe('computeCronRuleNextExecution weekly', () => {
   it('should run this week today', () => {
     const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Weeks, daysOfWeek: 999}); // every day
     const today = moment.utc().startOf('day').hour(7).toDate();
@@ -127,6 +127,23 @@ fdescribe('computeCronRuleNextExecution weekly', () => {
       lastRunMoment.add(8, 'weeks').isoWeekday(2).hour(8).toDate()
     );
   });
+
+  it('should run after starts on and before ends on', () => {
+    const endsOn = moment.utc().startOf('day').add(15, 'months').toDate();
+    const startsOnMoment = moment.utc().startOf('day').add(5, 'weeks').isoWeekday(6); // saturday
+    const rule = createCronRule({
+      interval: 3,
+      hour: '9',
+      unit: ChronoUnit.Weeks,
+      startsOn: startsOnMoment.toDate(),
+      endsOn,
+      daysOfWeek: 8,
+    }); // thursday
+    const today = moment.utc().toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(
+      startsOnMoment.add(1, 'week').hour(9).isoWeekday(4).toDate()
+    );
+  });
 });
 
 describe('computeCronRuleNextExecution monthly', () => {
@@ -153,13 +170,13 @@ describe('computeCronRuleNextExecution monthly', () => {
 
   it('should run after starts on and before ends on', () => {
     const endsOn = moment.utc().endOf('month').add(15, 'months').toDate();
-    const startsOnMoment = moment.utc().startOf('month').add(7, 'month').date(10);
+    const startsOn = moment.utc().startOf('month').add(7, 'month').date(10).toDate();
     const rule = createCronRule({
       interval: 3,
       hour: '9',
       occurrence: 5,
       unit: ChronoUnit.Months,
-      startsOn: startsOnMoment.toDate(),
+      startsOn,
       endsOn,
     });
     const today = moment.utc().toDate();

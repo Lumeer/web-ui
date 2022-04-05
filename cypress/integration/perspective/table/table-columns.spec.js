@@ -29,18 +29,18 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').should('have.length', 3);
     cy.get('[data-test="table-column-input"]').first().should('have.text', 'Add Column').click({force: true});
 
-    // // rename newly added column
-    // cy.focused().type('Z');
-    // cy.focused()
-    //   .should('have.attr', 'data-test', 'table-column-input')
-    //   .type('eroth')
-    //   .trigger('keydown', {code: 'Enter'});
-    // cy.wait('@createAttribute').its('status').should('eq', 200);
-    //
-    // // verify column count and names
-    // cy.get('[data-test="table-column-input"]').should('have.length', 3);
-    // cy.get('[data-test="table-column-input"]').first().should('have.text', 'Zeroth');
-    //
+    // rename newly added column
+    cy.focused().type('Z');
+    cy.focused()
+      .should('have.attr', 'data-test', 'table-column-input')
+      .type('eroth')
+      .trigger('keydown', {code: 'Enter'});
+    cy.wait('@createAttribute').its('status').should('eq', 200);
+
+    // verify column count and names
+    cy.get('[data-test="table-column-input"]').should('have.length', 3);
+    cy.get('[data-test="table-column-input"]').first().should('have.text', 'Zeroth');
+
     // // add new column right
     // cy.get('[data-test="table-column-input"].text-default-attribute')
     //   .first()
