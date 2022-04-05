@@ -37,6 +37,8 @@ describe('Table perspective :: Columns', () => {
       .trigger('keydown', {code: 'Enter'});
     cy.wait('@createAttribute').its('status').should('eq', 200);
 
+    cy.wait(5000);
+
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 3);
     cy.get('[data-test="table-column-input"]').first().should('have.text', 'Zeroth');
