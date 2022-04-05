@@ -74,11 +74,62 @@ describe('computeCronRuleNextExecution daily', () => {
   });
 });
 
-describe('computeCronRuleNextExecution weekly', () => {
-  it('should escape two plus signs', () => {});
+fdescribe('computeCronRuleNextExecution weekly', () => {
+  it('should run this week today', () => {
+    const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Weeks, daysOfWeek: 999}); // every day
+    const today = moment.utc().startOf('day').hour(7).toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(moment.utc().startOf('day').hour(9).toDate());
+  });
+
+  it('should run this week on wednesday', () => {
+    const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Weeks, daysOfWeek: 4}); // wednesday
+    const today = moment.utc().isoWeekday(1).startOf('day').hour(7).toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(
+      moment.utc().isoWeekday(3).startOf('day').hour(9).toDate()
+    );
+  });
+
+  it('should run this week on sunday', () => {
+    const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Weeks, daysOfWeek: 64}); // sunday
+    const today = moment.utc().isoWeekday(1).startOf('day').hour(7).toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(
+      moment.utc().isoWeekday(7).startOf('day').hour(9).toDate()
+    );
+  });
+
+  it('should run next week on monday', () => {
+    const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Weeks, daysOfWeek: 1}); // monday
+    const today = moment.utc().isoWeekday(7).startOf('day').hour(7).toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(
+      moment.utc().isoWeekday(1).add(1, 'week').startOf('day').hour(9).toDate()
+    );
+  });
+
+  it('should run next week on sunday', () => {
+    const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Weeks, daysOfWeek: 64}); // sunday
+    const today = moment.utc().isoWeekday(7).startOf('day').hour(16).toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(
+      moment.utc().isoWeekday(7).add(1, 'week').startOf('day').hour(9).toDate()
+    );
+  });
+
+  it('should run after last run', () => {
+    const lastRunMoment = moment.utc().startOf('day').add(-3, 'weeks').hour(10);
+    const rule = createCronRule({
+      interval: 8,
+      hour: '8',
+      unit: ChronoUnit.Weeks,
+      lastRun: lastRunMoment.toDate(),
+      daysOfWeek: 2,
+    }); //tuesday
+    const today = moment.utc().toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(
+      lastRunMoment.add(8, 'weeks').isoWeekday(2).hour(8).toDate()
+    );
+  });
 });
 
-fdescribe('computeCronRuleNextExecution monthly', () => {
+describe('computeCronRuleNextExecution monthly', () => {
   it('should run this month', () => {
     const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Months, occurrence: 15});
     const today = moment.utc().startOf('month').hour(7).toDate();

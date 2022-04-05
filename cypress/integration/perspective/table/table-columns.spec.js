@@ -21,14 +21,14 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"].text-default-attribute').first().should('have.text', 'First');
     cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
 
-    // // add new column left
-    // cy.get('[data-test="table-column-input"]').first().trigger('contextmenu', {force: true});
-    // cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
-    //
-    // // verify column count and names
-    // cy.get('[data-test="table-column-input"]').should('have.length', 3);
-    // cy.get('[data-test="table-column-input"]').first().should('have.text', 'Add Column').click({force: true});
-    //
+    // add new column left
+    cy.get('[data-test="table-column-input"]').first().trigger('contextmenu', {force: true});
+    cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
+
+    // verify column count and names
+    cy.get('[data-test="table-column-input"]').should('have.length', 3);
+    cy.get('[data-test="table-column-input"]').first().should('have.text', 'Add Column').click({force: true});
+
     // // rename newly added column
     // cy.focused().type('Z');
     // cy.focused()

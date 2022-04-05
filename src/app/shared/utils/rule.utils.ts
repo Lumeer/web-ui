@@ -148,10 +148,11 @@ function computeCronDailyNextExecution(rule: CronRule, time: Date): Date {
 function computeCronWeeklyNextExecution(rule: CronRule, time: Date): Date {
   const config = rule.configuration;
   const startDate = isDateValid(config.lastRun) ? config.lastRun : time;
-  const executionDates = createWeeklyExecutionDates(config, startDate, time);
+  const endDate = config.startsOn > time ? config.startsOn : time;
+  const executionDates = createWeeklyExecutionDates(config, startDate, endDate);
 
   for (const executionDate of executionDates) {
-    if (executionDate > time) {
+    if (executionDate > endDate) {
       return executionDate;
     }
   }
@@ -159,13 +160,13 @@ function computeCronWeeklyNextExecution(rule: CronRule, time: Date): Date {
   return time;
 }
 
-function createWeeklyExecutionDates(configuration: CronRuleConfiguration, start: Date, time: Date): Date[] {
+function createWeeklyExecutionDates(configuration: CronRuleConfiguration, start: Date, end: Date): Date[] {
   const dates = [];
 
   const days = createRange(0, 7).filter(day => bitTest(configuration.daysOfWeek, day));
 
   let currentMoment = truncateToHours(moment.utc(start).hour(+configuration.hour));
-  while (dates.length === 0 || dates[dates.length - 1] < time) {
+  while (dates.length === 0 || dates[dates.length - 1] < end) {
     for (const day of days) {
       currentMoment = currentMoment.isoWeekday(day + 1); // 1 to 7 -> Monday to Sunday)
       dates.push(currentMoment.toDate());
@@ -196,34 +197,26 @@ function computeCronMonthlyNextExecution(rule: CronRule, time: Date): Date {
         .hour(+config.hour),
       config.occurrence
     );
-    if (time.getTime() > dateMoment.toDate().getTime()) {
-      dateMoment = setDayOfMonth(
-        moment
-          .utc()
-          .startOf('month')
-          .add(1, 'month')
-          .hour(+config.hour),
-        config.occurrence
-      );
-    }
   }
 
-  if (dateMoment.toDate() > config.startsOn) {
+  const minDate = config.startsOn > time ? config.startsOn : time;
+
+  if (dateMoment.toDate() > minDate) {
     return dateMoment.toDate();
   }
 
   dateMoment = setDayOfMonth(
     moment
-      .utc(config.startsOn)
+      .utc(minDate)
       .startOf('month')
       .hour(+config.hour),
     config.occurrence
   );
 
-  if (dateMoment.toDate() > config.startsOn) {
+  if (dateMoment.toDate() > minDate) {
     return dateMoment.toDate();
   }
-  return dateMoment.add(1, 'month').toDate();
+  return setDayOfMonth(dateMoment.date(1).add(1, 'month'), config.occurrence).toDate();
 }
 
 function setDayOfMonth(moment: moment.Moment, day: number): moment.Moment {
