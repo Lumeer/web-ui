@@ -1,5 +1,7 @@
 describe('Table perspective :: Columns', () => {
   it('adds new columns in a single table', () => {
+    cy.log('debug0');
+
     // create new collection and open it in a table
     cy.createCollection('columns', 'fas fa-columns', '#0000ff').then(collection => cy.visitTable(collection.id));
 
