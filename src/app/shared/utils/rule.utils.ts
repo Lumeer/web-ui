@@ -88,56 +88,61 @@ export function computeCronRuleNextExecution(rule: CronRule, time: Date = new Da
     return null;
   }
 
+  const utcTime = moment.utc(time).toDate();
+
   let executionDate: Date;
   switch (rule.configuration.unit) {
     case ChronoUnit.Days:
-      executionDate = computeCronDailyNextExecution(rule, time);
+      executionDate = computeCronDailyNextExecution(rule, utcTime);
       break;
     case ChronoUnit.Weeks:
-      executionDate = computeCronWeeklyNextExecution(rule, time);
+      executionDate = computeCronWeeklyNextExecution(rule, utcTime);
       break;
     case ChronoUnit.Months:
-      executionDate = computeCronMonthlyNextExecution(rule, time);
+      executionDate = computeCronMonthlyNextExecution(rule, utcTime);
       break;
     default:
       return null;
   }
 
-  if (executionDate < time) {
-    return offsetExecutionDate(time);
+  if (executionDate < utcTime) {
+    return utcTime;
   }
 
   if (isDateValid(rule.configuration.endsOn) && executionDate > rule.configuration.endsOn) {
     return null;
   }
 
-  return offsetExecutionDate(executionDate);
-}
-
-function offsetExecutionDate(date: Date): Date {
-  if (date) {
-    const parsedDate = new Date(date);
-    parsedDate.setHours(parsedDate.getHours() + (parsedDate.getTimezoneOffset() / 60) * -1);
-    return parsedDate;
-  }
-  return date;
+  return executionDate;
 }
 
 function computeCronDailyNextExecution(rule: CronRule, time: Date): Date {
   const config = rule.configuration;
+  let dateMoment: moment.Moment;
   if (isDateValid(config.lastRun)) {
-    return truncateToHours(
-      moment(config.lastRun)
-        .add(config.interval, 'days')
-        .hour(+config.hour)
-    ).toDate();
+    dateMoment = moment
+      .utc(config.lastRun)
+      .startOf('day')
+      .add(config.interval, 'days')
+      .hour(+config.hour);
+  } else {
+    dateMoment = moment
+      .utc()
+      .startOf('day')
+      .hour(+config.hour);
+    if (time.getTime() > dateMoment.toDate().getTime()) {
+      dateMoment = dateMoment.add(1, 'day');
+    }
   }
 
-  const todayMoment = truncateToHours(moment().hour(+config.hour));
-  if (time.getTime() > todayMoment.toDate().getTime()) {
-    return todayMoment.add(1, 'day').toDate();
+  if (dateMoment.toDate() > config.startsOn) {
+    return dateMoment.toDate();
   }
-  return todayMoment.toDate();
+  return moment
+    .utc(config.startsOn)
+    .startOf('day')
+    .hour(+config.hour)
+    .toDate();
 }
 
 function computeCronWeeklyNextExecution(rule: CronRule, time: Date): Date {
@@ -159,7 +164,7 @@ function createWeeklyExecutionDates(configuration: CronRuleConfiguration, start:
 
   const days = createRange(0, 7).filter(day => bitTest(configuration.daysOfWeek, day));
 
-  let currentMoment = truncateToHours(moment(start).hour(+configuration.hour));
+  let currentMoment = truncateToHours(moment.utc(start).hour(+configuration.hour));
   while (dates.length === 0 || dates[dates.length - 1] < time) {
     for (const day of days) {
       currentMoment = currentMoment.isoWeekday(day + 1); // 1 to 7 -> Monday to Sunday)
@@ -174,14 +179,15 @@ function createWeeklyExecutionDates(configuration: CronRuleConfiguration, start:
 function computeCronMonthlyNextExecution(rule: CronRule, time: Date): Date {
   const config = rule.configuration;
   if (isDateValid(config.lastRun)) {
-    const dateMoment = moment(config.lastRun)
+    const dateMoment = moment
+      .utc(config.lastRun)
       .startOf('month')
       .add(config.interval, 'months')
       .hour(+config.hour);
     return truncateToHours(setDayOfMonth(dateMoment, config.occurrence)).toDate();
   }
 
-  const todayMoment = truncateToHours(setDayOfMonth(moment().hour(+config.hour), config.occurrence));
+  const todayMoment = truncateToHours(setDayOfMonth(moment.utc().hour(+config.hour), config.occurrence));
   if (time.getTime() > todayMoment.toDate().getTime()) {
     const dateMoment = todayMoment.startOf('month').add(1, 'month');
     return setDayOfMonth(dateMoment, config.occurrence).toDate();
@@ -205,6 +211,6 @@ function checkCronRuneWillRun(rule: CronRule, time: Date): boolean {
     rule?.configuration &&
     isDateValid(rule.configuration.startsOn) &&
     (isNullOrUndefined(rule.configuration.executionsLeft) || rule.configuration.executionsLeft > 0) &&
-    (!isDateValid(rule.configuration.endsOn) || rule.configuration.endsOn < time)
+    (!isDateValid(rule.configuration.endsOn) || rule.configuration.endsOn > time)
   );
 }
