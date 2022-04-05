@@ -21,7 +21,7 @@ import {ChronoUnit, CronRule, CronRuleConfiguration, RuleType} from '../../core/
 import * as moment from 'moment';
 import {computeCronRuleNextExecution} from './rule.utils';
 
-fdescribe('computeCronRuleNextExecution daily', () => {
+describe('computeCronRuleNextExecution daily', () => {
   it('should run today', () => {
     const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Days});
     const today = moment.utc().startOf('day').hour(7).toDate();
@@ -59,14 +59,14 @@ fdescribe('computeCronRuleNextExecution daily', () => {
     );
   });
 
-  it('should run after starts on and after ends on', () => {
+  it('should not run after starts on and after ends on', () => {
     const endsOn = moment.utc().startOf('day').add(1, 'days').toDate();
-    const startsOnMoment = moment.utc().startOf('day').add(5, 'days').hour(14);
+    const startsOn = moment.utc().startOf('day').add(5, 'days').hour(14).toDate();
     const rule = createCronRule({
       interval: 3,
       hour: '9',
       unit: ChronoUnit.Days,
-      startsOn: startsOnMoment.toDate(),
+      startsOn,
       endsOn,
     });
     const today = moment.utc().toDate();
@@ -78,8 +78,58 @@ describe('computeCronRuleNextExecution weekly', () => {
   it('should escape two plus signs', () => {});
 });
 
-describe('computeCronRuleNextExecution monthly', () => {
-  it('should escape two plus signs', () => {});
+fdescribe('computeCronRuleNextExecution monthly', () => {
+  it('should run this month', () => {
+    const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Months, occurrence: 15});
+    const today = moment.utc().startOf('month').hour(7).toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(moment.utc().startOf('month').date(15).hour(9).toDate());
+  });
+
+  it('should run next month', () => {
+    const rule = createCronRule({interval: 3, hour: '7', unit: ChronoUnit.Months, occurrence: 8});
+    const today = moment.utc().endOf('month').hour(13).toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(
+      moment.utc().startOf('month').add(1, 'month').date(8).hour(7).toDate()
+    );
+  });
+
+  it('should run after last run', () => {
+    const lastRunMoment = moment.utc().startOf('month').add(-3, 'month').hour(10);
+    const rule = createCronRule({interval: 5, hour: '8', unit: ChronoUnit.Months, lastRun: lastRunMoment.toDate()});
+    const today = moment.utc().toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(lastRunMoment.add(5, 'month').hour(8).toDate());
+  });
+
+  it('should run after starts on and before ends on', () => {
+    const endsOn = moment.utc().endOf('month').add(15, 'months').toDate();
+    const startsOnMoment = moment.utc().startOf('month').add(7, 'month').date(10);
+    const rule = createCronRule({
+      interval: 3,
+      hour: '9',
+      occurrence: 5,
+      unit: ChronoUnit.Months,
+      startsOn: startsOnMoment.toDate(),
+      endsOn,
+    });
+    const today = moment.utc().toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(
+      moment.utc().startOf('month').add(8, 'month').hour(9).date(5).toDate()
+    );
+  });
+
+  it('should not run after starts on and after ends on', () => {
+    const endsOn = moment.utc().endOf('month').add(1, 'months').toDate();
+    const startsOn = moment.utc().startOf('month').add(7, 'month').date(10).toDate();
+    const rule = createCronRule({
+      interval: 1,
+      hour: '9',
+      unit: ChronoUnit.Days,
+      startsOn,
+      endsOn,
+    });
+    const today = moment.utc().toDate();
+    expect(computeCronRuleNextExecution(rule, today)).toEqual(null);
+  });
 });
 
 function createCronRule(configuration: Partial<CronRuleConfiguration>): CronRule {
@@ -93,7 +143,7 @@ function createCronRule(configuration: Partial<CronRuleConfiguration>): CronRule
       lastRun: null,
       hour: '9',
       unit: ChronoUnit.Days,
-      startsOn: moment().add(-10, 'days').toDate(),
+      startsOn: moment().add(-100, 'days').toDate(),
       interval: 1,
       occurrence: 1,
       daysOfWeek: 1,

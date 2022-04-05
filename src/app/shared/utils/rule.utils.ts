@@ -178,26 +178,57 @@ function createWeeklyExecutionDates(configuration: CronRuleConfiguration, start:
 
 function computeCronMonthlyNextExecution(rule: CronRule, time: Date): Date {
   const config = rule.configuration;
+  let dateMoment: moment.Moment;
   if (isDateValid(config.lastRun)) {
-    const dateMoment = moment
-      .utc(config.lastRun)
-      .startOf('month')
-      .add(config.interval, 'months')
-      .hour(+config.hour);
-    return truncateToHours(setDayOfMonth(dateMoment, config.occurrence)).toDate();
+    dateMoment = setDayOfMonth(
+      moment
+        .utc(config.lastRun)
+        .startOf('month')
+        .add(config.interval, 'months')
+        .hour(+config.hour),
+      config.occurrence
+    );
+  } else {
+    dateMoment = setDayOfMonth(
+      moment
+        .utc()
+        .startOf('month')
+        .hour(+config.hour),
+      config.occurrence
+    );
+    if (time.getTime() > dateMoment.toDate().getTime()) {
+      dateMoment = setDayOfMonth(
+        moment
+          .utc()
+          .startOf('month')
+          .add(1, 'month')
+          .hour(+config.hour),
+        config.occurrence
+      );
+    }
   }
 
-  const todayMoment = truncateToHours(setDayOfMonth(moment.utc().hour(+config.hour), config.occurrence));
-  if (time.getTime() > todayMoment.toDate().getTime()) {
-    const dateMoment = todayMoment.startOf('month').add(1, 'month');
-    return setDayOfMonth(dateMoment, config.occurrence).toDate();
+  if (dateMoment.toDate() > config.startsOn) {
+    return dateMoment.toDate();
   }
-  return todayMoment.toDate();
+
+  dateMoment = setDayOfMonth(
+    moment
+      .utc(config.startsOn)
+      .startOf('month')
+      .hour(+config.hour),
+    config.occurrence
+  );
+
+  if (dateMoment.toDate() > config.startsOn) {
+    return dateMoment.toDate();
+  }
+  return dateMoment.add(1, 'month').toDate();
 }
 
 function setDayOfMonth(moment: moment.Moment, day: number): moment.Moment {
-  if (moment.daysInMonth() > day) {
-    return moment.endOf('month');
+  if (moment.daysInMonth() < day) {
+    return moment.date(moment.daysInMonth());
   }
   return moment.date(day);
 }

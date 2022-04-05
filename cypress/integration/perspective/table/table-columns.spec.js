@@ -9,18 +9,18 @@ describe('Table perspective :: Columns', () => {
       .should('have.text', 'Add Column')
       .click({force: true});
 
-    // // rename first column
-    // cy.focused().trigger('keydown', {code: 'Backspace'}).type('F');
-    // cy.focused().should('have.attr', 'data-test', 'table-column-input').type('irst');
-    // cy.get('[data-test="table-attribute-suggestions"]').should('be.visible');
-    // cy.get('[data-test="table-attribute-name-suggestion"]').click();
-    // cy.wait('@createAttribute').its('status').should('eq', 200);
-    //
-    // // verify column count and names
-    // cy.get('[data-test="table-column-input"]').should('have.length', 2);
-    // cy.get('[data-test="table-column-input"].text-default-attribute').first().should('have.text', 'First');
-    // cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
-    //
+    // rename first column
+    cy.focused().trigger('keydown', {code: 'Backspace'}).type('F');
+    cy.focused().should('have.attr', 'data-test', 'table-column-input').type('irst');
+    cy.get('[data-test="table-attribute-suggestions"]').should('be.visible');
+    cy.get('[data-test="table-attribute-name-suggestion"]').click();
+    cy.wait('@createAttribute').its('status').should('eq', 200);
+
+    // verify column count and names
+    cy.get('[data-test="table-column-input"]').should('have.length', 2);
+    cy.get('[data-test="table-column-input"].text-default-attribute').first().should('have.text', 'First');
+    cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
+
     // // add new column left
     // cy.get('[data-test="table-column-input"]').first().trigger('contextmenu', {force: true});
     // cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
