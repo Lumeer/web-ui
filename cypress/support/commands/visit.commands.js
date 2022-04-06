@@ -15,7 +15,7 @@ Cypress.Commands.add('visitTable', collectionId => {
   const workspacePath = `/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}`;
   const query = collectionId ? encodeQuery(JSON.stringify({s: [{c: collectionId}]})) : '';
 
-  cy.visitAndWait(`${workspacePath}/view/table?q=${query}`);
+  cy.visitAndWait(`${workspacePath}/view/table?q=${query}`).wait(2000);
 });
 
 function encodeQuery(query) {
