@@ -28,10 +28,10 @@ import {CronConfigurationFormComponent} from './add-rule-form/cron-form/configur
 import {BlocklyFormComponent} from './add-rule-form/blockly-form/blockly-form.component';
 import {AutoLinkFormComponent} from './add-rule-form/auto-link-form/auto-link-form.component';
 import {SingleRuleComponent} from './single-rule/single-rule.component';
-import {HasUpdatePipe} from './single-rule/has-update.pipe';
-import {HasDeletePipe} from './single-rule/has-delete.pipe';
-import {HasCreatePipe} from './single-rule/has-create.pipe';
-import {AttributeNamesPipe} from './single-rule/attribute-names.pipe';
+import {HasUpdatePipe} from './single-rule/pipes/has-update.pipe';
+import {HasDeletePipe} from './single-rule/pipes/has-delete.pipe';
+import {HasCreatePipe} from './single-rule/pipes/has-create.pipe';
+import {AttributeNamesPipe} from './single-rule/pipes/attribute-names.pipe';
 import {ShowOccurrencePipe} from './add-rule-form/cron-form/configuration-form/pipes/show-occurrence.pipe';
 import {MaxIntervalByUnitPipe} from './add-rule-form/cron-form/configuration-form/pipes/max-interval-by-unit.pipe';
 import {ShowDaysOfWeekPipe} from './add-rule-form/cron-form/configuration-form/pipes/show-days-of-week.pipe';
@@ -43,6 +43,8 @@ import {InputModule} from '../input/input.module';
 import {DirectivesModule} from '../directives/directives.module';
 import {DateTimeModule} from '../date-time/date-time.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {RuleRunInfoPipe} from './single-rule/pipes/rule-run-info.pipe';
+import {RuleRunInfoComponent} from './common/rule-run-info/rule-run-info.component';
 
 @NgModule({
   imports: [
@@ -73,6 +75,8 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     MaxIntervalByUnitPipe,
     ShowDaysOfWeekPipe,
     IsDayOfWeekSelectedPipe,
+    RuleRunInfoPipe,
+    RuleRunInfoComponent,
   ],
   exports: [AddRuleComponent, SingleRuleComponent, AddRuleFormComponent, NoRulesComponent],
 })

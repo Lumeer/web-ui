@@ -1,0 +1,8 @@
+@import 'src/styles/variables';
+
+.layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  grid-column-gap: 0.5rem;
+}

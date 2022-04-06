@@ -18,20 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {RuleTiming} from '../../../core/model/rule';
+import {RuleTiming} from '../../../../core/model/rule';
 
 @Pipe({
-  name: 'hasDelete',
+  name: 'hasCreate',
 })
-export class HasDeletePipe implements PipeTransform {
-  private readonly deleteTimings = [
-    RuleTiming.Delete,
-    RuleTiming.UpdateDelete,
+export class HasCreatePipe implements PipeTransform {
+  private readonly createTimings = [
+    RuleTiming.Create,
+    RuleTiming.CreateUpdate,
     RuleTiming.CreateDelete,
     RuleTiming.All,
   ];
 
   public transform(value: RuleTiming): boolean {
-    return this.deleteTimings.indexOf(value) >= 0;
+    return this.createTimings.indexOf(value) >= 0;
   }
 }

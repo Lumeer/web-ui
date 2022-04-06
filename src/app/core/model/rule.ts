@@ -98,11 +98,11 @@ export interface AutoLinkRuleConfiguration {
 export interface BlocklyRuleConfiguration {
   blocklyXml: string;
   blocklyJs: string;
-  blocklyError: string;
-  blocklyResultTimestamp: number;
-  blocklyDryRun: boolean;
-  blocklyDryRunResult: string;
-  blocklyRecursive: boolean;
+  blocklyError?: string;
+  blocklyResultTimestamp?: number;
+  blocklyDryRun?: boolean;
+  blocklyDryRunResult?: string;
+  blocklyRecursive?: boolean;
 }
 
 export interface ZapierRuleConfiguration {
@@ -135,9 +135,9 @@ export interface CronRuleConfiguration extends BlocklyRuleConfiguration {
   startsOn?: Date;
   endsOn?: Date;
   executionsLeft?: number;
-  lastRun?: string;
-  viewId: string;
-  language: LanguageCode;
+  lastRun?: Date;
+  viewId?: string;
+  language?: LanguageCode;
 }
 
 export interface WorkflowRuleConfiguration {}

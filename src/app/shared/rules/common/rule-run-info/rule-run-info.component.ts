@@ -17,21 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {RuleTiming} from '../../../core/model/rule';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 
-@Pipe({
-  name: 'hasUpdate',
+@Component({
+  selector: 'rule-run-info',
+  templateUrl: './rule-run-info.component.html',
+  styleUrls: ['./rule-run-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HasUpdatePipe implements PipeTransform {
-  private readonly updateTimings = [
-    RuleTiming.Update,
-    RuleTiming.CreateUpdate,
-    RuleTiming.UpdateDelete,
-    RuleTiming.All,
-  ];
+export class RuleRunInfoComponent {
+  @Input()
+  public lastRun: Date;
 
-  public transform(value: RuleTiming): boolean {
-    return this.updateTimings.indexOf(value) >= 0;
-  }
+  @Input()
+  public nextRun: Date;
 }

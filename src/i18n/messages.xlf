@@ -3707,7 +3707,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context>
@@ -4596,7 +4596,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/cron-form.component.html</context>
-          <context context-type="linenumber">12,14</context>
+          <context context-type="linenumber">18,20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dialog.attribute.function.restricted" datatype="html">
@@ -7143,21 +7143,21 @@
         <source>Set code</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.postit.name" datatype="html">
         <source>Fill in name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.settings.deleteResource.title" datatype="html">
         <source>Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.variables.placeholder.name" datatype="html">
@@ -7317,21 +7317,21 @@
         <source> Fire automation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">22,24</context>
+          <context context-type="linenumber">23,25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.onRecord" datatype="html">
         <source> On record </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">36,38</context>
+          <context context-type="linenumber">37,39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.timing.create" datatype="html">
         <source>Create</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context>
@@ -7342,7 +7342,7 @@
         <source>Update</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context>
@@ -7353,7 +7353,7 @@
         <source>Delete</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context>
@@ -7364,14 +7364,14 @@
         <source>Save Changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
         <source>Add Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.type" datatype="html">
@@ -7453,7 +7453,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/cron-form.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
@@ -7618,6 +7618,31 @@
           <context context-type="linenumber">5,7</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="rule.run.info.last" datatype="html">
+        <source>Last run:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="never" datatype="html">
+        <source>Never</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.run.info.next" datatype="html">
+        <source>Next run:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="collection.config.tab.automations.empty" datatype="html">
         <source> There are no automations yet. Create some by clicking on the button below! </source>
         <context-group purpose="location">
@@ -7650,35 +7675,35 @@
         <source>Duplicate automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.btn.edit" datatype="html">
         <source>Edit automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.btn.delete" datatype="html">
         <source>Delete automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
         <source>Zapier Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
         <source>This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="default" datatype="html">
@@ -8754,7 +8779,7 @@
         <source>Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="lumeer.advice.percentage" datatype="html">

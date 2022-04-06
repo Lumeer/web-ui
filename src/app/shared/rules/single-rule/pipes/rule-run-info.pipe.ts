@@ -18,15 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Rule} from '../../../core/model/rule';
-import {Attribute} from '../../../core/store/collections/collection';
-import {attributesWithRule} from '../../utils/attribute.utils';
+import {Rule, RuleType} from '../../../../core/model/rule';
+import {computeCronRuleNextExecution} from '../../../utils/rule.utils';
 
 @Pipe({
-  name: 'attributeNames',
+  name: 'ruleRunInfo',
 })
-export class AttributeNamesPipe implements PipeTransform {
-  public transform(value: Rule, attributes: Attribute[]): string {
-    return attributesWithRule(attributes, value)?.join(', ');
+export class RuleRunInfoPipe implements PipeTransform {
+  public transform(rule: Rule): {lastRun: Date; nextRun: Date} {
+    if (rule?.type === RuleType.Cron) {
+      return {
+        lastRun: rule.configuration.lastRun,
+        nextRun: computeCronRuleNextExecution(rule),
+      };
+    }
+    return null;
   }
 }

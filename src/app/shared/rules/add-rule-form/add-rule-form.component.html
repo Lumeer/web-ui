@@ -5,7 +5,7 @@
   </i>
 </div>
 <form [formGroup]="form" class="overflow-hidden">
-  <div class="d-flex align-items-baseline justify-content-start flex-wrap">
+  <div class="d-flex align-items-baseline justify-content-start flex-wrap pe-3 position-relative">
     <label for="name" class="mb-0 form-label" i18n="@@collection.config.tab.rules.automation.name.new">New automation name</label>
     <input type="text" class="form-control ms-3 w-50" autocomplete="off" id="name" formControlName="name"
            aria-errormessage="ruleNameError">
@@ -16,6 +16,7 @@
       i18n="@@collection.config.tab.rules.automation.name.exists">
       Automation name already used.
     </small>
+    <i class="fas fa-chevron-up cancel-icon clickable" (click)="onCancel()"></i>
   </div>
 
   <div *ngIf="collection" class="mt-3 d-flex align-items-center justify-content-start flex-wrap">
@@ -68,6 +69,7 @@
     </blockly-form>
     <cron-form
       *ngSwitchCase="ruleType.Cron"
+      [rule]="rule"
       [form]="configCron"
       [collection]="collection"
       [linkType]="linkType">
@@ -76,7 +78,7 @@
 
   <div class="d-flex justify-content-end align-items-center flex-wrap mt-3">
     <button type="button"
-            (click)="fireCancelNewRule()"
+            (click)="onCancel()"
             class="btn btn-sm btn-outline-secondary">
       <span class="fw-bold" i18n="@@button.cancel">Cancel</span>
     </button>

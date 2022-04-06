@@ -82,127 +82,37 @@
 
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context>
-                    <context context-type="linenumber">64</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context>
-                    <context context-type="linenumber">39</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context>
-                    <context context-type="linenumber">18</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context>
-                    <context context-type="linenumber">22</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/function/attribute-function-modal.component.html</context>
-                    <context context-type="linenumber">27</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context>
-                    <context context-type="linenumber">26</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context>
-                    <context context-type="linenumber">26</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context>
-                    <context context-type="linenumber">14</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
-                    <context context-type="linenumber">40</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
-                    <context context-type="linenumber">22</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context>
-                    <context context-type="linenumber">23</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context>
-                    <context context-type="linenumber">42</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context>
-                    <context context-type="linenumber">12</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context>
-                    <context context-type="linenumber">33</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context>
-                    <context context-type="linenumber">360</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
-                    <context context-type="linenumber">55</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context>
-                    <context context-type="linenumber">27</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context>
-                    <context context-type="linenumber">30</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context>
-                    <context context-type="linenumber">21</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context>
-                    <context context-type="linenumber">19</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context>
-                    <context context-type="linenumber">25</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context>
-                    <context context-type="linenumber">27</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context>
-                    <context context-type="linenumber">24</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context>
-                    <context context-type="linenumber">61</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context>
-                    <context context-type="linenumber">31</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/comments/new-comment/new-comment.component.html</context>
-                    <context context-type="linenumber">38</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-                    <context context-type="linenumber">81</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context>
-                    <context context-type="linenumber">178</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-                    <context context-type="linenumber">93</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
-                    <context context-type="linenumber">157</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/attribute-function-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">360</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">82</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
             <trans-unit id="button.select" datatype="html">
                 <source>Select</source>
                 <target state="final">Select</target>
@@ -1318,7 +1228,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="home" datatype="html">
         <source>Home</source><target state="final">Home</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {Organization} project {Project} other {}}"/></source><target state="final">Create New <x id="ICU" equiv-text="{type, select, organization {Organization} project {Project} other {}}"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5" datatype="html">
@@ -3543,7 +3453,29 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/tab/rules/link-type-rules.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
         <source> Add a new automation </source><target state="final"> Add a new automation </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule/add-rule.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.ofType" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule/add-rule.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="rule.run.info.last" datatype="html">
+        <source>Last run:</source><target state="final">Last run:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="never" datatype="html">
+        <source>Never</source><target state="final">Never</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="rule.run.info.next" datatype="html">
+        <source>Next run:</source><target state="final">Next run:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.ofType" datatype="html">
         <source>of type</source><target state="final">of type</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.type" datatype="html">
@@ -3560,24 +3492,24 @@
         <source>Create</source><target state="final">Create</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.timing.update" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.timing.update" datatype="html">
         <source>Update</source><target state="final">Update</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.timing.delete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.timing.delete" datatype="html">
         <source>Delete</source><target state="final">Delete</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">52</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.btn.duplicate" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.btn.duplicate" datatype="html">
         <source>Duplicate automation</source><target state="final">Duplicate automation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.btn.edit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.btn.edit" datatype="html">
         <source>Edit automation</source><target state="final">Edit automation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.btn.delete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.btn.delete" datatype="html">
         <source>Delete automation</source><target state="final">Delete automation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
         <source>New automation name</source><target state="final">New automation name</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.name.exists" datatype="html">
@@ -3586,16 +3518,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.onRecord" datatype="html">
         <source> On record </source><target state="final"> On record </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.type" datatype="html">
         <source> Fire automation </source><target state="final"> Fire automation </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
         <source>Save Changes</source><target state="final">Save Changes</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
         <source>Add Automation</source><target state="final">Add Automation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.info" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.info" datatype="html">
         <source> Automatically link records from two tables based on matching column values. </source><target state="final"> Automatically link records from two tables based on matching column values. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
@@ -3616,7 +3548,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.editAutomation.message" datatype="html">
         <source>Edit Automation Code:</source><target state="final">Edit Automation Code:</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/cron-form.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.recursive" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/cron-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.recursive" datatype="html">
         <source>Recursive</source><target state="final">Recursive</target>
 
 
@@ -3631,7 +3563,7 @@
         <source> Dry Run </source><target state="final"> Dry Run </target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/cron-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/cron-form.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
         <source> An automation executed regularly according to the timer settings.
 </source><target state="final"> An automation executed regularly according to the timer settings.
 </target>
@@ -5331,15 +5263,15 @@
         <source>Set code</source><target state="final">Set code</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">177</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">178</context></context-group></trans-unit>
       <trans-unit id="resource.postit.name" datatype="html">
         <source>Fill in name</source><target state="final">Fill in name</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">181</context></context-group></trans-unit><trans-unit id="resource.settings.deleteResource.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">182</context></context-group></trans-unit><trans-unit id="resource.settings.deleteResource.title" datatype="html">
         <source>Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}</source><target state="final">Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">199</context></context-group></trans-unit><trans-unit id="resource.variables.placeholder.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">200</context></context-group></trans-unit><trans-unit id="resource.variables.placeholder.name" datatype="html">
         <source>Variable Name</source><target state="final">Variable Name</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
@@ -6127,9 +6059,9 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
         <source>Zapier Automation</source><target state="final">Zapier Automation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
         <source>This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).</source><target state="final">This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit></body>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">81</context></context-group></trans-unit></body>
   </file>
 </xliff>

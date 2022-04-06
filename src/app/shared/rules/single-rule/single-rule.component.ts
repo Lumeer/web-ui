@@ -48,6 +48,8 @@ export class SingleRuleComponent {
   @Output()
   public onDuplicate = new EventEmitter<Rule>();
 
+  public readonly ruleType = RuleType;
+
   constructor(private store$: Store<AppState>) {}
 
   public fireEdit(rule: Rule) {

@@ -285,7 +285,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public fireCancelNewRule() {
+  public onCancel() {
     this.onCancelNewRule.emit(this.ruleIndex);
   }
 

@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
-import {CronRuleConfiguration} from '../../../../core/model/rule';
+import {CronRuleConfiguration, Rule} from '../../../../core/model/rule';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {FormGroup} from '@angular/forms';
@@ -40,9 +40,13 @@ import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/stor
 @Component({
   selector: 'cron-form',
   templateUrl: './cron-form.component.html',
+  styleUrls: ['./cron-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CronFormComponent implements OnInit {
+  @Input()
+  public rule: Rule;
+
   @Input()
   public config: CronRuleConfiguration;
 
