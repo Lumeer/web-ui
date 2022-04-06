@@ -25,7 +25,6 @@ import {Observable} from 'rxjs';
 import {User, UserHintsKeys} from '../../../../core/store/users/user';
 import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';
-import {selectUrl} from '../../../../core/store/navigation/navigation.state';
 import {selectCurrentUser} from '../../../../core/store/users/users.state';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {map} from 'rxjs/operators';
@@ -38,6 +37,7 @@ import {UserSettingsModalComponent} from '../../../modal/user-settings/user-sett
 import {availableLanguages, Language, LanguageCode} from '../../../../core/model/language';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {ApplicationTourService} from '../../../../core/service/application-tour.service';
+import {NavigationAction} from '../../../../core/store/navigation/navigation.action';
 
 @Component({
   selector: 'user-menu',
@@ -62,7 +62,6 @@ export class UserMenuComponent implements OnInit {
   public readonly helpLink: string;
 
   public currentUser$: Observable<User>;
-  public url$: Observable<string>;
   public freePlan$: Observable<boolean>;
   public currentLanguage: Language;
 
@@ -84,7 +83,6 @@ export class UserMenuComponent implements OnInit {
     this.currentLanguage = availableLanguages.find(language => language.code === this.locale);
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
-    this.url$ = this.store$.pipe(select(selectUrl));
     this.bindServiceLimits();
   }
 
@@ -142,5 +140,21 @@ export class UserMenuComponent implements OnInit {
     const config = {initialState: {}, keyboard: true};
     config['backdrop'] = 'static';
     this.modalService.show(UserSettingsModalComponent, config);
+  }
+
+  public selectLanguage(currentUser: User, language: LanguageCode) {
+    if (currentUser?.language === language) {
+      return;
+    }
+    this.store$.dispatch(
+      new UsersAction.PatchCurrentUser({
+        user: {language},
+        onSuccess: () => this.redirectToLanguage(language),
+      })
+    );
+  }
+
+  private redirectToLanguage(language: LanguageCode) {
+    this.store$.dispatch(new NavigationAction.RedirectToLanguage({language}));
   }
 }

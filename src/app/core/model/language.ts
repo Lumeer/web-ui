@@ -59,3 +59,7 @@ export const availableLanguages: Language[] = [
     icon: 'flag-icon flag-icon-hu',
   },
 ];
+
+export function createLanguageUrl(path: string, languageCode: string): string {
+  return window.location.origin + '/' + languageCode + (path || '/');
+}
