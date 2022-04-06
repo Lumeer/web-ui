@@ -44,7 +44,7 @@ export class CurrentUserCheckService {
 
   private checkUserLanguage(user: User) {
     const language = languageCodeMap[user.language];
-    if (language !== this.configurationService.getConfiguration().locale) {
+    if (language && language !== this.configurationService.getConfiguration().locale) {
       this.store$.dispatch(new NavigationAction.RedirectToLanguage({language}));
     }
   }
