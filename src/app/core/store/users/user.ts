@@ -36,6 +36,7 @@ export interface User {
   wizardDismissed?: boolean;
   lastLoggedIn?: Date;
   referral?: string;
+  language?: string;
   referrals?: PaymentStats;
   affiliatePartner?: boolean;
   emailVerified?: boolean;

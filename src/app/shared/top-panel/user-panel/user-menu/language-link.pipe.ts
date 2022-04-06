@@ -18,12 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {createLanguageUrl} from '../../../../core/model/language';
 
 @Pipe({
   name: 'languageLink',
 })
 export class LanguageLinkPipe implements PipeTransform {
   public transform(path: string, languageCode: string): string {
-    return window.location.origin + '/' + languageCode + (path || '/');
+    return createLanguageUrl(path, languageCode);
   }
 }

@@ -26,5 +26,6 @@ export const configuration: Partial<Configuration> = {
   production: false,
   storeDevtools: true,
   publicView: false,
+  languageRedirect: false,
   paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
 };

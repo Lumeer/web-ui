@@ -28,6 +28,7 @@ export const configuration: Partial<Configuration> = {
   pusherLogDisabled: true,
   notificationsDisabled: true,
   storeDevtools: false,
+  languageRedirect: false,
   name: 'public',
   paymentGw: 'https://gate.gopay.com/gp-gw/js/embed.js',
 };

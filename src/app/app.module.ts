@@ -38,6 +38,7 @@ import {configuration} from '../environments/configuration';
 import {TeamsLoadService} from './core/service/teams-load.service';
 import {LinkTypeModule} from './link-type/link-type.module';
 import {UserModule} from './user/user.module';
+import {CurrentUserCheckService} from './core/service/current-user-check.service';
 
 export const angularticsSettings: Partial<Angulartics2Settings> = {
   developerMode: !configuration.analytics,
@@ -90,6 +91,13 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
       provide: APP_INITIALIZER,
       useFactory: (permissionsCheckService: PermissionsCheckService) => () => permissionsCheckService.init(),
       deps: [PermissionsCheckService],
+      multi: true,
+    },
+    CurrentUserCheckService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (currentUserCheckService: CurrentUserCheckService) => () => currentUserCheckService.init(),
+      deps: [CurrentUserCheckService],
       multi: true,
     },
     TeamsLoadService,

@@ -165,7 +165,10 @@ function createWeeklyExecutionDates(configuration: CronRuleConfiguration, start:
 
   const days = createRange(0, 7).filter(day => bitTest(configuration.daysOfWeek, day));
 
-  let currentMoment = truncateToHours(moment.utc(start).hour(+configuration.hour));
+  let currentMoment = moment
+    .utc(start)
+    .startOf('day')
+    .hour(+configuration.hour);
   while (dates.length === 0 || dates[dates.length - 1] < end) {
     for (const day of days) {
       currentMoment = currentMoment.isoWeekday(day + 1); // 1 to 7 -> Monday to Sunday)
@@ -179,6 +182,10 @@ function createWeeklyExecutionDates(configuration: CronRuleConfiguration, start:
 
 function computeCronMonthlyNextExecution(rule: CronRule, time: Date): Date {
   const config = rule.configuration;
+  if (!config.occurrence || config.occurrence < 0) {
+    return null;
+  }
+
   let dateMoment: moment.Moment;
   if (isDateValid(config.lastRun)) {
     dateMoment = setDayOfMonth(
@@ -220,21 +227,39 @@ function computeCronMonthlyNextExecution(rule: CronRule, time: Date): Date {
 }
 
 function setDayOfMonth(moment: moment.Moment, day: number): moment.Moment {
-  if (moment.daysInMonth() < day) {
-    return moment.date(moment.daysInMonth());
-  }
-  return moment.date(day);
-}
-
-function truncateToHours(moment: moment.Moment): moment.Moment {
-  return moment.minute(0).second(0).millisecond(0);
+  return moment.date(Math.min(day, moment.daysInMonth()));
 }
 
 function checkCronRuneWillRun(rule: CronRule, time: Date): boolean {
   return (
-    rule?.configuration &&
+    cronRuleConfigurationIsValid(rule) &&
     isDateValid(rule.configuration.startsOn) &&
     (isNullOrUndefined(rule.configuration.executionsLeft) || rule.configuration.executionsLeft > 0) &&
     (!isDateValid(rule.configuration.endsOn) || rule.configuration.endsOn > time)
   );
+}
+
+function cronRuleConfigurationIsValid(rule: CronRule): boolean {
+  const config = rule?.configuration;
+  if (!config) {
+    return;
+  }
+
+  const hour = +config.hour;
+  if (hour < 0 || hour > 24) {
+    return false;
+  }
+
+  if (config.interval < 1) {
+    return false;
+  }
+
+  switch (config.unit) {
+    case ChronoUnit.Weeks:
+      return config.daysOfWeek > 0;
+    case ChronoUnit.Months:
+      return config.occurrence > 0;
+  }
+
+  return true;
 }

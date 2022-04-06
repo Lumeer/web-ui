@@ -25,6 +25,7 @@ export interface Configuration extends ConfigurationVariables {
   authPersistence?: boolean; // keep auth token in local storage
   production: boolean;
   publicView: boolean;
+  languageRedirect: boolean;
   pusherLogDisabled?: boolean;
   notificationsDisabled?: boolean;
   storeDevtools: boolean;
