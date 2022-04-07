@@ -1,4 +1,4 @@
-<ng-container *ngIf="{currentUser: currentUser$ | async, freePlan: freePlan$ | async, url: url$ | async } as data">
+<ng-container *ngIf="{currentUser: currentUser$ | async, freePlan: freePlan$ | async} as data">
   <div tooltip="User menu"
        i18n-tooltip="@@topPanel.userMenu.title"
        placement="bottom"
@@ -119,7 +119,7 @@
   <mat-menu #languageMenu="matMenu">
     <ng-template matMenuContent>
       <button mat-menu-item *ngFor="let language of languages">
-        <a class="color-inherit" [href]="data.url| languageLink:language.code">
+        <a class="color-inherit" (click)="selectLanguage(data.currentUser, language.code)">
           <span [ngClass]="language.icon"></span>
           <span>{{language.name}}</span>&nbsp;(<span>{{language.translatedName}}</span>)
         </a>

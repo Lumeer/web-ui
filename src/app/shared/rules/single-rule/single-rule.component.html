@@ -40,13 +40,21 @@
     </span>
   </div>
   <div class="flex-grow-1 text-end">
-    <a *ngIf="canDuplicate" (click)="fireDuplicate(rule)" title="Duplicate automation" i18n-title="@@collection.config.tab.rules.btn.duplicate">
+    <ng-container *ngIf="rule | ruleRunInfo as ruleRunInfo">
+      <i class="far fa-clock cursor-pointer me-2-5" [tooltip]="ruleRunInfoComponent" containerClass="bigger-tooltip"></i>
+      <ng-template #ruleRunInfoComponent>
+        <rule-run-info [lastRun]="ruleRunInfo.lastRun"
+                       [nextRun]="ruleRunInfo.nextRun">
+        </rule-run-info>
+      </ng-template>
+    </ng-container>
+    <a *ngIf="canDuplicate" class="me-2-5" (click)="fireDuplicate(rule)" title="Duplicate automation" i18n-title="@@collection.config.tab.rules.btn.duplicate">
       <i class="far fa-clone text-success cursor-pointer"></i>
     </a>
-    <a class="ms-2-5" (click)="fireEdit(rule)" title="Edit automation" i18n-title="@@collection.config.tab.rules.btn.edit">
+    <a class="me-2-5" (click)="fireEdit(rule)" title="Edit automation" i18n-title="@@collection.config.tab.rules.btn.edit">
       <i class="fas fa-pencil text-success cursor-pointer"></i>
     </a>
-    <a class="ms-2-5" (click)="fireDelete(rule)" title="Delete automation" i18n-title="@@collection.config.tab.rules.btn.delete">
+    <a (click)="fireDelete(rule)" title="Delete automation" i18n-title="@@collection.config.tab.rules.btn.delete">
       <i class="far fa-trash-alt text-danger cursor-pointer"></i>
     </a>
   </div>

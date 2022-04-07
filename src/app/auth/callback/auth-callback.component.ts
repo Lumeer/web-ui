@@ -26,6 +26,8 @@ import {AppState} from '../../core/store/app.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 import {ModalsAction} from '../../core/store/modals/modals.action';
+import {User} from '../../core/store/users/user';
+import {createLanguageUrl, languageCodeMap} from '../../core/model/language';
 
 @Component({
   selector: 'auth-callback',
@@ -49,23 +51,24 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
   public ngOnInit() {
     this.store$.dispatch(new ModalsAction.Hide());
 
-    if (this.authService.isAuthenticated()) {
-      this.navigateToApplication();
-      return;
-    }
+    this.selectUserAndNavigateToApp();
+  }
 
+  private selectUserAndNavigateToApp() {
     this.store$
       .select(selectCurrentUser)
       .pipe(
         filter(user => !!user),
         take(1)
       )
-      .subscribe(() => this.navigateToApplication());
+      .subscribe(user => this.navigateToApplication(user));
   }
 
-  private navigateToApplication() {
+  private navigateToApplication(user?: User) {
     const path = this.authService.getAndClearLoginRedirectPath();
-    if (path) {
+    if (user?.language && languageCodeMap[user.language]) {
+      window.location.href = createLanguageUrl(path, user.language);
+    } else if (path) {
       this.router.navigateByUrl(path);
     } else {
       this.router.navigate(['/']);

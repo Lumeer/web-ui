@@ -33,6 +33,7 @@ export interface UserDto {
   wizardDismissed?: boolean;
   lastLoggedIn?: number;
   referral?: string;
+  language?: string;
   affiliatePartner?: boolean;
   emailVerified?: boolean;
   notifications?: NotificationsSettingsDto;

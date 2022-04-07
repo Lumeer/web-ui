@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Query} from './query/query';
 import {ViewCursor} from './view-cursor/view-cursor';
 import {PerspectiveSettings} from './settings/perspective-settings';
+import {LanguageCode} from '../../model/language';
 
 export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
@@ -34,6 +35,8 @@ export enum NavigationActionType {
   SET_VIEW_CURSOR = '[Navigation] Set View Cursor',
 
   SET_PERSPECTIVE_SETTINGS = '[Navigation] Set Perspective Settings',
+
+  REDIRECT_TO_LANGUAGE = '[Navigation] Redirect To Language',
 
   REMOVE_VIEW_FROM_URL = '[Navigation] Remove view from URL',
 }
@@ -73,6 +76,12 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.REMOVE_VIEW_FROM_URL;
 
     public constructor(public payload: {setQuery?: Query; cursor?: ViewCursor}) {}
+  }
+
+  export class RedirectToLanguage implements Action {
+    public readonly type = NavigationActionType.REDIRECT_TO_LANGUAGE;
+
+    public constructor(public payload: {language: LanguageCode}) {}
   }
 
   export class NavigateToPreviousUrl implements Action {

@@ -9,3 +9,10 @@ input.ng-invalid {
   grid-template-columns: min-content 1fr;
   grid-gap: 1rem;
 }
+
+.cancel-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}

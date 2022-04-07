@@ -18,13 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {createLanguageUrl} from '../../../../core/model/language';
+import {RuleTiming} from '../../../../core/model/rule';
 
 @Pipe({
-  name: 'languageLink',
+  name: 'hasDelete',
 })
-export class LanguageLinkPipe implements PipeTransform {
-  public transform(path: string, languageCode: string): string {
-    return createLanguageUrl(path, languageCode);
+export class HasDeletePipe implements PipeTransform {
+  private readonly deleteTimings = [
+    RuleTiming.Delete,
+    RuleTiming.UpdateDelete,
+    RuleTiming.CreateDelete,
+    RuleTiming.All,
+  ];
+
+  public transform(value: RuleTiming): boolean {
+    return this.deleteTimings.indexOf(value) >= 0;
   }
 }

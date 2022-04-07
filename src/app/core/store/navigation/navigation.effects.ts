@@ -21,13 +21,13 @@ import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {filter, map, withLatestFrom} from 'rxjs/operators';
+import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ModuleLazyLoadingService} from '../../service/module-lazy-loading.service';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
-import {selectNavigation} from './navigation.state';
+import {selectNavigation, selectUrl} from './navigation.state';
 import {QueryParam} from './query-param';
 import {Query, QueryStem} from './query/query';
 import {convertQueryModelToString} from './query/query.converter';
@@ -35,6 +35,9 @@ import {convertViewCursorToString} from './view-cursor/view-cursor';
 import {selectViewQuery} from '../views/views.state';
 import {convertPerspectiveSettingsToString} from './settings/perspective-settings';
 import {createCollectionQueryStem} from './query/query.util';
+import {CommonAction, CommonActionType} from '../common/common.action';
+import {createLanguageUrl} from '../../model/language';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class NavigationEffects {
@@ -63,6 +66,24 @@ export class NavigationEffects {
         return newQueryAction({...query, stems});
       })
     )
+  );
+
+  public redirectToLanguage$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<NavigationAction.RedirectToLanguage>(NavigationActionType.REDIRECT_TO_LANGUAGE),
+        withLatestFrom(this.store$.pipe(select(selectUrl))),
+        tap(([action, url]) => {
+          const currentLanguage = this.configurationService.getConfiguration().locale;
+          const {language} = action.payload;
+          if (this.configurationService.getConfiguration().languageRedirect && language !== currentLanguage) {
+            const a = document.createElement('a');
+            a.href = createLanguageUrl(url, action.payload.language);
+            a.click();
+          }
+        })
+      ),
+    {dispatch: false}
   );
 
   public navigateToPreviousUrl$ = createEffect(() =>
@@ -164,6 +185,7 @@ export class NavigationEffects {
   constructor(
     private actions$: Actions,
     private moduleLazyLoadingService: ModuleLazyLoadingService,
+    private configurationService: ConfigurationService,
     private router: Router,
     private store$: Store<AppState>
   ) {}

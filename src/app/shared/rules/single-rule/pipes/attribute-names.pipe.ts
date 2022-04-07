@@ -18,13 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {createLanguageUrl} from '../../../../core/model/language';
+import {Rule} from '../../../../core/model/rule';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {attributesWithRule} from '../../../utils/attribute.utils';
 
 @Pipe({
-  name: 'languageLink',
+  name: 'attributeNames',
 })
-export class LanguageLinkPipe implements PipeTransform {
-  public transform(path: string, languageCode: string): string {
-    return createLanguageUrl(path, languageCode);
+export class AttributeNamesPipe implements PipeTransform {
+  public transform(value: Rule, attributes: Attribute[]): string {
+    return attributesWithRule(attributes, value)?.join(', ');
   }
 }
