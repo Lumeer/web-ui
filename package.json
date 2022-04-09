@@ -89,7 +89,7 @@
     "lodash": "^4.17.21",
     "mapbox-gl": "^2.7.0",
     "mixpanel-browser": "^2.45.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.34",
     "ngx-bootstrap": "^8.0.0",
     "ngx-color-picker": "^11.0.0",
