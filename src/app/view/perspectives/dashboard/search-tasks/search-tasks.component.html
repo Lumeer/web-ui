@@ -1,4 +1,4 @@
-<search-tasks-content class="d-block" *ngIf="loaded$ | async"
+<tasks-content class="d-block" *ngIf="loaded$ | async"
                       [class.pb-5]="perspectiveConfiguration?.additionalSpace"
                       [constraintData]="constraintData$ | async"
                       [query]="query$ | async"
@@ -20,4 +20,4 @@
                       [infiniteScrollContainer]="scrollContainer"
                       [fromRoot]="true"
                       (scrolled)="onFetchNextPage()">
-</search-tasks-content>
+</tasks-content>

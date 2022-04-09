@@ -1,0 +1,44 @@
+<ng-container
+  *ngIf="{taskAttributes: collections | collectionTaskAttributes, truncateContent: truncateContent$ | async} as data ">
+  <tasks-toolbar class="d-block"
+                        [class.mt-3]="perspectiveConfiguration?.additionalSpace"
+                        [config]="config"
+                        [documentsCount]="documents?.length"
+                        [viewId]="view?.id"
+                        [collections]="collections | filterContributeTasksCollections:permissions"
+                        [views]="defaultTasksViews$ | async | filterContributeViews:(tasksPermissions$ | async)"
+                        (configChange)="configChange.emit($event)">
+  </tasks-toolbar>
+
+  <div class="mt-4 pt-2 pb-5" *ngIf="documents?.length; else noDocuments">
+
+    <tasks-group *ngFor="let group of documents | createTasksGroups:data.truncateContent:maxDocuments; trackBy: trackByGroup; let first = first"
+                 class="d-block"
+                 [class.mt-3]="!first"
+                 [collectionsMap]="collectionsMap"
+                 [config]="config"
+                 [constraintData]="constraintData"
+                 [currentSize]="currentSize"
+                 [currentUser]="currentUser"
+                 [tasks]="group.tasks"
+                 [title]="group.title"
+                 [isTruncated]="group.truncated"
+                 [permissions]="permissions"
+                 [taskAttributes]="data.taskAttributes"
+                 [view]="view"
+                 [views]="views"
+                 (detail)="onDetailClick($event)"
+                 (showAll)="onShowAll()"
+                 (toggleFavorite)="onFavoriteToggle($event)"
+                 (toggleOpen)="toggleDocument($event)">
+    </tasks-group>
+
+  </div>
+</ng-container>
+
+<ng-template #noDocuments>
+  <empty-tasks [collections]="allTasksCollections$ | async"
+               [compact]="compactEmptyPages"
+               [query]="query">
+  </empty-tasks>
+</ng-template>

@@ -1,0 +1,17 @@
+<dropdown [origin]="origin"
+          [closeOnClickOutside]="true"
+          [closeOnClickOrigin]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false">
+
+  <div class="card p-2 overflow-auto" [style.min-width.px]="200">
+
+    <label class="" i18n="@@groupBy">Group by</label>
+    <select-item [items]="taskConfigItems"
+                 [selectedId]="groupBy || null"
+                 [removable]="false"
+                 (selected)="onGroupBySelected($event)">
+    </select-item>
+  </div>
+
+</dropdown>

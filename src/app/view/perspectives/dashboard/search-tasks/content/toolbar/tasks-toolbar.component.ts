@@ -17,21 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Output, EventEmitter, Input, SimpleChanges} from '@angular/core';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {CreateDocumentModalComponent} from '../../../../../../shared/modal/create-document/create-document-modal.component';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {View} from '../../../../../../core/store/views/view';
+import {
+  checkSizeType,
+  SearchTasksConfig,
+  TaskConfigAttribute,
+  TasksConfigGroupBy,
+  TasksConfigSortBy,
+} from '../../../../../../core/store/searches/search';
 
 @Component({
-  selector: 'search-tasks-toolbar',
-  templateUrl: './search-tasks-toolbar.component.html',
+  selector: 'tasks-toolbar',
+  templateUrl: './tasks-toolbar.component.html',
+  styleUrls: ['./tasks-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTasksToolbarComponent {
+export class TasksToolbarComponent {
   @Input()
-  public size: SizeType;
+  public config: SearchTasksConfig;
 
   @Input()
   public documentsCount: number;
@@ -46,12 +54,28 @@ export class SearchTasksToolbarComponent {
   public viewId: string;
 
   @Output()
-  public sizeChange = new EventEmitter<SizeType>();
+  public configChange = new EventEmitter<SearchTasksConfig>();
+
+  public currentSize: SizeType;
 
   constructor(private modalService: ModalService) {}
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.config) {
+      this.currentSize = checkSizeType(this.config?.size);
+    }
+  }
+
+  public onSortByChange(sortBy: TasksConfigSortBy) {
+    this.configChange.next({...this.config, sortBy});
+  }
+
+  public onGroupByChange(groupBy: TasksConfigGroupBy) {
+    this.configChange.next({...this.config, groupBy});
+  }
+
   public onSizeChange(size: SizeType) {
-    this.sizeChange.emit(size);
+    this.configChange.next({...this.config, size});
   }
 
   public onAdd() {

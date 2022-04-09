@@ -407,140 +407,140 @@
           <context context-type="linenumber">4,6</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.assignee.label" datatype="html">
+      <trans-unit id="collections.purpose.tasks.assignee" datatype="html">
         <source> Assignee </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">4,6</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.assignee.select" datatype="html">
+      <trans-unit id="collections.purpose.tasks.assignee.select" datatype="html">
         <source>Select assignee attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.assignee.help" datatype="html">
+      <trans-unit id="collections.purpose.tasks.assignee.help" datatype="html">
         <source> Which attribute specifies who the assignee is? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> attribute type. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">18,20</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.dueDate.label" datatype="html">
+      <trans-unit id="collections.purpose.tasks.dueDate" datatype="html">
         <source> Due Date </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">25,27</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.dueDate.select" datatype="html">
+      <trans-unit id="collections.purpose.tasks.dueDate.select" datatype="html">
         <source>Select due date attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.dueDate.help" datatype="html">
+      <trans-unit id="collections.purpose.tasks.dueDate.help" datatype="html">
         <source> Which attribute specifies the due date of a task? Works only with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Date<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> attribute type. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">39,41</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.state.label" datatype="html">
+      <trans-unit id="collections.purpose.tasks.state" datatype="html">
         <source> State </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">46,48</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.state.select" datatype="html">
+      <trans-unit id="collections.purpose.tasks.state.select" datatype="html">
         <source>Select state attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.state.help" datatype="html">
+      <trans-unit id="collections.purpose.tasks.state.help" datatype="html">
         <source> Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> attribute type. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">60,62</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.stateList.label" datatype="html">
+      <trans-unit id="collections.purpose.tasks.stateList" datatype="html">
         <source> Done States </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">68,70</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.stateList.help" datatype="html">
+      <trans-unit id="collections.purpose.tasks.stateList.help" datatype="html">
         <source> Which states are considered final? That means no further notifications about the task will be sent. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">84,86</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.observer.label" datatype="html">
+      <trans-unit id="collections.purpose.tasks.observer" datatype="html">
         <source> Observer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">91,93</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.observer.select" datatype="html">
+      <trans-unit id="collections.purpose.tasks.observer.select" datatype="html">
         <source>Select observer attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.observer.help" datatype="html">
+      <trans-unit id="collections.purpose.tasks.observer.help" datatype="html">
         <source> Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> attribute type. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">105,108</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.priority.label" datatype="html">
+      <trans-unit id="collections.purpose.tasks.priority" datatype="html">
         <source> Priority </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">113,115</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.priority.select" datatype="html">
+      <trans-unit id="collections.purpose.tasks.priority.select" datatype="html">
         <source>Select priority attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.priority.help" datatype="html">
+      <trans-unit id="collections.purpose.tasks.priority.help" datatype="html">
         <source> Which attribute specifies the task priority? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">125,127</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.tags.label" datatype="html">
+      <trans-unit id="collections.purpose.tasks.tags" datatype="html">
         <source> Tags </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">132,134</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.tags.select" datatype="html">
+      <trans-unit id="collections.purpose.tasks.tags.select" datatype="html">
         <source>Select tags attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">140</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collections.tab.purpose.tags.help" datatype="html">
+      <trans-unit id="collections.purpose.tasks.tags.help" datatype="html">
         <source> Tags, labels, hashtags... Simply anything you use to categorize the tasks. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
@@ -10946,7 +10946,7 @@
           <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="perspective.workflow.toolbar.groupBy" datatype="html">
+      <trans-unit id="groupBy" datatype="html">
         <source>Group By</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context>

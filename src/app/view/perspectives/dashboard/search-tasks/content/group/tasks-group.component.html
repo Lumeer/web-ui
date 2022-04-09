@@ -1,0 +1,59 @@
+<div *ngIf="title" class="h6 fw-bold mb-3">{{title}}</div>
+
+<div class="card">
+
+  <task-wrapper
+    class="detail px-1 py-2 position-relative"
+    *ngFor="let document of tasks; trackBy:trackByDocument; let index = index; let last = last"
+    [class.border-bottom]="isTruncated || !last"
+    [class.light]="isTruncated && last"
+    [size]="currentSize"
+    [document]="document"
+    [currentUser]="currentUser"
+    [view]="view"
+    [permissions]="permissions && permissions[document.collectionId]"
+    [isOpened]="document | isDocumentOpened:config"
+    [collection]="collectionsMap[document.collectionId]"
+    [attributes]="taskAttributes[document.collectionId]"
+    [constraintData]="constraintData"
+    (toggleFavorite)="toggleFavorite.emit(document)"
+    (toggleOpen)="toggleOpen.emit(document)"
+    (detail)="detail.emit(document)">
+
+    <div class="d-flex flex-row flex-wrap align-items-center overflow-hidden"
+         *ngIf="currentSize === sizeType.L || (document | isDocumentOpened:config)">
+      <ng-container
+        *ngFor="let entry of document | dataValueEntries:collectionsMap[document.collectionId]:taskAttributes[document.collectionId]:views:constraintData:config; let first = first; trackBy: trackByEntry">
+        <span class="mt-1" *ngIf="!first">,&nbsp;</span>
+        <span *ngIf="entry.label"
+              class="text-attribute text-nowrap mt-1 text-truncate"
+              [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
+        <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
+                            [dataValue]="entry.dataValue"
+                            [cursor]="document | dataCursor:entry.attributeId:view?.id"
+                            [configuration]="configuration"
+                            [constraint]="entry.constraint">
+        </data-input-preview>
+      </ng-container>
+    </div>
+
+    <div *ngIf="isTruncated && index >= tasks.length - 2" class="document-background cursor-pointer"
+         [class.last]="index === tasks.length - 1"
+         [class.second-last]="index === tasks.length - 2"
+         (click)="showAll.emit(); $event.stopPropagation()">
+    </div>
+
+  </task-wrapper>
+
+
+  <div class="d-flex flex-nowrap align-items-center p-1" *ngIf="isTruncated">
+    <i *ngIf="currentSize !== sizeType.L" class="fa fa-fw fa-none" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-none align-self-center me-2"
+       [class.ms-2]="currentSize === sizeType.L"
+       [ngClass]="currentSize === sizeType.M || currentSize === sizeType.L ? 'fa-2x' : 'bigger-icon'"
+       aria-hidden="true">
+    </i>
+    <see-more-button (clicked)="showAll.emit()"></see-more-button>
+  </div>
+
+</div>

@@ -18,31 +18,23 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
-import {ConstraintData} from '@lumeer/data-filters';
-import {TaskAttributes} from '../../../model/task-attributes';
-import {View} from '../../../../../../../core/store/views/view';
+import {TasksConfigSortBy, TasksConfigGroupBy} from '../../../../../../../core/store/searches/search';
 
 @Component({
-  selector: 'search-task-second-line',
-  templateUrl: './search-task-second-line.component.html',
-  styleUrls: ['./search-task-second-line.component.scss'],
+  selector: 'tasks-sort',
+  templateUrl: './tasks-sort.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-flex flex-row flex-nowrap text-truncate justify-content-end'},
 })
-export class SearchTaskSecondLineComponent {
+export class TasksSortComponent {
   @Input()
-  public document: DocumentModel;
+  public sortBy: TasksConfigSortBy;
 
   @Input()
-  public constraintData: ConstraintData;
-
-  @Input()
-  public attributes: TaskAttributes;
-
-  @Input()
-  public view: View;
+  public groupBy: TasksConfigGroupBy;
 
   @Output()
-  public commentClick = new EventEmitter();
+  public sortByChanged = new EventEmitter<TasksConfigSortBy>();
+
+  @Output()
+  public groupByChanged = new EventEmitter<TasksConfigGroupBy>();
 }

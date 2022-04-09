@@ -1,63 +1,57 @@
 <div [formGroup]="form" *ngIf="{collectionSelectItems: collection | attributesSelectItems} as data">
 
   <div class="row m-0 mt-3">
-    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.assignee.label">
-      Assignee
-    </label>
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.purpose.tasks.assignee">Assignee</label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
                    class="w-100"
                    buttonClasses="w-100"
                    emptyValue="Select assignee attribute"
-                   i18n-emptyValue="@@collections.tab.purpose.assignee.select"
+                   i18n-emptyValue="@@collections.purpose.tasks.assignee.select"
                    [selectedId]="assigneeControl.value"
                    (selected)="onSelectValue(assigneeControl, $event)"
                    (remove)="onSelectValue(assigneeControl, null)">
       </select-item>
-      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.assignee.help">
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.purpose.tasks.assignee.help">
         Which attribute specifies who the assignee is? Works best with the <em>User</em> attribute type.
       </div>
     </div>
   </div>
 
   <div class="row m-0 mt-3">
-    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.dueDate.label">
-      Due Date
-    </label>
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.purpose.tasks.dueDate">Due Date</label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="collection | attributesSelectItems:constraintType.DateTime"
                    [removable]="true"
                    class="w-100"
                    buttonClasses="w-100"
                    emptyValue="Select due date attribute"
-                   i18n-emptyValue="@@collections.tab.purpose.dueDate.select"
+                   i18n-emptyValue="@@collections.purpose.tasks.dueDate.select"
                    [selectedId]="dueDateControl.value"
                    (selected)="onSelectValue(dueDateControl, $event)"
                    (remove)="onSelectValue(dueDateControl, null)">
       </select-item>
-      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.dueDate.help">
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.purpose.tasks.dueDate.help">
         Which attribute specifies the due date of a task? Works only with the <em>Date</em> attribute type.
       </div>
     </div>
   </div>
 
   <div class="row m-0 mt-3">
-    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.state.label">
-      State
-    </label>
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.purpose.tasks.state">State</label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
                    class="w-100"
                    buttonClasses="w-100"
                    emptyValue="Select state attribute"
-                   i18n-emptyValue="@@collections.tab.purpose.state.select"
+                   i18n-emptyValue="@@collections.purpose.tasks.state.select"
                    [selectedId]="stateControl.value"
                    (selected)="onStateListSelected($event)"
                    (remove)="onSelectValue(stateControl, null)">
       </select-item>
-      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.state.help">
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.purpose.tasks.state.help">
         Which attribute specifies the state of a task? Works best with the <em>Selection</em> attribute type.
       </div>
     </div>
@@ -65,9 +59,7 @@
 
   <div class="row m-0 mt-3"
        *ngIf="collection?.attributes | stateListConstraint:stateControl.value:(documents$ | async):(constraintData$ | async) as stateConstraintData">
-    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.stateList.label">
-      Done States
-    </label>
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.purpose.tasks.stateList">Done States</label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <data-input class="py-0 px-1 form-control multiline d-flex align-items-center cursor-pointer"
                   [dataValue]="stateList$ | async | stateListDataValue:stateConstraintData.constraint:stateConstraintData.constraintData"
@@ -81,28 +73,26 @@
                   (save)="onStateListSave($event)"
                   (cancel)="setStateListCancel()">
       </data-input>
-      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.stateList.help">
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.purpose.tasks.stateList.help">
         Which states are considered final? That means no further notifications about the task will be sent.
       </div>
     </div>
   </div>
 
   <div class="row m-0 mt-3">
-    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.observer.label">
-      Observer
-    </label>
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.purpose.tasks.observer">Observer</label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
                    class="w-100"
                    buttonClasses="w-100"
                    emptyValue="Select observer attribute"
-                   i18n-emptyValue="@@collections.tab.purpose.observer.select"
+                   i18n-emptyValue="@@collections.purpose.tasks.observer.select"
                    [selectedId]="observersControl.value"
                    (selected)="onSelectValue(observersControl, $event)"
                    (remove)="onSelectValue(observersControl, null)">
       </select-item>
-      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.observer.help">
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.purpose.tasks.observer.help">
         Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works
         best with the <em>User</em> attribute type.
       </div>
@@ -110,40 +100,36 @@
   </div>
 
   <div class="row m-0 mt-3">
-    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.priority.label">
-      Priority
-    </label>
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.purpose.tasks.priority">Priority</label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
                    emptyValue="Select priority attribute"
-                   i18n-emptyValue="@@collections.tab.purpose.priority.select"
+                   i18n-emptyValue="@@collections.purpose.tasks.priority.select"
                    [selectedId]="priorityControl.value"
                    (selected)="onSelectValue(priorityControl, $event)"
                    (remove)="onSelectValue(priorityControl, null)">
       </select-item>
-      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.priority.help">
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.purpose.tasks.priority.help">
         Which attribute specifies the task priority?
       </div>
     </div>
   </div>
 
   <div class="row m-0 mt-3">
-    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.tags.label">
-      Tags
-    </label>
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.purpose.tasks.tags">Tags</label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
                    class="w-100"
                    buttonClasses="w-100"
                    emptyValue="Select tags attribute"
-                   i18n-emptyValue="@@collections.tab.purpose.tags.select"
+                   i18n-emptyValue="@@collections.purpose.tasks.tags.select"
                    [selectedId]="tagsControl.value"
                    (selected)="onSelectValue(tagsControl, $event)"
                    (remove)="onSelectValue(tagsControl,null)">
       </select-item>
-      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.tags.help">
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.purpose.tasks.tags.help">
         Tags, labels, hashtags... Simply anything you use to categorize the tasks.
       </div>
     </div>

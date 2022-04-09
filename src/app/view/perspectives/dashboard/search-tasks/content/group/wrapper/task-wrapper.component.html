@@ -11,7 +11,7 @@
    [style.color]="collection?.color" aria-hidden="true">
 </i>
 
-<search-task-first-line [constraintData]="constraintData"
+<task-first-line [constraintData]="constraintData"
                         [document]="document"
                         [attributes]="attributes"
                         [view]="view"
@@ -20,14 +20,14 @@
                         [large]="large"
                         (detail)="onDetail()"
                         (toggleFavorite)="onToggleFavorite()">
-</search-task-first-line>
+</task-first-line>
 
-<search-task-second-line *ngIf="medium || large"
+<task-second-line *ngIf="medium || large"
                          [attributes]="attributes"
                          [view]="view"
                          [document]="document"
                          [constraintData]="constraintData"
                          (commentClick)="onDetail()">
-</search-task-second-line>
+</task-second-line>
 
 <ng-content></ng-content>

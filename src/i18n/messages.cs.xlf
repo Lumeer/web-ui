@@ -5651,90 +5651,90 @@
   Lumeer automaticky upozorňuje uživatele na důležité změny úkolů.
 </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.assignee.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.assignee" datatype="html">
         <source> Assignee </source><target>
       Zodpovědná osoba
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.assignee.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.assignee.select" datatype="html">
         <source>Select assignee attribute</source><target>Atribut se zodpovědnou osobou</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.assignee.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.assignee.help" datatype="html">
         <source> Which attribute specifies who the assignee is? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source><target>
         Který atribut určuje, komu je daný úkol přidělen? Funguje nejlépe s atributy typu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Uživatel<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.dueDate.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.dueDate" datatype="html">
         <source> Due Date </source><target>
       Termín
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.dueDate.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.dueDate.select" datatype="html">
         <source>Select due date attribute</source><target>Atribut s termínem</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.dueDate.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.dueDate.help" datatype="html">
         <source> Which attribute specifies the due date of a task? Works only with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Date<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source><target>
         Který atribut určuje termín dokonční úkolu? Pracuje pouze s atributy typu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Datum<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.state.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.state" datatype="html">
         <source> State </source><target>
       Stav
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.state.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.state.select" datatype="html">
         <source>Select state attribute</source><target>Atribut se stavem</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.state.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.state.help" datatype="html">
         <source> Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source><target>
         Který atribut určuje stav úkolu? Pracuje nejlépe s atributy typu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Výběr<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.stateList.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.stateList" datatype="html">
         <source> Done States </source><target>
       Dokončené stavy
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.stateList.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.stateList.help" datatype="html">
         <source> Which states are considered final? That means no further notifications about the task will be sent. </source><target>
         Které stavy úkolu jsou považovány za konečené? To znamená, že se již nemají posílat upozornění na změny úkolu.
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.observer" datatype="html">
         <source> Observer </source><target>
       Pozorovatel
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.observer.select" datatype="html">
         <source>Select observer attribute</source><target>Atribut s pozorovatelem</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.observer.help" datatype="html">
         <source> Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source><target>
         Který atribut určuje, kdo (navíc oproti zodpovědné osobě) má být upozorňován na změny úkolu? Pracuje nejlépe s atributy typu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Uživatel<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">105</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">105</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.priority" datatype="html">
         <source> Priority </source><target>
       Priorita
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">113</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">113</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.priority.select" datatype="html">
         <source>Select priority attribute</source><target>Atribut s prioritou</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">119</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">119</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.priority.help" datatype="html">
         <source> Which attribute specifies the task priority? </source><target>
         Který atribut určuje prioritu?
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.tags" datatype="html">
         <source> Tags </source><target>
       Značky
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.tags.select" datatype="html">
         <source>Select tags attribute</source><target>Atribut se značkami</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">140</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">140</context></context-group></trans-unit><trans-unit id="collections.purpose.tasks.tags.help" datatype="html">
         <source> Tags, labels, hashtags... Simply anything you use to categorize the tasks. </source><target>
         Značky, štítky, hashtagy... Jednoduše cokoliv, co používáte ke kategorizaci úkolů.
       </target>
@@ -8862,7 +8862,7 @@
     Nejsou žádné řádky k zobrazení a nemáte ani právo je vytvářet.
   </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="perspective.workflow.toolbar.groupBy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="groupBy" datatype="html">
         <source>Group By</source><target>Seskupit podle</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="delete" datatype="html">

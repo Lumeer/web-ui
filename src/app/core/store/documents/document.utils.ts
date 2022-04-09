@@ -18,7 +18,7 @@
  */
 
 import {Collection} from '../collections/collection';
-import {Query, QueryStem} from '../navigation/query/query';
+import {Query} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,

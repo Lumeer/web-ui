@@ -17,15 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SearchTasksConfig} from '../../../../../core/store/searches/search';
 
-@Pipe({
-  name: 'isDocumentOpened',
-})
-export class IsDocumentOpenedPipe implements PipeTransform {
-  public transform(document: DocumentModel, config: SearchTasksConfig): boolean {
-    return config?.expandedIds?.includes(document.id);
-  }
+export interface TasksGroup {
+  tasks: DocumentModel[];
+  title?: string;
+  truncated?: boolean;
 }

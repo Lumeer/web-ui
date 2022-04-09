@@ -27,7 +27,7 @@ export interface Search {
 }
 
 export interface SearchConfig {
-  documents?: SearchDocumentsConfig;
+  documents?: SearchTasksConfig;
   views?: SearchViewsConfig;
   searchTab?: string;
   dashboard?: Dashboard;
@@ -38,9 +38,21 @@ export interface Dashboard {
   tabs?: DashboardTab[];
 }
 
-export interface SearchDocumentsConfig {
+export interface SearchTasksConfig {
   expandedIds?: string[];
   size: SizeType;
+  sortBy?: TasksConfigSortBy;
+  groupBy?: TasksConfigGroupBy;
+}
+
+export type TasksConfigSortBy = TaskConfigAttribute[];
+export type TasksConfigGroupBy = TaskConfigAttribute;
+
+export enum TaskConfigAttribute {
+  DueDate = 'dueDate',
+  Assignee = 'assignee',
+  State = 'state',
+  Priority = 'priority',
 }
 
 export interface SearchViewsConfig {
