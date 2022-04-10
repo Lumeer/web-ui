@@ -42,9 +42,11 @@ import {CreateTasksGroupsPipe} from './pipes/create-tasks-groups.pipe';
 import {TasksGroupComponent} from './content/group/tasks-group.component';
 import {TasksSortComponent} from './content/toolbar/sort/tasks-sort.component';
 import {TasksSortDropdownComponent} from './content/toolbar/sort/dropdown/tasks-sort-dropdown.component';
+import {FilterUnusedSortItemsPipe} from './content/toolbar/sort/dropdown/filter-unused-sort-items.pipe';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
-  imports: [CommonModule, SharedModule, DataInputModule],
+  imports: [CommonModule, SharedModule, DataInputModule, DragDropModule],
   declarations: [
     SearchTasksComponent,
     EmptyTasksComponent,
@@ -66,6 +68,7 @@ import {TasksSortDropdownComponent} from './content/toolbar/sort/dropdown/tasks-
     TasksGroupComponent,
     TasksSortComponent,
     TasksSortDropdownComponent,
+    FilterUnusedSortItemsPipe,
   ],
   exports: [SearchTasksComponent],
 })

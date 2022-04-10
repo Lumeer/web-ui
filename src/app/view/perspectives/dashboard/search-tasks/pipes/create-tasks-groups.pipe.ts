@@ -18,19 +18,31 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {TaskConfigAttribute} from '../../../../../core/store/searches/search';
+import {ConstraintData} from '@lumeer/data-filters';
 import {TasksGroup} from '../model/tasks-group';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {TaskConfigAttribute, TasksConfigGroupBy} from '../../../../../core/store/searches/search';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
+import {DataObjectAggregator, DataObjectAttribute} from '../../../../../shared/utils/data/data-object-aggregator';
+import {groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
+import {findAttribute} from '../../../../../core/store/collections/collection.util';
+import {AttributesResourceType} from '../../../../../core/model/resource';
+import {QueryStem} from '../../../../../core/store/navigation/query/query';
+import {objectValues} from '../../../../../shared/utils/common.utils';
 
 @Pipe({
   name: 'createTasksGroups',
 })
 export class CreateTasksGroupsPipe implements PipeTransform {
+  private dataObjectAggregator = new DataObjectAggregator<string>();
+
   public transform(
     documents: DocumentModel[],
+    collectionsMap: Record<string, Collection>,
+    constraintData: ConstraintData,
     truncateContent: boolean,
     maxDocuments: number,
-    groupBy?: TaskConfigAttribute
+    groupBy: TasksConfigGroupBy
   ): TasksGroup[] {
     if (truncateContent) {
       return [{tasks: documents.slice(0, maxDocuments), truncated: documents.length > maxDocuments}];
@@ -38,12 +50,103 @@ export class CreateTasksGroupsPipe implements PipeTransform {
     const {pinned, other} = this.splitPinnedDocuments(documents);
     if (pinned.length) {
       return [
-        {tasks: pinned, title: 'Pinned'},
-        {tasks: other, title: 'Other'},
+        {tasks: pinned, title: $localize`:@@pinned:Pinned`},
+        ...this.groupDocuments(other, collectionsMap, constraintData, groupBy, $localize`:@@other:Other`),
       ];
     }
 
-    return [{tasks: other}];
+    return [...this.groupDocuments(other, collectionsMap, constraintData, groupBy)];
+  }
+
+  private groupDocuments(
+    documents: DocumentModel[],
+    collectionsMap: Record<string, Collection>,
+    constraintData: ConstraintData,
+    groupBy: TasksConfigGroupBy,
+    defaultTitle?: string
+  ): TasksGroup[] {
+    if (groupBy) {
+      const documentsByCollection = groupDocumentsByCollection(documents);
+      const groupsMap: Record<string, TasksGroup> = {};
+      const usedDocumentsIds = new Set<string>();
+      Object.keys(documentsByCollection).forEach(collectionId => {
+        const collection = collectionsMap[collectionId];
+        const stem: QueryStem = {collectionId: collection.id};
+        const collectionDocuments = documentsByCollection[collectionId];
+        this.dataObjectAggregator.updateData(
+          [collection],
+          collectionDocuments,
+          [],
+          [],
+          stem,
+          {collections: {}, linkTypes: {}},
+          constraintData
+        );
+        const groupingAttribute = this.findGroupingAttribute(collection, groupBy);
+        if (groupingAttribute) {
+          const groupingObjectAttribute: DataObjectAttribute = {
+            attributeId: groupingAttribute.id,
+            key: groupBy,
+            constraint: groupingAttribute.constraint,
+            resourceId: collection.id,
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          };
+          const resultItems = this.dataObjectAggregator.convert({
+            groupingAttributes: [groupingObjectAttribute],
+            objectAttributes: [],
+            metaAttributes: [],
+            objectsConverter: value => value,
+          });
+          for (const item of resultItems) {
+            const key = item.groupingObjects[0];
+            const groupingDocuments = item.groupingDataResources as DocumentModel[];
+            if (key) {
+              if (!groupsMap[key]) {
+                groupsMap[key] = {tasks: [], title: key};
+              }
+              groupsMap[key].tasks.push(...groupingDocuments);
+              groupingDocuments.forEach(document => usedDocumentsIds.add(document.id));
+            }
+          }
+        }
+      });
+
+      const otherDocuments = documents.filter(document => !usedDocumentsIds.has(document.id));
+
+      if (otherDocuments.length) {
+        return [
+          ...objectValues(groupsMap),
+          {tasks: otherDocuments, title: $localize`:@@other:Other`, titleClassList: 'fst-italic'},
+        ];
+      }
+      return objectValues(groupsMap);
+    }
+
+    return [{tasks: documents, title: defaultTitle}];
+  }
+
+  private findGroupingAttribute(collection: Collection, groupBy: TasksConfigGroupBy): Attribute {
+    let attributeId;
+    switch (groupBy) {
+      case TaskConfigAttribute.Assignee: {
+        attributeId = collection.purpose?.metaData?.assigneeAttributeId;
+        break;
+      }
+      case TaskConfigAttribute.State: {
+        attributeId = collection.purpose?.metaData?.stateAttributeId;
+        break;
+      }
+      case TaskConfigAttribute.Priority: {
+        attributeId = collection.purpose?.metaData?.priorityAttributeId;
+        break;
+      }
+      case TaskConfigAttribute.DueDate: {
+        attributeId = collection.purpose?.metaData?.dueDateAttributeId;
+        break;
+      }
+    }
+    return findAttribute(collection.attributes, attributeId);
   }
 
   private splitPinnedDocuments(documents: DocumentModel[]): {pinned: DocumentModel[]; other: DocumentModel[]} {

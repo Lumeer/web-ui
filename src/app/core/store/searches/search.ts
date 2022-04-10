@@ -20,6 +20,7 @@
 import {SizeType} from '../../../shared/slider/size/size-type';
 import {SearchTab} from '../navigation/search-tab';
 import {DashboardTab} from '../../model/dashboard-tab';
+import {AttributeSortType} from '../views/view';
 
 export interface Search {
   id: string;
@@ -45,8 +46,13 @@ export interface SearchTasksConfig {
   groupBy?: TasksConfigGroupBy;
 }
 
-export type TasksConfigSortBy = TaskConfigAttribute[];
+export type TasksConfigSortBy = TasksConfigSort[];
 export type TasksConfigGroupBy = TaskConfigAttribute;
+
+export interface TasksConfigSort {
+  attribute: TaskConfigAttribute;
+  type?: AttributeSortType;
+}
 
 export enum TaskConfigAttribute {
   DueDate = 'dueDate',

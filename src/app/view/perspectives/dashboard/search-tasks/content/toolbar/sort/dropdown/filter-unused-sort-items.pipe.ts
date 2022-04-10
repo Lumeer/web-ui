@@ -17,11 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {Pipe, PipeTransform} from '@angular/core';
+import {TaskConfigAttribute, TasksConfigSortBy} from '../../../../../../../../core/store/searches/search';
+import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 
-export interface TasksGroup {
-  tasks: DocumentModel[];
-  title?: string;
-  titleClassList?: string;
-  truncated?: boolean;
+@Pipe({
+  name: 'filterUnusedSortItems',
+})
+export class FilterUnusedSortItemsPipe implements PipeTransform {
+  public transform(
+    items: SelectItemModel[],
+    sortBy: TasksConfigSortBy,
+    keepSort?: TaskConfigAttribute
+  ): SelectItemModel[] {
+    const usedAttributes = (sortBy || []).map(sort => sort.attribute);
+    return (items || []).filter(item => !item.id || item.id === keepSort || !usedAttributes?.includes(item.id));
+  }
 }

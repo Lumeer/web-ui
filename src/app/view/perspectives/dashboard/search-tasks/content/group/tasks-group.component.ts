@@ -43,6 +43,9 @@ export class TasksGroupComponent {
   public title: string;
 
   @Input()
+  public titleClassList: string;
+
+  @Input()
   public isTruncated: boolean;
 
   @Input()

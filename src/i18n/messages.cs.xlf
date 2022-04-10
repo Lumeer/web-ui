@@ -6415,7 +6415,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="perspective.gantt.config.position.save" datatype="html">
         <source>Save position to view</source><target>Ukládat polohu na ose</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="kanban.perspective.header.other" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="other" datatype="html">
         <source>Other</source><target>Ostatní</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/header/kanban-column-header.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">

@@ -17,14 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DropdownDirective} from '../../../../../../../../shared/dropdown/dropdown.directive';
 import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 import {
   TaskConfigAttribute,
   TasksConfigGroupBy,
+  TasksConfigSort,
   TasksConfigSortBy,
 } from '../../../../../../../../core/store/searches/search';
+import {AttributeSortType} from '../../../../../../../../core/store/views/view';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'tasks-sort-dropdown',
@@ -45,15 +48,86 @@ export class TasksSortDropdownComponent extends DropdownDirective {
   @Output()
   public groupByChanged = new EventEmitter<TasksConfigGroupBy>();
 
-  public taskConfigItems: SelectItemModel[] = [
-    {id: null, value: $localize`:@@default:Default`, classList: 'fst-italic'},
+  private readonly taskConfigItems: SelectItemModel[] = [
     {id: TaskConfigAttribute.DueDate, value: $localize`:@@collections.purpose.tasks.dueDate:Due Date`},
     {id: TaskConfigAttribute.Assignee, value: $localize`:@@collections.purpose.tasks.assignee:Assignee`},
     {id: TaskConfigAttribute.State, value: $localize`:@@collections.purpose.tasks.state:State`},
     {id: TaskConfigAttribute.Priority, value: $localize`:@@collections.purpose.tasks.priority:Priority`},
   ];
 
+  public readonly sortByItems = [
+    {id: null, value: $localize`:@@tasks.config.sortBy.default:Default Sorting`, classList: 'fst-italic'},
+    ...this.taskConfigItems,
+  ];
+
+  public readonly sortByAdditionalItems = [...this.taskConfigItems];
+
+  public readonly groupByItems = [
+    {id: null, value: $localize`:@@tasks.config.groupBy.noGrouping:No Grouping`, classList: 'fst-italic'},
+    ...this.taskConfigItems,
+  ];
+  public sortType = AttributeSortType;
+  public sortPlaceholder: boolean;
+
+  public onSortBySelected(index: number, configAttribute: TaskConfigAttribute, placeholder?: boolean) {
+    if (index === 0 && !configAttribute) {
+      if (this.sortBy?.length) {
+        this.sortByChanged.emit([]);
+      }
+    } else {
+      const sortByArray = [...(this.sortBy || [])];
+      if (sortByArray[index]?.attribute !== configAttribute) {
+        sortByArray[index] = {...sortByArray[index], attribute: configAttribute};
+        this.sortByChanged.emit(sortByArray);
+      }
+    }
+
+    if (placeholder) {
+      this.sortPlaceholder = false;
+    }
+  }
+
   public onGroupBySelected(groupBy: TaskConfigAttribute) {
     this.groupByChanged.emit(groupBy);
+  }
+
+  public onSortByRemoved(index: number) {
+    const sortByArray = [...(this.sortBy || [])];
+    sortByArray.splice(index, 1);
+    this.sortByChanged.emit(sortByArray);
+  }
+
+  public onNewSort() {
+    this.sortPlaceholder = true;
+  }
+
+  public onSortPlaceholderRemoved() {
+    this.sortPlaceholder = false;
+  }
+
+  public onSortToggle(index: number) {
+    const sortByArray = [...(this.sortBy || [])];
+    const newSort = {...sortByArray[index]};
+    if (newSort.type === AttributeSortType.Descending) {
+      newSort.type = AttributeSortType.Ascending;
+    } else {
+      newSort.type = AttributeSortType.Descending;
+    }
+
+    sortByArray[index] = newSort;
+
+    this.sortByChanged.emit(sortByArray);
+  }
+
+  public onSortDropped(event: CdkDragDrop<any>) {
+    if (event.currentIndex !== event.previousIndex) {
+      const sortByArray = [...(this.sortBy || [])];
+      moveItemInArray(sortByArray, event.previousIndex, event.currentIndex);
+      this.sortByChanged.emit(sortByArray);
+    }
+  }
+
+  public trackBySort(index: number, sort: TasksConfigSort): string {
+    return sort.attribute || '';
   }
 }

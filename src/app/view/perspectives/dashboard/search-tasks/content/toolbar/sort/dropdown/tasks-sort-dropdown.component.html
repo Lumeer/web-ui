@@ -4,13 +4,61 @@
           [pushOnScreen]="true"
           [showBackdrop]="false">
 
-  <div class="card p-2 overflow-auto" [style.min-width.px]="200">
+  <div class="card p-2 overflow-auto" [style.min-width.px]="250">
 
-    <label class="" i18n="@@groupBy">Group by</label>
-    <select-item [items]="taskConfigItems"
-                 [selectedId]="groupBy || null"
+    <div cdkDropList>
+      <label class="" i18n="@@sortBy">Sort by</label>
+      <div *ngFor="let sort of sortBy; trackBy:trackBySort let index = index; let first = first"
+           class="select-row py-1"
+           cdkDrag
+           cdkDragLockAxis="y"
+           cdkDragBoundary=".cdk-drop-list"
+           (cdkDragDropped)="onSortDropped($event)">
+      <span>
+        <i *ngIf="sortBy?.length > 1" class="fa-fw fa fa-grip-vertical cursor-move me-1 text-black-50" cdkDragHandle></i>
+      </span>
+        <select-item [items]="(index === 0 ? sortByItems : sortByAdditionalItems) | filterUnusedSortItems:sortBy:sort?.attribute"
+                     [selectedId]="sort?.attribute || null"
+                     [removable]="!!sort?.attribute || !first"
+                     (selected)="onSortBySelected(index, $event)"
+                     (remove)="onSortByRemoved(index)">
+        </select-item>
+        <div *ngIf="sort?.attribute"
+             class="ms-1 position-relative cursor-pointer sort-wrapper d-flex align-items-center justify-content-center"
+             title="Toggle sort"
+             i18n-title="@@attribute.settings.sort.toggle"
+             (click)="onSortToggle(index)">
+          <i class="fas fa-fw fa-lg fa-sort-up position-absolute"
+             [class.text-muted]="sort.type && sort.type !== sortType.Ascending">
+          </i>
+          <i class="fas fa-fw fa-lg fa-sort-down position-absolute"
+             [class.text-muted]="!sort.type || sort.type !== sortType.Descending">
+          </i>
+        </div>
+      </div>
+    </div>
+    <select-item *ngIf="!sortBy?.length || sortPlaceholder"
+                 class="mt-1"
+                 [items]="(sortPlaceholder ? sortByAdditionalItems : sortByItems) | filterUnusedSortItems:sortBy"
+                 [selectedId]="null"
+                 emptyValue="Select sort"
+                 i18n-emptyValue="@@tasks.sort.add.placeholder"
                  [removable]="false"
-                 (selected)="onGroupBySelected($event)">
+                 (selected)="onSortBySelected(sortBy?.length || 0, $event, true)"
+                 (remove)="onSortPlaceholderRemoved()">
+    </select-item>
+    <button *ngIf="!sortPlaceholder && sortBy?.[0]?.attribute && sortBy.length < sortByAdditionalItems.length" class="btn btn-link px-0 small"
+            (click)="$event.stopPropagation(); onNewSort()">
+      <i class="fas fa-plus-circle me-2"></i><span i18n="@@tasks.sort.add">Add next sort</span>
+    </button>
+
+    <label class="mt-3" i18n="@@groupBy">Group by</label>
+    <select-item class="d-block py-1"
+                 [items]="groupByItems"
+                 [selectedId]="groupBy || null"
+                 [removable]="!!groupBy"
+                 (selected)="onGroupBySelected($event)"
+                 (remove)="onGroupBySelected(null)">
     </select-item>
   </div>
 

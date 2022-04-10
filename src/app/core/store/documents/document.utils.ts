@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../collections/collection';
+import {Collection, CollectionPurposeMetadata} from '../collections/collection';
 import {Query} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,
   queryStemsAreSameById,
 } from '../navigation/query/query.util';
-import {DocumentModel, DocumentAdditionalDataRequest, DocumentIdsData} from './document.model';
+import {DocumentAdditionalDataRequest, DocumentIdsData, DocumentModel} from './document.model';
 import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
 import {createRange} from '../../../shared/utils/array.utils';
 import {isArray, isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
@@ -38,12 +38,13 @@ import {
   ConstraintData,
   ConstraintType,
   DataValue,
-  DateTimeConstraint,
   DocumentsAndLinksData,
   FilesDataValue,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {LinkInstance} from '../link-instances/link.instance';
+import {TaskConfigAttribute, TasksConfigSort, TasksConfigSortBy} from '../searches/search';
+import {AttributeSortType} from '../views/view';
 
 export function createDocumentRequestAdditionalData(
   collection: Collection,
@@ -112,24 +113,35 @@ function compareDocumentsDates(date1: Date, date2: Date, sortDesc?: boolean): nu
   return null;
 }
 
-export function sortDocumentsTasks(documents: DocumentModel[], collections: Collection[]): DocumentModel[] {
-  const collectionsMap = objectsByIdMap(collections);
+export function sortDocumentsTasks(
+  documents: DocumentModel[],
+  collectionsMap: Record<string, Collection>,
+  constraintData: ConstraintData,
+  sortConfig: TasksConfigSortBy
+): DocumentModel[] {
   return [...documents].sort((a, b) => {
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
-      const dueDateCompare = compareDataValues(
-        getDocumentDueDateDataValue(a, collectionsMap),
-        getDocumentDueDateDataValue(b, collectionsMap)
-      );
-      if (dueDateCompare) {
-        return dueDateCompare;
+      const sortCompare = compareDocumentsBySortConfig(a, b, collectionsMap, constraintData, sortConfig);
+      if (sortCompare) {
+        return sortCompare;
       }
 
-      const priorityCompare = compareDataValues(
-        getDocumentPriorityDataValue(a, collectionsMap),
-        getDocumentPriorityDataValue(b, collectionsMap)
-      );
-      if (priorityCompare) {
-        return priorityCompare;
+      if (!sortConfig?.length) {
+        const dueDateCompare = compareDataValues(
+          getDocumentDueDateDataValue(a, collectionsMap, constraintData),
+          getDocumentDueDateDataValue(b, collectionsMap, constraintData)
+        );
+        if (dueDateCompare) {
+          return dueDateCompare;
+        }
+
+        const priorityCompare = compareDataValues(
+          getDocumentPriorityDataValue(a, collectionsMap, constraintData),
+          getDocumentPriorityDataValue(b, collectionsMap, constraintData)
+        );
+        if (priorityCompare) {
+          return priorityCompare;
+        }
       }
 
       const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate);
@@ -142,26 +154,116 @@ export function sortDocumentsTasks(documents: DocumentModel[], collections: Coll
   });
 }
 
-export function getDocumentDueDateDataValue(
-  document: DocumentModel,
-  collectionsMap: Record<string, Collection>
-): DataValue {
-  const collection = collectionsMap?.[document.collectionId];
-  const attribute = findAttribute(collection?.attributes, collection?.purpose?.metaData?.dueDateAttributeId);
-  if (attribute?.constraint?.type === ConstraintType.DateTime) {
-    const constraint = <DateTimeConstraint>attribute.constraint;
-    return constraint.createDataValue(document?.data?.[attribute.id]);
+function compareDocumentsBySortConfig(
+  d1: DocumentModel,
+  d2: DocumentModel,
+  collectionsMap: Record<string, Collection>,
+  constraintData: ConstraintData,
+  sortConfig: TasksConfigSortBy
+): number {
+  for (const sort of sortConfig || []) {
+    const compared = compareDocumentsBySort(d1, d2, collectionsMap, constraintData, sort);
+    if (compared) {
+      return compared;
+    }
   }
-  return null;
+
+  return 0;
 }
 
-export function getDocumentPriorityDataValue(
+function compareDocumentsBySort(
+  d1: DocumentModel,
+  d2: DocumentModel,
+  collectionsMap: Record<string, Collection>,
+  constraintData: ConstraintData,
+  sort: TasksConfigSort
+): number {
+  const multiplier = sort?.type === AttributeSortType.Descending ? -1 : 1;
+  switch (sort?.attribute) {
+    case TaskConfigAttribute.DueDate:
+      return (
+        compareDataValues(
+          getDocumentDueDateDataValue(d1, collectionsMap, constraintData),
+          getDocumentDueDateDataValue(d2, collectionsMap, constraintData)
+        ) * multiplier
+      );
+    case TaskConfigAttribute.Priority:
+      return (
+        compareDataValues(
+          getDocumentPriorityDataValue(d1, collectionsMap, constraintData),
+          getDocumentPriorityDataValue(d2, collectionsMap, constraintData)
+        ) * multiplier
+      );
+    case TaskConfigAttribute.State:
+      return (
+        compareDataValues(
+          getDocumentStateDataValue(d1, collectionsMap, constraintData),
+          getDocumentStateDataValue(d2, collectionsMap, constraintData)
+        ) * multiplier
+      );
+    case TaskConfigAttribute.Assignee:
+      return (
+        compareDataValues(
+          getDocumentAssigneeDataValue(d1, collectionsMap, constraintData),
+          getDocumentAssigneeDataValue(d2, collectionsMap, constraintData)
+        ) * multiplier
+      );
+    default:
+      return 0;
+  }
+}
+
+function getDocumentDueDateDataValue(
   document: DocumentModel,
-  collectionsMap: Record<string, Collection>
+  collectionsMap: Record<string, Collection>,
+  constraintData: ConstraintData
+): DataValue {
+  return getDocumentPurposeDataValue(
+    document,
+    collectionsMap,
+    constraintData,
+    'dueDateAttributeId',
+    ConstraintType.DateTime
+  );
+}
+
+function getDocumentPriorityDataValue(
+  document: DocumentModel,
+  collectionsMap: Record<string, Collection>,
+  constraintData: ConstraintData
+): DataValue {
+  return getDocumentPurposeDataValue(document, collectionsMap, constraintData, 'priorityAttributeId');
+}
+
+function getDocumentAssigneeDataValue(
+  document: DocumentModel,
+  collectionsMap: Record<string, Collection>,
+  constraintData: ConstraintData
+): DataValue {
+  return getDocumentPurposeDataValue(document, collectionsMap, constraintData, 'assigneeAttributeId');
+}
+
+function getDocumentStateDataValue(
+  document: DocumentModel,
+  collectionsMap: Record<string, Collection>,
+  constraintData: ConstraintData
+): DataValue {
+  return getDocumentPurposeDataValue(document, collectionsMap, constraintData, 'stateAttributeId');
+}
+
+function getDocumentPurposeDataValue(
+  document: DocumentModel,
+  collectionsMap: Record<string, Collection>,
+  constraintData: ConstraintData,
+  key: Exclude<keyof CollectionPurposeMetadata, 'finalStatesList'>,
+  constraintType?: ConstraintType
 ): DataValue {
   const collection = collectionsMap?.[document.collectionId];
-  const attribute = findAttribute(collection?.attributes, collection?.purpose?.metaData?.priorityAttributeId);
-  return attribute?.constraint?.createDataValue(document?.data?.[attribute.id]);
+  const attribute = findAttribute(collection?.attributes, collection?.purpose?.metaData?.[key]);
+  if (!constraintType || attribute?.constraint?.type === constraintType) {
+    return attribute?.constraint?.createDataValue(document?.data?.[attribute.id], constraintData);
+  }
+  return null;
 }
 
 function compareDataValues(dv1: DataValue, dv2: DataValue): number {

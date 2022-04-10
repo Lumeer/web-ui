@@ -167,26 +167,30 @@ export class DataObjectAggregator<T> {
     dataObjectInfo: DataObjectInfo<T>,
     dataObjectsInfo: DataObjectInfo<T>[]
   ) {
-    const attribute = input.objectAttributes[level];
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      const dataResource = item.dataResources[0];
+    const attribute = input.objectAttributes?.[level];
+    if (attribute) {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const dataResource = item.dataResources[0];
 
-      const dataResourcesChain =
-        level === 0
-          ? [...dataObjectInfo.dataResourcesChain, ...item.dataResourcesChains[0]]
-          : dataObjectInfo.dataResourcesChain;
-      const nextDataObjectInfo: DataObjectInfo<T> = {
-        ...deepObjectCopy(dataObjectInfo),
-        dataResourcesChain,
-        objectDataResources: {...dataObjectInfo.objectDataResources, [attribute.key]: dataResource},
-      };
+        const dataResourcesChain =
+          level === 0
+            ? [...dataObjectInfo.dataResourcesChain, ...item.dataResourcesChains[0]]
+            : dataObjectInfo.dataResourcesChain;
+        const nextDataObjectInfo: DataObjectInfo<T> = {
+          ...deepObjectCopy(dataObjectInfo),
+          dataResourcesChain,
+          objectDataResources: {...dataObjectInfo.objectDataResources, [attribute.key]: dataResource},
+        };
 
-      if (level + 1 === input.objectAttributes.length) {
-        this.fillDataObjectInfoMeta(item.values || [], input, nextDataObjectInfo, dataObjectsInfo);
-      } else {
-        this.fillDataObjectInfo(item.children, input, level + 1, nextDataObjectInfo, dataObjectsInfo);
+        if (level + 1 === input.objectAttributes.length) {
+          this.fillDataObjectInfoMeta(item.values || [], input, nextDataObjectInfo, dataObjectsInfo);
+        } else {
+          this.fillDataObjectInfo(item.children, input, level + 1, nextDataObjectInfo, dataObjectsInfo);
+        }
       }
+    } else {
+      dataObjectsInfo.push(dataObjectInfo);
     }
   }
 

@@ -6615,7 +6615,7 @@
                     <context context-type="linenumber">19</context>
                 </context-group>
             </trans-unit>
-            <trans-unit datatype="html" id="kanban.perspective.header.other">
+            <trans-unit datatype="html" id="other">
                 <source>Other</source>
                 <target>Egyéb</target>
                 <context-group purpose="location">
