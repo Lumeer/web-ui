@@ -10,11 +10,11 @@
     <i class="fas fa-user-plus me-2"></i>
     <span i18n="@@inviteUser.button.text">Invite</span>
   </button>
-  <hint *ngIf="((projectUsers$ | async) < 2) && (displayInviteUsersHint$ | async)"
+  <hint *ngIf="displayInviteUsersHint$ | async"
         (dismissHint)="onHintDismissed()"
-        title="Pozvání kolegů do organizace"
-        i18n-title="@inviteUser.hint.title">
-    <span i18n="@@inviteUser.hint.content">Invite your colleagues using this button.</span>
+        title="Invite Colleague"
+        i18n-title="@hint.inviteUser.title">
+    <span i18n="@@hint.inviteUser.content">Many hands make light work. Invite your colleagues using this button. While inviting another member, you can select what kind of rights will be granted to them. So you can, for example, allow them to only view your data, but prevent them from modifying anything.</span>
   </hint>
 </div>
 

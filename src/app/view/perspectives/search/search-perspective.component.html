@@ -23,8 +23,9 @@
       <hint *ngIf="displayDashboardSettingsHint$ | async"
             class="dashboard-hint"
             (dismissHint)="onHintDismissed('dashboard_settings')"
-            title="Dashboard Settings">
-        <span>Zde si můžete zvolit, které ze záložek chcete na úvodní obrazovce vidět, přejmenovat již existující záložky, či dokonce přidat zcela vlastní záložku.</span>
+            title="Dashboard Settings"
+            i18n-title="@hint.dashboardSettings.title">
+        <span i18n="@@hint.dashboardSettings.content">Configure tabs on your home screen as well as their content to get quick access to the most important data. Of course, you can hide, rename and change the order of the tabs.</span>
       </hint>
     </div>
   </div>

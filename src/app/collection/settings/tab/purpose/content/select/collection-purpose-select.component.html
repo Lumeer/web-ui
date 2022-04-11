@@ -5,9 +5,10 @@
   </a>
   <hint *ngIf="displayWorkflowHint$ | async"
         class="position-relative"
-        title="14 Workflow"
-        (dismissHint)="onHintDismissed()">
-    <span>Lorem Ipsum, dolor sit amet. Jedi joshua amestuys mine workflow.</span>
+        (dismissHint)="onHintDismissed()"
+        title="Workflow"
+        i18n-title="@hint.workflow.title">
+    <span i18n="@@hint.workflow.content">Set the purpose of your table. Is it just a general table for any kind of data? Or would you like to use this table as a tasks table for the current project? In case this table is supposed to represent tasks, you can specify which columns will represent crucial data such as assignee, state, due date, priority, etc.</span>
   </hint>
 </div>
 

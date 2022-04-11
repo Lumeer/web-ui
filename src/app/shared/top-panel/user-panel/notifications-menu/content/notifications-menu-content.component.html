@@ -11,8 +11,9 @@
 
   <hint *ngIf="displayNotificationsHint$ | async"
         (dismissHint)="onHintDismissed()"
-        title="Notifications">
-    <span>Tady uvidíte všechny notifikace z Lumeeru. Tady vás také mimo jiné bude Lumeer upozorňovat, že je nějaký úkol již po termínu dokončení. Oznámení můžete smazat, nebo zobrazovat pouze nová, nepřečtená.</span>
+        title="Notifications"
+        i18n-title="@hint.notifications.title">
+    <span i18n="@@hint.notifications.content">These are all important tasks and sharing-related notifications. For example, if a task is overdue, Lumeer will notify you here. You can mark notifications as read, delete them, or show only new, unread notifications.</span>
   </hint>
 
   <notifications-menu-dropdown #dropdown

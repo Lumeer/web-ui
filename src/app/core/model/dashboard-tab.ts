@@ -119,9 +119,8 @@ export function filterDefaultDashboardTabs(
       id: TabType.Tasks,
       title: $localize`:@@tasks:Tasks`,
       type: TabType.Tasks,
-      hintTitle: 'Ukoly',
-      hintContent:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac.',
+      hintTitle: $localize`:@@tasks:Tasks`,
+      hintContent: $localize`:@@hint.tasks.content:All tasks assigned to you are visible on this tab. Note that these are tasks related to currently selected project. View task details, mark them as completed, or create new tasks.`,
     },
   ];
 
@@ -130,9 +129,8 @@ export function filterDefaultDashboardTabs(
       id: TabType.Tables,
       title: $localize`:@@collections:Tables`,
       type: TabType.Tables,
-      hintTitle: 'Tabulky',
-      hintContent:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex.',
+      hintTitle: $localize`:@@collections:Tables`,
+      hintContent: $localize`:@@hint.tables.content:Tables are the foundation of the entire application. They represent the raw data that is stored in Lumeer. You can quickly create a new table, rename or change the icon of an existing one as well as import a whole table from a CSV file. On hover, you can quickly check the number of records in the table or mark it as your favorite one. Similar to tasks, favorite tables will always be displayed first.`,
     });
   }
   if (permissions?.roles?.ViewContribute || viewsCount > 0) {
@@ -140,9 +138,8 @@ export function filterDefaultDashboardTabs(
       id: TabType.Views,
       title: $localize`:@@views:Views`,
       type: TabType.Views,
-      hintTitle: 'Pohledy',
-      hintContent:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac.',
+      hintTitle: $localize`:@@views:Views`,
+      hintContent: $localize`:@@hint.views.content:Views make your work more efficient by presenting you with the very same data in many different visual ways. Use a timeline, kanban board, calendar, and many more depending on your current job duty. The possibilities are endless and up to your preference!`,
     });
   }
 

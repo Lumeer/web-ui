@@ -18,8 +18,9 @@
       </div>
       <hint *ngIf="data.currentUser.hints.logoHintDismissed && !data.currentUser.hints.organizationMenuHintDismissed"
             (dismissHint)="onHintDismissed('organization')"
-            title="Organization Menu">
-        <span>Zde je vidět jednoduchý přehled Vaší organizace. Je zde rychle vidět počet členů a projektů v dané organizaci. Je tu také možnost přizvat uživatele, nebo zakoupit Business verzi Aplikace. Mimo to, jako uživatel můžete být členem několika organizací - a pokud byste patřili do nějaké další organizace, byla by tu uvedena a mohli byste aktivní organizaci jednoduše přepnout.</span>
+            title="Organization Menu"
+            i18n-title="@hint.organizationOverview.title">
+        <span i18n="@@hint.organizationOverview.content">This is a simple overview of your organization. Find a number of members and projects in the given organization, invite colleagues or switch to Business Plan for Lumeer. You can be a member of many different organizations – all your other organizations are listed here with an option to switch between them.</span>
       </hint>
       <resource-menu #organizationMenu
                      [type]="organizationResourceType"
@@ -49,8 +50,9 @@
       </div>
       <hint *ngIf="data.currentUser.hints.organizationMenuHintDismissed && !data.currentUser.hints.projectMenuHintDismissed"
             (dismissHint)="onHintDismissed('project')"
-            title="Project Menu">
-        <span>Podobně jako u nabídky organizace - můžete zde vidět název projektu, popis, počet tabulek a záznamů. V případě více projektů budou ve spodní části taky vypsané další dostupné projekty, mezi kterými se můžete přepínat. Dále se tu pak nachází možnost vytvořit nový projekt, kde si můžete některou z mnoha existujících šablon, nebo začít s prázdným projektem.</span>
+            title="Project Menu"
+            i18n-title="@hint.projectOverview.title">
+        <span i18n="@@hint.projectOverview.content">Similar to the organization menu, here you can see the name of the project, its description, number of tables, and records. All your projects are listed here and you can easily switch between them. Create a new project using one of the many templates available or start with an empty one.</span>
       </hint>
       <resource-menu #projectMenu
                      [type]="projectResourceType"

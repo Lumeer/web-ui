@@ -48,7 +48,8 @@
   </form>
   <hint *ngIf="displaySearchHint$ | async"
         (dismissHint)="onHintDismissed()"
-        title="Vyhledavani / Filtrovani">
-    <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</span>
+        title="Search & Filter"
+        i18n-title="@hint.searchbar.title">
+    <span i18n="@@hint.searchbar.content">Search for records or filter them. Search even for tables or views containing the given data... simply anything! Lumeer makes your work as easy as possible and suggests attribute names and values. Just type the table name, then specify the attribute and the condition. Save the filtered results as a view. For example, when you often search for records from the last month, you can save a view directly for this filter and then access it with a click of a button.</span>
   </hint>
 </div>

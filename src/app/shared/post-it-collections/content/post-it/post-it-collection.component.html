@@ -82,10 +82,11 @@
              aria-hidden="true"></i>
         </a>
         <hint *ngIf="data.displayTableSettingsHint"
-              title="Table Settings"
               (click)="$event.preventDefault(); $event.stopPropagation();"
-              (dismissHint)="onHintDismissed();">
-          <span>Haha</span>
+              (dismissHint)="onHintDismissed();"
+              title="Table Settings"
+              i18n-title="@hint.tableConfiguration.title">
+          <span i18n="@@hint.tableConfiguration.content">Configure table details according to your needs. Set its name and description, check how many users have access to the table, how many records are there, develop automation, or even delete the whole table. There are many things you can specify, such as attributes, links, workflow, teams, and more...</span>
         </hint>
       </div>
 

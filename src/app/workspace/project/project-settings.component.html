@@ -43,8 +43,9 @@
         <i class="far fa-eraser cursor-pointer" aria-hidden="true" (click)="onSampleDataEraseClick()"></i>
         <hint *ngIf="displayDeleteSampleDataHint$ | async"
               (dismissHint)="onHintDismissed()"
-              title="Delete sample project data">
-          <span>Teď už znáte většinu Lumeerových schopností a možností. Je tedy na čase se pustit do práce! Tímto tlačítkem můžete vymazat ukázková data z projektu, a začít si vyplňovat Vaše opravdová data.</span>
+              title="Delete sample project data"
+              i18n-title="@hint.deleteSampleData.title">
+          <span i18n="@@hint.deleteSampleData.content">You now know many of Lumeer's abilities and capabilities. It's time to get to work! Clear the sample data from your project, and start filling in your real data.</span>
         </hint>&nbsp;
       </div>
     </resource-header>

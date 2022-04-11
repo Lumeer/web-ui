@@ -21,9 +21,10 @@
     <ng-container *ngTemplateOutlet="logo"></ng-container>
   </a>
   <hint *ngIf="displayLogoHint$ | async"
+        (dismissHint)="onHintDismissed()"
         title="Lumeer's Icon"
-        (dismissHint)="onHintDismissed()">
-    <span>Vezme Vás zpět domovskou obrazovku PROJEKTU, kde můžete vidět přehled všech svých Úkolů (Tasků), Pohledů (Views) a Tabulek. Je to nejrychlejší způsob, jak se dostat zpátky z pohledu, či tabulky. Tato Ikona je vždy viditelná</span>
+        i18n-title="@hint.lumeerIcon.title">
+    <span i18n="@@hint.lumeerIcon.content">As you probably know from our application tour, Lumeer icon will take you to the home screen of a currently selected project. There you can find an overview of all your Tasks, Views, and Tables. It's the fastest way to get back from any view or table. This icon always stays visible for your convenience and ease of navigation.</span>
   </hint>
   <span *ngIf="!link"
         class="d-flex justify-content-center">

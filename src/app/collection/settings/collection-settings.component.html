@@ -44,9 +44,10 @@
             Attributes
           </a>
           <hint *ngIf="displayTableAttributesHint$ | async"
-                title="Atributy Tabulky"
+                title="Table Attributes"
+                i18n-title="@hint.tableAttributes.title"
                 (dismissHint)="onHintDismissed('attributes')">
-            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex. Sed sit amet ligula sed urna laoreet iaculis in quis lectus. Vestibulum euismod dui ac eleifend volutpat. In nec ante non velit vehicula convallis.</span>
+            <span i18n="@@hint.tableAttributes.content">Attributes are essentially individual columns in the table. They form the shape of data in your table. Add new attributes, rename them, change their types, or delete them. Set the display attribute, which is used to represent records (rows) in a condensed format (e.g. in a timeline or calendar).</span>
           </hint>
       </li>
       <li role="presentation" class="nav-item position-relative" *ngIf="permissions?.roles?.TechConfig">
@@ -57,9 +58,10 @@
             Automation
           </a>
           <hint *ngIf="displayTableRulesHint$ | async"
-                title="Automatizace tabulky"
-                (dismissHint)="onHintDismissed('rules')">
-            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar sem nulla, sed vehicula urna pretium ac. Maecenas lacinia fringilla tortor et molestie. Suspendisse nec maximus dolor, sit amet efficitur ex. Sed sit amet ligula sed urna laoreet iaculis in quis lectus. Vestibulum euismod dui ac eleifend volutpat. In nec ante non velit vehicula convallis.</span>
+                (dismissHint)="onHintDismissed('rules')"
+                title="Table Automation"
+                i18n-title="@hint.tableAutomation.title">
+            <span i18n="@@hint.tableAutomation.content">Now we get to the fun part... Automation is a very powerful tool in Lumeer, which can save you an enormous amount of time wasted on repeating the same tasks over and over again. With automation, you can set the states of your tasks, assign them to other members, and much more. For more information, we recommend reading the documentation or checking our video tutorial on automation.</span>
           </hint>
       </li>
       <li role="presentation" class="nav-item">

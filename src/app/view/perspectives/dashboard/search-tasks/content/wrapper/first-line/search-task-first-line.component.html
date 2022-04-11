@@ -74,8 +74,9 @@
         class="position-relative"
         (click)="$event.preventDefault(); $event.stopPropagation();"
         (dismissHint)="onHintDismissed('pin')"
-        title="Pin Task">
-    <span>Pokud je nějaký úkol důležitý a chcete ho mít vždy hned po ruce, můžete si úkol připnout. Připnuté úkoly se zobrazují nad ostatními úkoly.</span>
+        title="Pin the Task"
+        i18n-title="@hint.taskPin.title">
+    <span i18n="@@hint.taskPin.content">Pin the most important tasks or tasks you are currently working on to the top of the list. This way you can clearly see the tasks you need to focus on!</span>
   </hint>
 
   <span class="clickable mx-2"
@@ -85,8 +86,9 @@
         class="position-relative"
         (click)="$event.preventDefault(); $event.stopPropagation();"
         (dismissHint)="onHintDismissed('detail')"
-        title="Detail of Task">
-    <span>K zobrazení podrobnějších informací, a popisu úkolu, komentářů využijte Detail.</span>
+        title="Detail of the Task"
+        i18n-title="@hint.taskDetail.title">
+    <span i18n="@@hint.taskDetail.content">Check out details of a given task by using this icon. In the detail dialog, you can of course mark the task as completed, and edit all its attributes (supposing you have sufficient rights). Other than that, you can also see the task's links, leave a comment and see a history of all the task activities.</span>
   </hint>
 </div>
 

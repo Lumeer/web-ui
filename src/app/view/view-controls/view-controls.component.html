@@ -24,8 +24,9 @@
             <hint *ngIf="displayPerspectiveHint$ | async"
                   class="position-relative"
                   (dismissHint)="onHintDismissed('perspective')"
-                  title="Perspektiva / Zmena typu pohledu">
-              <span>Zde si můžete zvolit jakým způsobem se chcete na data v tabulce dívat. Je možné využít kalendář, časovou osu, graf, mapu, nástěnku a mnoho dalších. Můžete mít dokonce více různých pohledů na stejnou tabulku, a tedy data vidět různými “pohledy”.</span>
+                  title="Change View type"
+                  i18n-title="@hint.perspective.title">
+              <span i18n="@@hint.perspective.content">Change the way how your data are visually represented. You can pick various options, such as a calendar, timeline, chart, map, kanban board, and many others! You can even have multiple views showing the same table – so quite literally see the very same data in many different ways.</span>
             </hint>
 
             <options-dropdown
@@ -79,8 +80,9 @@
           <hint *ngIf="displaySaveViewHint$ | async"
                 class="position-relative"
                 (dismissHint)="onHintDismissed('save')"
-                title="Save the view">
-            <span>Jednotlivé pohledy si samozřejmě můžete pojmenovávat a přejmenovávat, tak aby se Vám v nich co nejlépe orientovalo. Spolu s úpravou pohledu, dle Vašich představ můžete pohled uložit. Tento, ať už nový, či přejmenovaný pohled pak uvidíte na domovské obrazovce projektu, mezi ostatními pohledy.</span>
+                title="Save the View"
+                i18n-title="@hint.saveView.title">
+            <span i18n="@@hint.saveView.content">Give your view a name so that you can later easily find it and open it again. Along with editing the view and the query above to your liking, you can save the view using this button. You will then see this new or renamed view on the project home screen, together with other views.</span>
           </hint>
 
           <button *ngIf="canShareView"
@@ -97,8 +99,9 @@
           <hint *ngIf="displayShareViewHint$ | async"
                 class="position-relative"
                 (dismissHint)="onHintDismissed('share')"
-                title="Share the view">
-            <span>Chcete svému kolegovi nastavit stejný pohled, jako jste si tu dle Vašich představ vytvořili? Není nejmenší problém, tímto tlačítkem můžete pohledy nasdílet svým kolegům</span>
+                title="Share the View"
+                i18n-title="@hint.shareView.title">
+            <span i18n="@@hint.shareView.content">Share your new view with your colleagues and co-workers so that you can collaborate instantly. They do not need to see all the underlying data. A view can also provide only a limited peek into the whole table.</span>
           </hint>
         </div>
       </div>

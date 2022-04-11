@@ -13,8 +13,9 @@
 
     <hint *ngIf="displayNewTaskHint$ | async"
           (dismissHint)="onHintDismissed()"
-          title="Add New Task">
-      <span>Pomocí tohoto tlačítka můžete založit nový úkol. Nastavit data, přiřadit uživatele k úkolu, prioritu a popis. Pokud máte v projektu více tabulek s úkoly, tak můžete zvolit, do které z nich se úkol přidá.</span>
+          title="Add New Task"
+          i18n-title="@hint.addNewTask.title">
+      <span i18n="@@hint.addNewTask.content">Add new tasks simply by clicking on this button. Set the task name, description, priority, assign it to a specific user, and much more. In fact, you can fully customize what data will each task hold. We will show you that in just a second. If the current project has more than one table for storing tasks, you can also select which one the task will be added to.</span>
     </hint>
   </div>
 
