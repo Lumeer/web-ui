@@ -43,7 +43,7 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {LinkInstance} from '../link-instances/link.instance';
-import {TaskConfigAttribute, TasksConfigSort, TasksConfigSortBy} from '../searches/search';
+import {defaultTasksSortBy, TaskConfigAttribute, TasksConfigSort, TasksConfigSortBy} from '../searches/search';
 import {AttributeSortType} from '../views/view';
 
 export function createDocumentRequestAdditionalData(
@@ -121,33 +121,17 @@ export function sortDocumentsTasks(
 ): DocumentModel[] {
   return [...documents].sort((a, b) => {
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
-      const sortCompare = compareDocumentsBySortConfig(a, b, collectionsMap, constraintData, sortConfig);
+      const sortCompare = compareDocumentsBySortConfig(
+        a,
+        b,
+        collectionsMap,
+        constraintData,
+        sortConfig || defaultTasksSortBy
+      );
       if (sortCompare) {
         return sortCompare;
       }
 
-      if (!sortConfig?.length) {
-        const dueDateCompare = compareDataValues(
-          getDocumentDueDateDataValue(a, collectionsMap, constraintData),
-          getDocumentDueDateDataValue(b, collectionsMap, constraintData)
-        );
-        if (dueDateCompare) {
-          return dueDateCompare;
-        }
-
-        const priorityCompare = compareDataValues(
-          getDocumentPriorityDataValue(a, collectionsMap, constraintData),
-          getDocumentPriorityDataValue(b, collectionsMap, constraintData)
-        );
-        if (priorityCompare) {
-          return priorityCompare;
-        }
-      }
-
-      const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate);
-      if (datesCompare) {
-        return datesCompare;
-      }
       return a.id.localeCompare(b.id);
     }
     return a.favorite ? -1 : 1;
@@ -208,6 +192,8 @@ function compareDocumentsBySort(
           getDocumentAssigneeDataValue(d2, collectionsMap, constraintData)
         ) * multiplier
       );
+    case TaskConfigAttribute.LastUsed:
+      return compareDocumentsDates(d1.updateDate || d1.creationDate, d1.updateDate || d2.creationDate) * multiplier;
     default:
       return 0;
   }

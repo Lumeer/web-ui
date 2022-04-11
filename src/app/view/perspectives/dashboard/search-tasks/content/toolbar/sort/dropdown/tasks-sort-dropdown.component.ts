@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, QueryList, ViewChildren} from '@angular/core';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {DropdownDirective} from '../../../../../../../../shared/dropdown/dropdown.directive';
 import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 import {
@@ -27,7 +28,7 @@ import {
   TasksConfigSortBy,
 } from '../../../../../../../../core/store/searches/search';
 import {AttributeSortType} from '../../../../../../../../core/store/views/view';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {SelectItemComponent} from '../../../../../../../../shared/select/select-item/select-item.component';
 
 @Component({
   selector: 'tasks-sort-dropdown',
@@ -48,6 +49,9 @@ export class TasksSortDropdownComponent extends DropdownDirective {
   @Output()
   public groupByChanged = new EventEmitter<TasksConfigGroupBy>();
 
+  @ViewChildren(SelectItemComponent)
+  public valueInputs: QueryList<SelectItemComponent>;
+
   private readonly taskConfigItems: SelectItemModel[] = [
     {id: TaskConfigAttribute.DueDate, value: $localize`:@@collections.purpose.tasks.dueDate:Due Date`},
     {id: TaskConfigAttribute.Assignee, value: $localize`:@@collections.purpose.tasks.assignee:Assignee`},
@@ -56,11 +60,15 @@ export class TasksSortDropdownComponent extends DropdownDirective {
   ];
 
   public readonly sortByItems = [
-    {id: null, value: $localize`:@@tasks.config.sortBy.default:Default Sorting`, classList: 'fst-italic'},
+    {id: null, value: $localize`:@@tasks.config.sortBy.noSorting:No Sorting`, classList: 'fst-italic'},
     ...this.taskConfigItems,
+    {id: TaskConfigAttribute.LastUsed, value: $localize`:@@lastUsed:Last Used`},
   ];
 
-  public readonly sortByAdditionalItems = [...this.taskConfigItems];
+  public readonly sortByAdditionalItems = [
+    ...this.taskConfigItems,
+    {id: TaskConfigAttribute.LastUsed, value: $localize`:@@lastUsed:Last Used`},
+  ];
 
   public readonly groupByItems = [
     {id: null, value: $localize`:@@tasks.config.groupBy.noGrouping:No Grouping`, classList: 'fst-italic'},
@@ -129,5 +137,9 @@ export class TasksSortDropdownComponent extends DropdownDirective {
 
   public trackBySort(index: number, sort: TasksConfigSort): string {
     return sort.attribute || '';
+  }
+
+  public onClose() {
+    this.valueInputs.toArray().forEach(component => component.dropdown?.close());
   }
 }

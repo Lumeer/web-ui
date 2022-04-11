@@ -17,8 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {TasksConfigSortBy, TasksConfigGroupBy} from '../../../../../../../core/store/searches/search';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  defaultTasksSortBy,
+  TasksConfigGroupBy,
+  TasksConfigSortBy,
+} from '../../../../../../../core/store/searches/search';
 
 @Component({
   selector: 'tasks-sort',
@@ -37,4 +41,6 @@ export class TasksSortComponent {
 
   @Output()
   public groupByChanged = new EventEmitter<TasksConfigGroupBy>();
+
+  public readonly defaultSortBy = defaultTasksSortBy;
 }

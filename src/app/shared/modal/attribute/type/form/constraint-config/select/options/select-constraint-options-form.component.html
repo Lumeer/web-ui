@@ -36,7 +36,6 @@
           <input #valueInput
                  [formControlName]="formControlNames.Value"
                  [class.is-invalid]="group.touched && group.errors"
-                 (input)="onValueInput($event, optionIndex)"
                  (keydown.enter)="onValueEnterKeyDown($event, optionIndex)"
                  [attr.style]="!displayValuesControl?.value ? (('color: ' + (groupData.background | contrastColor) + ' !important; background: ' + groupData.background) | safeStyle) : null"
                  type="text"
@@ -53,6 +52,7 @@
           <input #displayValueInput
                  [formControlName]="formControlNames.DisplayValue"
                  (keydown.enter)="onDisplayValueEnterKeyDown($event, optionIndex)"
+                 (input)="onValueInput($event, optionIndex)"
                  [attr.style]="('color: ' + (groupData.background | contrastColor) + ' !important; background: ' + groupData.background) | safeStyle"
                  type="text"
                  class="form-control"

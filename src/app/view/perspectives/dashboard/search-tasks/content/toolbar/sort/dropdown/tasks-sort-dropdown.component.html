@@ -2,7 +2,8 @@
           [closeOnClickOutside]="true"
           [closeOnClickOrigin]="true"
           [pushOnScreen]="true"
-          [showBackdrop]="false">
+          [showBackdrop]="false"
+          (onClose)="onClose()">
 
   <div class="card p-2 overflow-auto" [style.min-width.px]="250">
 

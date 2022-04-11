@@ -126,4 +126,17 @@
     </div>
   </div>
 
+  <div class="pt-4">&nbsp;</div>
+  <div class="pt-4 text-muted small" *ngIf="rule | ruleRunInfo as ruleRunInfo">
+    <i class="far fa-clock pe-4"></i>
+    <span class="pe-2" i18n="@@rule.run.info.last">Last run:</span>
+    <span *ngIf="ruleRunInfo.lastRun" class="pe-4 fw-bold">{{ruleRunInfo.lastRun | date:'medium'}}</span>
+    <span *ngIf="!ruleRunInfo.lastRun" class="pe-4 fst-italic" i18n="@@never">Never</span>
+    <span class="pe-2" i18n="@@rule.run.info.next">Next run:</span>
+    <span *ngIf="ruleRunInfo.nextRun" class="fw-bold">{{ruleRunInfo.nextRun | date:'medium'}}</span>
+    <span *ngIf="!ruleRunInfo.nextRun" class="fst-italic" i18n="@@never">Never</span>
+  </div>
+
 </div>
+
+

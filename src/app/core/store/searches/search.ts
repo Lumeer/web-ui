@@ -59,7 +59,14 @@ export enum TaskConfigAttribute {
   Assignee = 'assignee',
   State = 'state',
   Priority = 'priority',
+  LastUsed = 'lastUsed',
 }
+
+export const defaultTasksSortBy: TasksConfigSortBy = [
+  {attribute: TaskConfigAttribute.DueDate},
+  {attribute: TaskConfigAttribute.Priority},
+  {attribute: TaskConfigAttribute.LastUsed},
+];
 
 export interface SearchViewsConfig {
   size: SizeType;

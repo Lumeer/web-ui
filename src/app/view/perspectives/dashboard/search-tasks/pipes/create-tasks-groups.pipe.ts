@@ -115,9 +115,10 @@ export class CreateTasksGroupsPipe implements PipeTransform {
       const otherDocuments = documents.filter(document => !usedDocumentsIds.has(document.id));
 
       if (otherDocuments.length) {
+        const hasAnyGroup = defaultTitle || Object.keys(groupsMap).length > 0;
         return [
           ...objectValues(groupsMap),
-          {tasks: otherDocuments, title: $localize`:@@other:Other`, titleClassList: 'fst-italic'},
+          {tasks: otherDocuments, title: hasAnyGroup ? $localize`:@@other:Other` : null, titleClassList: 'fst-italic'},
         ];
       }
       return objectValues(groupsMap);

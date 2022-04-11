@@ -11,7 +11,7 @@
     <span class="fw-bold" i18n="@@create.new.task">Add new task</span>
   </button>
 
-  <div *ngIf="documentsCount" class="ms-auto d-flex align-items-end justify-content-end flex-wrap">
+  <div *ngIf="documentsCount" class="d-flex align-items-center justify-content-between flex-wrap">
 
     <tasks-sort [sortBy]="config?.sortBy"
                 [groupBy]="config?.groupBy"
