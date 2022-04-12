@@ -408,150 +408,166 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.assignee" datatype="html">
-        <source> Assignee </source>
+        <source>Assignee</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">4,6</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.assignee.select" datatype="html">
         <source>Select assignee attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.assignee.help" datatype="html">
         <source> Which attribute specifies who the assignee is? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> attribute type. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="linenumber">16,18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.dueDate" datatype="html">
-        <source> Due Date </source>
+        <source>Due Date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">25,27</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.dueDate.select" datatype="html">
         <source>Select due date attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.dueDate.help" datatype="html">
         <source> Which attribute specifies the due date of a task? Works only with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Date<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> attribute type. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">39,41</context>
+          <context context-type="linenumber">35,37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.state" datatype="html">
-        <source> State </source>
+        <source>State</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">46,48</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.state.select" datatype="html">
         <source>Select state attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.state.help" datatype="html">
         <source> Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> attribute type. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">60,62</context>
+          <context context-type="linenumber">54,56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.stateList" datatype="html">
-        <source> Done States </source>
+        <source>Done States</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">68,70</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.stateList.help" datatype="html">
         <source> Which states are considered final? That means no further notifications about the task will be sent. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">84,86</context>
+          <context context-type="linenumber">76,78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.observer" datatype="html">
-        <source> Observer </source>
+        <source>Observer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">91,93</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.observer.select" datatype="html">
         <source>Select observer attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.observer.help" datatype="html">
         <source> Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> attribute type. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">105,108</context>
+          <context context-type="linenumber">95,98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.priority" datatype="html">
-        <source> Priority </source>
+        <source>Priority</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">113,115</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.priority.select" datatype="html">
         <source>Select priority attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.priority.help" datatype="html">
         <source> Which attribute specifies the task priority? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">125,127</context>
+          <context context-type="linenumber">113,115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.tags" datatype="html">
-        <source> Tags </source>
+        <source>Tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">132,134</context>
+          <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.tags.select" datatype="html">
         <source>Select tags attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.purpose.tasks.tags.help" datatype="html">
         <source> Tags, labels, hashtags... Simply anything you use to categorize the tasks. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">146,148</context>
+          <context context-type="linenumber">132,134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
         <source> Open in View </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">153,155</context>
+          <context context-type="linenumber">139,141</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context>
@@ -562,7 +578,7 @@
         <source>Select view</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
@@ -577,7 +593,7 @@
         <source> In what view do you want to open task notifications? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">169,171</context>
+          <context context-type="linenumber">155,157</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.tab.purpose.description.generic" datatype="html">
@@ -3707,7 +3723,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context>
@@ -4596,7 +4612,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/cron-form.component.html</context>
-          <context context-type="linenumber">18,20</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dialog.attribute.function.restricted" datatype="html">
@@ -5300,14 +5316,14 @@
         <source>Value</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.required" datatype="html">
         <source> You need to provide a value. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">48,50</context>
+          <context context-type="linenumber">47,49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.displayValue" datatype="html">
@@ -7364,14 +7380,14 @@
         <source>Save Changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
         <source>Add Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.type" datatype="html">
@@ -7453,7 +7469,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/cron-form.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
@@ -7583,43 +7599,12 @@
           <context context-type="linenumber">124,126</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="cron.unit.days.title" datatype="html">
-        <source>Days</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">76</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="cron.unit.weeks.title" datatype="html">
-        <source>Weeks</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="cron.unit.months.title" datatype="html">
-        <source>Months</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">78</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="cron.daysOfWeek.units" datatype="html">
-        <source>M|T|W|T|F|S|S</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">82</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="collection.config.tab.rules.add" datatype="html">
-        <source> Add a new automation </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/rules/add-rule/add-rule.component.html</context>
-          <context context-type="linenumber">5,7</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="rule.run.info.last" datatype="html">
         <source>Last run:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
           <context context-type="linenumber">2</context>
@@ -7627,6 +7612,14 @@
       </trans-unit>
       <trans-unit id="never" datatype="html">
         <source>Never</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
           <context context-type="linenumber">4</context>
@@ -7639,8 +7632,47 @@
       <trans-unit id="rule.run.info.next" datatype="html">
         <source>Next run:</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context>
           <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cron.unit.days.title" datatype="html">
+        <source>Days</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cron.unit.weeks.title" datatype="html">
+        <source>Weeks</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cron.unit.months.title" datatype="html">
+        <source>Months</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cron.daysOfWeek.units" datatype="html">
+        <source>M|T|W|T|F|S|S</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.add" datatype="html">
+        <source> Add a new automation </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/rules/add-rule/add-rule.component.html</context>
+          <context context-type="linenumber">5,7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.automations.empty" datatype="html">
@@ -7785,6 +7817,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/settings/attributes/content/settings/attribute-settings.component.html</context>
           <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.settings.includeChildren" datatype="html">
@@ -9427,14 +9463,99 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="task.state.placeholder" datatype="html">
+        <source>Select state</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/group/wrapper/first-line/task-first-line.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="task.pinned" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Unpin task from top&apos; : &apos;Pin task to top&apos;}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/group/wrapper/first-line/task-first-line.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.empty.title" datatype="html">
+        <source>Empty title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/group/wrapper/first-line/task-first-line.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sortBy" datatype="html">
+        <source>Sort by</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.sort.add.placeholder" datatype="html">
+        <source>Select sorting</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.sort.add" datatype="html">
+        <source>Add sorting</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="groupBy" datatype="html">
+        <source>Group by</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.sort.group.order.hint" datatype="html">
+        <source> Groups order is determined by the tasks order (the first sorting option). </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context>
+          <context context-type="linenumber">65,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.config.sortBy.noSorting" datatype="html">
+        <source>No Sorting</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="lastUsed" datatype="html">
+        <source>Last Used</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.config.groupBy.noGrouping" datatype="html">
+        <source>No Grouping</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="create.new.task" datatype="html">
         <source>Add new task</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context>
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/search-tasks-toolbar.component.html</context>
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
@@ -9442,25 +9563,26 @@
           <context context-type="linenumber">496</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="task.state.placeholder" datatype="html">
-        <source>Select state</source>
+      <trans-unit id="pinned" datatype="html">
+        <source>Pinned</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/pipes/create-tasks-groups.pipe.ts</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="task.pinned" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Unpin task from top&apos; : &apos;Pin task to top&apos;}}"/></source>
+      <trans-unit id="other" datatype="html">
+        <source>Other</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/pipes/create-tasks-groups.pipe.ts</context>
+          <context context-type="linenumber">54</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="tasks.empty.title" datatype="html">
-        <source>Empty title</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/pipes/create-tasks-groups.pipe.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/header/kanban-column-header.component.html</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.views.empty.title" datatype="html">
@@ -10011,13 +10133,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context>
           <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="other" datatype="html">
-        <source>Other</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/header/kanban-column-header.component.html</context>
-          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.kanban.create.card.failure" datatype="html">
@@ -10944,13 +11059,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
           <context context-type="linenumber">295</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="groupBy" datatype="html">
-        <source>Group By</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context>
-          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="workflow.table.empty" datatype="html">

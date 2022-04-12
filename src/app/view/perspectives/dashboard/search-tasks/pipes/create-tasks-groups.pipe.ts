@@ -50,7 +50,7 @@ export class CreateTasksGroupsPipe implements PipeTransform {
     const {pinned, other} = this.splitPinnedDocuments(documents);
     if (pinned.length) {
       return [
-        {tasks: pinned, title: $localize`:@@pinned:Pinned`},
+        {tasks: pinned, title: $localize`:@@pinned:Pinned`, titleClassList: 'fst-italic'},
         ...this.groupDocuments(other, collectionsMap, constraintData, groupBy, $localize`:@@other:Other`),
       ];
     }
