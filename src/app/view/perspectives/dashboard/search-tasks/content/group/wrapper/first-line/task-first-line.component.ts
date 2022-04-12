@@ -19,24 +19,24 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {ConstraintData, DataValue} from '@lumeer/data-filters';
-import {Collection} from '../../../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
-import {TaskAttributes} from '../../../model/task-attributes';
-import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
-import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
-import {View} from '../../../../../../../core/store/views/view';
-import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
-import {AppState} from '../../../../../../../core/store/app.state';
+import {Collection} from '../../../../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
+import {TaskAttributes} from '../../../../model/task-attributes';
+import {DataInputConfiguration} from '../../../../../../../../shared/data-input/data-input-configuration';
+import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
+import {View} from '../../../../../../../../core/store/views/view';
+import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
+import {AppState} from '../../../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
-  selector: 'search-task-first-line',
-  templateUrl: './search-task-first-line.component.html',
-  styleUrls: ['./search-task-first-line.component.scss'],
+  selector: 'task-first-line',
+  templateUrl: './task-first-line.component.html',
+  styleUrls: ['./task-first-line.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTaskFirstLineComponent {
+export class TaskFirstLineComponent {
   @Input()
   public collection: Collection;
 

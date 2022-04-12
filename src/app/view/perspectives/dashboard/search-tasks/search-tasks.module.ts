@@ -23,41 +23,52 @@ import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../../../shared/shared.module';
 import {SearchTasksComponent} from './search-tasks.component';
 import {EmptyTasksComponent} from './content/empty/empty-tasks.component';
-import {SearchTaskWrapperComponent} from './content/wrapper/search-task-wrapper.component';
+import {TaskWrapperComponent} from './content/group/wrapper/task-wrapper.component';
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
 import {DataValueEntriesPipe} from './pipes/data-value-entries.pipe';
-import {SearchTasksContentComponent} from './content/search-tasks-content.component';
+import {TasksContentComponent} from './content/tasks-content.component';
 import {FilterContributeTasksCollectionsPipe} from './pipes/filter-contribute-tasks-collections.pipe';
 import {DataInputModule} from '../../../../shared/data-input/data-input.module';
-import {SearchTasksToolbarComponent} from './content/toolbar/search-tasks-toolbar.component';
+import {TasksToolbarComponent} from './content/toolbar/tasks-toolbar.component';
 import {CollectionsTaskAttributesPipe} from './pipes/collections-task-attributes.pipe';
 import {EmptyTasksQueryComponent} from './content/empty/query/empty-tasks-query.component';
 import {EmptyTasksSearchComponent} from './content/empty/search/empty-tasks-search.component';
 import {EmptyTasksCollectionsComponent} from './content/empty/collections/empty-tasks-collections.component';
 import {EmptyTasksCollectionsWithoutRightsComponent} from './content/empty/collections-without-rights/empty-tasks-collections-without-rights.component';
-import {SearchTaskFirstLineComponent} from './content/wrapper/first-line/search-task-first-line.component';
-import {SearchTaskSecondLineComponent} from './content/wrapper/second-line/search-task-second-line.component';
+import {TaskFirstLineComponent} from './content/group/wrapper/first-line/task-first-line.component';
+import {TaskSecondLineComponent} from './content/group/wrapper/second-line/task-second-line.component';
 import {FilterContributeViewsPipe} from './pipes/filter-contribute-views.pipe';
+import {CreateTasksGroupsPipe} from './pipes/create-tasks-groups.pipe';
+import {TasksGroupComponent} from './content/group/tasks-group.component';
+import {TasksSortComponent} from './content/toolbar/sort/tasks-sort.component';
+import {TasksSortDropdownComponent} from './content/toolbar/sort/dropdown/tasks-sort-dropdown.component';
+import {FilterUnusedSortItemsPipe} from './content/toolbar/sort/dropdown/filter-unused-sort-items.pipe';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
-  imports: [CommonModule, SharedModule, DataInputModule],
+  imports: [CommonModule, SharedModule, DataInputModule, DragDropModule],
   declarations: [
     SearchTasksComponent,
     EmptyTasksComponent,
-    SearchTaskWrapperComponent,
+    TaskWrapperComponent,
     IsDocumentOpenedPipe,
     DataValueEntriesPipe,
-    SearchTasksContentComponent,
+    TasksContentComponent,
     FilterContributeTasksCollectionsPipe,
     FilterContributeViewsPipe,
-    SearchTasksToolbarComponent,
+    TasksToolbarComponent,
     CollectionsTaskAttributesPipe,
     EmptyTasksQueryComponent,
     EmptyTasksSearchComponent,
     EmptyTasksCollectionsComponent,
     EmptyTasksCollectionsWithoutRightsComponent,
-    SearchTaskFirstLineComponent,
-    SearchTaskSecondLineComponent,
+    TaskFirstLineComponent,
+    TaskSecondLineComponent,
+    CreateTasksGroupsPipe,
+    TasksGroupComponent,
+    TasksSortComponent,
+    TasksSortDropdownComponent,
+    FilterUnusedSortItemsPipe,
   ],
   exports: [SearchTasksComponent],
 })

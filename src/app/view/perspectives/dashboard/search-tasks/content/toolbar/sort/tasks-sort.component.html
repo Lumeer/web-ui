@@ -1,0 +1,11 @@
+<button class="btn btn-sm btn-outline-primary" #origin (click)="dropdownComponent.toggle()">
+  <i class="fas fa-sort-amount-down-alt"></i>&nbsp;<i class="fas fa-caret-down"></i>
+</button>
+
+<tasks-sort-dropdown #dropdownComponent
+                     [origin]="origin"
+                     [groupBy]="groupBy"
+                     [sortBy]="sortBy || defaultSortBy"
+                     (sortByChanged)="sortByChanged.emit($event)"
+                     (groupByChanged)="groupByChanged.emit($event)">
+</tasks-sort-dropdown>

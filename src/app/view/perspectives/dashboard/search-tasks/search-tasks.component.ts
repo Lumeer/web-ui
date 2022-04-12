@@ -31,7 +31,7 @@ import {
   selectTasksDocumentsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
+import {SearchConfig, SearchTasksConfig} from '../../../../core/store/searches/search';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectSearchConfigById, selectSearchId} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
@@ -74,7 +74,7 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
   public scrollContainer: string;
 
   public constraintData$: Observable<ConstraintData>;
-  public documentsConfig$: Observable<SearchDocumentsConfig>;
+  public documentsConfig$: Observable<SearchTasksConfig>;
   public documents$: Observable<DocumentModel[]>;
   public collections$: Observable<Collection[]>;
   public loaded$: Observable<boolean>;
@@ -151,7 +151,7 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(this.searchId$.subscribe(searchId => (this.searchId = searchId)));
   }
 
-  private selectDocumentsConfig$(): Observable<SearchDocumentsConfig> {
+  private selectDocumentsConfig$(): Observable<SearchTasksConfig> {
     return this.searchId$.pipe(
       switchMap(id =>
         this.store$.pipe(
@@ -175,7 +175,7 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  public configChange(documentsConfig: SearchDocumentsConfig) {
+  public configChange(documentsConfig: SearchTasksConfig) {
     if (this.searchId) {
       const searchConfig = {...this.config, documents: documentsConfig};
       this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config: searchConfig}));

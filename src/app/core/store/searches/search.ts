@@ -20,6 +20,7 @@
 import {SizeType} from '../../../shared/slider/size/size-type';
 import {SearchTab} from '../navigation/search-tab';
 import {DashboardTab} from '../../model/dashboard-tab';
+import {AttributeSortType} from '../views/view';
 
 export interface Search {
   id: string;
@@ -27,7 +28,7 @@ export interface Search {
 }
 
 export interface SearchConfig {
-  documents?: SearchDocumentsConfig;
+  documents?: SearchTasksConfig;
   views?: SearchViewsConfig;
   searchTab?: string;
   dashboard?: Dashboard;
@@ -38,10 +39,34 @@ export interface Dashboard {
   tabs?: DashboardTab[];
 }
 
-export interface SearchDocumentsConfig {
+export interface SearchTasksConfig {
   expandedIds?: string[];
   size: SizeType;
+  sortBy?: TasksConfigSortBy;
+  groupBy?: TasksConfigGroupBy;
 }
+
+export type TasksConfigSortBy = TasksConfigSort[];
+export type TasksConfigGroupBy = TaskConfigAttribute;
+
+export interface TasksConfigSort {
+  attribute: TaskConfigAttribute;
+  type?: AttributeSortType;
+}
+
+export enum TaskConfigAttribute {
+  DueDate = 'dueDate',
+  Assignee = 'assignee',
+  State = 'state',
+  Priority = 'priority',
+  LastUsed = 'lastUsed',
+}
+
+export const defaultTasksSortBy: TasksConfigSortBy = [
+  {attribute: TaskConfigAttribute.DueDate},
+  {attribute: TaskConfigAttribute.Priority},
+  {attribute: TaskConfigAttribute.LastUsed},
+];
 
 export interface SearchViewsConfig {
   size: SizeType;

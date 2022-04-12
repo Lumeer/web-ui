@@ -1,0 +1,17 @@
+@import '~src/styles/variables';
+
+.select-row {
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  align-items: center;
+
+  .sort-wrapper {
+    width: 20px;
+    height: 100%;
+  }
+}
+
+.cdk-drag-placeholder {
+  background-color: $light;
+  border-radius: $border-radius-base;
+}

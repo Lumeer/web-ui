@@ -111,7 +111,7 @@ import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../.
 import {filterDefaultDashboardTabs} from '../../model/dashboard-tab';
 import {selectSearchesDictionary} from '../searches/searches.state';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
-import {SearchConfig} from '../searches/search';
+import {SearchConfig, SearchTasksConfig} from '../searches/search';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
@@ -469,8 +469,18 @@ export const selectTasksDocumentsByCustomQuery = (view: View, query: DataQuery) 
     selectAllLinkInstances,
     selectResourcesPermissionsByView(view),
     selectConstraintData,
-    (documents, collections, linkTypes, linkInstances, permissions, constraintData): DocumentModel[] =>
-      filterTasksDocuments(documents, collections, linkTypes, linkInstances, query, permissions, constraintData)
+    selectDefaultSearchPerspectiveConfig,
+    (documents, collections, linkTypes, linkInstances, permissions, constraintData, config): DocumentModel[] =>
+      filterTasksDocuments(
+        documents,
+        collections,
+        linkTypes,
+        linkInstances,
+        query,
+        permissions,
+        constraintData,
+        config?.documents
+      )
   );
 
 export function filterTasksDocuments(
@@ -480,7 +490,8 @@ export function filterTasksDocuments(
   linkInstances: LinkInstance[],
   query: DataQuery,
   permissions: ResourcesPermissions,
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  config: SearchTasksConfig
 ): DocumentModel[] {
   let tasksDocuments = documents;
   let tasksQuery: Query = query;
@@ -502,7 +513,7 @@ export function filterTasksDocuments(
     query?.includeSubItems
   ).documents;
 
-  return sortDocumentsTasks(filteredTasks, collections);
+  return sortDocumentsTasks(filteredTasks, objectsByIdMap(collections), constraintData, config?.sortBy);
 }
 
 export const selectDocumentsByViewAndCustomQueryAndIdsSortedByCreation = (view: View, query: Query, ids: string[]) =>

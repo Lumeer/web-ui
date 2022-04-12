@@ -18,14 +18,19 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SearchTasksConfig} from '../../../../../core/store/searches/search';
+import {TaskConfigAttribute, TasksConfigSortBy} from '../../../../../../../../core/store/searches/search';
+import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 
 @Pipe({
-  name: 'isDocumentOpened',
+  name: 'filterUnusedSortItems',
 })
-export class IsDocumentOpenedPipe implements PipeTransform {
-  public transform(document: DocumentModel, config: SearchTasksConfig): boolean {
-    return config?.expandedIds?.includes(document.id);
+export class FilterUnusedSortItemsPipe implements PipeTransform {
+  public transform(
+    items: SelectItemModel[],
+    sortBy: TasksConfigSortBy,
+    keepSort?: TaskConfigAttribute
+  ): SelectItemModel[] {
+    const usedAttributes = (sortBy || []).map(sort => sort.attribute);
+    return (items || []).filter(item => !item.id || item.id === keepSort || !usedAttributes?.includes(item.id));
   }
 }

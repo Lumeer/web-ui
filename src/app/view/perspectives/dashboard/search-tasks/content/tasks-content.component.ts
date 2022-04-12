@@ -31,7 +31,7 @@ import {
 import {Router} from '@angular/router';
 import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {checkSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
+import {checkSizeType, SearchTasksConfig} from '../../../../../core/store/searches/search';
 import {Collection, CollectionPurposeType} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
@@ -62,20 +62,20 @@ import {
   SearchPerspectiveConfiguration,
 } from '../../../perspective-configuration';
 import {selectViewsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
+import {TasksGroup} from '../model/tasks-group';
 
 @Component({
-  selector: 'search-tasks-content',
-  templateUrl: './search-tasks-content.component.html',
-  styleUrls: ['./search-tasks-content.component.scss'],
+  selector: 'tasks-content',
+  templateUrl: './tasks-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy {
+export class TasksContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public documents: DocumentModel[];
 
   @Input()
-  public config: SearchDocumentsConfig;
+  public config: SearchTasksConfig;
 
   @Input()
   public collections: Collection[];
@@ -117,7 +117,7 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public perspectiveConfiguration: SearchPerspectiveConfiguration = defaultSearchPerspectiveConfiguration;
 
   @Output()
-  public configChange = new EventEmitter<SearchDocumentsConfig>();
+  public configChange = new EventEmitter<SearchTasksConfig>();
 
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly sizeType = SizeType;
@@ -169,16 +169,8 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
     this.modalService.showDataResourceDetail(document, collection, this.view?.id);
   }
 
-  public trackByDocument(index: number, document: DocumentModel): string {
-    return document.id;
-  }
-
-  public trackByEntry(index: number, entry: {attributeId: string}): string {
-    return entry.attributeId;
-  }
-
-  public onSizeChange(size: SizeType) {
-    this.configChange.next({...this.config, size});
+  public trackByGroup(index: number, group: TasksGroup): string {
+    return group.title || '';
   }
 
   private isDocumentExplicitlyExpanded(document: DocumentModel): boolean {

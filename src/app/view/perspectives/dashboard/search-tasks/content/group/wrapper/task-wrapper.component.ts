@@ -18,25 +18,25 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {ResourceType} from '../../../../../../core/model/resource-type';
+import {ResourceType} from '../../../../../../../core/model/resource-type';
 
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {SizeType} from '../../../../../../shared/slider/size/size-type';
-import {RoleType} from '../../../../../../core/model/role-type';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {Collection} from '../../../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {SizeType} from '../../../../../../../shared/slider/size/size-type';
+import {RoleType} from '../../../../../../../core/model/role-type';
+import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {ConstraintData} from '@lumeer/data-filters';
-import {TaskAttributes} from '../../model/task-attributes';
-import {User} from '../../../../../../core/store/users/user';
-import {View} from '../../../../../../core/store/views/view';
+import {TaskAttributes} from '../../../model/task-attributes';
+import {User} from '../../../../../../../core/store/users/user';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
-  selector: 'search-task-wrapper',
-  templateUrl: './search-task-wrapper.component.html',
-  styleUrls: ['./search-task-wrapper.component.scss'],
+  selector: 'task-wrapper',
+  templateUrl: './task-wrapper.component.html',
+  styleUrls: ['./task-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTaskWrapperComponent implements OnChanges {
+export class TaskWrapperComponent implements OnChanges {
   @Input()
   public collection: Collection;
 

@@ -23,7 +23,7 @@ import * as moment from 'moment';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {map} from 'rxjs/operators';
-import {ChronoUnit, maxIntervalByChronoUnit} from '../../../../../core/model/rule';
+import {ChronoUnit, Rule, maxIntervalByChronoUnit} from '../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../select/select-item/select-item.model';
 import {bitClear, bitSet, isDateValid, objectChanged} from '../../../../utils/common.utils';
 import {generateId} from '../../../../utils/resource.utils';
@@ -62,6 +62,9 @@ export class CronConfigurationFormComponent implements OnInit, OnChanges {
 
   @Input()
   public linkType: LinkType;
+
+  @Input()
+  public rule: Rule;
 
   public readonly unitsItems: SelectItemModel[];
   public readonly hoursItems: SelectItemModel[];

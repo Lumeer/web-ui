@@ -1,0 +1,28 @@
+<div class="content"
+     *ngIf="collections?.length || views?.length || documentsCount">
+
+  <button *ngIf="collections?.length || views?.length"
+          type="button"
+          class="btn btn-sm btn-primary cursor-pointer"
+          title="Add new task"
+          i18n-title="@@create.new.task"
+          (click)="onAdd()">
+    <i class="fa fa-plus-circle me-1" aria-hidden="true"></i>
+    <span class="fw-bold" i18n="@@create.new.task">Add new task</span>
+  </button>
+
+  <div *ngIf="documentsCount" class="d-flex align-items-center justify-content-between flex-wrap">
+
+    <tasks-sort [sortBy]="config?.sortBy"
+                [groupBy]="config?.groupBy"
+                (groupByChanged)="onGroupByChange($event)"
+                (sortByChanged)="onSortByChange($event)">
+    </tasks-sort>
+
+    <size-slider class="ms-3"
+                 [defaultSize]="currentSize"
+                 (newSize)="onSizeChange($event)">
+    </size-slider>
+
+  </div>
+</div>

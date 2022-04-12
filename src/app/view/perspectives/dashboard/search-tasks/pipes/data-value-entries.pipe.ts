@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {SizeType} from '../../../../../shared/slider/size/size-type';
-import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
+import {SearchTasksConfig} from '../../../../../core/store/searches/search';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 import {Constraint, ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {TaskAttributes} from '../model/task-attributes';
@@ -39,7 +39,7 @@ export class DataValueEntriesPipe implements PipeTransform {
     taskAttributes: TaskAttributes,
     views: View[],
     constraintData: ConstraintData,
-    config: SearchDocumentsConfig
+    config: SearchTasksConfig
   ): {label?: string; attributeId: string; isDefault?: boolean; dataValue: DataValue; constraint: Constraint}[] {
     const expanded =
       config?.size === SizeType.L || config?.size === SizeType.XL || (config?.expandedIds || []).includes(document.id);

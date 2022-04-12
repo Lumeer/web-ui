@@ -79,7 +79,10 @@ export class SelectConstraintOptionsFormComponent implements OnInit, OnChanges, 
   }
 
   private checkOptionsControls() {
-    this.optionsForm.controls.forEach(control => control.updateValueAndValidity());
+    this.optionsForm.controls.forEach(control => {
+      control.markAsTouched();
+      control.updateValueAndValidity();
+    });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
