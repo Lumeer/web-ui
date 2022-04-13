@@ -27,6 +27,7 @@ export interface AttributeDto {
   function?: AttributeFunctionDto;
   lock?: AttributeLockDto;
   usageCount?: number;
+  suggestValues?: boolean;
 }
 
 export interface ConstraintDto {

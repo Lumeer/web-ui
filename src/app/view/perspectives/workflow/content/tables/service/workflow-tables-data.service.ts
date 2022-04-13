@@ -856,8 +856,9 @@ export class WorkflowTablesDataService {
           correlationId: objectCorrelationId || id,
           commentsCount: object.document ? object.document.commentsCount : object.linkInstance.commentsCount,
           documentEditable: documentPermissions?.edit,
-          linkEditable: linkInstancePermissions?.edit,
-          canSuggest: linkInstancePermissions?.edit,
+          linkEditable: !!linkType && linkInstancePermissions?.edit,
+          suggestLinks: !!linkType && linkInstancePermissions?.edit,
+          suggestDetail: !linkType,
           documentMenuItems: [],
           linkMenuItems: [],
         };

@@ -109,6 +109,7 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
 import {AttributeLockStatsPipe} from './attribute-lock-stats.pipe';
 import {IsAttributeEnabledByLockStatsPipe} from './is-attribute-enabled-by-lock-stats.pipe';
 import {ResourceAttributesMapPipe} from './resource-attributes-map.pipe';
+import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -200,6 +201,7 @@ import {ResourceAttributesMapPipe} from './resource-attributes-map.pipe';
     ViewIconPipe,
     ViewColorPipe,
     ViewLinkPipe,
+    CanShowAttributeHintsPipe,
   ],
   exports: [
     DataPipesModule,
@@ -292,6 +294,7 @@ import {ResourceAttributesMapPipe} from './resource-attributes-map.pipe';
     ViewIconPipe,
     ViewColorPipe,
     ViewLinkPipe,
+    CanShowAttributeHintsPipe,
   ],
 })
 export class PipesModule {}

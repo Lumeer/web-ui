@@ -61,6 +61,7 @@ import {ViewConstraintConfigFormComponent} from './form/constraint-config/view/v
 import {AttributeCommonModalModule} from '../common/attribute-common-modal.module';
 import {AttributeLockModalModule} from '../lock/attribute-lock-modal.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {AttributeCommonConfigComponent} from './form/common-config/attribute-common-config.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     ActionConstraintConfirmationFormComponent,
     PercentageConstraintConfigStyleComponent,
     ViewConstraintConfigFormComponent,
+    AttributeCommonConfigComponent,
   ],
   imports: [
     CommonModule,

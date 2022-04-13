@@ -27,7 +27,7 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {AddressConstraintFormControl} from './constraint-config/address/address-constraint-form-control';
 import {CoordinatesConstraintFormControl} from './constraint-config/coordinates/coordinates-constraint-form-control';
 import {PercentageConstraintFormControl} from './constraint-config/percentage/percentage-constraint-form-control';
@@ -52,7 +52,7 @@ import {AttributesResource} from '../../../../../core/model/resource';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Constraint, ConstraintConfig, ConstraintType, SelectConstraintConfig} from '@lumeer/data-filters';
 import {ViewConstraintFormControl} from './constraint-config/view/view-constraint-form-control';
-import {isUsedConstraintAttribute} from '../../../../utils/attribute.utils';
+import {canShowAttributeHints, isUsedConstraintAttribute} from '../../../../utils/attribute.utils';
 
 @Component({
   selector: 'attribute-type-form',
@@ -75,6 +75,7 @@ export class AttributeTypeFormComponent implements OnChanges {
   public form = new FormGroup({
     type: new FormControl(),
     config: new FormGroup({}),
+    commonConfig: new FormGroup({suggestValues: new FormControl()}),
     lock: new FormControl(),
   });
 
@@ -83,6 +84,9 @@ export class AttributeTypeFormComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (this.attributeTypeChanges(changes.attribute) && this.attribute) {
       this.typeControl.setValue(this.attribute.constraint?.type || ConstraintType.Unknown);
+    }
+    if (changes.attribute?.firstChange) {
+      this.commonConfigForm.patchValue({suggestValues: this.attribute?.suggestValues});
     }
   }
 
@@ -110,7 +114,14 @@ export class AttributeTypeFormComponent implements OnChanges {
     const constraint: Constraint = type ? createConstraint(type, config) : null;
     const attributeFunction: AttributeFunction = constraint.allowEditFunction ? this.attribute?.function : null;
     const lock = this.lockControl.value;
-    return {...this.attribute, constraint, function: attributeFunction, lock: lock || this.attribute.lock};
+    const suggestValues = canShowAttributeHints(type) ? this.suggestValuesControl.value : undefined;
+    return {
+      ...this.attribute,
+      constraint,
+      function: attributeFunction,
+      suggestValues,
+      lock: lock || this.attribute.lock,
+    };
   }
 
   private createConstraintConfig(type: ConstraintType): ConstraintConfig {
@@ -266,15 +277,23 @@ export class AttributeTypeFormComponent implements OnChanges {
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.attributeChange.emit(attribute));
   }
 
-  public get typeControl(): AbstractControl {
-    return this.form.get('type');
+  public get typeControl(): FormControl {
+    return this.form.get('type') as FormControl;
   }
 
-  public get configForm(): AbstractControl {
-    return this.form.get('config');
+  public get commonConfigForm(): FormGroup {
+    return this.form.get('commonConfig') as FormGroup;
   }
 
-  public get lockControl(): AbstractControl {
-    return this.form.get('lock');
+  public get suggestValuesControl(): FormControl {
+    return this.commonConfigForm.get('suggestValues') as FormControl;
+  }
+
+  public get configForm(): FormGroup {
+    return this.form.get('config') as FormGroup;
+  }
+
+  public get lockControl(): FormControl {
+    return this.form.get('lock') as FormControl;
   }
 }

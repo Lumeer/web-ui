@@ -33,7 +33,8 @@ export interface TableRow {
   commentsCount?: number;
   documentEditable: boolean;
   linkEditable: boolean;
-  canSuggest: boolean;
+  suggestLinks: boolean;
+  suggestDetail: boolean;
   documentMenuItems: MenuItem[];
   linkMenuItems: MenuItem[];
 }

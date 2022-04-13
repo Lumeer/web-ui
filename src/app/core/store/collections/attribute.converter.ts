@@ -56,6 +56,7 @@ export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: st
     lock: convertAttributeLockDtoToModel(dto.lock),
     usageCount: dto.usageCount,
     correlationId: correlationId,
+    suggestValues: dto.suggestValues,
   };
 }
 
@@ -84,6 +85,7 @@ export function convertAttributeModelToDto(model: Attribute): AttributeDto {
     constraint: convertAttributeConstraintModelToDto(model.constraint),
     function: convertAttributeFunctionModelToDto(model.function),
     lock: convertAttributeLockModelToDto(model.lock),
+    suggestValues: model.suggestValues,
   };
 }
 

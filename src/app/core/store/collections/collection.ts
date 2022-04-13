@@ -31,6 +31,7 @@ export interface Attribute {
   function?: AttributeFunction;
   lock?: AttributeLock;
   mandatory?: boolean;
+  suggestValues?: boolean;
 
   usageCount?: number;
   intermediate?: boolean;

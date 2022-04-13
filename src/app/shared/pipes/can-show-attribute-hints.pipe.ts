@@ -19,25 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../core/store/collections/collection';
-import {ConstraintType} from '@lumeer/data-filters';
-
-const NO_HINTS_CONSTRAINT_TYPES = [
-  ConstraintType.Action,
-  ConstraintType.Color,
-  ConstraintType.Boolean,
-  ConstraintType.DateTime,
-  ConstraintType.Select,
-  ConstraintType.View,
-  ConstraintType.User,
-  ConstraintType.Files,
-  ConstraintType.Link,
-];
+import {canShowAttributeHints} from '../utils/attribute.utils';
 
 @Pipe({
   name: 'canShowAttributeHints',
 })
 export class CanShowAttributeHintsPipe implements PipeTransform {
   public transform(attribute: Attribute): boolean {
-    return !NO_HINTS_CONSTRAINT_TYPES.includes(attribute?.constraint?.type);
+    return canShowAttributeHints(attribute?.constraint?.type);
   }
 }

@@ -53,9 +53,10 @@ import {escapeHtml, isNotNullOrUndefined, preventEvent} from '../utils/common.ut
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {stripTextHtmlTags} from '../utils/data.utils';
 import {isTopPositionDropdown} from '../dropdown/util/dropdown-util';
-import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {ConstraintData, DataValue, removeAccentFromString, UnknownConstraint} from '@lumeer/data-filters';
 import {selectDocumentsByViewAndCustomQuery} from '../../core/store/common/permissions.selectors';
 import {selectViewById} from '../../core/store/views/views.state';
+import {ModalService} from '../modal/modal.service';
 
 @Component({
   selector: 'document-hints',
@@ -104,6 +105,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public constraintData: ConstraintData;
 
   @Input()
+  public showDetail: boolean;
+
+  @Input()
   public createLinkDirectly = true;
 
   @Input()
@@ -137,7 +141,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   private lastMouseTargetId: string;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectAllUsers));
@@ -176,7 +180,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     this.documents$ = combineLatest([documents$, this.collection$]).pipe(
       mergeMap(([documents, collection]) =>
         this.filter$.pipe(
-          map(typedValue => escapeHtml(stripTextHtmlTags(String(typedValue || ''), false).toLowerCase())),
+          map(typedValue =>
+            escapeHtml(removeAccentFromString(stripTextHtmlTags(String(typedValue || ''), false), true))
+          ),
           map(typedValue => {
             const constraint =
               findAttributeConstraint(collection?.attributes, this.attributeId) || new UnknownConstraint();
@@ -186,7 +192,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
                 const formattedValue = isNotNullOrUndefined(value)
                   ? constraint.createDataValue(value, this.constraintData).format()
                   : '';
-                return stripTextHtmlTags(String(formattedValue), false).toLowerCase().includes(typedValue);
+                return removeAccentFromString(stripTextHtmlTags(String(formattedValue), false), true).includes(
+                  typedValue
+                );
               })
               .slice(0, this.limit);
           }),
@@ -201,9 +209,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public open() {
-    if (this.dropdown) {
-      this.dropdown.open(this.offsetLeft);
-    }
+    this.dropdown?.open(this.offsetLeft);
   }
 
   public ngOnDestroy() {
@@ -211,19 +217,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public close() {
-    if (this.dropdown) {
-      this.dropdown.close();
-    }
-  }
-
-  public emitCreateLink(document: DocumentModel, data: Record<string, any> = {}) {
-    const linkInstance: LinkInstance = {
-      correlationId: this.correlationId,
-      linkTypeId: this.linkTypeId,
-      documentIds: [this.linkedDocumentId, document.id],
-      data,
-    };
-    this.createLink.emit({linkInstance});
+    this.dropdown?.close();
   }
 
   public moveSelection(direction: Direction) {
@@ -277,7 +271,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     this.confirmedSelectedIndex = index;
     emit && this.useHint.emit({document, external});
 
-    if (this.createLinkDirectly) {
+    if (this.showDetail) {
+      this.showDocumentDetail(document);
+    } else if (this.createLinkDirectly) {
       if (this.linkInstanceId) {
         this.createLinkWithExistingLinkData(document);
       } else {
@@ -286,6 +282,10 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     } else {
       this.close();
     }
+  }
+
+  private showDocumentDetail(document: DocumentModel) {
+    this.modalService.showDocumentDetail(document.id, document.collectionId, this.viewId);
   }
 
   private createLinkWithExistingLinkData(document: DocumentModel) {
@@ -311,6 +311,16 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
         }
         this.updateLink.emit({linkInstance, nextAction});
       });
+  }
+
+  private emitCreateLink(document: DocumentModel, data: Record<string, any> = {}) {
+    const linkInstance: LinkInstance = {
+      correlationId: this.correlationId,
+      linkTypeId: this.linkTypeId,
+      documentIds: [this.linkedDocumentId, document.id],
+      data,
+    };
+    this.createLink.emit({linkInstance});
   }
 
   public clearSelection() {

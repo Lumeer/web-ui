@@ -126,6 +126,7 @@ export class TableRowComponent implements OnInit, OnChanges {
 
   public editedValue: DataValue;
   public suggestedColumn: TableColumn;
+  public canSuggestDocuments: boolean;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
   public mouseHoverColumnId$ = new BehaviorSubject(null);
@@ -137,7 +138,11 @@ export class TableRowComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.editedCell) {
+    if (changes.row) {
+      this.canSuggestDocuments =
+        this.row?.suggestDetail || ((this.row?.linkInstanceId || this.row?.linkedDocumentId) && this.row?.suggestLinks);
+    }
+    if (changes.row || changes.editedCell) {
       this.checkEdited();
     }
   }
@@ -175,7 +180,12 @@ export class TableRowComponent implements OnInit, OnChanges {
   }
 
   private canSuggestInColumn(column: TableColumn): boolean {
-    return column.collectionId && this.row?.canSuggest;
+    if (this.row?.suggestDetail) {
+      return !!column.collectionId && column?.attribute?.suggestValues;
+    } else if (this.row?.suggestLinks) {
+      return !!column.collectionId;
+    }
+    return false;
   }
 
   private isEditing(): boolean {
@@ -296,7 +306,9 @@ export class TableRowComponent implements OnInit, OnChanges {
 
   public onUseHint(data: {document: DocumentModel; external: boolean}) {
     this.endSuggesting(!data.external);
-    this.linkedDocumentSelect.emit(data.document);
+    if (this.row?.suggestLinks) {
+      this.linkedDocumentSelect.emit(data.document);
+    }
   }
 
   public onValueChange(dataValue: DataValue) {

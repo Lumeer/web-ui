@@ -35,14 +35,15 @@ export class HighlightTextPipe implements PipeTransform {
       return text;
     }
     const textString = String(text);
-    const pattern = escapeHtml(
+    const textPattern = escapeHtml(
       escapeStringForRegex(removeAccentFromString(stripTextHtmlTags(String(highlightedText), false)))
     );
+    const pattern = `(?<!<[^>]*)${textPattern}`;
     const match = removeAccentFromString(textString).match(new RegExp(pattern, 'i'));
     if (!match || (prefixOnly && match.index > 0)) {
       return textString;
     }
-    const highlightedLength = String(pattern).length;
+    const highlightedLength = String(textPattern).length;
     return (
       textString.substring(0, match.index) +
       `<span class="text-success">${textString.substring(match.index, match.index + highlightedLength)}</span>` +
