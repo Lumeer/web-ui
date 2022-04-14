@@ -3455,14 +3455,14 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule/add-rule.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="rule.run.info.last" datatype="html">
         <source>Last run:</source><target state="final">Last run:</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">132</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="never" datatype="html">
         <source>Never</source><target state="final">Never</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">134</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="rule.run.info.next" datatype="html">
         <source>Next run:</source><target state="final">Next run:</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">135</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.ofType" datatype="html">
         <source>of type</source><target state="final">of type</target>
 
@@ -5218,7 +5218,7 @@
         <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source><target state="final">You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">271</context></context-group></trans-unit><trans-unit id="2e5f1b77c06e168cd9b5a2e47ddae876b1b0756c" datatype="html">
-        <source>Suggest values when typing (works in table and workflow)</source><target state="final">Suggest values when typing (works in table and workflow)</target>
+        <source>Suggest values when typing (works in Table and Workflow)</source><target state="final">Suggest values when typing (works in Table and Workflow)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
           <context context-type="linenumber">4</context>

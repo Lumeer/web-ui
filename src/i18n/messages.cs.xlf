@@ -5260,7 +5260,7 @@
 
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">271</context></context-group></trans-unit><trans-unit id="2e5f1b77c06e168cd9b5a2e47ddae876b1b0756c" datatype="html">
-        <source>Suggest values when typing (works in table and workflow)</source><target state="final">Navrhovat hodnoty při psaní (funguje v tabulce a pracovním postupu)</target>
+        <source>Suggest values when typing (works in Table and Workflow)</source><target state="final">Navrhovat hodnoty při psaní (funguje v Tabulce a Workflow)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
           <context context-type="linenumber">4</context>
