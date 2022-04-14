@@ -10,13 +10,17 @@
     </attribute-type-select>
   </div>
 
+  <attribute-common-config class="d-block mt-3"
+                           [type]="typeControl.value"
+                           [form]="commonConfigForm">
+  </attribute-common-config>
+
   <constraint-config-form [config]="attribute.constraint?.type === typeControl.value ? attribute.constraint?.config : null"
                           [form]="configForm"
                           [resource]="resource"
                           [attribute]="attribute"
                           [type]="typeControl.value"
                           [lockControl]="lockControl"
-                          [permissions]="permissions"
-                          class="d-block mt-3">
+                          [permissions]="permissions">
   </constraint-config-form>
 </form>

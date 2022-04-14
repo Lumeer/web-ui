@@ -68,7 +68,7 @@
   </ng-container>
 
   <ng-container
-    *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (data.attribute | canShowAttributeHints) && (suggesting$ | async) && editedValue">
+    *ngIf="selected && (table | part:cursor)?.collectionId && (data.attribute | canShowAttributeHints) && (suggesting$ | async) && editedValue">
     <document-hints
       *ngIf="{row: row$ | async, columns: table | documentHintColumns:cursor:canManageConfig} as hintsData"
       [attributeId]="column.attributeIds[0]"
@@ -78,12 +78,14 @@
       [columns]="hintsData.columns"
       [excludedDocumentIds]="document && document.id ? [document.id] : []"
       [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
-      [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
+      [linkTypeId]="table.config?.parts[cursor.partIndex - 1]?.linkTypeId"
       [linkInstanceId]="hintsData.row?.linkInstanceId"
       [correlationId]="hintsData.row?.correlationId"
       [offsetLeft]="hintsData.columns | documentHintsOffset:column.attributeIds[0]"
       [dataValue]="editedValue"
       [origin]="element"
+      [showDetail]="cursor | isFirstPart"
+      [createLinkDirectly]="!(cursor | isFirstPart)"
       (useHint)="onUseDocumentHint()"
       (createLink)="onCreateLink($event)"
       (updateLink)="onUpdateLink($event)">

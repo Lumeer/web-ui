@@ -408,7 +408,7 @@
             <trans-unit datatype="html" id="attribute.settings.sort.toggle">
                 <source>Toggle sort</source>
                 <target>Rendezés váltása</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/settings/attributes/content/settings/attribute-settings.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
             <trans-unit datatype="html" id="attribute.type.label">
                 <source> Type </source>
@@ -422,20 +422,14 @@
                 <source>Delete all files?</source>
                 <target state="new">Remove files</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context>
-                    <context context-type="linenumber">258</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">264</context></context-group></trans-unit>
             <trans-unit id="constraint.files.modify.constraint.message" datatype="html">
                 <source>Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</source>
                 <target state="new">Changing constraint type from 'File attachment' will remove all uploaded attachments in column. Do you want to proceed?</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context>
-                    <context context-type="linenumber">259</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">265</context></context-group></trans-unit>
             <trans-unit datatype="html" id="b23496c0dd5ab3e99af27accd883244aff78fb5d">
                 <source>You are all alone here</source>
                 <target>Egyedül vagy itt.</target>
@@ -2492,14 +2486,14 @@
                 </context-group>
             </trans-unit><trans-unit id="rule.run.info.last" datatype="html">
         <source>Last run:</source><target state="new">Last run:</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">132</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="never" datatype="html">
         <source>Never</source><target state="new">Never</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">134</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="rule.run.info.next" datatype="html">
         <source>Next run:</source><target state="new">Next run:</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">135</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.config.tab.rules.autoLink.equals">
                 <source> equals </source>
@@ -3469,17 +3463,17 @@
                     tulajdonságtípussal
                     <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     működik a legjobban.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.assignee">
                 <source>Assignee</source>
                 <target>Engedményes</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.assignee.select">
                 <source>Select assignee attribute</source>
                 <target>Engedményes tulajdonság kiválasztása</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.tab.purpose.description.generic">
                 <source> A generic table to store any type of information you might have. The possibilities are limitless.
@@ -3506,17 +3500,17 @@
                     attribútumtípussal
                     <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     tulajdonsággal működik.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.dueDate">
                 <source>Due Date</source>
                 <target>Határidő</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.dueDate.select">
                 <source>Select due date attribute</source>
                 <target>Határidő tulajdonságának kiválasztása</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.observer.help">
                 <source> Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source>
@@ -3525,32 +3519,32 @@
                     attribútumtípussal
                     <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     tulajdonság típussal működik a legjobban.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">95</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.observer">
                 <source>Observer</source>
                 <target>Megfigyelő</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">83</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.observer.select">
                 <source>Select observer attribute</source>
                 <target>Megfigyelő tulajdonság kiválasztása</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.priority.help">
                 <source> Which attribute specifies the task priority? </source>
                 <target>Melyik tulajdonság adja meg a tevékenység prioritását?</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">113</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.priority">
                 <source>Priority</source>
                 <target>Prioritás</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context><context context-type="linenumber">59</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.priority.select">
                 <source>Select priority attribute</source>
                 <target>Prioritás tulajdonság kiválasztása</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.state.help">
                 <source> Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source>
@@ -3559,42 +3553,42 @@
                     attribútumtípussal
                     <x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                     tulajdonság típussal működik.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.state">
                 <source>State</source>
                 <target>Állapot</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context><context context-type="linenumber">58</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.state.select">
                 <source>Select state attribute</source>
                 <target>Állap tulajdonság kiválasztása</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.stateList.help">
                 <source> Which states are considered final? That means no further notifications about the task will be sent. </source>
                 <target>Mely állapotok tekinthetők véglegesnek? Ez azt jelenti, hogy a rendszer nem küld további értesítéseket a feladatról.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.stateList">
                 <source>Done States</source>
                 <target>Kész állapotok</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.tags.help">
                 <source> Tags, labels, hashtags... Simply anything you use to categorize the tasks. </source>
                 <target>Megjelölések, címkék, hashtagek... Egyszerűen bármi, amit a feladatok kategorizálására használ.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">132</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.tags">
                 <source>Tags</source>
                 <target>Megjelölések</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">120</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.purpose.tasks.tags.select">
                 <source>Select tags attribute</source>
                 <target>Címke tulajdonságok kijelölése</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">126</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.tab.workflow.heading">
                 <source>What best describes your intentions with this table?</source>
@@ -4189,19 +4183,20 @@
             <trans-unit datatype="html" id="constraint.select.modify.value.message">
                 <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source>
                 <target>Egy olyan beállítás értékét módosítod, amely csak egyes rekordokban használható. Ezzel érvénytelenné teszed a rekordok értékét. Folytatod?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context>
-                    <context context-type="linenumber">265</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">271</context></context-group></trans-unit><trans-unit id="2e5f1b77c06e168cd9b5a2e47ddae876b1b0756c" datatype="html">
+        <source>Suggest values when typing (works in Table and Workflow)</source><target state="new">Suggest values when typing (works in Table and Workflow)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">attribute.config.common.suggestValues</note>
+      </trans-unit>
             <trans-unit datatype="html" id="constraint.select.modify.value.title">
                 <source>Remove options?</source>
                 <target>Eltávolítod a beállításokat?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context>
-                    <context context-type="linenumber">264</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.select.multi.label">
                 <source>Allow select multiple values</source>
                 <target>Több érték kijelölésének engedélyezése</target>
@@ -4275,12 +4270,12 @@
             <trans-unit datatype="html" id="constraint.select.option.required">
                 <source> You need to provide a value. </source>
                 <target>Meg kell adnod egy értéket.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.select.option.value">
                 <source>Value</source>
                 <target>Érték</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/options/select-constraint-options-form.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.select.options.description">
                 <source> Keeps a predefined set of valid values from which one can be selected. At least one value must be configured. </source>
@@ -6543,7 +6538,7 @@
             <trans-unit datatype="html" id="other">
                 <source>Other</source>
                 <target>Egyéb</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/pipes/create-tasks-groups.pipe.ts</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/pipes/create-tasks-groups.pipe.ts</context><context context-type="linenumber">121</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/column/header/kanban-column-header.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
             <trans-unit datatype="html" id="label.newsletter.end">
                 <source>increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source>
@@ -10020,15 +10015,15 @@
 				<trans-unit datatype="html" id="table.data.cell.linked.row.uninitialized">
 					<source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source>
 					<target>Nem tudom a megadott értéket semmivel kapcsolni, először meg kell adnod egy értéket a táblázat előző részéhez.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">515</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">519</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1246</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1247</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.title">
 					<source>Delete this column?</source>
 					<target>Törlöd ezt az oszlopot?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1245</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1246</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.add-button">
 					<source>Link table</source>
 					<target>Hivatkozási tábla</target>

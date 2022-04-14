@@ -351,3 +351,19 @@ export function isAttributeLockEnabledByLockStats(lock: AttributeLock, stats: At
   }
   return !stats?.satisfy;
 }
+
+const NO_HINTS_CONSTRAINT_TYPES = [
+  ConstraintType.Action,
+  ConstraintType.Color,
+  ConstraintType.Boolean,
+  ConstraintType.DateTime,
+  ConstraintType.Select,
+  ConstraintType.View,
+  ConstraintType.User,
+  ConstraintType.Files,
+  ConstraintType.Link,
+];
+
+export function canShowAttributeHints(type: ConstraintType): boolean {
+  return !NO_HINTS_CONSTRAINT_TYPES.includes(type);
+}

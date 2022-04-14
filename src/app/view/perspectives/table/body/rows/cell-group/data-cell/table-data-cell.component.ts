@@ -323,6 +323,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         return this.linkDataPermissions?.create && this.isAttributeEditable(this.attribute);
       }
     }
+    if (this.cursor?.partIndex === 0) {
+      return this.attribute?.suggestValues;
+    }
     return false;
   }
 

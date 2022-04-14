@@ -106,7 +106,8 @@ export function createEmptyNewRow(tableId: string): TableRow {
     height: TABLE_ROW_HEIGHT,
     documentEditable: true,
     linkEditable: true,
-    canSuggest: true,
+    suggestLinks: false,
+    suggestDetail: true,
     documentMenuItems: [],
     linkMenuItems: [],
   };

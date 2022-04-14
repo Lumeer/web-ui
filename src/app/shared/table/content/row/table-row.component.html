@@ -4,7 +4,7 @@
     *ngIf="{dataValue: group.column &&  (row.cellsMap[group.column.id]?.data | dataValue:group.column?.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
     cell: row.cellsMap[group.column?.id],
-    editable: (group.column?.collectionId ? (row.documentEditable || row.canSuggest) : row.linkEditable),
+    editable: (group.column?.collectionId ? (row.documentEditable || row.suggestLinks) : row.linkEditable),
     editing: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
     <ng-container
@@ -78,7 +78,7 @@
 </ng-container>
 <lmr-static-menu #tableMenu (itemSelected)="onMenuSelected(row, tableMenu.id, $event)"></lmr-static-menu>
 <document-hints
-  *ngIf="suggestedColumn?.attribute && (suggestedColumn?.attribute | canShowAttributeHints) && (row.linkInstanceId || row.linkedDocumentId) && row.canSuggest"
+  *ngIf="suggestedColumn?.attribute && (suggestedColumn?.attribute | canShowAttributeHints) && canSuggestDocuments"
   [attributeId]="suggestedColumn?.attribute?.id"
   [correlationId]="row.correlationId"
   [dataValue]="suggesting$ | async"
@@ -90,6 +90,7 @@
   [linkedDocumentId]="row.linkedDocumentId"
   [linkInstanceId]="row.linkInstanceId"
   [linkTypeId]="linkTypeId"
+  [showDetail]="row.suggestDetail"
   [createLinkDirectly]="false"
   [constraintData]="constraintData"
   [origin]="element"
