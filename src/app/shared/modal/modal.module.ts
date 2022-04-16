@@ -41,6 +41,7 @@ import {AttributeModalModule} from './attribute/attribute-modal.module';
 import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
 import {BookProductDemoModalModule} from './book-product-demo/book-product-demo-modal.module';
 import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loading/data-resource-detail-loading-modal.module';
+import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-link-documents-modal.module';
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loadi
     GetInTouchModalModule,
     BookProductDemoModalModule,
     DataResourceDetailLoadingModalModule,
+    ChooseLinkDocumentsModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -91,6 +93,7 @@ import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loadi
     GetInTouchModalModule,
     BookProductDemoModalModule,
     DataResourceDetailLoadingModalModule,
+    ChooseLinkDocumentsModalModule,
   ],
 })
 export class ModalModule {}

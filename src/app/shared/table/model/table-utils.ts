@@ -87,9 +87,9 @@ export function isTableCellAffected(
     case TableCellType.Body:
       const bodyCondition = editedCell.columnId === column.id && editedCell.rowId !== row?.id;
       if (column.collectionId) {
-        return editedCell.documentId === row?.documentId && bodyCondition && tableCondition;
+        return editedCell.documentId === row?.documentId && bodyCondition;
       } else {
-        return editedCell.linkId === row?.linkInstanceId && bodyCondition && tableCondition;
+        return editedCell.linkId === row?.linkInstanceId && bodyCondition;
       }
     default:
       return false;

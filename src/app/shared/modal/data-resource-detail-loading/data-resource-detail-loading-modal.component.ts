@@ -53,9 +53,6 @@ export class DataResourceDetailLoadingModalComponent implements OnInit {
   @Input()
   public viewId: string;
 
-  @Input()
-  public createDirectly: boolean;
-
   public readonly dialogType = DialogType;
 
   public loading$ = new BehaviorSubject(true);

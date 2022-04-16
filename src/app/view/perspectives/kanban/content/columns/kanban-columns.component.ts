@@ -59,10 +59,6 @@ import {groupLinkInstancesByLinkTypes} from '../../../../../core/store/link-inst
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../core/model/resource';
-import {
-  createPossibleLinkingDocuments,
-  createPossibleLinkingDocumentsByChains,
-} from '../../../../../shared/utils/data/data-aggregator-util';
 import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
 import {
   ConditionType,
@@ -76,6 +72,8 @@ import {
 import {User} from '../../../../../core/store/users/user';
 import {ViewSettings} from '../../../../../core/store/views/view';
 import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration';
+import {createPossibleLinkingDocuments, createPossibleLinkingDocumentsByChains} from '../../../../../shared/utils/data/data-aggregator-util';
+import {CreateDataResourceService} from '../../../../../core/service/create-data-resource.service';
 
 @Component({
   selector: 'kanban-columns',
@@ -131,13 +129,13 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public perspectiveConfiguration: KanbanPerspectiveConfiguration;
 
   @Output()
-  public columnsMoved = new EventEmitter<{previousIndex: number; currentIndex: number}>();
+  public columnsMoved = new EventEmitter<{ previousIndex: number; currentIndex: number }>();
 
   @Output()
   public columnRemove = new EventEmitter<KanbanColumn>();
 
   @Output()
-  public columnsChange = new EventEmitter<{columns: KanbanDataColumn[]; otherColumn: KanbanDataColumn}>();
+  public columnsChange = new EventEmitter<{ columns: KanbanDataColumn[]; otherColumn: KanbanDataColumn }>();
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
@@ -146,7 +144,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public patchLinkInstanceData = new EventEmitter<LinkInstance>();
 
   @Output()
-  public updateLinkDocuments = new EventEmitter<{linkInstanceId: string; documentIds: [string, string]}>();
+  public updateLinkDocuments = new EventEmitter<{ linkInstanceId: string; documentIds: [string, string] }>();
 
   public readonly dragDelay = DRAG_DELAY;
 
@@ -155,8 +153,10 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private modalService: ModalService,
-    private toggleService: DocumentFavoriteToggleService
-  ) {}
+    private toggleService: DocumentFavoriteToggleService,
+    private createService: CreateDataResourceService
+  ) {
+  }
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.currentWorkspace());
@@ -166,6 +166,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.viewId) {
       this.toggleService.setWorkspace(this.currentWorkspace());
     }
+    this.createService.setData(this.data, this.query, this.collections, this.linkTypes, this.permissions, this.constraintData, this.currentWorkspace());
   }
 
   public dropColumn(event: CdkDragDrop<string[]>) {
@@ -180,11 +181,15 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onCreateDataResource(resourceCreate: KanbanCreateResource, column: KanbanDataColumn) {
-    if (this.stemConfigIsWithPath(resourceCreate.stemIndex)) {
-      this.createDataResourceWithPath(resourceCreate, column);
-    } else {
-      this.createDataResourceInResource(resourceCreate, column);
-    }
+    const stemConfig = this.config?.stemsConfigs?.[resourceCreate.stemIndex];
+    const grouping = stemConfig?.attribute ? {value: column.title, attribute: stemConfig.attribute} : null;
+    const dataResourcesChains = column.cards.map(card => card.dataResourcesChain);
+    this.createService.create({
+      resource: stemConfig.resource,
+      stem: stemConfig.stem,
+      grouping: [grouping].filter(val => !!val),
+      dataResourcesChains
+    });
   }
 
   private stemConfigIsWithPath(stemIndex: number): boolean {
@@ -205,7 +210,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
         this.createDataResource(resourceCreate, column, possibleDocumentsIds[0], linkTypeId);
       } else {
         this.chooseDocument(possibleDocumentsIds, document =>
-          this.createDataResource(resourceCreate, column, document, linkTypeId)
+          this.createDataResource(resourceCreate, column, document.id, linkTypeId)
         );
       }
     } else {
@@ -251,23 +256,20 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     if (lastDataResource) {
-      const ref = this.modalService.showDataResourceDetail(
+      this.modalService.showDataResourceDetail(
         lastDataResource,
         createResource.resource,
-        this.viewId,
-        false
+        this.viewId
       );
-      ref.content.onSubmit$.subscribe(modifiedDocument => {
-        lastDataResource.data = modifiedDocument.data;
-        this.store$.dispatch(
-          new DocumentsAction.CreateChain({
-            documents,
-            linkInstances,
-            failureMessage,
-            workspace: this.currentWorkspace(),
-          })
-        );
-      });
+
+      this.store$.dispatch(
+        new DocumentsAction.CreateChain({
+          documents,
+          linkInstances,
+          failureMessage,
+          workspace: this.currentWorkspace(),
+        })
+      );
     }
   }
 
@@ -277,7 +279,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     kanbanResource: KanbanResource,
     value: any,
     card?: KanbanCard
-  ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
+  ): { documents: DocumentModel[]; linkInstances: LinkInstance[] } {
     const chain: DataResource[] = [];
     const chainRange = this.createChainRange(createResource, kanbanResource);
 
@@ -319,10 +321,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
         }
         chain[rangeIndex] =
           resourceType === AttributesResourceType.Collection
-            ? ({
-                collectionId: resource.id,
-                data,
-              } as DataResource)
+            ? ({collectionId: resource.id, data} as DataResource)
             : ({linkTypeId: resource.id, data, documentIds: []} as DataResource);
       }
     }
@@ -359,7 +358,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         this.chooseDocument(
           previousDocuments.map(doc => doc.id),
-          document => this.createDataResource(resourceCreate, column, document, linkTypeId)
+          document => this.createDataResource(resourceCreate, column, document.id, linkTypeId)
         );
       }
     } else if (resourceCreate.kanbanAttribute.resourceType === AttributesResourceType.Collection) {
@@ -367,7 +366,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private chooseDocument(documentsIds: string[], callback: (document) => void) {
+  private chooseDocument(documentsIds: string[], callback: (document: DocumentModel) => void) {
     this.modalService.showChooseLinkDocument(documentsIds, this.viewId, callback);
   }
 
@@ -387,7 +386,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   ) {
     const {document, collection} = this.createDocumentData(createResource, column.title);
     const {linkInstance = null, linkType = null} =
-      (linkTypeId && linkDocumentId && this.createLinkData(createResource, column.title)) || {};
+    (linkTypeId && linkDocumentId && this.createLinkData(createResource, column.title)) || {};
 
     const creatingDocument = this.modifyingDocuments(createResource);
     const modalRef = creatingDocument
@@ -485,7 +484,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   private createLinkData(
     createResource: KanbanCreateResource,
     value: any
-  ): {linkType: LinkType; linkInstance: LinkInstance} {
+  ): { linkType: LinkType; linkInstance: LinkInstance } {
     const linkType = this.getPreviousLinkType(createResource);
     const linkFilters = getQueryFiltersForLinkType(this.query, linkType.id);
     const linkData = generateDocumentData(linkType, linkFilters, this.constraintData, false);
@@ -501,7 +500,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   private createDocumentData(
     createResource: KanbanCreateResource,
     value: any
-  ): {document: DocumentModel; collection: Collection} {
+  ): { document: DocumentModel; collection: Collection } {
     const collection = this.getNextCollection(createResource);
     const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
     const documentData = generateDocumentData(collection, collectionsFilters, this.constraintData, false);
@@ -542,7 +541,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  public onUpdateDataResource(object: {card: KanbanCard; fromColumn: KanbanDataColumn; toColumn: KanbanDataColumn}) {
+  public onUpdateDataResource(object: { card: KanbanCard; fromColumn: KanbanDataColumn; toColumn: KanbanDataColumn }) {
     const {card, fromColumn, toColumn} = object;
     const stemConfig = this.config.stemsConfigs?.[card.stemIndex];
     if (this.stemConfigIsWithPath(card.stemIndex)) {

@@ -28,7 +28,7 @@ export function createPossibleLinkingDocuments(otherChains: DataResourceChain[][
       .map(otherChain => {
         const linkChainIndex = findLastIndex(otherChain, chain => !!chain.linkInstanceId);
         const documentChain = otherChain[linkChainIndex - 1];
-        return documentChain && documentChain.documentId;
+        return documentChain?.documentId;
       })
       .filter(documentId => !!documentId)
   );

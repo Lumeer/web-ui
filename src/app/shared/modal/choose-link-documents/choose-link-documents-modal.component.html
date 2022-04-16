@@ -3,29 +3,19 @@
   (onClose)="hideDialog()"
   (onSubmit)="onSubmit()"
   [submitDisabled]="!(selectedDocumentId$ | async)"
-  *ngIf="{collections: collections$ | async, documents: documents$ | async, selectedCollectionId: selectedCollectionId$ | async} as data">
+  *ngIf="{collection: collection$ | async, documents: documents$ | async} as data">
 
-  <span class="title" i18n="@@modal.kanban.chooseDocument.title">Choose a record</span>
+  <span class="title" i18n="@@modal.chooseDocuments.title">Choose a record</span>
 
   <div class="body p-3 h-100">
-    <ng-container *ngIf="data.collections.length && data.documents.length; else noData">
+    <ng-container *ngIf="data.collection && data.documents.length; else noData">
       <div class="text-muted text-center"
-           i18n="@@modal.kanban.chooseDocument.description">
-        Select to which record you want to link the new one.
+           i18n="@@modal.chooseDocuments.description">Select to which record you want to link the new one.
       </div>
 
-      <div>
-        <preview-results-tabs
-          *ngIf="data.collections.length > 1"
-          class="d-block mt-2"
-          [resources]="data.collections"
-          [selectedId]="data.selectedCollectionId"
-          (selectResource)="onSelectCollection($event)">
-        </preview-results-tabs>
-      </div>
       <preview-results-table class="mt-2 overflow-hidden results-table"
-                             [dataResources]="data.documents | documentsByCollection:data.selectedCollectionId"
-                             [resource]="data.collections | collectionById:data.selectedCollectionId"
+                             [dataResources]="data.documents | documentsByCollection:data.collection.id"
+                             [resource]="data.collection"
                              [selectedId]="selectedDocumentId$ | async"
                              [attributesSettings]="(viewSettings$ | async)?.attributes"
                              [view]="view$ | async"

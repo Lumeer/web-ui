@@ -66,15 +66,11 @@ export class DataResourceDetailModalComponent implements OnInit {
   @Input()
   public viewId: string;
 
-  @Input()
-  public createDirectly: boolean;
-
   public readonly dialogType = DialogType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
   public resourceType: AttributesResourceType;
 
-  public onSubmit$ = new Subject<DataResource>();
   public onCancel$ = new Subject();
   public performingAction$ = new BehaviorSubject(false);
 
@@ -88,7 +84,6 @@ export class DataResourceDetailModalComponent implements OnInit {
 
   private dataResourceSubscription = new Subscription();
   private dataExistSubscription = new Subscription();
-  private currentDataResource: DataResource;
   private initialModalsCount: number;
   private currentView: View;
 
@@ -96,7 +91,8 @@ export class DataResourceDetailModalComponent implements OnInit {
     private store$: Store<AppState>,
     private bsModalRef: BsModalRef,
     private bsModalService: BsModalService
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.initData();
@@ -137,7 +133,6 @@ export class DataResourceDetailModalComponent implements OnInit {
     this.currentView$ = this.currentView$.pipe(tap(view => (this.currentView = view)));
 
     this.subscribeExist(resource, dataResource);
-    this.currentDataResource = dataResource;
   }
 
   private subscribeDataResource(dataResource: DataResource) {
@@ -178,24 +173,16 @@ export class DataResourceDetailModalComponent implements OnInit {
   }
 
   public onSubmit() {
-    const dataResource = this.currentDataResource || this.dataResource;
-    if (this.dataResource?.id || this.createDirectly) {
-      this.onClose();
-    } else {
-      this.onSubmit$.next(dataResource);
-      this.hideDialog();
-    }
+    this.onClose();
   }
 
   public onDataResourceChanged(dataResource: DataResource) {
-    if (!dataResource.id && this.createDirectly) {
+    if (!dataResource.id) {
       if (this.resourceType === AttributesResourceType.Collection) {
         this.createDocument(<DocumentModel>dataResource);
       } else {
         this.createLink(<LinkInstance>dataResource);
       }
-    } else {
-      this.currentDataResource = dataResource;
     }
   }
 
@@ -256,7 +243,7 @@ export class DataResourceDetailModalComponent implements OnInit {
     }
   }
 
-  public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
+  public selectCollectionAndDocument(data: { collection: Collection; document: DocumentModel }) {
     this.setData(data.collection, data.document);
   }
 }

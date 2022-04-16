@@ -1,7 +1,6 @@
 <data-resource-detail-modal *ngIf="dataResource$ | async as dataResource; else loading"
                             [dataResource]="dataResource"
                             [resource]="resource$ | async"
-                            [createDirectly]="createDirectly"
                             [toolbarRef]="toolbarRef"
                             [viewId]="viewId">
 </data-resource-detail-modal>

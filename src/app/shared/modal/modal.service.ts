@@ -63,6 +63,7 @@ import {GettingStartedModalType} from './getting-started/model/getting-started-m
 import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
 import {BookProductDemoModalComponent} from './book-product-demo/book-product-demo-modal.component';
 import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading/data-resource-detail-loading-modal.component';
+import {ChooseLinkDocumentsModalComponent} from './choose-link-documents/choose-link-documents-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -91,6 +92,16 @@ export class ModalService {
   ): BsModalRef {
     const config = {initialState: {documentIds, viewId, callback}, keyboard: true, class: 'modal-lg'};
     return this.show(ChooseLinkDocumentModalComponent, config);
+  }
+
+  public showChooseDocumentsPath(
+    documentIds: string[][],
+    collectionIds: string[],
+    viewId: string,
+    callback?: (document: DocumentModel[]) => void
+  ): BsModalRef {
+    const config = {initialState: {documentIds, collectionIds, viewId, callback}, keyboard: true, class: 'modal-lg'};
+    return this.show(ChooseLinkDocumentsModalComponent, config);
   }
 
   public showChooseLinkDocumentByCollection(
@@ -163,7 +174,7 @@ export class ModalService {
     createDirectly: boolean = true
   ): BsModalRef {
     const config = {
-      initialState: {dataResource, resource, createDirectly, viewId},
+      initialState: {dataResource, resource, viewId},
       keyboard: true,
       class: 'modal-lg',
     };
