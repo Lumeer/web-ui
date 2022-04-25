@@ -46,6 +46,7 @@ import {map, switchMap, tap} from 'rxjs/operators';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {View} from '../../../core/store/views/view';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {DataResourcesChain} from './model/data-resources-chain';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -65,6 +66,9 @@ export class DataResourceDetailModalComponent implements OnInit {
 
   @Input()
   public viewId: string;
+
+  @Input()
+  public chain: DataResourcesChain;
 
   public readonly dialogType = DialogType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
@@ -91,8 +95,7 @@ export class DataResourceDetailModalComponent implements OnInit {
     private store$: Store<AppState>,
     private bsModalRef: BsModalRef,
     private bsModalService: BsModalService
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.initData();
@@ -178,12 +181,43 @@ export class DataResourceDetailModalComponent implements OnInit {
 
   public onDataResourceChanged(dataResource: DataResource) {
     if (!dataResource.id) {
-      if (this.resourceType === AttributesResourceType.Collection) {
+      if (this.chain) {
+        this.createChain(dataResource);
+      } else if (this.resourceType === AttributesResourceType.Collection) {
         this.createDocument(<DocumentModel>dataResource);
       } else {
         this.createLink(<LinkInstance>dataResource);
       }
     }
+  }
+
+  private createChain(dataResource: DataResource) {
+    this.performingAction$.next(true);
+
+    let resourceId: string;
+    if (this.chain.type === AttributesResourceType.Collection) {
+      this.chain.documents[this.chain.index].data = dataResource.data;
+      resourceId = this.chain.documents[this.chain.index].collectionId;
+    } else {
+      this.chain.linkInstances[this.chain.index].data = dataResource.data;
+      resourceId = this.chain.linkInstances[this.chain.index].linkTypeId;
+    }
+
+    this.store$.dispatch(
+      new DocumentsAction.CreateChain({
+        ...this.chain,
+        workspace: this.currentWorkspace(),
+        afterSuccess: ({documents, linkInstances}) => {
+          if (this.chain.type === AttributesResourceType.Collection) {
+            this.subscribeDataResource(documents.find(document => document.collectionId === resourceId));
+          } else {
+            this.subscribeDataResource(linkInstances.find(linkInstance => linkInstance.linkTypeId === resourceId));
+          }
+          this.performingAction$.next(false);
+        },
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
   }
 
   private createDocument(document: DocumentModel) {
@@ -243,7 +277,7 @@ export class DataResourceDetailModalComponent implements OnInit {
     }
   }
 
-  public selectCollectionAndDocument(data: { collection: Collection; document: DocumentModel }) {
+  public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
     this.setData(data.collection, data.document);
   }
 }

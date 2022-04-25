@@ -199,6 +199,15 @@ export namespace DocumentsAction {
         linkInstances: LinkInstance[];
         failureMessage: string;
         workspace?: Workspace;
+        onSuccess?: ({documents, linkInstances}: {documents: DocumentModel[]; linkInstances: LinkInstance[]}) => void;
+        afterSuccess?: ({
+          documents,
+          linkInstances,
+        }: {
+          documents: DocumentModel[];
+          linkInstances: LinkInstance[];
+        }) => void;
+        onFailure?: () => void;
       }
     ) {}
   }

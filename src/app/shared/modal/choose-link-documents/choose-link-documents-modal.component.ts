@@ -28,9 +28,9 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
 import {AppState} from '../../../core/store/app.state';
 import {switchMap, tap} from 'rxjs/operators';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {Query} from '../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectDocumentsByCollectionAndQuery,} from '../../../core/store/common/permissions.selectors';
+import {selectDocumentsByCollectionAndQuery} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResource} from '../../../core/model/resource';
 import {selectViewById} from '../../../core/store/views/views.state';
@@ -44,10 +44,7 @@ import {selectViewSettingsByView} from '../../../core/store/view-settings/view-s
 })
 export class ChooseLinkDocumentsModalComponent implements OnInit {
   @Input()
-  public documentIds: string[][];
-
-  @Input()
-  public collectionIds: string[];
+  public stems: QueryStem[];
 
   @Input()
   public viewId: string;
@@ -68,8 +65,7 @@ export class ChooseLinkDocumentsModalComponent implements OnInit {
   private currentStage = 0;
   private selectedDocuments: DocumentModel[] = [];
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {
-  }
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.view$ = this.store$.pipe(select(selectViewById(this.viewId)));
@@ -82,27 +78,24 @@ export class ChooseLinkDocumentsModalComponent implements OnInit {
   private setupStage(index: number) {
     this.currentStage = index;
 
-    const collectionId = this.collectionIds[index];
-    const query: Query = {stems: [{collectionId}]};
+    const stem = this.stems[index];
+    const query: Query = {stems: [stem]};
     this.store$.dispatch(new DocumentsAction.Get({query}));
     this.documents$ = this.view$.pipe(
-      switchMap(view =>
-        this.store$.pipe(select(selectDocumentsByCollectionAndQuery(collectionId, query, view)))
-      ),
+      switchMap(view => this.store$.pipe(select(selectDocumentsByCollectionAndQuery(stem.collectionId, query, view)))),
       tap(documents => {
         this.documents = documents;
         this.checkSelectedDocument(documents);
       })
     );
-    this.collection$ = this.store$.pipe(select(selectCollectionById(collectionId)));
+    this.collection$ = this.store$.pipe(select(selectCollectionById(stem.collectionId)));
   }
 
   private checkSelectedDocument(documents: DocumentModel[]) {
-    if (this.selectedDocumentId$.value) {
-      const documentExist = documents.some(document => document.id === this.selectedDocumentId$.value);
-      if (!documentExist) {
-        this.selectedDocumentId$.next(documents[0]?.id);
-      }
+    const documentExist =
+      this.selectedDocumentId$.value && documents.some(document => document.id === this.selectedDocumentId$.value);
+    if (!documentExist) {
+      this.selectedDocumentId$.next(documents[0]?.id);
     }
   }
 
@@ -114,7 +107,7 @@ export class ChooseLinkDocumentsModalComponent implements OnInit {
     const documentId = this.selectedDocumentId$.getValue();
     this.selectedDocuments[this.currentStage] = (this.documents || []).find(doc => doc.id === documentId);
 
-    if (this.collectionIds[this.currentStage + 1]) {
+    if (this.stems[this.currentStage + 1]) {
       this.setupStage(this.currentStage + 1);
     } else {
       this.callback(this.selectedDocuments);

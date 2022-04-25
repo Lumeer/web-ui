@@ -327,7 +327,7 @@ export class DocumentsEffects {
     this.actions$.pipe(
       ofType<DocumentsAction.CreateChain>(DocumentsActionType.CREATE_CHAIN),
       mergeMap(action => {
-        const {documents, linkInstances, failureMessage} = action.payload;
+        const {documents, linkInstances, failureMessage, onSuccess, onFailure, afterSuccess} = action.payload;
         const documentsDtos = documents.map(document => convertDocumentModelToDto(document));
         const linkInstancesDtos = linkInstances.map(link => convertLinkInstanceModelToDto(link));
 
@@ -336,11 +336,15 @@ export class DocumentsEffects {
             const newDocuments = documentDtos.map(dto => convertDocumentDtoToModel(dto));
             const newLinks = linkDtos.map(dto => convertLinkInstanceDtoToModel(dto));
             return [
+              ...createCallbackActions(onSuccess, {documents: newDocuments, linkInstances: newLinks}),
               new DocumentsAction.CreateChainSuccess({documents: newDocuments}),
               new LinkInstancesAction.CreateMultipleSuccess({linkInstances: newLinks}),
+              ...createCallbackActions(afterSuccess, {documents: newDocuments, linkInstances: newLinks}),
             ];
           }),
-          catchError(() => of(new NotificationsAction.Error({message: failureMessage})))
+          catchError(() =>
+            of(...createCallbackActions(onFailure), new NotificationsAction.Error({message: failureMessage}))
+          )
         );
       })
     )

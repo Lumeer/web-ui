@@ -64,6 +64,8 @@ import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.compon
 import {BookProductDemoModalComponent} from './book-product-demo/book-product-demo-modal.component';
 import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading/data-resource-detail-loading-modal.component';
 import {ChooseLinkDocumentsModalComponent} from './choose-link-documents/choose-link-documents-modal.component';
+import {DataResourcesChain} from './data-resource-detail/model/data-resources-chain';
+import {QueryStem} from '../../core/store/navigation/query/query';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -95,12 +97,11 @@ export class ModalService {
   }
 
   public showChooseDocumentsPath(
-    documentIds: string[][],
-    collectionIds: string[],
+    stems: QueryStem[],
     viewId: string,
     callback?: (document: DocumentModel[]) => void
   ): BsModalRef {
-    const config = {initialState: {documentIds, collectionIds, viewId, callback}, keyboard: true, class: 'modal-lg'};
+    const config = {initialState: {stems, viewId, callback}, keyboard: true, class: 'modal-lg'};
     return this.show(ChooseLinkDocumentsModalComponent, config);
   }
 
@@ -165,6 +166,20 @@ export class ModalService {
           this.showDataResourceDetail(linkInstance, linkType, viewId);
         }
       });
+  }
+
+  public showDataResourceDetailWithChain(
+    dataResource: DataResource,
+    resource: AttributesResource,
+    chain: DataResourcesChain,
+    viewId?: string
+  ): BsModalRef {
+    const config = {
+      initialState: {dataResource, resource, chain, viewId},
+      keyboard: true,
+      class: 'modal-lg',
+    };
+    return this.show(DataResourceDetailModalComponent, config);
   }
 
   public showDataResourceDetail(
