@@ -105,14 +105,6 @@ export class ModalService {
     return this.show(ChooseLinkDocumentsModalComponent, config);
   }
 
-  public showChooseLinkDocumentByCollection(
-    collectionId: string,
-    callback?: (document: DocumentModel) => void
-  ): BsModalRef {
-    const config = {initialState: {collectionId, callback}, keyboard: true, class: 'modal-lg'};
-    return this.show(ChooseLinkDocumentModalComponent, config);
-  }
-
   public showModifyDocumentLinks(
     documentId: string,
     collectionId: string,

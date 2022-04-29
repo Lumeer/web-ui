@@ -148,12 +148,12 @@ export function isLinkedOrGroupedConfig(stemConfig: WorkflowStemConfig): boolean
   return isLinkedConfig(stemConfig) || isGroupedConfig(stemConfig);
 }
 
-export function isLinkedAndNotGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
-  return isLinkedConfig(stemConfig) && !isGroupedConfig(stemConfig);
-}
-
 function isGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
-  return stemConfig?.attribute && stemConfig.collection && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex;
+  return (
+    stemConfig?.attribute &&
+    stemConfig.collection &&
+    stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex
+  );
 }
 
 function isLinkedConfig(stemConfig: WorkflowStemConfig): boolean {
@@ -202,7 +202,7 @@ export function createLinkingCollectionId(
   collections: Collection[],
   linkTypesMap: Record<string, LinkType>
 ): string | null {
-  if (isLinkedAndNotGroupedConfig(stemConfig)) {
+  if (isLinkedOrGroupedConfig(stemConfig)) {
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(
       stemConfig.stem,
       collections,
