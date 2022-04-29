@@ -600,7 +600,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const primaryDataResource = isCollection ? document : linkInstance;
     const resource = this.getResourceById(createModel.resourceId, createModel.resourceType);
     if (primaryDataResource && resource && document) {
-      const modalRef = this.modalService.showDataResourceDetail(primaryDataResource, resource, this.view?.id, false);
+      const modalRef = this.modalService.showDataResourceDetail(
+        primaryDataResource,
+        resource,
+        this.view?.id,
+        null,
+        false
+      );
       modalRef.content.onCancel$.subscribe(() => cancel());
       modalRef.content.onSubmit$.subscribe(modifiedDataResource => {
         primaryDataResource.data = modifiedDataResource.data;

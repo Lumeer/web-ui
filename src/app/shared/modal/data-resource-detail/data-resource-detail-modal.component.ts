@@ -70,6 +70,9 @@ export class DataResourceDetailModalComponent implements OnInit {
   @Input()
   public chain: DataResourcesChain;
 
+  @Input()
+  public onCreated: (dataResource: DataResource) => void;
+
   public readonly dialogType = DialogType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
@@ -209,9 +212,17 @@ export class DataResourceDetailModalComponent implements OnInit {
         workspace: this.currentWorkspace(),
         afterSuccess: ({documents, linkInstances}) => {
           if (this.chain.type === AttributesResourceType.Collection) {
-            this.subscribeDataResource(documents.find(document => document.collectionId === resourceId));
+            const document = documents.find(document => document.collectionId === resourceId);
+            if (document) {
+              this.onCreated(document);
+              this.subscribeDataResource(document);
+            }
           } else {
-            this.subscribeDataResource(linkInstances.find(linkInstance => linkInstance.linkTypeId === resourceId));
+            const linkInstance = linkInstances.find(linkInstance => linkInstance.linkTypeId === resourceId);
+            if (linkInstance) {
+              this.onCreated(linkInstance);
+              this.subscribeDataResource(linkInstance);
+            }
           }
           this.performingAction$.next(false);
         },
@@ -228,6 +239,7 @@ export class DataResourceDetailModalComponent implements OnInit {
         document,
         workspace: this.currentWorkspace(),
         afterSuccess: document => {
+          this.onCreated(document);
           this.subscribeDataResource(document);
           this.performingAction$.next(false);
         },
@@ -244,6 +256,7 @@ export class DataResourceDetailModalComponent implements OnInit {
         linkInstance,
         workspace: this.currentWorkspace(),
         afterSuccess: linkInstance => {
+          this.onCreated(linkInstance);
           this.subscribeDataResource(linkInstance);
           this.performingAction$.next(false);
         },

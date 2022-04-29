@@ -172,10 +172,11 @@ export class ModalService {
     dataResource: DataResource,
     resource: AttributesResource,
     chain: DataResourcesChain,
-    viewId?: string
+    viewId?: string,
+    onCreated?: (DataResource) => void
   ): BsModalRef {
     const config = {
-      initialState: {dataResource, resource, chain, viewId},
+      initialState: {dataResource, resource, chain, viewId, onCreated},
       keyboard: true,
       class: 'modal-lg',
     };
@@ -186,10 +187,11 @@ export class ModalService {
     dataResource: DataResource,
     resource: AttributesResource,
     viewId?: string,
+    onCreated?: (DataResource) => void,
     createDirectly: boolean = true
   ): BsModalRef {
     const config = {
-      initialState: {dataResource, resource, viewId},
+      initialState: {dataResource, resource, viewId, onCreated},
       keyboard: true,
       class: 'modal-lg',
     };

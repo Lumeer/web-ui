@@ -24,7 +24,14 @@ import {ModalService} from '../../shared/modal/modal.service';
 import {Query, QueryStem} from '../store/navigation/query/query';
 import {QueryAttribute, QueryResource} from '../model/query-attribute';
 import {Collection} from '../store/collections/collection';
-import {ConditionType, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {
+  ConditionType,
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DocumentsAndLinksData,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 import {LinkType} from '../store/link-types/link.type';
 import {Workspace} from '../store/navigation/workspace';
 import {DocumentModel} from '../store/documents/document.model';
@@ -37,17 +44,29 @@ import {
   getQueryFiltersForLinkType,
   queryStemAttributesResourcesOrder,
 } from '../store/navigation/query/query.util';
-import {objectsByIdMap} from '../../shared/utils/common.utils';
+import {findLastIndex, isArray, isNotNullOrUndefined, objectsByIdMap} from '../../shared/utils/common.utils';
 import {LinkInstance} from '../store/link-instances/link.instance';
 import {DataResourcesChain} from '../../shared/modal/data-resource-detail/model/data-resources-chain';
+import {findAttributeConstraint} from '../store/collections/collection.util';
+import {DocumentsAction} from '../store/documents/documents.action';
+import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
 
 export interface CreateDataResourceData {
   stem: QueryStem;
   grouping: CreateDataResourceDataGrouping[];
-  resource: QueryResource;
+  queryResource: QueryResource;
   dataResourcesChains: DataResourceChain[][];
   data: Record<string, Record<string, any>>;
   failureMessage: string;
+  onCreated?: (dataResource: DataResource) => void;
+}
+
+export interface UpdateDataResourceData extends CreateDataResourceData {
+  dataResource: DataResource;
+  dataResourceChain: DataResourceChain[];
+  previousValue: any;
+  newValue: any;
+  attributeId: string;
 }
 
 export interface CreateDataResourceDataGrouping {
@@ -89,33 +108,103 @@ export class CreateDataResourceService {
 
   public create(createData: CreateDataResourceData) {
     const groupingAttributes = createData.grouping.map(g => g.attribute);
-    const chainRange = createChainRange(createData.resource, groupingAttributes);
+    const chainRange = createChainRange(createData.queryResource, groupingAttributes);
 
     if (chainRange.length > 1) {
       const choosePathStems = this.createChoosePathStems(createData, chainRange);
       this.modalService.showChooseDocumentsPath(choosePathStems, this.workspace?.viewId, documents => {
-        const chain = this.createDataResourcesChain(createData, chainRange, documents);
+        const chain = this.createDataResourcesChain(createData, chainRange, documents, []);
         const dataResource =
           chain.type === AttributesResourceType.Collection
             ? chain.documents[chain.index]
             : chain.linkInstances[chain.index];
-        const resource = this.getResourceInStem(createData.stem, createData.resource.resourceIndex);
-        this.modalService.showDataResourceDetailWithChain(dataResource, resource, chain, this.workspace?.viewId);
+        const resource = this.getResourceInStem(createData.stem, createData.queryResource.resourceIndex);
+        this.modalService.showDataResourceDetailWithChain(
+          dataResource,
+          resource,
+          chain,
+          this.workspace?.viewId,
+          createData.onCreated
+        );
       });
     } else {
       const {dataResource, resource} = this.prepareDataResource(
         createData,
-        createData.resource.resourceType,
-        createData.resource.resourceIndex
+        createData.queryResource.resourceType,
+        createData.queryResource.resourceIndex
       );
-      this.modalService.showDataResourceDetail(dataResource, resource, this.workspace?.viewId);
+      this.modalService.showDataResourceDetail(dataResource, resource, this.workspace?.viewId, createData.onCreated);
     }
+  }
+
+  public update(updateData: UpdateDataResourceData) {
+    const groupingAttributes = updateData.grouping.map(g => g.attribute);
+    const chainRange = createChainRange(updateData.queryResource, groupingAttributes);
+    const resourceType = updateData.queryResource.resourceType;
+    if (chainRange.length > 1) {
+      const choosePathStems = this.createChoosePathStems(updateData, chainRange);
+      this.modalService.showChooseDocumentsPath(choosePathStems, this.workspace?.viewId, documents => {
+        const selectedDocuments = [...documents];
+        const selectedLinkInstances = [];
+
+        if (resourceType === AttributesResourceType.Collection) {
+          selectedDocuments.push(updateData.dataResource as DocumentModel);
+          selectedLinkInstances.push(this.findLastLink(updateData));
+        } else if (resourceType === AttributesResourceType.LinkType) {
+          selectedLinkInstances.push(updateData.dataResource as LinkInstance);
+        }
+        const chain = this.createDataResourcesChain(updateData, chainRange, selectedDocuments, selectedLinkInstances);
+        this.store$.dispatch(new DocumentsAction.CreateChain({...chain, workspace: this.workspace}));
+      });
+    } else if (resourceType === AttributesResourceType.Collection) {
+      this.updateDocument(updateData);
+    } else if (resourceType === AttributesResourceType.LinkType) {
+      this.updateLink(updateData);
+    }
+  }
+
+  private findLastLink(updateData: UpdateDataResourceData): LinkInstance {
+    const linkChainIndex = findLastIndex(updateData.dataResourceChain, chain => !!chain.linkInstanceId);
+    const linkChain = updateData.dataResourceChain[linkChainIndex];
+    return linkChain && (this.data.uniqueLinkInstances || []).find(li => li.id === linkChain.linkInstanceId);
+  }
+
+  private updateDocument(updateData: UpdateDataResourceData) {
+    const document = <DocumentModel>updateData.dataResource;
+    const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
+    const attributeId = updateData.attributeId;
+    const constraint = findAttributeConstraint(collection?.attributes, attributeId);
+    const value = createValueByConstraint(
+      constraint,
+      updateData.newValue,
+      updateData.previousValue,
+      document.data?.[attributeId]
+    );
+    const data = {...document.data, [attributeId]: value};
+    this.store$.dispatch(new DocumentsAction.PatchData({document: {...document, data}, workspace: this.workspace}));
+  }
+
+  private updateLink(updateData: UpdateDataResourceData) {
+    const linkInstance = <LinkInstance>updateData.dataResource;
+    const linkType = (this.linkTypes || []).find(coll => coll.id === linkInstance.linkTypeId);
+    const attributeId = updateData.attributeId;
+    const constraint = findAttributeConstraint(linkType?.attributes, attributeId);
+    const value = createValueByConstraint(
+      constraint,
+      updateData.newValue,
+      updateData.previousValue,
+      linkInstance.data?.[attributeId]
+    );
+    const data = {...linkInstance.data, [attributeId]: value};
+    this.store$.dispatch(
+      new LinkInstancesAction.PatchData({linkInstance: {...linkInstance, data}, workspace: this.workspace})
+    );
   }
 
   private createChoosePathStems(createData: CreateDataResourceData, chainRange: number[]): QueryStem[] {
     const choosePathStems: QueryStem[] = [];
     for (const resourceIndex of chainRange) {
-      if (isCollectionIndex(resourceIndex) && resourceIndex !== createData.resource.resourceIndex) {
+      if (isCollectionIndex(resourceIndex) && resourceIndex !== createData.queryResource.resourceIndex) {
         const grouping = this.getGroupingByResourceIndex(createData, resourceIndex);
         const collectionId = this.getResourceInStem(createData.stem, resourceIndex).id;
         const collectionsFilters = getQueryFiltersForCollection(this.query, collectionId);
@@ -137,7 +226,8 @@ export class CreateDataResourceService {
   private createDataResourcesChain(
     createData: CreateDataResourceData,
     chainRange: number[],
-    selectedDocuments: DocumentModel[]
+    selectedDocuments: DocumentModel[],
+    selectedLinkInstances: LinkInstance[]
   ): DataResourcesChain {
     const chainDocuments: DocumentModel[] = [];
     const chainLinkInstances: LinkInstance[] = [];
@@ -145,66 +235,63 @@ export class CreateDataResourceService {
 
     for (let i = 0; i < chainRange.length; i++) {
       const resourceIndex = chainRange[i];
-      const isMainResource = resourceIndex === createData.resource.resourceIndex;
-      const resource = this.getResourceInStem(createData.stem, resourceIndex);
+      const isMainResource = resourceIndex === createData.queryResource.resourceIndex;
 
       if (isCollectionIndex(resourceIndex)) {
-        const {dataResource} = this.prepareDataResource(createData, AttributesResourceType.Collection, resourceIndex);
+        const {dataResource, resource} = this.prepareDataResource(
+          createData,
+          AttributesResourceType.Collection,
+          resourceIndex
+        );
+        const selectedDocument = selectedDocuments.find(doc => doc?.collectionId === resource.id);
         if (isMainResource) {
           mainIndex = chainDocuments.length;
-          chainDocuments.push(dataResource as DocumentModel);
-        } else {
-          const selectedDocument = selectedDocuments.find(doc => doc.collectionId === resource.id) || dataResource;
-          chainDocuments.push(selectedDocument as DocumentModel);
         }
+        chainDocuments.push(selectedDocument || (dataResource as DocumentModel));
       }
     }
 
     for (let i = 0; i < chainRange.length; i++) {
       const resourceIndex = chainRange[i];
-      const isMainResource = resourceIndex === createData.resource.resourceIndex;
+      const isMainResource = resourceIndex === createData.queryResource.resourceIndex;
 
       if (isLinkIndex(resourceIndex)) {
-        const {dataResource} = this.prepareDataResource(createData, AttributesResourceType.LinkType, resourceIndex);
+        const linkIndex = chainLinkInstances.length;
+        const previousDocument = chainDocuments[linkIndex];
+        const nextDocument = chainDocuments[linkIndex + 1];
+        const {dataResource, resource} = this.prepareDataResource(
+          createData,
+          AttributesResourceType.LinkType,
+          resourceIndex
+        );
+        const selectedLinkInstance = selectedLinkInstances.find(link => link?.linkTypeId === resource.id);
+
         if (isMainResource) {
           mainIndex = chainLinkInstances.length;
-          chainLinkInstances.push(dataResource as LinkInstance);
+        }
+
+        if (selectedLinkInstance) {
+          chainLinkInstances.push({...selectedLinkInstance, documentIds: [previousDocument?.id, nextDocument?.id]});
         } else {
-          const linkIndex = chainLinkInstances.length;
-          const previousDocument = chainDocuments[linkIndex];
-          const nextDocument = chainDocuments[linkIndex + 1];
-          const linkInstance =
-            this.findLinkInstanceByExistingChains(createData, i, previousDocument, nextDocument) || dataResource;
-          chainLinkInstances.push(linkInstance as LinkInstance);
+          if (isMainResource) {
+            chainLinkInstances.push(dataResource as LinkInstance);
+          } else {
+            chainLinkInstances.push(
+              this.findLinkInstanceByExistingChains(createData, i, previousDocument, nextDocument) ||
+                (dataResource as LinkInstance)
+            );
+          }
         }
       }
     }
 
     return {
       index: mainIndex,
-      type: createData.resource.resourceType,
+      type: createData.queryResource.resourceType,
       documents: chainDocuments,
       linkInstances: chainLinkInstances,
       failureMessage: createData.failureMessage,
     };
-  }
-
-  private findLinkInstanceByExistingChains(
-    createData: CreateDataResourceData,
-    index: number,
-    previousDocument: DocumentModel,
-    nextDocument: DocumentModel
-  ): LinkInstance {
-    if (!previousDocument?.id || !nextDocument?.id) {
-      return null;
-    }
-    for (const chain of createData.dataResourcesChains) {
-      if (chain[index - 1]?.documentId === previousDocument.id && chain[index + 1]?.documentId === nextDocument.id) {
-        const linkInstanceId = chain[index]?.linkInstanceId;
-        return this.data.uniqueLinkInstances.find(linkInstance => linkInstance.id === linkInstanceId);
-      }
-    }
-    return null;
   }
 
   private prepareDataResource(
@@ -227,6 +314,24 @@ export class CreateDataResourceService {
       const linkInstance: LinkInstance = {linkTypeId: linkType.id, data: linkData, documentIds: [null, null]};
       return {dataResource: linkInstance, resource: linkType};
     }
+  }
+
+  private findLinkInstanceByExistingChains(
+    createData: CreateDataResourceData,
+    index: number,
+    previousDocument: DocumentModel,
+    nextDocument: DocumentModel
+  ): LinkInstance {
+    if (!previousDocument?.id || !nextDocument?.id) {
+      return null;
+    }
+    for (const chain of createData.dataResourcesChains) {
+      if (chain[index - 1]?.documentId === previousDocument.id && chain[index + 1]?.documentId === nextDocument.id) {
+        const linkInstanceId = chain[index]?.linkInstanceId;
+        return this.data.uniqueLinkInstances.find(linkInstance => linkInstance.id === linkInstanceId);
+      }
+    }
+    return null;
   }
 
   private getResourceInStem(stem: QueryStem, index: number): AttributesResource {
@@ -265,6 +370,34 @@ function createChainRange(resource: QueryResource, attributes: QueryAttribute[])
   }
 
   return createRangeInclusive(fromIndex, toIndex);
+}
+
+function createValueByConstraint(
+  constraint: Constraint,
+  newValue: any,
+  previousValue?: any,
+  documentValue?: any,
+  constraintData?: ConstraintData
+): any {
+  if (
+    constraint &&
+    (constraint.type === ConstraintType.Select ||
+      constraint.type === ConstraintType.User ||
+      constraint.type === ConstraintType.View) &&
+    isNotNullOrUndefined(previousValue) &&
+    isArray(documentValue)
+  ) {
+    const changedIndex = documentValue.findIndex(value => String(value) === String(previousValue));
+    const newArray = [...documentValue];
+    if (newArray.some(value => String(value) === String(newValue))) {
+      newArray.splice(changedIndex, 1);
+    } else {
+      newArray[changedIndex] = newValue;
+    }
+    return constraint.createDataValue(newArray, constraintData).serialize();
+  } else {
+    return (constraint || new UnknownConstraint()).createDataValue(newValue).serialize();
+  }
 }
 
 function isCollectionIndex(index: number): boolean {

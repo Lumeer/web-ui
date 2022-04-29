@@ -31,9 +31,7 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
@@ -46,8 +44,6 @@ import {View, ViewSettings} from '../../../../core/store/views/view';
 import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
 import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
 import {KanbanPerspectiveConfiguration} from '../../perspective-configuration';
@@ -249,18 +245,6 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
 
   public onColumnsChanged(data: {columns: KanbanDataColumn[]; otherColumn: KanbanDataColumn}) {
     this.data$.next({...this.data$.value, ...data});
-  }
-
-  public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()}));
-  }
-
-  public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.currentWorkspace()}));
-  }
-
-  public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
-    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments({...payload, workspace: this.currentWorkspace()}));
   }
 
   private currentWorkspace(): Workspace {
