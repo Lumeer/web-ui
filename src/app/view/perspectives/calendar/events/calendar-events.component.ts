@@ -38,6 +38,7 @@ import {
   calendarWritableStemsByCollections,
   checkOrTransformCalendarConfig,
   createCalendarNewEventData,
+  parseCalendarDate,
 } from '../util/calendar-util';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {deepObjectsEquals, toNumber} from '../../../../shared/utils/common.utils';
@@ -49,7 +50,6 @@ import {CalendarConverter} from '../util/calendar-converter';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
-import * as moment from 'moment';
 import {
   ConstraintData,
   ConstraintType,
@@ -282,7 +282,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   ) {
     const resource = this.getResourceById(model.resourceId, model.resourceType);
     const constraint = findAttributeConstraint(resource?.attributes, model.attributeId) || new DateTimeConstraint(null);
-    let momentDate = moment(date);
+    let momentDate = parseCalendarDate(date, constraint, this.constraintData);
     if (!constraintContainsHoursInConfig(constraint)) {
       momentDate = momentDate.startOf('day');
       if (subtractDay) {

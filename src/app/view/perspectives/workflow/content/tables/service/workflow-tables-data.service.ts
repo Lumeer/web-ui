@@ -138,6 +138,7 @@ import {Workspace} from '../../../../../../core/store/navigation/workspace';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
+import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -153,6 +154,7 @@ export class WorkflowTablesDataService {
     private menuService: WorkflowTablesMenuService,
     private stateService: WorkflowTablesStateService,
     private modalService: ModalService,
+    private createDataResourceService: CreateDataResourceService,
     private constraintItemsFormatter: SelectItemWithConstraintFormatter,
     private copyValueService: CopyValueService
   ) {
@@ -1490,8 +1492,11 @@ export class WorkflowTablesDataService {
   public createNewRow(tableId: string) {
     const table = this.stateService.findTable(tableId);
     if (table.linkingQueryStem) {
-      this.modalService.showChooseDocumentsPath([table.linkingQueryStem], this.currentView?.id, documents =>
-        this.addRow(tableId, documents[0].id)
+      this.createDataResourceService.chooseDocumentsPath(
+        table.stem,
+        [table.linkingQueryStem],
+        this.currentView?.id,
+        documents => this.addRow(tableId, documents[0].id)
       );
     } else {
       this.addRow(tableId);

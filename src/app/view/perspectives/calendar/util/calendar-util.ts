@@ -311,7 +311,7 @@ export function createCalendarNewEventData(
   return dataMap;
 }
 
-function parseCalendarDate(date: Date, constraint: Constraint, constraintData: ConstraintData): moment.Moment {
+export function parseCalendarDate(date: Date, constraint: Constraint, constraintData: ConstraintData): moment.Moment {
   if (constraint?.type === ConstraintType.DateTime) {
     return (<DateTimeConstraint>constraint).createDataValue(date, constraintData).momentDate;
   } else {

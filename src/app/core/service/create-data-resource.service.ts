@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
 import {ModalService} from '../../shared/modal/modal.service';
 import {Query, QueryStem} from '../store/navigation/query/query';
@@ -50,6 +50,10 @@ import {DataResourcesChain} from '../../shared/modal/data-resource-detail/model/
 import {findAttributeConstraint} from '../store/collections/collection.util';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
+import {selectViewById} from '../store/views/views.state';
+import {switchMap} from 'rxjs';
+import {selectDocumentsByCollectionAndQuery} from '../store/common/permissions.selectors';
+import {take} from 'rxjs/operators';
 
 export interface CreateDataResourceData {
   stem: QueryStem;
@@ -112,7 +116,7 @@ export class CreateDataResourceService {
 
     if (chainRange.length > 1) {
       const choosePathStems = this.createChoosePathStems(createData, chainRange);
-      this.modalService.showChooseDocumentsPath(choosePathStems, this.workspace?.viewId, documents => {
+      this.chooseDocumentsPath(createData.stem, choosePathStems, this.workspace?.viewId, documents => {
         const chain = this.createDataResourcesChain(createData, chainRange, documents, []);
         const dataResource =
           chain.type === AttributesResourceType.Collection
@@ -134,6 +138,44 @@ export class CreateDataResourceService {
         createData.queryResource.resourceIndex
       );
       this.modalService.showDataResourceDetail(dataResource, resource, this.workspace?.viewId, createData.onCreated);
+    }
+  }
+
+  public chooseDocumentsPath(
+    mainStem: QueryStem,
+    pathStems: QueryStem[],
+    viewId: string,
+    callback: (documents: DocumentModel[]) => void
+  ) {
+    // we can not guarantee that documents in second (or any next) collection is fully loaded by query stem, because some documents are not linked
+    const mainStemInPath = pathStems.find(stem => stem.collectionId === mainStem.collectionId);
+    if (mainStemInPath) {
+      const query = {stems: [mainStemInPath]};
+      this.store$
+        .pipe(
+          select(selectViewById(viewId)),
+          switchMap(view =>
+            this.store$.pipe(select(selectDocumentsByCollectionAndQuery(mainStem.collectionId, query, view)))
+          ),
+          take(1)
+        )
+        .subscribe(mainStemDocuments => {
+          // we are sure that documents are fully loaded for main collection in stem
+          if (mainStemDocuments.length === 1) {
+            const pathStemsWithoutMain = pathStems.filter(stem => stem.collectionId !== mainStem.collectionId);
+            if (pathStemsWithoutMain.length > 0) {
+              this.modalService.showChooseDocumentsPath(pathStemsWithoutMain, this.workspace?.viewId, chosenDocuments =>
+                callback([mainStemDocuments[0], ...chosenDocuments])
+              );
+            } else {
+              callback(mainStemDocuments);
+            }
+          } else {
+            this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback);
+          }
+        });
+    } else {
+      this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback);
     }
   }
 
