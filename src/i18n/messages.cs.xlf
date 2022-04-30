@@ -3767,7 +3767,7 @@
                     <context context-type="linenumber">44</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="dialog.choose.document.empty" datatype="html">
+            <trans-unit id="choose.empty" datatype="html">
                 <source>I am sorry but I did not find anything.</source>
                 <target>Je mi líto, ale nepodařilo se mi nic najít.</target>
 

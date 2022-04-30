@@ -10,4 +10,9 @@
   &:hover {
     box-shadow: $shadow-default;
   }
+
+  &.active {
+    background: lighten($success, 60%);
+    box-shadow: $shadow-default !important;
+  }
 }

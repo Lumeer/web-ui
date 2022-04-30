@@ -166,7 +166,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  public onUpdateDataResource(object: {card: KanbanCard; fromColumn: KanbanDataColumn; toColumn: KanbanDataColumn}) {
+  public onMoveDataResource(object: {card: KanbanCard; fromColumn: KanbanDataColumn; toColumn: KanbanDataColumn}) {
     const {card, fromColumn, toColumn} = object;
     const stemConfig = this.config.stemsConfigs?.[card.stemIndex];
     const grouping = stemConfig?.resource ? {value: toColumn.title, attribute: stemConfig.attribute} : null;

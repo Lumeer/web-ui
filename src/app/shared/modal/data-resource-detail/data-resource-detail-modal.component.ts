@@ -178,23 +178,31 @@ export class DataResourceDetailModalComponent implements OnInit {
     return this.store$.pipe(select(selectLinkInstanceById(id)));
   }
 
-  public onSubmit() {
-    this.onClose();
+  public onSubmit(dataResource: DataResource) {
+    if (dataResource?.id) {
+      this.onClose();
+    } else {
+      this.createDataResource(dataResource, true);
+    }
   }
 
   public onDataResourceChanged(dataResource: DataResource) {
     if (!dataResource.id) {
-      if (this.chain) {
-        this.createChain(dataResource);
-      } else if (this.resourceType === AttributesResourceType.Collection) {
-        this.createDocument(<DocumentModel>dataResource);
-      } else {
-        this.createLink(<LinkInstance>dataResource);
-      }
+      this.createDataResource(dataResource);
     }
   }
 
-  private createChain(dataResource: DataResource) {
+  private createDataResource(dataResource: DataResource, closeAfter?: boolean) {
+    if (this.chain) {
+      this.createChain(dataResource, closeAfter);
+    } else if (this.resourceType === AttributesResourceType.Collection) {
+      this.createDocument(<DocumentModel>dataResource, closeAfter);
+    } else {
+      this.createLink(<LinkInstance>dataResource, closeAfter);
+    }
+  }
+
+  private createChain(dataResource: DataResource, closeAfter: boolean) {
     this.performingAction$.next(true);
 
     let resourceId: string;
@@ -214,24 +222,28 @@ export class DataResourceDetailModalComponent implements OnInit {
           if (this.chain.type === AttributesResourceType.Collection) {
             const document = documents.find(document => document.collectionId === resourceId);
             if (document) {
-              this.onCreated(document);
+              this.onCreated?.(document);
               this.subscribeDataResource(document);
             }
           } else {
             const linkInstance = linkInstances.find(linkInstance => linkInstance.linkTypeId === resourceId);
             if (linkInstance) {
-              this.onCreated(linkInstance);
+              this.onCreated?.(linkInstance);
               this.subscribeDataResource(linkInstance);
             }
           }
-          this.performingAction$.next(false);
+          if (closeAfter) {
+            this.hideDialog();
+          } else {
+            this.performingAction$.next(false);
+          }
         },
         onFailure: () => this.performingAction$.next(false),
       })
     );
   }
 
-  private createDocument(document: DocumentModel) {
+  private createDocument(document: DocumentModel, closeAfter: boolean) {
     this.performingAction$.next(true);
 
     this.store$.dispatch(
@@ -239,16 +251,20 @@ export class DataResourceDetailModalComponent implements OnInit {
         document,
         workspace: this.currentWorkspace(),
         afterSuccess: document => {
-          this.onCreated(document);
+          this.onCreated?.(document);
           this.subscribeDataResource(document);
-          this.performingAction$.next(false);
+          if (closeAfter) {
+            this.hideDialog();
+          } else {
+            this.performingAction$.next(false);
+          }
         },
         onFailure: () => this.performingAction$.next(false),
       })
     );
   }
 
-  private createLink(linkInstance: LinkInstance) {
+  private createLink(linkInstance: LinkInstance, closeAfter: boolean) {
     this.performingAction$.next(true);
 
     this.store$.dispatch(
@@ -256,9 +272,13 @@ export class DataResourceDetailModalComponent implements OnInit {
         linkInstance,
         workspace: this.currentWorkspace(),
         afterSuccess: linkInstance => {
-          this.onCreated(linkInstance);
+          this.onCreated?.(linkInstance);
           this.subscribeDataResource(linkInstance);
-          this.performingAction$.next(false);
+          if (closeAfter) {
+            this.hideDialog();
+          } else {
+            this.performingAction$.next(false);
+          }
         },
         onFailure: () => this.performingAction$.next(false),
       })

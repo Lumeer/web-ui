@@ -25,7 +25,6 @@ import {DocumentDetailModalModule} from './document-detail/document-detail-modal
 import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
 import {CreateLinkModalModule} from './create-link/create-link-modal.module';
 import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
-import {CalendarEventDetailModalModule} from './calendar-event-detail/calendar-event-detail-modal.module';
 import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
 import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
 import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
@@ -42,6 +41,7 @@ import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
 import {BookProductDemoModalModule} from './book-product-demo/book-product-demo-modal.module';
 import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loading/data-resource-detail-loading-modal.module';
 import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-link-documents-modal.module';
+import {ChooseResourceModalModule} from './choose-resource/choose-resource-modal.module';
 
 @NgModule({
   imports: [
@@ -54,7 +54,6 @@ import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-lin
     CreateLinkModalModule,
     TextEditorModalModule,
     TextInputModalModule,
-    CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
@@ -69,6 +68,7 @@ import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-lin
     BookProductDemoModalModule,
     DataResourceDetailLoadingModalModule,
     ChooseLinkDocumentsModalModule,
+    ChooseResourceModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -78,7 +78,6 @@ import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-lin
     CreateLinkModalModule,
     TextEditorModalModule,
     TextInputModalModule,
-    CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
@@ -94,6 +93,7 @@ import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-lin
     BookProductDemoModalModule,
     DataResourceDetailLoadingModalModule,
     ChooseLinkDocumentsModalModule,
+    ChooseResourceModalModule,
   ],
 })
 export class ModalModule {}

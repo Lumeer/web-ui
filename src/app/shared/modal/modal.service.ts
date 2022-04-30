@@ -66,6 +66,7 @@ import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-lo
 import {ChooseLinkDocumentsModalComponent} from './choose-link-documents/choose-link-documents-modal.component';
 import {DataResourcesChain} from './data-resource-detail/model/data-resources-chain';
 import {QueryStem} from '../../core/store/navigation/query/query';
+import {ChooseResourceModalComponent} from './choose-resource/choose-resource-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -85,6 +86,18 @@ export class ModalService {
 
   public isSomeModalOpened$(): Observable<boolean> {
     return interval(1000).pipe(map(() => this.isSomeModalOpened()));
+  }
+
+  public showChooseCollection(
+    collectionIds: string[],
+    title?: string,
+    callback?: (collectionId: string) => void
+  ): BsModalRef {
+    const config = {
+      initialState: {resourceIds: collectionIds, resourceType: AttributesResourceType.Collection, title, callback},
+      keyboard: true,
+    };
+    return this.show(ChooseResourceModalComponent, config);
   }
 
   public showChooseLinkDocument(

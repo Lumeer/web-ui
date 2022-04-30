@@ -21,14 +21,13 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SelectModule} from '../../select/select.module';
 import {PipesModule} from '../../pipes/pipes.module';
-import {CalendarEventDetailModalComponent} from './calendar-event-detail-modal.component';
-import {StemCollectionItemsPipe} from './pipes/stem-collection-items.pipe';
-import {DataResourceDetailModalModule} from '../data-resource-detail/data-resource-detail-modal.module';
-import {CanToggleAllDayPipe} from './pipes/can-toggle-all-day.pipe';
+import {ChooseResourceModalComponent} from './choose-resource-modal.component';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {PreviewResultsModule} from '../../preview-results/preview-results.module';
 
 @NgModule({
-  declarations: [CalendarEventDetailModalComponent, StemCollectionItemsPipe, CanToggleAllDayPipe],
-  imports: [CommonModule, SelectModule, PipesModule, DataResourceDetailModalModule],
-  exports: [CalendarEventDetailModalComponent],
+  declarations: [ChooseResourceModalComponent],
+  imports: [CommonModule, SelectModule, PipesModule, ModalWrapperModule, PreviewResultsModule],
+  exports: [ChooseResourceModalComponent],
 })
-export class CalendarEventDetailModalModule {}
+export class ChooseResourceModalModule {}

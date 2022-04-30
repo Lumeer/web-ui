@@ -29,14 +29,18 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CalendarBar, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
+import {CalendarBar, CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, filter, map} from 'rxjs/operators';
-import {calendarStemConfigIsWritable, checkOrTransformCalendarConfig} from '../util/calendar-util';
+import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {
+  calendarStemConfigIsWritable,
+  calendarWritableStemsByCollections,
+  checkOrTransformCalendarConfig,
+  createCalendarNewEventData,
+} from '../util/calendar-util';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {deepObjectCopy, deepObjectsEquals, toNumber} from '../../../../shared/utils/common.utils';
-import {CalendarEventDetailModalComponent} from '../../../../shared/modal/calendar-event-detail/calendar-event-detail-modal.component';
+import {deepObjectsEquals, toNumber} from '../../../../shared/utils/common.utils';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {CalendarEvent, CalendarMetaData} from '../util/calendar-event';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -56,6 +60,9 @@ import {
   durationCountsMapToString,
 } from '@lumeer/data-filters';
 import {View} from '../../../../core/store/views/view';
+import {CreateDataResourceService} from '../../../../core/service/create-data-resource.service';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 
 interface Data {
   collections: Collection[];
@@ -107,6 +114,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public view: View;
 
   @Input()
+  public workspace: Workspace;
+
+  @Input()
   public sidebarOpened: boolean;
 
   @Output()
@@ -125,7 +135,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   public canCreateEvents: boolean;
 
-  constructor(private modalService: ModalService) {
+  private events: CalendarEvent[];
+
+  constructor(private modalService: ModalService, private createService: CreateDataResourceService) {
     this.converter = new CalendarConverter();
   }
 
@@ -137,7 +149,8 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
-      map(data => this.handleData(data))
+      map(data => this.handleData(data)),
+      tap(events => (this.events = events))
     );
   }
 
@@ -180,7 +193,17 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         constraintData: this.constraintData,
       });
     }
-    this.canCreateEvents = this.isSomeStemConfigWritable();
+    if (changes.config || changes.permissions) {
+      this.canCreateEvents = this.isSomeStemConfigWritable();
+    }
+    this.createService.setData(
+      this.data,
+      this.query,
+      this.collections,
+      this.linkTypes,
+      this.constraintData,
+      this.currentWorkspace()
+    );
   }
 
   private isSomeStemConfigWritable(): boolean {
@@ -188,10 +211,8 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   public onRangeChanged(data: {newMode: CalendarMode; newDate: Date}) {
-    if (this.canManageConfig) {
-      const config = {...this.config, mode: data.newMode, date: data.newDate};
-      this.configChange.next(config);
-    }
+    const config = {...this.config, mode: data.newMode, date: data.newDate};
+    this.configChange.next(config);
   }
 
   public onListToggle(displayList: boolean) {
@@ -309,45 +330,49 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }
   }
 
-  public onNewEvent(data: {start: Date; end: Date; resourceId?: string}) {
-    const dataResource: DataResource = {data: {}};
-    if (this.canCreateEvents) {
-      if (this.config?.stemsConfigs?.length === 1) {
-        const group = this.config.stemsConfigs[0].group;
-        if (group) {
-          dataResource.id = group.resourceId;
-          dataResource.data = {[group.attributeId]: data.resourceId};
-        }
-      }
-
-      this.showCalendarEventDetail(data.start, data.end, this.config, undefined, dataResource);
-    }
+  public onNewEvent(value: {start: Date; end: Date; group?: string}) {
+    this.chooseWritableStemConfig(stemConfig => {
+      const grouping = stemConfig.group ? {value: value.group, attribute: stemConfig.group} : null;
+      const dataResourcesChains = this.filterDataResourcesChains(value.group);
+      const startResource = this.getResourceById(stemConfig.start.resourceId, stemConfig.start.resourceType);
+      const endResource = this.getResourceById(stemConfig.end?.resourceId, stemConfig.end?.resourceType);
+      const data = createCalendarNewEventData(
+        stemConfig,
+        {date: value.start, resource: startResource},
+        {date: value.end, resource: endResource},
+        this.constraintData
+      );
+      this.createService.create({
+        queryResource: stemConfig.name || stemConfig.start,
+        stem: stemConfig.stem,
+        grouping: [grouping].filter(val => !!val),
+        dataResourcesChains,
+        data,
+        failureMessage: $localize`:@@perspective.calendar.create.event.failure:Could not create event`,
+      });
+    });
   }
 
-  private showCalendarEventDetail(
-    start: Date,
-    end: Date,
-    calendarConfig: CalendarConfig,
-    stemIndex?: number,
-    dataResource?: DataResource,
-    resource?: AttributesResource
-  ) {
-    const config = {
-      initialState: {
-        start,
-        end,
-        stemIndex,
-        resource,
-        view: this.view,
-        query: this.query,
-        dataResource,
-        config: calendarConfig,
-        constraintData: this.constraintData,
-      },
-      class: 'modal-lg',
-    };
-    config['backdrop'] = 'static';
-    this.modalService.show(CalendarEventDetailModalComponent, config);
+  private filterDataResourcesChains(group: string): DataResourceChain[][] {
+    return (this.events || []).reduce((chains, event) => {
+      if (event.extendedProps.dataResourcesChain?.length && event.resourceIds?.[0] === group) {
+        chains.push(event.extendedProps.dataResourcesChain);
+      }
+      return chains;
+    }, []);
+  }
+
+  private chooseWritableStemConfig(callback: (config: CalendarStemConfig) => void) {
+    const stemsMap = calendarWritableStemsByCollections(this.query, this.config, this.collections, this.permissions);
+    const collectionIds = Object.keys(stemsMap);
+    if (collectionIds.length === 1) {
+      callback(stemsMap[collectionIds[0]]);
+    } else if (collectionIds.length) {
+      const title = $localize`:@@calendar.events.stem.choose:Choose query base Collection`;
+      this.modalService.showChooseCollection(collectionIds, title, collectionId => {
+        callback(stemsMap[collectionId]);
+      });
+    }
   }
 
   public onEventClicked(event: CalendarEvent) {
@@ -356,16 +381,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     const dataResource = this.getDataResource(metadata.nameDataId, resourceType);
     const resourceId = (<DocumentModel>dataResource).collectionId || (<LinkInstance>dataResource).linkTypeId;
     const resource = this.getResourceById(resourceId, resourceType);
-    const calendarConfig = deepObjectCopy(this.config);
-    calendarConfig.stemsConfigs[metadata.stemIndex] = {...metadata.stemConfig};
-    this.showCalendarEventDetail(
-      event.start,
-      event.end || event.start,
-      calendarConfig,
-      metadata.stemIndex,
-      dataResource,
-      resource
-    );
+    this.modalService.showDataResourceDetail(dataResource, resource, this.view?.id);
   }
 
   private getDataResource(id: string, type: AttributesResourceType): DataResource {
@@ -385,5 +401,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
       return (this.linkTypes || []).find(lt => lt.id === id);
     }
     return null;
+  }
+
+  private currentWorkspace(): Workspace {
+    return {...this.workspace, viewId: this.view?.id};
   }
 }

@@ -4,10 +4,11 @@
   [showSubmit]="true"
   [performingAction]="performingAction$ | async"
   [showHeader]="false"
-  (onSubmit)="onSubmit()">
+  [showSecondarySubmit]="!data.dataResource?.id"
+  (onSubmit)="onSubmit(data.dataResource)"
+  *ngIf="{resource: resource$ | async, dataResource: dataResource$ | async} as data">
 
-  <div class="body p-3"
-       *ngIf="{resource: resource$ | async, dataResource: dataResource$ | async} as data">
+  <div class="body p-3">
     <data-resource-detail *ngIf="data.resource && data.dataResource"
                           [resource]="data.resource"
                           [dataResource]="data.dataResource"
@@ -23,6 +24,10 @@
                           (documentSelect)="selectCollectionAndDocument($event)">
     </data-resource-detail>
   </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times me-2"></i><span i18n="@@button.close">Close</span>
+  </span>
 
   <span class="button-submit">
     <i class="fal fa-check me-2"></i><span i18n="@@button.done">Done</span>

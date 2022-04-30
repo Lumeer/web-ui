@@ -5322,7 +5322,7 @@
                     <context context-type="linenumber">3</context>
                 </context-group>
             </trans-unit>
-            <trans-unit datatype="html" id="dialog.choose.document.empty">
+            <trans-unit datatype="html" id="choose.empty">
                 <source>I am sorry but I did not find anything.</source>
                 <target>Sajnálom, de nem találtam semmit.</target>
                 <context-group purpose="location">

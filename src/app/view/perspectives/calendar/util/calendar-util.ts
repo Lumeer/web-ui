@@ -27,7 +27,7 @@ import {
 } from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isDateValid, toNumber} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
   checkOrTransformQueryAttribute,
@@ -39,6 +39,17 @@ import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util
 import * as moment from 'moment';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DateTimeConstraint,
+  DurationConstraint,
+  durationCountsMapToString,
+} from '@lumeer/data-filters';
+import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
+import {AttributesResource} from '../../../../core/model/resource';
 
 export function isAllDayEvent(start: Date, end: Date): boolean {
   return isAllDayEventSingle(start) && isAllDayEventSingle(end);
@@ -212,6 +223,22 @@ export function getCalendarDefaultStemConfig(
   return {stem};
 }
 
+export function calendarWritableStemsByCollections(
+  query: Query,
+  config: CalendarConfig,
+  collections: Collection[],
+  permissions: ResourcesPermissions
+): Record<string, CalendarStemConfig> {
+  return (query.stems || []).reduce((models, stem, index) => {
+    const calendarStemConfig = config?.stemsConfigs?.[index];
+    const collection = (collections || []).find(coll => coll.id === stem.collectionId);
+    if (collection && !models[collection.id] && calendarStemConfigIsWritable(calendarStemConfig, permissions)) {
+      models[collection.id] = calendarStemConfig;
+    }
+    return models;
+  }, {});
+}
+
 export function calendarStemConfigIsWritable(
   stemConfig: CalendarStemConfig,
   permissions: ResourcesPermissions
@@ -231,4 +258,75 @@ export function createCalendarSaveConfig(config: CalendarConfig): CalendarConfig
     delete copy.date;
   }
   return copy;
+}
+
+export function createCalendarNewEventData(
+  stemConfig: CalendarStemConfig,
+  start: {date: Date; resource: AttributesResource},
+  end: {date: Date; resource: AttributesResource},
+  constraintData: ConstraintData
+): Record<string, Record<string, any>> {
+  const dataMap = {};
+
+  if (stemConfig?.name) {
+    const initialTitle = $localize`:@@dialog.create.calendar.event.default.title:New event`;
+    patchDataMap(dataMap, stemConfig.name.resourceId, stemConfig.name.attributeId, initialTitle);
+  }
+
+  if (stemConfig?.start) {
+    const startConstraint = findAttributeConstraint(start.resource.attributes, stemConfig.start.attributeId);
+    const startMoment = parseCalendarDate(start.date, startConstraint, constraintData);
+
+    patchDataMap(dataMap, stemConfig.start.resourceId, stemConfig.start.attributeId, startMoment.toISOString());
+
+    if (stemConfig?.end) {
+      const endConstraint = findAttributeConstraint(end.resource.attributes, stemConfig.end.attributeId);
+      if (endConstraint?.type === ConstraintType.Duration) {
+        const durationCountsMap = subtractDatesToDurationCountsMap(end.date, start.date);
+        const durationString = durationCountsMapToString(durationCountsMap);
+        const dataValue = (<DurationConstraint>endConstraint).createDataValue(durationString, constraintData);
+
+        patchDataMap(dataMap, stemConfig.end.resourceId, stemConfig.end.attributeId, toNumber(dataValue.serialize()));
+      } else {
+        const endMoment = parseCalendarDate(end.date, endConstraint, constraintData);
+        const endMomentStartOfDay = endMoment.clone().startOf('day');
+        if (
+          !constraintContainsHoursInConfig(endConstraint) &&
+          startMoment.day() !== endMoment.day() &&
+          endMoment.isSame(endMomentStartOfDay)
+        ) {
+          patchDataMap(
+            dataMap,
+            stemConfig.end.resourceId,
+            stemConfig.end.attributeId,
+            endMoment.subtract(1, 'days').toISOString()
+          );
+        } else {
+          patchDataMap(dataMap, stemConfig.end.resourceId, stemConfig.end.attributeId, endMoment.toISOString());
+        }
+      }
+    }
+  }
+
+  return dataMap;
+}
+
+function parseCalendarDate(date: Date, constraint: Constraint, constraintData: ConstraintData): moment.Moment {
+  if (constraint?.type === ConstraintType.DateTime) {
+    return (<DateTimeConstraint>constraint).createDataValue(date, constraintData).momentDate;
+  } else {
+    return moment(date);
+  }
+}
+
+function patchDataMap(
+  dataMap: Record<string, Record<string, any>>,
+  resourceId: string,
+  attributeId: string,
+  value: any
+) {
+  if (!dataMap[resourceId]) {
+    dataMap[resourceId] = {};
+  }
+  dataMap[resourceId][attributeId] = value;
 }
