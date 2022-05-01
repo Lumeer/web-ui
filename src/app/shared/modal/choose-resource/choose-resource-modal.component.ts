@@ -44,6 +44,9 @@ export class ChooseResourceModalComponent implements OnInit {
   @Input()
   public callback: (resourceId: string) => void;
 
+  @Input()
+  public cancel: () => void;
+
   public defaultTitle: string;
 
   public selectedResourceId$ = new BehaviorSubject<string>(null);
@@ -63,16 +66,21 @@ export class ChooseResourceModalComponent implements OnInit {
     }
   }
 
-  public hideDialog() {
-    this.bsModalRef.hide();
+  public onSelectResource(resource: AttributesResource) {
+    this.selectedResourceId$.next(resource.id);
   }
 
-  public onSubmit() {
-    this.callback(this.selectedResourceId$.value);
+  public onClose() {
+    this.cancel?.();
     this.hideDialog();
   }
 
-  public onSelectResource(resource: AttributesResource) {
-    this.selectedResourceId$.next(resource.id);
+  public onSubmit() {
+    this.callback?.(this.selectedResourceId$.value);
+    this.hideDialog();
+  }
+
+  private hideDialog() {
+    this.bsModalRef.hide();
   }
 }

@@ -91,13 +91,17 @@ export class ModalService {
   public showChooseCollection(
     collectionIds: string[],
     title?: string,
-    callback?: (collectionId: string) => void
+    callback?: (collectionId: string) => void,
+    cancel?: () => void
   ): BsModalRef {
-    const config = {
-      initialState: {resourceIds: collectionIds, resourceType: AttributesResourceType.Collection, title, callback},
-      keyboard: true,
+    const initialState = {
+      resourceIds: collectionIds,
+      resourceType: AttributesResourceType.Collection,
+      title,
+      callback,
+      cancel,
     };
-    return this.show(ChooseResourceModalComponent, config);
+    return this.showStaticDialog(initialState, ChooseResourceModalComponent);
   }
 
   public showChooseLinkDocument(
@@ -112,10 +116,11 @@ export class ModalService {
   public showChooseDocumentsPath(
     stems: QueryStem[],
     viewId: string,
-    callback?: (document: DocumentModel[]) => void
+    callback?: (document: DocumentModel[]) => void,
+    cancel?: () => void
   ): BsModalRef {
-    const config = {initialState: {stems, viewId, callback}, keyboard: true, class: 'modal-lg'};
-    return this.show(ChooseLinkDocumentsModalComponent, config);
+    const initialState = {stems, viewId, callback, cancel};
+    return this.showStaticDialog(initialState, ChooseLinkDocumentsModalComponent, 'modal-lg');
   }
 
   public showModifyDocumentLinks(
@@ -178,28 +183,34 @@ export class ModalService {
     resource: AttributesResource,
     chain: DataResourcesChain,
     viewId?: string,
-    onCreated?: (DataResource) => void
+    onCreated?: (DataResource) => void,
+    onCancel?: () => void
   ): BsModalRef {
-    const config = {
-      initialState: {dataResource, resource, chain, viewId, onCreated},
-      keyboard: true,
-      class: 'modal-lg',
-    };
-    return this.show(DataResourceDetailModalComponent, config);
+    const initialState = {dataResource, resource, chain, viewId, onCreated, onCancel};
+    const classString = 'modal-lg';
+    if (dataResource?.id) {
+      const config = {initialState, keyboard: true, class: classString};
+      return this.show(DataResourceDetailModalComponent, config);
+    } else {
+      return this.showStaticDialog(initialState, DataResourceDetailModalComponent, classString);
+    }
   }
 
   public showDataResourceDetail(
     dataResource: DataResource,
     resource: AttributesResource,
     viewId?: string,
-    onCreated?: (DataResource) => void
+    onCreated?: (DataResource) => void,
+    onCancel?: () => void
   ): BsModalRef {
-    const config = {
-      initialState: {dataResource, resource, viewId, onCreated},
-      keyboard: true,
-      class: 'modal-lg',
-    };
-    return this.show(DataResourceDetailModalComponent, config);
+    const initialState = {dataResource, resource, viewId, onCreated, onCancel};
+    const classString = 'modal-lg';
+    if (dataResource?.id) {
+      const config = {initialState, keyboard: true, class: classString};
+      return this.show(DataResourceDetailModalComponent, config);
+    } else {
+      return this.showStaticDialog(initialState, DataResourceDetailModalComponent, classString);
+    }
   }
 
   public showDataResourcesDetail(dataResources: DataResource[], title: string, viewId: string): BsModalRef {

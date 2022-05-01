@@ -1,6 +1,6 @@
 <modal-wrapper
   [dialogType]="dialogType.Primary"
-  (onClose)="hideDialog()"
+  (onClose)="onCancel()"
   (onSubmit)="onSubmit()"
   [submitDisabled]="!(selectedDocumentId$ | async)"
   *ngIf="{collection: collection$ | async, documents: documents$ | async} as data">

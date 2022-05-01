@@ -52,6 +52,9 @@ export class ChooseLinkDocumentsModalComponent implements OnInit {
   @Input()
   public callback: (documents: DocumentModel[]) => void;
 
+  @Input()
+  public cancel: () => void;
+
   public selectedDocumentId$ = new BehaviorSubject<string>(null);
   public collection$: Observable<Collection>;
   public documents$: Observable<DocumentModel[]>;
@@ -99,8 +102,13 @@ export class ChooseLinkDocumentsModalComponent implements OnInit {
     }
   }
 
-  public hideDialog() {
-    this.bsModalRef.hide();
+  public onSelectDocument(dataResource: DataResource) {
+    this.selectedDocumentId$.next(dataResource.id);
+  }
+
+  public onCancel() {
+    this.cancel?.();
+    this.hideDialog();
   }
 
   public onSubmit() {
@@ -115,7 +123,7 @@ export class ChooseLinkDocumentsModalComponent implements OnInit {
     }
   }
 
-  public onSelectDocument(dataResource: DataResource) {
-    this.selectedDocumentId$.next(dataResource.id);
+  private hideDialog() {
+    this.bsModalRef.hide();
   }
 }

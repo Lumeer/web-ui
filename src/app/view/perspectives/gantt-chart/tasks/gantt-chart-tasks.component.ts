@@ -341,21 +341,25 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const stemsConfigs = (this.config.stemsConfigs || []).filter(config =>
       canCreateTaskByStemConfig(config, this.permissions)
     );
-    this.createService.chooseStemConfig(stemsConfigs, stemConfig => {
-      const grouping = this.createDataResourceDataGrouping(task, stemConfig);
-      const dataResourcesChains = this.taskDataResourcesChains(task);
-      const patchDataMap = this.createPatchDataMapNewTask(task, stemConfig);
+    this.createService.chooseStemConfig(
+      stemsConfigs,
+      stemConfig => {
+        const grouping = this.createDataResourceDataGrouping(task, stemConfig);
+        const dataResourcesChains = this.taskDataResourcesChains(task);
+        const patchDataMap = this.createPatchDataMapNewTask(task, stemConfig);
 
-      this.createService.create({
-        queryResource: stemConfig.name || stemConfig.start,
-        stem: stemConfig.stem,
-        grouping,
-        dataResourcesChains,
-        data: patchDataMap,
-        failureMessage: $localize`:@@perspective.gantt.create.task.failure:Could not create task`,
-        onCancel: () => this.ganttChartVisualizationComponent.removeTask(task),
-      });
-    });
+        this.createService.create({
+          queryResource: stemConfig.name || stemConfig.start,
+          stem: stemConfig.stem,
+          grouping,
+          dataResourcesChains,
+          data: patchDataMap,
+          failureMessage: $localize`:@@perspective.gantt.create.task.failure:Could not create task`,
+          onCancel: () => this.ganttChartVisualizationComponent?.removeTask(task),
+        });
+      },
+      () => this.ganttChartVisualizationComponent?.removeTask(task)
+    );
   }
 
   private patchTaskCategories(task: GanttTask) {

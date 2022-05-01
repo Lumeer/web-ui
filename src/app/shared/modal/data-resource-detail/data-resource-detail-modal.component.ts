@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, Templat
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -73,12 +73,14 @@ export class DataResourceDetailModalComponent implements OnInit {
   @Input()
   public onCreated: (dataResource: DataResource) => void;
 
+  @Input()
+  public onCancel?: () => void;
+
   public readonly dialogType = DialogType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
   public resourceType: AttributesResourceType;
 
-  public onCancel$ = new Subject();
   public performingAction$ = new BehaviorSubject(false);
 
   public query$: Observable<Query>;
@@ -290,7 +292,7 @@ export class DataResourceDetailModalComponent implements OnInit {
   }
 
   public onClose() {
-    this.onCancel$.next(null);
+    this.onCancel?.();
     this.hideDialog();
   }
 

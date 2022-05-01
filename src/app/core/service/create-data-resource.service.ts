@@ -63,7 +63,7 @@ export interface CreateDataResourceData {
   data: Record<string, Record<string, any>>;
   failureMessage: string;
   onCreated?: (dataResource: DataResource) => void;
-  onCancel?: (dataResource: DataResource) => void;
+  onCancel?: () => void;
 }
 
 export interface UpdateDataResourceData extends CreateDataResourceData {
@@ -116,28 +116,41 @@ export class CreateDataResourceService {
 
     if (chainRange.length > 1) {
       const choosePathStems = this.createChoosePathStems(createData, chainRange);
-      this.chooseDocumentsPath(createData.stem, choosePathStems, this.workspace?.viewId, documents => {
-        const chain = this.createDataResourcesChain(createData, chainRange, documents, []);
-        const dataResource =
-          chain.type === AttributesResourceType.Collection
-            ? chain.documents[chain.index]
-            : chain.linkInstances[chain.index];
-        const resource = this.getResourceInStem(createData.stem, createData.queryResource.resourceIndex);
-        this.modalService.showDataResourceDetailWithChain(
-          dataResource,
-          resource,
-          chain,
-          this.workspace?.viewId,
-          createData.onCreated
-        );
-      });
+      this.chooseDocumentsPath(
+        createData.stem,
+        choosePathStems,
+        this.workspace?.viewId,
+        documents => {
+          const chain = this.createDataResourcesChain(createData, chainRange, documents, []);
+          const dataResource =
+            chain.type === AttributesResourceType.Collection
+              ? chain.documents[chain.index]
+              : chain.linkInstances[chain.index];
+          const resource = this.getResourceInStem(createData.stem, createData.queryResource.resourceIndex);
+          this.modalService.showDataResourceDetailWithChain(
+            dataResource,
+            resource,
+            chain,
+            this.workspace?.viewId,
+            createData.onCreated,
+            createData.onCancel
+          );
+        },
+        createData.onCancel
+      );
     } else {
       const {dataResource, resource} = this.prepareDataResource(
         createData,
         createData.queryResource.resourceType,
         createData.queryResource.resourceIndex
       );
-      this.modalService.showDataResourceDetail(dataResource, resource, this.workspace?.viewId, createData.onCreated);
+      this.modalService.showDataResourceDetail(
+        dataResource,
+        resource,
+        this.workspace?.viewId,
+        createData.onCreated,
+        createData.onCancel
+      );
     }
   }
 
@@ -147,19 +160,24 @@ export class CreateDataResourceService {
     const resourceType = updateData.queryResource.resourceType;
     if (chainRange.length > 1) {
       const choosePathStems = this.createChoosePathStems(updateData, chainRange);
-      this.modalService.showChooseDocumentsPath(choosePathStems, this.workspace?.viewId, documents => {
-        const selectedDocuments = [...documents];
-        const selectedLinkInstances = [];
+      this.modalService.showChooseDocumentsPath(
+        choosePathStems,
+        this.workspace?.viewId,
+        documents => {
+          const selectedDocuments = [...documents];
+          const selectedLinkInstances = [];
 
-        if (resourceType === AttributesResourceType.Collection) {
-          selectedDocuments.push(updateData.dataResource as DocumentModel);
-          selectedLinkInstances.push(this.findLastLink(updateData));
-        } else if (resourceType === AttributesResourceType.LinkType) {
-          selectedLinkInstances.push(updateData.dataResource as LinkInstance);
-        }
-        const chain = this.createDataResourcesChain(updateData, chainRange, selectedDocuments, selectedLinkInstances);
-        this.store$.dispatch(new DocumentsAction.CreateChain({...chain, workspace: this.workspace}));
-      });
+          if (resourceType === AttributesResourceType.Collection) {
+            selectedDocuments.push(updateData.dataResource as DocumentModel);
+            selectedLinkInstances.push(this.findLastLink(updateData));
+          } else if (resourceType === AttributesResourceType.LinkType) {
+            selectedLinkInstances.push(updateData.dataResource as LinkInstance);
+          }
+          const chain = this.createDataResourcesChain(updateData, chainRange, selectedDocuments, selectedLinkInstances);
+          this.store$.dispatch(new DocumentsAction.CreateChain({...chain, workspace: this.workspace}));
+        },
+        updateData.onCancel
+      );
     } else if (resourceType === AttributesResourceType.Collection) {
       this.updateDocument(updateData);
     } else if (resourceType === AttributesResourceType.LinkType) {
@@ -347,7 +365,11 @@ export class CreateDataResourceService {
     return data.grouping.find(gr => gr.attribute.resourceIndex === index);
   }
 
-  public chooseStemConfig<T extends {stem: QueryStem}>(stemConfigs: T[], callback: (config: T) => void) {
+  public chooseStemConfig<T extends {stem: QueryStem}>(
+    stemConfigs: T[],
+    callback: (config: T) => void,
+    cancel?: () => void
+  ) {
     const stemsMap = (stemConfigs || []).reduce(
       (map, stemConfig) => ({...map, [stemConfig.stem.collectionId]: stemConfig}),
       {}
@@ -357,9 +379,16 @@ export class CreateDataResourceService {
       callback(stemsMap[collectionIds[0]]);
     } else if (collectionIds.length) {
       const title = $localize`:@@query.stem.choose:Choose query base Collection`;
-      this.modalService.showChooseCollection(collectionIds, title, collectionId => {
-        callback(stemsMap[collectionId]);
-      });
+      this.modalService.showChooseCollection(
+        collectionIds,
+        title,
+        collectionId => {
+          callback(stemsMap[collectionId]);
+        },
+        cancel
+      );
+    } else {
+      cancel?.();
     }
   }
 
@@ -367,7 +396,8 @@ export class CreateDataResourceService {
     mainStem: QueryStem,
     pathStems: QueryStem[],
     viewId: string,
-    callback: (documents: DocumentModel[]) => void
+    callback: (documents: DocumentModel[]) => void,
+    cancel?: () => void
   ) {
     // we can not guarantee that documents in second (or any next) collection is fully loaded by query stem, because some documents are not linked
     const mainStemInPath = pathStems.find(stem => stem.collectionId === mainStem.collectionId);
@@ -386,18 +416,21 @@ export class CreateDataResourceService {
           if (mainStemDocuments.length === 1) {
             const pathStemsWithoutMain = pathStems.filter(stem => stem.collectionId !== mainStem.collectionId);
             if (pathStemsWithoutMain.length > 0) {
-              this.modalService.showChooseDocumentsPath(pathStemsWithoutMain, this.workspace?.viewId, chosenDocuments =>
-                callback([mainStemDocuments[0], ...chosenDocuments])
+              this.modalService.showChooseDocumentsPath(
+                pathStemsWithoutMain,
+                this.workspace?.viewId,
+                chosenDocuments => callback([mainStemDocuments[0], ...chosenDocuments]),
+                cancel
               );
             } else {
               callback(mainStemDocuments);
             }
           } else {
-            this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback);
+            this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback, cancel);
           }
         });
     } else {
-      this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback);
+      this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback, cancel);
     }
   }
 }

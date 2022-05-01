@@ -1,6 +1,6 @@
 <modal-wrapper
   [dialogType]="dialogType.Primary"
-  (onClose)="hideDialog()"
+  (onClose)="onClose()"
   (onSubmit)="onSubmit()"
   [submitDisabled]="!(selectedResourceId$ | async)">
 

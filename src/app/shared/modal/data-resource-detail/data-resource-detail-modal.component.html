@@ -1,11 +1,11 @@
 <modal-wrapper
   [dialogType]="dialogType.Primary"
-  [showClose]="false"
+  [showClose]="!data.dataResource?.id"
   [showSubmit]="true"
   [performingAction]="performingAction$ | async"
   [showHeader]="false"
-  [showSecondarySubmit]="!data.dataResource?.id"
   (onSubmit)="onSubmit(data.dataResource)"
+  (onClose)="onClose()"
   *ngIf="{resource: resource$ | async, dataResource: dataResource$ | async} as data">
 
   <div class="body p-3">
