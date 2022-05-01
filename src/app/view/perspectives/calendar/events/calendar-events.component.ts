@@ -29,13 +29,13 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CalendarBar, CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
+import {CalendarBar, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 import {
   calendarStemConfigIsWritable,
-  calendarWritableStemsByCollections,
+  calendarWritableUniqueStemsConfigs,
   checkOrTransformCalendarConfig,
   createCalendarNewEventData,
   parseCalendarDate,
@@ -202,7 +202,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
       this.collections,
       this.linkTypes,
       this.constraintData,
-      this.currentWorkspace()
+      this.workspace
     );
   }
 
@@ -331,7 +331,13 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   public onNewEvent(value: {start: Date; end: Date; group?: string}) {
-    this.chooseWritableStemConfig(stemConfig => {
+    const stemsConfigs = calendarWritableUniqueStemsConfigs(
+      this.query,
+      this.config,
+      this.collections,
+      this.permissions
+    );
+    this.createService.chooseStemConfig(stemsConfigs, stemConfig => {
       const grouping = stemConfig.group ? {value: value.group, attribute: stemConfig.group} : null;
       const dataResourcesChains = this.filterDataResourcesChains(value.group);
       const startResource = this.getResourceById(stemConfig.start.resourceId, stemConfig.start.resourceType);
@@ -362,19 +368,6 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }, []);
   }
 
-  private chooseWritableStemConfig(callback: (config: CalendarStemConfig) => void) {
-    const stemsMap = calendarWritableStemsByCollections(this.query, this.config, this.collections, this.permissions);
-    const collectionIds = Object.keys(stemsMap);
-    if (collectionIds.length === 1) {
-      callback(stemsMap[collectionIds[0]]);
-    } else if (collectionIds.length) {
-      const title = $localize`:@@calendar.events.stem.choose:Choose query base Collection`;
-      this.modalService.showChooseCollection(collectionIds, title, collectionId => {
-        callback(stemsMap[collectionId]);
-      });
-    }
-  }
-
   public onEventClicked(event: CalendarEvent) {
     const metadata = event.extendedProps;
     const resourceType = metadata.stemConfig.name?.resourceType || metadata.stemConfig.start?.resourceType;
@@ -401,9 +394,5 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
       return (this.linkTypes || []).find(lt => lt.id === id);
     }
     return null;
-  }
-
-  private currentWorkspace(): Workspace {
-    return {...this.workspace, viewId: this.view?.id};
   }
 }

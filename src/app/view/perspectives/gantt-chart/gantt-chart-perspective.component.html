@@ -30,13 +30,12 @@
                        [config]="data.config"
                        [constraintData]="constraintData$ | async"
                        [query]="data.query"
+                       [workspace]="workspace$ | async"
                        [settings]="viewSettings$ | async"
                        [perspectiveConfiguration]="perspectiveConfiguration"
                        (patchDocumentData)="patchDocumentData($event)"
                        (patchLinkData)="patchLinkInstanceData($event)"
                        (patchMetaData)="patchDocumentMetaData($event)"
-                       (createDocumentsChain)="createDocumentsChain($event)"
-                       (updateLinkDocuments)="updateLinkDocuments($event)"
                        (configChange)="onConfigChanged($event)">
     </gantt-chart-tasks>
 

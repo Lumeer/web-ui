@@ -192,8 +192,7 @@ export class ModalService {
     dataResource: DataResource,
     resource: AttributesResource,
     viewId?: string,
-    onCreated?: (DataResource) => void,
-    createDirectly: boolean = true
+    onCreated?: (DataResource) => void
   ): BsModalRef {
     const config = {
       initialState: {dataResource, resource, viewId, onCreated},

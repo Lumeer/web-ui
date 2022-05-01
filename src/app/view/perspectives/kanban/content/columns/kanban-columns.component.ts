@@ -122,12 +122,12 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.toggleService.setWorkspace(this.currentWorkspace());
+    this.toggleService.setWorkspace(this.workspace);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.viewId) {
-      this.toggleService.setWorkspace(this.currentWorkspace());
+    if (changes.workspace) {
+      this.toggleService.setWorkspace(this.workspace);
     }
     this.createService.setData(
       this.data,
@@ -135,7 +135,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
       this.collections,
       this.linkTypes,
       this.constraintData,
-      this.currentWorkspace()
+      this.workspace
     );
   }
 
@@ -189,10 +189,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   private onDataResourceCreated(dataResource: DataResource) {
     this.columns.forEach(column => column.onDataResourceCreated(dataResource.id));
-  }
-
-  private currentWorkspace(): Workspace {
-    return {...this.workspace, viewId: this.viewId};
   }
 
   public onRemoveColumn(column: KanbanColumn) {

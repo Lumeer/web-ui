@@ -63,6 +63,7 @@ export interface CreateDataResourceData {
   data: Record<string, Record<string, any>>;
   failureMessage: string;
   onCreated?: (dataResource: DataResource) => void;
+  onCancel?: (dataResource: DataResource) => void;
 }
 
 export interface UpdateDataResourceData extends CreateDataResourceData {
@@ -76,7 +77,6 @@ export interface UpdateDataResourceData extends CreateDataResourceData {
 export interface CreateDataResourceDataGrouping {
   attribute: QueryAttribute;
   value: any;
-  data?: Record<string, any>;
 }
 
 @Injectable({
@@ -138,44 +138,6 @@ export class CreateDataResourceService {
         createData.queryResource.resourceIndex
       );
       this.modalService.showDataResourceDetail(dataResource, resource, this.workspace?.viewId, createData.onCreated);
-    }
-  }
-
-  public chooseDocumentsPath(
-    mainStem: QueryStem,
-    pathStems: QueryStem[],
-    viewId: string,
-    callback: (documents: DocumentModel[]) => void
-  ) {
-    // we can not guarantee that documents in second (or any next) collection is fully loaded by query stem, because some documents are not linked
-    const mainStemInPath = pathStems.find(stem => stem.collectionId === mainStem.collectionId);
-    if (mainStemInPath) {
-      const query = {stems: [mainStemInPath]};
-      this.store$
-        .pipe(
-          select(selectViewById(viewId)),
-          switchMap(view =>
-            this.store$.pipe(select(selectDocumentsByCollectionAndQuery(mainStem.collectionId, query, view)))
-          ),
-          take(1)
-        )
-        .subscribe(mainStemDocuments => {
-          // we are sure that documents are fully loaded for main collection in stem
-          if (mainStemDocuments.length === 1) {
-            const pathStemsWithoutMain = pathStems.filter(stem => stem.collectionId !== mainStem.collectionId);
-            if (pathStemsWithoutMain.length > 0) {
-              this.modalService.showChooseDocumentsPath(pathStemsWithoutMain, this.workspace?.viewId, chosenDocuments =>
-                callback([mainStemDocuments[0], ...chosenDocuments])
-              );
-            } else {
-              callback(mainStemDocuments);
-            }
-          } else {
-            this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback);
-          }
-        });
-    } else {
-      this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback);
     }
   }
 
@@ -383,6 +345,60 @@ export class CreateDataResourceService {
 
   private getGroupingByResourceIndex(data: CreateDataResourceData, index: number): CreateDataResourceDataGrouping {
     return data.grouping.find(gr => gr.attribute.resourceIndex === index);
+  }
+
+  public chooseStemConfig<T extends {stem: QueryStem}>(stemConfigs: T[], callback: (config: T) => void) {
+    const stemsMap = (stemConfigs || []).reduce(
+      (map, stemConfig) => ({...map, [stemConfig.stem.collectionId]: stemConfig}),
+      {}
+    );
+    const collectionIds = Object.keys(stemsMap);
+    if (collectionIds.length === 1) {
+      callback(stemsMap[collectionIds[0]]);
+    } else if (collectionIds.length) {
+      const title = $localize`:@@query.stem.choose:Choose query base Collection`;
+      this.modalService.showChooseCollection(collectionIds, title, collectionId => {
+        callback(stemsMap[collectionId]);
+      });
+    }
+  }
+
+  public chooseDocumentsPath(
+    mainStem: QueryStem,
+    pathStems: QueryStem[],
+    viewId: string,
+    callback: (documents: DocumentModel[]) => void
+  ) {
+    // we can not guarantee that documents in second (or any next) collection is fully loaded by query stem, because some documents are not linked
+    const mainStemInPath = pathStems.find(stem => stem.collectionId === mainStem.collectionId);
+    if (mainStemInPath) {
+      const query = {stems: [mainStemInPath]};
+      this.store$
+        .pipe(
+          select(selectViewById(viewId)),
+          switchMap(view =>
+            this.store$.pipe(select(selectDocumentsByCollectionAndQuery(mainStem.collectionId, query, view)))
+          ),
+          take(1)
+        )
+        .subscribe(mainStemDocuments => {
+          // we are sure that documents are fully loaded for main collection in stem
+          if (mainStemDocuments.length === 1) {
+            const pathStemsWithoutMain = pathStems.filter(stem => stem.collectionId !== mainStem.collectionId);
+            if (pathStemsWithoutMain.length > 0) {
+              this.modalService.showChooseDocumentsPath(pathStemsWithoutMain, this.workspace?.viewId, chosenDocuments =>
+                callback([mainStemDocuments[0], ...chosenDocuments])
+              );
+            } else {
+              callback(mainStemDocuments);
+            }
+          } else {
+            this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback);
+          }
+        });
+    } else {
+      this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback);
+    }
   }
 }
 

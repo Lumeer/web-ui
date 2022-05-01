@@ -97,7 +97,7 @@ function convertGanttChartDtoToModelV2(config: GanttChartConfigV2): GanttChartCo
 
 function convertGanttChartDtoToModelV1(config: GanttChartConfigV1): GanttChartConfigV2 {
   const stemsConfigs: GanttChartStemConfig[] = (config.stemsConfigs || []).map(stemConfig => {
-    const newConfig: GanttChartStemConfig = {};
+    const newConfig: GanttChartStemConfig = {stem: null};
     Object.entries(stemConfig.barsProperties || {}).forEach(([key, bar]) => {
       if (key !== 'category' && key !== 'subCategory') {
         newConfig[key] = bar;

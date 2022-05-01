@@ -56,7 +56,7 @@ export enum GanttChartConfigVersion {
 export const ganttChartConfigLatestVersion = GanttChartConfigVersion.V3;
 
 export interface GanttChartStemConfig {
-  stem?: QueryStem;
+  stem: QueryStem;
   name?: GanttChartBarModel;
   start?: GanttChartBarModel;
   end?: GanttChartBarModel;

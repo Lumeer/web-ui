@@ -223,20 +223,24 @@ export function getCalendarDefaultStemConfig(
   return {stem};
 }
 
-export function calendarWritableStemsByCollections(
+export function calendarWritableUniqueStemsConfigs(
   query: Query,
   config: CalendarConfig,
   collections: Collection[],
   permissions: ResourcesPermissions
-): Record<string, CalendarStemConfig> {
+): CalendarStemConfig[] {
   return (query.stems || []).reduce((models, stem, index) => {
     const calendarStemConfig = config?.stemsConfigs?.[index];
     const collection = (collections || []).find(coll => coll.id === stem.collectionId);
-    if (collection && !models[collection.id] && calendarStemConfigIsWritable(calendarStemConfig, permissions)) {
-      models[collection.id] = calendarStemConfig;
+    if (
+      collection &&
+      calendarStemConfigIsWritable(calendarStemConfig, permissions) &&
+      !models.some(model => model.stem.collectionId === collection.id)
+    ) {
+      models.push(calendarStemConfig);
     }
     return models;
-  }, {});
+  }, []);
 }
 
 export function calendarStemConfigIsWritable(

@@ -99,19 +99,4 @@ export class GanttChartPerspectiveComponent
       .pipe(take(1))
       .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace})));
   }
-
-  public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
-    this.workspace$
-      .pipe(take(1))
-      .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.ChangeDocuments({...payload, workspace})));
-  }
-
-  public createDocumentsChain(data: {documents: DocumentModel[]; linkInstances: LinkInstance[]}) {
-    const failureMessage = $localize`:@@perspective.gantt.create.task.failure:Could not create task`;
-    this.workspace$
-      .pipe(take(1))
-      .subscribe(workspace =>
-        this.store$.dispatch(new DocumentsAction.CreateChain({...data, failureMessage, workspace}))
-      );
-  }
 }
