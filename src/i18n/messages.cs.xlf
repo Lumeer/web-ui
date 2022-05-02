@@ -2935,13 +2935,13 @@
                 <target>Smazat všechny soubory?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">264</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">269</context></context-group></trans-unit>
             <trans-unit id="constraint.files.modify.constraint.message" datatype="html">
                 <source>Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</source>
                 <target>Změna typu atributu ze 'Souboru' trvale odstraní všechny přílohy v tomto sloupci. Chcete pokračovat?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">265</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
 
             <trans-unit id="referralsDialog.affiliateProgram.dialogTitle" datatype="html">
                 <source>Make money with Lumeer</source>
@@ -5253,14 +5253,14 @@
                 <target>Odstranit možnosti?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">275</context></context-group></trans-unit>
             <trans-unit id="constraint.select.modify.value.message" datatype="html">
                 <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source>
                 <target>Měníte hodnotu možnosti, která může být již použitá v záznamech. To způsobí, že tyto záznamy nebudou mít platnou hodnotu. Chcete pokračovat?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">271</context></context-group></trans-unit><trans-unit id="2e5f1b77c06e168cd9b5a2e47ddae876b1b0756c" datatype="html">
-        <source>Suggest values when typing (works in Table and Workflow)</source><target state="final">Navrhovat hodnoty při psaní (funguje v Tabulce a Workflow)</target>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">276</context></context-group></trans-unit><trans-unit id="29b490ded71910586b2ab4d0c9bc79c9b1b6c18b" datatype="html">
+        <source>Suggest values when typing (works in Table and Workflow)</source><target>Navrhovat hodnoty při psaní (funguje v Tabulce a Workflow)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
           <context context-type="linenumber">4</context>
@@ -9523,7 +9523,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="table.data.cell.linked.row.uninitialized" datatype="html">
         <source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source><target>Nemám kam navázat zadanou hodnotu, musíte něco zadat do předchozí části tabulky.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">519</context></context-group></trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">518</context></context-group></trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
         <source>The view was changed. Do you want to save the changes?</source><target>Pohled se změnil. Uložte změny, nebo je zahoďte.</target>
 
 
