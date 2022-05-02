@@ -8,10 +8,10 @@
     </div>
     <div class="row mt-3">
       <div class="col-6">
-          <input type="text" ngModel name="firstName" i18n-placeholder="@@organizations.tab.detail.contact.firstName" placeholder="First Name" class="form-control form-control-sm" id="firstName">
+        <input type="text" ngModel name="firstName" i18n-placeholder="@@organizations.tab.detail.contact.firstName" placeholder="First Name" class="form-control form-control-sm" id="firstName">
       </div>
       <div class="col-6">
-          <input type="text" ngModel name="lastName" i18n-placeholder="@@organizations.tab.detail.contact.lastName" placeholder="Last Name" class="form-control form-control-sm" id="lastName">
+        <input type="text" ngModel name="lastName" i18n-placeholder="@@organizations.tab.detail.contact.lastName" placeholder="Last Name" class="form-control form-control-sm" id="lastName">
       </div>
     </div>
     <div class="row mt-3">
@@ -34,7 +34,7 @@
       </div>
       <div class="col-3">
         <select ngModel name="country" class="form-control form-control-sm" id="country" i18n-title="@@organizations.tab.detail.contact.country" title="Select country">
-          <option *ngFor="let c of countries">{{c}}</option>
+          <option *ngFor="let country of countries">{{country}}</option>
         </select>
       </div>
     </div>
@@ -63,10 +63,11 @@
         <input type="text" ngModel name="dic" i18n-placeholder="@@organizations.tab.detail.contact.dic" placeholder="Tax Ident. No." class="form-control form-control-sm" id="dic">
       </div>
     </div>
-    <div class="text-end mt-4">
-      <button *ngIf="!savingState && invoicingContactForm.form.dirty" type="submit" class="btn btn-primary mb-2" i18n="@@organizations.tab.detail.contact.save" (click)="save()" [disabled]="!invoicingContactForm.form.dirty || !invoicingContactForm.valid">Save</button>
-      <button *ngIf="savingState" type="submit" class="btn btn-primary mb-2" i18n="@@organizations.tab.detail.contact.saving" [disabled]="true">Saving</button>
-      <button *ngIf="!savingState && !invoicingContactForm.form.dirty" type="submit" class="btn btn-primary mb-2" i18n="@@organizations.tab.detail.contact.saved" [disabled]="true">Saved!</button>
+    <div class="text-end mt-4" *ngIf="{savingState: savingState$ | async} as formData">
+      <button *ngIf="!formData.savingState && invoicingContactForm.form.dirty" type="submit" class="btn btn-primary mb-2" i18n="@@organizations.tab.detail.contact.save" (click)="save()" [disabled]="!invoicingContactForm.form.dirty || !invoicingContactForm.valid">Save</button>
+      <button *ngIf="formData.savingState" type="submit" class="btn btn-primary mb-2" [disabled]="true">
+        <span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span><span i18n="@@organizations.tab.detail.contact.saving">Saving</span></button>
+      <button *ngIf="!formData.savingState && !invoicingContactForm.form.dirty" type="submit" class="btn btn-primary mb-2" i18n="@@organizations.tab.detail.contact.saved" [disabled]="true">Saved!</button>
     </div>
   </form>
 </div>

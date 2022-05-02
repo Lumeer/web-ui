@@ -17,49 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, Input} from '@angular/core';
+import {DatePipe, DOCUMENT} from '@angular/common';
 import {Payment} from '../../../../core/store/organizations/payment/payment';
 import {Organization} from '../../../../core/store/organizations/organization';
-import {Subscription} from 'rxjs';
-import {ActionsSubject, Store} from '@ngrx/store';
-import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
-import {filter} from 'rxjs/operators';
-import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
-import {PaymentsAction, PaymentsActionType} from '../../../../core/store/organizations/payment/payments.action';
+import {PaymentsAction} from '../../../../core/store/organizations/payment/payments.action';
 import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
-import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
-import {selectLastCreatedPayment} from '../../../../core/store/organizations/payment/payments.state';
-import {DatePipe, DOCUMENT} from '@angular/common';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'payments-panel',
   templateUrl: './payments-panel.component.html',
-  styleUrls: ['./payments-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit {
-  private organization: Organization;
-  private organizationSubscription: Subscription;
+export class PaymentsPanelComponent implements AfterViewInit {
+  @Input()
+  public organization: Organization;
 
-  private serviceLimits: ServiceLimits;
-  private serviceLimitsSubscription: Subscription;
+  @Input()
+  public serviceLimits: ServiceLimits;
+
+  @Input()
+  public lastPayment: Payment;
 
   private readonly languageCode: string;
 
-  public lastPayment: Payment;
-  private paymentCreatedSubscription: Subscription;
-  private lastCreatedPayment: Subscription;
-
   constructor(
-    private router: Router,
-    private store: Store<AppState>,
-    private actionsSubject: ActionsSubject,
+    private store$: Store<AppState>,
     @Inject(DOCUMENT) private document,
     private elementRef: ElementRef,
     private notificationService: NotificationService,
@@ -67,46 +57,6 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
     private configurationService: ConfigurationService
   ) {
     this.languageCode = $localize`:@@organization.payments.lang.code:en`;
-  }
-
-  public ngOnInit() {
-    this.subscribeToStore();
-    this.subscribeToActions();
-  }
-
-  public subscribeToStore() {
-    this.organizationSubscription = this.store
-      .select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => isNotNullOrUndefined(organization)))
-      .subscribe(organization => (this.organization = organization));
-
-    this.serviceLimitsSubscription = this.store
-      .select(selectServiceLimitsByWorkspace)
-      .pipe(filter(serviceLimits => isNotNullOrUndefined(serviceLimits)))
-      .subscribe(serviceLimits => (this.serviceLimits = serviceLimits));
-
-    this.lastCreatedPayment = this.store
-      .select(selectLastCreatedPayment)
-      .pipe(filter(payment => isNotNullOrUndefined(payment)))
-      .subscribe(payment => (this.lastPayment = payment));
-  }
-
-  public ngOnDestroy() {
-    if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe();
-    }
-
-    if (this.serviceLimitsSubscription) {
-      this.serviceLimitsSubscription.unsubscribe();
-    }
-
-    if (this.paymentCreatedSubscription) {
-      this.paymentCreatedSubscription.unsubscribe();
-    }
-
-    if (this.lastCreatedPayment) {
-      this.lastCreatedPayment.unsubscribe();
-    }
   }
 
   public createPayment($event) {
@@ -142,17 +92,31 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
     ) {
       const validUntil = this.datePipe.transform(this.serviceLimits.validUntil, 'shortDate');
       const start = this.datePipe.transform($event.start, 'shortDate');
-      this.store.dispatch(
+      this.store$.dispatch(
         new NotificationsAction.Confirm({
           title: $localize`:@@organization.payments.paidWarning.title:Already Paid`,
           message: $localize`:@@organization.payments.paidWarning.text:Your current subscription lasts until ${validUntil}:validUntil:. Are you sure you want to proceed with an order with earlier start date of ${start}:start:? In case you want to add more users, please contact support@lumeer.io.`,
-          action: new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment}),
+          action: new PaymentsAction.CreatePayment({
+            organizationId: this.organization.id,
+            payment,
+            onSuccess: payment => this.onPaymentCreated(payment),
+          }),
           type: 'warning',
         })
       );
     } else {
-      this.store.dispatch(new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment}));
+      this.store$.dispatch(
+        new PaymentsAction.CreatePayment({
+          organizationId: this.organization.id,
+          payment,
+          onSuccess: payment => this.onPaymentCreated(payment),
+        })
+      );
     }
+  }
+
+  private onPaymentCreated(payment: Payment) {
+    this.callGoPay(payment.gwUrl);
   }
 
   private checkDayOverlap(serviceUntil: Date, newOrder: Date): boolean {
@@ -167,15 +131,6 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
     );
     const newOrderDay = new Date(newOrder.getFullYear(), newOrder.getMonth(), newOrder.getDate(), 0, 0, 0, 0);
     return serviceDay.getTime() > newOrderDay.getTime();
-  }
-
-  private subscribeToActions() {
-    this.paymentCreatedSubscription = this.actionsSubject.subscribe(action => {
-      if (action.type === PaymentsActionType.CREATE_PAYMENT_SUCCESS) {
-        const newPaymentAction: CreatePaymentSuccess = action as CreatePaymentSuccess;
-        this.callGoPay(newPaymentAction.payload.payment.gwUrl);
-      }
-    });
   }
 
   public callGoPay($event: string) {

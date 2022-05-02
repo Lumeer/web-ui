@@ -15,29 +15,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let payment of payments">
+        <tr *ngFor="let payment of payments$ | async; trackBy: trackByPayment">
           <td class="align-middle">{{ payment.date | date : 'shortDate'}}</td>
           <td class="align-middle">
-            <span *ngIf="payment.serviceLevel === 'FREE'" class="badge rounded-pill bg-danger p-2" i18n="@@organizations.tab.detail.payments.trial">Free</span>
-            <span *ngIf="payment.serviceLevel !== 'FREE'" class="badge rounded-pill bg-success p-2" i18n="@@organizations.tab.detail.payments.business">Business</span>
+            <span *ngIf="payment.serviceLevel === paymentState.FREE" class="badge rounded-pill bg-danger p-2" i18n="@@organizations.tab.detail.payments.trial">Free</span>
+            <span *ngIf="payment.serviceLevel !== paymentState.FREE" class="badge rounded-pill bg-success p-2" i18n="@@organizations.tab.detail.payments.business">Business</span>
           </td>
           <td class="align-middle">
             {{ payment.users }}
-            <button *ngIf="payment.state === 'PAID'" class="btn btn-sm btn-primary" title="Add more users" i18n-title="@@organizations.tab.detail.payments.addUsers" (click)="addUsers()">
+            <button *ngIf="payment.state === paymentState.PAID" class="btn btn-sm btn-primary" title="Add more users" i18n-title="@@organizations.tab.detail.payments.addUsers" (click)="addUsers()">
               <i class="fas fa-user-plus"></i>
             </button>
           </td>
           <td class="align-middle">{{ payment.currency }} {{ payment.amount | number:'1.2-2' }}</td>
-          <td class="align-middle" *ngIf="payment.state === 'PAID'"><span class="badge rounded-pill bg-success p-2" i18n="@@organizations.tab.detail.payments.paid">Paid</span></td>
-          <td class="align-middle" *ngIf="payment.state === 'CANCELED'"><span class="badge rounded-pill bg-light p-2" i18n="@@organizations.tab.detail.payments.canceled">Canceled</span></td>
-          <td class="align-middle" *ngIf="payment.state === 'TIMEOUTED'"><span class="badge rounded-pill bg-light p-2" i18n="@@organizations.tab.detail.payments.timeouted">Timeouted</span></td>
-          <td class="align-middle" *ngIf="payment.state !== 'PAID' && payment.state !== 'CANCELED' && payment.state !== 'TIMEOUTED'">
+          <td class="align-middle" *ngIf="payment.state === paymentState.PAID"><span class="badge rounded-pill bg-success p-2" i18n="@@organizations.tab.detail.payments.paid">Paid</span></td>
+          <td class="align-middle" *ngIf="payment.state === paymentState.CANCELED"><span class="badge rounded-pill bg-light p-2" i18n="@@organizations.tab.detail.payments.canceled">Canceled</span></td>
+          <td class="align-middle" *ngIf="payment.state === paymentState.TIMEOUTED"><span class="badge rounded-pill bg-light p-2" i18n="@@organizations.tab.detail.payments.timeouted">Timeouted</span></td>
+          <td class="align-middle" *ngIf="payment.state !== paymentState.PAID && payment.state !== paymentState.CANCELED && payment.state !== paymentState.TIMEOUTED">
             <span class="badge rounded-pill bg-danger p-2" i18n="@@organizations.tab.detail.payments.ordered">Ordered</span>
             <button type="button" class="btn btn-sm btn-primary ms-2" (click)="refreshPayment(payment.paymentId)"
                     title="Refresh payment state" i18n-title="@@organizations.tab.detail.payments.refresh">
               <i class="fas fa-sync-alt"></i>
             </button>
-            <button *ngIf="payment.state !== 'AUTHORIZED' " type="button" class="btn btn-sm btn-primary ms-2"
+            <button *ngIf="payment.state !== paymentState.AUTHORIZED " type="button" class="btn btn-sm btn-primary ms-2"
                     (click)="repayEvent(payment.gwUrl)" title="Try to pay again"
                     i18n-title="@@organizations.tab.detail.payments.repay">
               <i class="fas fa-credit-card"></i>
@@ -46,7 +46,7 @@
           <td class="align-middle">{{ payment.start | date : 'shortDate'}}</td>
           <td class="align-middle">{{ payment.validUntil | date : 'shortDate' }}</td>
         </tr>
-        <tr *ngIf="!payments?.length">
+        <tr *ngIf="!(payments$ | async).length">
           <td colspan="7" class="align-middle text-center" i18n="@@organizations.tab.detail.payments.giveItATry">You've never had a chance to see Lumeer for <strong>Business</strong>. Give it a try today!</td>
         </tr>
       </tbody>

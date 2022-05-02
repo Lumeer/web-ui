@@ -34,6 +34,14 @@ export interface Payment {
   version?: number;
 }
 
+export enum PaymentState {
+  FREE = 'FREE',
+  PAID = 'PAID',
+  CANCELED = 'CANCELED',
+  TIMEOUTED = 'TIMEOUTED',
+  AUTHORIZED = 'AUTHORIZED',
+}
+
 export interface PaymentStats {
   registeredUsers: number;
   commissions: PaymentAmount[];

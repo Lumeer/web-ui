@@ -28,6 +28,7 @@ import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
 import {ContactsAction, ContactsActionType} from './contacts.action';
 import {OrganizationService} from '../../../data-service';
+import {createCallbackActions} from '../../utils/store.utils';
 
 @Injectable()
 export class ContactsEffects {
@@ -61,8 +62,13 @@ export class ContactsEffects {
         this.organizationService
           .setOrganizationContact(action.payload.organizationId, ContactConverter.toDto(action.payload.contact))
           .pipe(
-            map(contact => new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(contact)})),
-            catchError(error => of(new ContactsAction.SetContactFailure({error})))
+            mergeMap(contact => [
+              new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(contact)}),
+              ...createCallbackActions(action.payload.onSuccess),
+            ]),
+            catchError(error =>
+              of(...createCallbackActions(action.payload.onFailure), new ContactsAction.SetContactFailure({error}))
+            )
           )
       )
     )

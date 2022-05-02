@@ -1,6 +1,6 @@
 <ng-container *ngIf="!trial">
   <h5 i18n="@@organizations.tab.detail.order.prolong">Keep your Lumeer for Business active!</h5>
-  <p i18n="@@organizations.tab.detail.order.activeUntil">Subscription is active until {{serviceLimits.validUntil | date : 'mediumDate'}}. <strong>Extend it today!</strong></p>
+  <p i18n="@@organizations.tab.detail.order.activeUntil">Subscription is active until {{serviceLimits?.validUntil | date : 'mediumDate'}}. <strong>Extend it today!</strong></p>
 </ng-container>
 <h5 *ngIf="trial">
   <span i18n="@@organizations.tab.detail.order.get"
@@ -24,7 +24,7 @@
       values="1 month|2 months|3 months|6 months|1 year|2 years|3 years"
       defaultValue="4"
       id="subscriptionLength"
-      (onSlide)="sliderValue($event)">
+      (onSlide)="onSliderUpdated($event)">
     </slider>
   </div>
   <div class="mt-3">

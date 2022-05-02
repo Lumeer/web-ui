@@ -1,9 +1,14 @@
-<div class="row justify-content-center">
-  <div class="col-lg-9 col-md-9 col-sm-10">
-    <contact-form
-      [contact]="contact$ | async"
-      [organization]="organization"
-      (updateContact)="updateContact($event)"></contact-form>
+<ng-container *ngIf="organization$ | async as organization">
+  <div class="row justify-content-center">
+    <div class="col-lg-9 col-md-9 col-sm-10">
+      <contact-form
+        [contact]="contact$ | async"
+        [organization]="organization">
+      </contact-form>
+    </div>
   </div>
-</div>
-<payments-panel></payments-panel>
+  <payments-panel [organization]="organization"
+                  [serviceLimits]="serviceLimits$ | async"
+                  [lastPayment]="lastPayment$ | async">
+  </payments-panel>
+</ng-container>

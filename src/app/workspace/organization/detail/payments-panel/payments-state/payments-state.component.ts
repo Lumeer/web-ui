@@ -17,71 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {filter} from 'rxjs/operators';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../../../core/store/app.state';
 import {Organization} from '../../../../../core/store/organizations/organization';
-import {Subscription} from 'rxjs';
-import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
 import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
-import {ServiceLimitsAction} from '../../../../../core/store/organizations/service-limits/service-limits.action';
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'payments-state',
   templateUrl: './payments-state.component.html',
   styleUrls: ['./payments-state.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaymentsStateComponent implements OnInit, OnDestroy {
-  private organization: Organization;
-  private organizationSubscription: Subscription;
+export class PaymentsStateComponent implements OnChanges {
+  @Input()
+  public organization: Organization;
 
+  @Input()
   public serviceLimits: ServiceLimits;
-  private serviceLimitsSubscription: Subscription;
 
-  constructor(private router: Router, private store: Store<AppState>) {}
+  public isFree: boolean;
+  public isBasic: boolean;
 
-  public ngOnInit() {
-    this.subscribeToStore();
-    this.requestData();
-  }
-
-  private subscribeToStore() {
-    this.organizationSubscription = this.store
-      .select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => isNotNullOrUndefined(organization)))
-      .subscribe(organization => (this.organization = organization));
-
-    this.serviceLimitsSubscription = this.store
-      .select(selectServiceLimitsByWorkspace)
-      .pipe(filter(serviceLimits => isNotNullOrUndefined(serviceLimits)))
-      .subscribe(serviceLimits => (this.serviceLimits = serviceLimits));
-  }
-
-  private requestData() {
-    this.store.dispatch(new ServiceLimitsAction.GetServiceLimits({organizationId: this.organization.id}));
-  }
-
-  public ngOnDestroy() {
-    if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.serviceLimits) {
+      this.isFree = this.serviceLimits?.serviceLevel === ServiceLevelType.FREE;
+      this.isBasic = this.serviceLimits?.serviceLevel === ServiceLevelType.BASIC;
     }
-
-    if (this.serviceLimitsSubscription) {
-      this.serviceLimitsSubscription.unsubscribe();
-    }
-  }
-
-  public isFree(): boolean {
-    return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.FREE;
-  }
-
-  public isBasic(): boolean {
-    return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.BASIC;
   }
 }
