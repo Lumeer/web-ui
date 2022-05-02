@@ -423,13 +423,13 @@
                 <target state="new">Remove files</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">264</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">269</context></context-group></trans-unit>
             <trans-unit id="constraint.files.modify.constraint.message" datatype="html">
                 <source>Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</source>
                 <target state="new">Changing constraint type from 'File attachment' will remove all uploaded attachments in column. Do you want to proceed?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">265</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
             <trans-unit datatype="html" id="b23496c0dd5ab3e99af27accd883244aff78fb5d">
                 <source>You are all alone here</source>
                 <target>Egyedül vagy itt.</target>
@@ -4184,7 +4184,7 @@
                 <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source>
                 <target>Egy olyan beállítás értékét módosítod, amely csak egyes rekordokban használható. Ezzel érvénytelenné teszed a rekordok értékét. Folytatod?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">271</context></context-group></trans-unit><trans-unit id="2e5f1b77c06e168cd9b5a2e47ddae876b1b0756c" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">276</context></context-group></trans-unit><trans-unit id="29b490ded71910586b2ab4d0c9bc79c9b1b6c18b" datatype="html">
         <source>Suggest values when typing (works in Table and Workflow)</source><target state="new">Suggest values when typing (works in Table and Workflow)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
@@ -4196,7 +4196,7 @@
                 <source>Remove options?</source>
                 <target>Eltávolítod a beállításokat?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">275</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.select.multi.label">
                 <source>Allow select multiple values</source>
                 <target>Több érték kijelölésének engedélyezése</target>
@@ -10015,7 +10015,7 @@
 				<trans-unit datatype="html" id="table.data.cell.linked.row.uninitialized">
 					<source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source>
 					<target>Nem tudom a megadott értéket semmivel kapcsolni, először meg kell adnod egy értéket a táblázat előző részéhez.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">519</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">518</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
