@@ -28,7 +28,6 @@ import {selectPaymentsByWorkspaceSorted} from '../../../../../core/store/organiz
 import {PaymentsAction} from '../../../../../core/store/organizations/payment/payments.action';
 import {ServiceLimitsAction} from '../../../../../core/store/organizations/service-limits/service-limits.action';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
 @Component({
   selector: 'payments-list',

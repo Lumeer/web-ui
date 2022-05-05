@@ -79,6 +79,8 @@ import {
 } from '../../../../core/service/create-data-resource.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
+import {TranslationService} from '../../../../core/service/translation.service';
+import {QueryAttribute} from '../../../../core/model/query-attribute';
 
 interface Data {
   collections: Collection[];
@@ -164,7 +166,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public ganttChartVisualizationComponent: GanttChartVisualizationComponent;
 
   private readonly converter: GanttChartConverter;
-  private readonly newTaskName: string;
 
   private options: GanttOptions;
   private tasks: GanttTask[];
@@ -177,13 +178,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
     private modalService: ModalService,
     private configurationService: ConfigurationService,
-    private createService: CreateDataResourceService
+    private createService: CreateDataResourceService,
+    private translationService: TranslationService
   ) {
     this.converter = new GanttChartConverter(
       this.selectItemWithConstraintFormatter,
       configurationService.getConfiguration()
     );
-    this.newTaskName = $localize`:@@gantt.perspective.task.create.title:New task`;
   }
 
   public ngOnInit() {
@@ -345,6 +346,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       stemsConfigs,
       stemConfig => {
         const grouping = this.createDataResourceDataGrouping(task, stemConfig);
+        const additionalAttributes = this.createAdditionAttributes(stemConfig);
         const dataResourcesChains = this.taskDataResourcesChains(task);
         const patchDataMap = this.createPatchDataMapNewTask(task, stemConfig);
 
@@ -352,6 +354,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
           queryResource: stemConfig.name || stemConfig.start,
           stem: stemConfig.stem,
           grouping,
+          additionalAttributes,
           dataResourcesChains,
           data: patchDataMap,
           failureMessage: $localize`:@@perspective.gantt.create.task.failure:Could not create task`,
@@ -390,6 +393,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return task.swimlanes
       .map((swimlane, index) => ({value: swimlane.value, attribute: stemConfig.categories?.[index]}))
       .filter(group => !!group.attribute);
+  }
+
+  private createAdditionAttributes(stemConfig: GanttChartStemConfig): QueryAttribute[] {
+    return [stemConfig.start, stemConfig.end].filter(attribute => !!attribute);
   }
 
   private taskDataResourcesChains(task: GanttTask): DataResourceChain[][] {
@@ -573,7 +580,11 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const patchDataMap: PatchDataMap = {};
 
     if (stemConfig.name) {
-      patchDataMap[stemConfig.name.resourceId] = {[stemConfig.name.attributeId]: this.newTaskName};
+      const resource = this.getResourceById(stemConfig.name.resourceId, stemConfig.name.resourceType);
+      const purposeType = (<Collection>resource)?.purpose?.type;
+      patchDataMap[stemConfig.name.resourceId] = {
+        [stemConfig.name.attributeId]: this.translationService.createNewRecordTitle(purposeType),
+      };
     }
 
     if (!patchDataMap[stemConfig.start.resourceId]) {

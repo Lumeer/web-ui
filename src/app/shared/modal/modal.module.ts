@@ -42,6 +42,7 @@ import {BookProductDemoModalModule} from './book-product-demo/book-product-demo-
 import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loading/data-resource-detail-loading-modal.module';
 import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-link-documents-modal.module';
 import {ChooseResourceModalModule} from './choose-resource/choose-resource-modal.module';
+import {ChooseStemModalModule} from './choose-stem/choose-stem-modal.module';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import {ChooseResourceModalModule} from './choose-resource/choose-resource-modal
     DataResourceDetailLoadingModalModule,
     ChooseLinkDocumentsModalModule,
     ChooseResourceModalModule,
+    ChooseStemModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -94,6 +96,7 @@ import {ChooseResourceModalModule} from './choose-resource/choose-resource-modal
     DataResourceDetailLoadingModalModule,
     ChooseLinkDocumentsModalModule,
     ChooseResourceModalModule,
+    ChooseStemModalModule,
   ],
 })
 export class ModalModule {}

@@ -58,6 +58,7 @@ import {take} from 'rxjs/operators';
 export interface CreateDataResourceData {
   stem: QueryStem;
   grouping: CreateDataResourceDataGrouping[];
+  additionalAttributes?: QueryAttribute[];
   queryResource: QueryResource;
   dataResourcesChains: DataResourceChain[][];
   data: Record<string, Record<string, any>>;
@@ -111,7 +112,10 @@ export class CreateDataResourceService {
   }
 
   public create(createData: CreateDataResourceData) {
-    const groupingAttributes = createData.grouping.map(g => g.attribute);
+    const groupingAttributes = [
+      ...createData.grouping.map(g => g.attribute),
+      ...(createData.additionalAttributes || []),
+    ];
     const chainRange = createChainRange(createData.queryResource, groupingAttributes);
 
     if (chainRange.length > 1) {
@@ -226,7 +230,7 @@ export class CreateDataResourceService {
   private createChoosePathStems(createData: CreateDataResourceData, chainRange: number[]): QueryStem[] {
     const choosePathStems: QueryStem[] = [];
     for (const resourceIndex of chainRange) {
-      if (isCollectionIndex(resourceIndex) && resourceIndex !== createData.queryResource.resourceIndex) {
+      if (isCollectionIndex(resourceIndex) && this.shouldChoosePathStem(createData, resourceIndex)) {
         const grouping = this.getGroupingByResourceIndex(createData, resourceIndex);
         const collectionId = this.getResourceInStem(createData.stem, resourceIndex).id;
         const collectionsFilters = getQueryFiltersForCollection(this.query, collectionId);
@@ -243,6 +247,22 @@ export class CreateDataResourceService {
       }
     }
     return choosePathStems;
+  }
+
+  private shouldChoosePathStem(createData: CreateDataResourceData, resourceIndex: number): boolean {
+    if (resourceIndex === createData.queryResource.resourceIndex) {
+      return false;
+    }
+
+    if (createData.grouping.some(grouping => grouping.attribute.resourceIndex === resourceIndex)) {
+      return true;
+    }
+
+    if (createData.additionalAttributes.some(attribute => attribute.resourceIndex === resourceIndex)) {
+      return false;
+    }
+
+    return true;
   }
 
   private createDataResourcesChain(
@@ -370,20 +390,15 @@ export class CreateDataResourceService {
     callback: (config: T) => void,
     cancel?: () => void
   ) {
-    const stemsMap = (stemConfigs || []).reduce(
-      (map, stemConfig) => ({...map, [stemConfig.stem.collectionId]: stemConfig}),
-      {}
-    );
-    const collectionIds = Object.keys(stemsMap);
-    if (collectionIds.length === 1) {
-      callback(stemsMap[collectionIds[0]]);
-    } else if (collectionIds.length) {
-      const title = $localize`:@@query.stem.choose:Choose query base Collection`;
-      this.modalService.showChooseCollection(
-        collectionIds,
+    if (stemConfigs.length === 1) {
+      callback(stemConfigs[0]);
+    } else if (stemConfigs.length) {
+      const title = $localize`:@@query.stem.choose:Choose query`;
+      this.modalService.showChooseStem(
+        stemConfigs.map(config => config.stem),
         title,
-        collectionId => {
-          callback(stemsMap[collectionId]);
+        index => {
+          callback(stemConfigs[index]);
         },
         cancel
       );
@@ -399,6 +414,10 @@ export class CreateDataResourceService {
     callback: (documents: DocumentModel[]) => void,
     cancel?: () => void
   ) {
+    if (!pathStems.length) {
+      callback([]);
+      return;
+    }
     // we can not guarantee that documents in second (or any next) collection is fully loaded by query stem, because some documents are not linked
     const mainStemInPath = pathStems.find(stem => stem.collectionId === mainStem.collectionId);
     if (mainStemInPath) {

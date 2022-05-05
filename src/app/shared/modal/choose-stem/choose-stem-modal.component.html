@@ -1,0 +1,40 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  (onClose)="onClose()"
+  (onSubmit)="onSubmit()"
+  [submitDisabled]="selectedIndex$ | async | isNullOrUndefined">
+
+  <span class="title">{{title || defaultTitle}}</span>
+
+  <div class="body p-3">
+
+    <div *ngFor="let queryItems of queryItemsArray$ | async; let last = last; let index = index"
+         class="query-stem card d-flex flex-wrap flex-row p-2 cursor-pointer"
+         [class.active]="(selectedIndex$ | async) === index"
+         (click)="onSelectIndex(index)"
+         (dblclick)="onDoubleClick(index)"
+         [class.mb-3]="!last">
+      <query-item *ngFor="let queryItem of queryItems;  let isLast = last"
+                  [queryItem]="queryItem"
+                  [queryItemForm]="queryItem | queryItemForm"
+                  [readonly]="true"
+                  class="d-inline-flex mt-1 align-items-center"
+                  [class.me-1]="!isLast">
+      </query-item>
+
+    </div>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="far fa-check"></i>&nbsp;<span i18n="@@button.choose">Choose</span>
+  </span>
+
+</modal-wrapper>
+
+<ng-template #noData>
+  <span class="text-muted" i18n="@@choose.empty">I am sorry but I did not find anything.</span>
+</ng-template>

@@ -67,6 +67,7 @@ import {ChooseLinkDocumentsModalComponent} from './choose-link-documents/choose-
 import {DataResourcesChain} from './data-resource-detail/model/data-resources-chain';
 import {QueryStem} from '../../core/store/navigation/query/query';
 import {ChooseResourceModalComponent} from './choose-resource/choose-resource-modal.component';
+import {ChooseStemModalComponent} from './choose-stem/choose-stem-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -102,6 +103,21 @@ export class ModalService {
       cancel,
     };
     return this.showStaticDialog(initialState, ChooseResourceModalComponent);
+  }
+
+  public showChooseStem(
+    stems: QueryStem[],
+    title?: string,
+    callback?: (index: number) => void,
+    cancel?: () => void
+  ): BsModalRef {
+    const initialState = {
+      stems,
+      title,
+      callback,
+      cancel,
+    };
+    return this.showStaticDialog(initialState, ChooseStemModalComponent);
   }
 
   public showChooseLinkDocument(

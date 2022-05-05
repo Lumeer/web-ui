@@ -268,12 +268,12 @@ export function createCalendarNewEventData(
   stemConfig: CalendarStemConfig,
   start: {date: Date; resource: AttributesResource},
   end: {date: Date; resource: AttributesResource},
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  initialTitle: string
 ): Record<string, Record<string, any>> {
   const dataMap = {};
 
   if (stemConfig?.name) {
-    const initialTitle = $localize`:@@dialog.create.calendar.event.default.title:New event`;
     patchDataMap(dataMap, stemConfig.name.resourceId, stemConfig.name.attributeId, initialTitle);
   }
 

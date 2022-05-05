@@ -63,6 +63,7 @@ import {View} from '../../../../core/store/views/view';
 import {CreateDataResourceService} from '../../../../core/service/create-data-resource.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
+import {TranslationService} from '../../../../core/service/translation.service';
 
 interface Data {
   collections: Collection[];
@@ -137,7 +138,11 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private events: CalendarEvent[];
 
-  constructor(private modalService: ModalService, private createService: CreateDataResourceService) {
+  constructor(
+    private modalService: ModalService,
+    private createService: CreateDataResourceService,
+    private translationService: TranslationService
+  ) {
     this.converter = new CalendarConverter();
   }
 
@@ -340,13 +345,16 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     this.createService.chooseStemConfig(stemsConfigs, stemConfig => {
       const grouping = stemConfig.group ? {value: value.group, attribute: stemConfig.group} : null;
       const dataResourcesChains = this.filterDataResourcesChains(value.group);
+      const nameResource = this.getResourceById(stemConfig.name?.resourceId, stemConfig.name?.resourceType);
+      const namePurposeType = (<Collection>nameResource)?.purpose?.type;
       const startResource = this.getResourceById(stemConfig.start.resourceId, stemConfig.start.resourceType);
       const endResource = this.getResourceById(stemConfig.end?.resourceId, stemConfig.end?.resourceType);
       const data = createCalendarNewEventData(
         stemConfig,
         {date: value.start, resource: startResource},
         {date: value.end, resource: endResource},
-        this.constraintData
+        this.constraintData,
+        this.translationService.createNewRecordTitle(namePurposeType)
       );
       this.createService.create({
         queryResource: stemConfig.name || stemConfig.start,

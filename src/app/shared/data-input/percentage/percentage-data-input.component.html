@@ -1,6 +1,8 @@
 <progress-bar *ngIf="isProgressStyle"
               [color]="value?.config?.color"
               [style.height.px]="15"
+              [tooltip]="value | formatDataValueTitle"
+              [delay]="700"
               [value]="numericValue">
 </progress-bar>
 

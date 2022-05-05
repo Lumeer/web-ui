@@ -1,0 +1,8 @@
+@import '../../../../styles/variables';
+
+.card {
+  &.active {
+    background: lighten($success, 60%);
+    box-shadow: $shadow-default;
+  }
+}
