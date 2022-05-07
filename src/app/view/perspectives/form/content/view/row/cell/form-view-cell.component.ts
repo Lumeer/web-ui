@@ -22,6 +22,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -55,6 +56,7 @@ import {selectDocumentsByCollectionAndQuery} from '../../../../../../../core/sto
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {mergeAttributeOverride} from '../../../../../../../shared/utils/attribute.utils';
 import {DataInputSaveAction} from '../../../../../../../shared/data-input/data-input-save-action';
+import {AttributesSettings} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'form-view-cell',
@@ -99,6 +101,9 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public attributesSettings: AttributesSettings;
+
   @Output()
   public attributeValueChange = new EventEmitter<{
     attributeId: string;
@@ -138,6 +143,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public showBorder: boolean;
 
   public dataIsValid: boolean;
+  public params: {left: number; width: number; parentWidth: number};
 
   public linkDocuments$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
@@ -146,6 +152,18 @@ export class FormViewCellComponent implements OnInit, OnChanges {
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+
+    this.computeLeftOffset();
+  }
+
+  private computeLeftOffset() {
+    if (this.element?.nativeElement) {
+      this.params = {
+        left: this.element.nativeElement.offsetLeft,
+        width: this.element.nativeElement.offsetWidth,
+        parentWidth: this.element.nativeElement.offsetParent?.offsetWidth,
+      };
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -259,5 +277,10 @@ export class FormViewCellComponent implements OnInit, OnChanges {
 
   public onUseHint(data: {document: DocumentModel; external: boolean}) {
     this.suggestedValue = null;
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.computeLeftOffset();
   }
 }

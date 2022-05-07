@@ -20,12 +20,56 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentHintColumn} from '../../../../shared/document-hints/document-hint-column';
+import {AttributesSettings} from '../../../../core/store/views/view';
+import {filterVisibleAttributesBySettings} from '../../../../shared/utils/attribute.utils';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+
+const defaultColumnWidth = 100;
 
 @Pipe({
   name: 'collectionHintColumns',
 })
 export class CollectionHintColumnsPipe implements PipeTransform {
-  public transform(collection: Collection): DocumentHintColumn[] {
-    return (collection?.attributes || []).map(attribute => ({attributeId: attribute.id, width: 100}));
+  public transform(
+    collection: Collection,
+    settings: AttributesSettings,
+    attributeId: string,
+    params: {left: number; width: number; parentWidth: number}
+  ): DocumentHintColumn[] {
+    const visibleAttributes = filterVisibleAttributesBySettings(collection, settings?.collections);
+    const attributeIndex = visibleAttributes.findIndex(attribute => attribute.id === attributeId);
+    if (attributeIndex >= 0) {
+      visibleAttributes.splice(attributeIndex, 1);
+    }
+
+    const attribute = findAttribute(collection?.attributes, attributeId);
+    if (visibleAttributes.length === 0) {
+      return [{width: params.parentWidth, attributeId: attribute.id}];
+    }
+
+    const {columnWidth, mainColumnWidth} = this.computeColumnOptimalWidth(visibleAttributes.length, params);
+
+    const offsetIndex = Math.floor(params.left / columnWidth);
+    visibleAttributes.splice(offsetIndex, 0, attribute);
+
+    return visibleAttributes.map(attribute => ({
+      attributeId: attribute.id,
+      width: attribute.id === attributeId ? mainColumnWidth : columnWidth,
+    }));
+  }
+
+  private computeColumnOptimalWidth(
+    columnsCount: number,
+    params: {left: number; width: number; parentWidth: number}
+  ): {columnWidth: number; mainColumnWidth: number} {
+    let columnWidth = defaultColumnWidth;
+    let mainColumnWidth = 2 * defaultColumnWidth;
+
+    while (columnWidth * columnsCount + mainColumnWidth < params.parentWidth) {
+      columnWidth += 1;
+      mainColumnWidth += 3;
+    }
+
+    return {columnWidth, mainColumnWidth};
   }
 }
