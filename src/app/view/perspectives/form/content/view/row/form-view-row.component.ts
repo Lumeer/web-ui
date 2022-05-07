@@ -54,6 +54,9 @@ export class FormViewRowComponent implements OnChanges {
   public documentId: string;
 
   @Input()
+  public viewId: string;
+
+  @Input()
   public documentEditable: boolean;
 
   @Input()

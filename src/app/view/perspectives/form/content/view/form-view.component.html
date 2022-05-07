@@ -26,6 +26,7 @@
                        [section]="section"
                        [collection]="data.collection"
                        [documentId]="data.document?.id"
+                       [viewId]="view?.id"
                        [originalDocument]="data.originalDocument"
                        [constraintData]="constraintData"
                        [documentEditable]="data.originalDocument | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:constraintData"

@@ -18,6 +18,7 @@
                   [configuration]="dataInputConfiguration"
                   [focus]="true"
                   (saveAction)="onValueSave($event.dataValue, $event.action)"
+                  (valueChange)="onValueChange($event)"
                   (cancel)="onCancelEditing()">
       </data-input>
       <div class="d-flex align-items-center html-input px-1"
@@ -59,4 +60,20 @@
   </form-view-cell-link>
   <div *ngFor="let error of formErrors" class="text-danger small mt-1">{{error.title}}</div>
   <div class="text-muted small mt-1">{{cell?.description}}</div>
+
+  <document-hints *ngIf="cell?.type === type.Attribute && suggestedValue && (attribute | canShowAttributeHints)"
+                  [attributeId]="attribute?.id"
+                  [collectionId]="collection?.id"
+                  [columns]="collection | collectionHintColumns"
+                  [dataValue]="suggestedValue"
+                  [constraintData]="constraintData"
+                  [viewId]="viewId"
+                  [excludedDocumentIds]="documentId ? [documentId] : []"
+                  [offsetLeft]="0"
+                  [showDetail]="true"
+                  [createLinkDirectly]="false"
+                  [origin]="hintsOrigin"
+                  (useHint)="onUseHint($event)">
+  </document-hints>
 </ng-container>
+

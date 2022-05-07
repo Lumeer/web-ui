@@ -20,6 +20,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -84,6 +85,12 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public editing: boolean;
 
   @Input()
+  public viewId: string;
+
+  @Input()
+  public hintsOrigin: ElementRef | HTMLElement;
+
+  @Input()
   public lockStats: AttributeLockFiltersStats;
 
   @Input()
@@ -119,6 +126,8 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     select: {wrapItems: true},
   };
 
+  public suggestedValue: DataValue;
+
   public attribute: Attribute;
   public dataValue: DataValue;
   public cursor: DataCursor;
@@ -133,7 +142,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public linkDocuments$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, public element: ElementRef) {}
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
@@ -149,6 +158,17 @@ export class FormViewCellComponent implements OnInit, OnChanges {
       changes.collectionLinkTypes
     ) {
       this.initDataVariables();
+    }
+    if (changes.editing) {
+      this.checkEdited();
+    }
+  }
+
+  private checkEdited() {
+    if (this.editing) {
+      this.suggestedValue = this.dataValue;
+    } else {
+      this.suggestedValue = null;
     }
   }
 
@@ -231,5 +251,13 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     if (this.linkData?.linkType) {
       this.linkValueChange.emit({linkTypeId: this.linkData.linkType.id, selectedData, action});
     }
+  }
+
+  public onValueChange(dataValue: DataValue) {
+    this.suggestedValue = dataValue;
+  }
+
+  public onUseHint(data: {document: DocumentModel; external: boolean}) {
+    this.suggestedValue = null;
   }
 }
