@@ -24,22 +24,26 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
-import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {FileDownloadService} from '../file-download.service';
+import {AppState} from '../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 
 @Component({
   selector: 'files-dropdown',
   templateUrl: './files-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilesDropdownComponent implements AfterViewInit {
+export class FilesDropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input()
   public filesAttachments: FileAttachment[];
 
@@ -76,7 +80,22 @@ export class FilesDropdownComponent implements AfterViewInit {
     DropdownPosition.TopEnd,
   ];
 
-  constructor(private configurationService: ConfigurationService, private downloadService: FileDownloadService) {}
+  private fileSizeMb: number;
+  private subscriptions = new Subscription();
+
+  constructor(private downloadService: FileDownloadService, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.subscriptions.add(
+      this.store$
+        .pipe(select(selectServiceLimitsByWorkspace))
+        .subscribe(limits => (this.fileSizeMb = limits?.fileSizeMb || 0))
+    );
+  }
+
+  private get maxFileUploadSize(): number {
+    return this.fileSizeMb * 1024 * 1024;
+  }
 
   public ngAfterViewInit() {
     this.dropdown.open();
@@ -100,7 +119,7 @@ export class FilesDropdownComponent implements AfterViewInit {
 
     const file = files.item(0);
 
-    if (file.size > this.configurationService.getConfiguration().maxFileUploadSize * 1024 * 1024) {
+    if (file.size > this.maxFileUploadSize * 1024 * 1024) {
       this.showFileSizeError();
       return;
     }
@@ -110,7 +129,7 @@ export class FilesDropdownComponent implements AfterViewInit {
   }
 
   private showFileSizeError() {
-    const size = this.configurationService.getConfiguration().maxFileUploadSize.toFixed(0);
+    const size = this.fileSizeMb.toFixed(0);
     this.fileSizeError$.next(
       $localize`:@@file.upload.max.size.error:Cannot process files bigger than ${size}:size: MB. Please upload smaller file.`
     );
@@ -139,5 +158,9 @@ export class FilesDropdownComponent implements AfterViewInit {
 
   public onFileClick(file: File) {
     this.downloadService.downloadFile(file);
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

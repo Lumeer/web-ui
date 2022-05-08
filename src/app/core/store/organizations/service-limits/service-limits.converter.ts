@@ -21,20 +21,20 @@ import {ServiceLimitsDto} from '../../../dto/service-limits.dto';
 import {ServiceLimits} from './service.limits';
 import {serviceLevelMap} from '../../../dto/service-level-type';
 
-export class ServiceLimitsConverter {
-  public static fromDto(organizationId: string, dto: ServiceLimitsDto): ServiceLimits {
-    return {
-      organizationId: organizationId,
-      serviceLevel: serviceLevelMap[dto.serviceLevel],
-      users: dto.users,
-      projects: dto.projects,
-      files: dto.files,
-      documents: dto.documents,
-      groups: dto.groups,
-      dbSizeMb: dto.dbSizeMb,
-      validUntil: new Date(dto.validUntil),
-      rulesPerCollection: dto.rulesPerCollection,
-      functionsPerCollection: dto.functionsPerCollection,
-    };
-  }
+export function convertServiceLimitsDtoToModel(organizationId: string, dto: ServiceLimitsDto): ServiceLimits {
+  return {
+    organizationId: organizationId,
+    serviceLevel: serviceLevelMap[dto.serviceLevel],
+    users: dto.users,
+    projects: dto.projects,
+    files: dto.files,
+    documents: dto.documents,
+    groups: dto.groups,
+    fileSizeMb: dto.fileSizeMb,
+    auditDays: dto.auditDays,
+    dbSizeMb: dto.dbSizeMb,
+    validUntil: new Date(dto.validUntil),
+    rulesPerCollection: dto.rulesPerCollection,
+    functionsPerCollection: dto.functionsPerCollection,
+  };
 }

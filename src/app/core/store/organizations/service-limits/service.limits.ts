@@ -28,6 +28,8 @@ export interface ServiceLimits {
   documents: number;
   groups?: boolean;
   dbSizeMb: number;
+  fileSizeMb: number;
+  auditDays: number;
   validUntil: Date;
   rulesPerCollection: number;
   functionsPerCollection: number;
