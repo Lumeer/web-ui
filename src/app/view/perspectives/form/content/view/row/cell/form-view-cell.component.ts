@@ -20,7 +20,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -54,6 +56,7 @@ import {selectDocumentsByCollectionAndQuery} from '../../../../../../../core/sto
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {mergeAttributeOverride} from '../../../../../../../shared/utils/attribute.utils';
 import {DataInputSaveAction} from '../../../../../../../shared/data-input/data-input-save-action';
+import {AttributesSettings} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'form-view-cell',
@@ -84,6 +87,12 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public editing: boolean;
 
   @Input()
+  public viewId: string;
+
+  @Input()
+  public hintsOrigin: ElementRef | HTMLElement;
+
+  @Input()
   public lockStats: AttributeLockFiltersStats;
 
   @Input()
@@ -91,6 +100,9 @@ export class FormViewCellComponent implements OnInit, OnChanges {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public attributesSettings: AttributesSettings;
 
   @Output()
   public attributeValueChange = new EventEmitter<{
@@ -119,6 +131,8 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     select: {wrapItems: true},
   };
 
+  public suggestedValue: DataValue;
+
   public attribute: Attribute;
   public dataValue: DataValue;
   public cursor: DataCursor;
@@ -129,14 +143,27 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public showBorder: boolean;
 
   public dataIsValid: boolean;
+  public params: {left: number; width: number; parentWidth: number};
 
   public linkDocuments$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, public element: ElementRef) {}
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+
+    this.computeLeftOffset();
+  }
+
+  private computeLeftOffset() {
+    if (this.element?.nativeElement) {
+      this.params = {
+        left: this.element.nativeElement.offsetLeft,
+        width: this.element.nativeElement.offsetWidth,
+        parentWidth: this.element.nativeElement.offsetParent?.offsetWidth,
+      };
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -149,6 +176,17 @@ export class FormViewCellComponent implements OnInit, OnChanges {
       changes.collectionLinkTypes
     ) {
       this.initDataVariables();
+    }
+    if (changes.editing) {
+      this.checkEdited();
+    }
+  }
+
+  private checkEdited() {
+    if (this.editing) {
+      this.suggestedValue = this.dataValue;
+    } else {
+      this.suggestedValue = null;
     }
   }
 
@@ -231,5 +269,18 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     if (this.linkData?.linkType) {
       this.linkValueChange.emit({linkTypeId: this.linkData.linkType.id, selectedData, action});
     }
+  }
+
+  public onValueChange(dataValue: DataValue) {
+    this.suggestedValue = dataValue;
+  }
+
+  public onUseHint(data: {document: DocumentModel; external: boolean}) {
+    this.suggestedValue = null;
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.computeLeftOffset();
   }
 }

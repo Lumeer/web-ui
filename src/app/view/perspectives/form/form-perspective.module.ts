@@ -66,6 +66,8 @@ import {LinkCollectionDisplayedAttributePipe} from './pipes/link-collection-disp
 import {FormDocumentsChooseComponent} from './content/view/choose/form-documents-choose.component';
 import {FormCellIsEditedPipe} from './pipes/form-cell-is-edited.pipe';
 import {FormCellLockStatsPipe} from './pipes/form-cell-lock-stats.pipe';
+import {DocumentHintsModule} from '../../../shared/document-hints/document-hints.module';
+import {CollectionHintColumnsPipe} from './pipes/collection-hint-columns.pipe';
 
 @NgModule({
   declarations: [
@@ -98,6 +100,7 @@ import {FormCellLockStatsPipe} from './pipes/form-cell-lock-stats.pipe';
     FormDocumentsChooseComponent,
     FormCellIsEditedPipe,
     FormCellLockStatsPipe,
+    CollectionHintColumnsPipe,
   ],
   imports: [
     CommonModule,
@@ -119,6 +122,7 @@ import {FormCellLockStatsPipe} from './pipes/form-cell-lock-stats.pipe';
     DataInputModule,
     PreviewResultsModule,
     PresenterModule,
+    DocumentHintsModule,
   ],
   exports: [FormPerspectiveComponent],
 })

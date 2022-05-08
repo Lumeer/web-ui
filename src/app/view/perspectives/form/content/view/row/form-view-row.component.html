@@ -1,4 +1,4 @@
-<div class="form-view-row" [style.grid-template-columns]="templateColumns">
+<div class="form-view-row position-relative" [style.grid-template-columns]="templateColumns" #hintsOrigin>
 
   <form-view-cell *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
                   [cell]="cell"
@@ -6,9 +6,12 @@
                   [linkValues]="linkValues"
                   [collection]="collection"
                   [documentId]="documentId"
+                  [viewId]="viewId"
                   [lockStats]="cell | formCellLockStats:originalDocument:collection:constraintData"
                   [constraintData]="constraintData"
                   [editable]="documentEditable"
+                  [attributesSettings]="attributesSettings"
+                  [hintsOrigin]="hintsOrigin"
                   [editing]="editedCell | formCellIsEdited:sectionId:row.id:cell.id"
                   [formErrors]="formErrors | formErrorsByCell:cell.id"
                   (attributeValueChange)="onAttributeValueChange($event, cell.id)"
