@@ -65,7 +65,6 @@ export class ConfigurationService {
     const mapboxKey: string = env['MAPBOX_KEY'];
     const mapQuestKey: string = env['MAPQUEST_KEY'];
     const mapTilerKey: string = env['MAPTILER_KEY'];
-    const maxFileUploadSize = Number(env['MAX_FILE_UPLOAD_SIZE']) || 10; // MB
     const presignedUrlTimeout = Number(env['PRESIGNED_URL_TIMEOUT']) || 60; // seconds
     const sentryDsn: string = env['SENTRY_DSN'];
     const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
@@ -98,7 +97,6 @@ export class ConfigurationService {
       mapboxKey,
       mapQuestKey,
       mapTilerKey,
-      maxFileUploadSize,
       presignedUrlTimeout,
       sentryDsn,
       sessionTimeout,

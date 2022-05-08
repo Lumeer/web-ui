@@ -68,3 +68,5 @@ export const USER_AVATAR_SIZE = 22;
 export const TABLE_ROW_MIN_HEIGHT = 34;
 
 export const LUMEER_REFERRAL = 'lumeer_referral';
+
+export const DEFAULT_FILE_SIZE_MB = 10;

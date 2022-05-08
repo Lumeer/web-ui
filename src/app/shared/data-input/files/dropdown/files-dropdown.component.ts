@@ -37,6 +37,7 @@ import {FileDownloadService} from '../file-download.service';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {DEFAULT_FILE_SIZE_MB} from '../../../../core/constants';
 
 @Component({
   selector: 'files-dropdown',
@@ -80,7 +81,7 @@ export class FilesDropdownComponent implements OnInit, OnDestroy, AfterViewInit 
     DropdownPosition.TopEnd,
   ];
 
-  private fileSizeMb: number;
+  private fileSizeMb = DEFAULT_FILE_SIZE_MB;
   private subscriptions = new Subscription();
 
   constructor(private downloadService: FileDownloadService, private store$: Store<AppState>) {}
@@ -89,7 +90,7 @@ export class FilesDropdownComponent implements OnInit, OnDestroy, AfterViewInit 
     this.subscriptions.add(
       this.store$
         .pipe(select(selectServiceLimitsByWorkspace))
-        .subscribe(limits => (this.fileSizeMb = limits?.fileSizeMb || 0))
+        .subscribe(limits => (this.fileSizeMb = limits?.fileSizeMb || DEFAULT_FILE_SIZE_MB))
     );
   }
 
@@ -119,13 +120,12 @@ export class FilesDropdownComponent implements OnInit, OnDestroy, AfterViewInit 
 
     const file = files.item(0);
 
-    if (file.size > this.maxFileUploadSize * 1024 * 1024) {
+    if (file.size > this.maxFileUploadSize) {
       this.showFileSizeError();
-      return;
+    } else {
+      this.fileSizeError$.next(null);
+      this.add.emit(file);
     }
-
-    this.fileSizeError$.next(null);
-    this.add.emit(file);
   }
 
   private showFileSizeError() {

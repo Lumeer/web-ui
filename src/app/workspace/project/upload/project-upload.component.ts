@@ -33,6 +33,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Subscription} from 'rxjs';
 import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
+import {DEFAULT_FILE_SIZE_MB} from '../../../core/constants';
 
 @Component({
   selector: 'project-upload',
@@ -52,7 +53,7 @@ export class ProjectUploadComponent implements OnInit, OnDestroy {
   @Output()
   public add = new EventEmitter<File>();
 
-  private fileSizeMb: number;
+  private fileSizeMb = DEFAULT_FILE_SIZE_MB;
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
@@ -61,7 +62,7 @@ export class ProjectUploadComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.store$
         .pipe(select(selectServiceLimitsByWorkspace))
-        .subscribe(limits => (this.fileSizeMb = limits?.fileSizeMb || 0))
+        .subscribe(limits => (this.fileSizeMb = limits?.fileSizeMb || DEFAULT_FILE_SIZE_MB))
     );
   }
 
@@ -84,18 +85,14 @@ export class ProjectUploadComponent implements OnInit, OnDestroy {
     }
 
     const file = files.item(0);
-    const size = this.maxFileUploadSize;
-
-    if (file.size > size) {
+    if (file.size > this.maxFileUploadSize) {
       const message = $localize`:@@project.settings.upload.tooLarge:The file size is above the upload limit (${this.fileSizeMb.toFixed(
         0
       )}:size: MB).`;
       this.notificationService.error(message);
-
-      return;
+    } else {
+      this.add.emit(file);
     }
-
-    this.add.emit(file);
   }
 
   public ngOnDestroy() {
