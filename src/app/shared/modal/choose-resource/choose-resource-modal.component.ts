@@ -59,10 +59,10 @@ export class ChooseResourceModalComponent implements OnInit {
   public ngOnInit() {
     if (this.resourceType === AttributesResourceType.Collection) {
       this.resources$ = this.store$.pipe(select(selectCollectionsByIds(this.resourceIds)));
-      this.defaultTitle = $localize`:@@collection.select:Select Collection`;
+      this.defaultTitle = $localize`:@@collection.select:Select a Table`;
     } else if (this.resourceType === AttributesResourceType.LinkType) {
       this.resources$ = this.store$.pipe(select(selectLinkTypesByIds(this.resourceIds)));
-      this.defaultTitle = $localize`:@@linkType.select:Select Link Type`;
+      this.defaultTitle = $localize`:@@linkType.select:Select a Link Type`;
     }
   }
 

@@ -5,12 +5,12 @@
   [submitDisabled]="!(selectedDocumentId$ | async)"
   *ngIf="{collection: collection$ | async, documents: documents$ | async} as data">
 
-  <span class="title" i18n="@@modal.chooseDocuments.title">Choose a record</span>
+  <span class="title" i18n="@@modal.chooseDocuments.title">Choose a Record</span>
 
   <div class="body p-3 h-100">
     <ng-container *ngIf="data.collection && data.documents.length; else noData">
       <div class="text-muted text-center"
-           i18n="@@modal.chooseDocuments.description">Select to which record you want to link the new one.
+           i18n="@@modal.chooseDocuments.description">Select a record to which you want to link a new one.
       </div>
 
       <preview-results-table class="mt-2 overflow-hidden results-table"

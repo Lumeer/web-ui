@@ -393,7 +393,7 @@ export class CreateDataResourceService {
     if (stemConfigs.length === 1) {
       callback(stemConfigs[0]);
     } else if (stemConfigs.length) {
-      const title = $localize`:@@query.stem.choose:Choose query`;
+      const title = $localize`:@@query.stem.choose:The New Record Belongs to...`;
       this.modalService.showChooseStem(
         stemConfigs.map(config => config.stem),
         title,
