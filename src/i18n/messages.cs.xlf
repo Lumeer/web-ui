@@ -7545,7 +7545,7 @@
         <note priority="1" from="description">@hint.organizationOverview.title</note>
       </trans-unit><trans-unit id="hint.organizationOverview.content" datatype="html">
         <source>This is a simple overview of your organization. Find a number of members and projects in the given organization, invite colleagues or switch to Business Plan for Lumeer. You can be a member of many different organizations – all your other organizations are listed here with an option to switch between them.</source>
-        <target state="new">Toto je jednoduchý přehled Vaší organizace. Najdete zde počet uživatelů a projektů v dané organizaci, přizvat nové kolegy nebo upgradovat na Business Plán. Můžete být současně členem několika různých organizací - všechny ostatní organizace a možnost přepínat mezi nimi najdete právě zde.</target>
+        <target state="new">Toto je jednoduchý přehled Vaší organizace. Najdete zde počet uživatelů a projektů v dané organizaci, možnost přizvat nové kolegy nebo upgradovat na Business Plán. Můžete být současně členem několika různých organizací - všechny ostatní organizace a možnost přepínat mezi nimi najdete právě zde.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/workspace-panel.component.html</context>
           <context context-type="linenumber">23,25</context>
