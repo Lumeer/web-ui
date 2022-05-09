@@ -39,14 +39,9 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {GanttTaskMetadata} from './gantt-chart-converter';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
-import {
-  createPossibleLinkingDocuments,
-  createPossibleLinkingDocumentsByChains,
-} from '../../../../shared/utils/data/data-aggregator-util';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
@@ -205,30 +200,11 @@ export function createDefaultGanttChartStemConfig(
   return {stem};
 }
 
-export function createLinkDocumentsDataNewTask(task: GanttTask, otherTasks: GanttTask[]): string[] {
-  const swimlaneChains = (otherTasks || [])
-    .filter(otherTask => tasksHasSameSwimlanes(otherTask, task))
-    .map(otherTask => (otherTask.metadata && (<GanttTaskMetadata>otherTask.metadata).dataResourceChain) || []);
-  return createPossibleLinkingDocuments(swimlaneChains);
-}
-
-function tasksHasSameSwimlanes(task1: GanttTask, task2: GanttTask): boolean {
+export function tasksHasSameSwimlanes(task1: GanttTask, task2: GanttTask): boolean {
   return (task1.swimlanes || []).every((swimlane, index) => {
     const otherSwimlane = (task2.swimlanes || [])[index];
     return swimlane?.value === otherSwimlane?.value;
   });
-}
-
-export function createLinkDocumentsData(
-  task: GanttTask,
-  otherTasks: GanttTask[],
-  linkInstances: LinkInstance[]
-): {linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[]} {
-  const swimlaneChains = (otherTasks || [])
-    .filter(otherTask => tasksHasSameSwimlanes(otherTask, task))
-    .map(otherTask => (<GanttTaskMetadata>otherTask.metadata).dataResourceChain);
-  const dataResourceChain = (task.metadata && (<GanttTaskMetadata>task.metadata).dataResourceChain) || [];
-  return createPossibleLinkingDocumentsByChains(dataResourceChain, swimlaneChains, linkInstances);
 }
 
 export function ganttTaskDataResourceId(task: GanttTask): string {

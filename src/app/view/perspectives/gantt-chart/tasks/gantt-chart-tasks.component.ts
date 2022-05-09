@@ -46,26 +46,20 @@ import {
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals, isNotNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
 import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
 import {
   canCreateTaskByStemConfig,
   checkOrTransformGanttConfig,
-  createLinkDocumentsData,
-  createLinkDocumentsDataNewTask,
   ganttModelsAreFromSameOrNearResource,
   isGanttConfigChanged,
+  tasksHasSameSwimlanes,
 } from '../util/gantt-chart-util';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {
-  getQueryStemFiltersForResource,
-  queryStemAttributesResourcesOrder,
-} from '../../../../core/store/navigation/query/query.util';
-import {generateDocumentData} from '../../../../core/store/documents/document.utils';
 import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
 import {
   ConstraintData,
@@ -79,6 +73,14 @@ import {
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {View, ViewSettings} from '../../../../core/store/views/view';
 import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
+import {
+  CreateDataResourceDataGrouping,
+  CreateDataResourceService,
+} from '../../../../core/service/create-data-resource.service';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
+import {TranslationService} from '../../../../core/service/translation.service';
+import {QueryAttribute} from '../../../../core/model/query-attribute';
 
 interface Data {
   collections: Collection[];
@@ -143,6 +145,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public settings: ViewSettings;
 
   @Input()
+  public workspace: Workspace;
+
+  @Input()
   public perspectiveConfiguration: GanttPerspectiveConfiguration;
 
   @Output()
@@ -152,22 +157,15 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public patchLinkData = new EventEmitter<LinkInstance>();
 
   @Output()
-  public updateLinkDocuments = new EventEmitter<{linkInstanceId: string; documentIds: [string, string]}>();
-
-  @Output()
   public patchMetaData = new EventEmitter<{collectionId: string; documentId: string; metaData: DocumentMetaData}>();
 
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 
-  @Output()
-  public createDocumentsChain = new EventEmitter<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>();
-
   @ViewChild(GanttChartVisualizationComponent)
   public ganttChartVisualizationComponent: GanttChartVisualizationComponent;
 
   private readonly converter: GanttChartConverter;
-  private readonly newTaskName: string;
 
   private options: GanttOptions;
   private tasks: GanttTask[];
@@ -179,13 +177,14 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   constructor(
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
     private modalService: ModalService,
-    private configurationService: ConfigurationService
+    private configurationService: ConfigurationService,
+    private createService: CreateDataResourceService,
+    private translationService: TranslationService
   ) {
     this.converter = new GanttChartConverter(
       this.selectItemWithConstraintFormatter,
       configurationService.getConfiguration()
     );
-    this.newTaskName = $localize`:@@gantt.perspective.task.create.title:New task`;
   }
 
   public ngOnInit() {
@@ -235,6 +234,14 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         constraintData: this.constraintData,
       });
     }
+    this.createService.setData(
+      this.data,
+      this.query,
+      this.collections,
+      this.linkTypes,
+      this.constraintData,
+      this.workspace
+    );
   }
 
   private shouldConvertData(changes: SimpleChanges): boolean {
@@ -280,7 +287,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
 
     if (someLinkSwimlaneChanged(task)) {
-      this.patchCategoryLink(task);
+      this.patchTaskCategories(task);
     }
   }
 
@@ -331,25 +338,71 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return patchData;
   }
 
-  private patchCategoryLink(task: GanttTask) {
-    const {linkInstanceId, documentId, otherDocumentIds} = createLinkDocumentsData(
-      task,
-      this.tasks,
-      this.data?.uniqueLinkInstances
+  public createTask(task: GanttTask) {
+    const stemsConfigs = (this.config.stemsConfigs || []).filter(config =>
+      canCreateTaskByStemConfig(config, this.permissions)
     );
+    this.createService.chooseStemConfig(
+      stemsConfigs,
+      stemConfig => {
+        const grouping = this.createDataResourceDataGrouping(task, stemConfig);
+        const additionalAttributes = this.createAdditionAttributes(stemConfig);
+        const dataResourcesChains = this.taskDataResourcesChains(task);
+        const patchDataMap = this.createPatchDataMapNewTask(task, stemConfig);
 
-    if (linkInstanceId && documentId && (otherDocumentIds || []).length > 0) {
-      if (otherDocumentIds.length === 1) {
-        this.updateLinkDocuments.emit({linkInstanceId, documentIds: [documentId, otherDocumentIds[0]]});
-      } else {
-        const callback = selectedDocument =>
-          this.updateLinkDocuments.emit({
-            linkInstanceId,
-            documentIds: [documentId, selectedDocument.id],
-          });
-        this.modalService.showChooseLinkDocument(otherDocumentIds, this.view?.id, callback);
-      }
-    }
+        this.createService.create({
+          queryResource: stemConfig.name || stemConfig.start,
+          stem: stemConfig.stem,
+          grouping,
+          additionalAttributes,
+          dataResourcesChains,
+          data: patchDataMap,
+          failureMessage: $localize`:@@perspective.gantt.create.task.failure:Could not create task`,
+          onCancel: () => this.ganttChartVisualizationComponent?.removeTask(task),
+        });
+      },
+      () => this.ganttChartVisualizationComponent?.removeTask(task)
+    );
+  }
+
+  private patchTaskCategories(task: GanttTask) {
+    const metadata = <GanttTaskMetadata>task.metadata;
+    const stemConfig = metadata.stemConfig;
+    const grouping = this.createDataResourceDataGrouping(task, stemConfig);
+    const dataResourcesChains = this.taskDataResourcesChains(task);
+    const patchDataMap = this.createPatchDataMapNewTask(task, stemConfig);
+    this.createService.update({
+      queryResource: stemConfig.name || stemConfig.start,
+      stem: stemConfig.stem,
+      grouping,
+      dataResourcesChains,
+      data: patchDataMap,
+      dataResource: metadata.dataResource,
+      dataResourceChain: metadata.dataResourceChain,
+      previousValue: task.swimlanes?.[0]?.value,
+      newValue: metadata.swimlanes?.[0]?.value,
+      attributeId: stemConfig.categories?.[0]?.attributeId,
+      failureMessage: $localize`:@@perspective.gantt.move.task.failure:Could not move task`,
+    });
+  }
+
+  private createDataResourceDataGrouping(
+    task: GanttTask,
+    stemConfig: GanttChartStemConfig
+  ): CreateDataResourceDataGrouping[] {
+    return task.swimlanes
+      .map((swimlane, index) => ({value: swimlane.value, attribute: stemConfig.categories?.[index]}))
+      .filter(group => !!group.attribute);
+  }
+
+  private createAdditionAttributes(stemConfig: GanttChartStemConfig): QueryAttribute[] {
+    return [stemConfig.start, stemConfig.end].filter(attribute => !!attribute);
+  }
+
+  private taskDataResourcesChains(task: GanttTask): DataResourceChain[][] {
+    return (this.tasks || [])
+      .filter(otherTask => tasksHasSameSwimlanes(otherTask, task))
+      .map(otherTask => (<GanttTaskMetadata>otherTask.metadata).dataResourceChain);
   }
 
   private patchCategory(
@@ -523,47 +576,33 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  public onTaskCreated(task: GanttTask) {
-    const stemConfig = (this.config.stemsConfigs || []).find(config =>
-      canCreateTaskByStemConfig(config, this.permissions)
-    );
-    if (!stemConfig || !stemConfig.stem) {
-      return;
-    }
-    const patchDataMap = this.createPatchDataMapNewTask(task, stemConfig);
-
-    this.createFirstChain(
-      task,
-      stemConfig,
-      patchDataMap,
-      ({document, linkInstance}) => this.createSecondaryChain(stemConfig, patchDataMap, document, linkInstance),
-      () => this.ganttChartVisualizationComponent.removeTask(task)
-    );
-  }
-
   private createPatchDataMapNewTask(task: GanttTask, stemConfig: GanttChartStemConfig): PatchDataMap {
     const patchDataMap: PatchDataMap = {};
 
     if (stemConfig.name) {
-      const data = this.generateDataForModel(stemConfig.name, stemConfig.stem);
-      patchDataMap[stemConfig.name.resourceId] = {...data, [stemConfig.name.attributeId]: this.newTaskName};
+      const resource = this.getResourceById(stemConfig.name.resourceId, stemConfig.name.resourceType);
+      const purposeType = (<Collection>resource)?.purpose?.type;
+      patchDataMap[stemConfig.name.resourceId] = {
+        [stemConfig.name.attributeId]: this.translationService.createNewRecordTitle(purposeType),
+      };
     }
 
     if (!patchDataMap[stemConfig.start.resourceId]) {
-      const data = this.generateDataForModel(stemConfig.start, stemConfig.stem);
-      patchDataMap[stemConfig.start.resourceId] = {...data};
+      patchDataMap[stemConfig.start.resourceId] = {};
     }
     this.patchDate(task.start, stemConfig.start, patchDataMap[stemConfig.start.resourceId]);
 
     if (!patchDataMap[stemConfig.end.resourceId]) {
-      const data = this.generateDataForModel(stemConfig.end, stemConfig.stem);
-      patchDataMap[stemConfig.end.resourceId] = {...data};
+      patchDataMap[stemConfig.end.resourceId] = {};
     }
     this.patchEndDate(task, stemConfig.end, patchDataMap[stemConfig.end.resourceId]);
 
     (stemConfig.categories || []).forEach((category, index) => {
+      if (!patchDataMap[category.resourceId]) {
+        patchDataMap[category.resourceId] = {};
+      }
       const patchData = patchDataMap[category.resourceId];
-      if (patchData && !patchData[category.attributeId]) {
+      if (!patchData[category.attributeId]) {
         const swimlane = task.swimlanes[index];
         if (swimlane) {
           patchData[category.attributeId] = swimlane.value;
@@ -572,142 +611,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     });
 
     return patchDataMap;
-  }
-
-  private generateDataForModel(model: GanttChartBarModel, stem: QueryStem): Record<string, any> {
-    const resource = this.getResourceById(model.resourceId, model.resourceType);
-    const filters = (resource && getQueryStemFiltersForResource(stem, resource.id, model.resourceType)) || [];
-    return (resource && generateDocumentData(resource, filters, this.constraintData, false)) || {};
-  }
-
-  private createFirstChain(
-    task: GanttTask,
-    stemConfig: GanttChartStemConfig,
-    patchDataMap: PatchDataMap,
-    chain: ({document: DocumentModel, linkInstance: LinkInstance}) => void,
-    cancel: () => void
-  ) {
-    const createModel = stemConfig.name || stemConfig.start;
-    const resourcesOrder = queryStemAttributesResourcesOrder(stemConfig.stem, this.collections, this.linkTypes);
-    const possibleLinkDocumentsIds = createLinkDocumentsDataNewTask(task, this.tasks);
-    const {document, linkInstance} = this.createDataResources(
-      createModel,
-      patchDataMap,
-      resourcesOrder,
-      possibleLinkDocumentsIds.length > 0
-    );
-    const isCollection = createModel.resourceType === AttributesResourceType.Collection;
-    const primaryDataResource = isCollection ? document : linkInstance;
-    const resource = this.getResourceById(createModel.resourceId, createModel.resourceType);
-    if (primaryDataResource && resource && document) {
-      const modalRef = this.modalService.showDataResourceDetail(primaryDataResource, resource, this.view?.id, false);
-      modalRef.content.onCancel$.subscribe(() => cancel());
-      modalRef.content.onSubmit$.subscribe(modifiedDataResource => {
-        primaryDataResource.data = modifiedDataResource.data;
-        primaryDataResource.newData = modifiedDataResource.newData;
-
-        if (possibleLinkDocumentsIds.length > 1) {
-          const callback = documentId => {
-            linkInstance.documentIds[0] = documentId;
-            chain({document, linkInstance});
-          };
-          this.modalService.showChooseLinkDocument(possibleLinkDocumentsIds, this.view?.id, callback);
-        } else if (possibleLinkDocumentsIds.length === 1) {
-          linkInstance.documentIds[0] = possibleLinkDocumentsIds[0];
-          chain({document, linkInstance});
-        } else {
-          chain({document, linkInstance});
-        }
-      });
-    } else {
-      cancel();
-    }
-  }
-
-  private createDataResources(
-    model: GanttChartBarModel,
-    patchDataMap: PatchDataMap,
-    resourcesOrder: AttributesResource[],
-    withLink?: boolean
-  ): {document?: DocumentModel; linkInstance?: LinkInstance} {
-    const patchData = patchDataMap[model.resourceId];
-    const resource = this.getResourceById(model.resourceId, model.resourceType);
-    if (resource) {
-      if (model.resourceType === AttributesResourceType.Collection) {
-        const document = {id: null, data: patchData, collectionId: resource.id};
-        if (withLink) {
-          const linkType = <LinkType>resourcesOrder[model.resourceIndex - 1];
-          if (linkType) {
-            const linkInstance: LinkInstance = {
-              id: null,
-              data: patchDataMap[linkType.id] || {},
-              linkTypeId: linkType.id,
-              documentIds: [null, null],
-            };
-            return {document, linkInstance};
-          }
-        }
-
-        return {document};
-      } else {
-        const linkInstance: LinkInstance = {
-          id: null,
-          data: patchData,
-          linkTypeId: resource.id,
-          documentIds: [null, null],
-        };
-        const collection = <Collection>resourcesOrder[model.resourceIndex + 1];
-        if (collection) {
-          const document = {id: null, data: patchDataMap[collection.id] || {}, collectionId: collection.id};
-          return {document, linkInstance};
-        }
-      }
-    }
-
-    return {};
-  }
-
-  private createSecondaryChain(
-    stemConfig: GanttChartStemConfig,
-    patchDataMap: PatchDataMap,
-    document: DocumentModel,
-    linkInstance: LinkInstance
-  ) {
-    const attributesResourcesOrder = queryStemAttributesResourcesOrder(
-      stemConfig.stem,
-      this.collections,
-      this.linkTypes
-    );
-    document && delete patchDataMap[document.collectionId];
-    linkInstance && delete patchDataMap[linkInstance.linkTypeId];
-
-    const documentsChain: DocumentModel[] = [];
-    const linkInstancesChain: LinkInstance[] = [];
-
-    if (document) {
-      documentsChain[0] = document;
-    }
-    if (linkInstance) {
-      linkInstancesChain[0] = linkInstance;
-    }
-
-    if (Object.keys(patchDataMap).length > 0) {
-      const model = patchDataMap[stemConfig.end.resourceId] ? stemConfig.end : stemConfig.start;
-      const {document: secondDocument, linkInstance: secondLinkInstance} = this.createDataResources(
-        model,
-        patchDataMap,
-        attributesResourcesOrder,
-        true
-      );
-      if (secondDocument) {
-        documentsChain.push(secondDocument);
-      }
-      if (secondLinkInstance) {
-        linkInstancesChain.push(secondLinkInstance);
-      }
-    }
-
-    this.createDocumentsChain.emit({documents: documentsChain, linkInstances: linkInstancesChain});
   }
 
   public onTaskDetail(task: GanttTask) {

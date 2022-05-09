@@ -1,0 +1,11 @@
+@import '../../../../styles/variables';
+
+.body {
+  display: grid;
+  grid-template-rows: min-content minmax(250px, 1fr);
+}
+
+.results-table {
+  display: grid;
+  grid-template-rows: min-content 1fr;
+}

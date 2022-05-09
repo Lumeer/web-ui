@@ -56,7 +56,14 @@ export namespace PaymentsAction {
   export class CreatePayment implements Action {
     public readonly type = PaymentsActionType.CREATE_PAYMENT;
 
-    public constructor(public payload: {organizationId: string; payment: Payment; returnUrl?: string}) {}
+    public constructor(
+      public payload: {
+        organizationId: string;
+        payment: Payment;
+        returnUrl?: string;
+        onSuccess?: (payment: Payment) => void;
+      }
+    ) {}
   }
 
   export class CreatePaymentSuccess implements Action {

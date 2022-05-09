@@ -5,7 +5,7 @@
   [submitDisabled]="!(selectedDocumentId$ | async)"
   *ngIf="{collections: collections$ | async, documents: documents$ | async, selectedCollectionId: selectedCollectionId$ | async} as data">
 
-  <span class="title" i18n="@@modal.kanban.chooseDocument.title">Choose a record</span>
+  <span class="title" i18n="@@modal.kanban.chooseDocument.title">Choose a Record</span>
 
   <div class="body p-3 h-100">
     <ng-container *ngIf="data.collections.length && data.documents.length; else noData">
@@ -41,11 +41,11 @@
   </span>
 
   <span class="button-submit">
-      <i class="far fa-check"></i>&nbsp;<span i18n="@@modal.kanban.chooseDocument.submit">Choose</span>
+      <i class="far fa-check"></i>&nbsp;<span i18n="@@button.choose">Choose</span>
   </span>
 
 </modal-wrapper>
 
 <ng-template #noData>
-  <span class="text-muted" i18n="@@dialog.choose.document.empty">I am sorry but I did not find anything.</span>
+  <span class="text-muted" i18n="@@choose.empty">I am sorry but I did not find anything.</span>
 </ng-template>

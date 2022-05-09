@@ -52,7 +52,9 @@ export namespace ContactsAction {
   export class SetContact implements Action {
     public readonly type = ContactsActionType.SET_CONTACT;
 
-    public constructor(public payload: {organizationId: string; contact: Contact}) {}
+    public constructor(
+      public payload: {organizationId: string; contact: Contact; onSuccess?: () => void; onFailure?: () => void}
+    ) {}
   }
 
   export class SetContactSuccess implements Action {

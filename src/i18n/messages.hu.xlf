@@ -14,11 +14,14 @@
             <trans-unit datatype="html" id="perspective.gantt.create.task.failure">
                 <source>Could not create task</source>
                 <target>Nem lehet létrehozni a feladatot</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context>
-                    <context context-type="linenumber">110</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">360</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
+        <source>Could not move task</source><target state="new">Could not move task</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
+          <context context-type="linenumber">385</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="ganttChart.empty.placeholder2" datatype="html">
                 <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source>
                 <target state="new">Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {Column}}</target>
@@ -316,7 +319,13 @@
                     <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
                     <context context-type="linenumber">346</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="query.stem.choose" datatype="html">
+        <source>The New Record Belongs to...</source><target state="new">Choose query</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context>
+          <context context-type="linenumber">396</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="appTour.description.views">
                 <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
                 <target>Miután finomra hangoltad a vizuális szempontot, adj neki nevet, és mentsd el. Később elérheted a tárolt nézetet a kezdőlapon, vagy megoszthatod a nézetet munkatársaiddal.</target>
@@ -965,7 +974,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/attribute-function-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">360</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/attribute-function-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-documents/choose-link-documents-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-resource/choose-resource-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-stem/choose-stem-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">360</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
             <trans-unit datatype="html" id="button.close">
                 <source>Close</source>
                 <target>Bezár</target>
@@ -975,7 +984,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/box/hint/hint-box.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
             <trans-unit datatype="html" id="button.continue">
                 <source>Continue</source>
                 <target>Folytat</target>
@@ -996,7 +1005,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
             <trans-unit id="selection.lists.modal.add" datatype="html">
                 <source>Add a new list</source>
                 <target state="new">Add list</target>
@@ -1798,7 +1807,19 @@
                     <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
                     <context context-type="linenumber">438</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="record.new.title.tasks" datatype="html">
+        <source>New task</source><target state="new">New task</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="record.new.title.default" datatype="html">
+        <source>New record</source><target state="new">New record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="button.onward">
                 <source>Onward!</source>
                 <target>Tovább!</target>
@@ -2894,7 +2915,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.config.tab.rules.run.title">
                 <source>Run the Automation</source>
                 <target>A szabály futtatása</target>
@@ -3903,11 +3924,8 @@
             <trans-unit datatype="html" id="constraint.duration.unit">
                 <source>{unit, select, w {w} d {d} h {h} m {m} s {s}}</source>
                 <target>{unit, select, w {w} d {d} h {h} m {m} s {s} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-                    <context context-type="linenumber">55</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">65</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.duration.unit.conversion">
                 <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
                 <target>
@@ -3995,11 +4013,8 @@
             <trans-unit datatype="html" id="constraint.number.currency.select">
                 <source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</source>
                 <target>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukrajna - ₴ (UAH)} tr-TR {Törökország - ₺ (TRY)} en-MT {Málta - € (EUR)} en-IE {Írország - € (EUR)} da-DK {Dánia - kr (DKK)} de-CH {Svájc - CHF} en-NZ {Új Zéland - $ (NZD)} fr-CA {Kanada - $ (CAD)} sv-SE {Svédország - kr (SEK)} nb-NO {Norvégia - kr (NOK)} fi-FI {Finnország - € (EUR)} he-IL {Izrael - ₪ (ILS)} es-ES {Spanyolország - € (EUR)} fr-FR {Franciaország - € (EUR)} it-IT {Olaszország - € (EUR)} en-GB {Egyesült Királyság - £ (GBP)} pt-PT {Portugália - € (EUR)} pl-PL {Lengyelország - zł (PLN)} cs-CZ {Csehország - Kč (CZK)} sk-SK {Szlovákia - € (EUR)} hu-HU {Magyarország - Ft (HUF)} de-AT {Ausztria - € (EUR)} de-DE {Németország - € (EUR)} en-US {Amerikai Egyesült Államok - $ (USD)} pt-BR {Brazília - R$ (BRL)} zh-TW {Tajvan - NT$ (TWD)} nl-NL {Hollandia - € (EUR)} zh-CN {Kína - ¥ (CNY)} ru-RU {Oroszország - ₽ (RUB)} ja-JP {Japán - ¥ (JPY)} en-AU {Ausztrália - $ (AUD)} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-                    <context context-type="linenumber">86</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">96</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.number.decimals.description">
                 <source> Leave empty for no rounding. </source>
                 <target>Hagyd üresen, kerekítés nélkül.</target>
@@ -5024,7 +5039,7 @@
                 <target>Feladat hozzáadása</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">496</context></context-group></trans-unit><trans-unit id="pinned" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">520</context></context-group></trans-unit><trans-unit id="pinned" datatype="html">
         <source>Pinned</source><target state="new">Pinned</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/pipes/create-tasks-groups.pipe.ts</context>
@@ -5037,19 +5052,13 @@
             <trans-unit datatype="html" id="currency.abbreviations">
                 <source>k|m|b|t</source>
                 <target>k|m|b|t</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-                    <context context-type="linenumber">39</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
             <trans-unit datatype="html" id="currency.ordinals">
                 <source>st|nd|rd|th</source>
                 <target>st|nd|rd|th</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-                    <context context-type="linenumber">43</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">53</context></context-group></trans-unit>
             <trans-unit datatype="html" id="currentUser.get.fail">
                 <source>Could not get user details</source>
                 <target>Nem lehet beszerezni a felhasználói adatokat</target>
@@ -5105,15 +5114,9 @@
             <trans-unit datatype="html" id="dataResource.runRule.fail">
                 <source>Could not run the selected automation</source>
                 <target>A kijelölt szabály nem futtatható.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-                    <context context-type="linenumber">740</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
-                    <context context-type="linenumber">469</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">744</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit>
             <trans-unit datatype="html" id="default">
                 <source>Default</source>
                 <target>Alapértelmezett</target>
@@ -5322,24 +5325,38 @@
                     <context context-type="linenumber">3</context>
                 </context-group>
             </trans-unit>
-            <trans-unit datatype="html" id="dialog.choose.document.empty">
+            <trans-unit datatype="html" id="choose.empty">
                 <source>I am sorry but I did not find anything.</source>
                 <target>Sajnálom, de nem találtam semmit.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
-                    <context context-type="linenumber">50</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context>
-                    <context context-type="linenumber">49</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-documents/choose-link-documents-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-resource/choose-resource-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-stem/choose-stem-modal.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="modal.chooseDocuments.title" datatype="html">
+        <source>Choose a Record</source><target state="new">Choose a record</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/choose-link-documents/choose-link-documents-modal.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="modal.chooseDocuments.description" datatype="html">
+        <source>Select a record to which you want to link a new one. </source><target state="new">Select to which record you want to link the new one. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/choose-link-documents/choose-link-documents-modal.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.select" datatype="html">
+        <source>Select a Table</source><target state="new">Select Collection</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/choose-resource/choose-resource-modal.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit><trans-unit id="linkType.select" datatype="html">
+        <source>Select a Link Type</source><target state="new">Select Link Type</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/choose-resource/choose-resource-modal.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
 
-            <trans-unit datatype="html" id="dialog.create.calendar.event.default.title">
-                <source>New event</source>
-                <target>Új esemény</target>
-
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.ts</context><context context-type="linenumber">196</context></context-group></trans-unit>
+            
 
 
 
@@ -5449,11 +5466,8 @@
             <trans-unit datatype="html" id="document.add.favorite.fail">
                 <source>Could not add the record to favorites</source>
                 <target>Nem lehetett hozzáadni a rekordot a kedvencekhez</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-                    <context context-type="linenumber">436</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">440</context></context-group></trans-unit>
             <trans-unit datatype="html" id="document.create.fail">
                 <source>Could not create the record</source>
                 <target>Nem lehet létrehozni a rekordot</target>
@@ -5473,27 +5487,18 @@
             <trans-unit datatype="html" id="document.delete.dialog.message">
                 <source>Do you really want to delete this record?</source>
                 <target>Biztosan törölni szeretnéd ezt a rekordot?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-                    <context context-type="linenumber">697</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">701</context></context-group></trans-unit>
             <trans-unit datatype="html" id="document.delete.dialog.title">
                 <source>Delete record</source>
                 <target>Rekord törlése</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-                    <context context-type="linenumber">696</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">700</context></context-group></trans-unit>
             <trans-unit datatype="html" id="document.delete.fail">
                 <source>Could not delete the record</source>
                 <target>Nem lehet törölni a rekordot</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-                    <context context-type="linenumber">715</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">719</context></context-group></trans-unit>
 
             <trans-unit datatype="html" id="document.detail.comments.commentRemove.message">
                 <source>Do you really want to delete this comment?</source>
@@ -5882,19 +5887,13 @@
             <trans-unit datatype="html" id="document.remove.favorite.fail">
                 <source>Could not remove the record from favorites</source>
                 <target>Nem lehetett eltávolítani a rekordot a kedvencekből</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-                    <context context-type="linenumber">468</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">472</context></context-group></trans-unit>
             <trans-unit datatype="html" id="document.update.fail">
                 <source>Could not update the record</source>
                 <target>Nem lehetett frissíteni a rekordot</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-                    <context context-type="linenumber">479</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">483</context></context-group></trans-unit>
             <trans-unit datatype="html" id="documents.get.fail">
                 <source>Could not get records</source>
                 <target>Nem lehet lekérni a rekordokat</target>
@@ -6128,27 +6127,14 @@
             <trans-unit datatype="html" id="function.create.serviceLimits">
                 <source>You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?</source>
                 <target>Az Ingyenes Csomagban táblázat/hivatkozástípusonként csak egy függvény lehet. Szeretne most frissíteni az Üzleti verzióra?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context>
-                    <context context-type="linenumber">304</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">363</context></context-group></trans-unit>
             <trans-unit datatype="html" id="function.create.serviceLimits.noRights">
                 <source>You can have only a single function per table/link type in the Free Plan.</source>
                 <target>Az Ingyenes Csomagban táblázat/hivatkozástípusonként csak egy függvény lehet.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context>
-                    <context context-type="linenumber">310</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit datatype="html" id="gantt.perspective.task.create.title">
-                <source>New task</source>
-                <target>Új tevékenység</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
-                    <context context-type="linenumber">188</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">369</context></context-group></trans-unit>
+            
 
 
             <trans-unit datatype="html" id="get.help.button">
@@ -6356,7 +6342,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="inviteUser.dialog.readOnlyNoAccess.description1">
-                <source>New colleagues can join the project, they won't see exiting tables and views.</source>
+                <source>New colleagues can join the project, they won't see existing tables and views.</source>
                 <target>Új munkatársak csatlakozhatnak a projekthez, nem látják a kilépő táblázatokat és nézeteket.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/invite-users/invite-users.component.ts</context>
@@ -7148,17 +7134,28 @@
                     <context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
                     <context context-type="linenumber">13</context>
                 </context-group>
-            </trans-unit>
-            <trans-unit datatype="html" id="modal.kanban.chooseDocument.submit">
-                <source>Choose</source>
-                <target>Válaszd ki</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
-                    <context context-type="linenumber">44</context>
-                </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="button.choose" datatype="html">
+        <source>Choose</source><target state="new">Choose</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/choose-link-documents/choose-link-documents-modal.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/choose-resource/choose-resource-modal.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/choose-stem/choose-stem-modal.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+            
             <trans-unit datatype="html" id="modal.kanban.chooseDocument.title">
-                <source>Choose a record</source>
+                <source>Choose a Record</source>
                 <target>Rekord kiválasztása</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
@@ -7201,19 +7198,13 @@
             <trans-unit datatype="html" id="organization.contact.get.fail">
                 <source>Could not read contact information</source>
                 <target>Nem lehet olvasni az elérhetőségi adatokat</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/organizations/contact/contacts.effects.ts</context>
-                    <context context-type="linenumber">51</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/contact/contacts.effects.ts</context><context context-type="linenumber">52</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.contact.set.fail">
                 <source>Could not save contact information</source>
                 <target>Nem lehet menteni az elérhetőségi adatokat</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/organizations/contact/contacts.effects.ts</context>
-                    <context context-type="linenumber">76</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/contact/contacts.effects.ts</context><context context-type="linenumber">82</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.create.fail">
                 <source>Could not create the organization</source>
                 <target>Nem lehet létrehozni a szervezetet</target>
@@ -7277,51 +7268,33 @@
             <trans-unit datatype="html" id="organization.payment.create.fail">
                 <source>Could not create your new service order</source>
                 <target>Nem lehet létrehozni az új szolgáltatási megrendelést</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context>
-                    <context context-type="linenumber">153</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.payment.get.fail">
                 <source>Could not read information about your previous service order</source>
                 <target>Nem lehetett olvasni a korábbi szolgáltatási megrendeléssel kapcsolatos információkról</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context>
-                    <context context-type="linenumber">128</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context><context context-type="linenumber">129</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.payments.addUsers.info">
                 <source>To add more users to your organization, please contact support@lumeer.io.</source>
                 <target>Ha további felhasználókat szeretnél hozzáadni a szervezethez, fordulj a support@lumeer.io -hoz.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-list/payments-list.component.ts</context>
-                    <context context-type="linenumber">101</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-list/payments-list.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.payments.addUsers.title">
                 <source>Add Users</source>
                 <target>Felhasználók hozzáadása</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-list/payments-list.component.ts</context>
-                    <context context-type="linenumber">100</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-list/payments-list.component.ts</context><context context-type="linenumber">71</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.payments.get.fail">
                 <source>Could not read information about your previous service orders</source>
                 <target>Nem lehetett olvasni a korábbi szolgáltatási megrendeléssel kapcsolatos információkról</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context>
-                    <context context-type="linenumber">56</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context><context context-type="linenumber">57</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.payments.lang.code">
                 <source>en</source>
                 <target>En</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context>
-                    <context context-type="linenumber">69</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context><context context-type="linenumber">59</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.payments.paidWarning.text">
                 <source>Your current subscription lasts until <x id="validUntil" equiv-text="validUntil"/>. Are you sure you want to proceed with an order with earlier start date of <x id="start" equiv-text="start"/>? In case you want to add more users, please contact support@lumeer.io.</source>
                 <target>
@@ -7331,19 +7304,13 @@
                     <x id="start" equiv-text="{{1}}"/> rendelkező rendeléssel folytatod?
                     Ha további felhasználókat szeretnél hozzáadni, kérjük, fordulj a support@lumeer.io -hoz.
                 </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context>
-                    <context context-type="linenumber">148</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.payments.paidWarning.title">
                 <source>Already Paid</source>
                 <target>Már kifizetett</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context>
-                    <context context-type="linenumber">147</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.permission.change.fail">
                 <source>Could not change the organization permissions</source>
                 <target>Nem lehet módosítani a szervezeti engedélyeket</target>
@@ -7582,19 +7549,13 @@
             <trans-unit datatype="html" id="organizations.tab.detail.contact.saved">
                 <source>Saved!</source>
                 <target>Mentett!</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/contact-form/contact-form.component.html</context>
-                    <context context-type="linenumber">69</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/contact-form/contact-form.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.contact.saving">
                 <source>Saving</source>
                 <target>Mentés</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/contact-form/contact-form.component.html</context>
-                    <context context-type="linenumber">68</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/contact-form/contact-form.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.contact.state">
                 <source>State</source>
                 <target>Állapot</target>
@@ -7612,7 +7573,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.order.activeUntil">
-                <source>Subscription is active until <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/>. <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Extend it today!<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/></source>
+                <source>Subscription is active until <x id="INTERPOLATION" equiv-text="{{serviceLimits?.validUntil | date : 'mediumDate'}}"/>. <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Extend it today!<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/></source>
                 <target>Az előfizetés eddig
                     <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/>
                     aktív.
@@ -7644,11 +7605,8 @@
             <trans-unit datatype="html" id="organizations.tab.detail.order.discount">
                 <source>Special Early Bird Prices!</source>
                 <target>Különleges Early Bird árak!</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.ts</context>
-                    <context context-type="linenumber">77</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.order.duration">
                 <source>Subscription Duration</source>
                 <target>Előfizetés időtartama</target>
@@ -7741,11 +7699,8 @@
             <trans-unit datatype="html" id="organizations.tab.detail.order.term">
                 <source>year</source>
                 <target>Év</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.ts</context>
-                    <context context-type="linenumber">117</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.ts</context><context context-type="linenumber">94</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organizations.tab.detail.order.users">
                 <source>Number of Users in your Organization</source>
                 <target>A szervezetben lévő felhasználók száma</target>
@@ -8236,7 +8191,13 @@
                     <context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.ts</context>
                     <context context-type="linenumber">100</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="perspective.calendar.create.event.failure" datatype="html">
+        <source>Could not create event</source><target state="new">Could not create event</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/calendar-events.component.ts</context>
+          <context context-type="linenumber">365</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="perspective.calendar.display.allDay">
                 <source>All day</source>
                 <target>Egész nap</target>
@@ -8525,10 +8486,10 @@
 				<trans-unit datatype="html" id="perspective.kanban.create.card.failure">
 					<source>Could not create card</source>
 					<target>Nem lehet létrehozni a kártyát</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">243</context></context-group></trans-unit><trans-unit id="perspective.kanban.move.card.failure" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">164</context></context-group></trans-unit><trans-unit id="perspective.kanban.move.card.failure" datatype="html">
         <source>Could not move card</source><target>Nem sikerült áthelyezni a kártyát</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">629</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">186</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.map.config.position.saved">
 					<source> Save map position to view </source>
 					<target>Térképpozíció mentése a megtekintéshez</target>
@@ -8755,7 +8716,7 @@
 					<target>Táblázat átméretezése</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="groupBy">
-					<source>Group by</source>
+					<source>Group By</source>
 					<target>Csoportosítás szerint</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="tasks.sort.group.order.hint" datatype="html">
         <source> Groups order is determined by the tasks order (the first sorting option). </source><target state="new"> Groups order is determined by the tasks order (the first sorting option). </target>
@@ -9075,26 +9036,26 @@
 				<trans-unit datatype="html" id="query.filter.condition.constraint.date">
 					<source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, eq {Van} neq {Nincs} gt {Utána} lt {Előtte} gte {Benne van vagy utána} lte {Benne van vagy előtte} between {Közte van} notBetween {Nincs közte} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">129</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">139</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.number">
 					<source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, between {Tartomány} notBetween {Nem a tartományból} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">132</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.select">
 					<source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, eq {Benne van} neq {Nincs egy sem} in {Bent} nin {Nincs egy sem} hasAll {Mindegyik van} hasSome {Néhány van} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">93</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">103</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.text">
 					<source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled}}</source>
 					<target>{condition, select, eq {Van} neq {Nincs} contains {Tartalmazza} notContains {Nem tartalmazza} startsWith {Kezdődik a} endsWith {Végződik a} in {Benne van} nin {Nincs benne} empty {Üres} notEmpty {Nem üres} enabled {Engedélyezett} disabled {Nem engedélyezett} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">100</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">110</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.value.constraint.date">
 					<source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}</source>
 					<target>{condition, select, today {Ma} yesterday {Tegnap} tomorrow {Holnap} thisWeek {Ez a hét} thisMonth {Eza hónap} lastWeek {Múlt hét} lastMonth {Múlt hónap} nextMonth {Következő hónap} nextWeek {Következő hét} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">151</context></context-group></trans-unit><trans-unit id="query.filter.condition.value.constraint.usersAndTeams" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">161</context></context-group></trans-unit><trans-unit id="query.filter.condition.value.constraint.usersAndTeams" datatype="html">
         <source>{type, select, currentUser {Current User} currentTeams {Current Teams}}</source><target state="new">{type, select, currentUser {Current User} currentTeams {Current Teams}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">158</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">168</context></context-group></trans-unit>
 
 				<trans-unit datatype="html" id="query.item.button.remove">
 					<source>Delete query item</source>
@@ -9449,7 +9410,7 @@
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="dataResource.detail.loading" datatype="html">
         <source>Fetching record</source><target state="new">Fetching record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="go.back" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail-loading/data-resource-detail-loading-modal.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="go.back" datatype="html">
         <source>Go back</source><target>Visszamegyek</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resources-detail/detail/data-resources-detail.component.html</context>
@@ -9464,7 +9425,7 @@
       </trans-unit><trans-unit id="button.done" datatype="html">
         <source>Done</source><target state="new">Done</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
 
 				<trans-unit datatype="html" id="resource.new.dialog.title">
 					<source> Create a new <x id="ICU" equiv-text="{resourceType, select, organization {Organization} project {Project}}"/> </source>
@@ -9883,7 +9844,7 @@
 				<trans-unit datatype="html" id="serviceLimits.trial">
 					<source>Free Service</source>
 					<target>Ingyenes szolgáltatás</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">328</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">309</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">328</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">368</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="session.expired.message">
 					<source> You have been inactive for <x id="INTERPOLATION" equiv-text="{{sessionTimeout}}"/> minutes and the application logged out for security reasons. Click Continue to log in again. </source>
 					<target>Inaktív voltál
@@ -10019,11 +9980,11 @@
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1247</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1271</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.title">
 					<source>Delete this column?</source>
 					<target>Törlöd ezt az oszlopot?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1246</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1270</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.add-button">
 					<source>Link table</source>
 					<target>Hivatkozási tábla</target>

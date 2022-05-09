@@ -1,0 +1,28 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  (onClose)="onClose()"
+  (onSubmit)="onSubmit()"
+  [submitDisabled]="!(selectedResourceId$ | async)">
+
+  <span class="title">{{title || defaultTitle}}</span>
+
+  <div class="body p-3">
+    <select-collection [collections]="resources$ | async"
+                       [selectedCollectionId]="selectedResourceId$ | async"
+                       (onSelect)="onSelectResource($event.collection)">
+    </select-collection>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="far fa-check"></i>&nbsp;<span i18n="@@button.choose">Choose</span>
+  </span>
+
+</modal-wrapper>
+
+<ng-template #noData>
+  <span class="text-muted" i18n="@@choose.empty">I am sorry but I did not find anything.</span>
+</ng-template>

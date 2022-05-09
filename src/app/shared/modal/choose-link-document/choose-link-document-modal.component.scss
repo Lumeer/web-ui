@@ -2,7 +2,7 @@
 
 .body {
   display: grid;
-  grid-template-rows: min-content 1fr;
+  grid-template-rows: min-content min-content minmax(250px, 1fr);
 }
 
 .results-table {

@@ -77,6 +77,7 @@ import {WorkflowTable} from '../../../model/workflow-table';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {
   filterQueryByStem,
+  getQueryFiltersForCollection,
   getQueryFiltersForResource,
   queryStemsAreSame,
 } from '../../../../../../core/store/navigation/query/query.util';
@@ -95,7 +96,6 @@ import {
 } from '../../../../../../core/store/documents/document.utils';
 import {
   computeTableHeight,
-  createAggregatedLinkingDocumentsIds,
   createAggregatorAttributes,
   createEmptyNewRow,
   createLinkingCollectionId,
@@ -123,6 +123,7 @@ import {
   ConditionValue,
   Constraint,
   ConstraintData,
+  DataValue,
   DocumentsAndLinksData,
   UnknownConstraint,
 } from '@lumeer/data-filters';
@@ -137,6 +138,7 @@ import {Workspace} from '../../../../../../core/store/navigation/workspace';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
+import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -152,6 +154,7 @@ export class WorkflowTablesDataService {
     private menuService: WorkflowTablesMenuService,
     private stateService: WorkflowTablesStateService,
     private modalService: ModalService,
+    private createDataResourceService: CreateDataResourceService,
     private constraintItemsFormatter: SelectItemWithConstraintFormatter,
     private copyValueService: CopyValueService
   ) {
@@ -382,6 +385,7 @@ export class WorkflowTablesDataService {
             const title = aggregatedDataItem.value?.toString() || '';
             const tableId = workflowTableId(stemConfig.stem, this.workflowId, title);
             const titleDataValue = constraint.createDataValue(title, constraintData);
+            const linkingQueryStem = this.createLinkingQueryStem(linkingCollectionId, titleDataValue, attribute, query);
             const titleDataResources = aggregatedDataItem.dataResources;
             for (const childItem of aggregatedDataItem.children || []) {
               const currentTable = currentTables.find(table => table.id === tableId) || tableByCollection;
@@ -437,9 +441,7 @@ export class WorkflowTablesDataService {
                 bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
                 width: columnsWidth + 1, // + 1 for border
                 newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated, actionTitle} : undefined,
-                linkingDocumentIds:
-                  !linkingCollectionId && createAggregatedLinkingDocumentsIds(aggregatedDataItem, childItem),
-                linkingCollectionId,
+                linkingQueryStem,
               };
               tables.push(workflowTable);
             }
@@ -477,7 +479,7 @@ export class WorkflowTablesDataService {
             width: columnsWidth + 1, // + 1 for border
             newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap, actionTitle} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
-            linkingCollectionId,
+            linkingQueryStem: linkingCollectionId ? {collectionId: linkingCollectionId} : null,
           };
           tables.push(workflowTable);
         }
@@ -489,6 +491,28 @@ export class WorkflowTablesDataService {
       },
       {tables: [], actions: []}
     );
+  }
+
+  private createLinkingQueryStem(
+    collectionId: string,
+    titleDataValue: DataValue,
+    titleAttribute: Attribute,
+    query: Query
+  ): QueryStem {
+    if (collectionId) {
+      const collectionsFilters = getQueryFiltersForCollection(query, collectionId);
+      if (titleAttribute) {
+        collectionsFilters.push({
+          attributeId: titleAttribute.id,
+          collectionId,
+          condition: ConditionType.Equals,
+          conditionValues: [{value: titleDataValue.serialize()}],
+        });
+      }
+      return {collectionId, filters: collectionsFilters};
+    }
+
+    return null;
   }
 
   private tableNewRowTitle(collection: Collection): string {
@@ -887,7 +911,7 @@ export class WorkflowTablesDataService {
       ? linkPermissions.rolesWithView?.DataContribute
       : collectionPermissions.rolesWithView?.[RoleType.DataContribute];
     if (canCreateNewRow) {
-      newRow = createEmptyNewRow(tableId);
+      newRow = createEmptyNewRow(tableId, !!linkType);
       newRow.documentMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
       newRow.linkMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
     }
@@ -1467,18 +1491,13 @@ export class WorkflowTablesDataService {
 
   public createNewRow(tableId: string) {
     const table = this.stateService.findTable(tableId);
-    if (table.linkingCollectionId) {
-      this.modalService.showChooseLinkDocumentByCollection(table.linkingCollectionId, document =>
-        this.addRow(tableId, document.id)
+    if (table.linkingQueryStem) {
+      this.createDataResourceService.chooseDocumentsPath(
+        table.stem,
+        [table.linkingQueryStem],
+        this.currentView?.id,
+        documents => this.addRow(tableId, documents[0].id)
       );
-    } else if (table.linkingDocumentIds?.length) {
-      if (table.linkingDocumentIds.length === 1) {
-        this.addRow(tableId, table.linkingDocumentIds[0]);
-      } else {
-        this.modalService.showChooseLinkDocument(table.linkingDocumentIds, this.currentView?.id, document =>
-          this.addRow(tableId, document.id)
-        );
-      }
     } else {
       this.addRow(tableId);
     }
@@ -1487,7 +1506,14 @@ export class WorkflowTablesDataService {
   private addRow(tableId: string, linkedDocumentId?: string) {
     const table = this.stateService.findTable(tableId);
     const id = generateId();
-    const newRow = {...table.newRow, linkedDocumentId, id, correlationId: id};
+    const newRow: TableRow = {
+      ...table.newRow,
+      linkedDocumentId,
+      id,
+      correlationId: id,
+      suggestLinks: !!linkedDocumentId,
+      suggestDetail: !linkedDocumentId,
+    };
     this.stateService.addRow(tableId, newRow);
     this.addLockedRow(tableId, id);
   }

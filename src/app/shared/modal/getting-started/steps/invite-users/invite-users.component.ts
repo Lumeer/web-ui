@@ -35,7 +35,7 @@ export class InviteUsersComponent {
       id: InvitationType.JoinOnly,
       icons: ['fa fa-eye-slash'],
       value: $localize`:@@inviteUser.dialog.readOnlyNoAccess.title2:Just Join`,
-      description: $localize`:@@inviteUser.dialog.readOnlyNoAccess.description1:New colleagues can join the project, they won't see exiting tables and views.`,
+      description: $localize`:@@inviteUser.dialog.readOnlyNoAccess.description1:New colleagues can join the project, they won't see existing tables and views.`,
     },
     {
       id: InvitationType.ReadOnly,

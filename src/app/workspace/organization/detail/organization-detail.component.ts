@@ -17,34 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Contact} from '../../../core/store/organizations/contact/contact';
 import {select, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {AppState} from '../../../core/store/app.state';
-import {Observable, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {ContactsAction} from '../../../core/store/organizations/contact/contacts.action';
 import {Organization} from '../../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
-import {filter} from 'rxjs/operators';
+import {take, tap} from 'rxjs/operators';
 import {selectContactByWorkspace} from '../../../core/store/organizations/contact/contacts.state';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
+import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
+import {Payment} from '../../../core/store/organizations/payment/payment';
+import {selectLastCreatedPayment} from '../../../core/store/organizations/payment/payments.state';
+import {PaymentsAction} from '../../../core/store/organizations/payment/payments.action';
 
 @Component({
   templateUrl: './organization-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrganizationDetailComponent implements OnInit, OnDestroy {
+export class OrganizationDetailComponent implements OnInit {
   public contact$: Observable<Contact>;
+  public organization$: Observable<Organization>;
+  public serviceLimits$: Observable<ServiceLimits>;
+  public lastPayment$: Observable<Payment>;
 
-  public organization: Organization;
-
-  private contactSubscription: Subscription;
-  private organizationSubscription: Subscription;
+  private organization: Organization;
 
   constructor(private router: Router, private store$: Store<AppState>) {}
-
-  public updateContact(contact: Contact) {
-    this.store$.dispatch(new ContactsAction.SetContact({organizationId: this.organization.id, contact}));
-  }
 
   public ngOnInit() {
     this.subscribeToStore();
@@ -52,30 +55,22 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToStore() {
-    this.organizationSubscription = this.store$
-      .pipe(
-        select(selectOrganizationByWorkspace),
-        filter(organization => !!organization)
-      )
-      .subscribe(organization => (this.organization = organization));
-
-    this.contact$ = this.store$.pipe(
-      select(selectContactByWorkspace),
-      filter(contact => !!contact)
+    this.organization$ = this.store$.pipe(
+      select(selectOrganizationByWorkspace),
+      tap(organization => (this.organization = organization))
     );
-  }
 
-  public ngOnDestroy() {
-    if (this.contactSubscription) {
-      this.contactSubscription.unsubscribe();
-    }
+    this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
-    if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe();
-    }
+    this.contact$ = this.store$.pipe(select(selectContactByWorkspace));
+
+    this.lastPayment$ = this.store$.pipe(select(selectLastCreatedPayment));
   }
 
   private requestData() {
-    this.store$.dispatch(new ContactsAction.GetContact({organizationId: this.organization.id}));
+    this.store$.pipe(select(selectWorkspaceWithIds), take(1)).subscribe(workspace => {
+      this.store$.dispatch(new ContactsAction.GetContact({organizationId: workspace.organizationId}));
+      this.store$.dispatch(new PaymentsAction.GetPayments({organizationId: workspace.organizationId}));
+    });
   }
 }

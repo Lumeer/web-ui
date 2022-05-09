@@ -17,71 +17,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Organization} from '../../../../../core/store/organizations/organization';
-import {Subscription} from 'rxjs';
-import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {AppState} from '../../../../../core/store/app.state';
-import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {filter} from 'rxjs/operators';
-import {Payment} from '../../../../../core/store/organizations/payment/payment';
+import {Payment, PaymentState} from '../../../../../core/store/organizations/payment/payment';
 import {selectPaymentsByWorkspaceSorted} from '../../../../../core/store/organizations/payment/payments.state';
 import {PaymentsAction} from '../../../../../core/store/organizations/payment/payments.action';
 import {ServiceLimitsAction} from '../../../../../core/store/organizations/service-limits/service-limits.action';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'payments-list',
   templateUrl: './payments-list.component.html',
-  styleUrls: ['./payments-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaymentsListComponent implements OnInit, OnDestroy {
+export class PaymentsListComponent implements OnInit {
+  @Input()
+  public organization: Organization;
+
   @Output()
   public repay = new EventEmitter<string>();
 
-  private organization: Organization;
-  private organizationSubscription: Subscription;
+  public paymentState = PaymentState;
 
-  public payments: Payment[];
-  private paymentsSubscription: Subscription;
+  public payments$: Observable<Payment[]>;
 
-  constructor(private router: Router, private store: Store<AppState>) {}
+  constructor(private router: Router, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.subscribeToStore();
-    this.requestData();
-  }
-
-  public subscribeToStore() {
-    this.organizationSubscription = this.store
-      .select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => isNotNullOrUndefined(organization)))
-      .subscribe(organization => (this.organization = organization));
-
-    this.paymentsSubscription = this.store
-      .select(selectPaymentsByWorkspaceSorted)
-      .pipe(filter(payments => isNotNullOrUndefined(payments) && payments.length > 0))
-      .subscribe(payments => (this.payments = payments));
-  }
-
-  public requestData() {
-    this.store.dispatch(new PaymentsAction.GetPayments({organizationId: this.organization.id}));
-  }
-
-  public ngOnDestroy() {
-    if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe();
-    }
-
-    if (this.paymentsSubscription) {
-      this.paymentsSubscription.unsubscribe();
-    }
+    this.payments$ = this.store$.pipe(select(selectPaymentsByWorkspaceSorted));
   }
 
   public refreshPayment(paymentId: string) {
-    this.store.dispatch(
+    this.store$.dispatch(
       new PaymentsAction.GetPayment({
         organizationId: this.organization.id,
         paymentId,
@@ -95,11 +66,15 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   }
 
   public addUsers() {
-    this.store.dispatch(
+    this.store$.dispatch(
       new NotificationsAction.Info({
         title: $localize`:@@organization.payments.addUsers.title:Add Users`,
         message: $localize`:@@organization.payments.addUsers.info:To add more users to your organization, please contact support@lumeer.io.`,
       })
     );
+  }
+
+  public trackByPayment(index: number, payment: Payment): string {
+    return payment.id;
   }
 }

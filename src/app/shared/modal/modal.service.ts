@@ -63,6 +63,11 @@ import {GettingStartedModalType} from './getting-started/model/getting-started-m
 import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
 import {BookProductDemoModalComponent} from './book-product-demo/book-product-demo-modal.component';
 import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading/data-resource-detail-loading-modal.component';
+import {ChooseLinkDocumentsModalComponent} from './choose-link-documents/choose-link-documents-modal.component';
+import {DataResourcesChain} from './data-resource-detail/model/data-resources-chain';
+import {QueryStem} from '../../core/store/navigation/query/query';
+import {ChooseResourceModalComponent} from './choose-resource/choose-resource-modal.component';
+import {ChooseStemModalComponent} from './choose-stem/choose-stem-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -84,6 +89,37 @@ export class ModalService {
     return interval(1000).pipe(map(() => this.isSomeModalOpened()));
   }
 
+  public showChooseCollection(
+    collectionIds: string[],
+    title?: string,
+    callback?: (collectionId: string) => void,
+    cancel?: () => void
+  ): BsModalRef {
+    const initialState = {
+      resourceIds: collectionIds,
+      resourceType: AttributesResourceType.Collection,
+      title,
+      callback,
+      cancel,
+    };
+    return this.showStaticDialog(initialState, ChooseResourceModalComponent);
+  }
+
+  public showChooseStem(
+    stems: QueryStem[],
+    title?: string,
+    callback?: (index: number) => void,
+    cancel?: () => void
+  ): BsModalRef {
+    const initialState = {
+      stems,
+      title,
+      callback,
+      cancel,
+    };
+    return this.showStaticDialog(initialState, ChooseStemModalComponent);
+  }
+
   public showChooseLinkDocument(
     documentIds: string[],
     viewId: string,
@@ -93,12 +129,14 @@ export class ModalService {
     return this.show(ChooseLinkDocumentModalComponent, config);
   }
 
-  public showChooseLinkDocumentByCollection(
-    collectionId: string,
-    callback?: (document: DocumentModel) => void
+  public showChooseDocumentsPath(
+    stems: QueryStem[],
+    viewId: string,
+    callback?: (document: DocumentModel[]) => void,
+    cancel?: () => void
   ): BsModalRef {
-    const config = {initialState: {collectionId, callback}, keyboard: true, class: 'modal-lg'};
-    return this.show(ChooseLinkDocumentModalComponent, config);
+    const initialState = {stems, viewId, callback, cancel};
+    return this.showStaticDialog(initialState, ChooseLinkDocumentsModalComponent, 'modal-lg');
   }
 
   public showModifyDocumentLinks(
@@ -156,18 +194,39 @@ export class ModalService {
       });
   }
 
+  public showDataResourceDetailWithChain(
+    dataResource: DataResource,
+    resource: AttributesResource,
+    chain: DataResourcesChain,
+    viewId?: string,
+    onCreated?: (DataResource) => void,
+    onCancel?: () => void
+  ): BsModalRef {
+    const initialState = {dataResource, resource, chain, viewId, onCreated, onCancel};
+    const classString = 'modal-lg';
+    if (dataResource?.id) {
+      const config = {initialState, keyboard: true, class: classString};
+      return this.show(DataResourceDetailModalComponent, config);
+    } else {
+      return this.showStaticDialog(initialState, DataResourceDetailModalComponent, classString);
+    }
+  }
+
   public showDataResourceDetail(
     dataResource: DataResource,
     resource: AttributesResource,
     viewId?: string,
-    createDirectly: boolean = true
+    onCreated?: (DataResource) => void,
+    onCancel?: () => void
   ): BsModalRef {
-    const config = {
-      initialState: {dataResource, resource, createDirectly, viewId},
-      keyboard: true,
-      class: 'modal-lg',
-    };
-    return this.show(DataResourceDetailModalComponent, config);
+    const initialState = {dataResource, resource, viewId, onCreated, onCancel};
+    const classString = 'modal-lg';
+    if (dataResource?.id) {
+      const config = {initialState, keyboard: true, class: classString};
+      return this.show(DataResourceDetailModalComponent, config);
+    } else {
+      return this.showStaticDialog(initialState, DataResourceDetailModalComponent, classString);
+    }
   }
 
   public showDataResourcesDetail(dataResources: DataResource[], title: string, viewId: string): BsModalRef {

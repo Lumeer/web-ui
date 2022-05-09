@@ -1,0 +1,41 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  (onClose)="onCancel()"
+  (onSubmit)="onSubmit()"
+  [submitDisabled]="!(selectedDocumentId$ | async)"
+  *ngIf="{collection: collection$ | async, documents: documents$ | async} as data">
+
+  <span class="title" i18n="@@modal.chooseDocuments.title">Choose a Record</span>
+
+  <div class="body p-3 h-100">
+    <ng-container *ngIf="data.collection && data.documents.length; else noData">
+      <div class="text-muted text-center"
+           i18n="@@modal.chooseDocuments.description">Select a record to which you want to link a new one.
+      </div>
+
+      <preview-results-table class="mt-2 overflow-hidden results-table"
+                             [dataResources]="data.documents | documentsByCollection:data.collection.id"
+                             [resource]="data.collection"
+                             [selectedId]="selectedDocumentId$ | async"
+                             [attributesSettings]="(viewSettings$ | async)?.attributes"
+                             [view]="view$ | async"
+                             [resizeable]="false"
+                             [constraintData]="constraintData$ | async"
+                             (selectDataResource)="onSelectDocument($event)">
+      </preview-results-table>
+    </ng-container>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="far fa-check"></i>&nbsp;<span i18n="@@button.choose">Choose</span>
+  </span>
+
+</modal-wrapper>
+
+<ng-template #noData>
+  <span class="text-muted" i18n="@@choose.empty">I am sorry but I did not find anything.</span>
+</ng-template>

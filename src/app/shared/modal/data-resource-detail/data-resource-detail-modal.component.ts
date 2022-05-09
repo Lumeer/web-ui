@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, Templat
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -46,6 +46,7 @@ import {map, switchMap, tap} from 'rxjs/operators';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {View} from '../../../core/store/views/view';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {DataResourcesChain} from './model/data-resources-chain';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -67,15 +68,19 @@ export class DataResourceDetailModalComponent implements OnInit {
   public viewId: string;
 
   @Input()
-  public createDirectly: boolean;
+  public chain: DataResourcesChain;
+
+  @Input()
+  public onCreated: (dataResource: DataResource) => void;
+
+  @Input()
+  public onCancel?: () => void;
 
   public readonly dialogType = DialogType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
   public resourceType: AttributesResourceType;
 
-  public onSubmit$ = new Subject<DataResource>();
-  public onCancel$ = new Subject();
   public performingAction$ = new BehaviorSubject(false);
 
   public query$: Observable<Query>;
@@ -88,7 +93,6 @@ export class DataResourceDetailModalComponent implements OnInit {
 
   private dataResourceSubscription = new Subscription();
   private dataExistSubscription = new Subscription();
-  private currentDataResource: DataResource;
   private initialModalsCount: number;
   private currentView: View;
 
@@ -137,7 +141,6 @@ export class DataResourceDetailModalComponent implements OnInit {
     this.currentView$ = this.currentView$.pipe(tap(view => (this.currentView = view)));
 
     this.subscribeExist(resource, dataResource);
-    this.currentDataResource = dataResource;
   }
 
   private subscribeDataResource(dataResource: DataResource) {
@@ -177,29 +180,72 @@ export class DataResourceDetailModalComponent implements OnInit {
     return this.store$.pipe(select(selectLinkInstanceById(id)));
   }
 
-  public onSubmit() {
-    const dataResource = this.currentDataResource || this.dataResource;
-    if (this.dataResource?.id || this.createDirectly) {
+  public onSubmit(dataResource: DataResource) {
+    if (dataResource?.id) {
       this.onClose();
     } else {
-      this.onSubmit$.next(dataResource);
-      this.hideDialog();
+      this.createDataResource(dataResource, true);
     }
   }
 
   public onDataResourceChanged(dataResource: DataResource) {
-    if (!dataResource.id && this.createDirectly) {
-      if (this.resourceType === AttributesResourceType.Collection) {
-        this.createDocument(<DocumentModel>dataResource);
-      } else {
-        this.createLink(<LinkInstance>dataResource);
-      }
-    } else {
-      this.currentDataResource = dataResource;
+    if (!dataResource.id) {
+      this.createDataResource(dataResource);
     }
   }
 
-  private createDocument(document: DocumentModel) {
+  private createDataResource(dataResource: DataResource, closeAfter?: boolean) {
+    if (this.chain) {
+      this.createChain(dataResource, closeAfter);
+    } else if (this.resourceType === AttributesResourceType.Collection) {
+      this.createDocument(<DocumentModel>dataResource, closeAfter);
+    } else {
+      this.createLink(<LinkInstance>dataResource, closeAfter);
+    }
+  }
+
+  private createChain(dataResource: DataResource, closeAfter: boolean) {
+    this.performingAction$.next(true);
+
+    let resourceId: string;
+    if (this.chain.type === AttributesResourceType.Collection) {
+      this.chain.documents[this.chain.index].data = dataResource.data;
+      resourceId = this.chain.documents[this.chain.index].collectionId;
+    } else {
+      this.chain.linkInstances[this.chain.index].data = dataResource.data;
+      resourceId = this.chain.linkInstances[this.chain.index].linkTypeId;
+    }
+
+    this.store$.dispatch(
+      new DocumentsAction.CreateChain({
+        ...this.chain,
+        workspace: this.currentWorkspace(),
+        afterSuccess: ({documents, linkInstances}) => {
+          if (this.chain.type === AttributesResourceType.Collection) {
+            const document = documents.find(document => document.collectionId === resourceId);
+            if (document) {
+              this.onCreated?.(document);
+              this.subscribeDataResource(document);
+            }
+          } else {
+            const linkInstance = linkInstances.find(linkInstance => linkInstance.linkTypeId === resourceId);
+            if (linkInstance) {
+              this.onCreated?.(linkInstance);
+              this.subscribeDataResource(linkInstance);
+            }
+          }
+          if (closeAfter) {
+            this.hideDialog();
+          } else {
+            this.performingAction$.next(false);
+          }
+        },
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
+  }
+
+  private createDocument(document: DocumentModel, closeAfter: boolean) {
     this.performingAction$.next(true);
 
     this.store$.dispatch(
@@ -207,15 +253,20 @@ export class DataResourceDetailModalComponent implements OnInit {
         document,
         workspace: this.currentWorkspace(),
         afterSuccess: document => {
+          this.onCreated?.(document);
           this.subscribeDataResource(document);
-          this.performingAction$.next(false);
+          if (closeAfter) {
+            this.hideDialog();
+          } else {
+            this.performingAction$.next(false);
+          }
         },
         onFailure: () => this.performingAction$.next(false),
       })
     );
   }
 
-  private createLink(linkInstance: LinkInstance) {
+  private createLink(linkInstance: LinkInstance, closeAfter: boolean) {
     this.performingAction$.next(true);
 
     this.store$.dispatch(
@@ -223,8 +274,13 @@ export class DataResourceDetailModalComponent implements OnInit {
         linkInstance,
         workspace: this.currentWorkspace(),
         afterSuccess: linkInstance => {
+          this.onCreated?.(linkInstance);
           this.subscribeDataResource(linkInstance);
-          this.performingAction$.next(false);
+          if (closeAfter) {
+            this.hideDialog();
+          } else {
+            this.performingAction$.next(false);
+          }
         },
         onFailure: () => this.performingAction$.next(false),
       })
@@ -236,7 +292,7 @@ export class DataResourceDetailModalComponent implements OnInit {
   }
 
   public onClose() {
-    this.onCancel$.next(null);
+    this.onCancel?.();
     this.hideDialog();
   }
 

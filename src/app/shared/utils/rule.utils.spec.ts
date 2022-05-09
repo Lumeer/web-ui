@@ -76,7 +76,7 @@ describe('computeCronRuleNextExecution daily', () => {
 
 describe('computeCronRuleNextExecution weekly', () => {
   it('should run this week today', () => {
-    const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Weeks, daysOfWeek: 999}); // every day
+    const rule = createCronRule({interval: 1, hour: '9', unit: ChronoUnit.Weeks, daysOfWeek: 127}); // every day
     const today = moment.utc().startOf('day').hour(7).toDate();
     expect(computeCronRuleNextExecution(rule, today)).toEqual(moment.utc().startOf('day').hour(9).toDate());
   });

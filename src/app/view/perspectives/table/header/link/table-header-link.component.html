@@ -21,7 +21,8 @@
                      (removePart)="onRemovePart()"
                      class="d-block table-border-top table-border-right table-border-bottom">
     </table-link-info>
-    <table-column-group [table]="table"
+    <table-column-group *ngIf="part.columns.length"
+                        [table]="table"
                         [cursor]="cursor"
                         [query]="query"
                         [columns]="part.columns"

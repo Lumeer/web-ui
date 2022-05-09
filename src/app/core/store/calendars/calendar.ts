@@ -52,7 +52,7 @@ export enum CalendarGridMode {
 }
 
 export interface CalendarStemConfig {
-  stem?: QueryStem;
+  stem: QueryStem;
   name?: CalendarBar;
   start?: CalendarBar;
   end?: CalendarBar;

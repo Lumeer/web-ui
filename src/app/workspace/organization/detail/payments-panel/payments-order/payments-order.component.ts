@@ -17,24 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Router} from '@angular/router';
-import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
-import {Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
-import {AppState} from '../../../../../core/store/app.state';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {isDateValid} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'payments-order',
   templateUrl: './payments-order.component.html',
   styleUrls: ['./payments-order.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaymentsOrderComponent implements OnInit, OnDestroy {
+export class PaymentsOrderComponent implements OnChanges {
+  @Input()
+  public serviceLimits: ServiceLimits;
+
+  @Output()
+  public pay = new EventEmitter<{users: number; months: number; currency: string; amount: number; start: Date}>();
+
   private static CZK_FULL = 290;
   private static CZK_SALE = 220;
   private static EUR_FULL = 11.5;
@@ -44,9 +45,6 @@ export class PaymentsOrderComponent implements OnInit, OnDestroy {
 
   public discountAmount = 0;
   public discountDescription: string;
-
-  @Output()
-  public pay = new EventEmitter<{users: number; months: number; currency: string; amount: number; start: Date}>();
 
   public subscriptionLength: string;
 
@@ -68,49 +66,28 @@ export class PaymentsOrderComponent implements OnInit, OnDestroy {
   public discountInfoPerUser: string = '';
   public discountInfo: number = 0;
 
-  private serviceLimitsSubscription: Subscription;
+  public trial: boolean; // are we on a trial subscription?
 
-  public trial: boolean = true; // are we on a trial subscription?
-  public serviceLimits: ServiceLimits;
-
-  constructor(private router: Router, private store: Store<AppState>) {
+  constructor() {
     this.discountDescription = $localize`:@@organizations.tab.detail.order.discount:Special Early Bird Prices!`;
   }
 
-  private static floorDate(d: Date) {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-  }
-
-  public ngOnInit() {
-    this.subscribeToStore();
-  }
-
-  private subscribeToStore() {
-    this.serviceLimitsSubscription = this.store
-      .select(selectServiceLimitsByWorkspace)
-      .pipe(filter(serviceLimits => isNotNullOrUndefined(serviceLimits)))
-      .subscribe(serviceLimits => {
-        this.serviceLimits = serviceLimits;
-        if (serviceLimits.serviceLevel === ServiceLevelType.FREE) {
-          this.trial = true;
-          this.setStartDate(PaymentsOrderComponent.floorDate(new Date()));
-        } else {
-          this.trial = false;
-          this.numberOfUsers = this.serviceLimits.users;
-          this.setStartDate(new Date(serviceLimits.validUntil.getTime() + 1));
-        }
-      });
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.serviceLimits) {
+      if (!this.serviceLimits || this.serviceLimits.serviceLevel === ServiceLevelType.FREE) {
+        this.trial = true;
+        this.setStartDate(floorDate(new Date()));
+      } else {
+        this.trial = false;
+        this.numberOfUsers = this.serviceLimits?.users;
+        this.setStartDate(new Date(this.serviceLimits?.validUntil.getTime() + 1));
+      }
+    }
   }
 
   private setStartDate(d: Date) {
     this.startDate = d;
     this.startDateText = new DatePipe('en-US').transform(d, 'yyyy-MM-dd'); // `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-  }
-
-  public ngOnDestroy() {
-    if (this.serviceLimitsSubscription) {
-      this.serviceLimitsSubscription.unsubscribe();
-    }
   }
 
   private isDiscount(): boolean {
@@ -162,8 +139,8 @@ export class PaymentsOrderComponent implements OnInit, OnDestroy {
     );
   }
 
-  public sliderValue($event) {
-    this.subscriptionLength = $event.value;
+  public onSliderUpdated(data: {position: number; value: string}) {
+    this.subscriptionLength = data.value;
     this.updatePrice();
   }
 
@@ -205,10 +182,14 @@ export class PaymentsOrderComponent implements OnInit, OnDestroy {
     });
   }
 
-  public updateStartDate($event) {
-    const d = new Date($event.target.value);
-    if (!isNaN(d.getTime())) {
-      this.startDate = PaymentsOrderComponent.floorDate(d);
+  public updateStartDate(event: any) {
+    const date = new Date(event.target.value);
+    if (isDateValid(date)) {
+      this.startDate = floorDate(date);
     }
   }
+}
+
+function floorDate(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
 }

@@ -30,6 +30,7 @@
                      [permissions]="permissions$ | async"
                      [constraintData]="constraintData$ | async"
                      [query]="data.query"
+                     [workspace]="workspace$ | async"
                      [sidebarOpened]="sidebarOpened$ | async"
                      (patchDocumentData)="patchDocumentData($event)"
                      (patchLinkData)="patchLinkInstanceData($event)"

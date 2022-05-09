@@ -20,7 +20,7 @@
                    [constraintData]="constraintData"
                    [viewSettings]="viewSettings"
                    (createDataResource)="onCreateDataResource($event, column)"
-                   (updateDataResource)="onUpdateDataResource($event)"
+                   (updateDataResource)="onMoveDataResource($event)"
                    (removeColumn)="onRemoveColumn(column)"
                    (toggleFavorite)="onToggleFavorite($event)"
                    (columnsChange)="columnsChange.emit($event)">
@@ -39,7 +39,7 @@
                    [constraintData]="constraintData"
                    [viewSettings]="viewSettings"
                    (createDataResource)="onCreateDataResource($event, kanbanData.otherColumn)"
-                   (updateDataResource)="onUpdateDataResource($event)"
+                   (updateDataResource)="onMoveDataResource($event)"
                    (toggleFavorite)="onToggleFavorite($event)"
                    (columnsChange)="columnsChange.emit($event)">
     </kanban-column>

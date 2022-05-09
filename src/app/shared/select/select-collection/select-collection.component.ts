@@ -30,6 +30,9 @@ export class SelectCollectionComponent {
   @Input()
   public collections: Collection[];
 
+  @Input()
+  public selectedCollectionId: string;
+
   @Output()
   public onSelect = new EventEmitter<{collection: Collection; index: number}>();
 

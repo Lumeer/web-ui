@@ -32,6 +32,7 @@ import mixpanel from 'mixpanel-browser';
 import {Payment} from './payment';
 import {OrganizationService} from '../../../data-service';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
+import {createCallbackActions} from '../../utils/store.utils';
 
 @Injectable()
 export class PaymentsEffects {
@@ -138,7 +139,10 @@ export class PaymentsEffects {
         const returnUrl = action.payload.returnUrl || window.location.href;
         return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
           map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
-          map(payment => new PaymentsAction.CreatePaymentSuccess({payment: payment})),
+          mergeMap(payment => [
+            new PaymentsAction.CreatePaymentSuccess({payment}),
+            ...createCallbackActions(action.payload.onSuccess, payment),
+          ]),
           catchError(error => of(new PaymentsAction.CreatePaymentFailure({error})))
         );
       })

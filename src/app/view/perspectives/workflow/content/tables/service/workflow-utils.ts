@@ -96,7 +96,7 @@ export function createRowData(
   );
 }
 
-export function createEmptyNewRow(tableId: string): TableRow {
+export function createEmptyNewRow(tableId: string, linked: boolean): TableRow {
   const id = generateId();
   return {
     id,
@@ -106,8 +106,8 @@ export function createEmptyNewRow(tableId: string): TableRow {
     height: TABLE_ROW_HEIGHT,
     documentEditable: true,
     linkEditable: true,
-    suggestLinks: false,
-    suggestDetail: true,
+    suggestLinks: linked,
+    suggestDetail: !linked,
     documentMenuItems: [],
     linkMenuItems: [],
   };
@@ -145,11 +145,15 @@ export function workflowTableId(stem: QueryStem, ...values: string[]): string {
 }
 
 export function isLinkedOrGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
-  return isGroupedConfig(stemConfig) || isLinkedConfig(stemConfig);
+  return isLinkedConfig(stemConfig) || isGroupedConfig(stemConfig);
 }
 
 function isGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
-  return stemConfig?.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex;
+  return (
+    stemConfig?.attribute &&
+    stemConfig.collection &&
+    stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex
+  );
 }
 
 function isLinkedConfig(stemConfig: WorkflowStemConfig): boolean {

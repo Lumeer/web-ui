@@ -83,7 +83,7 @@ export class CalendarVisualizationComponent implements OnChanges {
   public eventClick = new EventEmitter<CalendarEvent>();
 
   @Output()
-  public newEvent = new EventEmitter<{start: Date; end: Date; resourceId?: string}>();
+  public newEvent = new EventEmitter<{start: Date; end: Date; group?: string}>();
 
   @Output()
   public rangeChanged = new EventEmitter<{newMode: CalendarMode; newDate: Date}>();
@@ -315,7 +315,7 @@ export class CalendarVisualizationComponent implements OnChanges {
   }
 
   public onRangeSelected(data: {start: Date; end: Date; resource?: {id: string}}) {
-    this.newEvent.emit({start: data.start, end: data.end, resourceId: data.resource?.id});
+    this.newEvent.emit({start: data.start, end: data.end, group: data.resource?.id});
   }
 
   private calendarModeByDefaultView(newView: string): CalendarMode | null {
