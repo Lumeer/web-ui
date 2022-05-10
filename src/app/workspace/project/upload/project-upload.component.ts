@@ -17,17 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {FileAttachment} from '../../../core/store/file-attachments/file-attachment.model';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
+import {Subscription} from 'rxjs';
+import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
+import {DEFAULT_FILE_SIZE_MB} from '../../../core/constants';
 
 @Component({
   selector: 'project-upload',
   templateUrl: './project-upload.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectUploadComponent {
+export class ProjectUploadComponent implements OnInit, OnDestroy {
   @Input()
   public files: FileAttachment[];
 
@@ -40,7 +53,22 @@ export class ProjectUploadComponent {
   @Output()
   public add = new EventEmitter<File>();
 
-  constructor(private configurationService: ConfigurationService, private notificationService: NotificationService) {}
+  private fileSizeMb = DEFAULT_FILE_SIZE_MB;
+  private subscriptions = new Subscription();
+
+  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
+
+  public ngOnInit() {
+    this.subscriptions.add(
+      this.store$
+        .pipe(select(selectServiceLimitsByWorkspace))
+        .subscribe(limits => (this.fileSizeMb = limits?.fileSizeMb || DEFAULT_FILE_SIZE_MB))
+    );
+  }
+
+  private get maxFileUploadSize(): number {
+    return this.fileSizeMb * 1024 * 1024;
+  }
 
   public onFileChange($event: Event) {
     if (this.uploadProgress) {
@@ -57,17 +85,17 @@ export class ProjectUploadComponent {
     }
 
     const file = files.item(0);
-    const size = this.configurationService.getConfiguration().maxFileUploadSize;
-
-    if (file.size > size * 1024 * 1024) {
-      const message = $localize`:@@project.settings.upload.tooLarge:The file size is above the upload limit (${size.toFixed(
+    if (file.size > this.maxFileUploadSize) {
+      const message = $localize`:@@project.settings.upload.tooLarge:The file size is above the upload limit (${this.fileSizeMb.toFixed(
         0
       )}:size: MB).`;
       this.notificationService.error(message);
-
-      return;
+    } else {
+      this.add.emit(file);
     }
+  }
 
-    this.add.emit(file);
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

@@ -25,6 +25,8 @@ export interface ServiceLimitsDto {
   documents: number;
   groups?: boolean;
   dbSizeMb: number;
+  fileSizeMb: number;
+  auditDays: number;
   validUntil: number;
   rulesPerCollection: number;
   functionsPerCollection: number;

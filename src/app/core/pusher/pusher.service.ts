@@ -48,7 +48,6 @@ import {selectOrganizationsDictionary} from '../store/organizations/organization
 import {PaymentConverter} from '../store/organizations/payment/payment.converter';
 import {PaymentsAction} from '../store/organizations/payment/payments.action';
 import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
-import {ServiceLimitsConverter} from '../store/organizations/service-limits/service-limits.converter';
 import {Project} from '../store/projects/project';
 import {ProjectConverter} from '../store/projects/project.converter';
 import {ProjectsAction} from '../store/projects/projects.action';
@@ -92,6 +91,7 @@ import {convertDashboardDataDtoToModel} from '../store/dashboard-data/dashboard-
 import {convertResourceVariableDtoToModel} from '../store/resource-variables/resource-variable.converter';
 import {Query} from '../store/navigation/query/query';
 import {ModalsAction} from '../store/modals/modals.action';
+import {convertServiceLimitsDtoToModel} from '../store/organizations/service-limits/service-limits.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -762,7 +762,7 @@ export class PusherService implements OnDestroy {
     this.channel.bind('ServiceLimits:update', data => {
       this.store$.dispatch(
         new ServiceLimitsAction.GetServiceLimitsSuccess({
-          serviceLimits: ServiceLimitsConverter.fromDto(data.organizationId, data.object),
+          serviceLimits: convertServiceLimitsDtoToModel(data.organizationId, data.object),
         })
       );
     });

@@ -32,7 +32,6 @@ export interface ConfigurationVariables {
   mapboxKey: string;
   mapQuestKey: string;
   mapTilerKey: string;
-  maxFileUploadSize: number;
   presignedUrlTimeout: number;
   sentryDsn: string;
   sessionTimeout: number;
