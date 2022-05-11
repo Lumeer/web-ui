@@ -226,8 +226,8 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   private shouldEmitCursor(collection: Collection, document: DocumentModel, cursor: ViewCursor): boolean {
-    if (cursor?.collectionId === collection?.id) {
-      return false;
+    if (cursor?.collectionId !== collection?.id) {
+      return true;
     }
     if (document?.id) {
       return document.id !== cursor?.documentId;
