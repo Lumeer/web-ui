@@ -67,6 +67,7 @@ import {DataQuery} from '../../../core/model/data-query';
 import {defaultDetailPerspectiveConfiguration, DetailPerspectiveConfiguration} from '../perspective-configuration';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'detail-perspective',
@@ -100,6 +101,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   private collection: Collection;
   private constraintData: ConstraintData;
   private createdDocuments: string[] = [];
+  private newDocument: DocumentModel;
   private subscriptions = new Subscription();
 
   public constructor(private store$: Store<AppState>) {}
@@ -216,11 +218,23 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   private emitCursor(collection: Collection, document: DocumentModel, cursor: ViewCursor) {
-    if (collection?.id !== cursor?.collectionId || document?.id !== cursor?.documentId) {
+    if (this.shouldEmitCursor(collection, document, cursor)) {
       this.emit(collection, document);
     } else if (collection) {
       this.collection = collection;
     }
+  }
+
+  private shouldEmitCursor(collection: Collection, document: DocumentModel, cursor: ViewCursor): boolean {
+    if (cursor?.collectionId === collection?.id) {
+      return false;
+    }
+    if (document?.id) {
+      return document.id !== cursor?.documentId;
+    } else if (document?.correlationId) {
+      return document.correlationId !== cursor?.documentId;
+    }
+    return false;
   }
 
   private selectCollectionByCursor$(
@@ -261,6 +275,9 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
       mergeMap(() => this.store$.pipe(select(selectDocumentsByViewAndCustomQuery(view, collectionQuery)))),
       switchMap(documents => {
         if (cursor?.documentId) {
+          if (this.newDocument?.correlationId === cursor.documentId) {
+            return of(this.newDocument);
+          }
           const documentByCursor = documents.find(doc => doc.id === cursor.documentId);
           if (documentByCursor) {
             return of(documentByCursor);
@@ -307,7 +324,6 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   public onCreatedDocument(document: DocumentModel) {
     this.createdDocuments.push(document.id);
     this.emit(this.collection, document);
-    this.selected$ = of({collection: this.collection, document});
   }
 
   public selectDocument(document: DocumentModel) {
@@ -328,7 +344,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
     const cursor: ViewCursor = {
       collectionId: selectedCollection.id,
-      documentId: selectedDocument?.id,
+      documentId: selectedDocument?.id || selectedDocument?.correlationId,
     };
 
     this.collection = selectedCollection;
@@ -354,8 +370,9 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
     if (collection) {
       const queryFilters = getQueryFiltersForCollection(this.query, collection.id);
       const data = generateDocumentData(collection, queryFilters, this.constraintData, true);
-      const document = {data, collectionId: collection.id};
-      this.selected$ = of({collection, document});
+      const document = {data, collectionId: collection.id, correlationId: generateCorrelationId()};
+      this.newDocument = document;
+      this.emit(collection, document);
     }
   }
 
@@ -365,6 +382,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
   public onDocumentChanged(document: DocumentModel) {
     if (!document?.id) {
+      this.newDocument = document;
       this.creatingDocument$.next(true);
 
       this.store$.dispatch(
