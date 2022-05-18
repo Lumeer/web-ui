@@ -19,8 +19,9 @@
 
 import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType} from './table-model';
 import {columnConstraint, TableColumn, TableColumnGroup} from './table-column';
-import {TableRow} from './table-row';
+import {TableRow, TableRowHierarchy, TableRowHierarchyData} from './table-row';
 import {TableColumnType, TableConfigPart} from '../../../core/store/tables/table.model';
+import {objectsByIdMap} from '../../utils/common.utils';
 
 export function groupTableColumns(columns: TableColumn[]): TableColumnGroup[] {
   return (columns || []).reduce<TableColumnGroup[]>((array, column) => {
@@ -136,4 +137,67 @@ export function isTablePartEmpty(part: TableConfigPart): boolean {
       column.attributeIds &&
       column.attributeIds.length > 0
   );
+}
+
+export function createTableRowsHierarchy(rows: TableRow[]): TableRowHierarchyData {
+  const tableRowsMap = objectsByIdMap(rows);
+  return (rows || []).reduce<TableRowHierarchyData>((map, row, index) => {
+    const hasChild = rows[index + 1]?.parentRowId === row.id;
+    if (row.parentRowId) {
+      const level = map[row.parentRowId]?.level + 1 || 1;
+      map[row.id] = {level, hasChild, hasLevelLine: computeHasLevelLine(index, level, tableRowsMap, rows)};
+    } else {
+      map[row.id] = {level: 0, hasChild}; //
+    }
+
+    return map;
+  }, {});
+}
+
+function computeHasLevelLine(
+  index: number,
+  rowLevel: number,
+  map: Record<string, TableRow>,
+  rows: TableRow[]
+): boolean[] {
+  let currentRow = rows[index];
+  const rowsUnderRow = rows.slice(index + 1);
+  const hasLevelLine = [];
+  for (let i = rowLevel - 1; i >= 0; i--) {
+    if (currentRow) {
+      hasLevelLine[i] = rowsUnderRow.some(row => row.parentRowId === currentRow.parentRowId);
+      currentRow = map[currentRow.parentRowId];
+    }
+  }
+
+  return hasLevelLine;
+}
+
+export function createTableHierarchySvg(hierarchy: TableRowHierarchy): string {
+  const width = ((hierarchy?.level || 0) + 1) * 20;
+  const height = 37;
+  const color = '#A8A7A7FF';
+  const elements = [];
+  for (let i = 0; i < hierarchy?.level; i++) {
+    if (hierarchy.hasLevelLine?.[i]) {
+      const x = i * 20 + 10;
+      elements[i] = `<line x1="${x}" y1="0" x2="${x}" y2="${height}" style="stroke:${color}; stroke-width:1" />`;
+    }
+  }
+  if (hierarchy.hasChild) {
+    elements.push(
+      `<line x1="${width - 10}" y1="${height / 2}" x2="${
+        width - 10
+      }" y2="${height}" style="stroke:${color}; stroke-width:1" />`
+    );
+  }
+  if (hierarchy?.level > 0) {
+    elements.push(
+      `<path d="M ${width - 30} 0 C ${width - 30} 20, ${width - 10} 20, ${width - 10} ${
+        height / 2
+      }" stroke="${color}" fill="transparent"/>`
+    );
+  }
+  elements.push(`<circle cx="${width - 10}" cy="${height / 2}" r="4" fill="${color}"/>`);
+  return `<svg height="${height}" width="${width}">${elements.join()}</svg>`;
 }

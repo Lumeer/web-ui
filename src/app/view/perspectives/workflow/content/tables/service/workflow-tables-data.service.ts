@@ -839,6 +839,8 @@ export class WorkflowTablesDataService {
       (data, object) => {
         const objectId = object.linkInstance?.id || object.document.id;
         const objectCorrelationId = object.linkInstance?.correlationId || object.document.correlationId;
+        const parentDocumentId = object.document?.metaData?.parentId;
+        const parentCell = data.rowsByDocumentIdMap[parentDocumentId];
         const currentRow = rowsMap[objectCorrelationId || objectId] || rowsMap[objectId];
         const pendingData = (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
         const documentCells = createTableRowCellsMapForResource(
@@ -876,6 +878,7 @@ export class WorkflowTablesDataService {
           cellsMap: {...documentCells, ...linkCells},
           documentId: object.document.id,
           linkInstanceId: object.linkInstance?.id,
+          parentRowId: parentCell?.id,
           height: currentRow?.height || TABLE_ROW_HEIGHT,
           correlationId: objectCorrelationId || id,
           commentsCount: object.document ? object.document.commentsCount : object.linkInstance.commentsCount,
@@ -896,9 +899,11 @@ export class WorkflowTablesDataService {
           data.rows.push(row);
         }
 
+        data.rowsByDocumentIdMap[object.document.id] = row;
+
         return data;
       },
-      {rows: [], lockedRows: []}
+      {rows: [], lockedRows: [], rowsByDocumentIdMap: {}}
     );
 
     const lockedRowsMap = objectsByIdMap(lockedRows);

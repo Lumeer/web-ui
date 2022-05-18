@@ -143,6 +143,10 @@ export function removeFromArray<T>(array: T[], item: T): T[] {
 }
 
 export function createRange(from: number, to: number): number[] {
+  if (from > to) {
+    const range = [...Array(from - to).keys()];
+    return range.map(r => from - r);
+  }
   const range = [...Array(to - from).keys()];
   return range.map(r => r + from);
 }

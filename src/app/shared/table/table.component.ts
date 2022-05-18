@@ -28,7 +28,6 @@ import {
   OnInit,
   Output,
   QueryList,
-  Renderer2,
   SimpleChanges,
   ViewChild,
   ViewChildren,
@@ -37,7 +36,7 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {filter, throttleTime} from 'rxjs/operators';
-import {TableRow} from './model/table-row';
+import {TableRow, TableRowHierarchyData} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
 import {
@@ -55,6 +54,7 @@ import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
+import {createTableRowsHierarchy} from './model/table-utils';
 
 @Component({
   selector: 'lmr-table',
@@ -177,21 +177,19 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   public scrollDisabled$ = new BehaviorSubject(false);
   public detailColumnId: string;
+  public hierarchyColumnId: string;
   public scrollOffsetLeft: number;
   public toolbarMarginBottom = 0;
   public toolbarMarginRight = 0;
   public rows: TableRow[];
+  public hierarchyData: TableRowHierarchyData;
 
   private scrollOffsetTop: number;
   private subscriptions = new Subscription();
   private tableScrollService: TableScrollService;
   private scrollCheckSubject = new Subject();
 
-  constructor(
-    private scrollDispatcher: ScrollDispatcher,
-    private element: ElementRef<HTMLElement>,
-    private renderer: Renderer2
-  ) {
+  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef<HTMLElement>) {
     this.tableScrollService = new TableScrollService(() => this.viewPort);
   }
 
@@ -216,11 +214,15 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         this.rows = this.tableModel?.rows;
       }
+      this.hierarchyData = createTableRowsHierarchy(this.tableModel?.rows);
       setTimeout(() => this.setScrollbarMargin());
     }
     if (changes.tableModel || changes.detailPanel) {
       this.detailColumnId =
         this.detailPanel && this.tableModel?.columns?.find(column => this.columnCanShowDetailIndicator(column))?.id;
+      this.hierarchyColumnId = this.tableModel?.columns?.find(column =>
+        this.columnCanShowHierarchyIndicator(column)
+      )?.id;
     }
   }
 
@@ -230,6 +232,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       !column.hidden &&
       (column.attribute?.constraint?.isTextRepresentation || allowedTypes.includes(column.attribute?.constraint?.type))
     );
+  }
+
+  private columnCanShowHierarchyIndicator(column: TableColumn): boolean {
+    return !column.hidden;
   }
 
   private checkScrollPositionForSelectedCell() {

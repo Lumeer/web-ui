@@ -24,6 +24,7 @@ export interface TableRow {
   id: string;
   tableId: string;
   height: number;
+  parentRowId?: string;
   creating?: boolean;
   documentId?: string;
   cellsMap?: TableRowCellsMap; // columnId -> string
@@ -38,6 +39,14 @@ export interface TableRow {
   documentMenuItems: MenuItem[];
   linkMenuItems: MenuItem[];
 }
+
+export interface TableRowHierarchy {
+  level: number;
+  hasLevelLine?: boolean[];
+  hasChild?: boolean;
+}
+
+export type TableRowHierarchyData = Record<string, TableRowHierarchy>;
 
 export type TableRowCellsMap = Record<string, TableRowCell>;
 

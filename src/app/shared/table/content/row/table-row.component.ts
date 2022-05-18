@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {TableColumn, TableColumnGroup} from '../../model/table-column';
-import {TableRow} from '../../model/table-row';
+import {TableRow, TableRowHierarchy} from '../../model/table-row';
 import {
   computeElementPositionInParent,
   isNotNullOrUndefined,
@@ -50,6 +50,7 @@ import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.compone
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {initForceTouch} from '../../../utils/html-modifier';
 import {animateOpacityEnterLeave} from '../../../animations';
+import {createTableHierarchySvg} from '../../model/table-utils';
 
 @Component({
   selector: '[table-row]',
@@ -66,6 +67,9 @@ export class TableRowComponent implements OnInit, OnChanges {
   public row: TableRow;
 
   @Input()
+  public hierarchy: TableRowHierarchy;
+
+  @Input()
   public constraintData: ConstraintData;
 
   @Input()
@@ -76,6 +80,9 @@ export class TableRowComponent implements OnInit, OnChanges {
 
   @Input()
   public detailColumnId: string;
+
+  @Input()
+  public hierarchyColumnId: string;
 
   @Input()
   public cellType: TableCellType = TableCellType.Body;
@@ -130,6 +137,7 @@ export class TableRowComponent implements OnInit, OnChanges {
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
   public mouseHoverColumnId$ = new BehaviorSubject(null);
+  public hierarchySvg: string;
 
   constructor(public element: ElementRef) {}
 
@@ -144,6 +152,9 @@ export class TableRowComponent implements OnInit, OnChanges {
     }
     if (changes.row || changes.editedCell) {
       this.checkEdited();
+    }
+    if (changes.hierarchy) {
+      this.hierarchySvg = createTableHierarchySvg(this.hierarchy);
     }
   }
 

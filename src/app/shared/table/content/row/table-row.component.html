@@ -24,6 +24,7 @@
           (mouseenter)="onMouseEnter(group.column?.id)"
           (mouseleave)="onMouseLeave(group.column?.id)"
           (contextmenu)="onContextMenu(group.column?.id, $event)">
+        <div class="hierarchy" *ngIf="group.column.id === hierarchyColumnId" [innerHTML]="hierarchySvg | safeHtml"></div>
         <data-input
           *ngIf="group.column && dataInputInfo.showDataInput"
           class="d-block h-100"
@@ -32,6 +33,7 @@
           [style.height.px]="row.height - 1"
           [editableInReadonly]="dataInputInfo.editable"
           [style.max-height.px]="row.height - 1"
+          [style.margin-left.px]="group.column.id === hierarchyColumnId ? (hierarchy?.level + 1) * 20 : 0"
           [dataValue]="(editedValue | isNotNullOrUndefined) && dataInputInfo.editing ? editedValue : data.dataValue"
           [focus]="true"
           [readonly]="dataInputInfo.readonly"
@@ -43,6 +45,7 @@
         </data-input>
         <div class="d-flex align-items-center html-input"
              *ngIf="group.column && !dataInputInfo.showDataInput && dataInputInfo.hasValue"
+             [style.margin-left.px]="group.column.id === hierarchyColumnId ? (hierarchy?.level + 1) * 20 : 0"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
         <ng-container *ngIf="{
