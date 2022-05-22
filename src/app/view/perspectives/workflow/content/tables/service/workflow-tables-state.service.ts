@@ -382,7 +382,7 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  private setRowProperty(tableId: string, rowId: string, properties: Partial<Record<keyof TableRow, any>>) {
+  private setRowProperties(tableId: string, rowId: string, properties: Partial<Record<keyof TableRow, any>>) {
     const newTables = [...this.tables];
     const tableIndex = newTables.findIndex(table => table.id === tableId);
     if (tableIndex !== -1) {
@@ -445,7 +445,11 @@ export class WorkflowTablesStateService {
   }
 
   public setRowValue(row: TableRow, column: TableColumn, value: any) {
-    this.setRowProperty(column.tableId, row.id, {[`data.${column.id}`]: value});
+    this.setRowProperties(column.tableId, row.id, {[`data.${column.id}`]: value});
+  }
+
+  public setRowProperty(row: TableRow, key: keyof TableRow, value: any) {
+    this.setRowProperties(row.tableId, row.id, {[key]: value});
   }
 
   public removeRow(row: TableRow) {
@@ -487,15 +491,15 @@ export class WorkflowTablesStateService {
   }
 
   public startRowCreatingWithValue(row: TableRow, column: TableColumn, value: any) {
-    this.setRowProperty(row.tableId, row.id, {creating: true, [`data.${column.id}`]: value});
+    this.setRowProperties(row.tableId, row.id, {creating: true, [`data.${column.id}`]: value});
   }
 
   public startRowCreating(row: TableRow, cellsMap: TableRowCellsMap, documentId: string) {
-    this.setRowProperty(row.tableId, row.id, {creating: true, cellsMap, documentId});
+    this.setRowProperties(row.tableId, row.id, {creating: true, cellsMap, documentId});
   }
 
   public endRowCreating(row: TableRow) {
-    this.setRowProperty(row.tableId, row.id, {creating: false});
+    this.setRowProperties(row.tableId, row.id, {creating: false});
   }
 
   public resizeColumn(changedTable: TableModel, column: TableColumn, width: number) {

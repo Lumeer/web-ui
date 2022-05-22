@@ -299,6 +299,10 @@ export class WorkflowTablesComponent implements OnChanges {
     this.tablesService.onRowDetail(row);
   }
 
+  public onRowHierarchyToggle(row: TableRow) {
+    this.tablesService.onHierarchyToggle(row);
+  }
+
   public onTableResize(table: WorkflowTable, height: number) {
     this.tablesService.onTableResize(table, height);
   }

@@ -37,7 +37,6 @@
             *ngIf="row"
             [class.selected]="row.documentId === selectedDocumentId"
             [row]="row"
-            [hierarchy]="hierarchyData?.[row.id]"
             [viewId]="viewId"
             [selectedCell]="selectedCell"
             [editedCell]="editedCell"
@@ -53,7 +52,8 @@
             (onDoubleClick)="onBodyCellDoubleClick(row, $event)"
             (menuSelected)="onBodyMenuSelected($event)"
             (linkedDocumentSelect)="onRowLinkedDocumentSelect(row, $event)"
-            (onDetail)="rowDetail.emit(row)">
+            (onDetail)="rowDetail.emit(row)"
+            (toggleHierarchy)="rowHierarchyToggle.emit(row)">
         </tr>
         <tr *ngIf="!row"
             [style.height.px]="toolbarHeight">

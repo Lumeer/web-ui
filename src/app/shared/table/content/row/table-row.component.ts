@@ -31,14 +31,14 @@ import {
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {TableColumn, TableColumnGroup} from '../../model/table-column';
-import {TableRow, TableRowHierarchy} from '../../model/table-row';
+import {TableRow, TableRowWithData} from '../../model/table-row';
 import {
   computeElementPositionInParent,
   isNotNullOrUndefined,
   isNullOrUndefinedOrEmpty,
   preventEvent,
 } from '../../../utils/common.utils';
-import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
+import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
 import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../key-code';
@@ -50,7 +50,8 @@ import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.compone
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {initForceTouch} from '../../../utils/html-modifier';
 import {animateOpacityEnterLeave} from '../../../animations';
-import {createTableHierarchySvg} from '../../model/table-utils';
+import {createTableHierarchyPath} from '../../model/table-hierarchy';
+import {COLOR_GRAY300, COLOR_PRIMARY} from '../../../../core/constants';
 
 @Component({
   selector: '[table-row]',
@@ -64,10 +65,7 @@ export class TableRowComponent implements OnInit, OnChanges {
   public columnGroups: TableColumnGroup[];
 
   @Input()
-  public row: TableRow;
-
-  @Input()
-  public hierarchy: TableRowHierarchy;
+  public row: TableRowWithData;
 
   @Input()
   public constraintData: ConstraintData;
@@ -103,6 +101,9 @@ export class TableRowComponent implements OnInit, OnChanges {
   public onDetail = new EventEmitter();
 
   @Output()
+  public toggleHierarchy = new EventEmitter();
+
+  @Output()
   public onCancel = new EventEmitter<{columnId: string; action: DataInputSaveAction}>();
 
   @Output()
@@ -124,6 +125,10 @@ export class TableRowComponent implements OnInit, OnChanges {
   public suggestions: DocumentHintsComponent;
 
   public readonly constraintType = ConstraintType;
+  public readonly hierarchyStepWidth = 25;
+  public readonly hierarchyHeight = TABLE_ROW_HEIGHT;
+  public readonly hierarchyLineColor = COLOR_GRAY300;
+  public readonly hierarchyControlColor = COLOR_PRIMARY;
   public readonly configuration: DataInputConfiguration = {
     common: {allowRichText: true},
     boolean: {center: true},
@@ -137,7 +142,7 @@ export class TableRowComponent implements OnInit, OnChanges {
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
   public mouseHoverColumnId$ = new BehaviorSubject(null);
-  public hierarchySvg: string;
+  public hierarchyPath: string;
 
   constructor(public element: ElementRef) {}
 
@@ -149,12 +154,10 @@ export class TableRowComponent implements OnInit, OnChanges {
     if (changes.row) {
       this.canSuggestDocuments =
         this.row?.suggestDetail || ((this.row?.linkInstanceId || this.row?.linkedDocumentId) && this.row?.suggestLinks);
+      this.hierarchyPath = createTableHierarchyPath(this.row, this.hierarchyHeight, this.hierarchyStepWidth);
     }
     if (changes.row || changes.editedCell) {
       this.checkEdited();
-    }
-    if (changes.hierarchy) {
-      this.hierarchySvg = createTableHierarchySvg(this.hierarchy);
     }
   }
 
@@ -365,5 +368,15 @@ export class TableRowComponent implements OnInit, OnChanges {
     if (this.mouseHoverColumnId$.value === columnId) {
       this.mouseHoverColumnId$.next(null);
     }
+  }
+
+  public onHierarchyClick(event: MouseEvent) {
+    preventEvent(event);
+
+    this.toggleHierarchy.emit();
+  }
+
+  public onHierarchyDoubleClick(event: MouseEvent) {
+    preventEvent(event);
   }
 }

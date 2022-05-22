@@ -19,8 +19,10 @@
 
 import {initialWorkflowsState, workflowsAdapter, WorkflowsState} from './workflow.state';
 import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
-import {WorkflowColumnSettings} from './workflow';
+import {WorkflowColumnSettings, WorkflowTableConfig} from './workflow';
 import {queryStemsAreSame, queryStemWithoutFilters} from '../navigation/query/query.util';
+import {QueryStem} from '../navigation/query/query';
+import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
 
 export function workflowsReducer(
   state: WorkflowsState = initialWorkflowsState,
@@ -33,6 +35,8 @@ export function workflowsReducer(
       return workflowsAdapter.removeOne(action.payload.workflowId, state);
     case WorkflowsActionType.SET_TABLE_HEIGHT:
       return setTableHeight(state, action);
+    case WorkflowsActionType.TOGGLE_HIERARCHY:
+      return toggleHierarchy(state, action);
     case WorkflowsActionType.SET_COLUMN_WIDTH:
       return setColumnWidth(state, action);
     case WorkflowsActionType.SET_CONFIG:
@@ -49,6 +53,28 @@ export function workflowsReducer(
 
 function setTableHeight(state: WorkflowsState, action: WorkflowsAction.SetTableHeight): WorkflowsState {
   const {workflowId, collectionId, height, stem, value} = action.payload;
+  return setTableProperty(state, workflowId, collectionId, stem, value, table => ({...table, height}));
+}
+
+function toggleHierarchy(state: WorkflowsState, action: WorkflowsAction.ToggleHierarchy): WorkflowsState {
+  const {workflowId, collectionId, documentId, stem, value} = action.payload;
+  return setTableProperty(state, workflowId, collectionId, stem, value, table => {
+    if (table.expandedDocuments?.includes(documentId)) {
+      return {...table, expandedDocuments: removeFromArray(table.expandedDocuments, documentId)};
+    } else {
+      return {...table, expandedDocuments: appendToArray(table.expandedDocuments, documentId)};
+    }
+  });
+}
+
+function setTableProperty(
+  state: WorkflowsState,
+  workflowId: string,
+  collectionId: string,
+  stem: QueryStem,
+  value: any,
+  modifier: (table: WorkflowTableConfig) => WorkflowTableConfig
+): WorkflowsState {
   const workflow = state.entities[workflowId];
   if (workflow) {
     const tables = [...(workflow.config.tables || [])];
@@ -56,9 +82,11 @@ function setTableHeight(state: WorkflowsState, action: WorkflowsAction.SetTableH
       tab => queryStemsAreSame(tab.stem, stem) && collectionId === tab.collectionId && value === tab.value
     );
     if (tableIndex !== -1) {
-      tables[tableIndex] = {...tables[tableIndex], height};
+      tables[tableIndex] = modifier(tables[tableIndex]);
     } else {
-      tables.push({stem: queryStemWithoutFilters(stem), collectionId, value, height});
+      tables.push(
+        modifier({stem: queryStemWithoutFilters(stem), collectionId, value, height: 0, expandedDocuments: []})
+      );
     }
     return workflowsAdapter.updateOne({id: workflowId, changes: {config: {...workflow.config, tables}}}, state);
   }

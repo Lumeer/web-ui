@@ -30,6 +30,7 @@ export enum WorkflowsActionType {
   SET_CONFIG = '[Workflow] Set config',
   SET_COLUMN_WIDTH = '[Workflow] Set column width',
   SET_TABLE_HEIGHT = '[Workflow] Set table height',
+  TOGGLE_HIERARCHY = '[Workflow] Toggle hierarchy',
   SET_OPENED_DOCUMENT = '[Workflow] Set opened document',
   RESET_OPENED_DOCUMENT = '[Workflow] Reset opened document',
   SET_SELECTED_CELL = '[Workflow] Set selected cell',
@@ -78,6 +79,14 @@ export namespace WorkflowsAction {
     ) {}
   }
 
+  export class ToggleHierarchy implements Action {
+    public readonly type = WorkflowsActionType.TOGGLE_HIERARCHY;
+
+    public constructor(
+      public payload: {workflowId: string; documentId: string; collectionId: string; stem: QueryStem; value?: any}
+    ) {}
+  }
+
   export class SetOpenedDocument implements Action {
     public readonly type = WorkflowsActionType.SET_OPENED_DOCUMENT;
 
@@ -119,5 +128,6 @@ export namespace WorkflowsAction {
     | SetColumnWidth
     | SetOpenedDocument
     | ResetOpenedDocument
+    | ToggleHierarchy
     | Clear;
 }

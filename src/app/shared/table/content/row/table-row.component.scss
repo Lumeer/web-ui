@@ -79,3 +79,18 @@ td.focused {
   position: absolute;
   top: 0;
 }
+
+.hierarchy-control {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  &.default {
+    font-size: 60%;
+  }
+
+  &.expanded,
+  &.collapsed {
+    font-size: 130%;
+  }
+}

@@ -19,12 +19,14 @@
 
 import {MenuItem} from '../../menu/model/menu-item';
 import {AttributeLockFiltersStats} from '@lumeer/data-filters';
+import {TableRowHierarchy} from './table-hierarchy';
 
 export interface TableRow {
   id: string;
   tableId: string;
   height: number;
   parentRowId?: string;
+  expanded?: boolean;
   creating?: boolean;
   documentId?: string;
   cellsMap?: TableRowCellsMap; // columnId -> string
@@ -40,13 +42,9 @@ export interface TableRow {
   linkMenuItems: MenuItem[];
 }
 
-export interface TableRowHierarchy {
-  level: number;
-  hasLevelLine?: boolean[];
-  hasChild?: boolean;
+export interface TableRowWithData extends TableRow {
+  hierarchy: TableRowHierarchy;
 }
-
-export type TableRowHierarchyData = Record<string, TableRowHierarchy>;
 
 export type TableRowCellsMap = Record<string, TableRowCell>;
 

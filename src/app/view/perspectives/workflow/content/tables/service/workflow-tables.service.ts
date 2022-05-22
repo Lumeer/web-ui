@@ -375,6 +375,10 @@ export class WorkflowTablesService {
     this.dataService.createNewRow(table.id);
   }
 
+  public onHierarchyToggle(row: TableRow) {
+    this.dataService.toggleHierarchy(row);
+  }
+
   public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {
     this.dataService.createOrUpdateLink(row, document);
   }
