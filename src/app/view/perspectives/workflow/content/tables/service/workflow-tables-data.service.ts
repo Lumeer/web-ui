@@ -140,6 +140,7 @@ import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
+import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -911,6 +912,8 @@ export class WorkflowTablesDataService {
       {rows: [], lockedRows: [], rowsByDocumentIdMap: {}}
     );
 
+    const rowsWithHierarchy = sortAndFilterTableRowsByHierarchy(rows);
+
     const lockedRowsMap = objectsByIdMap(lockedRows);
     const lockedRowsWithUncreated = lockedRowIds
       .map(rowId => lockedRowsMap[rowId] || rowsMap[rowId])
@@ -926,7 +929,7 @@ export class WorkflowTablesDataService {
       newRow.linkMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
     }
 
-    return {rows: [...rows, ...lockedRowsWithUncreated], newRow};
+    return {rows: [...rowsWithHierarchy, ...lockedRowsWithUncreated], newRow};
   }
 
   public moveColumns(table: TableModel, from: number, to: number) {
@@ -1225,6 +1228,61 @@ export class WorkflowTablesDataService {
           : null,
       })
     );
+  }
+
+  public indentRow(row: TableRow) {
+    const table = this.stateService.findTable(row?.tableId);
+    const rows = table?.rows || [];
+    const rowIndex = rows.findIndex(tr => tr.id === row.id);
+    if (rowIndex <= 0) {
+      return;
+    }
+
+    const parentRow = rows
+      .slice(0, rowIndex)
+      .reverse()
+      .find(hierarchyRow => hierarchyRow.hierarchy?.level === row.hierarchy?.level);
+
+    if (parentRow) {
+      this.store$.dispatch(
+        new DocumentsAction.PatchMetaData({
+          collectionId: table.collectionId,
+          documentId: row.documentId,
+          metaData: {parentId: parentRow?.documentId},
+          workspace: this.currentWorkspace(),
+        })
+      );
+    }
+  }
+
+  public outdentRow(row: TableRow) {
+    const table = this.stateService.findTable(row?.tableId);
+    const rows = table?.rows || [];
+    const rowIndex = rows.findIndex(tr => tr.id === row.id);
+    if (rowIndex <= 0) {
+      return;
+    }
+
+    const parentRow = rows
+      .slice(0, rowIndex)
+      .reverse()
+      .find(hierarchyRow => hierarchyRow?.hierarchy?.level === row.hierarchy?.level - 1);
+
+    const previousParentDocument = this.stateService.data?.uniqueDocuments?.find(
+      document => document.id === parentRow?.documentId
+    );
+    const parentDocumentId = previousParentDocument?.metaData?.parentId || null;
+
+    if (parentRow) {
+      this.store$.dispatch(
+        new DocumentsAction.PatchMetaData({
+          collectionId: table.collectionId,
+          documentId: row.documentId,
+          metaData: {parentId: parentDocumentId},
+          workspace: this.currentWorkspace(),
+        })
+      );
+    }
   }
 
   public showAttributeType(column: TableColumn) {

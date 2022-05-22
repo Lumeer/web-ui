@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableRow, TableRowWithData} from './table-row';
+import {TableRow} from './table-row';
 import {objectsByIdMap} from '../../utils/common.utils';
 
 export interface TableRowHierarchy {
@@ -28,10 +28,11 @@ export interface TableRowHierarchy {
 
 export type TableRowHierarchyData = Record<string, TableRowHierarchy>;
 
-export function sortAndFilterTableRowsByHierarchy(rows: TableRow[]): TableRowWithData[] {
+export function sortAndFilterTableRowsByHierarchy(rows: TableRow[]): TableRow[] {
   const rowsMap = createRowsMapByParentId(rows);
-  const hierarchyData = createTableRowsHierarchy(rows);
-  return createRowsFromRowsMap(null, rowsMap, hierarchyData);
+  const sortedRows = createRowsFromRowsMap(null, rowsMap);
+  const hierarchyData = createTableRowsHierarchy(sortedRows, createRowChildrenMap(rows));
+  return sortedRows.map(row => ({...row, hierarchy: hierarchyData[row.id]}));
 }
 
 function createRowsMapByParentId(rows: TableRow[]): Record<string, TableRow[]> {
@@ -43,29 +44,41 @@ function createRowsMapByParentId(rows: TableRow[]): Record<string, TableRow[]> {
   }, {});
 }
 
-function createRowsFromRowsMap(
-  parentId: string,
-  rowsMap: Record<string, TableRow[]>,
-  hierarchyData: TableRowHierarchyData
-): TableRowWithData[] {
+function createRowChildrenMap(rows: TableRow[]): Record<string, TableRow[]> {
+  return (rows || []).reduce((map, row) => {
+    if (!row.parentRowId) {
+      return map;
+    }
+    if (!map[row.parentRowId]) {
+      map[row.parentRowId] = [];
+    }
+    map[row.parentRowId].push(row);
+    return map;
+  }, {});
+}
+
+function createRowsFromRowsMap(parentId: string, rowsMap: Record<string, TableRow[]>): TableRow[] {
   const rows = rowsMap[parentId] || [];
   return rows.reduce((orderedRows, row) => {
-    const rowWithData = {...row, hierarchy: hierarchyData?.[row.id]};
-    orderedRows.push(rowWithData);
+    orderedRows.push(row);
     if (row.expanded) {
-      orderedRows.push(...createRowsFromRowsMap(row.id, rowsMap, hierarchyData));
+      orderedRows.push(...createRowsFromRowsMap(row.id, rowsMap));
     }
     return orderedRows;
   }, []);
 }
 
-export function createTableRowsHierarchy(rows: TableRow[]): TableRowHierarchyData {
+export function createTableRowsHierarchy(
+  rows: TableRow[],
+  rowsMapByParentId: Record<string, TableRow[]>
+): TableRowHierarchyData {
   const tableRowsMap = objectsByIdMap(rows);
 
   // we know that rows are already sorted by hierarchy
   const result = (rows || []).reduce<{data: TableRowHierarchyData; hasHierarchy: boolean}>(
     (partialResult, row, index) => {
-      const hasChild = rows[index + 1]?.parentRowId === row.id;
+      const hasChild = rowsMapByParentId[row.id]?.length > 0;
+
       if (row.parentRowId) {
         partialResult.hasHierarchy = true;
         const parentRow = tableRowsMap[row.parentRowId];
@@ -80,6 +93,10 @@ export function createTableRowsHierarchy(rows: TableRow[]): TableRowHierarchyDat
         }
       } else {
         partialResult.data[row.id] = {level: 0, hasChild}; //
+      }
+
+      if (hasChild) {
+        partialResult.hasHierarchy = true;
       }
 
       return partialResult;
@@ -112,7 +129,7 @@ function computeHasLevelLine(
   return hasLevelLine;
 }
 
-export function createTableHierarchyPath(row: TableRowWithData, height: number, stepWidth: number): string {
+export function createTableHierarchyPath(row: TableRow, height: number, stepWidth: number): string {
   if (!row?.hierarchy) {
     return '';
   }

@@ -40,10 +40,7 @@ export interface TableRow {
   suggestDetail: boolean;
   documentMenuItems: MenuItem[];
   linkMenuItems: MenuItem[];
-}
-
-export interface TableRowWithData extends TableRow {
-  hierarchy: TableRowHierarchy;
+  hierarchy?: TableRowHierarchy;
 }
 
 export type TableRowCellsMap = Record<string, TableRowCell>;

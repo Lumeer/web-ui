@@ -112,6 +112,12 @@ export class WorkflowTablesService {
       case RowMenuId.Copy:
         this.dataService.copyRowValue(row, column);
         break;
+      case RowMenuId.Indent:
+        this.dataService.indentRow(row);
+        break;
+      case RowMenuId.Outdent:
+        this.dataService.outdentRow(row);
+        break;
       case RowMenuId.Delete:
         this.dataService.removeRow(row, column);
         break;

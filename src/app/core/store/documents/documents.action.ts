@@ -61,8 +61,8 @@ export enum DocumentsActionType {
 
   CHECK_DATA_HINT = '[Documents] Check Data Hint',
 
-  UPDATE_META_DATA = '[Documents] Update Meta Data',
   PATCH_META_DATA = '[Documents] Patch Meta Data',
+  PATCH_META_DATA_INTERNAL = '[Documents] Patch Meta Data Internal',
 
   ADD_FAVORITE = '[Documents] Add Favorite',
   ADD_FAVORITE_SUCCESS = '[Documents] Add Favorite :: Success',
@@ -326,12 +326,6 @@ export namespace DocumentsAction {
     public constructor(public payload: {collectionId: string; documentId: string; correlationId: string}) {}
   }
 
-  export class UpdateMetaData implements Action {
-    public readonly type = DocumentsActionType.UPDATE_META_DATA;
-
-    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
-  }
-
   export class PatchMetaData implements Action {
     public readonly type = DocumentsActionType.PATCH_META_DATA;
 
@@ -340,9 +334,16 @@ export namespace DocumentsAction {
         collectionId: string;
         documentId: string;
         metaData: DocumentMetaData;
-        onSuccess?: (document: DocumentModel) => void;
         workspace?: Workspace;
       }
+    ) {}
+  }
+
+  export class PatchMetaDataInternal implements Action {
+    public readonly type = DocumentsActionType.PATCH_META_DATA_INTERNAL;
+
+    public constructor(
+      public payload: {metaData: DocumentMetaData; originalDocument?: DocumentModel; workspace?: Workspace}
     ) {}
   }
 
@@ -494,8 +495,8 @@ export namespace DocumentsAction {
     | PatchDataInternal
     | PatchDataPending
     | CheckDataHint
-    | UpdateMetaData
     | PatchMetaData
+    | PatchMetaDataInternal
     | UpdateSuccess
     | UpdateFailure
     | Delete

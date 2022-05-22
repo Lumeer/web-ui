@@ -49,6 +49,8 @@ export enum RowMenuId {
   Edit = 'edit',
   Detail = 'detail',
   Copy = 'copy',
+  Indent = 'indent',
+  Outdent = 'outdent',
   Delete = 'delete',
   Unlink = 'unlink',
 }
@@ -88,13 +90,33 @@ export class WorkflowTablesMenuService {
       group: 0,
     });
 
+    if (row.documentId && dataPermissions?.edit) {
+      items.push({
+        id: RowMenuId.Indent,
+        title: this.translateRowMenuItem(RowMenuId.Indent),
+        disabled: false,
+        icons: ['fas fa-indent'],
+        shortcut: this.macOS ? '⇧ ⌥ →' : 'Shift + Alt + →',
+        group: 1,
+      });
+
+      items.push({
+        id: RowMenuId.Outdent,
+        title: this.translateRowMenuItem(RowMenuId.Outdent),
+        disabled: false,
+        icons: ['fas fa-outdent'],
+        shortcut: this.macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←',
+        group: 1,
+      });
+    }
+
     if (row.documentId && linked) {
       items.push({
         id: RowMenuId.Unlink,
         title: this.translateRowMenuItem(RowMenuId.Unlink),
         disabled: !dataPermissions?.delete,
         icons: ['fa fa-unlink text-warning'],
-        group: 1,
+        group: 2,
       });
     } else {
       items.push({
@@ -102,7 +124,7 @@ export class WorkflowTablesMenuService {
         title: this.translateRowMenuItem(RowMenuId.Delete),
         disabled: !dataPermissions?.delete,
         icons: ['far fa-trash-alt text-danger'],
-        group: 1,
+        group: 2,
       });
     }
 
@@ -117,6 +139,10 @@ export class WorkflowTablesMenuService {
         return $localize`:@@table.body.row.show.detail:Show detail`;
       case RowMenuId.Copy:
         return $localize`:@@table.body.row.copy.value:Copy value`;
+      case RowMenuId.Indent:
+        return $localize`:@@table.body.row.indent:Indent`;
+      case RowMenuId.Outdent:
+        return $localize`:@@table.body.row.outdent:Outdent`;
       case RowMenuId.Delete:
         return $localize`:@@remove.row:Remove row`;
       case RowMenuId.Unlink:
