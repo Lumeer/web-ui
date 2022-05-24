@@ -83,14 +83,20 @@ td.focused {
 .hierarchy-control {
   position: absolute;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transition: none;
+  transform: translateY(-50%);
 
   &.default {
     font-size: 60%;
   }
 
-  &.expanded,
   &.collapsed {
+    margin-left: 2px;
     font-size: 130%;
+  }
+
+  &.expanded {
+    font-size: 130%;
+    margin-left: -2px;
   }
 }

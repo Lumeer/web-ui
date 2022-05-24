@@ -91,23 +91,30 @@ export class WorkflowTablesMenuService {
     });
 
     if (row.documentId && dataPermissions?.edit) {
-      items.push({
-        id: RowMenuId.Indent,
-        title: this.translateRowMenuItem(RowMenuId.Indent),
-        disabled: false,
-        icons: ['fas fa-indent'],
-        shortcut: this.macOS ? '⇧ ⌥ →' : 'Shift + Alt + →',
-        group: 1,
-      });
+      if (
+        row.hierarchy?.level - row.hierarchy?.previousRowLevel < 1 &&
+        !(row.hierarchy?.level === row?.hierarchy?.previousRowLevel && !row.documentId)
+      ) {
+        items.push({
+          id: RowMenuId.Indent,
+          title: this.translateRowMenuItem(RowMenuId.Indent),
+          disabled: false,
+          icons: ['fas fa-indent'],
+          shortcut: this.macOS ? '⇧ ⌥ →' : 'Shift + Alt + →',
+          group: 1,
+        });
+      }
 
-      items.push({
-        id: RowMenuId.Outdent,
-        title: this.translateRowMenuItem(RowMenuId.Outdent),
-        disabled: false,
-        icons: ['fas fa-outdent'],
-        shortcut: this.macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←',
-        group: 1,
-      });
+      if (row.hierarchy?.level > 0) {
+        items.push({
+          id: RowMenuId.Outdent,
+          title: this.translateRowMenuItem(RowMenuId.Outdent),
+          disabled: false,
+          icons: ['fas fa-outdent'],
+          shortcut: this.macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←',
+          group: 1,
+        });
+      }
     }
 
     if (row.documentId && linked) {

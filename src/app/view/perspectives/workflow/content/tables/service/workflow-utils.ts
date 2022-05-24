@@ -56,6 +56,26 @@ export interface PendingRowUpdate {
   value: any;
 }
 
+export function computeParentsHasChildBelow(
+  index: number,
+  rowLevel: number,
+  objects: {document: DocumentModel}[]
+): boolean[] {
+  let currentObject = objects[index];
+  const objectsToIndex = objects.slice(0, index);
+  const objectsFromIndex = objects.slice(index + 1);
+  const hasLevelLine = [];
+  for (let i = rowLevel - 1; i >= 0; i--) {
+    const parentId = currentObject.document.metaData?.parentId;
+    if (parentId) {
+      hasLevelLine[i] = objectsFromIndex.some(object => object.document.metaData?.parentId === parentId);
+      currentObject = objectsToIndex.find(object => object.document.id === parentId);
+    }
+  }
+
+  return hasLevelLine;
+}
+
 export function computeTableHeight(rows: TableRow[], newRow: TableRow, maxRows?: number): number {
   const trimmedRows = rows.slice(0, maxRows || rows.length);
   // header + border
@@ -267,7 +287,15 @@ export function createRowObjectsFromAggregated(
     {data: [], ids: new Set()}
   ).data;
 
-  return sortDataObjectsByViewSettings(objects, collection, linkType, viewSettings?.attributes, constraintData, false);
+  return sortDataObjectsByViewSettings(
+    objects,
+    collection,
+    linkType,
+    viewSettings?.attributes,
+    constraintData,
+    false,
+    true
+  );
 }
 
 export function createTableRowCellsMapForResource(

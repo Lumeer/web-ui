@@ -77,7 +77,8 @@ export function sortDataObjectsByViewSettings<T extends {linkInstance?: LinkInst
   linkType: LinkType,
   attributesSettings: AttributesSettings,
   constraintData: ConstraintData,
-  composed = true
+  composed = true,
+  sortByHierarchy = false
 ): T[] {
   const linkTypeSettings = attributesSettings?.linkTypes?.[linkType?.id];
   let collectionSettings;
@@ -94,7 +95,8 @@ export function sortDataObjectsByViewSettings<T extends {linkInstance?: LinkInst
     linkType,
     collectionSettings,
     linkTypeSettings,
-    constraintData
+    constraintData,
+    sortByHierarchy
   );
 }
 
@@ -106,7 +108,8 @@ export function sortDataObjectsByResourceAttributesSettings<
   linkType: LinkType,
   collectionSettings: ResourceAttributeSettings[],
   linkTypeSettings: ResourceAttributeSettings[],
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  sortByHierarchy: boolean
 ): T[] {
   const linkTypeSortSettings = (linkTypeSettings || []).filter(setting => !!setting.sort);
   const collectionSortSettings = (collectionSettings || []).filter(setting => !!setting.sort);
@@ -114,7 +117,47 @@ export function sortDataObjectsByResourceAttributesSettings<
   const linkTypeAttributesMap = objectsByIdMap(linkType?.attributes);
   const collectionAttributesMap = objectsByIdMap(collection?.attributes);
 
-  return [...(dataObjects || [])].sort((a, b) => {
+  const baseKey = null;
+  let dataObjectsMap: Record<string, T[]>;
+  if (sortByHierarchy) {
+    const parentsMap = (dataObjects || []).reduce(
+      (map, dataObject) => ({...map, [dataObject.document.id]: dataObject}),
+      {}
+    );
+    dataObjectsMap = (dataObjects || []).reduce((map, dataObject) => {
+      const parent = parentsMap[dataObject.document.metaData?.parentId];
+      const parentId = parent?.document?.id || null;
+      const siblingRows = map[parentId] || [];
+      map[parentId] = siblingRows.concat(dataObject);
+      return map;
+    }, {});
+  } else {
+    dataObjectsMap = {[baseKey]: dataObjects};
+  }
+
+  return sortDataObjectsByResourceAttributesSettingsAndParent(
+    baseKey,
+    dataObjectsMap,
+    linkTypeSortSettings,
+    collectionSortSettings,
+    linkTypeAttributesMap,
+    collectionAttributesMap,
+    constraintData
+  );
+}
+
+function sortDataObjectsByResourceAttributesSettingsAndParent<
+  T extends {linkInstance?: LinkInstance; document?: DocumentModel}
+>(
+  parentId: string,
+  dataObjectsMap: Record<string, T[]>,
+  linkTypeSortSettings: ResourceAttributeSettings[],
+  collectionSortSettings: ResourceAttributeSettings[],
+  linkTypeAttributesMap: Record<string, Attribute>,
+  collectionAttributesMap: Record<string, Attribute>,
+  constraintData: ConstraintData
+): T[] {
+  const sortedDataObjects = [...(dataObjectsMap[parentId] || [])].sort((a, b) => {
     if (linkTypeSortSettings.length) {
       const compare = compareDataResourcesObjectsBySort(
         a,
@@ -122,7 +165,6 @@ export function sortDataObjectsByResourceAttributesSettings<
         linkTypeSortSettings,
         linkTypeAttributesMap,
         constraintData,
-        false,
         object => object.linkInstance
       );
       if (compare !== 0) {
@@ -137,7 +179,6 @@ export function sortDataObjectsByResourceAttributesSettings<
         collectionSortSettings,
         collectionAttributesMap,
         constraintData,
-        false,
         object => object.document
       );
       if (compare !== 0) {
@@ -147,6 +188,22 @@ export function sortDataObjectsByResourceAttributesSettings<
 
     return compareDataResourcesObjectsByCreation(a, b, false, object => object.linkInstance || object.document);
   });
+
+  return sortedDataObjects.reduce((array, dataObject) => {
+    array.push(dataObject);
+    array.push(
+      ...sortDataObjectsByResourceAttributesSettingsAndParent(
+        dataObject.document.id,
+        dataObjectsMap,
+        linkTypeSortSettings,
+        collectionSortSettings,
+        linkTypeAttributesMap,
+        collectionAttributesMap,
+        constraintData
+      )
+    );
+    return array;
+  }, []);
 }
 
 export function sortDataResourcesObjectsByViewSettings<T>(
@@ -200,15 +257,7 @@ export function sortDataResourcesObjectsByViewSettings<T>(
           ? collectionsSortsMap[aResource.id]
           : linkTypesSortsMap[aResource.id];
       return (
-        compareDataResourcesObjectsBySort(
-          a,
-          b,
-          sortSettings,
-          attributesMap,
-          constraintData,
-          false,
-          dataResourceCallback
-        ) ||
+        compareDataResourcesObjectsBySort(a, b, sortSettings, attributesMap, constraintData, dataResourceCallback) ||
         defaultSort?.(a, b) ||
         compareDataResourcesObjectsByCreation(a, b, false, dataResourceCallback)
       );
@@ -229,15 +278,7 @@ export function sortDataResourcesObjects<T>(
 ): T[] {
   return objects.sort(
     (a, b) =>
-      compareDataResourcesObjectsBySort(
-        a,
-        b,
-        sortSettings,
-        attributesMap,
-        constraintData,
-        sortDesc,
-        dataResourceCallback
-      ) ||
+      compareDataResourcesObjectsBySort(a, b, sortSettings, attributesMap, constraintData, dataResourceCallback) ||
       defaultSort?.(a, b) ||
       compareDataResourcesObjectsByCreation(a, b, sortDesc, dataResourceCallback)
   );
@@ -249,7 +290,6 @@ export function compareDataResourcesObjectsBySort<T>(
   sortSettings: ResourceAttributeSettings[],
   attributesMap: Record<string, Attribute>,
   constraintData: ConstraintData,
-  sortDesc: boolean,
   dataResourceCallback: (T) => DataResource
 ): number {
   const aDataResource = dataResourceCallback(a);

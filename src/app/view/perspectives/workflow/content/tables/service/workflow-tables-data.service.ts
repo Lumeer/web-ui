@@ -86,6 +86,7 @@ import {
   deepObjectsEquals,
   findIthItemIndex,
   isArray,
+  isNotNullOrUndefined,
   objectsByIdMap,
 } from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
@@ -96,6 +97,7 @@ import {
   getDocumentsAndLinksByStemData,
 } from '../../../../../../core/store/documents/document.utils';
 import {
+  computeParentsHasChildBelow,
   computeTableHeight,
   createAggregatorAttributes,
   createEmptyNewRow,
@@ -140,7 +142,6 @@ import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
-import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -840,8 +841,8 @@ export class WorkflowTablesDataService {
     const pendingColumnValuesByRow = createPendingColumnValuesByRow(this.pendingColumnValues);
     const lockedRowIds = this.lockedRowIds[tableId] || [];
 
-    const {rows, lockedRows} = sortedData.reduce(
-      (data, object) => {
+    const {rows, lockedRows, hasHierarchy} = sortedData.reduce(
+      (data, object, index) => {
         const objectId = object.linkInstance?.id || object.document.id;
         const objectCorrelationId = object.linkInstance?.correlationId || object.document.correlationId;
         const parentDocumentId = object.document?.metaData?.parentId;
@@ -877,6 +878,12 @@ export class WorkflowTablesDataService {
           constraintData.currentUser,
           constraintData
         );
+
+        const nextDocument = sortedData[index + 1]?.document;
+        const hasChild = nextDocument?.metaData?.parentId === object.document.id;
+        const hierarchyLevel = isNotNullOrUndefined(parentRow?.hierarchy?.level) ? parentRow.hierarchy.level + 1 : 0;
+        const expanded = (!parentRow || parentRow.expanded) && config?.expandedDocuments?.includes(object.document.id);
+
         const row: TableRow = {
           id,
           tableId,
@@ -885,7 +892,7 @@ export class WorkflowTablesDataService {
           linkInstanceId: object.linkInstance?.id,
           parentRowId: parentRow?.id,
           height: currentRow?.height || TABLE_ROW_HEIGHT,
-          expanded: config?.expandedDocuments?.includes(object.document.id),
+          expanded,
           correlationId: objectCorrelationId || id,
           commentsCount: object.document ? object.document.commentsCount : object.linkInstance.commentsCount,
           documentEditable: documentPermissions?.edit,
@@ -894,7 +901,20 @@ export class WorkflowTablesDataService {
           suggestDetail: !linkType,
           documentMenuItems: [],
           linkMenuItems: [],
+          hierarchy: {
+            hasChild,
+            previousRowLevel: data.previousRow?.hierarchy?.level,
+            level: hierarchyLevel,
+            parentsHasChildBelow: computeParentsHasChildBelow(index, hierarchyLevel, sortedData),
+          },
         };
+        data.rowsByDocumentIdMap[object.document.id] = row;
+        data.hasHierarchy = data.hasHierarchy || hasChild;
+        data.previousRow = row;
+
+        if (parentRow && !parentRow.expanded) {
+          return data;
+        }
 
         row.documentMenuItems.push(...this.menuService.createRowMenu(documentPermissions, row, !!object.linkInstance));
         row.linkMenuItems.push(...this.menuService.createRowMenu(linkInstancePermissions, row, !!object.linkInstance));
@@ -905,14 +925,15 @@ export class WorkflowTablesDataService {
           data.rows.push(row);
         }
 
-        data.rowsByDocumentIdMap[object.document.id] = row;
-
         return data;
       },
-      {rows: [], lockedRows: [], rowsByDocumentIdMap: {}}
+      {rows: [], lockedRows: [], rowsByDocumentIdMap: {}, hasHierarchy: false, previousRow: undefined}
     );
 
-    const rowsWithHierarchy = sortAndFilterTableRowsByHierarchy(rows);
+    if (!hasHierarchy) {
+      rows.forEach(row => delete row.hierarchy);
+      lockedRows.forEach(row => delete row.hierarchy);
+    }
 
     const lockedRowsMap = objectsByIdMap(lockedRows);
     const lockedRowsWithUncreated = lockedRowIds
@@ -929,7 +950,7 @@ export class WorkflowTablesDataService {
       newRow.linkMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
     }
 
-    return {rows: [...rowsWithHierarchy, ...lockedRowsWithUncreated], newRow};
+    return {rows: [...rows, ...lockedRowsWithUncreated], newRow};
   }
 
   public moveColumns(table: TableModel, from: number, to: number) {
@@ -1231,6 +1252,10 @@ export class WorkflowTablesDataService {
   }
 
   public indentRow(row: TableRow) {
+    if (!row?.documentEditable) {
+      return;
+    }
+
     const table = this.stateService.findTable(row?.tableId);
     const rows = table?.rows || [];
     const rowIndex = rows.findIndex(tr => tr.id === row.id);
@@ -1244,6 +1269,10 @@ export class WorkflowTablesDataService {
       .find(hierarchyRow => hierarchyRow.hierarchy?.level === row.hierarchy?.level);
 
     if (parentRow) {
+      if (!parentRow.expanded) {
+        this.toggleHierarchy(parentRow);
+      }
+
       this.store$.dispatch(
         new DocumentsAction.PatchMetaData({
           collectionId: table.collectionId,
@@ -1256,6 +1285,10 @@ export class WorkflowTablesDataService {
   }
 
   public outdentRow(row: TableRow) {
+    if (!row?.documentEditable) {
+      return;
+    }
+
     const table = this.stateService.findTable(row?.tableId);
     const rows = table?.rows || [];
     const rowIndex = rows.findIndex(tr => tr.id === row.id);
@@ -1274,6 +1307,10 @@ export class WorkflowTablesDataService {
     const parentDocumentId = previousParentDocument?.metaData?.parentId || null;
 
     if (parentRow) {
+      if (!parentRow.expanded) {
+        this.toggleHierarchy(parentRow);
+      }
+
       this.store$.dispatch(
         new DocumentsAction.PatchMetaData({
           collectionId: table.collectionId,

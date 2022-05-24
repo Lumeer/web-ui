@@ -22,10 +22,11 @@ import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {keyboardEventCode, KeyCode} from '../../../../../../shared/key-code';
 import {preventEvent} from '../../../../../../shared/utils/common.utils';
 import {TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
+import {WorkflowTablesDataService} from './workflow-tables-data.service';
 
 @Injectable()
 export class WorkflowTablesKeyboardService {
-  constructor(private stateService: WorkflowTablesStateService) {}
+  constructor(private stateService: WorkflowTablesStateService, private dataService: WorkflowTablesDataService) {}
 
   private get tables(): TableModel[] {
     return this.stateService.tables;
@@ -56,6 +57,8 @@ export class WorkflowTablesKeyboardService {
         this.onBackSpaceKeyDown(event);
         break;
     }
+
+    this.onShortcutKeyDown(event);
   }
 
   private shouldHandleKeyDown(): boolean {
@@ -203,6 +206,26 @@ export class WorkflowTablesKeyboardService {
           this.stateService.selectCell(tableIndex + 1, null, columnIndex, TableCellType.Header);
         }
         break;
+    }
+  }
+
+  private onShortcutKeyDown(event: KeyboardEvent) {
+    if (!this.isSelected()) {
+      return;
+    }
+
+    const cell = this.stateService.selectedCell;
+    const row = this.stateService.findTableRow(cell.tableId, cell.rowId);
+
+    if (event.altKey && event.shiftKey) {
+      switch (keyboardEventCode(event)) {
+        case KeyCode.ArrowRight:
+          this.dataService.indentRow(row);
+          return;
+        case KeyCode.ArrowLeft:
+          this.dataService.outdentRow(row);
+          return;
+      }
     }
   }
 

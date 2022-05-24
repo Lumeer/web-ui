@@ -54,7 +54,6 @@ import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
-import {sortAndFilterTableRowsByHierarchy} from './model/table-hierarchy';
 
 @Component({
   selector: 'lmr-table',
@@ -236,7 +235,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private columnCanShowHierarchyIndicator(column: TableColumn): boolean {
-    return !column.hidden;
+    return !column.hidden && !!column.collectionId;
   }
 
   private checkScrollPositionForSelectedCell() {
