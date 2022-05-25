@@ -56,24 +56,94 @@ export interface PendingRowUpdate {
   value: any;
 }
 
-export function computeParentsHasChildBelow(
+export function computeParentsHasChildBelow<T>(
   index: number,
   rowLevel: number,
-  objects: {document: DocumentModel}[]
+  objects: T[],
+  parentIdFun: (object: T) => string,
+  idFun: (object: T) => string
 ): boolean[] {
   let currentObject = objects[index];
   const objectsToIndex = objects.slice(0, index);
   const objectsFromIndex = objects.slice(index + 1);
   const hasLevelLine = [];
   for (let i = rowLevel - 1; i >= 0; i--) {
-    const parentId = currentObject.document.metaData?.parentId;
+    const parentId = parentIdFun(currentObject);
     if (parentId) {
-      hasLevelLine[i] = objectsFromIndex.some(object => object.document.metaData?.parentId === parentId);
-      currentObject = objectsToIndex.find(object => object.document.id === parentId);
+      hasLevelLine[i] = objectsFromIndex.some(object => parentIdFun(object) === parentId);
+      currentObject = objectsToIndex.find(object => idFun(object) === parentId);
     }
   }
 
   return hasLevelLine;
+}
+
+export function addRowByParentId(newRow: TableRow, rows: TableRow[]): TableRow[] {
+  if (newRow.parentRowId) {
+    const parentIndex = rows.findIndex(row => row.id === newRow.parentRowId);
+    const parentRow = rows[parentIndex];
+    const childIndex =
+      parentRow &&
+      rows.slice(parentIndex + 1).findIndex(row => (row.hierarchy?.level || 0) <= (parentRow?.hierarchy?.level || 0));
+
+    if (childIndex >= 0) {
+      const realIndex = parentIndex + childIndex + 1;
+      const rowsCopy = [...rows];
+
+      if (!parentRow.hierarchy?.hasChild) {
+        rowsCopy.splice(parentIndex, 1, {
+          ...parentRow,
+          hierarchy: {
+            hasChild: true,
+            previousRowLevel: rows[parentIndex - 1]?.hierarchy?.level || 0,
+            level: parentRow?.hierarchy?.level || 0,
+          },
+        });
+      }
+
+      if (newRow.documentId) {
+        rowsCopy.splice(realIndex, 0, newRow);
+      } else {
+        rowsCopy.splice(realIndex, 0, {
+          ...newRow,
+          hierarchy: {
+            level: (parentRow?.hierarchy?.level || 0) + 1,
+            hasChild: false,
+            previousRowLevel: rows[realIndex - 1]?.hierarchy?.level || 0,
+          },
+        });
+      }
+
+      for (let i = parentIndex; i <= realIndex; i++) {
+        const currentRow = rowsCopy[i];
+        rowsCopy[i] = {
+          ...currentRow,
+          hierarchy: {
+            ...currentRow.hierarchy,
+            parentsHasChildBelow: computeParentsHasChildBelow(
+              i,
+              currentRow.hierarchy?.level,
+              rowsCopy,
+              row => row.parentRowId,
+              row => row.id
+            ),
+          },
+        };
+      }
+
+      return rowsCopy;
+    }
+  }
+
+  if (newRow?.documentId) {
+    return [...rows, newRow];
+  }
+
+  const lastRow = rows[rows.length - 1];
+  if (lastRow?.hierarchy) {
+    return [...rows, {...newRow, hierarchy: {level: 0, previousRowLevel: lastRow?.hierarchy?.level, hasChild: false}}];
+  }
+  return [...rows, newRow];
 }
 
 export function computeTableHeight(rows: TableRow[], newRow: TableRow, maxRows?: number): number {

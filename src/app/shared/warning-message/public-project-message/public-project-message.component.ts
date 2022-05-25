@@ -40,7 +40,7 @@ export class PublicProjectMessageComponent implements AfterViewInit, OnDestroy {
 
   private setAuthCallbackOffsetTop() {
     const element = this.element.nativeElement as HTMLElement;
-    document.body.style.setProperty('--browser-warning-height', `${element.offsetHeight}px`);
+    document.body.style.setProperty('--browser-warning-height', `${element.offsetHeight + 1}px`);
   }
 
   public ngOnDestroy() {

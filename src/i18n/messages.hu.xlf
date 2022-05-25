@@ -9305,7 +9305,7 @@
 					<source>Remove Attribute</source>
 					<target>Tulajdonság eltávolítása</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/attributes/table/resource-attributes-table.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit>
-				<trans-unit datatype="html" id="remove.row">
+				<trans-unit datatype="html" id="row.remove">
 					<source>Remove row</source>
 					<target>Sor eltávolítása</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">145</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">121</context></context-group></trans-unit>

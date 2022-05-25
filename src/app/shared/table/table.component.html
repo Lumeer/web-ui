@@ -36,6 +36,7 @@
         <tr table-row #tableRow
             *ngIf="row"
             [class.selected]="row.documentId === selectedDocumentId"
+            [class.uncreated]="!row.documentId"
             [row]="row"
             [viewId]="viewId"
             [selectedCell]="selectedCell"

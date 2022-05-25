@@ -48,6 +48,7 @@ import {queryAttributePermissions} from '../../../../../../core/model/query-attr
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {addRowByParentId} from './workflow-utils';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -480,13 +481,14 @@ export class WorkflowTablesStateService {
     if (tableIndex >= 0) {
       const table = this.tables[tableIndex];
       const newTables = [...this.tables];
-      const rows = [...newTables[tableIndex].rows, newRow];
+      const rows = addRowByParentId(newRow, newTables[tableIndex].rows);
+      const rowIndex = rows.findIndex(row => row.id === newRow.id);
       newTables[tableIndex] = {...newTables[tableIndex], rows};
 
       this.setTables(newTables);
 
       const columnIndex = table.columns.findIndex(column => column.default);
-      setTimeout(() => this.editCell(tableIndex, rows.length - 1, Math.max(columnIndex, 0)));
+      setTimeout(() => this.editCell(tableIndex, rowIndex, Math.max(columnIndex, 0)));
     }
   }
 

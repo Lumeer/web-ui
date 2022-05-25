@@ -124,6 +124,9 @@ export class WorkflowTablesService {
       case RowMenuId.Unlink:
         this.dataService.unlinkRow(row, column);
         break;
+      case RowMenuId.AddChild:
+        this.dataService.createNewRow(row.tableId, row.id);
+        break;
     }
   }
 

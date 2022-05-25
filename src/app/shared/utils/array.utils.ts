@@ -138,6 +138,12 @@ export function appendToArray<T>(array: T[], item: T): T[] {
   return [...(array || []), item];
 }
 
+export function addItemToArray<T>(array: T[], item: T, index: number): T[] {
+  const copy = [...(array || [])];
+  copy.splice(index, 0, item);
+  return copy;
+}
+
 export function removeFromArray<T>(array: T[], item: T): T[] {
   return [...(array || [])].filter(it => it !== item);
 }

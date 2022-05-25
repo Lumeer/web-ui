@@ -53,13 +53,19 @@ export enum RowMenuId {
   Outdent = 'outdent',
   Delete = 'delete',
   Unlink = 'unlink',
+  AddChild = 'addChild',
 }
 
 @Injectable()
 export class WorkflowTablesMenuService {
   public readonly macOS = isMacOS();
 
-  public createRowMenu(dataPermissions: DataResourcePermissions, row: TableRow, linked?: boolean): MenuItem[] {
+  public createRowMenu(
+    dataPermissions: DataResourcePermissions,
+    row: TableRow,
+    canCreateNewRow: boolean,
+    linked?: boolean
+  ): MenuItem[] {
     const items: MenuItem[] = [
       {
         id: RowMenuId.Edit,
@@ -117,6 +123,16 @@ export class WorkflowTablesMenuService {
       }
     }
 
+    if (canCreateNewRow && row.documentId) {
+      items.push({
+        id: RowMenuId.AddChild,
+        title: this.translateRowMenuItem(RowMenuId.AddChild),
+        disabled: false,
+        icons: ['fas fa-sitemap'],
+        group: 1,
+      });
+    }
+
     if (row.documentId && linked) {
       items.push({
         id: RowMenuId.Unlink,
@@ -151,9 +167,11 @@ export class WorkflowTablesMenuService {
       case RowMenuId.Outdent:
         return $localize`:@@table.body.row.outdent:Outdent`;
       case RowMenuId.Delete:
-        return $localize`:@@remove.row:Remove row`;
+        return $localize`:@@row.remove:Remove row`;
       case RowMenuId.Unlink:
         return $localize`:@@table.body.row.unlink:Unlink row`;
+      case RowMenuId.AddChild:
+        return $localize`:@@row.add.child:Add child row`;
       default:
         return '';
     }

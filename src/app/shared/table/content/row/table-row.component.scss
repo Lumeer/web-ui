@@ -27,6 +27,10 @@ td.focused {
   }
 }
 
+:host.uncreated {
+  background: $gray-200;
+}
+
 :host:hover {
   background: lighten($success, 60%);
 
