@@ -56,6 +56,11 @@ export enum RowMenuId {
   AddChild = 'addChild',
 }
 
+export interface RowMenuData {
+  canCreateNewRow: boolean;
+  previousRow: TableRow;
+}
+
 @Injectable()
 export class WorkflowTablesMenuService {
   public readonly macOS = isMacOS();
@@ -63,7 +68,7 @@ export class WorkflowTablesMenuService {
   public createRowMenu(
     dataPermissions: DataResourcePermissions,
     row: TableRow,
-    canCreateNewRow: boolean,
+    data?: RowMenuData,
     linked?: boolean
   ): MenuItem[] {
     const items: MenuItem[] = [
@@ -97,10 +102,7 @@ export class WorkflowTablesMenuService {
     });
 
     if (row.documentId && dataPermissions?.edit) {
-      if (
-        row.hierarchy?.level - row.hierarchy?.previousRowLevel < 1 &&
-        !(row.hierarchy?.level === row?.hierarchy?.previousRowLevel && !row.documentId)
-      ) {
+      if (data.previousRow && row.parentRowId !== data.previousRow.id) {
         items.push({
           id: RowMenuId.Indent,
           title: this.translateRowMenuItem(RowMenuId.Indent),
@@ -111,7 +113,7 @@ export class WorkflowTablesMenuService {
         });
       }
 
-      if (row.hierarchy?.level > 0) {
+      if (row.parentRowId) {
         items.push({
           id: RowMenuId.Outdent,
           title: this.translateRowMenuItem(RowMenuId.Outdent),
@@ -123,7 +125,7 @@ export class WorkflowTablesMenuService {
       }
     }
 
-    if (canCreateNewRow && row.documentId) {
+    if (row.documentId && data?.canCreateNewRow) {
       items.push({
         id: RowMenuId.AddChild,
         title: this.translateRowMenuItem(RowMenuId.AddChild),

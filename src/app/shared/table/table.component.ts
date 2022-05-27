@@ -36,7 +36,7 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {filter, throttleTime} from 'rxjs/operators';
-import {TableRow} from './model/table-row';
+import {TableRow, TableRowWithData} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
 import {
@@ -54,6 +54,7 @@ import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
+import {sortAndFilterTableRowsByHierarchy} from './model/table-hierarchy';
 
 @Component({
   selector: 'lmr-table',
@@ -183,7 +184,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public scrollOffsetLeft: number;
   public toolbarMarginBottom = 0;
   public toolbarMarginRight = 0;
-  public rows: TableRow[];
+  public rows: TableRowWithData[];
 
   private scrollOffsetTop: number;
   private subscriptions = new Subscription();
@@ -210,10 +211,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.tableModel) {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
+      const sortedRows = sortAndFilterTableRowsByHierarchy(this.tableModel?.rows);
       if (this.tableModel.bottomToolbar) {
-        this.rows = [...(this.tableModel?.rows || []), null];
+        this.rows = [...sortedRows, null];
       } else {
-        this.rows = this.tableModel?.rows || [];
+        this.rows = sortedRows;
       }
       setTimeout(() => this.setScrollbarMargin());
     }

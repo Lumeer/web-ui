@@ -26,6 +26,7 @@ export interface TableRow {
   tableId: string;
   height: number;
   parentRowId?: string;
+  level?: number;
   expanded?: boolean;
   creating?: boolean;
   documentId?: string;
@@ -40,6 +41,9 @@ export interface TableRow {
   suggestDetail: boolean;
   documentMenuItems: MenuItem[];
   linkMenuItems: MenuItem[];
+}
+
+export interface TableRowWithData extends TableRow {
   hierarchy?: TableRowHierarchy;
 }
 

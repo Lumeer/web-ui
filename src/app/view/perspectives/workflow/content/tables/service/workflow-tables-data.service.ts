@@ -98,7 +98,6 @@ import {
 } from '../../../../../../core/store/documents/document.utils';
 import {
   addRowByParentId,
-  computeParentsHasChildBelow,
   computeTableHeight,
   createAggregatorAttributes,
   createEmptyNewRow,
@@ -135,7 +134,6 @@ import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/work
 import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
 import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
 import {CommonAction} from '../../../../../../core/store/common/common.action';
-import {RoleType} from '../../../../../../core/model/role-type';
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
@@ -845,7 +843,7 @@ export class WorkflowTablesDataService {
       ? linkPermissions.rolesWithView?.DataContribute
       : collectionPermissions.rolesWithView?.DataContribute;
 
-    const {rows, lockedRows, hasHierarchy} = sortedData.reduce(
+    const {rows, lockedRows} = sortedData.reduce(
       (data, object, index) => {
         const objectId = object.linkInstance?.id || object.document.id;
         const objectCorrelationId = object.linkInstance?.correlationId || object.document.correlationId;
@@ -883,10 +881,7 @@ export class WorkflowTablesDataService {
           constraintData
         );
 
-        const nextDocument = sortedData[index + 1]?.document;
-        const hasChild = nextDocument?.metaData?.parentId === object.document.id;
-        const hierarchyLevel = isNotNullOrUndefined(parentRow?.hierarchy?.level) ? parentRow.hierarchy.level + 1 : 0;
-        const expanded = (!parentRow || parentRow.expanded) && config?.expandedDocuments?.includes(object.document.id);
+        const hierarchyLevel = isNotNullOrUndefined(parentRow?.level) ? parentRow.level + 1 : 0;
 
         const row: TableRow = {
           id,
@@ -895,8 +890,9 @@ export class WorkflowTablesDataService {
           documentId: object.document.id,
           linkInstanceId: object.linkInstance?.id,
           parentRowId: parentRow?.id,
+          level: hierarchyLevel,
           height: currentRow?.height || TABLE_ROW_HEIGHT,
-          expanded,
+          expanded: config?.expandedDocuments?.includes(object.document.id),
           correlationId: objectCorrelationId || id,
           commentsCount: object.document ? object.document.commentsCount : object.linkInstance.commentsCount,
           documentEditable: documentPermissions?.edit,
@@ -905,32 +901,24 @@ export class WorkflowTablesDataService {
           suggestDetail: !linkType,
           documentMenuItems: [],
           linkMenuItems: [],
-          hierarchy: {
-            hasChild,
-            previousRowLevel: data.previousRow?.hierarchy?.level,
-            level: hierarchyLevel,
-            parentsHasChildBelow: computeParentsHasChildBelow(
-              index,
-              hierarchyLevel,
-              sortedData,
-              object => object.document.metaData?.parentId,
-              object => object.document.id
-            ),
-          },
         };
         data.rowsByDocumentIdMap[object.document.id] = row;
-        data.hasHierarchy = data.hasHierarchy || hasChild;
-        data.previousRow = row;
-
-        if (parentRow && !parentRow.expanded) {
-          return data;
-        }
 
         row.documentMenuItems.push(
-          ...this.menuService.createRowMenu(documentPermissions, row, canCreateNewRow, !!object.linkInstance)
+          ...this.menuService.createRowMenu(
+            documentPermissions,
+            row,
+            {canCreateNewRow, previousRow: data.previousRow},
+            !!object.linkInstance
+          )
         );
         row.linkMenuItems.push(
-          ...this.menuService.createRowMenu(linkInstancePermissions, row, canCreateNewRow, !!object.linkInstance)
+          ...this.menuService.createRowMenu(
+            linkInstancePermissions,
+            row,
+            {canCreateNewRow, previousRow: data.previousRow},
+            !!object.linkInstance
+          )
         );
 
         if (lockedRowIds.includes(row.id)) {
@@ -939,39 +927,28 @@ export class WorkflowTablesDataService {
           data.rows.push(row);
         }
 
+        data.previousRow = row;
+
         return data;
       },
-      {rows: [], lockedRows: [], rowsByDocumentIdMap: {}, hasHierarchy: false, previousRow: undefined}
+      {rows: [], lockedRows: [], rowsByDocumentIdMap: {}, previousRow: undefined}
     );
-
-    if (!hasHierarchy) {
-      rows.forEach(row => delete row.hierarchy);
-      lockedRows.forEach(row => delete row.hierarchy);
-    }
-
-    const lockedRowsMap = objectsByIdMap(lockedRows);
-    const lockedRowsWithUncreated = lockedRowIds
-      .map(rowId => lockedRowsMap[rowId] || rowsMap[rowId])
-      .filter(row => !!row);
 
     let newRow: TableRow;
     if (canCreateNewRow) {
       newRow = createEmptyNewRow(tableId, !!linkType);
-      newRow.documentMenuItems = this.menuService.createRowMenu(
-        {read: false, edit: true, delete: true},
-        newRow,
-        canCreateNewRow
-      );
-      newRow.linkMenuItems = this.menuService.createRowMenu(
-        {read: false, edit: true, delete: true},
-        newRow,
-        canCreateNewRow
-      );
+      newRow.documentMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
+      newRow.linkMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
     }
 
-    lockedRowsWithUncreated.forEach(row => addRowByParentId(row, rows));
+    const lockedRowsMap = objectsByIdMap(lockedRows);
 
-    return {rows, newRow};
+    const lockedRowsWithUncreated = lockedRowIds
+      .map(rowId => lockedRowsMap[rowId] || rowsMap[rowId])
+      .filter(row => !!row)
+      .reduce((allRows, row) => addRowByParentId(row, allRows), rows);
+
+    return {rows: lockedRowsWithUncreated, newRow};
   }
 
   public moveColumns(table: TableModel, from: number, to: number) {
@@ -1287,7 +1264,7 @@ export class WorkflowTablesDataService {
     const parentRow = rows
       .slice(0, rowIndex)
       .reverse()
-      .find(hierarchyRow => hierarchyRow.hierarchy?.level === row.hierarchy?.level);
+      .find(hierarchyRow => (hierarchyRow?.level || 0) === (row?.level || 0));
 
     if (parentRow) {
       if (!parentRow.expanded) {
@@ -1320,7 +1297,7 @@ export class WorkflowTablesDataService {
     const parentRow = rows
       .slice(0, rowIndex)
       .reverse()
-      .find(hierarchyRow => hierarchyRow?.hierarchy?.level === row.hierarchy?.level - 1);
+      .find(hierarchyRow => (hierarchyRow?.level || 0) === (row?.level || 0) - 1);
 
     const previousParentDocument = this.stateService.data?.uniqueDocuments?.find(
       document => document.id === parentRow?.documentId
@@ -1658,12 +1635,13 @@ export class WorkflowTablesDataService {
       suggestLinks: !!linkedDocumentId,
       suggestDetail: !linkedDocumentId,
     };
-    const parentRow = parentRowId && table.rows.find(row => row.id === parentRowId);
-    if (parentRow && !parentRow.expanded) {
-      // TODO this.toggleHierarchy(parentRow);
-    }
     this.stateService.addRow(tableId, newRow);
     this.addLockedRow(tableId, id);
+
+    const parentRow = parentRowId && table.rows.find(row => row.id === parentRowId);
+    if (parentRow && !parentRow.expanded) {
+      this.toggleHierarchy(parentRow);
+    }
   }
 
   private addLockedRow(tableId: string, rowId: string) {

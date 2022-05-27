@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {TableColumn, TableColumnGroup} from '../../model/table-column';
-import {TableRow} from '../../model/table-row';
+import {TableRow, TableRowWithData} from '../../model/table-row';
 import {
   computeElementPositionInParent,
   isNotNullOrUndefined,
@@ -65,7 +65,7 @@ export class TableRowComponent implements OnInit, OnChanges {
   public columnGroups: TableColumnGroup[];
 
   @Input()
-  public row: TableRow;
+  public row: TableRowWithData;
 
   @Input()
   public constraintData: ConstraintData;
