@@ -94,6 +94,9 @@ export class TableRowComponent implements OnInit, OnChanges {
   @Input()
   public viewId: string;
 
+  @Input()
+  public tableColor: string;
+
   @Output()
   public onClick = new EventEmitter<string>();
 

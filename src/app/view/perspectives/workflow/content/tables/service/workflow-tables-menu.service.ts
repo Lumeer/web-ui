@@ -25,6 +25,8 @@ import {isMacOS} from '../../../../../../shared/utils/system.utils';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {ConstraintType} from '@lumeer/data-filters';
 import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
+import {Translation} from '../../../../../../shared/utils/translation';
+import {CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 
 export enum HeaderMenuId {
   Edit = 'edit',
@@ -54,11 +56,13 @@ export enum RowMenuId {
   Delete = 'delete',
   Unlink = 'unlink',
   AddChild = 'addChild',
+  AddSubParent = 'addSubParent',
 }
 
 export interface RowMenuData {
   canCreateNewRow: boolean;
   previousRow: TableRow;
+  purpose: CollectionPurposeType;
 }
 
 @Injectable()
@@ -74,7 +78,7 @@ export class WorkflowTablesMenuService {
     const items: MenuItem[] = [
       {
         id: RowMenuId.Edit,
-        title: this.translateRowMenuItem(RowMenuId.Edit),
+        title: this.translateRowMenuItem(RowMenuId.Edit, data?.purpose),
         disabled: !dataPermissions?.edit,
         icons: ['fa fa-edit'],
         shortcut: this.macOS ? '↩' : 'Enter',
@@ -85,7 +89,7 @@ export class WorkflowTablesMenuService {
     if (row.documentId) {
       items.push({
         id: RowMenuId.Detail,
-        title: this.translateRowMenuItem(RowMenuId.Detail),
+        title: this.translateRowMenuItem(RowMenuId.Detail, data?.purpose),
         disabled: !dataPermissions?.read,
         icons: ['far fa-file-search'],
         group: 0,
@@ -94,7 +98,7 @@ export class WorkflowTablesMenuService {
 
     items.push({
       id: RowMenuId.Copy,
-      title: this.translateRowMenuItem(RowMenuId.Copy),
+      title: this.translateRowMenuItem(RowMenuId.Copy, data?.purpose),
       disabled: false,
       icons: ['far fa-copy'],
       shortcut: this.macOS ? '⌘ C' : 'Ctrl + C',
@@ -105,7 +109,7 @@ export class WorkflowTablesMenuService {
       if (data.previousRow && row.parentRowId !== data.previousRow.id) {
         items.push({
           id: RowMenuId.Indent,
-          title: this.translateRowMenuItem(RowMenuId.Indent),
+          title: this.translateRowMenuItem(RowMenuId.Indent, data?.purpose),
           disabled: false,
           icons: ['fas fa-indent'],
           shortcut: this.macOS ? '⇧ ⌥ →' : 'Shift + Alt + →',
@@ -116,7 +120,7 @@ export class WorkflowTablesMenuService {
       if (row.parentRowId) {
         items.push({
           id: RowMenuId.Outdent,
-          title: this.translateRowMenuItem(RowMenuId.Outdent),
+          title: this.translateRowMenuItem(RowMenuId.Outdent, data?.purpose),
           disabled: false,
           icons: ['fas fa-outdent'],
           shortcut: this.macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←',
@@ -128,17 +132,27 @@ export class WorkflowTablesMenuService {
     if (row.documentId && data?.canCreateNewRow) {
       items.push({
         id: RowMenuId.AddChild,
-        title: this.translateRowMenuItem(RowMenuId.AddChild),
+        title: this.translateRowMenuItem(RowMenuId.AddChild, data?.purpose),
         disabled: false,
         icons: ['fas fa-sitemap'],
         group: 1,
       });
+
+      if (row.parentRowId) {
+        items.push({
+          id: RowMenuId.AddSubParent,
+          title: this.translateRowMenuItem(RowMenuId.AddSubParent, data?.purpose),
+          disabled: false,
+          icons: ['fas fa-plus-circle'],
+          group: 1,
+        });
+      }
     }
 
     if (row.documentId && linked) {
       items.push({
         id: RowMenuId.Unlink,
-        title: this.translateRowMenuItem(RowMenuId.Unlink),
+        title: this.translateRowMenuItem(RowMenuId.Unlink, data?.purpose),
         disabled: !dataPermissions?.delete,
         icons: ['fa fa-unlink text-warning'],
         group: 2,
@@ -146,7 +160,7 @@ export class WorkflowTablesMenuService {
     } else {
       items.push({
         id: RowMenuId.Delete,
-        title: this.translateRowMenuItem(RowMenuId.Delete),
+        title: this.translateRowMenuItem(RowMenuId.Delete, data?.purpose),
         disabled: !dataPermissions?.delete,
         icons: ['far fa-trash-alt text-danger'],
         group: 2,
@@ -156,7 +170,7 @@ export class WorkflowTablesMenuService {
     return items;
   }
 
-  private translateRowMenuItem(id: string): string {
+  private translateRowMenuItem(id: string, purpose: CollectionPurposeType): string {
     switch (id) {
       case RowMenuId.Edit:
         return $localize`:@@table.body.row.edit:Edit value`;
@@ -173,7 +187,9 @@ export class WorkflowTablesMenuService {
       case RowMenuId.Unlink:
         return $localize`:@@table.body.row.unlink:Unlink row`;
       case RowMenuId.AddChild:
-        return $localize`:@@row.add.child:Add child row`;
+        return Translation.newSubRecordTitle(purpose);
+      case RowMenuId.AddSubParent:
+        return Translation.tableSubParentRecordTitle(purpose);
       default:
         return '';
     }

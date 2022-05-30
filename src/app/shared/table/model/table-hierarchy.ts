@@ -147,11 +147,8 @@ export function createTableHierarchyPath(row: TableRowWithData, height: number, 
   }
 
   if (row.hierarchy.level > 0) {
-    paths.push(
-      `M ${width - (stepWidth / 2) * 3} 0 C ${width - (stepWidth / 2) * 3} 20, ${width - stepWidth / 2} 20, ${
-        width - stepWidth / 2
-      } ${height / 2}`
-    );
+    const m = width - (stepWidth / 2) * 3;
+    paths.push(`M ${m} 0 C ${m} 0, ${m} 20, ${width - stepWidth / 2} ${height / 2}`);
   }
 
   return paths.join('\n');

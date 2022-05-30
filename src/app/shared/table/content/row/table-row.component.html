@@ -29,8 +29,9 @@
           <svg class="hierarchy" [attr.width]="(row.hierarchy.level + 1) * hierarchyStepWidth" [attr.height]="hierarchyHeight">
             <path [attr.d]="hierarchyPath" [attr.stroke]="hierarchyLineColor" fill="transparent"/>
           </svg>
-          <i class="hierarchy-control fas text-primary"
+          <i class="hierarchy-control fas"
              [style.left.px]="(row.hierarchy.level + 0.5) * hierarchyStepWidth"
+             [style.color]="row.hierarchy.hasChild ? hierarchyControlColor : (tableColor || hierarchyControlColor)"
              [ngClass]="row.hierarchy.hasChild ? row.expanded ?  'fa-caret-down expanded clickable' : 'fa-caret-right collapsed clickable' : 'fa-circle default' "
              (click)="onHierarchyClick($event)" (dblclick)="onHierarchyDoubleClick($event)">
           </i>

@@ -3927,7 +3927,7 @@
           <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
-            <trans-unit id="perspective.workflow.row.new" datatype="html">
+            <trans-unit id="create.new.row" datatype="html">
                 <source>Add new row</source>
                 <target>Přidat nový řádek</target>
 

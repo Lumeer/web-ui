@@ -31,7 +31,7 @@ import {DocumentsAction} from '../../../../../../core/store/documents/documents.
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, map, mergeMap, skip, take} from 'rxjs/operators';
-import {Attribute, Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
@@ -141,6 +141,8 @@ import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
+import {Translation} from '../../../../../../shared/utils/translation';
+import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -425,13 +427,14 @@ export class WorkflowTablesDataService {
               const minHeight = computeTableHeight(rows, newRow, 1);
               const maxHeight = computeTableHeight(rows, newRow);
               const height = tableSettings?.height || computeTableHeight(rows, newRow, 5);
-              const actionTitle = this.tableNewRowTitle(collection);
+              const actionTitle = Translation.tableNewRowTitle(collection.purpose?.type);
               const workflowTable: WorkflowTable = {
                 id: tableId,
                 columns: columns.map(column => ({...column, tableId})),
                 rows,
                 collectionId: collection.id,
                 linkTypeId: linkType?.id,
+                color: shadeColor(collection.color, 0.5),
                 title: attribute && {
                   value: title,
                   dataValue: titleDataValue,
@@ -470,13 +473,14 @@ export class WorkflowTablesDataService {
           const minHeight = computeTableHeight(rows, newRow, 1);
           const maxHeight = computeTableHeight(rows, newRow);
           const height = tableSettings?.height || maxHeight;
-          const actionTitle = this.tableNewRowTitle(collection);
+          const actionTitle = Translation.tableNewRowTitle(collection.purpose?.type);
           const workflowTable: WorkflowTable = {
             id: tableId,
             columns: columns.map(column => ({...column, tableId})),
             rows,
             collectionId: collection.id,
             linkTypeId: linkType?.id,
+            color: shadeColor(collection.color, 0.5),
             stem: stemConfig.stem,
             minHeight,
             height,
@@ -516,13 +520,6 @@ export class WorkflowTablesDataService {
       return {collectionId, filters: collectionsFilters};
     }
 
-    return null;
-  }
-
-  private tableNewRowTitle(collection: Collection): string {
-    if (collection.purpose?.type === CollectionPurposeType.Tasks) {
-      return $localize`:@@create.new.task:Add new task`;
-    }
     return null;
   }
 
@@ -908,7 +905,7 @@ export class WorkflowTablesDataService {
           ...this.menuService.createRowMenu(
             documentPermissions,
             row,
-            {canCreateNewRow, previousRow: data.previousRow},
+            {canCreateNewRow, previousRow: data.previousRow, purpose: collection.purpose?.type},
             !!object.linkInstance
           )
         );
@@ -916,7 +913,7 @@ export class WorkflowTablesDataService {
           ...this.menuService.createRowMenu(
             linkInstancePermissions,
             row,
-            {canCreateNewRow, previousRow: data.previousRow},
+            {canCreateNewRow, previousRow: data.previousRow, purpose: collection.purpose?.type},
             !!object.linkInstance
           )
         );

@@ -127,6 +127,9 @@ export class WorkflowTablesService {
       case RowMenuId.AddChild:
         this.dataService.createNewRow(row.tableId, row.id);
         break;
+      case RowMenuId.AddSubParent:
+        this.dataService.createNewRow(row.tableId, row.parentRowId);
+        break;
     }
   }
 

@@ -8617,7 +8617,7 @@
 					<source>Summary</source>
 					<target>Összefoglaló</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-sort-select-items.pipe.ts</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context><context context-type="linenumber">54</context></context-group></trans-unit>
-				<trans-unit datatype="html" id="perspective.workflow.row.new">
+				<trans-unit datatype="html" id="create.new.row">
 					<source>Add new row</source>
 					<target>Új sor hozzáadása</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/new-row/table-new-row.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="team.add.placeholder" datatype="html">

@@ -79,8 +79,8 @@ import {
 } from '../../../../core/service/create-data-resource.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
-import {TranslationService} from '../../../../core/service/translation.service';
 import {QueryAttribute} from '../../../../core/model/query-attribute';
+import {Translation} from '../../../../shared/utils/translation';
 
 interface Data {
   collections: Collection[];
@@ -178,8 +178,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
     private modalService: ModalService,
     private configurationService: ConfigurationService,
-    private createService: CreateDataResourceService,
-    private translationService: TranslationService
+    private createService: CreateDataResourceService
   ) {
     this.converter = new GanttChartConverter(
       this.selectItemWithConstraintFormatter,
@@ -583,7 +582,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       const resource = this.getResourceById(stemConfig.name.resourceId, stemConfig.name.resourceType);
       const purposeType = (<Collection>resource)?.purpose?.type;
       patchDataMap[stemConfig.name.resourceId] = {
-        [stemConfig.name.attributeId]: this.translationService.createNewRecordTitle(purposeType),
+        [stemConfig.name.attributeId]: Translation.newRecordTitle(purposeType),
       };
     }
 

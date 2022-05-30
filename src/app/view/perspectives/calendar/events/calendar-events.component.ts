@@ -63,7 +63,7 @@ import {View} from '../../../../core/store/views/view';
 import {CreateDataResourceService} from '../../../../core/service/create-data-resource.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
-import {TranslationService} from '../../../../core/service/translation.service';
+import {Translation} from '../../../../shared/utils/translation';
 
 interface Data {
   collections: Collection[];
@@ -138,11 +138,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private events: CalendarEvent[];
 
-  constructor(
-    private modalService: ModalService,
-    private createService: CreateDataResourceService,
-    private translationService: TranslationService
-  ) {
+  constructor(private modalService: ModalService, private createService: CreateDataResourceService) {
     this.converter = new CalendarConverter();
   }
 
@@ -354,7 +350,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         {date: value.start, resource: startResource},
         {date: value.end, resource: endResource},
         this.constraintData,
-        this.translationService.createNewRecordTitle(namePurposeType)
+        Translation.newRecordTitle(namePurposeType)
       );
       this.createService.create({
         queryResource: stemConfig.name || stemConfig.start,
