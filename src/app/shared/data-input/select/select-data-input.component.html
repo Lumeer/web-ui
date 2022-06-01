@@ -44,7 +44,7 @@
                       [origin]="textInput"
                       [multiSelect]="multi"
                       [highlightedText]="text"
-                      [selectedValues]="multi ? (selectedOptions | selectOptionsValues) : []"
+                      [selectedValues]="selectedOptions | selectOptionsValues"
                       [firstItemActive]="!multi && text?.length > 0"
                       (selectOption)="onSelect($event)">
     </options-dropdown>

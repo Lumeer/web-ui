@@ -1,7 +1,7 @@
 <div *ngIf="showSuggestValuesControl" class="pb-3">
   <toggle-checkbox [checked]="suggestValuesControl?.value"
                    (checkedChange)="suggestValuesControl?.patchValue($event)"
-                   label="Suggest values when typing (works in Table and Workflow)"
+                   label="Suggest values when typing (works in Table, Workflow and Form)"
                    i18n-label="attribute.config.common.suggestValues">
   </toggle-checkbox>
 </div>

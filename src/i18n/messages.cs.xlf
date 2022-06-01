@@ -1896,7 +1896,7 @@
                 <source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</source>
                 <target>{tag, select, en-IN {Indie - ₹ (INR)} uk-UA {Ukraina - ₴ (UAH)} tr-TR {Turecko - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Irsko - € (EUR)} da-DK {Dánsko - kr (DKK)} de-CH {Švýcarsko - CHF} en-NZ {Nový Zéland - $ (NZD)} fr-CA {Kanada - $ (CAD)} sv-SE {Švédsko - kr (SEK)} nb-NO {Norsko - kr (NOK)} fi-FI {Finsko - € (EUR)} he-IL {Izrael - ₪ (ILS)} es-ES {Španělsko - € (EUR)} fr-FR {Francie - € (EUR)} it-IT {Itálie - € (EUR)} en-GB {Spojené Království - £ (GBP)} pt-PT {Portugalsko - € (EUR)} pl-PL {Polsko - zł (PLN)} cs-CZ {Česká Republika - Kč (CZK)} sk-SK {Slovensko - € (EUR)} hu-HU {Maďarsko - Ft (HUF)} de-AT {Rakousko - € (EUR)} de-DE {Německo - € (EUR)} en-US {Spojené Státy Americké - $ (USD)} pt-BR {Brazílie - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Nizozemí - € (EUR)} zh-CN {Čína - ¥ (CNY)} ru-RU {Rusko - ₽ (RUB)} ja-JP {Japonsko - ¥ (JPY)} en-AU {Austrálie - $ (AUD)} }</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">96</context></context-group></trans-unit>&lt;<trans-unit id="constraint.duration.unit.description" datatype="html">
                 <source> <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }"/> </source>
                 <target>
@@ -3773,13 +3773,13 @@
           <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
-            
+
             <trans-unit id="choose.empty" datatype="html">
                 <source>I am sorry but I did not find anything.</source>
                 <target>Je mi líto, ale nepodařilo se mi nic najít.</target>
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-documents/choose-link-documents-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-resource/choose-resource-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-stem/choose-stem-modal.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="modal.chooseDocuments.title" datatype="html">
         <source>Choose a Record</source><target>Vyberte záznam</target>
         <context-group purpose="location">
@@ -4476,33 +4476,33 @@
                 <target state="translated">Nelze změnit záznam</target>
 
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">483</context></context-group></trans-unit>
             <trans-unit id="document.delete.dialog.title" datatype="html">
                 <source>Delete record</source>
                 <target state="translated">Smazat záznam</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">700</context></context-group></trans-unit>
             <trans-unit id="document.delete.dialog.message" datatype="html">
                 <source>Do you really want to delete this record?</source>
                 <target state="translated">Chcete opravdu smazat tento záznam?</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">701</context></context-group></trans-unit>
             <trans-unit id="document.delete.fail" datatype="html">
                 <source>Could not delete the record</source>
                 <target state="translated">Záznam nelze smazat</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">719</context></context-group></trans-unit>
             <trans-unit id="dataResource.runRule.fail" datatype="html">
                 <source>Could not run the selected automation</source>
                 <target>Nemůžu spustit zvolenou automatizaci</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">744</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit>
             <trans-unit id="groups.get.fail" datatype="html">
                 <source>Could not get groups</source>
@@ -5268,7 +5268,7 @@
 
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">276</context></context-group></trans-unit><trans-unit id="29b490ded71910586b2ab4d0c9bc79c9b1b6c18b" datatype="html">
-        <source>Suggest values when typing (works in Table and Workflow)</source><target>Navrhovat hodnoty při psaní (funguje v Tabulce a Workflow)</target>
+        <source>Suggest values when typing (works in Table, Workflow and Form)</source><target>Navrhovat hodnoty při psaní (funguje v Tabulce, Workflow a Formuláři)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
           <context context-type="linenumber">4</context>
@@ -5312,7 +5312,7 @@
                     <context context-type="linenumber">11</context>
                 </context-group>
             </trans-unit>
-            
+
 
 
 

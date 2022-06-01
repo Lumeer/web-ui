@@ -35,8 +35,9 @@
                       [closeOnClickOutside]="false"
                       [origin]="textInput"
                       [multiSelect]="multi"
+                      [maxSelected]="maxLinks"
                       [highlightedText]="text"
-                      [selectedValues]="multi ? (selectedOptions | dropdownOptionsValues) : []"
+                      [selectedValues]="selectedOptions | dropdownOptionsValues"
                       [firstItemActive]="!multi && text?.length > 0"
                       (selectOption)="onSelect($event)">
     </options-dropdown>

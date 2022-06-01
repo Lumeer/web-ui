@@ -48,7 +48,7 @@
                       [closeOnClickOrigin]="true"
                       [origin]="wrapperElement"
                       [multiSelect]="multi"
-                      [selectedValues]="multi ? (data.selectedUsers | selectedValues:data.selectedTeams) : []"
+                      [selectedValues]="data.selectedUsers | selectedValues:data.selectedTeams"
                       [firstItemActive]="false"
                       (selectOption)="onSelect($event)"
                       (onClose)="onDropdownClosed()">

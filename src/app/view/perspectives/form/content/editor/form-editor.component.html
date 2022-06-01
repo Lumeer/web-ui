@@ -9,7 +9,7 @@
 <form-editor-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index; let first = first"
                      class="d-block card shadow-light mt-3"
                      [section]="section"
-                     [collection]="collectionWithFilteredAttributes"
+                     [collection]="collection"
                      [collectionLinkTypes]="collectionLinkTypes"
                      [sectionIds]="sectionIds"
                      [usedAttributeIds]="usedAttributeIds"

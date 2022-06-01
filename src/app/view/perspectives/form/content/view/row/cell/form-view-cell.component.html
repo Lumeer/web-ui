@@ -44,7 +44,8 @@
   </div>
   <form-view-cell-link *ngIf="cell?.type === type.Link" class="data-input with-border mt-1 d-flex align-items-center"
                        [class.cursor-pointer]="editable"
-                       [multi]="linkMulti"
+                       [multi]="true"
+                       [maxLinks]="maxLinks"
                        [displayAttributeId]="linkAttributeId"
                        [readonly]="!editing || !editable"
                        [linkType]="linkData?.linkType"
@@ -61,7 +62,7 @@
   <div *ngFor="let error of formErrors" class="text-danger small mt-1">{{error.title}}</div>
   <div class="text-muted small mt-1">{{cell?.description}}</div>
 
-  <document-hints *ngIf="cell?.type === type.Attribute && suggestedValue && (attribute | canShowAttributeHints)"
+  <document-hints *ngIf="cell?.type === type.Attribute && suggestedValue && (attribute | canShowAttributeHints) && attribute?.suggestValues"
                   [attributeId]="attribute?.id"
                   [collectionId]="collection?.id"
                   [columns]="collection | collectionHintColumns:attributesSettings:attribute?.id:params"

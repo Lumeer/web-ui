@@ -40,7 +40,6 @@ import {
 import {connectedPositionsMap, convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-position';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {deepObjectsEquals, preventEvent} from '../utils/common.utils';
-import {OptionsDropdownComponent} from './options/options-dropdown.component';
 
 @Component({
   selector: 'dropdown',
