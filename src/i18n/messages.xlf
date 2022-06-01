@@ -4813,7 +4813,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="29b490ded71910586b2ab4d0c9bc79c9b1b6c18b" datatype="html">
-        <source>Suggest values when typing (works in Table and Workflow)</source>
+        <source>Suggest values when typing (works in Table, Workflow and Form)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
           <context context-type="linenumber">4</context>

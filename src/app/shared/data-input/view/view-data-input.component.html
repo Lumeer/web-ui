@@ -36,7 +36,7 @@
                       [origin]="textInput"
                       [highlightedText]="name"
                       [multiSelect]="multi"
-                      [selectedValues]="multi ? (data.selectedViews | viewsIds) : []"
+                      [selectedValues]="data.selectedViews | viewsIds"
                       [firstItemActive]="!multi && name?.length > 0"
                       (selectOption)="onSelectOption($event)">
     </options-dropdown>

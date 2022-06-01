@@ -57,6 +57,9 @@ export class FormViewCellLinkComponent implements OnChanges, AfterViewChecked {
   public multi: boolean;
 
   @Input()
+  public maxLinks: number;
+
+  @Input()
   public displayAttributeId: string;
 
   @Input()
@@ -157,7 +160,7 @@ export class FormViewCellLinkComponent implements OnChanges, AfterViewChecked {
     const constraint = attribute?.constraint || new UnknownConstraint();
     this.dropdownOptions = (this.documents || []).map(document => ({
       value: document.id,
-      displayValue: constraint.createDataValue(document.data?.[attribute.id], this.constraintData).format(),
+      displayValue: constraint.createDataValue(document.data?.[attribute.id], this.constraintData).format() || ' ',
       background: shadeColor(this.collection?.color, 0.5),
       icons: [this.collection?.icon],
       iconColors: [this.collection?.color],

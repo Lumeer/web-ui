@@ -84,10 +84,10 @@ export class OptionsDropdownComponent implements OnChanges {
   public multiSelect: boolean;
 
   @Input()
-  public showSelection: boolean;
+  public minWidth: number;
 
   @Input()
-  public minWidth: number;
+  public maxSelected: number;
 
   @Input()
   public editable = true;
@@ -114,12 +114,16 @@ export class OptionsDropdownComponent implements OnChanges {
 
   public readonly avatarSize = USER_AVATAR_SIZE;
 
+  public allowSelection: boolean;
   public activeValue$ = new BehaviorSubject<any>(null);
   public dropdownPosition$ = new BehaviorSubject<DropdownPosition>(null);
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldResetActiveItem(changes)) {
       this.activeValue$.next(this.firstItemActive ? this.firstOptionValue() : null);
+    }
+    if (changes.maxSelected || changes.selectedValues) {
+      this.allowSelection = !this.maxSelected || (this.selectedValues || []).length < this.maxSelected;
     }
   }
 

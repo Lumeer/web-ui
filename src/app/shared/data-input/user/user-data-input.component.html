@@ -64,7 +64,7 @@
                       [origin]="textInput"
                       [highlightedText]="name"
                       [multiSelect]="multi"
-                      [selectedValues]="multi ? (data.selectedUsers | selectedValues:data.selectedTeams) : []"
+                      [selectedValues]="data.selectedUsers | selectedValues:data.selectedTeams"
                       [firstItemActive]="!multi && !value?.config?.externalUsers && name?.length > 0"
                       (selectOption)="onSelectOption($event)">
     </options-dropdown>

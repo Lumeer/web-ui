@@ -137,7 +137,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public dataValue: DataValue;
   public cursor: DataCursor;
   public linkData: FormLinkData;
-  public linkMulti: boolean;
+  public maxLinks: number;
   public linkAttributeId: string;
   public mandatory: boolean;
   public showBorder: boolean;
@@ -233,7 +233,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   private initLinkDataVariables() {
     const config = <FormLinkCellConfig>this.cell?.config;
 
-    this.linkMulti = !config.maxLinks || config.maxLinks > 1;
+    this.maxLinks = config.maxLinks || Number.MAX_SAFE_INTEGER;
     this.linkAttributeId = config.attributeId;
     this.linkData = this.linkValues?.[config?.linkTypeId];
     if (this.linkData?.collection) {
