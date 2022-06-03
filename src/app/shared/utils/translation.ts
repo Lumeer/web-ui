@@ -41,9 +41,9 @@ export namespace Translation {
   export function tableSubParentRecordTitle(purpose: CollectionPurposeType): string {
     switch (purpose) {
       case CollectionPurposeType.Tasks:
-        return $localize`:@@record.new.subParent.title.tasks:Add task to parent`;
+        return $localize`:@@record.new.subParent.title.tasks:Add task at this level`;
       default:
-        return $localize`:@@record.new.subParent.title.default:Add row to parent`;
+        return $localize`:@@record.new.subParent.title.default:Add item at this level`;
     }
   }
 

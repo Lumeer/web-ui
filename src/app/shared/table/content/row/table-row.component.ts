@@ -129,6 +129,7 @@ export class TableRowComponent implements OnInit, OnChanges {
 
   public readonly constraintType = ConstraintType;
   public readonly hierarchyStepWidth = 25;
+  public readonly hierarchyRadius = 14;
   public readonly hierarchyHeight = TABLE_ROW_HEIGHT;
   public readonly hierarchyLineColor = COLOR_GRAY300;
   public readonly hierarchyControlColor = COLOR_PRIMARY;
@@ -157,7 +158,12 @@ export class TableRowComponent implements OnInit, OnChanges {
     if (changes.row) {
       this.canSuggestDocuments =
         this.row?.suggestDetail || ((this.row?.linkInstanceId || this.row?.linkedDocumentId) && this.row?.suggestLinks);
-      this.hierarchyPath = createTableHierarchyPath(this.row, this.hierarchyHeight, this.hierarchyStepWidth);
+      this.hierarchyPath = createTableHierarchyPath(
+        this.row,
+        this.hierarchyHeight,
+        this.hierarchyStepWidth,
+        this.hierarchyRadius
+      );
     }
     if (changes.row || changes.editedCell) {
       this.checkEdited();

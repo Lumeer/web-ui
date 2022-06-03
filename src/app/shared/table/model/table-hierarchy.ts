@@ -129,7 +129,12 @@ function computeHasLevelLine(
   return hasLevelLine;
 }
 
-export function createTableHierarchyPath(row: TableRowWithData, height: number, stepWidth: number): string {
+export function createTableHierarchyPath(
+  row: TableRowWithData,
+  height: number,
+  stepWidth: number,
+  radius: number
+): string {
   if (!row?.hierarchy) {
     return '';
   }
@@ -148,7 +153,12 @@ export function createTableHierarchyPath(row: TableRowWithData, height: number, 
 
   if (row.hierarchy.level > 0) {
     const m = width - (stepWidth / 2) * 3;
-    paths.push(`M ${m} 0 C ${m} 0, ${m} 20, ${width - stepWidth / 2} ${height / 2}`);
+    const r = Math.min(height / 2, radius, stepWidth);
+    paths.push(
+      `M ${m} 0 L ${m} ${height / 2 - r} Q ${m} ${height / 2} ${m + r} ${height / 2} L ${width - stepWidth / 2} ${
+        height / 2
+      }`
+    );
   }
 
   return paths.join('\n');
