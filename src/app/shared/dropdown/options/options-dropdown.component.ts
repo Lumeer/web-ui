@@ -114,7 +114,7 @@ export class OptionsDropdownComponent implements OnChanges {
 
   public readonly avatarSize = USER_AVATAR_SIZE;
 
-  public allowSelection: boolean;
+  public allowSelection = true;
   public activeValue$ = new BehaviorSubject<any>(null);
   public dropdownPosition$ = new BehaviorSubject<DropdownPosition>(null);
 
