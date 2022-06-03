@@ -48,6 +48,7 @@ import {queryAttributePermissions} from '../../../../../../core/model/query-attr
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {addRowByParentId} from './workflow-utils';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -382,7 +383,7 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  private setRowProperty(tableId: string, rowId: string, properties: Partial<Record<keyof TableRow, any>>) {
+  private setRowProperties(tableId: string, rowId: string, properties: Partial<Record<keyof TableRow, any>>) {
     const newTables = [...this.tables];
     const tableIndex = newTables.findIndex(table => table.id === tableId);
     if (tableIndex !== -1) {
@@ -445,7 +446,11 @@ export class WorkflowTablesStateService {
   }
 
   public setRowValue(row: TableRow, column: TableColumn, value: any) {
-    this.setRowProperty(column.tableId, row.id, {[`data.${column.id}`]: value});
+    this.setRowProperties(column.tableId, row.id, {[`data.${column.id}`]: value});
+  }
+
+  public setRowProperty(row: TableRow, key: keyof TableRow, value: any) {
+    this.setRowProperties(row.tableId, row.id, {[key]: value});
   }
 
   public removeRow(row: TableRow) {
@@ -476,26 +481,27 @@ export class WorkflowTablesStateService {
     if (tableIndex >= 0) {
       const table = this.tables[tableIndex];
       const newTables = [...this.tables];
-      const rows = [...newTables[tableIndex].rows, newRow];
+      const rows = addRowByParentId(newRow, newTables[tableIndex].rows);
+      const rowIndex = rows.findIndex(row => row.id === newRow.id);
       newTables[tableIndex] = {...newTables[tableIndex], rows};
 
       this.setTables(newTables);
 
       const columnIndex = table.columns.findIndex(column => column.default);
-      setTimeout(() => this.editCell(tableIndex, rows.length - 1, Math.max(columnIndex, 0)));
+      setTimeout(() => this.editCell(tableIndex, rowIndex, Math.max(columnIndex, 0)));
     }
   }
 
   public startRowCreatingWithValue(row: TableRow, column: TableColumn, value: any) {
-    this.setRowProperty(row.tableId, row.id, {creating: true, [`data.${column.id}`]: value});
+    this.setRowProperties(row.tableId, row.id, {creating: true, [`data.${column.id}`]: value});
   }
 
   public startRowCreating(row: TableRow, cellsMap: TableRowCellsMap, documentId: string) {
-    this.setRowProperty(row.tableId, row.id, {creating: true, cellsMap, documentId});
+    this.setRowProperties(row.tableId, row.id, {creating: true, cellsMap, documentId});
   }
 
   public endRowCreating(row: TableRow) {
-    this.setRowProperty(row.tableId, row.id, {creating: false});
+    this.setRowProperties(row.tableId, row.id, {creating: false});
   }
 
   public resizeColumn(changedTable: TableModel, column: TableColumn, width: number) {

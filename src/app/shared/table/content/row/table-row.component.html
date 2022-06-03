@@ -13,7 +13,8 @@
           [style.width.px]="group.width"
           [style.height.px]="row.height"
           [style.max-height.px]="row.height"
-          [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
+          [class.px-1]="!dataInputInfo.showDataInput || row.hierarchy"
+          [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden align-middle'"
           [class.focused]="selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row"
           [class.editing]="dataInputInfo.editing"
           [class.affected]="editedCell | tableCellAffected:group.column:cellType:row"
@@ -24,6 +25,17 @@
           (mouseenter)="onMouseEnter(group.column?.id)"
           (mouseleave)="onMouseLeave(group.column?.id)"
           (contextmenu)="onContextMenu(group.column?.id, $event)">
+        <ng-container *ngIf="row.hierarchy && group.column.id === hierarchyColumnId">
+          <svg class="hierarchy" [attr.width]="(row.hierarchy.level + 1) * hierarchyStepWidth" [attr.height]="hierarchyHeight">
+            <path [attr.d]="hierarchyPath" [attr.stroke]="hierarchyLineColor" fill="transparent"/>
+          </svg>
+          <i class="hierarchy-control fas"
+             [style.left.px]="(row.hierarchy.level + 0.5) * hierarchyStepWidth"
+             [style.color]="row.hierarchy.hasChild ? hierarchyControlColor : (tableColor || hierarchyControlColor)"
+             [ngClass]="row.hierarchy.hasChild ? row.expanded ?  'fa-caret-down expanded clickable' : 'fa-caret-right collapsed clickable' : 'fa-circle default' "
+             (click)="onHierarchyClick($event)" (dblclick)="onHierarchyDoubleClick($event)">
+          </i>
+        </ng-container>
         <data-input
           *ngIf="group.column && dataInputInfo.showDataInput"
           class="d-block h-100"
@@ -32,6 +44,7 @@
           [style.height.px]="row.height - 1"
           [editableInReadonly]="dataInputInfo.editable"
           [style.max-height.px]="row.height - 1"
+          [style.margin-left.px]="row.hierarchy && group.column.id === hierarchyColumnId ? (row.hierarchy.level + 1) * hierarchyStepWidth : 0"
           [dataValue]="(editedValue | isNotNullOrUndefined) && dataInputInfo.editing ? editedValue : data.dataValue"
           [focus]="true"
           [readonly]="dataInputInfo.readonly"
@@ -43,6 +56,7 @@
         </data-input>
         <div class="d-flex align-items-center html-input"
              *ngIf="group.column && !dataInputInfo.showDataInput && dataInputInfo.hasValue"
+             [style.margin-left.px]="row.hierarchy && group.column.id === hierarchyColumnId ? (row.hierarchy.level + 1) * hierarchyStepWidth : 0"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
         <ng-container *ngIf="{

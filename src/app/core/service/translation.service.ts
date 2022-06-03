@@ -30,21 +30,11 @@ import {
   UserConstraintConditionValue,
 } from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../shared/utils/translation.utils';
-import {CollectionPurposeType} from '../store/collections/collection';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TranslationService {
-  public createNewRecordTitle(purpose: CollectionPurposeType): string {
-    switch (purpose) {
-      case CollectionPurposeType.Tasks:
-        return $localize`:@@record.new.title.tasks:New task`;
-      default:
-        return $localize`:@@record.new.title.default:New record`;
-    }
-  }
-
   public createCurrencyAbbreviations(): string[] {
     return $localize`:@@currency.abbreviations:k|m|b|t`.split('|');
   }

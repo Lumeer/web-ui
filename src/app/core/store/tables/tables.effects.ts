@@ -967,7 +967,7 @@ export class TablesEffects {
                 .slice(0, action.payload.cursor.rowPath[0])
                 .reverse()
                 .find(hierarchyRow => hierarchyRow.level === level) || {};
-            const parentDocumentId = newParentRow && newParentRow.documentId;
+            const parentDocumentId = newParentRow?.documentId;
 
             if (row.documentId) {
               const {collectionId, id: documentId} = documentsMap[row.documentId];
@@ -1004,10 +1004,8 @@ export class TablesEffects {
                 .slice(0, action.payload.cursor.rowPath[0])
                 .reverse()
                 .find(hierarchyRow => hierarchyRow.level === level - 1) || {};
-            const previousParentDocument = documentsMap[previousParentRow && previousParentRow.documentId];
-            const parentDocumentId =
-              (previousParentDocument && previousParentDocument.metaData && previousParentDocument.metaData.parentId) ||
-              null;
+            const previousParentDocument = documentsMap[previousParentRow?.documentId];
+            const parentDocumentId = previousParentDocument?.metaData?.parentId || null;
 
             if (row.documentId) {
               const {collectionId, id: documentId} = documentsMap[row.documentId];
@@ -1146,17 +1144,13 @@ export class TablesEffects {
           first(),
           mergeMap(([rows, documentsMap]) => {
             const row = findTableRow(rows, cursor.rowPath);
-            const document = documentsMap[row && row.documentId];
-            const parentId =
-              (document && document.metaData && document.metaData.parentId) || (row && row.parentDocumentId) || null;
+            const document = documentsMap[row?.documentId];
+            const parentId = document?.metaData?.parentId || row?.parentDocumentId || null;
 
             const previousCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex - 1)};
             const previousRow = findTableRow(rows, previousCursor.rowPath);
-            const previousDocument = documentsMap[previousRow && previousRow.documentId];
-            const previousParentId =
-              (previousDocument && previousDocument.metaData && previousDocument.metaData.parentId) ||
-              (previousRow && previousRow.parentDocumentId) ||
-              null;
+            const previousDocument = documentsMap[previousRow?.documentId];
+            const previousParentId = previousDocument?.metaData?.parentId || previousRow?.parentDocumentId || null;
 
             const actions: Action[] = [
               new TablesAction.RemoveRow({cursor}),
@@ -1171,8 +1165,8 @@ export class TablesEffects {
                     documentId: document.id,
                     workspace,
                     metaData: {parentId: previousParentId},
-                    onSuccess: () => actions.forEach(a => this.store$.dispatch(a)),
                   }),
+                  ...actions,
                 ];
               } else {
                 return [
@@ -1224,11 +1218,8 @@ export class TablesEffects {
             }
 
             const sourceRow = hierarchyRows[cursor.rowPath[0]];
-            const document = documentsMap[sourceRow && sourceRow.row.documentId];
-            const parentId =
-              (document && document.metaData && document.metaData.parentId) ||
-              (sourceRow && sourceRow.row.parentDocumentId) ||
-              null;
+            const document = documentsMap[sourceRow?.row?.documentId];
+            const parentId = document?.metaData?.parentId || sourceRow?.row?.parentDocumentId || null;
 
             const nextRow = hierarchyRows.slice(rowIndex + 1).find(row => row.level <= sourceRow.level);
             if (!nextRow) {
@@ -1238,11 +1229,8 @@ export class TablesEffects {
             const targetRowIndex = hierarchyRows.indexOf(nextRow) + 1;
             const targetRow = hierarchyRows[targetRowIndex];
             const targetCursor: TableBodyCursor = {...cursor, rowPath: [targetRowIndex]};
-            const targetDocument = documentsMap[targetRow && targetRow.row.documentId];
-            const targetParentId =
-              (targetDocument && targetDocument.metaData && targetDocument.metaData.parentId) ||
-              (targetRow && targetRow.row.parentDocumentId) ||
-              null;
+            const targetDocument = documentsMap[targetRow?.row?.documentId];
+            const targetParentId = targetDocument?.metaData?.parentId || targetRow?.row?.parentDocumentId || null;
 
             const deleteCount = targetRowIndex - rowIndex - 1;
             const childRows = rows.slice(rowIndex + 1, rowIndex + deleteCount);
@@ -1260,8 +1248,8 @@ export class TablesEffects {
                     documentId: document.id,
                     workspace,
                     metaData: {parentId: targetParentId},
-                    onSuccess: () => actions.forEach(a => this.store$.dispatch(a)),
                   }),
+                  ...actions,
                 ];
               } else {
                 return [

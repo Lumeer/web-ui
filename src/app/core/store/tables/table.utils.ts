@@ -648,8 +648,7 @@ export function getRowParentDocumentId(
   documentsMap: {[id: string]: DocumentModel}
 ): string {
   const document = documentsMap[row && row.documentId];
-  const parentDocumentId =
-    (document && document.metaData && document.metaData['parentId']) || (row && row.parentDocumentId);
+  const parentDocumentId = document?.metaData?.parentId || row?.parentDocumentId;
   return documentIdsFilter.has(parentDocumentId) ? parentDocumentId : null;
 }
 

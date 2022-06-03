@@ -56,6 +56,25 @@ export interface PendingRowUpdate {
   value: any;
 }
 
+export function addRowByParentId(newRow: TableRow, rows: TableRow[]): TableRow[] {
+  if (newRow.parentRowId) {
+    const parentIndex = rows.findIndex(row => row.id === newRow.parentRowId);
+    const parentRow = rows[parentIndex];
+    const childIndex =
+      parentRow && rows.slice(parentIndex + 1).findIndex(row => (row?.level || 0) <= (parentRow?.level || 0));
+
+    if (childIndex >= 0) {
+      const realIndex = parentIndex + childIndex + 1;
+      const rowsCopy = [...rows];
+
+      rowsCopy.splice(realIndex, 0, newRow);
+      return rowsCopy;
+    }
+  }
+
+  return [...rows, newRow];
+}
+
 export function computeTableHeight(rows: TableRow[], newRow: TableRow, maxRows?: number): number {
   const trimmedRows = rows.slice(0, maxRows || rows.length);
   // header + border
@@ -267,7 +286,15 @@ export function createRowObjectsFromAggregated(
     {data: [], ids: new Set()}
   ).data;
 
-  return sortDataObjectsByViewSettings(objects, collection, linkType, viewSettings?.attributes, constraintData, false);
+  return sortDataObjectsByViewSettings(
+    objects,
+    collection,
+    linkType,
+    viewSettings?.attributes,
+    constraintData,
+    false,
+    true
+  );
 }
 
 export function createTableRowCellsMapForResource(

@@ -27,6 +27,10 @@ td.focused {
   }
 }
 
+:host.uncreated {
+  background: $gray-200;
+}
+
 :host:hover {
   background: lighten($success, 60%);
 
@@ -73,4 +77,30 @@ td.focused {
   right: 0;
   padding: 0 0.35rem;
   z-index: 3;
+}
+
+.hierarchy {
+  position: absolute;
+  top: 0;
+}
+
+.hierarchy-control {
+  position: absolute;
+  top: 50%;
+  transition: none;
+  transform: translateY(-50%);
+
+  &.default {
+    font-size: 50%;
+  }
+
+  &.collapsed {
+    margin-left: 2px;
+    font-size: 130%;
+  }
+
+  &.expanded {
+    font-size: 130%;
+    margin-left: -2px;
+  }
 }

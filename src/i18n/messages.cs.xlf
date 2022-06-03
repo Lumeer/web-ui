@@ -1897,7 +1897,7 @@
                 <target>{tag, select, en-IN {Indie - ₹ (INR)} uk-UA {Ukraina - ₴ (UAH)} tr-TR {Turecko - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Irsko - € (EUR)} da-DK {Dánsko - kr (DKK)} de-CH {Švýcarsko - CHF} en-NZ {Nový Zéland - $ (NZD)} fr-CA {Kanada - $ (CAD)} sv-SE {Švédsko - kr (SEK)} nb-NO {Norsko - kr (NOK)} fi-FI {Finsko - € (EUR)} he-IL {Izrael - ₪ (ILS)} es-ES {Španělsko - € (EUR)} fr-FR {Francie - € (EUR)} it-IT {Itálie - € (EUR)} en-GB {Spojené Království - £ (GBP)} pt-PT {Portugalsko - € (EUR)} pl-PL {Polsko - zł (PLN)} cs-CZ {Česká Republika - Kč (CZK)} sk-SK {Slovensko - € (EUR)} hu-HU {Maďarsko - Ft (HUF)} de-AT {Rakousko - € (EUR)} de-DE {Německo - € (EUR)} en-US {Spojené Státy Americké - $ (USD)} pt-BR {Brazílie - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Nizozemí - € (EUR)} zh-CN {Čína - ¥ (CNY)} ru-RU {Rusko - ₽ (RUB)} ja-JP {Japonsko - ¥ (JPY)} en-AU {Austrálie - $ (AUD)} }</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">96</context></context-group></trans-unit>&lt;<trans-unit id="constraint.duration.unit.description" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">86</context></context-group></trans-unit>&lt;<trans-unit id="constraint.duration.unit.description" datatype="html">
                 <source> <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }"/> </source>
                 <target>
                     <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
@@ -2168,41 +2168,23 @@
                 <target>Upravit hodnotu</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
-                    <context context-type="linenumber">15</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">115</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">176</context></context-group></trans-unit>
             <trans-unit id="table.body.row.show.detail" datatype="html">
                 <source>Show detail</source>
                 <target>Zobrazit detail</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
-                    <context context-type="linenumber">25</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">117</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">178</context></context-group></trans-unit>
             <trans-unit id="table.body.row.copy.value" datatype="html">
                 <source>Copy value</source>
                 <target>Kopírovat hodnotu</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
-                    <context context-type="linenumber">31</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">119</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">180</context></context-group></trans-unit>
             <trans-unit id="table.body.row.link.above" datatype="html">
                 <source>Link new row above</source>
                 <target>Připojit nový řádek nad</target>
@@ -2235,15 +2217,9 @@
                 <target>Odpojit řádek</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
-                    <context context-type="linenumber">137</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">123</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">188</context></context-group></trans-unit>
             <trans-unit id="table.header.add-button" datatype="html">
                 <source>Link table</source>
                 <target>Připojit tabulku</target>
@@ -2302,44 +2278,23 @@
                 <target>Upravit název</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">15</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">265</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">334</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.lockSettings" datatype="html">
                 <source>Locking...</source>
                 <target>Zamykání...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">41</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">273</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">342</context></context-group></trans-unit>
             <trans-unit id="copy" datatype="html">
                 <source>Copy</source>
                 <target>Kopírovat</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/lists/selection/content/list/selection-list.component.html</context>
-                    <context context-type="linenumber">13</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">64</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">281</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/list/selection-list.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">350</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.changeType" datatype="html">
                 <source>Attribute settings...</source>
                 <target>Nastavení atributu...</target>
@@ -2365,31 +2320,13 @@
                 <source>Edit function...</source>
                 <target>Upravit vzorec...</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/attributes/table/resource-attributes-table.component.html</context>
-                    <context context-type="linenumber">74</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
-                    <context context-type="linenumber">27</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
-                    <context context-type="linenumber">29</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
-                    <context context-type="linenumber">23</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">32</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">269</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/attributes/table/resource-attributes-table.component.html</context><context context-type="linenumber">74</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">338</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.editAutomation" datatype="html">
                 <source>Edit automation...</source>
                 <target>Upravit automatizaci...</target>
@@ -2398,31 +2335,13 @@
 
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/attributes/table/resource-attributes-table.component.html</context>
-                    <context context-type="linenumber">80</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
-                    <context context-type="linenumber">36</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
-                    <context context-type="linenumber">38</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
-                    <context context-type="linenumber">24</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">33</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">275</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/attributes/table/resource-attributes-table.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">344</context></context-group></trans-unit>
             <trans-unit id="table.header.column.settings" datatype="html">
                 <source>Column settings...</source>
                 <target>Nastavení sloupce...</target>
@@ -2461,68 +2380,38 @@
                 <target>Skrýt sloupec</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">103</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">279</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">348</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.remove" datatype="html">
                 <source>Delete column</source>
                 <target>Smazat sloupec</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">111</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">289</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">111</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">358</context></context-group></trans-unit>
             <trans-unit id="resource.attribute.name" datatype="html">
                 <source>Copy column name</source>
                 <target>Kopírovat název sloupce</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">121</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">283</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">121</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">352</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.copy.values" datatype="html">
                 <source>Copy all column values</source>
                 <target>Kopírovat všechny hodnoty</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">128</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">285</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">128</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">354</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.copy.values.unique" datatype="html">
                 <source>Copy unique column values</source>
                 <target>Kopírovat unikátní hodnoty</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">134</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">287</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">134</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">356</context></context-group></trans-unit>
             <trans-unit id="table.header.add.link.column" datatype="html">
                 <source>Add link column</source>
                 <target>Přidat sloupec do propojení</target>
@@ -3678,28 +3567,16 @@
                 <source>Add column right</source>
                 <target state="translated">Přidat sloupec vpravo</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">75</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">293</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">362</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.add.column.previous" datatype="html">
                 <source>Add column left</source>
                 <target state="translated">Přidat sloupec vlevo</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-                    <context context-type="linenumber">84</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">291</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">360</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.split" datatype="html">
                 <source>Split column</source>
                 <target state="final">Rozdělit sloupec</target>
@@ -3927,15 +3804,12 @@
           <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
-            <trans-unit id="perspective.workflow.row.new" datatype="html">
+            <trans-unit id="create.new.row" datatype="html">
                 <source>Add new row</source>
                 <target>Přidat nový řádek</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/table/new-row/table-new-row.component.html</context>
-                    <context context-type="linenumber">4</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/new-row/table-new-row.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/translation.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
             <trans-unit id="team.add.placeholder" datatype="html">
                 <source>Type team name (e.g. Managers)</source>
                 <target>Zadejte název týmu (např. Správci)</target>
@@ -4483,19 +4357,19 @@
                 <target state="translated">Smazat záznam</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">700</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">669</context></context-group></trans-unit>
             <trans-unit id="document.delete.dialog.message" datatype="html">
                 <source>Do you really want to delete this record?</source>
                 <target state="translated">Chcete opravdu smazat tento záznam?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">701</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">670</context></context-group></trans-unit>
             <trans-unit id="document.delete.fail" datatype="html">
                 <source>Could not delete the record</source>
                 <target state="translated">Záznam nelze smazat</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">719</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">688</context></context-group></trans-unit>
             <trans-unit id="dataResource.runRule.fail" datatype="html">
                 <source>Could not run the selected automation</source>
                 <target>Nemůžu spustit zvolenou automatizaci</target>
@@ -4503,7 +4377,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">744</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">713</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit>
             <trans-unit id="groups.get.fail" datatype="html">
                 <source>Could not get groups</source>
                 <target state="translated">Skupiny nelze načíst</target>
@@ -4876,32 +4750,26 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1270</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">382</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1370</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.message" datatype="html">
                 <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
                 <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v tabulce.</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1271</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">383</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1371</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.changeAttribute" datatype="html">
                 <source>Attribute settings...</source>
                 <target>Nastavení attributu...</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">267</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">336</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.add.linkColumn" datatype="html">
                 <source>Add Link column</source>
                 <target>Přidat sloupec mezi tabulky</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-                    <context context-type="linenumber">295</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">364</context></context-group></trans-unit>
 
             <trans-unit id="organization.delete.dialog.message" datatype="html">
                 <source>Do you really want to permanently delete this organization?</source>
@@ -6632,11 +6500,11 @@
         <source>Indent</source><target>Odsadit</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="table.body.row.outdent" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">182</context></context-group></trans-unit><trans-unit id="table.body.row.outdent" datatype="html">
         <source>Outdent</source><target>Snížit odsazení</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">101</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="table.body.row.clone" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">101</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">184</context></context-group></trans-unit><trans-unit id="table.body.row.clone" datatype="html">
         <source>Duplicate row</source><target>Zkopírovat řádek</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
@@ -6688,26 +6556,26 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="constraint.duration.unit" datatype="html">
         <source>{unit, select, w {w} d {d} h {h} m {m} s {s}}</source><target>{unit, select, w {t} d {d} h {h} m {m} s {s} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="query.filter.condition.constraint.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="query.filter.condition.constraint.select" datatype="html">
         <source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty}}</source>
         <target>{condition, select, eq {Je mezi} neq {Není mezi} in {Je mezi} nin {Není mezi} hasAll {Má všechny} hasSome {Má některé} empty {Je prázdný} notEmpty {Není prázdný} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">103</context></context-group></trans-unit><trans-unit id="query.filter.condition.constraint.text" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="query.filter.condition.constraint.text" datatype="html">
         <source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled}}</source><target>{condition, select, eq {Je} neq {Není} contains {Obsahuje} notContains {Neobsahuje} startsWith {Začíná na} endsWith {Končí na} in {Je mezi} nin {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} enabled {Je povoleno} disabled {Není povoleno} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="query.filter.condition.constraint.number" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="query.filter.condition.constraint.number" datatype="html">
         <source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}</source><target>{condition, select, between {V rozsahu} notBetween {Není v rozsahu} empty {Je prázdný} notEmpty {Není prázdný} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="query.filter.condition.constraint.date" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="query.filter.condition.constraint.date" datatype="html">
         <source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}</source><target>{condition, select, eq {Je} neq {Není} gt {Je po} lt {Je před} gte {Je v nebo po} lte {Je v nebo před} between {Je mezi} notBetween {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">139</context></context-group></trans-unit><trans-unit id="query.filter.condition.value.constraint.date" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">129</context></context-group></trans-unit><trans-unit id="query.filter.condition.value.constraint.date" datatype="html">
         <source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}</source><target>{condition, select, today {Dnes} yesterday {Včera} tomorrow {Zítra} thisWeek {Tento týden} thisMonth {Tento měsíc} lastWeek {Minulý týden} lastMonth {Minulý měsíc} nextMonth {Příští měsíc} nextWeek {Příští týden} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">161</context></context-group></trans-unit><trans-unit id="query.filter.condition.value.constraint.usersAndTeams" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">151</context></context-group></trans-unit><trans-unit id="query.filter.condition.value.constraint.usersAndTeams" datatype="html">
         <source>{type, select, currentUser {Current User} currentTeams {Current Teams}}</source><target>{type, select, currentUser {Aktuální uživatel} currentTeams {Aktuální týmy}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">168</context></context-group></trans-unit><trans-unit id="projects.notPermissions" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">158</context></context-group></trans-unit><trans-unit id="projects.notPermissions" datatype="html">
         <source>I am sorry, you are not allowed to view or create any project in this organization.</source><target>Je mi líto ale nemáte oprávnění číst nebo vytvářet projekty v této organizaci.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/workspace-select.service.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="audit.get.document.fail" datatype="html">
@@ -7042,15 +6910,33 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">438</context></context-group></trans-unit><trans-unit id="record.new.title.tasks" datatype="html">
         <source>New task</source><target>Nový úkol</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-      </trans-unit><trans-unit id="record.new.title.default" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/translation.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="record.new.title.default" datatype="html">
         <source>New record</source><target>Nový záznam</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/translation.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="record.new.child.title.tasks" datatype="html">
+        <source>Add sub-task</source><target>Přidat podúkol</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="record.new.child.title.default" datatype="html">
+        <source>Add sub-item</source><target>Přidat podpoložku</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit><trans-unit id="record.new.subParent.title.tasks" datatype="html">
+        <source>Add task at this level</source><target>Přidat úkol na tuto úroveň</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
           <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit><trans-unit id="record.new.subParent.title.default" datatype="html">
+        <source>Add item at this level</source><target>Přidat řádek na tuto úroveň</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit><trans-unit id="lumeer.advice" datatype="html">
         <source>Lumeer's Advice</source><target>Lumeer radí</target>
@@ -7285,13 +7171,13 @@
         <source>Previous upload is already in progress. Please wait for it to finish first.</source>
         <target>Předcházející nahrávání projektu stále probíhá. Prosím počkejte dokud se nedokončí.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="project.settings.upload.tooLarge" datatype="html">
-        <source>The file size is above the upload limit (<x id="size" equiv-text="size.toFixed(
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="project.settings.upload.tooLarge" datatype="html">
+        <source>The file size is above the upload limit (<x id="size" equiv-text="this.fileSizeMb.toFixed(
         0
       )"/> MB).</source>
         <target>Velikost souboru je nad maximální povolenou hranicí (<x id="size" equiv-text="size.toFixed(0)"/> MB).</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="projects.tab.variables.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="projects.tab.variables.title" datatype="html">
         <source>Create a new variable</source><target>Vytvoření nové proměnné</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/variables/project-variables.component.html</context>
@@ -7735,7 +7621,7 @@
                 <source>Set as displayed attribute</source>
                 <target>Nastavit jako hlavní atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">277</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">346</context></context-group></trans-unit>
             <trans-unit id="user.defaultWorkspace.save.fail" datatype="html">
                 <source>Could not save the default workspace</source>
                 <target>Nelze uložit výchozí organizace a projekt.</target>
@@ -7760,7 +7646,7 @@
         <source>Cannot process files bigger than <x id="size" equiv-text="size"/> MB. Please upload smaller file.</source>
         <target>Nemohu zpracovat soubory větší než <x id="size" equiv-text="{{size}}"/> MB. Nahrajte prosím menší soubor.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="file.attachment.upload.success" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit><trans-unit id="file.attachment.upload.success" datatype="html">
         <source>The file is successfully saved.</source>
         <target>Soubor jsem úspěšně uložil.</target>
 
@@ -7980,11 +7866,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="perspective.calendar.create.event.failure" datatype="html">
         <source>Could not create event</source><target>Nemohl jsem vytvořit událost</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/calendar-events.component.ts</context>
-          <context context-type="linenumber">365</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/calendar-events.component.ts</context><context context-type="linenumber">361</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
         <source>Calendar</source><target>Kalendář</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">141</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.list" datatype="html">
@@ -8040,13 +7923,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="perspective.gantt.create.task.failure" datatype="html">
         <source>Could not create task</source><target>Úkol nelze vytvořit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">360</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">359</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source><target>Nemohl jsem přesunout úkol</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
-          <context context-type="linenumber">385</context>
-        </context-group>
-      </trans-unit><trans-unit id="ganttChart.empty.placeholder2" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">384</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder2" datatype="html">
         <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source>
         <target>Vyberte {emptyProperty, select, name {název} start {začátek} end {konec} progress {průběh} category {kategorie} subCategory {podkategorii} color {barvu} attribute {sloupec}}</target>
         <context-group purpose="location">
@@ -8316,13 +8196,13 @@
                 <target>Sdílet</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit>
-            <trans-unit id="remove.row" datatype="html">
+            <trans-unit id="row.remove" datatype="html">
                 <source>Remove row</source>
                 <target>Odstranit řádek</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">145</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="document.detail.tabs.detail" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">145</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">186</context></context-group></trans-unit><trans-unit id="document.detail.tabs.detail" datatype="html">
         <source>Detail</source><target>
       Detail
     </target>
@@ -8862,7 +8742,7 @@
         <source>Add new task</source><target>Vytvořit nový úkol</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">520</context></context-group></trans-unit><trans-unit id="pinned" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/translation.ts</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="pinned" datatype="html">
         <source>Pinned</source><target>Připíchnuté</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/pipes/create-tasks-groups.pipe.ts</context>
@@ -8900,12 +8780,12 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/group/wrapper/first-line/task-first-line.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source><target>Roztáhnout tabulku</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
         <source> There are no rows to display and you are not allowed to create any. </source><target>
     Nejsou žádné řádky k zobrazení a nemáte ani právo je vytvářet.
   </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="groupBy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="groupBy" datatype="html">
         <source>Group By</source><target>Seskupit podle</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="tasks.sort.group.order.hint" datatype="html">
@@ -9133,7 +9013,7 @@
         <source>Edit description...</source><target>Upravit popis...</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">271</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">340</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
         <source>Could not delete the view</source><target>Pohled se nepodařilo smazat</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">361</context></context-group></trans-unit><trans-unit id="view.change.permission.fail" datatype="html">
@@ -9541,10 +9421,10 @@
       </trans-unit><trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source><target>tis.|mil.|mld.|bil.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source><target>.|.|.|.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="views.delete.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="views.delete.message" datatype="html">
         <source>Do you really want to permanently delete this view?</source><target>Chcete skutečně navždy smazat tento pohled?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="views.delete.title" datatype="html">

@@ -37,6 +37,7 @@ export interface WorkflowTableConfig {
   collectionId: string;
   value?: any;
   height: number;
+  expandedDocuments: string[];
 }
 
 export interface WorkflowColumnsSettings {

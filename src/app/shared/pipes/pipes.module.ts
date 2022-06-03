@@ -110,6 +110,7 @@ import {AttributeLockStatsPipe} from './attribute-lock-stats.pipe';
 import {IsAttributeEnabledByLockStatsPipe} from './is-attribute-enabled-by-lock-stats.pipe';
 import {ResourceAttributesMapPipe} from './resource-attributes-map.pipe';
 import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
+import {IndicesPipe} from './indices.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -153,6 +154,7 @@ import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
     ConstraintTypeIconTitlePipe,
     FormatDatePipe,
     JoinPipe,
+    IndicesPipe,
     SafeHtmlPipe,
     EmailValidPipe,
     UserByEmailPipe,
@@ -246,6 +248,7 @@ import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
     ConstraintTypeIconTitlePipe,
     FormatDatePipe,
     JoinPipe,
+    IndicesPipe,
     SafeHtmlPipe,
     EmailValidPipe,
     UserByEmailPipe,

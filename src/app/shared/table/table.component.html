@@ -36,13 +36,16 @@
         <tr table-row #tableRow
             *ngIf="row"
             [class.selected]="row.documentId === selectedDocumentId"
+            [class.uncreated]="!row.documentId"
             [row]="row"
             [viewId]="viewId"
+            [tableColor]="tableModel.color"
             [selectedCell]="selectedCell"
             [editedCell]="editedCell"
             [constraintData]="constraintData"
             [columnGroups]="data.columnGroups"
             [detailColumnId]="detailColumnId"
+            [hierarchyColumnId]="hierarchyColumnId"
             [collectionId]="tableModel.collectionId"
             [linkTypeId]="tableModel.linkTypeId"
             (newValue)="onBodyRowNewValue(row, $event)"
@@ -51,7 +54,8 @@
             (onDoubleClick)="onBodyCellDoubleClick(row, $event)"
             (menuSelected)="onBodyMenuSelected($event)"
             (linkedDocumentSelect)="onRowLinkedDocumentSelect(row, $event)"
-            (onDetail)="rowDetail.emit(row)">
+            (onDetail)="rowDetail.emit(row)"
+            (toggleHierarchy)="rowHierarchyToggle.emit(row)">
         </tr>
         <tr *ngIf="!row"
             [style.height.px]="toolbarHeight">

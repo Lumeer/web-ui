@@ -171,7 +171,8 @@ export class ResultsTableComponent implements OnChanges {
       this.linkType,
       this.collectionAttributesSettings,
       this.linkTypesAttributesSettings?.[this.linkType?.id],
-      this.constraintData
+      this.constraintData,
+      true
     );
   }
 

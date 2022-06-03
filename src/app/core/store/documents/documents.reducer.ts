@@ -62,6 +62,8 @@ export function documentsReducer(
       return patchData(state, action);
     case DocumentsActionType.PATCH_DATA_PENDING:
       return removeEmptyPendingData(state, action);
+    case DocumentsActionType.PATCH_META_DATA_INTERNAL:
+      return patchMetaData(state, action);
     case DocumentsActionType.CREATE_CHAIN_SUCCESS:
       return documentsAdapter.upsertMany(action.payload.documents, state);
     case DocumentsActionType.UPDATE_SUCCESS:
@@ -176,6 +178,22 @@ function patchData(state: DocumentsState, action: DocumentsAction.PatchDataInter
       data: {
         ...originalDocument.data,
         ...action.payload.document.data,
+      },
+      dataVersion: originalDocument.dataVersion + 1,
+    },
+    state
+  );
+}
+
+function patchMetaData(state: DocumentsState, action: DocumentsAction.PatchMetaDataInternal): DocumentsState {
+  const originalDocument = action.payload.originalDocument;
+
+  return documentsAdapter.upsertOne(
+    {
+      ...originalDocument,
+      metaData: {
+        ...originalDocument.metaData,
+        ...action.payload.metaData,
       },
       dataVersion: originalDocument.dataVersion + 1,
     },

@@ -31,7 +31,7 @@ import {DocumentsAction} from '../../../../../../core/store/documents/documents.
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, map, mergeMap, skip, take} from 'rxjs/operators';
-import {Attribute, Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
@@ -60,6 +60,7 @@ import {
   WorkflowColumnSettings,
   WorkflowConfig,
   WorkflowStemConfig,
+  WorkflowTableConfig,
 } from '../../../../../../core/store/workflows/workflow';
 import {SelectItemWithConstraintFormatter} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {
@@ -85,6 +86,7 @@ import {
   deepObjectsEquals,
   findIthItemIndex,
   isArray,
+  isNotNullOrUndefined,
   objectsByIdMap,
 } from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
@@ -95,6 +97,7 @@ import {
   getDocumentsAndLinksByStemData,
 } from '../../../../../../core/store/documents/document.utils';
 import {
+  addRowByParentId,
   computeTableHeight,
   createAggregatorAttributes,
   createEmptyNewRow,
@@ -131,7 +134,6 @@ import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/work
 import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
 import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
 import {CommonAction} from '../../../../../../core/store/common/common.action';
-import {RoleType} from '../../../../../../core/model/role-type';
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
@@ -139,6 +141,8 @@ import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
+import {Translation} from '../../../../../../shared/utils/translation';
+import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -389,8 +393,10 @@ export class WorkflowTablesDataService {
             const titleDataResources = aggregatedDataItem.dataResources;
             for (const childItem of aggregatedDataItem.children || []) {
               const currentTable = currentTables.find(table => table.id === tableId) || tableByCollection;
+              const tableSettings = stemTableSettings?.find(tab => tab.value === title);
               const {rows, newRow} = this.createRows(
                 tableId,
+                tableSettings,
                 currentTable?.rows || [],
                 createRowObjectsFromAggregated(
                   aggregatedDataItem,
@@ -418,17 +424,17 @@ export class WorkflowTablesDataService {
                 ...(isGroupedByLink ? createTableRowCellsMapForAttribute(attribute, title, linkColumns) : {}),
               };
 
-              const tableSettings = stemTableSettings?.find(tab => tab.value === title);
               const minHeight = computeTableHeight(rows, newRow, 1);
               const maxHeight = computeTableHeight(rows, newRow);
               const height = tableSettings?.height || computeTableHeight(rows, newRow, 5);
-              const actionTitle = this.tableNewRowTitle(collection);
+              const actionTitle = Translation.tableNewRowTitle(collection.purpose?.type);
               const workflowTable: WorkflowTable = {
                 id: tableId,
                 columns: columns.map(column => ({...column, tableId})),
                 rows,
                 collectionId: collection.id,
                 linkTypeId: linkType?.id,
+                color: shadeColor(collection.color, 0.5),
                 title: attribute && {
                   value: title,
                   dataValue: titleDataValue,
@@ -448,9 +454,11 @@ export class WorkflowTablesDataService {
           }
         } else {
           const tableId = workflowTableId(stemConfig.stem, this.workflowId);
+          const tableSettings = stemTableSettings?.find(tab => !tab.value);
 
           const {rows, newRow} = this.createRows(
             tableId,
+            tableSettings,
             tableByCollection?.rows || [],
             [],
             linkVisibleColumns,
@@ -462,17 +470,17 @@ export class WorkflowTablesDataService {
             constraintData
           );
 
-          const tableSettings = stemTableSettings?.find(tab => !tab.value);
           const minHeight = computeTableHeight(rows, newRow, 1);
           const maxHeight = computeTableHeight(rows, newRow);
           const height = tableSettings?.height || maxHeight;
-          const actionTitle = this.tableNewRowTitle(collection);
+          const actionTitle = Translation.tableNewRowTitle(collection.purpose?.type);
           const workflowTable: WorkflowTable = {
             id: tableId,
             columns: columns.map(column => ({...column, tableId})),
             rows,
             collectionId: collection.id,
             linkTypeId: linkType?.id,
+            color: shadeColor(collection.color, 0.5),
             stem: stemConfig.stem,
             minHeight,
             height,
@@ -512,13 +520,6 @@ export class WorkflowTablesDataService {
       return {collectionId, filters: collectionsFilters};
     }
 
-    return null;
-  }
-
-  private tableNewRowTitle(collection: Collection): string {
-    if (collection.purpose?.type === CollectionPurposeType.Tasks) {
-      return $localize`:@@create.new.task:Add new task`;
-    }
     return null;
   }
 
@@ -814,6 +815,7 @@ export class WorkflowTablesDataService {
 
   private createRows(
     tableId: string,
+    config: WorkflowTableConfig,
     currentRows: TableRow[],
     sortedData: {document: DocumentModel; linkInstance?: LinkInstance}[],
     linkColumns: TableColumn[],
@@ -834,11 +836,16 @@ export class WorkflowTablesDataService {
 
     const pendingColumnValuesByRow = createPendingColumnValuesByRow(this.pendingColumnValues);
     const lockedRowIds = this.lockedRowIds[tableId] || [];
+    const canCreateNewRow = linkPermissions
+      ? linkPermissions.rolesWithView?.DataContribute
+      : collectionPermissions.rolesWithView?.DataContribute;
 
     const {rows, lockedRows} = sortedData.reduce(
-      (data, object) => {
+      (data, object, index) => {
         const objectId = object.linkInstance?.id || object.document.id;
         const objectCorrelationId = object.linkInstance?.correlationId || object.document.correlationId;
+        const parentDocumentId = object.document?.metaData?.parentId;
+        const parentRow: TableRow = data.rowsByDocumentIdMap[parentDocumentId];
         const currentRow = rowsMap[objectCorrelationId || objectId] || rowsMap[objectId];
         const pendingData = (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
         const documentCells = createTableRowCellsMapForResource(
@@ -870,13 +877,19 @@ export class WorkflowTablesDataService {
           constraintData.currentUser,
           constraintData
         );
+
+        const hierarchyLevel = isNotNullOrUndefined(parentRow?.level) ? parentRow.level + 1 : 0;
+
         const row: TableRow = {
           id,
           tableId,
           cellsMap: {...documentCells, ...linkCells},
           documentId: object.document.id,
           linkInstanceId: object.linkInstance?.id,
+          parentRowId: parentRow?.id,
+          level: hierarchyLevel,
           height: currentRow?.height || TABLE_ROW_HEIGHT,
+          expanded: config?.expandedDocuments?.includes(object.document.id),
           correlationId: objectCorrelationId || id,
           commentsCount: object.document ? object.document.commentsCount : object.linkInstance.commentsCount,
           documentEditable: documentPermissions?.edit,
@@ -886,9 +899,24 @@ export class WorkflowTablesDataService {
           documentMenuItems: [],
           linkMenuItems: [],
         };
+        data.rowsByDocumentIdMap[object.document.id] = row;
 
-        row.documentMenuItems.push(...this.menuService.createRowMenu(documentPermissions, row, !!object.linkInstance));
-        row.linkMenuItems.push(...this.menuService.createRowMenu(linkInstancePermissions, row, !!object.linkInstance));
+        row.documentMenuItems.push(
+          ...this.menuService.createRowMenu(
+            documentPermissions,
+            row,
+            {canCreateNewRow, previousRow: data.previousRow, purpose: collection.purpose?.type},
+            !!object.linkInstance
+          )
+        );
+        row.linkMenuItems.push(
+          ...this.menuService.createRowMenu(
+            linkInstancePermissions,
+            row,
+            {canCreateNewRow, previousRow: data.previousRow, purpose: collection.purpose?.type},
+            !!object.linkInstance
+          )
+        );
 
         if (lockedRowIds.includes(row.id)) {
           data.lockedRows.push(row);
@@ -896,27 +924,28 @@ export class WorkflowTablesDataService {
           data.rows.push(row);
         }
 
+        data.previousRow = row;
+
         return data;
       },
-      {rows: [], lockedRows: []}
+      {rows: [], lockedRows: [], rowsByDocumentIdMap: {}, previousRow: undefined}
     );
 
-    const lockedRowsMap = objectsByIdMap(lockedRows);
-    const lockedRowsWithUncreated = lockedRowIds
-      .map(rowId => lockedRowsMap[rowId] || rowsMap[rowId])
-      .filter(row => !!row);
-
     let newRow: TableRow;
-    const canCreateNewRow = linkPermissions
-      ? linkPermissions.rolesWithView?.DataContribute
-      : collectionPermissions.rolesWithView?.[RoleType.DataContribute];
     if (canCreateNewRow) {
       newRow = createEmptyNewRow(tableId, !!linkType);
       newRow.documentMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
       newRow.linkMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
     }
 
-    return {rows: [...rows, ...lockedRowsWithUncreated], newRow};
+    const lockedRowsMap = objectsByIdMap(lockedRows);
+
+    const lockedRowsWithUncreated = lockedRowIds
+      .map(rowId => lockedRowsMap[rowId] || rowsMap[rowId])
+      .filter(row => !!row)
+      .reduce((allRows, row) => addRowByParentId(row, allRows), rows);
+
+    return {rows: lockedRowsWithUncreated, newRow};
   }
 
   public moveColumns(table: TableModel, from: number, to: number) {
@@ -1217,6 +1246,77 @@ export class WorkflowTablesDataService {
     );
   }
 
+  public indentRow(row: TableRow) {
+    if (!row?.documentEditable) {
+      return;
+    }
+
+    const table = this.stateService.findTable(row?.tableId);
+    const rows = table?.rows || [];
+    const rowIndex = rows.findIndex(tr => tr.id === row.id);
+    if (rowIndex <= 0) {
+      return;
+    }
+
+    const parentRow = rows
+      .slice(0, rowIndex)
+      .reverse()
+      .find(hierarchyRow => (hierarchyRow?.level || 0) === (row?.level || 0));
+
+    if (parentRow) {
+      if (!parentRow.expanded) {
+        this.toggleHierarchy(parentRow);
+      }
+
+      this.store$.dispatch(
+        new DocumentsAction.PatchMetaData({
+          collectionId: table.collectionId,
+          documentId: row.documentId,
+          metaData: {parentId: parentRow?.documentId},
+          workspace: this.currentWorkspace(),
+        })
+      );
+    }
+  }
+
+  public outdentRow(row: TableRow) {
+    if (!row?.documentEditable) {
+      return;
+    }
+
+    const table = this.stateService.findTable(row?.tableId);
+    const rows = table?.rows || [];
+    const rowIndex = rows.findIndex(tr => tr.id === row.id);
+    if (rowIndex <= 0) {
+      return;
+    }
+
+    const parentRow = rows
+      .slice(0, rowIndex)
+      .reverse()
+      .find(hierarchyRow => (hierarchyRow?.level || 0) === (row?.level || 0) - 1);
+
+    const previousParentDocument = this.stateService.data?.uniqueDocuments?.find(
+      document => document.id === parentRow?.documentId
+    );
+    const parentDocumentId = previousParentDocument?.metaData?.parentId || null;
+
+    if (parentRow) {
+      if (!parentRow.expanded) {
+        this.toggleHierarchy(parentRow);
+      }
+
+      this.store$.dispatch(
+        new DocumentsAction.PatchMetaData({
+          collectionId: table.collectionId,
+          documentId: row.documentId,
+          metaData: {parentId: parentDocumentId},
+          workspace: this.currentWorkspace(),
+        })
+      );
+    }
+  }
+
   public showAttributeType(column: TableColumn) {
     this.stateService.resetSelectedCell();
     this.modalService.showAttributeType(column.attribute.id, column.collectionId, column.linkTypeId);
@@ -1332,10 +1432,12 @@ export class WorkflowTablesDataService {
 
     const table = this.stateService.findTable(row.tableId);
     const {data, linkData} = createRowData(row, table?.columns || [], this.pendingColumnValues, column, value);
+    const parentRow = row.parentRowId && table?.rows.find(r => r.id === row.parentRowId);
     const document: DocumentModel = {
       correlationId: row.id,
       collectionId: table.collectionId,
       data,
+      metaData: {parentId: parentRow?.documentId},
     };
 
     if (row.linkedDocumentId) {
@@ -1485,25 +1587,40 @@ export class WorkflowTablesDataService {
     return copiedColumn;
   }
 
+  public toggleHierarchy(row: TableRow) {
+    this.stateService.setRowProperty(row, 'expanded', !row.expanded);
+
+    const table = this.stateService.findTable(row.tableId);
+    this.store$.dispatch(
+      new WorkflowsAction.ToggleHierarchy({
+        workflowId: this.workflowId,
+        documentId: row.documentId,
+        collectionId: table.collectionId,
+        stem: table.stem,
+        value: table.title?.value || '',
+      })
+    );
+  }
+
   public resetSidebar() {
     this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument({workflowId: this.workflowId}));
   }
 
-  public createNewRow(tableId: string) {
+  public createNewRow(tableId: string, parentRowId?: string) {
     const table = this.stateService.findTable(tableId);
     if (table.linkingQueryStem) {
       this.createDataResourceService.chooseDocumentsPath(
         table.stem,
         [table.linkingQueryStem],
         this.currentView?.id,
-        documents => this.addRow(tableId, documents[0].id)
+        documents => this.addRow(tableId, parentRowId, documents[0].id)
       );
     } else {
-      this.addRow(tableId);
+      this.addRow(tableId, parentRowId);
     }
   }
 
-  private addRow(tableId: string, linkedDocumentId?: string) {
+  private addRow(tableId: string, parentRowId: string, linkedDocumentId?: string) {
     const table = this.stateService.findTable(tableId);
     const id = generateId();
     const newRow: TableRow = {
@@ -1511,11 +1628,17 @@ export class WorkflowTablesDataService {
       linkedDocumentId,
       id,
       correlationId: id,
+      parentRowId,
       suggestLinks: !!linkedDocumentId,
       suggestDetail: !linkedDocumentId,
     };
     this.stateService.addRow(tableId, newRow);
     this.addLockedRow(tableId, id);
+
+    const parentRow = parentRowId && table.rows.find(row => row.id === parentRowId);
+    if (parentRow && !parentRow.expanded) {
+      this.toggleHierarchy(parentRow);
+    }
   }
 
   private addLockedRow(tableId: string, rowId: string) {

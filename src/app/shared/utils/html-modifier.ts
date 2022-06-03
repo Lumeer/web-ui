@@ -112,15 +112,29 @@ export function hex2rgba(hex: string, opacity: number): string {
 }
 
 export function clickedInsideElement(event: Event, tagName: string): boolean {
-  const paths = (<any>event).path as HTMLElement[];
-  if (paths) {
-    for (const element of paths) {
-      if (element?.tagName?.toUpperCase() === (tagName || '').toUpperCase()) {
-        return true;
-      }
+  const paths = getEventPath(event) || [];
+  for (const element of paths) {
+    if (element?.tagName?.toUpperCase() === (tagName || '').toUpperCase()) {
+      return true;
     }
   }
   return false;
+}
+
+function getEventPath(event: Event): HTMLElement[] {
+  if ((<any>event).path) {
+    return (<any>event).path as HTMLElement[];
+  } else {
+    const path = [];
+    let currentElem = event.target as HTMLElement;
+    while (currentElem) {
+      path.push(currentElem);
+      currentElem = currentElem.parentElement;
+    }
+    if (path.indexOf(window) === -1 && path.indexOf(document) === -1) path.push(document);
+    if (path.indexOf(window) === -1) path.push(window);
+    return path;
+  }
 }
 
 export function initForceTouch(element: HTMLElement, callback: (event: MouseEvent) => void) {

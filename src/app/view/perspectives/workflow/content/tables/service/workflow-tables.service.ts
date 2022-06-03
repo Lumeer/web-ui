@@ -112,11 +112,23 @@ export class WorkflowTablesService {
       case RowMenuId.Copy:
         this.dataService.copyRowValue(row, column);
         break;
+      case RowMenuId.Indent:
+        this.dataService.indentRow(row);
+        break;
+      case RowMenuId.Outdent:
+        this.dataService.outdentRow(row);
+        break;
       case RowMenuId.Delete:
         this.dataService.removeRow(row, column);
         break;
       case RowMenuId.Unlink:
         this.dataService.unlinkRow(row, column);
+        break;
+      case RowMenuId.AddChild:
+        this.dataService.createNewRow(row.tableId, row.id);
+        break;
+      case RowMenuId.AddSubParent:
+        this.dataService.createNewRow(row.tableId, row.parentRowId);
         break;
     }
   }
@@ -373,6 +385,10 @@ export class WorkflowTablesService {
 
   public onNewRow(table: WorkflowTable) {
     this.dataService.createNewRow(table.id);
+  }
+
+  public onHierarchyToggle(row: TableRow) {
+    this.dataService.toggleHierarchy(row);
   }
 
   public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {

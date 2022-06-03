@@ -611,57 +611,26 @@ export class DocumentsEffects {
   public patchMetaData$ = createEffect(() =>
     this.actions$.pipe(
       ofType<DocumentsAction.PatchMetaData>(DocumentsActionType.PATCH_META_DATA),
-      mergeMap(action => {
-        const {collectionId, documentId, metaData} = action.payload;
-        return this.store$.pipe(
-          select(selectDocumentById(documentId)),
-          take(1),
-          mergeMap(originalDocument => {
-            return this.documentService
-              .patchDocumentMetaData(collectionId, documentId, metaData, action.payload.workspace)
-              .pipe(
-                mergeMap(dto => {
-                  const document = {...convertDocumentDtoToModel(dto), data: originalDocument.data};
-                  const actions: Action[] = [new DocumentsAction.UpdateSuccess({document, originalDocument})];
-
-                  if (action.payload.onSuccess) {
-                    actions.push(
-                      new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess(document)})
-                    );
-                  }
-
-                  return actions;
-                }),
-                catchError(error => of(new DocumentsAction.UpdateFailure({error})))
-              );
-          })
-        );
+      withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+      mergeMap(([action, documents]) => {
+        const originalDocument = documents[action.payload.documentId];
+        return of(new DocumentsAction.PatchMetaDataInternal({...action.payload, originalDocument}));
       })
     )
   );
 
-  public updateMetaData$ = createEffect(() =>
+  public patchMetaDataInternal$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<DocumentsAction.UpdateMetaData>(DocumentsActionType.UPDATE_META_DATA),
+      ofType<DocumentsAction.PatchMetaDataInternal>(DocumentsActionType.PATCH_META_DATA_INTERNAL),
       mergeMap(action => {
-        const {document} = action.payload;
-        return this.store$.pipe(
-          select(selectDocumentById(document.id)),
-          take(1),
-          mergeMap(originalDocument => {
-            const documentDto = convertDocumentModelToDto(document);
-            return this.documentService.updateDocumentMetaData(documentDto, action.payload.workspace).pipe(
-              map(
-                dto =>
-                  new DocumentsAction.UpdateSuccess({
-                    document: convertDocumentDtoToModel(dto),
-                    originalDocument,
-                  })
-              ),
-              catchError(error => of(new DocumentsAction.UpdateFailure({error})))
-            );
-          })
-        );
+        const {originalDocument, workspace, metaData} = action.payload;
+        return this.documentService
+          .patchDocumentMetaData(originalDocument.collectionId, originalDocument.id, metaData, workspace)
+          .pipe(
+            map(dto => convertDocumentDtoToModel(dto)),
+            mergeMap(document => [new DocumentsAction.UpdateSuccess({document, originalDocument})]),
+            catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
+          );
       })
     )
   );

@@ -35,6 +35,7 @@ export interface TableModel {
   rows: TableRow[];
   newRow?: TableNewRow;
   bottomToolbar: boolean;
+  color?: string;
 }
 
 export interface TableNewRow extends TableRow {

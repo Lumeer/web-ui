@@ -25,9 +25,9 @@ export const DEFAULT_STRIPED_COLOR = '#eeeeee';
 
 export function columnBackgroundColor(color: string, unsaved?: boolean): string {
   const shadedColor = color ? shadeColor(color, 0.5) : DEFAULT_COLOR;
-  const stripeColor = color ? shadeColor(shadedColor, 0.25) : DEFAULT_STRIPED_COLOR;
 
   if (unsaved) {
+    const stripeColor = color ? shadeColor(shadedColor, 0.25) : DEFAULT_STRIPED_COLOR;
     return stripedBackground(shadedColor, stripeColor);
   }
 

@@ -1592,88 +1592,74 @@
           <context context-type="linenumber">438</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="record.new.title.tasks" datatype="html">
-        <source>New task</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="record.new.title.default" datatype="html">
-        <source>New record</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.duration.unit" datatype="html">
         <source>{unit, select, w {w} d {d} h {h} m {m} s {s}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.number.currency.select" datatype="html">
         <source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.filter.condition.constraint.select" datatype="html">
         <source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.filter.condition.constraint.text" datatype="html">
         <source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.filter.condition.constraint.number" datatype="html">
         <source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.filter.condition.constraint.date" datatype="html">
         <source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.filter.condition.value.constraint.date" datatype="html">
         <source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">151</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.filter.condition.value.constraint.usersAndTeams" datatype="html">
         <source>{type, select, currentUser {Current User} currentTeams {Current Teams}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">158</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projects.notPermissions" datatype="html">
@@ -1924,28 +1910,28 @@
         <source>Delete record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-          <context context-type="linenumber">700</context>
+          <context context-type="linenumber">669</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.delete.dialog.message" datatype="html">
         <source>Do you really want to delete this record?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-          <context context-type="linenumber">701</context>
+          <context context-type="linenumber">670</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.delete.fail" datatype="html">
         <source>Could not delete the record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-          <context context-type="linenumber">719</context>
+          <context context-type="linenumber">688</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dataResource.runRule.fail" datatype="html">
         <source>Could not run the selected automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
-          <context context-type="linenumber">744</context>
+          <context context-type="linenumber">713</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
@@ -2778,7 +2764,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">269</context>
+          <context context-type="linenumber">338</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.editAutomation" datatype="html">
@@ -2805,7 +2791,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">275</context>
+          <context context-type="linenumber">344</context>
         </context-group>
       </trans-unit>
       <trans-unit id="remove.attribute" datatype="html">
@@ -3786,7 +3772,7 @@
         <source>Cannot process files bigger than <x id="size" equiv-text="size"/> MB. Please upload smaller file.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="file.attachment.download.failure" datatype="html">
@@ -4440,7 +4426,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">271</context>
+          <context context-type="linenumber">340</context>
         </context-group>
       </trans-unit>
       <trans-unit id="copy" datatype="html">
@@ -4455,7 +4441,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">350</context>
         </context-group>
       </trans-unit>
       <trans-unit id="edit" datatype="html">
@@ -7022,7 +7008,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.detail.audit.limit" datatype="html">
@@ -7973,11 +7959,15 @@
           <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="perspective.workflow.row.new" datatype="html">
+      <trans-unit id="create.new.row" datatype="html">
         <source>Add new row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/table/new-row/table-new-row.component.html</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="team.add.placeholder" datatype="html">
@@ -9082,6 +9072,63 @@
           <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="record.new.title.tasks" datatype="html">
+        <source>New task</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="record.new.title.default" datatype="html">
+        <source>New record</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="record.new.child.title.tasks" datatype="html">
+        <source>Add sub-task</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="record.new.child.title.default" datatype="html">
+        <source>Add sub-item</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="record.new.subParent.title.tasks" datatype="html">
+        <source>Add task at this level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="record.new.subParent.title.default" datatype="html">
+        <source>Add item at this level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="create.new.task" datatype="html">
+        <source>Add new task</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/utils/translation.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="search.records.empty.project.title" datatype="html">
         <source>Your project is empty!</source>
         <context-group purpose="location">
@@ -9227,7 +9274,7 @@
         <source>Could not create event</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/events/calendar-events.component.ts</context>
-          <context context-type="linenumber">365</context>
+          <context context-type="linenumber">361</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.calendar.display.calendar" datatype="html">
@@ -9639,21 +9686,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.ts</context>
           <context context-type="linenumber">74</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="create.new.task" datatype="html">
-        <source>Add new task</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">520</context>
         </context-group>
       </trans-unit>
       <trans-unit id="pinned" datatype="html">
@@ -10190,14 +10222,14 @@
         <source>Could not create task</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
-          <context context-type="linenumber">360</context>
+          <context context-type="linenumber">359</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
-          <context context-type="linenumber">385</context>
+          <context context-type="linenumber">384</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.header.scroll.today" datatype="html">
@@ -10784,7 +10816,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.show.detail" datatype="html">
@@ -10795,7 +10827,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.copy.value" datatype="html">
@@ -10806,7 +10838,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.link.above" datatype="html">
@@ -10861,6 +10893,10 @@
           <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.outdent" datatype="html">
         <source>Outdent</source>
@@ -10871,6 +10907,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context>
           <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.clone" datatype="html">
@@ -10888,10 +10928,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">188</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="remove.row" datatype="html">
+      <trans-unit id="row.remove" datatype="html">
         <source>Remove row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
@@ -10899,7 +10939,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">186</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.data.cell.linked.row.uninitialized" datatype="html">
@@ -10981,7 +11021,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">265</context>
+          <context context-type="linenumber">334</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.lockSettings" datatype="html">
@@ -10992,7 +11032,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">342</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.defaultAttribute" datatype="html">
@@ -11003,7 +11043,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">277</context>
+          <context context-type="linenumber">346</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.add.column.next" datatype="html">
@@ -11014,7 +11054,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">293</context>
+          <context context-type="linenumber">362</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.add.column.previous" datatype="html">
@@ -11025,7 +11065,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">360</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.split" datatype="html">
@@ -11043,7 +11083,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">279</context>
+          <context context-type="linenumber">348</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.remove" datatype="html">
@@ -11054,7 +11094,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">289</context>
+          <context context-type="linenumber">358</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.attribute.name" datatype="html">
@@ -11065,7 +11105,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">283</context>
+          <context context-type="linenumber">352</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.copy.values" datatype="html">
@@ -11076,7 +11116,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">354</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.copy.values.unique" datatype="html">
@@ -11087,7 +11127,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">287</context>
+          <context context-type="linenumber">356</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.title" datatype="html">
@@ -11098,7 +11138,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1270</context>
+          <context context-type="linenumber">1370</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
@@ -11109,7 +11149,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1271</context>
+          <context context-type="linenumber">1371</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.add.link.column" datatype="html">
@@ -11144,21 +11184,21 @@
         <source>Attribute settings...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">267</context>
+          <context context-type="linenumber">336</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.add.linkColumn" datatype="html">
         <source>Add Link column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">364</context>
         </context-group>
       </trans-unit>
       <trans-unit id="workflow.table.empty" datatype="html">
         <source> There are no rows to display and you are not allowed to create any. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context>
-          <context context-type="linenumber">91,93</context>
+          <context context-type="linenumber">92,94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.perspective.guide.title" datatype="html">
@@ -12174,16 +12214,16 @@
         <source>Previous upload is already in progress. Please wait for it to finish first.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="project.settings.upload.tooLarge" datatype="html">
-        <source>The file size is above the upload limit (<x id="size" equiv-text="size.toFixed(
+        <source>The file size is above the upload limit (<x id="size" equiv-text="this.fileSizeMb.toFixed(
         0
       )"/> MB).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context>
-          <context context-type="linenumber">63,65</context>
+          <context context-type="linenumber">89,91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projects.tab.variables.title" datatype="html">
