@@ -34,13 +34,17 @@
   </ng-container>
   <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
        class="py-3 mt-3 d-flex flex-column align-items-center text-center">
-      <span i18n="@@document.detail.audit.limit">Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <a
-        href="https://www.lumeer.io/contact/" target="_blank">contact us.</a></span>
+  <span i18n="@@document.detail.audit.limit.free">Limited to first 3 entries within {{data.serviceLimits?.auditDays || defaultAuditDays}} days. Upgrade to the Business license to see complete {{data.serviceLimits?.auditDays || defaultAuditDays}} days worth of history. For even longer history, <a
+    href="https://www.lumeer.io/contact/" target="_blank">contact us.</a></span>
     <button *ngIf="organizationPermissions$ | async | canEnterOrganizationSettings"
             (click)="openServiceOrder()"
             class="btn btn-success mt-2">
       <span i18n="@@collection.config.tab.rules.upgradePlan">Upgrade to Business Plan!</span>
     </button>
+  </div>
+  <div *ngIf="data.serviceLimits?.serviceLevel === serviceLevel.BASIC"
+       class="py-3 mt-3 d-flex flex-column align-items-center text-center">
+    <span i18n="@@document.detail.audit.limit.basic">Limited to {{data.serviceLimits?.auditDays || defaultAuditDays}} days of history. For longer history, <a href="https://www.lumeer.io/contact/" target="_blank">contact us.</a></span>
   </div>
 </ng-container>
 

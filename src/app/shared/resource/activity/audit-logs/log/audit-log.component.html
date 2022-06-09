@@ -67,6 +67,8 @@
                      *ngIf="hasNewState"
                      [constraintData]="constraintData"
                      [parent]="parent"
+                     [resourceId]="auditLog.resourceId"
+                     [viewId]="view?.id"
                      [changes]="auditLog.newState">
   </audit-log-entries>
   <audit-log-entries class="d-block"
@@ -74,6 +76,8 @@
                      valueClasses="text-line-through"
                      [constraintData]="constraintData"
                      [parent]="parent"
+                     [resourceId]="auditLog.resourceId"
+                     [viewId]="view?.id"
                      [changes]="auditLog.oldState">
   </audit-log-entries>
 </div>
