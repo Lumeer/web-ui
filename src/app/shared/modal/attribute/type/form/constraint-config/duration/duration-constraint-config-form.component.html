@@ -28,7 +28,19 @@
                                               [editable]="typeControl.value === type.Custom">
   </duration-constraint-config-form-conversion>
 
-  <p class="text-muted">
+  <div class="mt-3">
+    <label class="form-label" [for]="controls.MaxUnit"
+           i18n="@@constraint.duration.maxUnit.label">Maximal unit</label>
+    <select-item class="w-100 d-block"
+                 [items]="maxUnitItems"
+                 [removable]="false"
+                 [selectedId]="maxUnitControl.value"
+                 (selected)="onMaxUnitSelect($event)"
+                 buttonClasses="flex-grow-1 text-truncate">
+    </select-item>
+  </div>
+
+  <p class="text-muted mt-3">
     <span i18n="@@constraint.example">Example:</span> {{exampleString}}
   </p>
 

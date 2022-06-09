@@ -36,6 +36,7 @@ import {
   getPreviousDurationUnit,
 } from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
+import {createDurationMaxUnitItems} from '../../../../../../select/select-constraint-item/constraint/duration';
 
 @Component({
   selector: 'duration-constraint-config-form',
@@ -55,10 +56,12 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   public readonly units = objectValues(DurationUnit);
   public readonly exampleString: string;
   public readonly typeItems: SelectItemModel[];
+  public readonly maxUnitItems: SelectItemModel[];
 
   constructor(private translationService: TranslationService) {
     this.exampleString = this.generateExampleString();
     this.typeItems = this.createTypeItems();
+    this.maxUnitItems = createDurationMaxUnitItems();
   }
 
   private generateExampleString(): string {
@@ -92,6 +95,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   private createForm() {
     const type = this.config?.type || DurationType.Work;
     this.form.addControl(DurationConstraintFormControl.Type, new FormControl(type));
+    this.form.addControl(DurationConstraintFormControl.MaxUnit, new FormControl(this.config?.maxUnit || null));
     this.form.addControl(
       DurationConstraintFormControl.Conversions,
       new FormArray(this.createConversionControls(type), [])
@@ -129,8 +133,16 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
     });
   }
 
+  public onMaxUnitSelect(unit: DurationUnit) {
+    this.maxUnitControl.setValue(unit);
+  }
+
   public get typeControl(): AbstractControl {
     return this.form.get(DurationConstraintFormControl.Type);
+  }
+
+  public get maxUnitControl(): AbstractControl {
+    return this.form.get(DurationConstraintFormControl.MaxUnit);
   }
 
   public get conversionsControl(): FormArray {

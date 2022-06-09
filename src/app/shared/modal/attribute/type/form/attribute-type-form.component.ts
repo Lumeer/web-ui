@@ -150,6 +150,7 @@ export class AttributeTypeFormComponent implements OnChanges {
       case ConstraintType.Duration:
         return {
           type: this.configForm.get(DurationConstraintFormControl.Type).value,
+          maxUnit: this.configForm.get(DurationConstraintFormControl.MaxUnit).value,
           conversions: this.configForm
             .get(DurationConstraintFormControl.Conversions)
             .value.reduce((map, value) => ({...map, [value.unit]: value.value}), {}),

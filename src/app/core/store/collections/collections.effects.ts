@@ -58,6 +58,7 @@ import {OrganizationsAction} from '../organizations/organizations.action';
 import {convertRuleToDto, createCallbackActions} from '../utils/store.utils';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as AuditLogActions from '../audit-logs/audit-logs.actions';
+import {LimitsService} from '../../service/limits.service';
 
 @Injectable()
 export class CollectionsEffects {
@@ -148,11 +149,9 @@ export class CollectionsEffects {
     this.actions$.pipe(
       ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE),
       tap(action => console.error(action.payload.error)),
-      withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
-      map(([action, organization]) => {
+      map(action => {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-          const message = $localize`:@@collection.create.serviceLimits:You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?`;
-          return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
+          return new CommonAction.ExecuteCallback({callback: () => this.limitsService.notifyTablesLimit()});
         }
         const errorMessage = $localize`:@@collection.create.fail:Could not create table`;
         return new NotificationsAction.Error({message: errorMessage});
@@ -187,11 +186,9 @@ export class CollectionsEffects {
     this.actions$.pipe(
       ofType<CollectionsAction.ImportFailure>(CollectionsActionType.IMPORT_FAILURE),
       tap(action => console.error(action.payload.error)),
-      withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
-      map(([action, organization]) => {
+      map(action => {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-          const message = $localize`:@@collection.create.serviceLimits:You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?`;
-          return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
+          return new CommonAction.ExecuteCallback({callback: () => this.limitsService.notifyTablesLimit()});
         }
         const errorMessage = $localize`:@@collection.import.fail:Could not import table`;
         return new NotificationsAction.Error({message: errorMessage});
@@ -518,13 +515,9 @@ export class CollectionsEffects {
               }
               return actions;
             }),
-            catchError(error => {
-              const actions: Action[] = [new CollectionsAction.ChangeAttributeFailure({error})];
-              if (onFailure) {
-                actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
-              }
-              return of(...actions);
-            })
+            catchError(error =>
+              of(new CollectionsAction.ChangeAttributeFailure({error}), ...createCallbackActions(onFailure))
+            )
           );
       })
     )
@@ -534,7 +527,10 @@ export class CollectionsEffects {
     this.actions$.pipe(
       ofType<CollectionsAction.ChangeAttributeFailure>(CollectionsActionType.CHANGE_ATTRIBUTE_FAILURE),
       tap(action => console.error(action.payload.error)),
-      map(() => {
+      map(action => {
+        if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
+          return new CommonAction.ExecuteCallback({callback: () => this.limitsService.notifyFunctionsLimit()});
+        }
         const message = $localize`:@@collection.change.attribute.fail:Could not change the attribute`;
         return new NotificationsAction.Error({message});
       })
@@ -657,6 +653,7 @@ export class CollectionsEffects {
     private store$: Store<AppState>,
     private collectionService: CollectionService,
     private importService: ImportService,
+    private limitsService: LimitsService,
     private angulartics2: Angulartics2,
     private configurationService: ConfigurationService
   ) {}
