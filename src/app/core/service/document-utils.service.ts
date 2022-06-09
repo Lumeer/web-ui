@@ -188,15 +188,8 @@ export class DocumentUtilsService {
     data: DocumentAdditionalDataRequest,
     workspace: Workspace
   ): Observable<DeletedAttachmentsData> {
-    const ids = collectFileIds(data);
-    if (ids.length === 0) {
-      return of({});
-    }
-
-    return this.attachmentService.removeFiles(workspace, ids).pipe(
-      map(() => data.deleteFilesMap),
-      catchError(() => of({}))
-    );
+    // we don't remove files in server in order to revert function properly
+    return of(data.deleteFilesMap);
   }
 
   private setDocumentLinks(
@@ -344,7 +337,7 @@ function createPatchData(
     );
     attachments.push(...attributeAttachments);
 
-    data[attributeId] = attachments.map(attachment => attachment.fileName).join(',');
+    data[attributeId] = attachments.map(attachment => attachment.uniqueName).join(',');
 
     return data;
   }, {});
