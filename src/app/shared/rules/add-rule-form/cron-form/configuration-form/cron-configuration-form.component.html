@@ -74,7 +74,7 @@
 
     <input type="radio" name="never" id="never" value="never"
            (change)="onNeverChecked($event.target.checked)"
-           [checked]="!(endsOnControl.value | isDateValid) && !(executionsControl.value >= 0)">
+           [checked]="!(endsOnControl.value | isDateValid) && !((executionsControl.value | isNotNullOrUndefined) && executionsControl.value >= 0)">
     <label for="never" i18n="@@collection.config.tab.rules.cron.timer.never">Never</label>
     <div>&nbsp;</div>
 
@@ -97,7 +97,7 @@
 
     <input type="radio" name="num" id="num" value="num"
            (change)="onExecutionsChecked($event.target.checked)"
-           [checked]="executionsControl.value >= 0">
+           [checked]="(executionsControl.value | isNotNullOrUndefined) && executionsControl.value >= 0">
     <label for="num" i18n="@@collection.config.tab.rules.cron.timer.after">After</label>
     <div class="d-flex align-items-center">
       <input class="form-control me-2 interval-input" type="number"
