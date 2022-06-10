@@ -34,8 +34,8 @@
   </ng-container>
   <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
        class="py-3 mt-3 d-flex flex-column align-items-center text-center">
-  <span i18n="@@document.detail.audit.limit.free">Limited to first 3 entries within {{data.serviceLimits?.auditDays || defaultAuditDays}} days. Upgrade to the Business license to see complete {{data.serviceLimits?.auditDays || defaultAuditDays}} days worth of history. For even longer history, <a
-    href="https://www.lumeer.io/contact/" target="_blank">contact us.</a></span>
+  <span i18n="@@document.detail.audit.limit.free">Showing only 3 most recent entries from last {{data.serviceLimits?.auditDays || defaultAuditDays}} days. Upgrade to the Business license to see the full history of the last {{data.serviceLimits?.auditDays || defaultAuditDays}} days. <a
+    href="https://www.lumeer.io/contact/" target="_blank">Contact us</a> with special requests.</span>
     <button *ngIf="organizationPermissions$ | async | canEnterOrganizationSettings"
             (click)="openServiceOrder()"
             class="btn btn-success mt-2">
@@ -44,7 +44,7 @@
   </div>
   <div *ngIf="data.serviceLimits?.serviceLevel === serviceLevel.BASIC"
        class="py-3 mt-3 d-flex flex-column align-items-center text-center">
-    <span i18n="@@document.detail.audit.limit.basic">Limited to {{data.serviceLimits?.auditDays || defaultAuditDays}} days of history. For longer history, <a href="https://www.lumeer.io/contact/" target="_blank">contact us.</a></span>
+    <span i18n="@@document.detail.audit.limit.basic">Showing last {{data.serviceLimits?.auditDays || defaultAuditDays}} days of history. <a href="https://www.lumeer.io/contact/" target="_blank">Contact us</a> with special needs.</span>
   </div>
 </ng-container>
 

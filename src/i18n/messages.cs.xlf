@@ -1882,16 +1882,19 @@
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
                     <context context-type="linenumber">13</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="constraint.duration.maxUnit.label" datatype="html">
+        <source>Maximal unit</source><target>Maximální jednotka</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="constraint.duration.type" datatype="html">
                 <source>{type, select, Work {Work} Classic {Normal} Custom {Custom}}</source>
                 <target>{type, select, Work {Pracovní} Classic {Normální} Custom {Vlastní} }</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context>
-                    <context context-type="linenumber">144</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">156</context></context-group></trans-unit>
             <trans-unit id="constraint.number.currency.select" datatype="html">
                 <source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</source>
                 <target>{tag, select, en-IN {Indie - ₹ (INR)} uk-UA {Ukraina - ₴ (UAH)} tr-TR {Turecko - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Irsko - € (EUR)} da-DK {Dánsko - kr (DKK)} de-CH {Švýcarsko - CHF} en-NZ {Nový Zéland - $ (NZD)} fr-CA {Kanada - $ (CAD)} sv-SE {Švédsko - kr (SEK)} nb-NO {Norsko - kr (NOK)} fi-FI {Finsko - € (EUR)} he-IL {Izrael - ₪ (ILS)} es-ES {Španělsko - € (EUR)} fr-FR {Francie - € (EUR)} it-IT {Itálie - € (EUR)} en-GB {Spojené Království - £ (GBP)} pt-PT {Portugalsko - € (EUR)} pl-PL {Polsko - zł (PLN)} cs-CZ {Česká Republika - Kč (CZK)} sk-SK {Slovensko - € (EUR)} hu-HU {Maďarsko - Ft (HUF)} de-AT {Rakousko - € (EUR)} de-DE {Německo - € (EUR)} en-US {Spojené Státy Americké - $ (USD)} pt-BR {Brazílie - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Nizozemí - € (EUR)} zh-CN {Čína - ¥ (CNY)} ru-RU {Rusko - ₽ (RUB)} ja-JP {Japonsko - ¥ (JPY)} en-AU {Austrálie - $ (AUD)} }</target>
@@ -2064,27 +2067,12 @@
                 <source>Example:</source>
                 <target>Příklad:</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">42</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">36</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">38</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">32</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/number/number-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">99</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
                 <source>View does not exist! </source>
                 <target>Tento pohled neexistuje!</target>
@@ -2821,13 +2809,13 @@
                 <target>Smazat všechny soubory?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">269</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
             <trans-unit id="constraint.files.modify.constraint.message" datatype="html">
                 <source>Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</source>
                 <target>Změna typu atributu ze 'Souboru' trvale odstraní všechny přílohy v tomto sloupci. Chcete pokračovat?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">271</context></context-group></trans-unit>
 
             <trans-unit id="referralsDialog.affiliateProgram.dialogTitle" datatype="html">
                 <source>Make money with Lumeer</source>
@@ -4083,15 +4071,9 @@
                 <source>Default</source>
                 <target>Výchozí</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context>
-                    <context context-type="linenumber">59</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context>
-                    <context context-type="linenumber">32</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">50</context></context-group></trans-unit>
             <trans-unit id="select.constraint.items.date.format" datatype="html">
                 <source>{format, select, weekly {[W]W YYYY} other {}}</source>
                 <target>{format, select, weekly {[T]W YYYY} other {} }</target>
@@ -4114,11 +4096,8 @@
                 <source>{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds}}</source>
                 <target>{unit, select, w {týdny} d {dny} h {hodiny} m {minuty} s {sekundy} }</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context>
-                    <context context-type="linenumber">48</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">62</context></context-group></trans-unit>
             <trans-unit id="sequence.item.delete.message" datatype="html">
                 <source>Do you want to permanently remove this sequence?</source>
                 <target>Chcete skutečně trvale odstranit tuto posloupnost?</target>
@@ -4178,112 +4157,82 @@
                 <source>Could not get tables</source>
                 <target>Tabulky nelze načíst</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">98</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit id="collection.create.fail" datatype="html">
                 <source>Could not create table</source>
                 <target>Tabulku nelze vytvořit</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">157</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">156</context></context-group></trans-unit>
             <trans-unit id="collection.import.fail" datatype="html">
                 <source>Could not import table</source>
                 <target>Tabulku nelze importovat</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">196</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">193</context></context-group></trans-unit>
             <trans-unit id="collection.update.fail" datatype="html">
                 <source>Could not update table</source>
                 <target>Tabulku nelze změnit</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">228</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">225</context></context-group></trans-unit>
             <trans-unit id="resource.rule.update.fail" datatype="html">
                 <source>Could not save automation</source>
                 <target>Nepodařilo se uložit automatizaci</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">260</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-                    <context context-type="linenumber">165</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">257</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">165</context></context-group></trans-unit>
             <trans-unit id="collection.update.purpose.fail" datatype="html">
                 <source>Could not update table purpose</source>
                 <target>Napodařilo se změnit účel tabulky</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">285</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">282</context></context-group></trans-unit>
             <trans-unit id="collection.delete.fail" datatype="html">
                 <source>Could not delete table</source>
                 <target>Tabulku nelze smazat</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">338</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">335</context></context-group></trans-unit>
             <trans-unit id="collection.add.favorite.fail" datatype="html">
                 <source>Could not add the table to favorites</source>
                 <target>Tabulku nelze přidat mezi oblíbené</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">363</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">360</context></context-group></trans-unit>
             <trans-unit id="collection.remove.favorite.fail" datatype="html">
                 <source>Could not remove the table from favorites</source>
                 <target>Tabulku nelze odebrat z oblíbených</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">388</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">385</context></context-group></trans-unit>
             <trans-unit id="collection.change.attribute.fail" datatype="html">
                 <source>Could not change the attribute</source>
                 <target state="translated">Atribut nelze změnit</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">538</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">534</context></context-group></trans-unit>
             <trans-unit id="collection.remove.attribute.fail" datatype="html">
                 <source>Could not delete the attribute</source>
                 <target state="translated">Atribut nelze smazat</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">578</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">574</context></context-group></trans-unit>
             <trans-unit id="collection.change.permission.fail" datatype="html">
                 <source>Could not change the table permissions</source>
                 <target>Nelze nastavit přístupová práva k tabulce</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">624</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">620</context></context-group></trans-unit>
             <trans-unit id="collection.runRule.fail" datatype="html">
                 <source>Could not run the selected automation for the whole table</source>
                 <target>Nemohu spustit vybranou automatizaci na všech řádcích v tabulce</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">649</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">645</context></context-group></trans-unit>
             <trans-unit id="dashboard.data.get.fail" datatype="html">
                 <source>Could not read dashboard data</source>
                 <target>Nepodařilo se mi načíst údaje o dashboardu</target>
@@ -5012,11 +4961,8 @@
                 <source> No activity yet. </source>
                 <target> Zatím neproběhla žádná aktivita. </target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
-                    <context context-type="linenumber">52</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit>
             <trans-unit id="audit.filters.button.title" datatype="html">
                 <source>Filters</source>
                 <target>Filtrování</target>
@@ -5110,33 +5056,28 @@
                 <source>Revert changes?</source>
                 <target>Vrátit změny?</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context>
-                    <context context-type="linenumber">137</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context><context context-type="linenumber">138</context></context-group></trans-unit>
             <trans-unit id="audit.revert.confirm.message" datatype="html">
                 <source>Do you really want to revert the latest changes?</source>
                 <target>Opravdy chcete vrátit poslední změny?</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context>
-                    <context context-type="linenumber">138</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context><context context-type="linenumber">139</context></context-group></trans-unit>
             <trans-unit id="constraint.select.modify.value.title" datatype="html">
                 <source>Remove options?</source>
                 <target>Odstranit možnosti?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">275</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">276</context></context-group></trans-unit>
             <trans-unit id="constraint.select.modify.value.message" datatype="html">
                 <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source>
                 <target>Měníte hodnotu možnosti, která může být již použitá v záznamech. To způsobí, že tyto záznamy nebudou mít platnou hodnotu. Chcete pokračovat?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">276</context></context-group></trans-unit><trans-unit id="29b490ded71910586b2ab4d0c9bc79c9b1b6c18b" datatype="html">
-        <source>Suggest values when typing (works in Table, Workflow and Form)</source><target>Navrhovat hodnoty při psaní (funguje v Tabulce, Workflow a Formuláři)</target>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">277</context></context-group></trans-unit><trans-unit id="154f4de2cf3b87839b8759ce1ab74579330ed273" datatype="html">
+        <source>Suggest values when typing (works in Table, Workflow and Form)</source>
+        <target>Navrhovat hodnoty při psaní (funguje v tabulce, workflow a formuláři)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
           <context context-type="linenumber">4</context>
@@ -5226,27 +5167,12 @@
                 <target>Načítám...</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context>
-                    <context context-type="linenumber">2</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
-                    <context context-type="linenumber">6</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
-                    <context context-type="linenumber">50</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context>
-                    <context context-type="linenumber">36</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context>
-                    <context context-type="linenumber">70</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
             <trans-unit id="blockly.editor.changed.warning" datatype="html">
                 <source>The automation has been changed because some of the tables or link types were either deleted or you do not have access rights to them. Please fix the automation before saving it. Saving the automation right away will change (and most probably brake) it.</source>
                 <target>Automatizace byla upravena, protože některá tabulka nebo propojení byly smazány, nebo nemáte právo je vidět. Opravte prosím automatizaci před uložením. Pokud ji rovnou uložíte dojde k její změně a pravděpodobně nebude pracovat správně.</target>
@@ -6601,23 +6527,30 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">328</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">368</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">328</context></context-group></trans-unit><trans-unit id="collection.create.serviceLimits.noRights" datatype="html">
+        <source>You are currently on the Free plan which allows you to have only limited number of tables.</source>
+        <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje vytvořit jen omezené množství tabulek.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/limits.service.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="collection.create.serviceLimits" datatype="html">
                 <source>You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?</source>
                 <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje vytvořit jen omezené množství tabulek. Chcete aktivovat program Lumeer Business, který tato omezení nemá?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">154</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">193</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">61</context></context-group></trans-unit>
             <trans-unit id="collection.attribute.default.set.fail" datatype="html">
                 <source>Could not set the displayed attribute id</source>
                 <target>Nelze nastavit hlavní atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">439</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">436</context></context-group></trans-unit>
             <trans-unit id="collection.create.attributes.fail" datatype="html">
                 <source>Could not create attributes</source>
                 <target>Nelze vytvořit atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">492</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">489</context></context-group></trans-unit>
             <trans-unit id="document.create.serviceLimits" datatype="html">
                 <source>You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?</source>
                 <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje vytvořit jen omezené množství záznamů. Chcete aktivovat program Lumeer Business, který tato omezení nemá?</target>
@@ -7650,18 +7583,18 @@
         <source>The file is successfully saved.</source>
         <target>Soubor jsem úspěšně uložil.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">221</context></context-group></trans-unit><trans-unit id="file.attachment.upload.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">226</context></context-group></trans-unit><trans-unit id="file.attachment.upload.failure" datatype="html">
         <source>Could not save the file. Please try again later.</source>
         <target>Soubor se mi nepodařilo uložit. Prosím zkuste to za chvíli znovu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">240</context></context-group></trans-unit><trans-unit id="file.attachment.delete.confirm.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">245</context></context-group></trans-unit><trans-unit id="file.attachment.delete.confirm.message" datatype="html">
         <source>Do you really want to permanently delete this file?</source>
         <target>Skutečně chcete tento soubor navždy smazat?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="file.attachment.delete.confirm.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">263</context></context-group></trans-unit><trans-unit id="file.attachment.delete.confirm.title" datatype="html">
         <source>Delete file?</source><target>Smazat soubor?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">259</context></context-group></trans-unit><trans-unit id="dataResource.detail.attribute.remove.confirm" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">264</context></context-group></trans-unit><trans-unit id="dataResource.detail.attribute.remove.confirm" datatype="html">
         <source>Are you sure you want to delete this row?</source><target>Chcete smazat tento řádek?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">212</context></context-group></trans-unit><trans-unit id="function.create.serviceLimits" datatype="html">
@@ -7669,11 +7602,11 @@
         <target>Ve verzi zdarma můžete mít jen jednu funkci na tabulku či propojení. Chcete aktivovat program Lumeer Business?</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">363</context></context-group></trans-unit><trans-unit id="function.create.serviceLimits.noRights" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="function.create.serviceLimits.noRights" datatype="html">
         <source>You can have only a single function per table/link type in the Free Plan.</source><target>Ve verzi Zdarma můžete mít v každé tabulce a propojení jen jednu funkci.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">369</context></context-group></trans-unit><trans-unit id="textEditor.insertTextPlaceholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="textEditor.insertTextPlaceholder" datatype="html">
         <source>Insert text here...</source><target>Tady napište text...</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/dashboard-tab/content/row/notes/dashboard-notes.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="modal.settings.title" datatype="html">
@@ -8322,11 +8255,8 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.filter" datatype="html">
         <source>Configure filtering of records that are possible to link</source><target>Nastavte filtrování záznamů, které je možné připojit</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.range.minimum" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.range.minimum" datatype="html">
         <source>Minimal links count</source><target>Minimální počet propojení</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/range/form-link-range-dropdown.component.html</context>
@@ -9477,11 +9407,19 @@
         <source>Users</source><target>Uživatelé</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="document.detail.audit.limit.free" datatype="html">
-        <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-        href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
-        <target>Omezeno na 3 záznamy. Aktivujte si program Lumeer Business a uvidíte záznamy za poslední 2 týdny. Pro delší historii nás kontaktujte.</target>
+        <source>Showing only 3 most recent entries from last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days. Upgrade to the Business license to see a complete <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> history. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+    href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>Contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> with special requests.</source>
+        <target>Zobrazuji nejnovější 3 záznamy za posledních <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> dní. Aktivujte si Business licenci a uvidíte kompletní historii za posledních <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> dní. Se speciálními požadavky <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+    href=&quot;https://www.lumeer.io/cs/kontakt/&quot; target=&quot;_blank&quot;>"/>nás kontaktujte.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="audit.action.revert" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="document.detail.audit.limit.basic" datatype="html">
+        <source>Showing last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days of history. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>Contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> with special needs.</source>
+        <target>Zobrazuji posledních <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> dní historie. Pro delší historii <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://www.lumeer.io/cs/kontakt/&quot; target=&quot;_blank&quot;>"/>nás kontaktujte.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit><trans-unit id="audit.action.revert" datatype="html">
         <source>Revert</source><target>Vrátit zpět</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/log/audit-log.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="user.unknown" datatype="html">
