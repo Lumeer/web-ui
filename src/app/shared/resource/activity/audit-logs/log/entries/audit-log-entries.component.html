@@ -9,6 +9,7 @@
                         [ngClass]="valueClasses"
                         [dataValue]="entry.dataValue"
                         [configuration]="configuration"
+                        [cursor]="resourceId | dataIdCursor:parent:entry.attributeId:viewId"
                         [constraint]="entry.constraint">
     </data-input-preview>
   </ng-container>

@@ -25,28 +25,10 @@ import {parseSelectTranslation} from '../../../utils/translation.utils';
 const maxDurationUnits = [DurationUnit.Days, DurationUnit.Hours, DurationUnit.Minutes, DurationUnit.Seconds];
 
 export class DurationConfigOverrideService extends ConstraintConfigOverrideService<DurationConstraintConfig> {
-  private readonly defaultTitle: string;
-
-  constructor() {
-    super();
-    this.defaultTitle = $localize`:@@default:Default`;
-  }
-
   public create(config: DurationConstraintConfig, withDefaultItem: boolean): SelectItemModel[] {
-    const defaultItem: SelectItemModel = {id: null, value: this.defaultTitle};
-    return [
-      ...(withDefaultItem ? [defaultItem] : []),
-      ...maxDurationUnits.map(unit => ({
-        id: new DurationConstraint({maxUnit: unit} as DurationConstraintConfig),
-        value: this.translateDurationUnit(unit),
-      })),
-    ];
-  }
-
-  private translateDurationUnit(unit: DurationUnit): string {
-    return parseSelectTranslation(
-      $localize`:@@select.constraint.items.duration.maxUnit:{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds}}`,
-      {unit}
+    return createDurationMaxUnitItems(
+      withDefaultItem,
+      unit => new DurationConstraint({maxUnit: unit} as DurationConstraintConfig)
     );
   }
 
@@ -59,4 +41,25 @@ export class DurationConfigOverrideService extends ConstraintConfigOverrideServi
     }
     return constraint;
   }
+}
+
+export function createDurationMaxUnitItems(
+  withDefaultItem: boolean = true,
+  idFunction: (unit: DurationUnit) => any = unit => unit
+): SelectItemModel[] {
+  const defaultItem: SelectItemModel = {id: null, value: $localize`:@@default:Default`};
+  return [
+    ...(withDefaultItem ? [defaultItem] : []),
+    ...maxDurationUnits.map(unit => ({
+      id: idFunction(unit),
+      value: translateDurationUnit(unit),
+    })),
+  ];
+}
+
+function translateDurationUnit(unit: DurationUnit): string {
+  return parseSelectTranslation(
+    $localize`:@@select.constraint.items.duration.maxUnit:{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds}}`,
+    {unit}
+  );
 }

@@ -27,10 +27,7 @@ import {AppState} from '../../core/store/app.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {first, map, mergeMap, take} from 'rxjs/operators';
 import {combineLatest, interval, Observable} from 'rxjs';
-import {selectCurrentUser} from '../../core/store/users/users.state';
-import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {Organization} from '../../core/store/organizations/organization';
-import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {AttributeFunctionModalComponent} from './attribute/function/attribute-function-modal.component';
 import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
@@ -45,7 +42,6 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {GettingStartedModalComponent} from './getting-started/getting-started-modal.component';
-import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
 import {findAttribute} from '../../core/store/collections/collection.util';
@@ -54,8 +50,6 @@ import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-
 import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {DataResourcesDetailModalComponent} from './data-resources-detail/data-resources-detail-modal.component';
-import {userHasRoleInOrganization} from '../utils/permission.utils';
-import {RoleType} from '../../core/model/role-type';
 import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
 import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
 import {AttributeLock} from '@lumeer/data-filters';
@@ -68,6 +62,7 @@ import {DataResourcesChain} from './data-resource-detail/model/data-resources-ch
 import {QueryStem} from '../../core/store/navigation/query/query';
 import {ChooseResourceModalComponent} from './choose-resource/choose-resource-modal.component';
 import {ChooseStemModalComponent} from './choose-stem/choose-stem-modal.component';
+import {LimitsService} from '../../core/service/limits.service';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -75,7 +70,11 @@ type Options = ModalOptions & {initialState: any};
   providedIn: 'root',
 })
 export class ModalService {
-  constructor(private store$: Store<AppState>, private bsModalService: BsModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private bsModalService: BsModalService,
+    private limitsService: LimitsService
+  ) {}
 
   public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
@@ -325,7 +324,7 @@ export class ModalService {
           attributesResource?.rules
         );
         if (!hasAnyFunction && limits?.functionsPerCollection !== -1 && functions >= limits?.functionsPerCollection) {
-          this.notifyFunctionsLimit();
+          this.limitsService.notifyFunctionsLimit();
         } else {
           this.showAttributeFunctionDialog(attributeId, collectionId, linkTypeId, workspace);
         }
@@ -342,32 +341,6 @@ export class ModalService {
     const config = {initialState, keyboard: false, class: 'modal-xxl'};
     config['backdrop'] = 'static';
     return this.show(AttributeFunctionModalComponent, config);
-  }
-
-  private notifyFunctionsLimit() {
-    combineLatest([
-      this.store$.pipe(select(selectCurrentUser)),
-      this.store$.pipe(select(selectOrganizationByWorkspace)),
-    ])
-      .pipe(take(1))
-      .subscribe(([currentUser, organization]) => {
-        if (userHasRoleInOrganization(organization, currentUser, RoleType.Manage)) {
-          this.notifyFunctionsLimitWithRedirect(organization);
-        } else {
-          this.notifyFunctionsLimitWithoutRights();
-        }
-      });
-  }
-
-  private notifyFunctionsLimitWithRedirect(organization: Organization) {
-    const message = $localize`:@@function.create.serviceLimits:You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?`;
-    this.store$.dispatch(new OrganizationsAction.OfferPayment({message, organizationCode: organization.code}));
-  }
-
-  private notifyFunctionsLimitWithoutRights() {
-    const title = $localize`:@@serviceLimits.trial:Free Service`;
-    const message = $localize`:@@function.create.serviceLimits.noRights:You can have only a single function per table/link type in the Free Plan.`;
-    this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }
 
   public showCreateProjectDialog(

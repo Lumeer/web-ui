@@ -48,6 +48,12 @@ export class AuditLogEntriesComponent implements OnChanges {
   public changes: Record<string, any>;
 
   @Input()
+  public resourceId: string;
+
+  @Input()
+  public viewId: string;
+
+  @Input()
   public valueClasses: string;
 
   public entries: ChangeEntry[];

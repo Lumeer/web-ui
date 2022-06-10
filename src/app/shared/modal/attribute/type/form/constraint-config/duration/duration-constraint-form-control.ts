@@ -19,6 +19,7 @@
 
 export enum DurationConstraintFormControl {
   Type = 'type',
+  MaxUnit = 'maxUnit',
   Conversions = 'conversion',
 }
 

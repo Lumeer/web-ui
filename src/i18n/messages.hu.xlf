@@ -17,7 +17,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">359</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source><target state="new">Could not move task</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">384</context></context-group></trans-unit>
             <trans-unit id="ganttChart.empty.placeholder2" datatype="html">
                 <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source>
@@ -429,13 +429,13 @@
                 <target state="new">Remove files</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">269</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
             <trans-unit id="constraint.files.modify.constraint.message" datatype="html">
                 <source>Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</source>
                 <target state="new">Changing constraint type from 'File attachment' will remove all uploaded attachments in column. Do you want to proceed?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">271</context></context-group></trans-unit>
             <trans-unit datatype="html" id="b23496c0dd5ab3e99af27accd883244aff78fb5d">
                 <source>You are all alone here</source>
                 <target>Egyedül vagy itt.</target>
@@ -1806,10 +1806,10 @@
                 </context-group>
             </trans-unit><trans-unit id="record.new.title.tasks" datatype="html">
         <source>New task</source><target state="new">New task</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/translation.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="record.new.title.default" datatype="html">
         <source>New record</source><target state="new">New record</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/translation.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="record.new.child.title.tasks" datatype="html">
         <source>Add sub-task</source><target state="new">Add sub-task</target>
         <context-group purpose="location">
@@ -2116,16 +2116,22 @@
                 <target state="new">Users</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">46</context></context-group></trans-unit>
-            <trans-unit id="document.detail.audit.limit" datatype="html">
-                <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-        href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
+            <trans-unit id="document.detail.audit.limit.free" datatype="html">
+                <source>Showing only 3 most recent entries from last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days. Upgrade to the Business license to see a complete <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> history. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+    href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>Contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> with special requests.</source>
                 <target>3 rekordra korlátozva. Aktiválja a Lumeer Business programot, és látni fogja az elmúlt 2 hét rekordjait. Hosszabb előzményekért vegye fel velünk a kapcsolatot.</target>
 
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
                     <context context-type="linenumber">37</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="document.detail.audit.limit.basic" datatype="html">
+        <source>Showing last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days of history. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>Contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> with special needs.</source><target state="new">Limited to <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days of history. For longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="audit.action.revert" datatype="html">
                 <source>Revert</source>
                 <target>Változtatások visszaállítása</target>
@@ -2406,19 +2412,13 @@
             <trans-unit datatype="html" id="collection.add.favorite.fail">
                 <source>Could not add the table to favorites</source>
                 <target>Nem lehet hozzáadni a táblázatot a kedvencekhez</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">363</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">360</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.attribute.default.set.fail">
                 <source>Could not set the displayed attribute id</source>
                 <target>Nem lehet beállítani a megjelenített tulajdonság azonosítót</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">439</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">436</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.button.configure">
                 <source>Configure</source>
                 <target>Konfigurál</target>
@@ -2439,12 +2439,12 @@
                 <source>Could not change the attribute</source>
                 <target>Nem lehet módosítani a tulajdonságot</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">538</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">534</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.change.permission.fail">
                 <source>Could not change the table permissions</source>
                 <target>Nem lehet módosítani a tábla engedélyeit</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">624</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">620</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.config.tab.attributes">
                 <source> Attributes </source>
                 <target>Tulajdonságok</target>
@@ -3019,27 +3019,18 @@
                 <source>Could not create attributes</source>
                 <target>Nem lehet tulajdonságokat létrehozni</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">492</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">489</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.create.fail">
                 <source>Could not create table</source>
                 <target>Nem lehet létrehozni a táblázatot</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">157</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">156</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.create.serviceLimits">
                 <source>You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?</source>
                 <target>Jelenleg az Ingyenes csomagban vagy, amely csak korlátozott számú táblákat engedélyez. Szeretnél most frissíteni az Üzleti verzióra?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">154</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">193</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">61</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.delete.dialog.message">
                 <source>Do you really want to delete this table?</source>
                 <target>Biztosan törlöd ezt a táblát?</target>
@@ -3067,11 +3058,8 @@
             <trans-unit datatype="html" id="collection.delete.fail">
                 <source>Could not delete table</source>
                 <target>A tábla nem törölhető</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">338</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">335</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.document.count">
                 <source>Record Count</source>
                 <target>Rekordok száma</target>
@@ -3117,11 +3105,8 @@
             <trans-unit datatype="html" id="collection.import.fail">
                 <source>Could not import table</source>
                 <target>Nem lehet importálni a táblázatot</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">196</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">193</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.name.placeholder">
                 <source>Click to set name</source>
                 <target>Kattintson ide a név beállításához</target>
@@ -3176,20 +3161,17 @@
                 <source>Could not delete the attribute</source>
                 <target>Nem lehetett törölni a tulajdonságot</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">578</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">574</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.remove.favorite.fail">
                 <source>Could not remove the table from favorites</source>
                 <target>Nem lehet eltávolítani a táblázatot a kedvencekből</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">388</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">385</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.runRule.fail">
                 <source>Could not run the selected automation for the whole table</source>
                 <target>Nem futtatható a kijelölt szabály a teljes táblázatban</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">649</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">645</context></context-group></trans-unit>
             <trans-unit id="dashboard.data.get.fail" datatype="html">
                 <source>Could not read dashboard data</source>
                 <target state="new">Could not read dashboard data</target>
@@ -3375,19 +3357,13 @@
             <trans-unit datatype="html" id="collection.update.fail">
                 <source>Could not update table</source>
                 <target>Nem lehet frissíteni a táblázat célját</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">228</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">225</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.update.purpose.fail">
                 <source>Could not update table purpose</source>
                 <target>A táblázat célját nem lehet frissíteni</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">285</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">282</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.empty.subtitle.norights">
                 <source>I am sorry but you do not have permissions to add tables. </source>
                 <target>Sajnálom, de nincs engedélyed ahhoz, hogy táblázatokat adj hozzá.</target>
@@ -3407,11 +3383,8 @@
             <trans-unit datatype="html" id="collections.get.fail">
                 <source>Could not get tables</source>
                 <target>Nem lehet beszerezni táblázatokat</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-                    <context context-type="linenumber">98</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collections.postit.empty.info">
                 <source>Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.</source>
                 <target>Úgy tűnik, sok üres táblázatod van. Jó lesz így? Azt javaslom, hogy töltsd ki a nevüket, vagy töröld őket.</target>
@@ -3923,11 +3896,8 @@
             <trans-unit datatype="html" id="constraint.duration.type">
                 <source>{type, select, Work {Work} Classic {Normal} Custom {Custom}}</source>
                 <target>{type, select, Work {Munka} Classic {Normális} Custom {Egyedi} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context>
-                    <context context-type="linenumber">144</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">156</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.duration.type.label">
                 <source> Time scope </source>
                 <target>Időtartomány</target>
@@ -3935,7 +3905,13 @@
                     <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
                     <context context-type="linenumber">13</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="constraint.duration.maxUnit.label" datatype="html">
+        <source>Maximal unit</source><target state="new">Maximal unit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="constraint.duration.unit">
                 <source>{unit, select, w {w} d {d} h {h} m {m} s {s}}</source>
                 <target>{unit, select, w {w} d {d} h {h} m {m} s {s} }</target>
@@ -3964,27 +3940,12 @@
             <trans-unit datatype="html" id="constraint.example">
                 <source>Example:</source>
                 <target>Példa:</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">42</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">36</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">38</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">32</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/number/number-constraint-config-form.component.html</context>
-                    <context context-type="linenumber">99</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.link.openInApp.label">
                 <source>Open content inside dialog</source>
                 <target>Tartalom megnyitása a párbeszédpanelen belül</target>
@@ -4214,7 +4175,7 @@
                 <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source>
                 <target>Egy olyan beállítás értékét módosítod, amely csak egyes rekordokban használható. Ezzel érvénytelenné teszed a rekordok értékét. Folytatod?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">276</context></context-group></trans-unit><trans-unit id="29b490ded71910586b2ab4d0c9bc79c9b1b6c18b" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">277</context></context-group></trans-unit><trans-unit id="154f4de2cf3b87839b8759ce1ab74579330ed273" datatype="html">
         <source>Suggest values when typing (works in Table, Workflow and Form)</source><target state="new">Suggest values when typing (works in Table, Workflow and Form)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/common-config/attribute-common-config.component.html</context>
@@ -4226,7 +4187,7 @@
                 <source>Remove options?</source>
                 <target>Eltávolítod a beállításokat?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">275</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/attribute-type-form.component.ts</context><context context-type="linenumber">276</context></context-group></trans-unit>
             <trans-unit datatype="html" id="constraint.select.multi.label">
                 <source>Allow select multiple values</source>
                 <target>Több érték kijelölésének engedélyezése</target>
@@ -4464,9 +4425,9 @@
             <trans-unit datatype="html" id="copy">
                 <source>Copy</source>
                 <target>Másol</target>
-                
-                
-                
+
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/list/selection-list.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">350</context></context-group></trans-unit>
             <trans-unit datatype="html" id="copyInputBox.clipboard.copy">
                 <source>Copy to clipboard</source>
@@ -4613,11 +4574,8 @@
             <trans-unit id="perspective.form.editor.row.cell.actions.filter" datatype="html">
                 <source>Configure filtering of records that are possible to link</source>
                 <target state="new">Filter</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context>
-                    <context context-type="linenumber">49</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
             <trans-unit id="perspective.form.editor.row.cell.actions.range.minimum" datatype="html">
                 <source>Minimal links count</source>
                 <target state="new">Minimum links</target>
@@ -5126,15 +5084,9 @@
             <trans-unit datatype="html" id="default">
                 <source>Default</source>
                 <target>Alapértelmezett</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context>
-                    <context context-type="linenumber">59</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context>
-                    <context context-type="linenumber">32</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">50</context></context-group></trans-unit>
             <trans-unit datatype="html" id="delete">
                 <source>Delete</source>
                 <target>Töröl</target>
@@ -5660,11 +5612,8 @@
                 <source> No activity yet. </source>
                 <target> Még nem történt tevékenység. </target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
-                    <context context-type="linenumber">52</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit>
             <trans-unit id="audit.filters.button.title" datatype="html">
                 <source>Filters</source>
                 <target state="new">Filters</target>
@@ -5759,20 +5708,14 @@
                 <source>Revert changes?</source>
                 <target>Visszavonja a változásokat?</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context>
-                    <context context-type="linenumber">137</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context><context context-type="linenumber">138</context></context-group></trans-unit>
             <trans-unit id="audit.revert.confirm.message" datatype="html">
                 <source>Do you really want to revert the latest changes?</source>
                 <target>Tényleg vissza akarja állítani a legújabb változtatásokat?</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context>
-                    <context context-type="linenumber">138</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context><context context-type="linenumber">139</context></context-group></trans-unit>
             <trans-unit datatype="html" id="document.detail.header.updatedOn">
                 <source>Updated on</source>
                 <target>Frissítve:</target>
@@ -5978,19 +5921,13 @@
             <trans-unit datatype="html" id="file.attachment.delete.confirm.message">
                 <source>Do you really want to permanently delete this file?</source>
                 <target>Biztosan véglegesen törlöd ezt a fájlt?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context>
-                    <context context-type="linenumber">258</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">263</context></context-group></trans-unit>
             <trans-unit datatype="html" id="file.attachment.delete.confirm.title">
                 <source>Delete file?</source>
                 <target>Törlöd a fájlt?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context>
-                    <context context-type="linenumber">259</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">264</context></context-group></trans-unit>
             <trans-unit datatype="html" id="file.attachment.download.failure">
                 <source>Could not download the file attachment. Please try again later.</source>
                 <target>Nem lehet letölteni a fájlmellékletet. Kérlek próbálkozz később.</target>
@@ -6010,19 +5947,13 @@
             <trans-unit datatype="html" id="file.attachment.upload.failure">
                 <source>Could not save the file. Please try again later.</source>
                 <target>A fájl nem menthető. Kérlek próbálkozz később.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context>
-                    <context context-type="linenumber">240</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">245</context></context-group></trans-unit>
             <trans-unit datatype="html" id="file.attachment.upload.success">
                 <source>The file is successfully saved.</source>
                 <target>A fájl mentése sikeresen megtörtént.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context>
-                    <context context-type="linenumber">221</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">226</context></context-group></trans-unit>
             <trans-unit datatype="html" id="file.not.exist">
                 <source>Table does not exist</source>
                 <target>A táblázat nem létezik.</target>
@@ -6044,7 +5975,7 @@
                 <target>
                     <x id="size" equiv-text="{{size}}"/>
                     MB-nál nagyobb fájlok nem dolgozhatóak fel. Tölts fel kisebb fájlokat.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit>
             <trans-unit datatype="html" id="files.dropdown.button.add">
                 <source>Add file</source>
@@ -6131,12 +6062,12 @@
                 <source>You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?</source>
                 <target>Az Ingyenes Csomagban táblázat/hivatkozástípusonként csak egy függvény lehet. Szeretne most frissíteni az Üzleti verzióra?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">363</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">82</context></context-group></trans-unit>
             <trans-unit datatype="html" id="function.create.serviceLimits.noRights">
                 <source>You can have only a single function per table/link type in the Free Plan.</source>
                 <target>Az Ingyenes Csomagban táblázat/hivatkozástípusonként csak egy függvény lehet.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">369</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">88</context></context-group></trans-unit>
 
 
 
@@ -7064,27 +6995,12 @@
             <trans-unit datatype="html" id="message.loading">
                 <source>Loading...</source>
                 <target>Betöltés...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context>
-                    <context context-type="linenumber">2</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
-                    <context context-type="linenumber">6</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
-                    <context context-type="linenumber">50</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context>
-                    <context context-type="linenumber">36</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context>
-                    <context context-type="linenumber">70</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
             <trans-unit id="blockly.editor.changed.warning" datatype="html">
                 <source>The automation has been changed because some of the tables or link types were either deleted or you do not have access rights to them. Please fix the automation before saving it. Saving the automation right away will change (and most probably brake) it.</source>
                 <target state="new">The automation has been changed because some of the tables or link types were either deleted or you do not have access rights to them. Please fix the automation before saving it. Saving the automation right away will change (and most probably brake) it.</target>
@@ -8196,7 +8112,7 @@
                 </context-group>
             </trans-unit><trans-unit id="perspective.calendar.create.event.failure" datatype="html">
         <source>Could not create event</source><target state="new">Could not create event</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/calendar-events.component.ts</context><context context-type="linenumber">361</context></context-group></trans-unit>
             <trans-unit datatype="html" id="perspective.calendar.display.allDay">
                 <source>All day</source>
@@ -9635,7 +9551,7 @@
 				<trans-unit datatype="html" id="resource.rule.update.fail">
 					<source>Could not save automation</source>
 					<target>Nem tudja menteni a szabályt</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">260</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">165</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">257</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">165</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.settings.back">
 					<source>Back to App</source>
 					<target>Vissza az alkalmazáshoz</target>
@@ -9804,7 +9720,7 @@
 				<trans-unit datatype="html" id="select.constraint.items.duration.maxUnit">
 					<source>{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds}}</source>
 					<target>{unit, select, w {hetek} d {napok} h {órák} m {percek} s {másodpercek} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">48</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">62</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="sequence.delete.fail">
 					<source>Could not delete sequence</source>
 					<target>Nem lehet törölni a sorozatot</target>
@@ -9844,7 +9760,13 @@
 				<trans-unit datatype="html" id="serviceLimits.trial">
 					<source>Free Service</source>
 					<target>Ingyenes szolgáltatás</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">328</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">368</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">328</context></context-group></trans-unit><trans-unit id="collection.create.serviceLimits.noRights" datatype="html">
+        <source>You are currently on the Free plan which allows you to have only limited number of tables.</source><target state="new">You are currently on the Free plan which allows you to have only limited number of tables.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/limits.service.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="session.expired.message">
 					<source> You have been inactive for <x id="INTERPOLATION" equiv-text="{{sessionTimeout}}"/> minutes and the application logged out for security reasons. Click Continue to log in again. </source>
 					<target>Inaktív voltál
@@ -10039,8 +9961,8 @@
 					<target>Név szerkesztése</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">334</context></context-group></trans-unit><trans-unit id="table.header.menu.lockSettings" datatype="html">
         <source>Locking...</source><target state="new">Locking...</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">342</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.menu.editAutomation">
 					<source>Edit automation...</source>

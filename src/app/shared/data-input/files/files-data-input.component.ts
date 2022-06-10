@@ -83,6 +83,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
 
   public uploadProgress$ = new BehaviorSubject<number>(null);
   public removedFilesIds$ = new BehaviorSubject<string[]>([]);
+  public dataValue$ = new BehaviorSubject<FilesDataValue>(null);
 
   private cursor$ = new BehaviorSubject<DataCursor>(null);
 
@@ -98,12 +99,15 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   ) {}
 
   public ngOnInit() {
-    this.fileAttachments$ = combineLatest([this.cursor$, this.removedFilesIds$]).pipe(
-      switchMap(([cursor, removedFilesIds]) => {
+    this.fileAttachments$ = combineLatest([this.cursor$, this.removedFilesIds$, this.dataValue$]).pipe(
+      switchMap(([cursor, removedFilesIds, dataValue]) => {
         if (cursor && !!(cursor.documentId || cursor.linkInstanceId)) {
+          const formattedValue = dataValue?.format() || '';
           return this.store$.pipe(
             select(selectFileAttachmentsByDataCursor(cursor)),
-            map(files => files.filter(file => !removedFilesIds.includes(file.id)))
+            map(files =>
+              files.filter(file => !removedFilesIds.includes(file.id) && formattedValue.includes(file.uniqueName))
+            )
           );
         } else {
           return of([]);
@@ -126,6 +130,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     }
     if (changes.value) {
       this.removedFilesIds$.next(this.value?.removedFiles || []);
+      this.dataValue$.next(this.value);
     }
     if (changes.readonly) {
       if (this.readonly) {
@@ -259,7 +264,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
       const title = $localize`:@@file.attachment.delete.confirm.title:Delete file?`;
 
       this.notificationService.confirmYesOrNo(message, title, 'danger', () => {
-        this.removeFileAttachment(fileId);
+        // we don't remove file in server in order to revert function properly
         this.removeFileNameFromData(fileId, fileAttachments);
       });
     }

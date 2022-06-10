@@ -72,6 +72,7 @@ export class AuditLogsComponent implements OnInit {
   public workspace: Workspace;
 
   public readonly serviceLevel = ServiceLevelType;
+  public readonly defaultAuditDays = 14;
 
   public usersMap$: Observable<Record<string, User>>;
   public constraintData$: Observable<ConstraintData>;
