@@ -31,6 +31,8 @@ export function collectionsReducer(
   switch (action.type) {
     case CollectionsActionType.GET_SUCCESS:
       return addCollections(state, action.payload.collections);
+    case CollectionsActionType.GET_SINGLE_SUCCESS:
+      return collectionsAdapter.upsertOne(action.payload.collection, state);
     case CollectionsActionType.CREATE_SUCCESS:
     case CollectionsActionType.IMPORT_SUCCESS:
     case CollectionsActionType.UPDATE_SUCCESS:

@@ -69,6 +69,7 @@ import {
   DocumentsAndLinksData,
   DurationConstraint,
   durationCountsMapToString,
+  DurationDataValue,
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {View, ViewSettings} from '../../../../core/store/views/view';
@@ -295,19 +296,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const stemConfig = metadata.stemConfig;
     const patchData: PatchData[] = [];
 
-    if (stemConfig.start) {
-      const dataResource = this.getDataResource(metadata.startDataId, stemConfig.start.resourceType);
-      if (dataResource) {
-        const data = this.getPatchData(patchData, dataResource, stemConfig.start);
-        this.patchDate(task.start, stemConfig.start, data, dataResource);
-      }
-    }
-
-    if (stemConfig.end) {
-      const dataResource = this.getDataResource(metadata.endDataId, stemConfig.end.resourceType);
-      if (dataResource) {
-        const data = this.getPatchData(patchData, dataResource, stemConfig.end);
-        this.patchEndDate(task, stemConfig.end, data, dataResource);
+    if (stemConfig.start && stemConfig.end) {
+      const startDataResource = this.getDataResource(metadata.startDataId, stemConfig.start.resourceType);
+      const endDataResource = this.getDataResource(metadata.endDataId, stemConfig.end.resourceType);
+      if (startDataResource && endDataResource) {
+        const startData = this.getPatchData(patchData, startDataResource, stemConfig.start);
+        const endData = this.getPatchData(patchData, endDataResource, stemConfig.end);
+        this.patchDates(task, stemConfig.start, stemConfig.end, startData, endData, startDataResource, endDataResource);
       }
     }
 
@@ -437,25 +432,40 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return data;
   }
 
-  private patchEndDate(
+  private patchDates(
     task: GanttTask,
-    model: GanttChartBarModel,
-    patchData: Record<string, any>,
-    dataResource: DataResource = null
+    startModel: GanttChartBarModel,
+    endModel: GanttChartBarModel,
+    startData: Record<string, any>,
+    endData: Record<string, any>,
+    startDataResource: DataResource = null,
+    endDataResource: DataResource = null
   ) {
-    const resource = this.getResourceById(model.resourceId, model.resourceType);
-    const constraint = findAttributeConstraint(resource.attributes, model.attributeId);
-    if (constraint?.type === ConstraintType.Duration) {
+    const startResource = this.getResourceById(startModel.resourceId, startModel.resourceType);
+    const endResource = this.getResourceById(endModel.resourceId, endModel.resourceType);
+    const startConstraint = findAttributeConstraint(startResource.attributes, startModel.attributeId);
+    const endConstraint = findAttributeConstraint(endResource.attributes, endModel.attributeId);
+
+    if (startConstraint?.type === ConstraintType.Duration || endConstraint?.type === ConstraintType.Duration) {
       const start = moment(task.start, this.options?.dateFormat);
       const end = moment(task.end, this.options?.dateFormat);
-
       const durationCountsMap = subtractDatesToDurationCountsMap(end.toDate(), start.toDate());
       const durationString = durationCountsMapToString(durationCountsMap);
-      const dataValue = (<DurationConstraint>constraint).createDataValue(durationString, this.constraintData);
 
-      patchData[model.attributeId] = toNumber(dataValue.serialize());
+      if (startConstraint?.type === ConstraintType.Duration) {
+        const dataValue = (<DurationConstraint>startConstraint).createDataValue(durationString, this.constraintData);
+        startData[startModel.attributeId] = toNumber(dataValue.serialize());
+
+        this.patchDate(task.end, endModel, endData, endDataResource);
+      } else {
+        const dataValue = (<DurationConstraint>endConstraint).createDataValue(durationString, this.constraintData);
+        startData[endModel.attributeId] = toNumber(dataValue.serialize());
+
+        this.patchDate(task.start, startModel, startData, startDataResource);
+      }
     } else {
-      this.patchDate(task.end, model, patchData, dataResource, true);
+      this.patchDate(task.start, startModel, startData, startDataResource);
+      this.patchDate(task.end, endModel, endData, endDataResource, true);
     }
   }
 
@@ -589,12 +599,17 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (!patchDataMap[stemConfig.start.resourceId]) {
       patchDataMap[stemConfig.start.resourceId] = {};
     }
-    this.patchDate(task.start, stemConfig.start, patchDataMap[stemConfig.start.resourceId]);
 
     if (!patchDataMap[stemConfig.end.resourceId]) {
       patchDataMap[stemConfig.end.resourceId] = {};
     }
-    this.patchEndDate(task, stemConfig.end, patchDataMap[stemConfig.end.resourceId]);
+    this.patchDates(
+      task,
+      stemConfig.start,
+      stemConfig.end,
+      patchDataMap[stemConfig.start.resourceId],
+      patchDataMap[stemConfig.end.resourceId]
+    );
 
     (stemConfig.categories || []).forEach((category, index) => {
       if (!patchDataMap[category.resourceId]) {

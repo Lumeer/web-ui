@@ -30,6 +30,7 @@ import {objectValues} from '../../../../../../utils/common.utils';
 import {
   DurationConstraintConfig,
   durationConstraintUnitMaxValue,
+  DurationDataValue,
   DurationType,
   DurationUnit,
   getDefaultDurationUnitConversion,
@@ -37,6 +38,8 @@ import {
 } from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
 import {createDurationMaxUnitItems} from '../../../../../../select/select-constraint-item/constraint/duration';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'duration-constraint-config-form',
@@ -57,6 +60,8 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   public readonly exampleString: string;
   public readonly typeItems: SelectItemModel[];
   public readonly maxUnitItems: SelectItemModel[];
+
+  public exampleString$: Observable<string>;
 
   constructor(private translationService: TranslationService) {
     this.exampleString = this.generateExampleString();
@@ -84,6 +89,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
     if (changes.config) {
       this.resetForm();
       this.createForm();
+      this.exampleString$ = this.bindExample$();
     }
   }
 
@@ -99,6 +105,17 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
     this.form.addControl(
       DurationConstraintFormControl.Conversions,
       new FormArray(this.createConversionControls(type), [])
+    );
+  }
+
+  private bindExample$(): Observable<string> {
+    return this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      map(config =>
+        new DurationDataValue(this.exampleString, config, {
+          durationUnitsMap: this.translationService.createDurationUnitsMap(),
+        }).format()
+      )
     );
   }
 
