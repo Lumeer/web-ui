@@ -951,6 +951,12 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/block-comment-blockly-component.ts</context>
           <context context-type="linenumber">34</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.copyDocumentValuesSimpleBlock" datatype="html">
+        <source>Copy values of attributes with the same name between two records. Also preserves hierarchical structure of newly created records.</source><target state="final">Copy values of attributes with the same name between two records. Also preserves hierarchical structure of newly created records.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/copy-document-values-simple-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.countOccurrences" datatype="html">
         <source>Counts the occurrences of a given string in an array.</source><target state="final">Counts the occurrences of a given string in an array.</target>
 
@@ -2350,7 +2356,7 @@
       </trans-unit><trans-unit id="constraint.duration.type" datatype="html">
         <source>{type, select, Work {Work} Classic {Normal} Custom {Custom}}</source><target state="final">{type, select, Work {Work} Classic {Normal} Custom {Custom}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">156</context></context-group></trans-unit><trans-unit id="constraint.number.currency.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">173</context></context-group></trans-unit><trans-unit id="constraint.number.currency.select" datatype="html">
         <source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</source><target state="final">{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
@@ -2640,8 +2646,8 @@
         <source>Users</source><target state="final">Users</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/user/pipes/filter-users-and-teams.pipe.ts</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="document.detail.audit.limit.free" datatype="html">
-        <source>Showing only 3 most recent entries from last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days. Upgrade to the Business license to see a complete <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> history. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-    href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>Contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> with special requests.</source><target state="final">Showing only 3 most recent entries from last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days. Upgrade to the Business license to see a complete <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> history. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+        <source>Showing only 3 most recent entries from last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days. Upgrade to the Business license to see the full history of the last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+    href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>Contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> with special requests.</source><target state="final">Showing only 3 most recent entries from last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days. Upgrade to the Business license to see the full history of the last <x id="INTERPOLATION" equiv-text="{{data.serviceLimits?.auditDays || defaultAuditDays}}"/> days. <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
     href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>Contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> with special requests.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="document.detail.audit.limit.basic" datatype="html">
@@ -5764,7 +5770,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="perspective.calendar.create.event.failure" datatype="html">
         <source>Could not create event</source><target state="final">Could not create event</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/calendar-events.component.ts</context><context context-type="linenumber">361</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/calendar-events.component.ts</context><context context-type="linenumber">383</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
         <source>Calendar</source><target state="final">Calendar</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">141</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.list" datatype="html">
@@ -5820,10 +5826,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="perspective.gantt.create.task.failure" datatype="html">
         <source>Could not create task</source><target state="final">Could not create task</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">359</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">354</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source><target state="final">Could not move task</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">384</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder2" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">379</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder2" datatype="html">
         <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source><target state="final">Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
