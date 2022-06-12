@@ -219,6 +219,7 @@ export class CalendarVisualizationComponent implements OnChanges {
       buttonText: elementWith < 500 ? this.shortButtonText : this.buttonText,
       allDayText: this.allDayText,
       noEventsText: this.noEventsText,
+      eventResizableFromStart: true,
       height: 'auto',
       eventMinHeight: 40,
       dayMaxEventRows: 10,
