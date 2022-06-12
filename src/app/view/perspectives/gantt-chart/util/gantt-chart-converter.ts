@@ -300,195 +300,182 @@ export class GanttChartConverter {
     stemConfig: GanttChartStemConfig,
     dataObjectsInfo: DataObjectInfo<GanttSwimlane>[]
   ): GanttTask[] {
+    const nameResource = this.dataObjectAggregator.getResource(stemConfig.name);
+    const nameConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.name);
+
+    const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
+    const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
+    const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
+
+    const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
+    const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
     const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
 
-    const nameResource = this.dataObjectAggregator.getResource(stemConfig.name);
-    const namePermission = this.dataObjectAggregator.attributePermissions(stemConfig.name);
-    const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
-    const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
     const progressResource = this.dataObjectAggregator.getResource(stemConfig.progress);
-
-    const nameConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.name);
-    const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
-    const progressConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.progress);
-
     const progressPermission = this.dataObjectAggregator.attributePermissions(stemConfig.progress);
-    const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
-    const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
+    const progressConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.progress);
 
     const attributesConstraints = (stemConfig.attributes || []).map(model => this.findColumnConstraint(model));
 
-    const validTaskIds = [];
-    const validDataResourceIdsMap: Record<string, string[]> = dataObjectsInfo.reduce((map, item) => {
-      const nameDataResource = item.objectDataResources[DataObjectInfoKeyType.Name];
-      const startDataResource = item.objectDataResources[DataObjectInfoKeyType.Start];
-      const endDataResource = item.objectDataResources[DataObjectInfoKeyType.End];
-
-      const start = stemConfig.start && startDataResource && startDataResource.data[stemConfig.start.attributeId];
-      const end = stemConfig.end && endDataResource && endDataResource.data[stemConfig.end.attributeId];
-      if (isTaskValid(start, end, endConstraint)) {
-        const id = helperDataId(item);
-        if (
-          userCanEditDataResource(
-            nameDataResource,
-            nameResource,
-            namePermission,
-            this.constraintData?.currentUser,
-            this.constraintData
-          )
-        ) {
-          validTaskIds.push(id);
-        }
-        const dataResource = nameDataResource || startDataResource;
-        const parentId = (<DocumentModel>dataResource).metaData && (<DocumentModel>dataResource).metaData.parentId;
-        if (parentId) {
-          if (map[parentId]) {
-            map[parentId].push(id);
-          } else {
-            map[parentId] = [id];
-          }
-        }
-      }
-      return map;
-    }, {});
+    const {editableTaskIds, dataResourcesMap, validTaskIds, intervalsMap, parentChildren} = computeTasksData(
+      this.dataObjectAggregator,
+      stemConfig,
+      dataObjectsInfo,
+      this.constraintData
+    );
 
     const dataModel = stemConfig.start || stemConfig.name;
-    const canEditDependencies = dataModel && dataModel.resourceType === AttributesResourceType.Collection;
+    const canEditDependencies = dataModel?.resourceType === AttributesResourceType.Collection;
 
     const maximumSwimlanes = this.maximumSwimlanes();
-    return dataObjectsInfo.reduce<GanttTask[]>((arr, item) => {
-      const nameDataResource = item.objectDataResources[DataObjectInfoKeyType.Name];
-      const startDataResource = item.objectDataResources[DataObjectInfoKeyType.Start];
-      const endDataResource = item.objectDataResources[DataObjectInfoKeyType.End];
-
-      const progressDataResources = item.metaDataResources[DataObjectInfoKeyType.Progress] || [];
-      const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
-
-      const name = stemConfig.name && nameDataResource?.data[stemConfig.name.attributeId];
-      const start = stemConfig.start && startDataResource?.data[stemConfig.start.attributeId];
-      const end = stemConfig.end && endDataResource?.data[stemConfig.end.attributeId];
-
-      if (!isTaskValid(start, end, endConstraint)) {
-        return arr;
-      }
-
-      const interval = createInterval(start, startConstraint, end, endConstraint, this.constraintData);
-      const progresses =
-        (stemConfig.progress &&
-          progressDataResources.map(dataResource => dataResource.data[stemConfig.progress.attributeId])) ||
-        [];
-      const dataAggregationType = stemConfig.progress?.aggregation || DataAggregationType.Avg;
-      const progressRaw = aggregateDataValues(dataAggregationType, progresses, progressConstraint, true);
-      const progress = progressConstraint.createDataValue(progressRaw).format();
-
-      const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(stemConfig.name || stemConfig.start);
-      const taskColor = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources);
-
-      const attributesSwimlanes: GanttSwimlane[] = (stemConfig.attributes || []).map((model, index) => {
-        let dataResource = null;
-        if (queryResourcesAreSame(model, stemConfig.name)) {
-          dataResource = nameDataResource;
-        } else if (queryResourcesAreSame(model, stemConfig.start)) {
-          dataResource = startDataResource;
-        } else if (queryResourcesAreSame(model, stemConfig.end)) {
-          dataResource = endDataResource;
-        }
-
-        const value = dataResource?.data?.[model.attributeId];
-        return this.formatSwimlaneValueByConstraint(value, attributesConstraints[index]);
-      });
-
-      let minProgress,
-        maxProgress = null;
-      if (progressConstraint && progressConstraint.type === ConstraintType.Percentage) {
-        const config = progressConstraint.config as PercentageConstraintConfig;
-        minProgress = isNotNullOrUndefined(config.minValue) ? Math.max(0, config.minValue) : null;
-        maxProgress = isNotNullOrUndefined(config.maxValue) ? config.maxValue : null;
-      }
-
-      const metadata: GanttTaskMetadata = {
-        dataResource: nameDataResource || (interval ? endDataResource : startDataResource),
-        resource: nameResource || (interval ? endResource : startResource),
-        nameDataId: nameDataResource?.id,
-        startDataId: interval.swapped ? endDataResource?.id : startDataResource?.id,
-        endDataId: interval.swapped ? startDataResource?.id : endDataResource?.id,
-        progressDataIds: (progressDataResources || []).map(dataResource => dataResource.id),
-        swimlanesDataResourcesIds: (item.groupingDataResources || []).map(dataResource => dataResource.id),
-        dataResourceChain: item.dataResourcesChain,
-        swimlanes: [...(item.groupingObjects || [])],
-        stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
-      };
-
-      const userCanEditStart = userCanEditDataResource(
-        startDataResource,
-        startResource,
-        startPermission,
-        this.constraintData?.currentUser,
-        this.constraintData
-      );
-      const userCanEditEnd = userCanEditDataResource(
-        endDataResource,
-        endResource,
-        endPermission,
-        this.constraintData?.currentUser,
-        this.constraintData
-      );
-
-      const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end, endDataResource);
-      const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start, startDataResource);
-      const progressEditable = this.dataObjectAggregator.isAttributeEditable(
-        stemConfig.progress,
-        progressDataResources[0]
-      );
-
-      const names = isArray(name) ? name : [name];
-      for (let i = 0; i < names.length; i++) {
-        let nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).preview();
-        if (nameConstraint.type === ConstraintType.Text) {
-          nameFormatted = stripTextHtmlTags(nameFormatted, false);
-        }
-
-        const barColor = taskColor
-          ? stemConfig.progress
-            ? shadeColor(taskColor, 0.3)
-            : taskColor
-          : shadeColor(resourceColor, 0.5);
+    return dataObjectsInfo
+      .filter(item => validTaskIds.includes(helperDataId(item)))
+      .reduce<GanttTask[]>((arr, item) => {
         const taskId = helperDataId(item);
-        const dataResourceId = (nameDataResource || startDataResource).id;
-        arr.push({
-          id: taskId,
-          name: nameFormatted,
-          start: interval.start,
-          end: interval.end,
-          progress: createProgress(progress),
-          dependencies: (canEditDependencies && validDataResourceIdsMap[dataResourceId]) || [],
-          allowedDependencies: canEditDependencies ? validTaskIds.filter(id => id !== taskId) : [],
-          barColor,
-          progressColor: taskColor || shadeColor(resourceColor, 0.3),
-          startDrag: startEditable && userCanEditStart,
-          endDrag: endEditable && userCanEditEnd,
-          progressDrag:
-            progressEditable &&
-            metadata.progressDataIds.length === 1 &&
-            userCanEditDataResource(
-              progressDataResources[0],
-              progressResource,
-              progressPermission,
-              this.constraintData?.currentUser,
-              this.constraintData
-            ),
-          editable: userCanEditStart && userCanEditEnd,
-          textColor: contrastColor(barColor),
-          swimlanes: [...fillWithNulls(metadata.swimlanes, maximumSwimlanes), ...attributesSwimlanes],
-          minProgress,
-          maxProgress,
+        const interval = intervalsMap[taskId];
 
-          metadata,
+        const nameDataResource = dataResourcesMap[taskId]?.name;
+        const startDataResource = dataResourcesMap[taskId]?.start;
+        const endDataResource = dataResourcesMap[taskId]?.end;
+
+        const taskStartResource = interval.swapped ? endResource : startResource;
+        const taskEndResource = interval.swapped ? startResource : endResource;
+
+        const taskStartPermission = interval.swapped ? endPermission : startPermission;
+        const taskEndPermission = interval.swapped ? startPermission : endPermission;
+
+        const taskStartConstraint = interval.swapped ? endConstraint : startConstraint;
+        const taskEndConstraint = interval.swapped ? startConstraint : endConstraint;
+
+        const progressDataResources = item.metaDataResources[DataObjectInfoKeyType.Progress] || [];
+        const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
+
+        const name = stemConfig.name && nameDataResource?.data?.[stemConfig.name.attributeId];
+
+        const progresses =
+          (stemConfig.progress &&
+            progressDataResources.map(dataResource => dataResource.data[stemConfig.progress.attributeId])) ||
+          [];
+        const dataAggregationType = stemConfig.progress?.aggregation || DataAggregationType.Avg;
+        const progressRaw = aggregateDataValues(dataAggregationType, progresses, progressConstraint, true);
+        const progress = progressConstraint.createDataValue(progressRaw).format();
+
+        const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(stemConfig.name || stemConfig.start);
+        const taskColor = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources);
+
+        const metadata: GanttTaskMetadata = {
+          dataResource: nameDataResource || startDataResource,
+          resource: nameResource || taskStartResource,
+          nameDataId: nameDataResource?.id,
+          startDataId: startDataResource?.id,
+          endDataId: endDataResource?.id,
+          progressDataIds: (progressDataResources || []).map(dataResource => dataResource.id),
+          swimlanesDataResourcesIds: (item.groupingDataResources || []).map(dataResource => dataResource.id),
+          dataResourceChain: item.dataResourcesChain,
+          swimlanes: [...(item.groupingObjects || [])],
+          stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
+        };
+
+        const attributesSwimlanes: GanttSwimlane[] = (metadata.stemConfig.attributes || []).map((model, index) => {
+          let dataResource = null;
+          if (queryResourcesAreSame(model, metadata.stemConfig.name)) {
+            dataResource = nameDataResource;
+          } else if (queryResourcesAreSame(model, metadata.stemConfig.start)) {
+            dataResource = startDataResource;
+          } else if (queryResourcesAreSame(model, metadata.stemConfig.end)) {
+            dataResource = endDataResource;
+          }
+
+          const value = dataResource?.data?.[model.attributeId];
+          return this.formatSwimlaneValueByConstraint(value, attributesConstraints[index]);
         });
-      }
 
-      return arr;
-    }, []);
+        let minProgress,
+          maxProgress = null;
+        if (progressConstraint && progressConstraint.type === ConstraintType.Percentage) {
+          const config = progressConstraint.config as PercentageConstraintConfig;
+          minProgress = isNotNullOrUndefined(config.minValue) ? Math.max(0, config.minValue) : null;
+          maxProgress = isNotNullOrUndefined(config.maxValue) ? config.maxValue : null;
+        }
+
+        const userCanEditStart = userCanEditDataResource(
+          startDataResource,
+          taskStartResource,
+          taskStartPermission,
+          this.constraintData?.currentUser,
+          this.constraintData
+        );
+        const userCanEditEnd = userCanEditDataResource(
+          endDataResource,
+          taskEndResource,
+          taskEndPermission,
+          this.constraintData?.currentUser,
+          this.constraintData
+        );
+
+        const startEditable = this.dataObjectAggregator.isAttributeEditable(
+          metadata.stemConfig.start,
+          startDataResource
+        );
+        const endEditable = this.dataObjectAggregator.isAttributeEditable(metadata.stemConfig.end, endDataResource);
+        const progressEditable = this.dataObjectAggregator.isAttributeEditable(
+          metadata.stemConfig.progress,
+          progressDataResources[0]
+        );
+
+        const names = isArray(name) ? name : [name];
+        for (let i = 0; i < names.length; i++) {
+          let nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).preview();
+          if (nameConstraint.type === ConstraintType.Text) {
+            nameFormatted = stripTextHtmlTags(nameFormatted, false);
+          }
+
+          const barColor = taskColor
+            ? metadata.stemConfig.progress
+              ? shadeColor(taskColor, 0.3)
+              : taskColor
+            : shadeColor(resourceColor, 0.5);
+          const taskId = helperDataId(item);
+          const dataResourceId = (nameDataResource || startDataResource).id;
+          const startDrag = startEditable && userCanEditStart;
+          const endDrag = endEditable && userCanEditEnd;
+          const draggable =
+            (startDrag && (endDrag || taskEndConstraint?.type === ConstraintType.Duration)) ||
+            (endDrag && (startDrag || taskStartConstraint?.type === ConstraintType.Duration));
+
+          arr.push({
+            id: taskId,
+            name: nameFormatted,
+            start: interval.start,
+            end: interval.end,
+            progress: createProgress(progress),
+            dependencies: (canEditDependencies && parentChildren[dataResourceId]) || [],
+            allowedDependencies: canEditDependencies ? editableTaskIds.filter(id => id !== taskId) : [],
+            barColor,
+            progressColor: taskColor || shadeColor(resourceColor, 0.3),
+            startDrag,
+            endDrag,
+            draggable,
+            progressDrag:
+              progressEditable &&
+              metadata.progressDataIds.length === 1 &&
+              userCanEditDataResource(
+                progressDataResources[0],
+                progressResource,
+                progressPermission,
+                this.constraintData?.currentUser,
+                this.constraintData
+              ),
+            textColor: contrastColor(barColor),
+            swimlanes: [...fillWithNulls(metadata.swimlanes, maximumSwimlanes), ...attributesSwimlanes],
+            minProgress,
+            maxProgress,
+            metadata,
+          });
+        }
+
+        return arr;
+      }, []);
   }
 
   private findColumnConstraint(model: GanttChartBarModel): Constraint {
@@ -582,12 +569,18 @@ export class GanttChartConverter {
   }
 }
 
-function isTaskValid(start: string, end: string, endConstraint: Constraint): boolean {
-  return areDatesValid(start, end, endConstraint);
+function isTaskValid(start: string, startConstraint: Constraint, end: string, endConstraint: Constraint): boolean {
+  return areDatesValid(start, startConstraint, end, endConstraint);
 }
 
-function areDatesValid(start: string, end: string, endConstraint: Constraint): boolean {
-  return isDateValidRange(start) && (isDateValidRange(end) || (end && endConstraint.type === ConstraintType.Duration));
+function areDatesValid(start: string, startConstraint: Constraint, end: string, endConstraint: Constraint): boolean {
+  if (startConstraint.type === ConstraintType.Duration) {
+    return start && isDateValidRange(end);
+  }
+  if (endConstraint.type === ConstraintType.Duration) {
+    return end && isDateValidRange(start);
+  }
+  return isDateValidRange(start) && isDateValidRange(end);
 }
 
 function isDateValidRange(dateString: string): boolean {
@@ -608,27 +601,105 @@ function createProgress(progress: any): number {
   return 0;
 }
 
+function computeTasksData(
+  dataObjectAggregator: DataObjectAggregator<GanttSwimlane>,
+  stemConfig: GanttChartStemConfig,
+  dataObjectsInfo: DataObjectInfo<GanttSwimlane>[],
+  constraintData: ConstraintData
+): GanttTasksData {
+  const nameResource = dataObjectAggregator.getResource(stemConfig.name);
+  const namePermission = dataObjectAggregator.attributePermissions(stemConfig.name);
+
+  const startResource = dataObjectAggregator.getResource(stemConfig.start);
+  const startPermission = dataObjectAggregator.attributePermissions(stemConfig.start);
+  const startConstraint = dataObjectAggregator.findAttributeConstraint(stemConfig.start);
+
+  const endConstraint = dataObjectAggregator.findAttributeConstraint(stemConfig.end);
+
+  return dataObjectsInfo.reduce<GanttTasksData>(
+    (data, item) => {
+      const nameDataResource = item.objectDataResources[DataObjectInfoKeyType.Name];
+      const startDataResource = item.objectDataResources[DataObjectInfoKeyType.Start];
+      const endDataResource = item.objectDataResources[DataObjectInfoKeyType.End];
+
+      const start = stemConfig.start && startDataResource?.data?.[stemConfig.start.attributeId];
+      const end = stemConfig.end && endDataResource?.data?.[stemConfig.end.attributeId];
+      if (isTaskValid(start, startConstraint, end, endConstraint)) {
+        const id = helperDataId(item);
+        data.validTaskIds.push(id);
+
+        const interval = createInterval(start, startConstraint, end, endConstraint, constraintData);
+        data.intervalsMap[id] = interval;
+
+        const dataResource = nameDataResource || startDataResource;
+        if (
+          userCanEditDataResource(
+            dataResource,
+            nameResource || startResource,
+            namePermission || startPermission,
+            constraintData?.currentUser,
+            constraintData
+          )
+        ) {
+          data.editableTaskIds.push(id);
+        }
+        const parentId = (<DocumentModel>dataResource).metaData?.parentId;
+        if (parentId) {
+          if (!data.parentChildren[parentId]) {
+            data.parentChildren[parentId] = [];
+          }
+          data.parentChildren[parentId].push(id);
+        }
+
+        data.dataResourcesMap[id] = {
+          name: nameDataResource,
+          start: interval.swapped ? endDataResource : startDataResource,
+          end: interval.swapped ? startDataResource : endDataResource,
+        };
+      }
+      return data;
+    },
+    {
+      intervalsMap: {},
+      editableTaskIds: [],
+      validTaskIds: [],
+      parentChildren: {},
+      dataResourcesMap: {},
+    }
+  );
+}
+
 function createInterval(
   startString: string,
   startConstraint: Constraint,
   endString: string,
   endConstraint: Constraint,
   constraintData: ConstraintData
-): {start: string; end?: string; swapped?: boolean} {
+): GanttInterval {
   const {
     start: startDate,
+    startUtc,
     end: endDate,
+    endUtc,
     swapped,
   } = createDatesInterval(startString, startConstraint, endString, endConstraint, constraintData);
 
-  let startMoment = moment(startDate);
+  if (swapped) {
+    startConstraint = endConstraint;
+    endConstraint = startConstraint;
+  }
 
-  if (!constraintContainsHoursInConfig(startConstraint)) {
+  let startMoment = startUtc ? moment.utc(startDate) : moment(startDate);
+  if (startConstraint?.type !== ConstraintType.Duration && !constraintContainsHoursInConfig(startConstraint)) {
     startMoment = startMoment.startOf('day');
   }
 
-  let endMoment = moment(endDate);
-  if (endConstraint?.type !== ConstraintType.Duration && !constraintContainsHoursInConfig(endConstraint)) {
+  let endMoment = endUtc ? moment.utc(endDate) : moment(endDate);
+  if (
+    startConstraint?.type !== ConstraintType.Duration &&
+    endConstraint?.type !== ConstraintType.Duration &&
+    !constraintContainsHoursInConfig(endConstraint)
+  ) {
     endMoment = endMoment.startOf('day').add(1, 'days');
   }
 
@@ -647,4 +718,25 @@ function helperDataId(data: DataObjectInfo<GanttSwimlane>): string {
     .filter(resource => isNotNullOrUndefined(resource))
     .map(resource => resource.id)
     .join(':');
+}
+
+interface GanttInterval {
+  start: string;
+  end?: string;
+  swapped?: boolean;
+}
+
+interface GanttTasksData {
+  intervalsMap: Record<string, GanttInterval>;
+  validTaskIds: string[];
+  editableTaskIds: string[];
+  parentChildren: Record<string, string[]>;
+  dataResourcesMap: Record<
+    string,
+    {
+      name: DataResource;
+      start: DataResource;
+      end: DataResource;
+    }
+  >;
 }

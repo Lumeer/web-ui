@@ -232,7 +232,24 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     const stemConfig = data.metadata.stemConfig;
     const patchData: PatchData[] = [];
 
-    if (stemConfig.start) {
+    if (stemConfig.start && stemConfig.end) {
+      const endDataResource = this.getDataResource(data.metadata.endDataId, stemConfig.end.resourceType);
+      const startDataResource = this.getDataResource(data.metadata.startDataId, stemConfig.start.resourceType);
+      if (startDataResource && endDataResource) {
+        const startData = this.getPatchData(patchData, startDataResource, stemConfig.start);
+        const endData = this.getPatchData(patchData, endDataResource, stemConfig.end);
+        this.patchDates(
+          data.start,
+          data.end,
+          stemConfig.start,
+          stemConfig.end,
+          startData,
+          endData,
+          startDataResource,
+          endDataResource
+        );
+      }
+    } else if (stemConfig.start) {
       const dataResource = this.getDataResource(data.metadata.startDataId, stemConfig.start.resourceType);
       if (dataResource) {
         const patch = this.getPatchData(patchData, dataResource, stemConfig.start);
@@ -240,37 +257,42 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
       }
     }
 
-    if (stemConfig.end) {
-      const dataResource = this.getDataResource(data.metadata.endDataId, stemConfig.end.resourceType);
-      if (dataResource) {
-        const patch = this.getPatchData(patchData, dataResource, stemConfig.end);
-        this.patchEndDate(data.start, data.end, data.moved, stemConfig.end, patch, dataResource);
-      }
-    }
-
     return patchData;
   }
 
-  private patchEndDate(
+  private patchDates(
     start: Date,
     end: Date,
-    moved: boolean,
-    model: CalendarBar,
-    patchData: Record<string, any>,
-    dataResource: DataResource = null
+    startModel: CalendarBar,
+    endModel: CalendarBar,
+    startData: Record<string, any>,
+    endData: Record<string, any>,
+    startDataResource: DataResource = null,
+    endDataResource: DataResource = null
   ) {
-    const resource = this.getResourceById(model.resourceId, model.resourceType);
-    const constraint = findAttributeConstraint(resource?.attributes, model.attributeId);
-    if (constraint?.type === ConstraintType.Duration) {
-      if (!moved) {
-        const durationCountsMap = subtractDatesToDurationCountsMap(end, start);
-        const durationString = durationCountsMapToString(durationCountsMap);
-        const dataValue = (<DurationConstraint>constraint).createDataValue(durationString, this.constraintData);
+    const startResource = this.getResourceById(startModel.resourceId, startModel.resourceType);
+    const endResource = this.getResourceById(endModel.resourceId, endModel.resourceType);
+    const startConstraint = findAttributeConstraint(startResource.attributes, startModel.attributeId);
+    const endConstraint = findAttributeConstraint(endResource.attributes, endModel.attributeId);
 
-        patchData[model.attributeId] = toNumber(dataValue.serialize());
+    if (startConstraint?.type === ConstraintType.Duration || endConstraint?.type === ConstraintType.Duration) {
+      const durationCountsMap = subtractDatesToDurationCountsMap(end, start);
+      const durationString = durationCountsMapToString(durationCountsMap);
+
+      if (startConstraint?.type === ConstraintType.Duration) {
+        const dataValue = (<DurationConstraint>startConstraint).createDataValue(durationString, this.constraintData);
+        startData[startModel.attributeId] = toNumber(dataValue.serialize());
+
+        this.patchDate(end, endModel, endData, endDataResource);
+      } else {
+        const dataValue = (<DurationConstraint>endConstraint).createDataValue(durationString, this.constraintData);
+        startData[endModel.attributeId] = toNumber(dataValue.serialize());
+
+        this.patchDate(start, startModel, startData, startDataResource);
       }
     } else {
-      this.patchDate(end, model, patchData, dataResource, true);
+      this.patchDate(start, startModel, startData, startDataResource);
+      this.patchDate(end, endModel, endData, endDataResource, true);
     }
   }
 

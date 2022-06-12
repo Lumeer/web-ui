@@ -30,11 +30,7 @@ import {
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {isAllDayEvent} from './calendar-util';
-import {
-  constraintContainsHoursInConfig,
-  createDatesInterval,
-  parseDateTimeByConstraint,
-} from '../../../../shared/utils/date.utils';
+import {constraintContainsHoursInConfig, createDatesInterval} from '../../../../shared/utils/date.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import * as moment from 'moment';
@@ -144,27 +140,48 @@ export class CalendarConverter {
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(stemConfig.name || stemConfig.start);
 
     return dataObjectsInfo.reduce<CalendarEvent[]>((events, item) => {
-      const startDataResource = item.objectDataResources[DataObjectInfoKeyType.Start];
+      let startDataResource = item.objectDataResources[DataObjectInfoKeyType.Start];
       const start = stemConfig.start && startDataResource?.data[stemConfig.start.attributeId];
-      const startDate = parseDateTimeByConstraint(start, startConstraint);
-      if (!isDateValid(startDate)) {
+      let endDataResource = item.objectDataResources[DataObjectInfoKeyType.End];
+      const end = stemConfig.end && endDataResource?.data[stemConfig.end.attributeId];
+      const interval = createInterval(start, startConstraint, end, endConstraint, this.constraintData);
+      if (!isDateValid(interval.start)) {
         return events;
       }
 
       const nameDataResource = item.objectDataResources[DataObjectInfoKeyType.Name];
       const name = (stemConfig.name && nameDataResource?.data[stemConfig.name.attributeId]) || '';
 
-      const endDataResource = item.objectDataResources[DataObjectInfoKeyType.End];
-      const end = stemConfig.end && endDataResource?.data[stemConfig.end.attributeId];
+      if (interval.swapped) {
+        const startCopy = startDataResource;
+        startDataResource = endDataResource;
+        endDataResource = startCopy;
+      }
 
-      const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start, startDataResource);
-      const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end, endDataResource);
+      const metadata: CalendarMetaData = {
+        startDataId: interval.swapped ? endDataResource?.id : startDataResource?.id,
+        endDataId: interval.swapped ? startDataResource?.id : endDataResource?.id,
+        nameDataId: nameDataResource?.id,
+        stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
+        stemIndex,
+        dataResourcesChain: item.dataResourcesChain,
+      };
+
+      const startAttributeEditable = this.dataObjectAggregator.isAttributeEditable(
+        metadata.stemConfig.start,
+        startDataResource
+      );
+      const endAttributeEditable = this.dataObjectAggregator.isAttributeEditable(
+        metadata.stemConfig.end,
+        endDataResource
+      );
+
+      const eventStartConstraint = interval.swapped ? endConstraint : startConstraint;
+      const eventEndConstraint = interval.swapped ? startConstraint : endConstraint;
 
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
-
       const eventColor = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources);
 
-      const interval = createInterval(start, startConstraint, end, endConstraint, this.constraintData);
       const allDay = isAllDayEvent(interval.start, interval.end);
 
       const titles = isArray(name) ? name : [name];
@@ -181,32 +198,46 @@ export class CalendarConverter {
           );
         }
 
-        const extendedProps: CalendarMetaData = {
-          startDataId: interval.swapped ? endDataResource?.id : startDataResource?.id,
-          endDataId: interval.swapped ? startDataResource?.id : endDataResource?.id,
-          nameDataId: nameDataResource?.id,
-          stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
-          stemIndex,
-          dataResourcesChain: item.dataResourcesChain,
-          formattedGroups,
-        };
+        metadata.formattedGroups = formattedGroups;
 
-        const durationEditable =
-          interval.end &&
-          stemConfig.end &&
-          endEditable &&
+        let startEditable =
+          interval.start &&
+          metadata.stemConfig.start &&
+          startAttributeEditable &&
           userCanEditDataResource(
-            endDataResource,
-            endResource,
-            endPermission,
+            startDataResource,
+            interval.swapped ? endDataResource : startDataResource,
+            interval.swapped ? endPermission : startPermission,
             this.constraintData?.currentUser,
             this.constraintData
           );
 
+        const endEditable =
+          interval.end &&
+          metadata.stemConfig.end &&
+          endAttributeEditable &&
+          userCanEditDataResource(
+            endDataResource,
+            interval.swapped ? startResource : endResource,
+            interval.swapped ? startPermission : endPermission,
+            this.constraintData?.currentUser,
+            this.constraintData
+          );
+
+        let durationEditable;
+        if (eventStartConstraint?.type === ConstraintType.Duration) {
+          durationEditable = startEditable;
+          startEditable = endEditable;
+        } else if (eventEndConstraint?.type === ConstraintType.Duration) {
+          durationEditable = endEditable;
+        } else {
+          durationEditable = endEditable;
+        }
+
         const backgroundColor = eventColor || shadeColor(resourceColor, 0.5);
         const eventGroupId = groupId(item);
         const event: CalendarEvent = {
-          id: eventUniqueId(extendedProps, eventGroupId, resourceIds),
+          id: eventUniqueId(metadata, eventGroupId, resourceIds),
           title: titleFormatted,
           start: interval.start,
           end: interval.end,
@@ -214,18 +245,9 @@ export class CalendarConverter {
           borderColor: eventColor || shadeColor(resourceColor, 0.4),
           textColor: contrastColor(backgroundColor),
           allDay,
-          startEditable:
-            startEditable &&
-            durationEditable &&
-            userCanEditDataResource(
-              startDataResource,
-              startResource,
-              startPermission,
-              this.constraintData?.currentUser,
-              this.constraintData
-            ),
+          startEditable,
           durationEditable,
-          extendedProps,
+          extendedProps: metadata,
           resourceIds,
         };
 
@@ -267,14 +289,21 @@ function createInterval(
 ): {start: Date; end?: Date; swapped?: boolean} {
   const {
     start: startDate,
-    end: endDateInterval,
+    startUtc,
+    end,
     swapped,
+    endUtc,
   } = createDatesInterval(startString, startConstraint, endString, endConstraint, constraintData);
-  let endDate = endDateInterval;
 
-  let startMoment = moment(startDate);
+  if (swapped) {
+    startConstraint = endConstraint;
+    endConstraint = startConstraint;
+  }
 
-  if (!constraintContainsHoursInConfig(startConstraint)) {
+  let endDate = end;
+  let startMoment = startUtc ? moment.utc(startDate) : moment(startDate);
+
+  if (startConstraint?.type !== ConstraintType.Duration && !constraintContainsHoursInConfig(startConstraint)) {
     startMoment = startMoment.startOf('day');
     if (!endDate) {
       endDate = startMoment.toDate();
@@ -285,8 +314,12 @@ function createInterval(
     return {start: startMoment.toDate()};
   }
 
-  let endMoment = moment(endDate);
-  if (endConstraint?.type !== ConstraintType.Duration && !constraintContainsHoursInConfig(endConstraint)) {
+  let endMoment = endUtc ? moment.utc(endDate) : moment(endDate);
+  if (
+    startConstraint?.type !== ConstraintType.Duration &&
+    endConstraint?.type !== ConstraintType.Duration &&
+    !constraintContainsHoursInConfig(endConstraint)
+  ) {
     endMoment = endMoment.startOf('day').add(1, 'days');
   }
 

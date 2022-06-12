@@ -52,7 +52,10 @@ export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig
     return true;
   }
 
-  if (Boolean(viewConfig.positionSaved) !== Boolean(currentConfig.positionSaved)) {
+  if (
+    Boolean(viewConfig.positionSaved) !== Boolean(currentConfig.positionSaved) ||
+    ganttPositionChanged(viewConfig, currentConfig)
+  ) {
     return true;
   }
 
@@ -74,6 +77,14 @@ export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig
   }
 
   return false;
+}
+
+function ganttPositionChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
+  if (!currentConfig.positionSaved) {
+    return false;
+  }
+
+  return viewConfig?.position?.value !== currentConfig?.position?.value;
 }
 
 function ganttStemsConfigsChanged(c1: GanttChartStemConfig[], c2: GanttChartStemConfig[]): boolean {

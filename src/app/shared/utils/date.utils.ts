@@ -48,10 +48,23 @@ const durationUnitToMomentUnitMap: Record<DurationUnit, DurationInputArg2> = {
   [DurationUnit.Seconds]: 'seconds',
 };
 
-export function addDurationToDate(date: Date, durationCountsMap: Record<DurationUnit, number>): Date {
-  const dateMoment = moment(date);
+export function addDurationToDate(date: Date, durationCountsMap: Record<DurationUnit, number>, utc: boolean): Date {
+  const dateMoment = utc ? moment.utc(date) : moment(date);
   Object.entries(durationCountsMap).forEach(([unit, count]) => {
     dateMoment.add(count, durationUnitToMomentUnitMap[unit]);
+  });
+
+  return dateMoment.toDate();
+}
+
+export function subtractDurationFromDate(
+  date: Date,
+  durationCountsMap: Record<DurationUnit, number>,
+  utc: boolean
+): Date {
+  const dateMoment = utc ? moment.utc(date) : moment(date);
+  Object.entries(durationCountsMap).forEach(([unit, count]) => {
+    dateMoment.add(-Math.abs(count), durationUnitToMomentUnitMap[unit]);
   });
 
   return dateMoment.toDate();
@@ -121,30 +134,44 @@ export function createDatesInterval(
   end: string,
   endConstraint: Constraint,
   constraintData: ConstraintData
-): {start: Date; end?: Date; swapped?: boolean} {
-  const startDate = parseDateTimeByConstraint(start, startConstraint);
-
-  let endDate: Date;
-
-  if (endConstraint?.type === ConstraintType.Duration) {
+): {start?: Date; startUtc?: boolean; end?: Date; endUtc?: boolean; swapped?: boolean} {
+  if (startConstraint?.type === ConstraintType.DateTime && endConstraint?.type === ConstraintType.Duration) {
+    const startDate = parseDateTimeByConstraint(start, startConstraint);
     const dataValue = (<DurationConstraint>endConstraint).createDataValue(end, constraintData);
-    endDate = addDurationToDate(startDate, dataValue.unitsCountMap);
-  } else {
-    endDate = parseDateTimeByConstraint(end, endConstraint);
+    const utc = (<DateTimeConstraint>startConstraint).config?.asUtc;
+    const endDate = addDurationToDate(startDate, dataValue.unitsCountMap, utc);
+    return checkDatesInterval(startDate, utc, endDate, utc, endConstraint);
+  }
+  if (startConstraint?.type === ConstraintType.Duration && endConstraint?.type === ConstraintType.DateTime) {
+    const endDate = parseDateTimeByConstraint(end, endConstraint);
+    const dataValue = (<DurationConstraint>startConstraint).createDataValue(start, constraintData);
+    const utc = (<DateTimeConstraint>endConstraint).config?.asUtc;
+    const startDate = subtractDurationFromDate(endDate, dataValue.unitsCountMap, utc);
+    return checkDatesInterval(startDate, utc, endDate, utc, endConstraint);
   }
 
-  if (!endDate) {
-    return {start: startDate};
-  }
+  const startDate = parseDateTimeByConstraint(start, startConstraint);
+  const startUtc = (<DateTimeConstraint>startConstraint)?.config?.asUtc;
+  const endDate = parseDateTimeByConstraint(end, endConstraint);
+  const endUtc = (<DateTimeConstraint>endConstraint)?.config?.asUtc;
+  return checkDatesInterval(startDate, startUtc, endDate, endUtc, endConstraint);
+}
 
-  if (endDate.getTime() < startDate.getTime()) {
+function checkDatesInterval(
+  start: Date,
+  startUtc: boolean,
+  end: Date,
+  endUtc: boolean,
+  endConstraint: Constraint
+): {start?: Date; startUtc?: boolean; end?: Date; endUtc?: boolean; swapped?: boolean} {
+  if (start && end && end.getTime() < start.getTime()) {
     if (endConstraint?.type === ConstraintType.Duration) {
       // it means that duration is less than 0
-      return {start: endDate, end: startDate};
+      return {start, end: start};
     }
-    return {start: endDate, end: startDate, swapped: true};
+    return {start: end, startUtc, end: start, endUtc, swapped: true};
   }
-  return {start: startDate, end: endDate};
+  return {start, startUtc, end, endUtc};
 }
 
 export function datesAreSameDay(d1: Date, d2: Date): boolean {
