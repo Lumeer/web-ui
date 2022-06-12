@@ -30,7 +30,7 @@ export class CopyDocumentValuesSimpleBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.copyDocumentValuesSimpleBlock:Copy values of attributes with the same name between two records.`;
+    this.tooltip = $localize`:@@blockly.tooltip.copyDocumentValuesSimpleBlock:Copy values of attributes with the same name between two records. Also preserves hierarchical structure of newly created records.`;
   }
 
   public getVisibility(): MasterBlockType[] {
