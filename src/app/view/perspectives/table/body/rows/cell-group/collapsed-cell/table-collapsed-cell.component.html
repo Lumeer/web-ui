@@ -46,12 +46,11 @@
                        class="h-100">
     </select-data-input>
 
-    <rich-text-data-input *ngSwitchCase="constraintType.Text"
-                          class="h-100"
-                          [readonly]="true"
-                          [title]="data.stringValues | join | stripHtml:false"
-                          [value]="(data.stringValues | join) | dataValue:data.constraint">
-    </rich-text-data-input>
+    <div *ngSwitchCase="constraintType.Text"
+         class="h-100 d-flex align-items-center px-1"
+         [innerHTML]="data.stringValues | join | stripHtml:true"
+         [title]="data.stringValues | join | stripHtml:false">
+    </div>
 
     <action-data-input *ngSwitchCase="constraintType.Action"
                        class="h-100"
