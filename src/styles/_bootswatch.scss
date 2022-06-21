@@ -716,11 +716,11 @@ ul.nav-tabs {
     }
   }
 
-  input:checked + .slider {
+  input:checked + .slider:not(.indeterminate) {
     background-color: $success;
   }
 
-  input:disabled:checked + .slider {
+  input:disabled:checked + .slider:not(.indeterminate) {
     background-color: darken($success, 20%);
   }
 

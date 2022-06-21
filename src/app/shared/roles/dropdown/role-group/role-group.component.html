@@ -1,7 +1,7 @@
 <span class="me-2">{{group.title}}</span>
 <span class="small text-muted me-2">({{numSelected}}/{{group.roles.length}})</span>
 <label class="switch" (click)="$event.stopPropagation()">
-  <input type="checkbox" [checked]="numSelected === group.roles.length"
+  <input type="checkbox" [checked]="numSelected  > 0"
          (change)="onCheckedChange($event.target.checked)">
-  <span class="slider round" (click)="$event.stopPropagation()"></span>
+  <span class="slider round" [class.indeterminate]="numSelected < group.roles.length" (click)="$event.stopPropagation()"></span>
 </label>

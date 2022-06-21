@@ -92,5 +92,5 @@ Cypress.Commands.add('waitForModalShown', () => {
 });
 
 Cypress.Commands.add('waitForModalHidden', () => {
-  cy.get('modal-container').should('not.be.visible');
+  cy.get('modal-container').should('not.exist');
 });

@@ -110,7 +110,7 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="link-name-input"]').clear().type('link'); // workaround waiting for dialog close hook binding
     cy.get('[data-test="create-link-dialog-create-button"]').click();
     cy.waitForModalHidden();
-    cy.get('[data-test="create-link-dialog"]').should('not.be.visible');
+    cy.get('[data-test="create-link-dialog"]').should('not.exist');
 
     // verify table caption and columns
     cy.get('[data-test="table-caption-name"]').should('have.length', 2).last().should('contain', 'second');
