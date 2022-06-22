@@ -51,10 +51,13 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
   },
 };
 
+const disableAnimations =
+  !('animate' in document.documentElement) || (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent));
+
 @NgModule({
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule.withConfig({disableAnimations}),
     AuthModule,
     CoreModule,
     CollectionModule,
