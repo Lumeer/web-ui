@@ -51,7 +51,7 @@
                                class="me-1">
               </icons-presenter>
               <span
-                [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
+                [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName)"></span>
               <small class="text-secondary ms-1">({{linkedAttribute.linkType.name}})</small>
             </a>
           </ng-container>
@@ -73,7 +73,7 @@
                                class="me-1">
               </icons-presenter>
               <span
-                [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
+                [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName)"></span>
             </a>
           </ng-container>
         </ng-container>

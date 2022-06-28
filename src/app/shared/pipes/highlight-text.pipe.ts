@@ -27,7 +27,7 @@ import {removeAccentFromString} from '@lumeer/data-filters';
   name: 'highlightText',
 })
 export class HighlightTextPipe implements PipeTransform {
-  public transform(text: any, highlightedText: any, prefixOnly?: boolean): string {
+  public transform(text: any, highlightedText: any): string {
     if (!text) {
       return '';
     }
@@ -38,16 +38,16 @@ export class HighlightTextPipe implements PipeTransform {
     const textPattern = escapeHtml(
       escapeStringForRegex(removeAccentFromString(stripTextHtmlTags(String(highlightedText), false)))
     );
-    const pattern = `(?<!<[^>]*)${textPattern}`;
-    const match = removeAccentFromString(textString).match(new RegExp(pattern, 'i'));
-    if (!match || (prefixOnly && match.index > 0)) {
-      return textString;
-    }
-    const highlightedLength = String(textPattern).length;
-    return (
-      textString.substring(0, match.index) +
-      `<span class="text-success">${textString.substring(match.index, match.index + highlightedLength)}</span>` +
-      textString.substring(match.index + highlightedLength, textString.length)
-    );
+
+    return textString.replace(new RegExp(textPattern, 'i'), (match, idx) => {
+      const startTagIndex = textString.substring(0, idx).lastIndexOf('<');
+      if (startTagIndex >= 0) {
+        const htmlTagBefore = textString.substring(startTagIndex, idx).match(/<[^>]*/);
+        if (htmlTagBefore) {
+          return match;
+        }
+      }
+      return `<span class="text-success">${match}</span>`;
+    });
   }
 }
