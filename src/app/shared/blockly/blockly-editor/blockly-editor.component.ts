@@ -116,6 +116,7 @@ import {NavigateSearchBlocklyComponent} from './blocks/navigate-search-blockly-c
 import {GetUserTeamsBlocklyComponent} from './blocks/get-user-teams-blockly-component';
 import {GetUserTeamIdsBlocklyComponent} from './blocks/get-user-team-ids-blockly-component';
 import {CopyDocumentValuesSimpleBlocklyComponent} from './blocks/copy-document-values-simple-blockly-component';
+import {GetRecordsCountBlocklyComponent} from './blocks/get-records-count-blockly-component';
 
 declare var Blockly: any;
 
@@ -265,6 +266,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new ReplacePatternBlocklyComponent(this.blocklyUtils),
       new MergeArraysBlocklyComponent(this.blocklyUtils),
       new CopyDocumentValuesSimpleBlocklyComponent(this.blocklyUtils),
+      new GetRecordsCountBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
