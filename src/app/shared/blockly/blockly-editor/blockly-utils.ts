@@ -133,6 +133,7 @@ export class BlocklyUtils {
   public static readonly GET_DOCUMENT_UPDATED_DATE = 'get_document_updated_date';
   public static readonly GET_DOCUMENT_UPDATED_AUTHOR = 'get_document_updated_author';
   public static readonly COPY_DOCUMENT_VALUES_SIMPLE = 'copy_document_values_simple';
+  public static readonly GET_RECORDS_COUNT = 'get_records_count';
   public static readonly CREATE_DELETE_DOCUMENTS_LINKS_LIMIT = 25;
   public static readonly MAXIMUM_DOCUMENTS_RETURNED = 1000;
   public static readonly SHOW_MESSAGES_LIMIT = 5;
