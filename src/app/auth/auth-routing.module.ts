@@ -24,12 +24,18 @@ import {AuthGuard} from './auth.guard';
 import {AuthCallbackComponent} from './callback/auth-callback.component';
 import {LogoutComponent} from './logout/logout.component';
 import {SessionExpiredComponent} from './session-expired/session-expired.component';
+import {SessionComponent} from './session/session.component';
 
 const authRoutes: Routes = [
   {
     path: 'agreement',
     canActivate: [AuthGuard],
     component: AgreementComponent,
+  },
+  {
+    path: 'session',
+    canActivate: [AuthGuard],
+    component: SessionComponent,
   },
   {
     path: 'auth',

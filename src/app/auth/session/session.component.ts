@@ -17,12 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Configuration} from '../../../environments/configuration-type';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../core/store/app.state';
 
-export function isBackendUrl(url: string, configuration: Configuration): boolean {
-  return url.startsWith(configuration.apiUrl) || url.startsWith(configuration.apiProdUrl);
-}
+@Component({
+  templateUrl: './session.component.html',
+  styleUrls: ['./session.component.scss'],
+})
+export class SessionComponent implements OnInit {
 
-export function isAuthUrl(url: string, configuration: Configuration): boolean {
-  return url.startsWith(`${configuration.apiUrl}/auth`);
+  public constructor(
+    private store$: Store<AppState>,
+    private router: Router,
+  ) {
+  }
+
+  public ngOnInit() {
+
+  }
+
+  public onContinue() {
+
+  }
 }

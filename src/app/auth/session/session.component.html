@@ -1,0 +1,31 @@
+<div class="background-overlay"></div>
+<div class="card border-light mb-3">
+  <div class="card-header">
+    <lumeer-logo [height]="48" text="Lumeer">
+    </lumeer-logo>
+  </div>
+  <div class="card-body">
+    <h5 class="text-center mb-4" i18n="@@session.remember.title">How do you want to handle device session?</h5>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="flexRadioDefault" id="remember" checked>
+      <label class="form-check-label" for="remember">
+        Remember this device
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="flexRadioDefault" id="notNow">
+      <label class="form-check-label" for="notNow">
+        Do not remember me now
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="flexRadioDefault" id="dontAsk">
+      <label class="form-check-label" for="dontAsk">
+        Do not ask me again
+      </label>
+    </div>
+    <button class="btn btn-success mt-4" (click)="onContinue()">
+      <span class="text-uppercase" i18n="@@button.continue">Continue</span>&nbsp;<i class="fa fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

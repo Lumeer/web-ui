@@ -21,12 +21,11 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
-import {EMPTY, from, of} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {EMPTY, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {UserService} from '../../data-service';
 import {AppState} from '../app.state';
-import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {
@@ -117,26 +116,6 @@ export class UsersEffects {
           catchError(() => {
             const message = $localize`:@@currentUser.resendVerificationEmail.fail:Could not request another verification email`;
             return of(...createCallbackActions(action.payload.onFailure), new NotificationsAction.Error({message}));
-          })
-        )
-      )
-    )
-  );
-
-  public getCurrentUserWithLastLogin$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<UsersAction.GetCurrentUserWithLastLogin>(UsersActionType.GET_CURRENT_USER_WITH_LAST_LOGIN),
-      tap(() => this.store$.dispatch(new UsersAction.SetPending({pending: true}))),
-      mergeMap(() =>
-        this.userService.getCurrentUserWithLastLogin().pipe(
-          map(user => convertUserDtoToModel(user)),
-          mergeMap(user => [
-            new UsersAction.GetCurrentUserSuccess({user}),
-            new UsersAction.SetPending({pending: false}),
-          ]),
-          catchError(() => {
-            const message = $localize`:@@currentUser.get.fail:Could not get user details`;
-            return of(new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message}));
           })
         )
       )

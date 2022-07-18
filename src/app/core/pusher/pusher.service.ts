@@ -19,9 +19,9 @@
 
 import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import Pusher from 'pusher-js';
-import {of, timer} from 'rxjs';
-import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
+import Pusher, {Channel} from 'pusher-js';
+import {of, timer, combineLatest} from 'rxjs';
+import {catchError, distinctUntilChanged, filter, first, map, take, withLatestFrom} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {OrganizationDto, ProjectDto} from '../dto';
 import {ResourceType, resourceTypesMap} from '../model/resource-type';
@@ -97,15 +97,14 @@ import {convertServiceLimitsDtoToModel} from '../store/organizations/service-lim
   providedIn: 'root',
 })
 export class PusherService implements OnDestroy {
-  private pusher: any;
-  private channel: any;
+  private pusher: Pusher;
+  private channel: Channel;
   private currentOrganization: Organization;
   private currentProject: Project;
   private user: User;
-  private pusherInitiated: boolean;
 
-  private userNotificationTitle: {success: string; info: string; warning: string; error: string};
-  private dismissButton: NotificationButton;
+  private readonly userNotificationTitle: { success: string; info: string; warning: string; error: string };
+  private readonly dismissButton: NotificationButton;
 
   constructor(
     private store$: Store<AppState>,
@@ -142,30 +141,34 @@ export class PusherService implements OnDestroy {
       .pipe(
         select(selectCurrentUserForWorkspace),
         filter(user => !!user),
-        tap(user => (this.user = user))
       )
-      .subscribe(user => {
-        if (!this.pusherInitiated) {
-          this.pusherInitiated = true;
-          this.subscribePusher(user);
-        }
-      });
+      .subscribe(user => (this.user = user));
+
+    const userId$ = this.store$
+      .pipe(select(selectCurrentUserForWorkspace), filter(user => !!user), map(user => user.id), distinctUntilChanged());
+    const accessToken$ = this.authService.getAccessToken$().pipe(filter(token => !!token));
+
+    combineLatest([userId$, accessToken$]).pipe(filter(([userId, accessToken]) => !!userId && !!accessToken))
+      .subscribe(([userId, accessToken]) => this.subscribePusher(userId, accessToken));
   }
 
-  private subscribePusher(user: User) {
+  private subscribePusher(userId: string, accessToken: string) {
+    console.log('init pusher', userId, accessToken);
+    this.unsubscribe();
+
     Pusher.logToConsole = !this.configurationService.getConfiguration().pusherLogDisabled;
     this.pusher = new Pusher(this.configurationService.getConfiguration().pusherKey, {
       cluster: this.configurationService.getConfiguration().pusherCluster,
-      authEndpoint: `${this.configurationService.getConfiguration().apiUrl}/rest/pusher`,
-      auth: {
-        params: {},
+      channelAuthorization: {
+        endpoint: `${this.configurationService.getConfiguration().apiUrl}/rest/pusher`,
+        transport: 'ajax',
         headers: {
-          Authorization: `Bearer ${this.authService.getAccessToken()}`,
+          Authorization: `Bearer ${accessToken}`,
         },
-      },
+      }
     });
 
-    this.channel = this.pusher.subscribe('private-' + user.id);
+    this.channel = this.pusher.subscribe('private-' + userId);
 
     this.bindOrganizationEvents();
     this.bindProjectEvents();
@@ -448,11 +451,11 @@ export class PusherService implements OnDestroy {
     const encodedQuery = convertQueryModelToString(replacementQuery ? replacementQuery : view.query);
     const encodedCursor = isNotNullOrUndefined(dataObject.documentId)
       ? convertViewCursorToString({
-          collectionId: dataObject.collectionId,
-          documentId: dataObject.documentId,
-          attributeId: dataObject.attributeId,
-          sidebar: dataObject.sidebar,
-        })
+        collectionId: dataObject.collectionId,
+        documentId: dataObject.documentId,
+        attributeId: dataObject.attributeId,
+        sidebar: dataObject.sidebar,
+      })
       : '';
 
     if (dataObject.newWindow) {
@@ -1167,9 +1170,13 @@ export class PusherService implements OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.channel) {
-      this.channel.unbind_all();
-      this.pusher.unsubscribe();
-    }
+    this.unsubscribe();
+  }
+
+  private unsubscribe() {
+    this.channel?.unbind_all();
+    this.channel?.unsubscribe();
+    this.pusher?.unbind_all();
+    this.pusher?.disconnect();
   }
 }

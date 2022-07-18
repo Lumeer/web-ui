@@ -90,10 +90,6 @@ export class PublicUserService implements UserService {
     return of(true);
   }
 
-  public getCurrentUserWithLastLogin(): Observable<UserDto> {
-    return this.getCurrentUser();
-  }
-
   public patchCurrentUser(user: Partial<UserDto>): Observable<UserDto> {
     return this.getCurrentUser();
   }

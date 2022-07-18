@@ -28,7 +28,6 @@ export enum UsersActionType {
   GET_FAILURE = '[Users] Get :: Failure',
 
   GET_CURRENT_USER = '[Users] Get current user',
-  GET_CURRENT_USER_WITH_LAST_LOGIN = '[Users] Get current user with last login',
   GET_CURRENT_USER_SUCCESS = '[Users] Get current user:: Success',
 
   RESEND_VERIFICATION_EMAIL = '[Users] Resend verification email',
@@ -113,10 +112,6 @@ export namespace UsersAction {
     public readonly type = UsersActionType.RESEND_VERIFICATION_EMAIL;
 
     public constructor(public payload: {onSuccess?: () => void; onFailure?: () => void} = {}) {}
-  }
-
-  export class GetCurrentUserWithLastLogin implements Action {
-    public readonly type = UsersActionType.GET_CURRENT_USER_WITH_LAST_LOGIN;
   }
 
   export class GetCurrentUserSuccess implements Action {
@@ -389,7 +384,6 @@ export namespace UsersAction {
     | GetFailure
     | GetCurrentUser
     | ResendVerificationEmail
-    | GetCurrentUserWithLastLogin
     | GetCurrentUserSuccess
     | PatchCurrentUser
     | Create

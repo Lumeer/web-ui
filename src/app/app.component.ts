@@ -79,7 +79,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.title.setTitle($localize`:@@page.title:Lumeer | Visual, easy project and team management`);
 
     this.storeReferralCookie();
-    this.handleAuthentication();
     this.startAnalyticsTracking();
     this.initTooltipConfig();
     this.initLanguage();
@@ -124,12 +123,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   private initPushNotifications() {
     if (this.configurationService.getConfiguration().pusherKey) {
       this.pusherService.init();
-    }
-  }
-
-  private handleAuthentication() {
-    if (this.configurationService.getConfiguration().auth) {
-      this.authService.handleAuthentication();
     }
   }
 
