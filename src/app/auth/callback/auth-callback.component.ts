@@ -45,17 +45,18 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
     private router: Router,
     private store$: Store<AppState>,
     private configurationService: ConfigurationService,
-    private route: ActivatedRoute,
-  ) {
-  }
+    private route: ActivatedRoute
+  ) {}
 
   public ngOnInit() {
     this.store$.dispatch(new ModalsAction.Hide());
 
-    this.route.queryParamMap.pipe(
-      take(1),
-      map(params => params.get('code')),
-    ).subscribe(code => this.authService.handleAuthenticationCode(code))
+    this.route.queryParamMap
+      .pipe(
+        take(1),
+        map(params => params.get('code'))
+      )
+      .subscribe(code => this.authService.onAuthenticated(code));
   }
 
   public ngAfterViewChecked() {

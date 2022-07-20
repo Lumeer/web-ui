@@ -1,4 +1,4 @@
-@import '~src/styles/bootstrap_var';
+@import 'src/styles/bootstrap_var';
 
 $session-width: 350px;
 
@@ -42,11 +42,14 @@ label > *::after {
 }
 
 button {
+  height: 4.375rem;
+  line-height: 3.625rem;
+}
+
+.button-area {
   position: relative;
   right: 1px;
   top: 1px;
-  height: 4.375rem;
-  line-height: 3.625rem;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   margin: 0.5rem -1rem -1rem;

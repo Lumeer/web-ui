@@ -103,7 +103,7 @@ export class PusherService implements OnDestroy {
   private currentProject: Project;
   private user: User;
 
-  private readonly userNotificationTitle: { success: string; info: string; warning: string; error: string };
+  private readonly userNotificationTitle: {success: string; info: string; warning: string; error: string};
   private readonly dismissButton: NotificationButton;
 
   constructor(
@@ -140,20 +140,24 @@ export class PusherService implements OnDestroy {
     this.store$
       .pipe(
         select(selectCurrentUserForWorkspace),
-        filter(user => !!user),
+        filter(user => !!user)
       )
       .subscribe(user => (this.user = user));
 
-    const userId$ = this.store$
-      .pipe(select(selectCurrentUserForWorkspace), filter(user => !!user), map(user => user.id), distinctUntilChanged());
+    const userId$ = this.store$.pipe(
+      select(selectCurrentUserForWorkspace),
+      filter(user => !!user),
+      map(user => user.id),
+      distinctUntilChanged()
+    );
     const accessToken$ = this.authService.getAccessToken$().pipe(filter(token => !!token));
 
-    combineLatest([userId$, accessToken$]).pipe(filter(([userId, accessToken]) => !!userId && !!accessToken))
+    combineLatest([userId$, accessToken$])
+      .pipe(filter(([userId, accessToken]) => !!userId && !!accessToken))
       .subscribe(([userId, accessToken]) => this.subscribePusher(userId, accessToken));
   }
 
   private subscribePusher(userId: string, accessToken: string) {
-    console.log('init pusher', userId, accessToken);
     this.unsubscribe();
 
     Pusher.logToConsole = !this.configurationService.getConfiguration().pusherLogDisabled;
@@ -165,7 +169,7 @@ export class PusherService implements OnDestroy {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     });
 
     this.channel = this.pusher.subscribe('private-' + userId);
@@ -451,11 +455,11 @@ export class PusherService implements OnDestroy {
     const encodedQuery = convertQueryModelToString(replacementQuery ? replacementQuery : view.query);
     const encodedCursor = isNotNullOrUndefined(dataObject.documentId)
       ? convertViewCursorToString({
-        collectionId: dataObject.collectionId,
-        documentId: dataObject.documentId,
-        attributeId: dataObject.attributeId,
-        sidebar: dataObject.sidebar,
-      })
+          collectionId: dataObject.collectionId,
+          documentId: dataObject.documentId,
+          attributeId: dataObject.attributeId,
+          sidebar: dataObject.sidebar,
+        })
       : '';
 
     if (dataObject.newWindow) {
@@ -1177,6 +1181,5 @@ export class PusherService implements OnDestroy {
     this.channel?.unbind_all();
     this.channel?.unsubscribe();
     this.pusher?.unbind_all();
-    this.pusher?.disconnect();
   }
 }

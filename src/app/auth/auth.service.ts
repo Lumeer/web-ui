@@ -20,6 +20,7 @@
 import {Location} from '@angular/common';
 import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {WebAuth} from 'auth0-js';
 import {BehaviorSubject, interval, Observable, of, share, Subject} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap} from 'rxjs/operators';
@@ -27,7 +28,6 @@ import {Angulartics2} from 'angulartics2';
 import {User} from '../core/store/users/user';
 import mixpanel from 'mixpanel-browser';
 import {hashUserId} from '../shared/utils/system.utils';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {AppState} from '../core/store/app.state';
 import {selectCurrentUser} from '../core/store/users/users.state';
 import {select, Store} from '@ngrx/store';
@@ -38,13 +38,16 @@ import {ConfigurationService} from '../configuration/configuration.service';
 import {createLanguageUrl, languageCodeMap} from '../core/model/language';
 import {UsersAction} from '../core/store/users/users.action';
 import Cookies from 'js-cookie';
+import {SessionType} from './common/session-type';
+import * as moment from 'moment';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
 const ID_TOKEN_KEY = 'auth_id_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';
 const REFRESH_TOKEN_KEY = 'auth_refresh_token';
-const CHECK_INTERVAL = 3000; // millis
+const SESSION_HANDLING_KEY = 'auth_session_handling';
+const CHECK_INTERVAL = 5000; // millis
 const RENEW_TOKEN_EXPIRATION = 10; // minutes
 const RENEW_TOKEN_MINUTES = 4;
 const REFRESH_TOKEN_MINUTES = 2;
@@ -75,7 +78,7 @@ export class AuthService {
     private angulartics2: Angulartics2,
     private ngZone: NgZone,
     private configurationService: ConfigurationService,
-    private httpClient: HttpClient,
+    private httpClient: HttpClient
   ) {
     if (this.configurationService.getConfiguration().auth) {
       this.initAuth();
@@ -93,8 +96,27 @@ export class AuthService {
       responseType: 'token id_token',
       audience: document.location.origin.replace(':7000', ':8080') + '/',
       redirectUri,
-      scope: 'openid profile email', // offline_access
+      scope: 'openid profile email offline_access',
     });
+  }
+
+  public setSessionType(method: SessionType, code: string) {
+    const expires = moment().add(6, 'months').toDate();
+    Cookies.set(SESSION_HANDLING_KEY, method, {expires});
+
+    this.handleAuthenticationCode(code);
+  }
+
+  private getSessionType(): SessionType {
+    return <SessionType>Cookies.get(SESSION_HANDLING_KEY);
+  }
+
+  private shouldSaveRefreshToken(): boolean {
+    return this.getSessionType() === SessionType.StayLoggedIn;
+  }
+
+  public shouldShowSessionType(): boolean {
+    return !this.getSessionType() || this.getSessionType() === SessionType.AskAgain;
   }
 
   public login(redirectPath: string) {
@@ -124,10 +146,18 @@ export class AuthService {
     }
   }
 
-  public handleAuthenticationCode(code: string) {
+  public onAuthenticated(code: string) {
+    if (this.shouldShowSessionType()) {
+      this.router.navigate(['/', 'session'], {queryParams: {code}});
+    } else {
+      this.handleAuthenticationCode(code);
+    }
+  }
+
+  private handleAuthenticationCode(code: string) {
     this._exchangeCode(code).subscribe(result => {
       this.handleAuthenticationResult(result);
-    })
+    });
   }
 
   private handleAuthenticationResult(authResult: AuthResult) {
@@ -196,7 +226,6 @@ export class AuthService {
   }
 
   private setSession(authResult: AuthResult) {
-    console.log('setting session', authResult);
     this.accessToken = authResult.accessToken;
     this.accessToken$.next(authResult.accessToken);
     // Set the time that the access token will expire at
@@ -206,8 +235,9 @@ export class AuthService {
       localStorage.setItem(ACCESS_TOKEN_KEY, this.accessToken);
       localStorage.setItem(EXPIRES_AT_KEY, String(this.expiresAt));
 
-      if (authResult.refreshToken) {
-        Cookies.set(REFRESH_TOKEN_KEY, authResult.refreshToken, {secure: true});
+      if (this.shouldSaveRefreshToken() && authResult.refreshToken) {
+        const expires = moment().add(6, 'months').toDate();
+        Cookies.set(REFRESH_TOKEN_KEY, authResult.refreshToken, {secure: true, expires});
       }
     }
   }
@@ -251,9 +281,7 @@ export class AuthService {
   }
 
   public isAuthenticated$(): Observable<boolean> {
-    return interval(1000).pipe(
-      map(() => this.isAuthenticated())
-    );
+    return interval(500).pipe(map(() => this.isAuthenticated()));
   }
 
   public getAccessToken(): string {
@@ -303,9 +331,7 @@ export class AuthService {
   private renewToken$(): Observable<AuthResult> {
     const subject = new Subject<AuthResult>();
     this.auth0.checkSession({}, (error, result) => subject.next(error ? null : result));
-    return subject.asObservable().pipe(
-      tap(response => response && this.setSession(response))
-    );
+    return subject.asObservable().pipe(tap(response => response && this.setSession(response)));
   }
 
   public refreshToken$(): Observable<AuthResult> {
@@ -314,16 +340,16 @@ export class AuthService {
     }
 
     this.activeRefresh$ = interval(1000).pipe(
-      share(),
       filter(() => !this.refreshing),
       take(1),
-      tap(() => this.refreshing = true),
+      tap(() => (this.refreshing = true)),
       mergeMap(() => this._refreshToken(this.getRefreshToken())),
       tap(response => {
         response && this.setSession(response);
-        this.refreshing = false
+        this.refreshing = false;
         this.activeRefresh$ = null;
       }),
+      share()
     );
 
     return this.activeRefresh$;
@@ -399,7 +425,7 @@ export class AuthService {
   }
 
   public isPathOutsideApp(redirectPath: string): boolean {
-    const restrictedPaths = ['/agreement', '/logout', '/auth', '/session-expired'];
+    const restrictedPaths = ['/agreement', '/logout', '/auth', '/session-expired', '/session'];
     return restrictedPaths.some(path => {
       const pathWithOrigin = window.location.origin + this.location.prepareExternalUrl(path);
       return redirectPath.startsWith(path) || redirectPath.startsWith(pathWithOrigin);
@@ -411,13 +437,9 @@ export class AuthService {
       mergeMap(success => {
         if (success) {
           const observable$ = this.hasRefreshToken() ? this.refreshToken$() : this.renewToken$();
-          return observable$.pipe(
-            map(response => !!response)
-          );
+          return observable$.pipe(map(response => !!response));
         } else if (this.hasRefreshToken()) {
-          return this.refreshToken$().pipe(
-            map(response => !!response)
-          );
+          return this.refreshToken$().pipe(map(response => !!response));
         }
         return of(false);
       })
@@ -439,20 +461,18 @@ export class AuthService {
     return of(false);
   }
 
-  public _exchangeCode(code: string): Observable<AuthResult> {
+  private _exchangeCode(code: string): Observable<AuthResult> {
     const params = new HttpParams().set('code', code);
-    return this.httpClient.post<AuthResult>(`${this.authApiPrefix()}/exchange-code`, {}, {params})
-      .pipe(
-        catchError(() => of(null)),
-      );
+    return this.httpClient
+      .post<AuthResult>(`${this.authApiPrefix()}/exchange-code`, {}, {params})
+      .pipe(catchError(() => of(null)));
   }
 
-  public _refreshToken(token: string): Observable<AuthResult> {
+  private _refreshToken(token: string): Observable<AuthResult> {
     const params = new HttpParams().set('token', token);
-    return this.httpClient.post<AuthResult>(`${this.authApiPrefix()}/refresh`, {}, {params})
-      .pipe(
-        catchError(() => of(null)),
-      );
+    return this.httpClient
+      .post<AuthResult>(`${this.authApiPrefix()}/refresh`, {}, {params})
+      .pipe(catchError(() => of(null)));
   }
 
   private authApiPrefix(): string {

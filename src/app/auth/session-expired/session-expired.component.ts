@@ -32,7 +32,7 @@ import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Component({
   templateUrl: './session-expired.component.html',
-  styleUrls: ['./session-expired.component.scss'],
+  styleUrls: ['../common/auth-styles.scss'],
 })
 export class SessionExpiredComponent implements OnInit {
   public readonly sessionTimeout;

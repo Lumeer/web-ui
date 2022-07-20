@@ -45,13 +45,15 @@ import {TeamsAction} from '../core/store/teams/teams.action';
 import {Team} from '../core/store/teams/team';
 import {userHasRoleInProject} from '../shared/utils/permission.utils';
 import {RoleType} from '../core/model/role-type';
+import {AuthService} from '../auth/auth.service';
 
 @Injectable()
 export class WorkspaceService {
   constructor(
     private organizationService: OrganizationService,
     private projectService: ProjectService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private authService: AuthService
   ) {}
 
   public selectOrGetUserAndOrganization(
@@ -190,7 +192,10 @@ export class WorkspaceService {
   }
 
   private getOrganizationFromApi(code: string): Observable<Organization> {
-    return this.organizationService.getOrganizationByCode(code).pipe(
+    return this.authService.isAuthenticated$().pipe(
+      filter(authenticated => authenticated),
+      take(1),
+      mergeMap(() => this.organizationService.getOrganizationByCode(code)),
       map(organization => OrganizationConverter.fromDto(organization)),
       tap(organization => this.store$.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
       catchError(() => of(undefined))
@@ -217,7 +222,10 @@ export class WorkspaceService {
   }
 
   private getProjectFromApi(orgId: string, projCode: string): Observable<Project> {
-    return this.projectService.getProjectByCode(orgId, projCode).pipe(
+    return this.authService.isAuthenticated$().pipe(
+      filter(authenticated => authenticated),
+      take(1),
+      mergeMap(() => this.projectService.getProjectByCode(orgId, projCode)),
       map(project => ProjectConverter.fromDto(project, orgId)),
       tap(project => this.store$.dispatch(new ProjectsAction.GetOneSuccess({project}))),
       catchError(() => of(undefined))

@@ -32,8 +32,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     private authService: AuthService,
     private router: Router,
     private configurationService: ConfigurationService
-  ) {
-  }
+  ) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const configuration = this.configurationService.getConfiguration();
@@ -48,18 +47,25 @@ export class AuthHttpInterceptor implements HttpInterceptor {
       withCredentials: true,
     });
     return next.handle(authRequest).pipe(
-      catchError((error, restart) => {
+      catchError(error => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           if (this.authService.hasRefreshToken()) {
             return this.authService.refreshToken$().pipe(
               mergeMap(result => {
                 if (result) {
-                  return restart;
+                  return next.handle(
+                    request.clone({
+                      setHeaders: {
+                        Authorization: `Bearer ${result.accessToken}`,
+                      },
+                      withCredentials: true,
+                    })
+                  );
                 }
 
                 return this.handleError(error, request);
               })
-            )
+            );
           }
           return this.handleError(error, request);
         }

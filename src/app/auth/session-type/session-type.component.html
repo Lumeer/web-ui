@@ -1,0 +1,16 @@
+<div class="background-overlay"></div>
+<div class="card border-light mb-3">
+  <div class="card-header">
+    <lumeer-logo [height]="48" text="Lumeer">
+    </lumeer-logo>
+  </div>
+  <div class="card-body">
+    <h5 class="text-center py-3" i18n="@@session.remember.title">Do you want to trust this browser and stay logged in?</h5>
+
+    <div class="button-area mt-4">
+      <button class="btn btn-primary text-uppercase" (click)="onNeverClick()"><i class="far fa-times"></i>&nbsp;<span i18n="@@never">Never</span></button>
+      <button class="btn btn-outline-secondary text-uppercase" (click)="onAskLaterClick()"><i class="far fa-question-circle"></i>&nbsp;<span i18n="@@session.remember.askLater">Ask me later</span></button>
+      <button class="btn btn-success text-uppercase" (click)="onYesClick()"><i class="far fa-check"></i>&nbsp;<span i18n="@@yes">Yes</span></button>
+    </div>
+  </div>
+</div>

@@ -16,29 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-
-@Component({
-  templateUrl: './session.component.html',
-  styleUrls: ['./session.component.scss'],
-})
-export class SessionComponent implements OnInit {
-
-  public constructor(
-    private store$: Store<AppState>,
-    private router: Router,
-  ) {
-  }
-
-  public ngOnInit() {
-
-  }
-
-  public onContinue() {
-
-  }
+export enum SessionType {
+  StayLoggedIn = 'stayLoggedIn',
+  NeverAsk = 'neverAsk',
+  AskAgain = 'askAgain',
 }

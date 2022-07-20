@@ -64,7 +64,7 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
 
   private checkStore(state: RouterStateSnapshot): Observable<boolean> {
     return this.authService.isAuthenticated$().pipe(
-      mergeMap(authenticated => authenticated ? this.selectCurrentUser$() : null),
+      mergeMap(authenticated => (authenticated ? this.selectCurrentUser$() : of(null))),
       filter(currentUser => isNotNullOrUndefined(currentUser)),
       first(),
       map(user => {
