@@ -37,7 +37,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v8-dependencies-{{ checksum "package-lock.json" }}
+          key: v9-dependencies-{{ checksum "package-lock.json" }}
 
       - run: # run AOT build
           name: build
