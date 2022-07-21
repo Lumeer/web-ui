@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {catchError, filter, first, map, tap} from 'rxjs/operators';
+import {catchError, filter, first, map, mergeMap, tap} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
 import {AppState} from '../store/app.state';
 import {UsersAction} from '../store/users/users.action';
@@ -33,6 +33,7 @@ import Cookies from 'js-cookie';
 import {LUMEER_REFERRAL} from '../constants';
 import {idToReference} from '../../shared/utils/string.utils';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {User} from '../store/users/user';
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate, CanActivateChild {
@@ -62,13 +63,8 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
   }
 
   private checkStore(state: RouterStateSnapshot): Observable<boolean> {
-    return this.store$.pipe(
-      select(selectCurrentUser),
-      tap(currentUser => {
-        if (isNullOrUndefined(currentUser)) {
-          this.store$.dispatch(new UsersAction.GetCurrentUser());
-        }
-      }),
+    return this.authService.isAuthenticated$().pipe(
+      mergeMap(authenticated => (authenticated ? this.selectCurrentUser$() : of(null))),
       filter(currentUser => isNotNullOrUndefined(currentUser)),
       first(),
       map(user => {
@@ -103,6 +99,17 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
         }
 
         return user.agreement;
+      })
+    );
+  }
+
+  private selectCurrentUser$(): Observable<User> {
+    return this.store$.pipe(
+      select(selectCurrentUser),
+      tap(currentUser => {
+        if (isNullOrUndefined(currentUser)) {
+          this.store$.dispatch(new UsersAction.GetCurrentUser());
+        }
       })
     );
   }

@@ -1,6 +1,8 @@
 import {WebAuth} from 'auth0-js';
 import './commands/rest.commands.js';
 import './commands/visit.commands.js';
+import Cookies from 'js-cookie';
+import {SessionType} from '../../src/app/auth/common/session-type';
 
 Cypress.Commands.add('login', () => {
   const auth = new WebAuth({
@@ -8,29 +10,29 @@ Cypress.Commands.add('login', () => {
     domain: Cypress.env('auth0Domain'),
     clientID: Cypress.env('auth0ClientId'),
     redirectUri: Cypress.config('baseUrl') + '/auth',
-    responseType: 'token id_token',
-    scope: 'openid email profile name username groups roles',
+    responseType: 'code',
+    scope: 'openid profile email',
   });
 
   const lumeerAuth = window['lumeerAuth'];
   if (lumeerAuth) {
     // restore tokens from previous login
-    const {authAccessToken, authIdToken, authExpiresAt} = lumeerAuth;
+    const {authAccessToken, authExpiresAt} = lumeerAuth;
     Cypress.env('authAccessToken', authAccessToken);
     window.localStorage.setItem('auth_access_token', authAccessToken);
-    window.localStorage.setItem('auth_id_token', authIdToken);
     window.localStorage.setItem('auth_expires_at', authExpiresAt);
   } else {
+    // we will skip session type screen
+    Cookies.set('auth_session_handling', SessionType.NeverAsk);
     // login via auth0 API
     auth.login({username: Cypress.env('username'), password: Cypress.env('password')});
 
     // wait for the token
     cy.window({timeout: 30000}).should(() => {
-      expect(window.localStorage.getItem('auth_id_token')).not.to.be.empty;
+      expect(window.localStorage.getItem('auth_access_token')).not.to.be.empty;
       Cypress.env('authAccessToken', window.localStorage.getItem('auth_access_token'));
       window['lumeerAuth'] = {
         authAccessToken: window.localStorage.getItem('auth_access_token'),
-        authIdToken: window.localStorage.getItem('auth_id_token'),
         authExpiresAt: window.localStorage.getItem('auth_expires_at'),
       };
     });
@@ -61,8 +63,8 @@ Cypress.Commands.add('logout', () => {
   cy.window()
     .its('localStorage')
     .then(localStorage => {
-      localStorage.removeItem('auth_id_token');
       localStorage.removeItem('auth_access_token');
+      localStorage.removeItem('auth_expires_at');
     });
 });
 

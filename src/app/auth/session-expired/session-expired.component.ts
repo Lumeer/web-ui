@@ -31,9 +31,8 @@ import {ModalsAction} from '../../core/store/modals/modals.action';
 import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Component({
-  selector: 'session-expired',
   templateUrl: './session-expired.component.html',
-  styleUrls: ['./session-expired.component.scss'],
+  styleUrls: ['../common/auth-styles.scss'],
 })
 export class SessionExpiredComponent implements OnInit {
   public readonly sessionTimeout;

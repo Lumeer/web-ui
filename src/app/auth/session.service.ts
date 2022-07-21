@@ -57,6 +57,9 @@ export class SessionService {
   }
 
   private check() {
+    if (this.authService.hasRefreshToken()) {
+      return;
+    }
     const now = Date.now();
     const timeLeft = this.activityService.getLastActivity() + this.timeoutMinutes * 60 * 1000;
     const isTimeout = timeLeft - now < 0;

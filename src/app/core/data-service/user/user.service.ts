@@ -51,8 +51,6 @@ export abstract class UserService {
 
   public abstract checkAuthentication(): Observable<any>;
 
-  public abstract getCurrentUserWithLastLogin(): Observable<UserDto>;
-
   public abstract patchCurrentUser(user: Partial<UserDto>): Observable<UserDto>;
 
   public abstract saveDefaultWorkspace(defaultWorkspace: DefaultWorkspaceDto): Observable<any>;

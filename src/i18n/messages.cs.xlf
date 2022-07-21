@@ -1893,7 +1893,7 @@
                 <source>{type, select, Work {Work} Classic {Normal} Custom {Custom}}</source>
                 <target>{type, select, Work {Pracovní} Classic {Normální} Custom {Vlastní} }</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">173</context></context-group></trans-unit>
             <trans-unit id="constraint.number.currency.select" datatype="html">
                 <source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</source>
@@ -2067,11 +2067,11 @@
                 <source>Example:</source>
                 <target>Příklad:</target>
 
-                
-                
-                
-                
-                
+
+
+
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
                 <source>View does not exist! </source>
@@ -4071,8 +4071,8 @@
                 <source>Default</source>
                 <target>Výchozí</target>
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">50</context></context-group></trans-unit>
             <trans-unit id="select.constraint.items.date.format" datatype="html">
                 <source>{format, select, weekly {[W]W YYYY} other {}}</source>
@@ -4096,7 +4096,7 @@
                 <source>{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds}}</source>
                 <target>{unit, select, w {týdny} d {dny} h {hodiny} m {minuty} s {sekundy} }</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">62</context></context-group></trans-unit>
             <trans-unit id="sequence.item.delete.message" datatype="html">
                 <source>Do you want to permanently remove this sequence?</source>
@@ -4157,57 +4157,57 @@
                 <source>Could not get tables</source>
                 <target>Tabulky nelze načíst</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit id="collection.create.fail" datatype="html">
                 <source>Could not create table</source>
                 <target>Tabulku nelze vytvořit</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">156</context></context-group></trans-unit>
             <trans-unit id="collection.import.fail" datatype="html">
                 <source>Could not import table</source>
                 <target>Tabulku nelze importovat</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">193</context></context-group></trans-unit>
             <trans-unit id="collection.update.fail" datatype="html">
                 <source>Could not update table</source>
                 <target>Tabulku nelze změnit</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">225</context></context-group></trans-unit>
             <trans-unit id="resource.rule.update.fail" datatype="html">
                 <source>Could not save automation</source>
                 <target>Nepodařilo se uložit automatizaci</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">257</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">165</context></context-group></trans-unit>
             <trans-unit id="collection.update.purpose.fail" datatype="html">
                 <source>Could not update table purpose</source>
                 <target>Napodařilo se změnit účel tabulky</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">282</context></context-group></trans-unit>
             <trans-unit id="collection.delete.fail" datatype="html">
                 <source>Could not delete table</source>
                 <target>Tabulku nelze smazat</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">335</context></context-group></trans-unit>
             <trans-unit id="collection.add.favorite.fail" datatype="html">
                 <source>Could not add the table to favorites</source>
                 <target>Tabulku nelze přidat mezi oblíbené</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">360</context></context-group></trans-unit>
             <trans-unit id="collection.remove.favorite.fail" datatype="html">
                 <source>Could not remove the table from favorites</source>
                 <target>Tabulku nelze odebrat z oblíbených</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">385</context></context-group></trans-unit>
             <trans-unit id="collection.change.attribute.fail" datatype="html">
                 <source>Could not change the attribute</source>
@@ -4454,19 +4454,10 @@
 
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
-                    <context context-type="linenumber">77</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
-                    <context context-type="linenumber">37</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
-                    <context context-type="linenumber">53</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">77</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">53</context></context-group></trans-unit>
             <trans-unit id="button.no" datatype="html">
                 <source>No</source>
                 <target state="final">Ne</target>
@@ -4495,25 +4486,25 @@
                 <target>Úspěch</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
             <trans-unit id="rules.blockly.action.message.info" datatype="html">
                 <source>Information</source>
                 <target>Informace</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
             <trans-unit id="rules.blockly.action.message.warning" datatype="html">
                 <source>Warning</source>
                 <target>Upozornění</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
             <trans-unit id="rules.blockly.action.message.error" datatype="html">
                 <source>Error</source>
                 <target>Chyba</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">126</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit>
             <trans-unit id="template.create.limitsExceeded" datatype="html">
                 <source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source>
                 <target>Je mi líto, ale ve verzi zdarma nemůžete vytvořit víc projektů. Chcete se podívat na Business verzi?</target>
@@ -4628,42 +4619,27 @@
                 <source>Could not get users</source>
                 <target state="translated">Uživatele nelze načíst</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-                    <context context-type="linenumber">80</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">79</context></context-group></trans-unit>
             <trans-unit id="user.create.fail" datatype="html">
                 <source>Could not add the user</source>
                 <target state="translated">Uživatele nelze vytvořit</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-                    <context context-type="linenumber">211</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">190</context></context-group></trans-unit>
             <trans-unit id="user.update.fail" datatype="html">
                 <source>Could not update the user</source>
                 <target state="translated">Uživatele nelze změnit</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-                    <context context-type="linenumber">319</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-                    <context context-type="linenumber">449</context>
-                </context-group>
-            </trans-unit>
+
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">298</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">428</context></context-group></trans-unit>
             <trans-unit id="user.delete.fail" datatype="html">
                 <source>Could not delete the user</source>
                 <target state="translated">Uživatele nelze smazat</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-                    <context context-type="linenumber">345</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">324</context></context-group></trans-unit>
             <trans-unit id="views.get.fail" datatype="html">
                 <source>Could not get views</source>
                 <target state="translated">Pohledy nelze načíst</target>
@@ -4961,7 +4937,7 @@
                 <source> No activity yet. </source>
                 <target> Zatím neproběhla žádná aktivita. </target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit>
             <trans-unit id="audit.filters.button.title" datatype="html">
                 <source>Filters</source>
@@ -5056,13 +5032,13 @@
                 <source>Revert changes?</source>
                 <target>Vrátit změny?</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context><context context-type="linenumber">138</context></context-group></trans-unit>
             <trans-unit id="audit.revert.confirm.message" datatype="html">
                 <source>Do you really want to revert the latest changes?</source>
                 <target>Opravdy chcete vrátit poslední změny?</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.ts</context><context context-type="linenumber">139</context></context-group></trans-unit>
             <trans-unit id="constraint.select.modify.value.title" datatype="html">
                 <source>Remove options?</source>
@@ -5167,11 +5143,11 @@
                 <target>Načítám...</target>
 
 
-                
-                
-                
-                
-                
+
+
+
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
             <trans-unit id="blockly.editor.changed.warning" datatype="html">
                 <source>The automation has been changed because some of the tables or link types were either deleted or you do not have access rights to them. Please fix the automation before saving it. Saving the automation right away will change (and most probably brake) it.</source>
@@ -6588,7 +6564,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">128</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v organizaci} ProjectContribute {Vytvářet projekty}}</target>
 
@@ -7034,7 +7010,7 @@
                 <source>You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?</source>
                 <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje do vaší organizace pozvat jen tři kolegy. Chcete aktivovat program Lumeer Business, který tato omezení nemá?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">230</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">209</context></context-group></trans-unit>
 
 
 
@@ -7565,13 +7541,13 @@
                 <source>Could not save the default workspace</source>
                 <target>Nelze uložit výchozí organizace a projekt.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">376</context></context-group></trans-unit><trans-unit id="user.teams.set.fail" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">355</context></context-group></trans-unit><trans-unit id="user.teams.set.fail" datatype="html">
         <source>Could not set user teams</source><target>Nepodařilo se mi nastavit týmy uživatele</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">401</context></context-group></trans-unit><trans-unit id="user.referrals.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">380</context></context-group></trans-unit><trans-unit id="user.referrals.fail" datatype="html">
         <source>Could not get your referrals at the moment</source><target>Nyní se mi nedaří získat údaje o vašich doporučených uživatelích</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">424</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">403</context></context-group></trans-unit>
 
             <trans-unit id="file.attachment.download.failure" datatype="html">
         <source>Could not download the file attachment. Please try again later.</source>
@@ -8047,10 +8023,10 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="dialog.productDemo.success" datatype="html">
         <source>We received your request and will get back to you soon.</source><target>Zaznamenali jsme Vaši žádost o ukázku aplikace a brzy Vás budeme kontaktovat.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">490</context></context-group></trans-unit><trans-unit id="dialog.productDemo.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit><trans-unit id="dialog.productDemo.error" datatype="html">
         <source>Could not schedule product demo.</source><target>Nepodařilo se mi zamluvit ukázku aplikace.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">501</context></context-group></trans-unit><trans-unit id="dialog.productDemo.form.name.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">480</context></context-group></trans-unit><trans-unit id="dialog.productDemo.form.name.label" datatype="html">
         <source>Your name:</source><target>Vaše jméno:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/book-product-demo/content/book-product-demo-content.component.html</context>
@@ -8117,10 +8093,10 @@
       </trans-unit><trans-unit id="dialog.getInTouch.success" datatype="html">
         <source>Your message has been sent.</source><target>Vaše zpráva byla odeslána.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">539</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">518</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.error" datatype="html">
         <source>Could not send your message.</source><target>Nemohl jsem odeslat Vaši zprávu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">550</context></context-group></trans-unit><trans-unit id="topPanel.userMenu.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">529</context></context-group></trans-unit><trans-unit id="topPanel.userMenu.title" datatype="html">
         <source>User menu</source><target>Uživatelská nabídka</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="topPanel.controlsToggle.tooltip" datatype="html">
@@ -8261,7 +8237,7 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.filter" datatype="html">
         <source>Configure filtering of records that are possible to link</source><target>Nastavte filtrování záznamů, které je možné připojit</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/editor/row/cell/actions/link/form-editor-cell-link-actions.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="perspective.form.editor.row.cell.actions.range.minimum" datatype="html">
         <source>Minimal links count</source><target>Minimální počet propojení</target>
         <context-group purpose="location">
@@ -8637,20 +8613,20 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/auth/agreement/agreement.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
         <source>Could not get user details</source><target>Nepodařilo se načíst nastavení uživatele</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">99</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">138</context></context-group></trans-unit><trans-unit id="currentUser.resendVerificationEmail.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="currentUser.resendVerificationEmail.fail" datatype="html">
         <source>Could not request another verification email</source><target>Nepodařilo se odeslat další email</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="currentUser.patch.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="currentUser.patch.fail" datatype="html">
         <source>Could not update user details</source><target>Nepodařilo se uložit nastavení uživatele</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">158</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.basic" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">137</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.basic" datatype="html">
         <source>You are allowed to invite only <x id="limit" equiv-text="limits.users"/> users to your organization. Do you want to upgrade your plan now?</source>
         <target>Do Vaší organizace je možné pozvat pouze <x id="limit" equiv-text="{{limit}}"/> uživatelů. Chcete upravit nastavení služby?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">227</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.business.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">206</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.business.title" datatype="html">
         <source>Limits exceeded</source><target>Překročení limitů</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">228</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">207</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {}}</source><target>{VAR_SELECT, select, organization {Organizace} project {Projekt} other {} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
@@ -8776,7 +8752,13 @@
         <source>Never</source><target state="final">Nikdy</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">134</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="rule.run.info.next" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">134</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="session.remember.askLater" datatype="html">
+        <source>Ask later</source><target state="translated">Příšte</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="rule.run.info.next" datatype="html">
         <source>Next run:</source><target state="final">Následující běh:</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">135</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.ofType" datatype="html">
@@ -8992,7 +8974,13 @@
         <source>Gets the parent record in hierarchy. Returns null if there isn't any.</source>
         <target>Získá nadřazený záznam v hierarchii. Vrátí null, pokud žádný neexistuje.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-parent-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getSiblingsBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-parent-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getRecordsCountBlock" datatype="html">
+        <source>Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</source><target state="new">Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-records-count-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getSiblingsBlock" datatype="html">
         <source>Follows the link from the given record and then all the links back to the original table, returning all siblings.</source>
         <target>Následuje všechna propojení daného typu z uvedeného záznamu a pak všechna propojení zpět do původní tabulky. Tak vrátí veškeré sourozence.</target>
         <context-group purpose="location">
@@ -9566,7 +9554,13 @@
       Klikněte na Pokračovat pro opětovné přihlášení.
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="document.detail.links.noLinks" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="session.remember.title" datatype="html">
+        <source>Do you want to trust this browser and stay logged in?</source><target state="final">Chcete tomuto prohlížeči důvěřovat a zůstat přihlášeni?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="document.detail.links.noLinks" datatype="html">
         <source>There are no links.</source><target>Nemáte žádná propojení.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="home" datatype="html">

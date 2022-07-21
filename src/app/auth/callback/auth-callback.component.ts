@@ -19,15 +19,12 @@
 
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AfterViewChecked, Component, ElementRef, HostListener, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {filter, take} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
-import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 import {ModalsAction} from '../../core/store/modals/modals.action';
-import {User} from '../../core/store/users/user';
-import {createLanguageUrl, languageCodeMap} from '../../core/model/language';
 import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Component({
@@ -47,38 +44,19 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
     private element: ElementRef,
     private router: Router,
     private store$: Store<AppState>,
-    private configurationService: ConfigurationService
+    private configurationService: ConfigurationService,
+    private route: ActivatedRoute
   ) {}
 
   public ngOnInit() {
     this.store$.dispatch(new ModalsAction.Hide());
 
-    this.selectUserAndNavigateToApp();
-  }
-
-  private selectUserAndNavigateToApp() {
-    this.store$
-      .select(selectCurrentUser)
+    this.route.queryParamMap
       .pipe(
-        filter(user => !!user),
-        take(1)
+        take(1),
+        map(params => params.get('code'))
       )
-      .subscribe(user => this.navigateToApplication(user));
-  }
-
-  private navigateToApplication(user?: User) {
-    const path = this.authService.getAndClearLoginRedirectPath();
-    if (
-      this.configurationService.getConfiguration().languageRedirect &&
-      user?.language &&
-      languageCodeMap[user.language]
-    ) {
-      window.location.href = createLanguageUrl(path, user.language);
-    } else if (path) {
-      this.router.navigateByUrl(path);
-    } else {
-      this.router.navigate(['/']);
-    }
+      .subscribe(code => this.authService.onAuthenticated(code));
   }
 
   public ngAfterViewChecked() {

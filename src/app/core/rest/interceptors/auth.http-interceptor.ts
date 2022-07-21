@@ -20,10 +20,10 @@
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {EMPTY, Observable, throwError} from 'rxjs';
+import {EMPTY, mergeMap, Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from '../../../auth/auth.service';
-import {isBackendUrl} from '../../api/api.utils';
+import {isAuthUrl, isBackendUrl} from '../../api/api.utils';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
@@ -35,10 +35,8 @@ export class AuthHttpInterceptor implements HttpInterceptor {
   ) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (
-      !this.configurationService.getConfiguration().auth ||
-      !isBackendUrl(request.url, this.configurationService.getConfiguration())
-    ) {
+    const configuration = this.configurationService.getConfiguration();
+    if (!configuration.auth || !isBackendUrl(request.url, configuration) || isAuthUrl(request.url, configuration)) {
       return next.handle(request);
     }
 
@@ -51,16 +49,40 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     return next.handle(authRequest).pipe(
       catchError(error => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
-          if (this.authService.isAuthenticated() && shouldProcessLogin(request.url)) {
-            this.authService.login(this.router.url);
+          if (this.authService.hasRefreshToken()) {
+            return this.authService.refreshToken$().pipe(
+              mergeMap(result => {
+                if (result) {
+                  return next.handle(
+                    request.clone({
+                      setHeaders: {
+                        Authorization: `Bearer ${result.accessToken}`,
+                      },
+                      withCredentials: true,
+                    })
+                  );
+                }
+
+                return this.handleError(error, request);
+              })
+            );
           }
-          if (shouldProcessLogin(request.url)) {
-            return EMPTY;
-          }
+          return this.handleError(error, request);
         }
         return throwError(error);
       })
     );
+  }
+
+  private handleError(error: any, request: HttpRequest<any>): Observable<any> {
+    if (this.authService.isAuthenticated() && shouldProcessLogin(request.url)) {
+      this.authService.login(this.router.url);
+    }
+    if (shouldProcessLogin(request.url)) {
+      return EMPTY;
+    }
+
+    return throwError(error);
   }
 }
 

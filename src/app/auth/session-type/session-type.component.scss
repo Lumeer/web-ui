@@ -1,0 +1,11 @@
+.button-area {
+  display: grid;
+  grid-template-columns: minmax(90px, auto) minmax(90px, auto) minmax(90px, auto);
+  grid-gap: 0;
+
+  button {
+    border-radius: 0;
+    height: 3.625rem;
+    line-height: 2.875rem;
+  }
+}

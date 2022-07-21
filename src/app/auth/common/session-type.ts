@@ -16,13 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Configuration} from '../../../environments/configuration-type';
-
-export function isBackendUrl(url: string, configuration: Configuration): boolean {
-  return url.startsWith(configuration.apiUrl) || url.startsWith(configuration.apiProdUrl);
-}
-
-export function isAuthUrl(url: string, configuration: Configuration): boolean {
-  return url.startsWith(`${configuration.apiUrl}/auth`);
+export enum SessionType {
+  StayLoggedIn = 'stayLoggedIn',
+  NeverAsk = 'neverAsk',
+  AskAgain = 'askAgain',
 }
