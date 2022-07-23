@@ -510,7 +510,7 @@
                     <context context-type="linenumber">33</context>
                 </context-group>
             </trans-unit><trans-unit id="blockly.tooltip.getRecordsCountBlock" datatype="html">
-        <source>Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</source><target state="new">Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</target>
+        <source>Gets the number of records in an array or a list. Ideal for counting linked records. Counts even records with all empty values.</source><target state="new">Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-records-count-blockly-component.ts</context>
           <context context-type="linenumber">33</context>
@@ -2318,9 +2318,9 @@
             <trans-unit datatype="html" id="button.yes">
                 <source>Yes</source>
                 <target>Igen</target>
-                
-                
-                
+
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">77</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">53</context></context-group></trans-unit>
 
             <trans-unit datatype="html" id="calendar.property.placeholder">

@@ -30,7 +30,7 @@ export class GetRecordsCountBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.getRecordsCountBlock:Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.`;
+    this.tooltip = $localize`:@@blockly.tooltip.getRecordsCountBlock:Gets the number of records in an array or a list. Ideal for counting linked records. Counts even records with all empty values.`;
   }
 
   public getVisibility(): MasterBlockType[] {
