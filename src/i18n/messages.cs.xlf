@@ -8753,7 +8753,7 @@
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">134</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/common/rule-run-info/rule-run-info.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="session.remember.askLater" datatype="html">
-        <source>Ask later</source><target state="translated">Příšte</target>
+        <source>Ask later</source><target state="translated">Příště</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context>
           <context context-type="linenumber">12</context>
@@ -8975,7 +8975,8 @@
         <target>Získá nadřazený záznam v hierarchii. Vrátí null, pokud žádný neexistuje.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-parent-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getRecordsCountBlock" datatype="html">
-        <source>Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</source><target state="new">Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</target>
+        <source>Gets the number of records in an array or a list. Ideal for counting linked records. Counts even records with all empty values.</source>
+        <target>Vrátí počet záznamů v poli nebo seznamu. Ideální pro počítání připojených záznamů. Počítá i záznamy se všemi prázdnými hodnotami.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-records-count-blockly-component.ts</context>
           <context context-type="linenumber">33</context>
@@ -9555,7 +9556,8 @@
     </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="session.remember.title" datatype="html">
-        <source>Do you want to trust this browser and stay logged in?</source><target state="final">Chcete tomuto prohlížeči důvěřovat a zůstat přihlášeni?</target>
+        <source>Do you want to trust this browser and stay logged in?</source>
+        <target>Chcete důvěřovat tomuto prohlížeči a zůstat přihlášení?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context>
           <context context-type="linenumber">8</context>

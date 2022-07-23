@@ -4904,7 +4904,7 @@
         <source>Gets the parent record in hierarchy. Returns null if there isn't any.</source><target state="final">Gets the parent record in hierarchy. Returns null if there isn't any.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-parent-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getRecordsCountBlock" datatype="html">
-        <source>Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</source><target state="final">Gets the number of records in array or list. Ideal for counting linked records. Counts even records with all empty values.</target>
+        <source>Gets the number of records in an array or a list. Ideal for counting linked records. Counts even records with all empty values.</source><target state="final">Gets the number of records in an array or a list. Ideal for counting linked records. Counts even records with all empty values.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-records-count-blockly-component.ts</context>
           <context context-type="linenumber">33</context>
