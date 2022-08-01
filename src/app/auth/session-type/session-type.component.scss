@@ -1,3 +1,7 @@
+@import 'src/styles/variables';
+
+$footer-height: 3.625rem;
+
 .button-area {
   display: grid;
   grid-template-columns: minmax(90px, auto) minmax(90px, auto) minmax(90px, auto);
@@ -8,4 +12,10 @@
     height: 3.625rem;
     line-height: 2.875rem;
   }
+}
+
+.loading-area {
+  height: $footer-height;
+  border: 1px solid $secondary;
+  color: $secondary;
 }
