@@ -22,13 +22,14 @@ import {ActivatedRoute} from '@angular/router';
 import {AuthService} from '../auth.service';
 import {SessionType} from '../common/session-type';
 import {map, take} from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   templateUrl: './session-type.component.html',
   styleUrls: ['../common/auth-styles.scss', './session-type.component.scss'],
 })
 export class SessionTypeComponent {
-  private clicked = false;
+  public performingRequest$ = new BehaviorSubject(false);
 
   public constructor(private authService: AuthService, private route: ActivatedRoute) {}
 
@@ -45,11 +46,8 @@ export class SessionTypeComponent {
   }
 
   private setSessionType(type: SessionType) {
-    if (this.clicked) {
-      return;
-    }
+    this.performingRequest$.next(true);
 
-    this.clicked = true;
     this.route.queryParamMap
       .pipe(
         take(1),

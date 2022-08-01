@@ -7,10 +7,14 @@
   <div class="card-body">
     <h5 class="text-center py-3" i18n="@@session.remember.title">Do you want to trust this browser and stay logged in?</h5>
 
-    <div class="button-area mt-4">
+    <div class="footer-area button-area mt-4" *ngIf="!(performingRequest$ | async)">
       <button class="btn btn-primary text-uppercase" (click)="onNeverClick()"><i class="far fa-times"></i>&nbsp;<span i18n="@@never">Never</span></button>
       <button class="btn btn-outline-secondary text-uppercase" (click)="onAskLaterClick()"><span i18n="@@session.remember.askLater">Ask later</span></button>
       <button class="btn btn-success text-uppercase" (click)="onYesClick()"><i class="far fa-check"></i>&nbsp;<span i18n="@@button.yes">Yes</span></button>
+    </div>
+    <div class="footer-area loading-area mt-4 d-flex align-items-center justify-content-center" *ngIf="performingRequest$ | async">
+      <span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
+      <span class="font-capitalize" i18n="@@message.loading">Loading...</span>
     </div>
   </div>
 </div>

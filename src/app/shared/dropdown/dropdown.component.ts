@@ -38,7 +38,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {connectedPositionsMap, convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-position';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, interval, Observable, Subscription} from 'rxjs';
 import {deepObjectsEquals, preventEvent} from '../utils/common.utils';
 
 @Component({
@@ -98,6 +98,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   private currentPosition: DropdownPosition;
   private positionSubscription: Subscription;
+  private originSubscription: Subscription;
 
   constructor(private overlay: Overlay, private viewContainer: ViewContainerRef, private renderer: Renderer2) {}
 
@@ -146,7 +147,18 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     this.syncSizes();
+    this.subscribeOrigin();
     setTimeout(() => this.syncSizes());
+  }
+
+  private subscribeOrigin() {
+    this.positionSubscription?.unsubscribe();
+    this.positionSubscription = interval(500).subscribe(() => {
+      const element = (<ElementRef>this.origin)?.nativeElement || (this.origin as HTMLElement);
+      if (!document.contains(element)) {
+        this.close();
+      }
+    });
   }
 
   public checkClickOutside(event: MouseEvent) {
@@ -218,6 +230,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.overlayRef = null;
     }
     document.removeEventListener('click', this.clickListener);
+    this.originSubscription?.unsubscribe();
   }
 
   public isOpen(): boolean {
@@ -272,7 +285,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
   }
 
-  private getOriginBoundingClientRect(): DOMRect | ClientRect {
+  private getOriginBoundingClientRect(): DOMRect {
     const element: HTMLElement = this.origin instanceof ElementRef ? this.origin.nativeElement : this.origin;
     return element.getBoundingClientRect();
   }

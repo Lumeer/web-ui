@@ -28,7 +28,7 @@
 
     <div class="col-2"></div>
     <div class="col-12 text-center">
-      <button class="btn btn-link"
+      <button class="btn btn-link" type="button"
               [class.hidden]="colorControl.value === defaultColor && iconControl.value === defaultIcon"
               (click)="resetIconAndColor()"><span class="small" i18n="@@view.settings.reset.iconColor">Reset icon and color</span>
       </button>
@@ -46,7 +46,8 @@
              formControlName="name"
              class="form-control"
              i18n-placeholder="@@resource.new.dialog.name.placeholder"
-             placeholder="Enter name">
+             placeholder="Enter name"
+             (keydown.enter)="$event.target.blur()">
     </div>
     <small class="col-12 text-danger mt-1" *ngIf="nameControl.errors?.notEmpty"
            i18n="@@view.modal.settings.name.notEmpty">View name can not be empty</small>
@@ -65,7 +66,8 @@
              integer
              inputmode="numeric"
              i18n-placeholder="@@view.modal.settings.priority.placeholder"
-             placeholder="Enter any number">
+             placeholder="Enter any number"
+             (keydown.enter)="$event.target.blur()">
     </div>
     <small class="col-12 text-danger mt-1" *ngIf="priorityControl.errors?.invalid"
            i18n="@@view.modal.settings.priority.invalid">Number is not valid</small>

@@ -112,11 +112,11 @@ export class InputTagsComponent implements OnInit, OnChanges {
     switch (event.key) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
-        this.submitTag();
+        this.submitTag(event);
         return;
       case KeyCode.Tab:
         event.preventDefault();
-        this.submitTag();
+        this.submitTag(event);
         return;
       case KeyCode.Backspace:
         this.removeLastTag();
@@ -125,16 +125,20 @@ export class InputTagsComponent implements OnInit, OnChanges {
     this.dropdown?.onKeyDown(event);
   }
 
-  private submitTag() {
+  private submitTag(event?: KeyboardEvent) {
     const activeOption = this.dropdown?.getActiveOption();
     if (activeOption) {
       this.onSelectOption(activeOption);
       return;
     }
+    const hasText = !!this.text;
     const tag = (this.text || '').trim();
     if (tag && !this.tags.includes(tag)) {
       this.tagsControl?.push(new FormControl(tag));
       this.text = '';
+    }
+    if (!hasText) {
+      (<HTMLInputElement>event?.target)?.blur();
     }
   }
 
