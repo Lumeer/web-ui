@@ -153,7 +153,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   private subscribeOrigin() {
     this.positionSubscription?.unsubscribe();
-    this.positionSubscription = interval(1000).subscribe(() => {
+    this.positionSubscription = interval(500).subscribe(() => {
       const element = (<ElementRef>this.origin)?.nativeElement || (this.origin as HTMLElement);
       if (!document.contains(element)) {
         this.close();
