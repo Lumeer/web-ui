@@ -22,13 +22,13 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {
   GanttChartStemConfig,
   GanttChartConfig,
-  GanttChartDisplayMultiplier,
+  ganttChartDefaultZoom,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {deepObjectCopy, objectValues} from '../../../../shared/utils/common.utils';
+import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
-import {SliderItem} from '../../../../shared/slider/values/slider-item';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'gantt-chart-config',
@@ -52,13 +52,15 @@ export class GanttChartConfigComponent {
   public configChange = new EventEmitter<GanttChartConfig>();
 
   public readonly defaultStemConfig = createDefaultGanttChartStemConfig();
-  public readonly displaySizeMultiplier = GanttChartDisplayMultiplier;
-  public readonly displaySizeItems: SliderItem[] = [
-    {id: GanttChartDisplayMultiplier.Small, title: formatDisplaySize(GanttChartDisplayMultiplier.Small)},
-    {id: GanttChartDisplayMultiplier.Medium, title: formatDisplaySize(GanttChartDisplayMultiplier.Medium)},
-    {id: GanttChartDisplayMultiplier.Default, title: formatDisplaySize(GanttChartDisplayMultiplier.Default)},
-    {id: GanttChartDisplayMultiplier.Large, title: formatDisplaySize(GanttChartDisplayMultiplier.Large)},
-    {id: GanttChartDisplayMultiplier.ExtraLarge, title: formatDisplaySize(GanttChartDisplayMultiplier.ExtraLarge)},
+  public readonly defaultZoom = ganttChartDefaultZoom;
+  public readonly zoomItems: SelectItemModel[] = [
+    {id: 0.5, value: '50%'},
+    {id: 0.75, value: '75%'},
+    {id: 0.9, value: '90%'},
+    {id: 1, value: '100%'},
+    {id: 1.25, value: '125%'},
+    {id: 1.5, value: '150%'},
+    {id: 2, value: '200%'},
   ];
 
   public onStemConfigChange(stemConfig: GanttChartStemConfig, stem: QueryStem, index: number) {
@@ -94,12 +96,8 @@ export class GanttChartConfigComponent {
     this.configChange.emit(config);
   }
 
-  public onDisplaySizeChanged(item: SliderItem) {
-    const config = {...this.config, displayMultiplier: item.id};
+  public onZoomChanged(zoom: any) {
+    const config: GanttChartConfig = {...this.config, zoom};
     this.configChange.emit(config);
   }
-}
-
-function formatDisplaySize(size: GanttChartDisplayMultiplier): string {
-  return `${(size * 100).toFixed(0)}%`;
 }

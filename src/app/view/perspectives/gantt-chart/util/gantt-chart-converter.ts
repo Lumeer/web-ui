@@ -33,7 +33,6 @@ import {
   GANTT_PADDING,
   GanttChartBarModel,
   GanttChartConfig,
-  GanttChartDisplayMultiplier,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -184,7 +183,7 @@ export class GanttChartConverter {
     const createTasks = (config.stemsConfigs || []).some(stemConfig =>
       canCreateTaskByStemConfig(stemConfig, permissions)
     );
-    const sizeMultiplier = config.displayMultiplier || GanttChartDisplayMultiplier.Default;
+    const sizeMultiplier = config.zoom || 1;
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),
       resizeTaskRight: true,

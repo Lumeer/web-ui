@@ -21,7 +21,7 @@ import {
   GanttChartBarModel,
   GanttChartConfig,
   ganttChartConfigLatestVersion,
-  GanttChartDisplayMultiplier,
+  ganttChartDefaultZoom,
   GanttChartMode,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
@@ -56,7 +56,7 @@ export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig
     Boolean(viewConfig.positionSaved) !== Boolean(currentConfig.positionSaved) ||
     ganttPositionChanged(viewConfig, currentConfig) ||
     Boolean(viewConfig.lockResize) !== Boolean(currentConfig.lockResize) ||
-    viewConfig.displayMultiplier !== currentConfig.displayMultiplier ||
+    (viewConfig.zoom || ganttChartDefaultZoom) !== (currentConfig.zoom || ganttChartDefaultZoom) ||
     viewConfig.mode !== currentConfig.mode ||
     !areArraysSame(viewConfig.swimlaneWidths, currentConfig.swimlaneWidths)
   ) {
@@ -181,7 +181,7 @@ function createDefaultGanttChartConfig(
     version: ganttChartConfigLatestVersion,
     stemsConfigs: stemsConfigs,
     lockResize: true,
-    displayMultiplier: GanttChartDisplayMultiplier.Default,
+    zoom: ganttChartDefaultZoom,
   };
 }
 

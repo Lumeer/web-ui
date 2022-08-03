@@ -41,19 +41,13 @@ export interface GanttChartConfig {
   stemsConfigs: GanttChartStemConfig[];
   lockResize?: boolean;
   swimlaneWidths?: number[];
-  displayMultiplier?: GanttChartDisplayMultiplier;
+  zoom?: number;
   positionSaved?: boolean;
   position?: GanttChartPosition;
   version?: GanttChartConfigVersion;
 }
 
-export enum GanttChartDisplayMultiplier {
-  Small = 0.7,
-  Medium = 0.85,
-  Default = 1,
-  Large = 1.15,
-  ExtraLarge = 1.3,
-}
+export const ganttChartDefaultZoom = 1.0;
 
 export enum GanttChartConfigVersion {
   V1 = '1',
