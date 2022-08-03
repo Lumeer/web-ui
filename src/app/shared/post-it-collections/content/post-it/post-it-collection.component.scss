@@ -1,6 +1,10 @@
 @import '../../../../../styles/variables';
 @import '../../../../../styles/bootstrap_var';
 
+:host {
+  position: relative;
+}
+
 .buttons a {
   color: $link-color;
 
@@ -31,7 +35,7 @@
   }
 }
 
-.post-it:hover {
+:host:hover {
   box-shadow: $shadow-default;
 
   .toggle-favorite {
@@ -86,15 +90,13 @@
 }
 
 .buttons {
-  width: 25px;
-  right: 0;
+  right: 4px;
   top: 1.5rem;
 }
 
 .button-remove {
   top: 0;
-  right: 0;
-  width: 25px;
+  right: 4px;
 }
 
 .uninitialized-dropdown {

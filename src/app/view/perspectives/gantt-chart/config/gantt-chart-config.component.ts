@@ -19,11 +19,16 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {GanttChartStemConfig, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {
+  GanttChartStemConfig,
+  GanttChartConfig,
+  GanttChartDisplayMultiplier,
+} from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {deepObjectCopy} from '../../../../shared/utils/common.utils';
+import {deepObjectCopy, objectValues} from '../../../../shared/utils/common.utils';
 import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
+import {SliderItem} from '../../../../shared/slider/values/slider-item';
 
 @Component({
   selector: 'gantt-chart-config',
@@ -47,6 +52,14 @@ export class GanttChartConfigComponent {
   public configChange = new EventEmitter<GanttChartConfig>();
 
   public readonly defaultStemConfig = createDefaultGanttChartStemConfig();
+  public readonly displaySizeMultiplier = GanttChartDisplayMultiplier;
+  public readonly displaySizeItems: SliderItem[] = [
+    {id: GanttChartDisplayMultiplier.Small, title: formatDisplaySize(GanttChartDisplayMultiplier.Small)},
+    {id: GanttChartDisplayMultiplier.Medium, title: formatDisplaySize(GanttChartDisplayMultiplier.Medium)},
+    {id: GanttChartDisplayMultiplier.Default, title: formatDisplaySize(GanttChartDisplayMultiplier.Default)},
+    {id: GanttChartDisplayMultiplier.Large, title: formatDisplaySize(GanttChartDisplayMultiplier.Large)},
+    {id: GanttChartDisplayMultiplier.ExtraLarge, title: formatDisplaySize(GanttChartDisplayMultiplier.ExtraLarge)},
+  ];
 
   public onStemConfigChange(stemConfig: GanttChartStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<GanttChartConfig>(this.config);
@@ -80,4 +93,13 @@ export class GanttChartConfigComponent {
     }
     this.configChange.emit(config);
   }
+
+  public onDisplaySizeChanged(item: SliderItem) {
+    const config = {...this.config, displayMultiplier: item.id};
+    this.configChange.emit(config);
+  }
+}
+
+function formatDisplaySize(size: GanttChartDisplayMultiplier): string {
+  return `${(size * 100).toFixed(0)}%`;
 }

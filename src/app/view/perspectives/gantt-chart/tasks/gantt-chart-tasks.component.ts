@@ -246,7 +246,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   private shouldConvertData(changes: SimpleChanges): boolean {
     return (
-      this.dataLoaded &&
       (changes.dataLoaded ||
         changes.data ||
         changes.settings ||

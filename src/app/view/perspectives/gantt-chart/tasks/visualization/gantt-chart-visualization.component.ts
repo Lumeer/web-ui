@@ -106,7 +106,7 @@ export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnCh
   private visualize() {
     if (this.ganttChart) {
       this.refreshChart();
-    } else {
+    } else if (this.options) {
       this.createChart();
     }
   }
@@ -128,7 +128,7 @@ export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnCh
   }
 
   public ngAfterViewInit() {
-    if (!this.ganttChart) {
+    if (!this.ganttChart && this.options) {
       this.createChart();
     }
   }

@@ -14,5 +14,11 @@
                          (attributeRemove)="onAttributeRemoved($event, index)">
 </gantt-chart-stem-config>
 
+<h6 class="mt-4 fw-bold" i18n="@@perspective.gantt.config.display.size">Display size</h6>
+<values-slider class="d-block w-100"
+               [items]="displaySizeItems"
+               [selectedId]="config?.displayMultiplier || displaySizeMultiplier.Default"
+               (itemSelected)="onDisplaySizeChanged($event)">
+</values-slider>
 
 

@@ -264,6 +264,9 @@ export class AuthService {
     }
 
     Cookies.remove(REFRESH_TOKEN_KEY);
+    if (this.getSessionType() !== SessionType.NeverAsk) {
+      Cookies.remove(SESSION_HANDLING_KEY);
+    }
 
     window.clearInterval(this.intervalId);
   }

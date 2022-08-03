@@ -26,9 +26,14 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
+  GANTT_BAR_HEIGHT,
+  GANTT_COLUMN_WIDTH,
   GANTT_DATE_FORMAT,
+  GANTT_FONT_SIZE,
+  GANTT_PADDING,
   GanttChartBarModel,
   GanttChartConfig,
+  GanttChartDisplayMultiplier,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -179,6 +184,7 @@ export class GanttChartConverter {
     const createTasks = (config.stemsConfigs || []).some(stemConfig =>
       canCreateTaskByStemConfig(stemConfig, permissions)
     );
+    const sizeMultiplier = config.displayMultiplier || GanttChartDisplayMultiplier.Default;
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),
       resizeTaskRight: true,
@@ -189,12 +195,15 @@ export class GanttChartConverter {
       createTasks,
       language: this.configuration.locale,
       lockResize: config.lockResize || false,
-      padding: config.padding,
       dateFormat: GANTT_DATE_FORMAT,
-      columnWidth: config.columnWidth,
-      barHeight: config.barHeight,
       initialScroll: config.positionSaved && config.position && this.convertCount === 0 ? config.position.value : null,
       viewMode: config.mode as any,
+      padding: sizeMultiplier * GANTT_PADDING,
+      columnWidth: sizeMultiplier * GANTT_COLUMN_WIDTH,
+      barHeight: sizeMultiplier * GANTT_BAR_HEIGHT,
+      fontSize: sizeMultiplier * GANTT_FONT_SIZE,
+      headerFontSize: sizeMultiplier * GANTT_FONT_SIZE,
+      swimlaneFontSize: sizeMultiplier * GANTT_FONT_SIZE,
     };
   }
 
