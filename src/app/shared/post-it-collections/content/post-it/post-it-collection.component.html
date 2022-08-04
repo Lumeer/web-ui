@@ -35,57 +35,6 @@
       </i>
     </div>
 
-    <div *ngIf="collection.id"
-         class="document-count opacity-content clickable">
-      <span title="Record Count" i18n-title="@@collection.document.count">
-        <i class="far fa-file"
-           aria-hidden="true">
-        </i>&nbsp;{{ collection.documentsCount }}</span>
-    </div>
-
-    <div *ngIf="collection.id && permissions.roles?.Read"
-         class="toggle-favorite opacity-content clickable text-warning"
-         [class.always-visible]="collection.favorite">
-      <span *ngIf="collection.favorite"
-            title="Remove from favorites"
-            i18n-title="@@collection.favorite.remove"
-            (click)="$event.preventDefault(); $event.stopPropagation(); toggleFavorite()">
-        <i class="fas fa-star text-warning"
-           aria-hidden="true">
-        </i>
-      </span>
-      <span *ngIf="!collection.favorite"
-            title="Add to favorites"
-            i18n-title="@@collection.favorite.add"
-            (click)="$event.preventDefault(); $event.stopPropagation(); toggleFavorite()">
-        <i class="far fa-star text-warning"
-           aria-hidden="true">
-        </i>
-      </span>
-    </div>
-
-    <div *ngIf="collection.id"
-         class="buttons opacity-content d-flex flex-column">
-      <div id="dropdown-{{collection.id}}">
-        <a *ngIf="canManageDetail" title="Configure" i18n-title="@@collection.button.configure"
-           class="rounded-start"
-           [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id]">
-          <i class="fas fa-fw fa-cog" aria-hidden="true"></i>
-        </a>
-      </div>
-    </div>
-    <div *ngIf="!collection.id"
-         class="button-remove opacity-content d-flex flex-column">
-      <a (click)="onDelete()"
-         class="text-danger rounded-start"
-         title="Delete Table"
-         i18n-title="@@collection.button.remove">
-        <i class="far fa-fw fa-trash-alt"
-           aria-hidden="true">
-        </i>
-      </a>
-    </div>
-
   </div>
 
   <post-it-collection-name [collectionName]="collection.name"
@@ -95,3 +44,54 @@
                            (unselected)="unselected.emit()">
   </post-it-collection-name>
 </a>
+
+<div *ngIf="collection.id"
+     class="document-count opacity-content clickable">
+      <span title="Record Count" i18n-title="@@collection.document.count">
+        <i class="far fa-file"
+           aria-hidden="true">
+        </i>&nbsp;{{ collection.documentsCount }}</span>
+</div>
+
+<div *ngIf="collection.id && permissions.roles?.Read"
+     class="toggle-favorite opacity-content clickable text-warning"
+     [class.always-visible]="collection.favorite">
+      <span *ngIf="collection.favorite"
+            title="Remove from favorites"
+            i18n-title="@@collection.favorite.remove"
+            (click)="$event.preventDefault(); $event.stopPropagation(); toggleFavorite()">
+        <i class="fas fa-fw fa-star text-warning"
+           aria-hidden="true">
+        </i>
+      </span>
+  <span *ngIf="!collection.favorite"
+        title="Add to favorites"
+        i18n-title="@@collection.favorite.add"
+        (click)="$event.preventDefault(); $event.stopPropagation(); toggleFavorite()">
+        <i class="far fa-fw fa-star text-warning"
+           aria-hidden="true">
+        </i>
+      </span>
+</div>
+
+<div *ngIf="collection.id"
+     class="buttons opacity-content d-flex flex-column">
+  <div id="dropdown-{{collection.id}}">
+    <a *ngIf="canManageDetail" title="Configure" i18n-title="@@collection.button.configure"
+       class="rounded-start"
+       [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id]">
+      <i class="fas fa-fw fa-cog" aria-hidden="true"></i>
+    </a>
+  </div>
+</div>
+<div *ngIf="!collection.id"
+     class="button-remove opacity-content d-flex flex-column">
+  <a (click)="onDelete()"
+     class="text-danger rounded-start"
+     title="Delete Table"
+     i18n-title="@@collection.button.remove">
+    <i class="far fa-fw fa-trash-alt"
+       aria-hidden="true">
+    </i>
+  </a>
+</div>

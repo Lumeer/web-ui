@@ -24,6 +24,8 @@ import {QueryAttribute} from '../../model/query-attribute';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
 export const GANTT_COLUMN_WIDTH = 40;
 export const GANTT_PADDING = 20;
+export const GANTT_BAR_HEIGHT = 20;
+export const GANTT_FONT_SIZE = 13;
 
 export interface GanttChart {
   id: string;
@@ -38,14 +40,14 @@ export interface GanttChartConfig {
   mode: GanttChartMode;
   stemsConfigs: GanttChartStemConfig[];
   lockResize?: boolean;
-  columnWidth?: number;
-  padding?: number;
-  barHeight?: number;
   swimlaneWidths?: number[];
+  zoom?: number;
   positionSaved?: boolean;
   position?: GanttChartPosition;
   version?: GanttChartConfigVersion;
 }
+
+export const ganttChartDefaultZoom = 1.0;
 
 export enum GanttChartConfigVersion {
   V1 = '1',

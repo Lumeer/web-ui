@@ -18,11 +18,10 @@
  */
 
 import {
-  GANTT_COLUMN_WIDTH,
-  GANTT_PADDING,
   GanttChartBarModel,
   GanttChartConfig,
   ganttChartConfigLatestVersion,
+  ganttChartDefaultZoom,
   GanttChartMode,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
@@ -42,6 +41,7 @@ import {GanttTaskMetadata} from './gantt-chart-converter';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
+import {areArraysSame} from '../../../../shared/utils/array.utils';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
@@ -54,29 +54,16 @@ export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig
 
   if (
     Boolean(viewConfig.positionSaved) !== Boolean(currentConfig.positionSaved) ||
-    ganttPositionChanged(viewConfig, currentConfig)
+    ganttPositionChanged(viewConfig, currentConfig) ||
+    Boolean(viewConfig.lockResize) !== Boolean(currentConfig.lockResize) ||
+    (viewConfig.zoom || ganttChartDefaultZoom) !== (currentConfig.zoom || ganttChartDefaultZoom) ||
+    viewConfig.mode !== currentConfig.mode ||
+    !areArraysSame(viewConfig.swimlaneWidths, currentConfig.swimlaneWidths)
   ) {
     return true;
   }
 
-  if (ganttStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
-    return true;
-  }
-
-  if (
-    !deepObjectsEquals(
-      {...viewConfig, stemsConfigs: null, position: null},
-      {
-        ...currentConfig,
-        stemsConfigs: null,
-        position: null,
-      }
-    )
-  ) {
-    return true;
-  }
-
-  return false;
+  return ganttStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
 }
 
 function ganttPositionChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
@@ -194,8 +181,7 @@ function createDefaultGanttChartConfig(
     version: ganttChartConfigLatestVersion,
     stemsConfigs: stemsConfigs,
     lockResize: true,
-    columnWidth: GANTT_COLUMN_WIDTH,
-    padding: GANTT_PADDING,
+    zoom: ganttChartDefaultZoom,
   };
 }
 

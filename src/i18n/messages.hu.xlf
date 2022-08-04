@@ -15,10 +15,10 @@
                 <source>Could not create task</source>
                 <target>Nem lehet létrehozni a feladatot</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">354</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">353</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source><target state="new">Could not move task</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">379</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">378</context></context-group></trans-unit>
             <trans-unit id="ganttChart.empty.placeholder2" datatype="html">
                 <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source>
                 <target state="new">Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {Column}}</target>
@@ -1890,94 +1890,64 @@
                 <source>View name can not be empty</source>
                 <target>A nézet neve nem lehet üres</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">52</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.priority" datatype="html">
                 <source>Priority:</source>
                 <target>Prioritás:</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">58</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.priority.placeholder" datatype="html">
                 <source>Enter any number</source>
                 <target>Írjon be bármilyen számot</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">68</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.priority.invalid" datatype="html">
                 <source>Number is not valid</source>
                 <target>A szám érvénytelen</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">71</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.priority.invalidRange" datatype="html">
                 <source>Number is not from valid range (<x id="INTERPOLATION" equiv-text="{{minInteger}}"/> - <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</source>
                 <target>A szám nem az érvényes tartományba esik (
                     <x id="INTERPOLATION" equiv-text="{{minInteger}}"/> -
                     <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">73</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.priority.help" datatype="html">
                 <source>By default, views are sorted by last used. Setting an priority overrides the default behavior. A higher priority means that the view will be above others. </source>
                 <target>A nézetek a legutóbb használt sorrend szerint vannak rendezve. A prioritás megadásával magasabbra kerülnek a listán. A magasabb prioritás azt jelenti, hogy a nézet mások fölött lesz. </target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">76</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.folders" datatype="html">
                 <source>Folders:</source>
                 <target>Mappák:</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">84</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.folders.placeholder" datatype="html">
                 <source>Enter folder name and press Enter</source>
                 <target>Írja be a mappa nevét, és nyomja meg az Enter billentyűt</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">90</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.folders.remove" datatype="html">
                 <source>Remove folder</source>
                 <target>Mappa eltávolítása</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">92</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit>
             <trans-unit id="view.modal.settings.folders.help" datatype="html">
                 <source>Use "/" to create nested folders i.e "Folder/Subfolder" </source>
                 <target>A "/" használatával hozhat létre beágyazott mappákat, azaz "Mappa/Almappa"</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-                    <context context-type="linenumber">97</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit id="settings" datatype="html">
                 <source>Settings</source>
                 <target>Beállítások</target>
@@ -2407,19 +2377,13 @@
             <trans-unit datatype="html" id="collection.button.configure">
                 <source>Configure</source>
                 <target>Konfigurál</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-                    <context context-type="linenumber">70</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.button.remove">
                 <source>Delete Table</source>
                 <target>Tábla törlése</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-                    <context context-type="linenumber">81</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.change.attribute.fail">
                 <source>Could not change the attribute</source>
                 <target>Nem lehet módosítani a tulajdonságot</target>
@@ -3054,11 +3018,8 @@
             <trans-unit datatype="html" id="collection.document.count">
                 <source>Record Count</source>
                 <target>Rekordok száma</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-                    <context context-type="linenumber">40</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.document.favorite">
                 <source><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source>
                 <target>
@@ -3080,19 +3041,13 @@
             <trans-unit datatype="html" id="collection.favorite.add">
                 <source>Add to favorites</source>
                 <target>Hozzáadás a kedvencekhez</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-                    <context context-type="linenumber">58</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.favorite.remove">
                 <source>Remove from favorites</source>
                 <target>Eltávolítás a Kedvencekből</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-                    <context context-type="linenumber">50</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.import.fail">
                 <source>Could not import table</source>
                 <target>Nem lehet importálni a táblázatot</target>
@@ -4976,7 +4931,13 @@
                     <context context-type="sourcefile">src/app/view/perspectives/form/form-utils.ts</context>
                     <context context-type="linenumber">96</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="perspective.gantt.config.zoom" datatype="html">
+        <source>Zoom</source><target state="new">Zoom</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="create.new.link">
                 <source>Create new link </source>
                 <target>Új hivatkozás létrehozása</target>
@@ -6979,7 +6940,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit>
             <trans-unit id="blockly.editor.changed.warning" datatype="html">
                 <source>The automation has been changed because some of the tables or link types were either deleted or you do not have access rights to them. Please fix the automation before saving it. Saving the automation right away will change (and most probably brake) it.</source>
                 <target state="new">The automation has been changed because some of the tables or link types were either deleted or you do not have access rights to them. Please fix the automation before saving it. Saving the automation right away will change (and most probably brake) it.</target>

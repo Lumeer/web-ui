@@ -14,5 +14,13 @@
                          (attributeRemove)="onAttributeRemoved($event, index)">
 </gantt-chart-stem-config>
 
+<h6 class="mt-4 fw-bold" i18n="@@perspective.gantt.config.zoom">Zoom</h6>
+<select-item [items]="zoomItems"
+             [fitParent]="true"
+             [removable]="false"
+             [selectedId]="config?.zoom || defaultZoom"
+             buttonClasses="flex-grow-1 text-truncate"
+             (selected)="onZoomChanged($event)">
+</select-item>
 
 

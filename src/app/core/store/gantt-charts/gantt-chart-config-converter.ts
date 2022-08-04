@@ -19,8 +19,6 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {
-  GANTT_COLUMN_WIDTH,
-  GANTT_PADDING,
   GanttChartBarModel,
   GanttChartConfig,
   ganttChartConfigLatestVersion,
@@ -117,8 +115,6 @@ function convertGanttChartDtoToModelV1(config: GanttChartConfigV1): GanttChartCo
     stemsConfigs,
     lockResize: true,
     version: GanttChartConfigVersion.V2,
-    columnWidth: GANTT_COLUMN_WIDTH,
-    padding: GANTT_PADDING,
   };
 }
 

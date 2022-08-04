@@ -197,6 +197,33 @@
           <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="message.loading" datatype="html">
+        <source>Loading...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/auth/session-type/session-type.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="organization.not.exist" datatype="html">
         <source>Organization does not exist</source>
         <context-group purpose="location">
@@ -2969,29 +2996,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
           <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="message.loading" datatype="html">
-        <source>Loading...</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/getting-started/steps/template/templates/empty/empty-templates.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/resource/activity/audit-logs/audit-logs.component.html</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/user/settings/tab/resources/list/user-resources-list.component.html</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-all/search-all.component.html</context>
-          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.editor.changed.warning" datatype="html">
@@ -6721,70 +6725,70 @@
         <source>View name can not be empty</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.priority" datatype="html">
         <source>Priority:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.priority.placeholder" datatype="html">
         <source>Enter any number</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.priority.invalid" datatype="html">
         <source>Number is not valid</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.priority.invalidRange" datatype="html">
         <source>Number is not from valid range (<x id="INTERPOLATION" equiv-text="{{minInteger}}"/> - <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">73,74</context>
+          <context context-type="linenumber">75,76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.priority.help" datatype="html">
         <source>By default, views are sorted by last used. Setting an priority overrides the default behavior. A higher priority means that the view will be above others. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">76,78</context>
+          <context context-type="linenumber">78,80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.folders" datatype="html">
         <source>Folders:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.folders.placeholder" datatype="html">
         <source>Enter folder name and press Enter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.folders.remove" datatype="html">
         <source>Remove folder</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.modal.settings.folders.help" datatype="html">
         <source>Use &quot;/&quot; to create nested folders i.e &quot;Folder/Subfolder&quot; </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">97,98</context>
+          <context context-type="linenumber">99,100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings" datatype="html">
@@ -7002,35 +7006,35 @@
         <source>Record Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.favorite.remove" datatype="html">
         <source>Remove from favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.favorite.add" datatype="html">
         <source>Add to favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.button.configure" datatype="html">
         <source>Configure</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.button.remove" datatype="html">
         <source>Delete Table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.remove" datatype="html">
@@ -10214,6 +10218,13 @@
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="perspective.gantt.config.zoom" datatype="html">
+        <source>Zoom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="perspective.gantt.config.position.save" datatype="html">
         <source>Save position to view</source>
         <context-group purpose="location">
@@ -10275,14 +10286,14 @@
         <source>Could not create task</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
-          <context context-type="linenumber">354</context>
+          <context context-type="linenumber">353</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
-          <context context-type="linenumber">379</context>
+          <context context-type="linenumber">378</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.header.scroll.today" datatype="html">

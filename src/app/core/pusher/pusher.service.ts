@@ -620,7 +620,7 @@ export class PusherService implements OnDestroy {
       }
     });
     this.channel.bind('Document:remove', data => {
-      if (this.isCurrentWorkspace(data)) {
+      if (this.isCurrentWorkspace(data) && !this.isCurrentAppTab(data)) {
         this.store$.dispatch(new DocumentsAction.DeleteSuccess({documentId: data.id}));
       }
     });

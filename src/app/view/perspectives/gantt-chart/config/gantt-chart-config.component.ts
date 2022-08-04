@@ -19,11 +19,16 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {GanttChartStemConfig, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {
+  GanttChartStemConfig,
+  GanttChartConfig,
+  ganttChartDefaultZoom,
+} from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'gantt-chart-config',
@@ -47,6 +52,16 @@ export class GanttChartConfigComponent {
   public configChange = new EventEmitter<GanttChartConfig>();
 
   public readonly defaultStemConfig = createDefaultGanttChartStemConfig();
+  public readonly defaultZoom = ganttChartDefaultZoom;
+  public readonly zoomItems: SelectItemModel[] = [
+    {id: 0.5, value: '50%'},
+    {id: 0.75, value: '75%'},
+    {id: 0.9, value: '90%'},
+    {id: 1, value: '100%'},
+    {id: 1.25, value: '125%'},
+    {id: 1.5, value: '150%'},
+    {id: 2, value: '200%'},
+  ];
 
   public onStemConfigChange(stemConfig: GanttChartStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<GanttChartConfig>(this.config);
@@ -78,6 +93,11 @@ export class GanttChartConfigComponent {
     if ((config.swimlaneWidths || []).length > maxCategories) {
       config.swimlaneWidths.splice(index, 1);
     }
+    this.configChange.emit(config);
+  }
+
+  public onZoomChanged(zoom: any) {
+    const config: GanttChartConfig = {...this.config, zoom};
     this.configChange.emit(config);
   }
 }
