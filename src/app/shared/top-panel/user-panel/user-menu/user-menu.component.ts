@@ -38,6 +38,8 @@ import {availableLanguages, Language, LanguageCode} from '../../../../core/model
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {ApplicationTourService} from '../../../../core/service/application-tour.service';
 import {NavigationAction} from '../../../../core/store/navigation/navigation.action';
+import {selectIsFullscreen} from '../../../../core/store/app-properties/app-properties.state';
+import {AppPropertiesAction} from '../../../../core/store/app-properties/app-properties.action';
 
 @Component({
   selector: 'user-menu',
@@ -63,6 +65,7 @@ export class UserMenuComponent implements OnInit {
 
   public currentUser$: Observable<User>;
   public freePlan$: Observable<boolean>;
+  public isFullscreen$: Observable<boolean>;
   public currentLanguage: Language;
 
   public constructor(
@@ -83,6 +86,7 @@ export class UserMenuComponent implements OnInit {
     this.currentLanguage = availableLanguages.find(language => language.code === this.locale);
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.isFullscreen$ = this.store$.pipe(select(selectIsFullscreen));
     this.bindServiceLimits();
   }
 
@@ -134,6 +138,10 @@ export class UserMenuComponent implements OnInit {
       // just toggle application hints
       this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.applicationHints, value: state}));
     }
+  }
+
+  public onFullScreenToggle(opened: boolean) {
+    this.store$.dispatch(new AppPropertiesAction.SetFullscreen({opened}));
   }
 
   public onSettings() {

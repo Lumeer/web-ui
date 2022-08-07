@@ -31,6 +31,8 @@ export function appPropertiesReducer(
       return {...state, topPanelOpened: action.payload.opened};
     case AppPropertiesActionType.TOGGLE_TOP_PANEL:
       return {...state, topPanelOpened: !state.topPanelOpened};
+    case AppPropertiesActionType.SET_FULLSCREEN:
+      return {...state, fullscreen: action.payload.opened};
     default:
       return state;
   }

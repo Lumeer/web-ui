@@ -1,18 +1,21 @@
-<div #topPanel
-     class="px-2 px-sm-3 py-2 w-100">
+<div #topPanel class="px-2 px-sm-3 py-2 w-100">
   <top-panel *ngIf="showTopPanel$ | async"
              [class.compact]="compactMode$ | async"
              [compact]="compactMode$ | async"
              [searchBoxShown]="searchBoxShown">
     <ng-content select=".controls"></ng-content>
   </top-panel>
-  <div *ngIf="showBackArrow$ | async" class="cursor-pointer clickable"
-       (click)="onBack()">
-    <i class="fas fa-chevron-left"></i>&nbsp;<span i18n="@@home">Home</span>
+  <div *ngIf="(showBackArrow$ | async) || (isFullscreen$ | async)" class="d-flex align-items-center">
+    <div *ngIf="showBackArrow$ | async" class="cursor-pointer clickable" (click)="onBack()">
+      <i class="fas fa-chevron-left"></i>&nbsp;<span i18n="@@home">Home</span>
+    </div>
+    <div *ngIf="isFullscreen$ | async" class="cursor-pointer clickable ms-auto" (click)="onExitFullscreen()">
+      <i class="far fa-compress"></i>&nbsp;<span i18n="@@fullscreen.exit">Exit fullscreen</span>
+    </div>
   </div>
 </div>
 <views-bookmarks [workspace]="workspace$ | async"></views-bookmarks>
-<get-help *ngIf="showHelp"></get-help>
-<div class="w-100 flex-grow-1 d-flex flex-column min-height-1 position-relative" [class.bottom-content]="showHelp">
+<get-help *ngIf="showHelp$ | async"></get-help>
+<div class="w-100 flex-grow-1 d-flex flex-column min-height-1 position-relative" [class.bottom-content]="showHelp$ | async">
   <ng-content select=".content"></ng-content>
 </div>

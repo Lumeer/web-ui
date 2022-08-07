@@ -71,6 +71,24 @@
              aria-hidden="true"></i>&nbsp;
           <span i18n="@@menu.hintsDisable">Hide Hints</span>
         </button>
+        <button mat-menu-item *ngIf="!(isFullscreen$ | async)"
+                (click)="onFullScreenToggle(true)"
+                title="Enter fullscreen"
+                i18n-title="@@menu.fullscreen.enter">
+          <i class="far fa-fw fa-expand"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@fullscreen.enter">Enter fullscreen</span>
+        </button>
+        <button mat-menu-item *ngIf="isFullscreen$ | async"
+                (click)="onFullScreenToggle(false)"
+                title="Exit fullscreen"
+                i18n-title="@@menu.fullscreen.exit">
+          <i class="far fa-fw fa-compress"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@fullscreen.exit">Exit fullscreen</span>
+        </button>
         <button mat-menu-item (click)="onAffiliateClick()"
                 title="Affiliate Program"
                 i18n-title="@@menu.affiliateProgram">
