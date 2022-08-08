@@ -73,21 +73,21 @@
         </button>
         <button mat-menu-item *ngIf="!(isFullscreen$ | async)"
                 (click)="onFullScreenToggle(true)"
-                title="Enter fullscreen"
+                title="Enter full screen"
                 i18n-title="@@menu.fullscreen.enter">
           <i class="far fa-fw fa-expand"
              data-fa-transform="left-4"
              aria-hidden="true"></i>&nbsp;
-          <span i18n="@@fullscreen.enter">Enter fullscreen</span>
+          <span i18n="@@fullscreen.enter">Enter Full Screen</span>
         </button>
         <button mat-menu-item *ngIf="isFullscreen$ | async"
                 (click)="onFullScreenToggle(false)"
-                title="Exit fullscreen"
+                title="Exit full screen"
                 i18n-title="@@menu.fullscreen.exit">
           <i class="far fa-fw fa-compress"
              data-fa-transform="left-4"
              aria-hidden="true"></i>&nbsp;
-          <span i18n="@@fullscreen.exit">Exit fullscreen</span>
+          <span i18n="@@fullscreen.exit">Exit Full Screen</span>
         </button>
         <button mat-menu-item (click)="onAffiliateClick()"
                 title="Affiliate Program"

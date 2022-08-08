@@ -1228,7 +1228,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="home" datatype="html">
         <source>Home</source><target state="final">Home</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {Organization} project {Project} other {}}"/></source><target state="final">Create New <x id="ICU" equiv-text="{type, select, organization {Organization} project {Project} other {}}"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5" datatype="html">
@@ -1449,28 +1449,56 @@
         <source>Hide Hints</source><target state="final">Hide Hints</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="menu.affiliateProgramMenuItem" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="menu.fullscreen.enter" datatype="html">
+        <source>Enter full screen</source><target state="final">Enter full screen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit><trans-unit id="fullscreen.enter" datatype="html">
+        <source>Enter Full Screen</source><target state="final">Enter Full Screen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.fullscreen.exit" datatype="html">
+        <source>Exit full screen</source><target state="final">Exit full screen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit><trans-unit id="fullscreen.exit" datatype="html">
+        <source>Exit Full Screen</source><target state="final">Exit Full Screen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.affiliateProgramMenuItem" datatype="html">
         <source>Earn with Lumeer</source><target state="final">Earn with Lumeer</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="menu.affiliateProgram" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="menu.affiliateProgram" datatype="html">
         <source>Affiliate Program</source><target state="final">Affiliate Program</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="menu.getHelp" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="menu.getHelp" datatype="html">
         <source>Get Help</source><target state="final">Get Help</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
         <source>Solutions and Support</source><target state="final">Solutions and Support</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="menu.account" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="menu.account" datatype="html">
         <source>Account</source><target state="final">Account</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">94</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="menu.logout" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">112</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="menu.logout" datatype="html">
         <source>Log out</source><target state="final">Log out</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">121</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">126</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {}}</source><target state="final">{VAR_SELECT, select, organization {Organization} project {Project} other {}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="resource.detail.organization.invite" datatype="html">
