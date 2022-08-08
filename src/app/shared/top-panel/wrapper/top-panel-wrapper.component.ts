@@ -32,6 +32,8 @@ import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {selectPublicShowTopPanel} from '../../../core/store/public-data/public-data.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {selectIsFullscreen} from '../../../core/store/app-properties/app-properties.state';
+import {AppPropertiesAction} from '../../../core/store/app-properties/app-properties.action';
 
 @Component({
   selector: 'top-panel-wrapper',
@@ -51,6 +53,8 @@ export class TopPanelWrapperComponent implements OnInit {
   public workspace$: Observable<Workspace>;
   public showTopPanel$: Observable<boolean>;
   public showBackArrow$: Observable<boolean>;
+  public isFullscreen$: Observable<boolean>;
+  public showHelp$: Observable<boolean>;
 
   constructor(
     private element: ElementRef,
@@ -66,7 +70,9 @@ export class TopPanelWrapperComponent implements OnInit {
     this.detectMobileResolution();
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.showTopPanel$ = this.bindShowTopPanel$();
+    this.showHelp$ = this.bindShowHelp$();
     this.showBackArrow$ = this.bindShowBackArrow$();
+    this.isFullscreen$ = this.store$.pipe(select(selectIsFullscreen));
   }
 
   private bindShowTopPanel$(): Observable<boolean> {
@@ -84,7 +90,20 @@ export class TopPanelWrapperComponent implements OnInit {
         })
       );
     }
-    return of(true);
+    return this.store$.pipe(
+      select(selectIsFullscreen),
+      map(fullscreen => !fullscreen)
+    );
+  }
+
+  private bindShowHelp$(): Observable<boolean> {
+    if (this.configurationService.getConfiguration().publicView) {
+      return of(false);
+    }
+    return this.store$.pipe(
+      select(selectIsFullscreen),
+      map(fullscreen => !fullscreen)
+    );
   }
 
   private bindShowBackArrow$(): Observable<boolean> {
@@ -114,5 +133,9 @@ export class TopPanelWrapperComponent implements OnInit {
     this.store$.pipe(select(selectWorkspace), take(1)).subscribe(workspace => {
       this.router.navigate(['/', 'w', workspace?.organizationCode, workspace?.projectCode, 'view', Perspective.Search]);
     });
+  }
+
+  public onExitFullscreen() {
+    this.store$.dispatch(new AppPropertiesAction.SetFullscreen({opened: false}));
   }
 }

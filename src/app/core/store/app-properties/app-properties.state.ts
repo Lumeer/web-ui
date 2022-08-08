@@ -18,21 +18,20 @@
  */
 
 import {createSelector} from '@ngrx/store';
-import {ConstraintData} from '@lumeer/data-filters';
 import {AppState} from '../app.state';
-import {selectAllUsers, selectCurrentUserForWorkspace} from '../users/users.state';
-import {selectAllViews} from '../views/views.state';
-import {selectTeamsForWorkspace} from '../teams/teams.state';
-import {selectSelectionListsByWorkspace} from '../selection-lists/selection-lists.state';
 
 export interface AppPropertiesState {
   topPanelOpened: boolean;
+  fullscreen: boolean;
 }
 
 export const initialAppPropertiesState: AppPropertiesState = {
   topPanelOpened: true,
+  fullscreen: false,
 };
 
 export const selectAppPropertiesState = (state: AppState) => state.properties;
 
 export const selectTopPanelOpened = createSelector(selectAppPropertiesState, properties => properties.topPanelOpened);
+
+export const selectIsFullscreen = createSelector(selectAppPropertiesState, state => state.fullscreen);

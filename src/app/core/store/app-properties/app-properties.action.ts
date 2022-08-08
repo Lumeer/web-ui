@@ -23,6 +23,7 @@ export enum AppPropertiesActionType {
   TOGGLE_TOP_PANEL = '[App Properties] Toggle Top Panel',
   OPEN_TOP_PANEL = '[App Properties] Open Top Panel',
   SET_TOP_PANEL_OPENED = '[App Properties] Set Top Panel Opened',
+  SET_FULLSCREEN = '[App Properties] Set Fullscreen',
 }
 
 export namespace AppPropertiesAction {
@@ -40,5 +41,11 @@ export namespace AppPropertiesAction {
     public constructor(public payload: {opened: boolean}) {}
   }
 
-  export type All = ToggleTopPanel | OpenTopPanel | SetTopPanelOpened;
+  export class SetFullscreen implements Action {
+    public readonly type = AppPropertiesActionType.SET_FULLSCREEN;
+
+    public constructor(public payload: {opened: boolean}) {}
+  }
+
+  export type All = ToggleTopPanel | OpenTopPanel | SetTopPanelOpened | SetFullscreen;
 }
