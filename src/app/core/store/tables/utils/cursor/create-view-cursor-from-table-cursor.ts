@@ -33,7 +33,7 @@ export function createViewCursorFromTableCursor(cursor: TableCursor, table: Tabl
   }
 
   const column = part.columns[cursor.columnIndex];
-  if (column.type !== TableColumnType.COMPOUND) {
+  if (!column || column.type !== TableColumnType.COMPOUND) {
     return null;
   }
 

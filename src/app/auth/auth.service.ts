@@ -279,8 +279,11 @@ export class AuthService {
   }
 
   public isAuthenticated(): boolean {
-    // Check whether the current time is past the access token's expiry time
-    return new Date().getTime() < this.getExpiresAt();
+    if (this.configurationService.getConfiguration().auth) {
+      // Check whether the current time is past the access token's expiry time
+      return new Date().getTime() < this.getExpiresAt();
+    }
+    return true;
   }
 
   public isAuthenticated$(): Observable<boolean> {
