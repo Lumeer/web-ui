@@ -530,7 +530,7 @@ export class GettingStartedService {
       .pipe(take(1))
       .subscribe(organizations => {
         if (organizations.length === 1) {
-          this.submitTemplate(organizations[0], copyProject);
+          this.submitCopyProject(organizations[0], copyProject);
         } else {
           this.stage = GettingStartedStage.ChooseOrganization;
         }
