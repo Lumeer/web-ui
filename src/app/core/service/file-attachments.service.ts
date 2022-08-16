@@ -23,7 +23,7 @@ import {of, Subscription} from 'rxjs';
 import {AppState} from '../store/app.state';
 import {FileAttachmentsAction} from '../store/file-attachments/file-attachments.action';
 import {selectViewQuery} from '../store/views/views.state';
-import {filter, switchMap} from 'rxjs/operators';
+import {debounceTime, filter, switchMap} from 'rxjs/operators';
 import {isNavigatingToOtherWorkspace, queryIsNotEmpty} from '../store/navigation/query/query.util';
 import {selectNavigation} from '../store/navigation/navigation.state';
 import {Perspective} from '../../view/perspectives/perspective';
@@ -55,7 +55,8 @@ export class FileAttachmentsService implements OnDestroy {
             filter(query => queryIsNotEmpty(query))
           );
         }),
-        filter(query => !!query)
+        filter(query => !!query),
+        debounceTime(1000)
       )
       .subscribe(query => this.store$.dispatch(new FileAttachmentsAction.GetByQuery({query})));
   }
