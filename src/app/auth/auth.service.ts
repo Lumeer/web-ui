@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {WebAuth} from 'auth0-js';
 import {BehaviorSubject, interval, Observable, of, share, Subject} from 'rxjs';
-import {catchError, filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {Angulartics2} from 'angulartics2';
 import {User} from '../core/store/users/user';
 import mixpanel from 'mixpanel-browser';
@@ -287,7 +287,10 @@ export class AuthService {
   }
 
   public isAuthenticated$(): Observable<boolean> {
-    return interval(500).pipe(map(() => this.isAuthenticated()));
+    return interval(500).pipe(
+      map(() => this.isAuthenticated()),
+      distinctUntilChanged()
+    );
   }
 
   public getAccessToken(): string {
