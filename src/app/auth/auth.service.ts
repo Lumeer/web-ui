@@ -67,7 +67,7 @@ export class AuthService {
   private intervalId: number;
 
   private activeRefresh$: Observable<AuthResult>;
-  private accessToken$ = new BehaviorSubject<string>(localStorage.getItem(ACCESS_TOKEN_KEY));
+  private accessToken$ = new BehaviorSubject<string>(localStorage?.getItem(ACCESS_TOKEN_KEY));
 
   public constructor(
     private location: Location,
