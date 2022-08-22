@@ -67,7 +67,7 @@ export class AuthService {
   private intervalId: number;
 
   private activeRefresh$: Observable<AuthResult>;
-  private accessToken$ = new BehaviorSubject<string>(localStorage?.getItem(ACCESS_TOKEN_KEY));
+  private accessToken$: BehaviorSubject<string>;
 
   public constructor(
     private location: Location,
@@ -98,6 +98,7 @@ export class AuthService {
       redirectUri,
       scope: 'openid profile email offline_access',
     });
+    this.accessToken$ = new BehaviorSubject<string>(localStorage.getItem(ACCESS_TOKEN_KEY));
   }
 
   public setSessionType(method: SessionType, code: string) {
