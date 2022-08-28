@@ -26,6 +26,7 @@ export interface AttributeDto {
   description?: string;
   function?: AttributeFunctionDto;
   lock?: AttributeLockDto;
+  formatting?: AttributeFormattingDto;
   usageCount?: number;
   suggestValues?: boolean;
 }
@@ -50,5 +51,16 @@ export interface AttributeLockDto {
 export interface AttributeLockExceptionGroupDto {
   type?: string;
   typeValue?: string[];
+  equation?: AttributeFilterEquationDto;
+}
+
+export interface AttributeFormattingDto {
+  groups: AttributeFormattingGroupDto[];
+}
+
+export interface AttributeFormattingGroupDto {
+  color?: string;
+  background?: string;
+  styles?: string[];
   equation?: AttributeFilterEquationDto;
 }

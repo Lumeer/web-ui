@@ -31,7 +31,6 @@ import {
 } from '@lumeer/data-filters';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {AttributesResource} from '../../../../../../core/model/resource';
-import {Attribute} from '../../../../../../core/store/collections/collection';
 import {deepArrayEquals} from '../../../../../utils/array.utils';
 import {SelectItem2Model} from '../../../../../select/select-item2/select-item2.model';
 
@@ -53,9 +52,6 @@ export class AttributeLockExceptionGroupComponent implements OnInit {
 
   @Input()
   public resource: AttributesResource;
-
-  @Input()
-  public attribute: Attribute;
 
   @Output()
   public delete = new EventEmitter();

@@ -24,6 +24,8 @@ import {AttributeFunctionModalModule} from './function/attribute-function-modal.
 import {AttributeLockModalModule} from './lock/attribute-lock-modal.module';
 import {AttributeTypeModalModule} from './type/attribute-type-modal.module';
 import {AttributeCommonModalModule} from './common/attribute-common-modal.module';
+import {ConditionalFormattingModalComponent} from './conditional-formatting/conditional-formatting-modal.component';
+import {ConditionalFormattingModalModule} from './conditional-formatting/conditional-formatting-modal.module';
 
 @NgModule({
   imports: [
@@ -31,6 +33,7 @@ import {AttributeCommonModalModule} from './common/attribute-common-modal.module
     AttributeFunctionModalModule,
     AttributeLockModalModule,
     AttributeTypeModalModule,
+    ConditionalFormattingModalModule,
     AttributeCommonModalModule,
   ],
   exports: [
@@ -38,6 +41,7 @@ import {AttributeCommonModalModule} from './common/attribute-common-modal.module
     AttributeFunctionModalModule,
     AttributeLockModalModule,
     AttributeTypeModalModule,
+    ConditionalFormattingModalModule,
     AttributeCommonModalModule,
   ],
 })

@@ -17,29 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild, HostListener} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener, ViewChild} from '@angular/core';
+import {select, Store} from '@ngrx/store';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Attribute, AttributeFormatting, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
 import {map} from 'rxjs/operators';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
-import {AttributeLock} from '@lumeer/data-filters';
 import {keyboardEventCode, KeyCode} from '../../../key-code';
+import {ConditionalFormattingContentComponent} from './content/conditional-formatting-content.component';
 
 @Component({
-  templateUrl: './attribute-lock-modal.component.html',
+  templateUrl: './conditional-formatting-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributeLockModalComponent implements OnInit {
+export class ConditionalFormattingModalComponent implements OnInit {
   @Input()
   public collectionId: string;
 
@@ -52,41 +51,26 @@ export class AttributeLockModalComponent implements OnInit {
   @Input()
   public workspace: Workspace;
 
-  @Input()
-  public overrideLock: AttributeLock;
-
-  @Input()
-  public handleSubmit: boolean;
-
-  @ViewChild(AttributeLockContentComponent)
-  public contentComponent: AttributeLockContentComponent;
+  @ViewChild(ConditionalFormattingContentComponent)
+  public contentComponent: ConditionalFormattingContentComponent;
 
   public collection$: Observable<Collection>;
   public linkType$: Observable<LinkType>;
   public attribute$: Observable<Attribute>;
 
-  public onSubmit$ = new Subject<AttributeLock>();
   public performingAction$ = new BehaviorSubject(false);
-  public overrideLock$ = new BehaviorSubject<AttributeLock>(null);
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.overrideLock$.next(this.overrideLock);
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
-      this.attribute$ = combineLatest([this.collection$, this.overrideLock$]).pipe(
-        map(([collection, overrideLock]) =>
-          checkOverrideLock(findAttribute(collection?.attributes, this.attributeId), overrideLock)
-        )
+      this.attribute$ = this.collection$.pipe(
+        map(collection => findAttribute(collection?.attributes, this.attributeId))
       );
     } else if (this.linkTypeId) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
-      this.attribute$ = combineLatest([this.linkType$, this.overrideLock$]).pipe(
-        map(([linkType, overrideLock]) =>
-          checkOverrideLock(findAttribute(linkType?.attributes, this.attributeId), overrideLock)
-        )
-      );
+      this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType?.attributes, this.attributeId)));
     }
   }
 
@@ -94,18 +78,14 @@ export class AttributeLockModalComponent implements OnInit {
     this.contentComponent?.onSubmit();
   }
 
-  public onLockChange(lock: AttributeLock, attribute: Attribute) {
-    if (this.handleSubmit) {
-      this.onSubmit$.next(lock);
-      this.hideDialog();
-    } else {
-      this.performingAction$.next(true);
-      const newAttribute = {...attribute, lock};
-      if (this.collectionId) {
-        this.updateCollectionAttribute(this.collectionId, newAttribute);
-      } else if (this.linkTypeId) {
-        this.updateLinkTypeAttribute(this.linkTypeId, newAttribute);
-      }
+  public onFormattingChange(formatting: AttributeFormatting, attribute: Attribute) {
+    this.performingAction$.next(true);
+    const newAttribute = {...attribute, formatting};
+
+    if (this.collectionId) {
+      this.updateCollectionAttribute(this.collectionId, newAttribute);
+    } else if (this.linkTypeId) {
+      this.updateLinkTypeAttribute(this.linkTypeId, newAttribute);
     }
   }
 
@@ -145,8 +125,4 @@ export class AttributeLockModalComponent implements OnInit {
       this.hideDialog();
     }
   }
-}
-
-function checkOverrideLock(attribute: Attribute, lock: AttributeLock): Attribute {
-  return {...attribute, lock: lock || attribute.lock};
 }

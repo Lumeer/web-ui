@@ -1,0 +1,14 @@
+<ng-container *ngFor="let group of groupsControl?.controls; let index = index; let last = last">
+
+  <conditional-formatting-group class="d-block mt-3"
+                                  [form]="group"
+                                  [resource]="resource"
+                                  [group]="attribute.formatting?.groups && attribute.formatting?.groups[index]"
+                                  (delete)="onDeleteGroup(index)">
+  </conditional-formatting-group>
+
+</ng-container>
+
+<button class="btn btn-sm btn-outline-primary mt-3"
+        (click)="onAddGroup()" i18n="@@resource.attribute.formatting.group.add">Add Condition Set
+</button>

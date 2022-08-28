@@ -1,0 +1,30 @@
+<div class="d-flex align-items-center">
+  <i class="fa fa-bold me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Bold" (click)="toggleStyle(fontStyle.Bold)"></i>
+  <i class="fa fa-italic me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Italic" (click)="toggleStyle(fontStyle.Italic)"></i>
+  <i class="fa fa-text me-2 format-icon" [style.color]="colorControl.value" #colorElement (click)="colorPicker.toggle()"></i>
+  <i class="fa fa-fill me-2 format-icon" [style.color]="backgroundControl.value" #backgroundElement (click)="backgroundPicker.toggle()"></i>
+</div>
+
+<constraint-conditions-form class="d-block mt-2"
+                            [resource]="resource"
+                            [filtersArray]="filtersControl"
+                            buttonLabel="Add condition"
+                            i18n-buttonLabel="@@resource.attribute.formatting.condition.add"
+                            [equation]="group?.equation">
+</constraint-conditions-form>
+
+<color-picker #colorPicker
+              [color]="colorControl.value"
+              [origin]="colorElement"
+              (save)="onColorChange($event)">
+</color-picker>
+
+<color-picker #backgroundPicker
+              [color]="backgroundControl.value"
+              [origin]="backgroundElement"
+              (save)="onBackgroundChange($event)">
+</color-picker>
+
+<i class="fal fa-trash-alt delete-icon text-danger clickable"
+   tooltip="Delete whole set"
+   i18n-tooltip="@@resource.attribute.lock.group.action.delete" (click)="delete.emit()"></i>

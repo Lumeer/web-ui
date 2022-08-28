@@ -13,13 +13,13 @@
                           [attribute]="data.attribute">
   </attribute-modal-header>
 
-
   <div class="body" *ngIf="data.attribute; else notFound">
-    <attribute-lock-content class="p-3 d-block"
-                            [resource]="data.collection || data.linkType"
-                            [attribute]="data.attribute"
-                            (lockChange)="onLockChange($event, data.attribute)">
-    </attribute-lock-content>
+    <conditional-formatting-content class="p-3 d-block"
+                                    [attribute]="data.attribute"
+                                    [resource]="data.collection || data.linkType"
+                                    (formattingChange)="onFormattingChange($event, data.attribute)">
+    </conditional-formatting-content>
+
   </div>
 
   <span class="button-cancel" i18n="@@button.cancel">Cancel</span>

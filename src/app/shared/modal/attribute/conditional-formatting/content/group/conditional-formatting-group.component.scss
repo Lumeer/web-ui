@@ -1,0 +1,25 @@
+@import '~src/styles/variables';
+
+:host {
+  box-shadow: $shadow-light;
+  padding: 0.5rem 0.75rem;
+  position: relative;
+}
+
+.format-icon {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid $primary;
+  border-radius: $border-radius-base;
+  cursor: pointer;
+
+  &.active {
+    color: $success;
+    border-color: $success;
+  }
+}
+
+.delete-icon {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+}
