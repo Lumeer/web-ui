@@ -2078,7 +2078,7 @@
             </trans-unit>
             <trans-unit id="view.perspective.name" datatype="html">
                 <source>{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} form {Form}}</source>
-                <target>{perspective, select, detail {Detail} pivot {Pivot} kanban {Nástěnka} chart {Graf} ganttChart {Časová osa} calendar {Kalendář} map {Mapa} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} workflow {Worklow} form {Formulář}}</target>
+                <target>{perspective, select, detail {Detail} pivot {Pivot} kanban {Nástěnka} chart {Graf} ganttChart {Časová osa} calendar {Kalendář} map {Mapa} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} workflow {Workflow} form {Formulář}}</target>
 
 
                 <context-group purpose="location">
