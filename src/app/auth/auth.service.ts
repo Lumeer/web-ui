@@ -189,7 +189,7 @@ export class AuthService {
       user?.language &&
       languageCodeMap[user.language]
     ) {
-      window.location.href = createLanguageUrl(path, user.language);
+      window.location.href = createLanguageUrl(path, user.language?.toLowerCase());
     } else if (path) {
       this.router.navigateByUrl(path);
     } else {
