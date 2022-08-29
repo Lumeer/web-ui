@@ -1337,6 +1337,11 @@ export class WorkflowTablesDataService {
     this.modalService.showAttributeLock(column.attribute.id, column.collectionId, column.linkTypeId);
   }
 
+  public showAttributeFormatting(column: TableColumn) {
+    this.stateService.resetSelectedCell();
+    this.modalService.showAttributeConditionalFormatting(column.attribute.id, column.collectionId, column.linkTypeId);
+  }
+
   public renameAttribute(column: TableColumn, name: string) {
     if (column?.collectionId) {
       this.store$.dispatch(

@@ -17,6 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+  computeAttributeLockStatsByDataValues,
+  ConstraintData,
+  createDataValuesMap,
+  objectsByIdMap,
+} from '@lumeer/data-filters';
 import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
@@ -46,8 +52,10 @@ import {resourceAttributeSettings} from '../../../../../../shared/settings/setti
 import {isNotNullOrUndefined, objectValues} from '../../../../../../shared/utils/common.utils';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
-import {computeAttributeLockStats, ConstraintData} from '@lumeer/data-filters';
-import {isAttributeLockEnabledByLockStats} from '../../../../../../shared/utils/attribute.utils';
+import {
+  computeAttributeFormatting,
+  isAttributeLockEnabledByLockStats,
+} from '../../../../../../shared/utils/attribute.utils';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
@@ -304,13 +312,22 @@ export function createTableRowCellsMapForResource(
   constraintData: ConstraintData,
   overrideData?: Record<string, any>
 ): TableRowCellsMap {
+  const dataValues = createDataValuesMap(object?.data, resource?.attributes, constraintData);
+  const attributesMap = objectsByIdMap(resource?.attributes);
+
   return (columns || []).reduce<TableRowCellsMap>((cellsMap, column) => {
     const data = isNotNullOrUndefined(overrideData?.[column.id])
       ? overrideData[column.id]
       : object.data?.[column.attribute?.id];
-    const lockStats = computeAttributeLockStats(object, resource, column.attribute?.lock, constraintData);
+    const lockStats = computeAttributeLockStatsByDataValues(
+      dataValues,
+      attributesMap,
+      column.attribute?.lock,
+      constraintData
+    );
     const editable = isAttributeLockEnabledByLockStats(column.attribute?.lock, lockStats);
-    cellsMap[column.id] = {data, lockStats, editable};
+    const formatting = computeAttributeFormatting(column.attribute, dataValues, attributesMap, constraintData);
+    cellsMap[column.id] = {data, lockStats, editable, ...formatting};
     return cellsMap;
   }, {});
 }

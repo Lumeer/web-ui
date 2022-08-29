@@ -27,8 +27,10 @@ import {
   AttributeLockFiltersStats,
   collectAttributeLockFilters,
   computeAttributeLockStats,
+  dataValuesSatisfyEquation,
   ConstraintData,
   ConstraintType,
+  DataValue,
   SelectConstraint,
   SelectConstraintConfig,
   UserConstraint,
@@ -39,6 +41,7 @@ import {
 import {createAttributesSettingsOrder} from '../settings/settings.util';
 import {AttributesResource, DataResource} from '../../core/model/resource';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
+import {fontStyleClass} from '../../core/model/font-style';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX = /\./g;
@@ -366,4 +369,21 @@ const NO_HINTS_CONSTRAINT_TYPES = [
 
 export function canShowAttributeHints(type: ConstraintType): boolean {
   return !NO_HINTS_CONSTRAINT_TYPES.includes(type);
+}
+
+export function computeAttributeFormatting(
+  attribute: Attribute,
+  dataValues: Record<string, DataValue>,
+  attributesMap: Record<string, Attribute>,
+  constraintData?: ConstraintData
+): {color?: string; background?: string; classes?: string} {
+  const groups = attribute?.formatting?.groups || [];
+  for (const group of groups) {
+    if (dataValuesSatisfyEquation(dataValues, attributesMap, group.equation, constraintData)) {
+      const classes = group.styles?.map(style => fontStyleClass(style)).filter(c => !!c) || [];
+      return {color: group.color, background: group.background, classes: classes.join(' ')};
+    }
+  }
+
+  return {};
 }

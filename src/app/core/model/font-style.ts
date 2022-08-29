@@ -21,3 +21,14 @@ export enum FontStyle {
   Italic = 'italic',
   Bold = 'bold',
 }
+
+export function fontStyleClass(style: FontStyle): string {
+  switch (style) {
+    case FontStyle.Bold:
+      return 'fw-bold';
+    case FontStyle.Italic:
+      return 'fst-italic';
+    default:
+      return '';
+  }
+}
