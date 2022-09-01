@@ -23,7 +23,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
 import {AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
 import {DialogType} from '../../../../modal/dialog-type';
 import {minLengthValidator} from '../../../../../core/validators/custom-validators';
 import {uniqueValuesValidator} from '../../../../../core/validators/unique-values-validator';
@@ -32,8 +32,17 @@ import {minimumValuesCountValidator} from '../../../../../core/validators/mininu
 import {SelectionListsAction} from '../../../../../core/store/selection-lists/selection-lists.action';
 import {parseSelectOptionsFromForm} from '../../../../modal/attribute/type/form/constraint-config/select/select-constraint.utils';
 import {keyboardEventCode, KeyCode} from '../../../../key-code';
-import {distinctUntilChanged, map, take} from 'rxjs/operators';
+import {distinctUntilChanged, map, startWith, take} from 'rxjs/operators';
 import {selectSelectionListsByProjectSorted} from '../../../../../core/store/selection-lists/selection-lists.state';
+import {
+  selectReadableCollections,
+  selectReadableLinkTypesWithCollections,
+} from '../../../../../core/store/common/permissions.selectors';
+import {
+  AttributeSelectionList,
+  collectionAttributeCustomSelectionLists,
+  linkTypeAttributeCustomSelectionLists,
+} from '../attribute-selection-list';
 
 @Component({
   templateUrl: './selection-list-modal.component.html',
@@ -51,15 +60,21 @@ export class SelectionListModalComponent implements OnInit, OnDestroy {
 
   public readonly dialogType = DialogType.Primary;
 
-  public form: FormGroup;
-  public performingAction$ = new BehaviorSubject(false);
   public invalid$: Observable<boolean>;
+  public attributesSelectionLists$: Observable<AttributeSelectionList[]>;
+
+  public performingAction$ = new BehaviorSubject(false);
+  public list$ = new BehaviorSubject<SelectionList>(null);
+
+  public form: FormGroup;
   private subscriptions = new Subscription();
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: FormBuilder) {}
 
   public ngOnInit() {
     this.createForm();
+
+    this.list$.next(this.list);
   }
 
   private createForm() {
@@ -72,10 +87,24 @@ export class SelectionListModalComponent implements OnInit, OnDestroy {
     this.setOptionsValidator();
 
     this.invalid$ = this.form.statusChanges.pipe(
+      startWith(() => this.form.invalid),
       map(() => this.form.invalid),
       distinctUntilChanged()
     );
     this.subscriptions.add(this.displayValuesControl.valueChanges.subscribe(() => this.setOptionsValidator()));
+
+    this.attributesSelectionLists$ = combineLatest([
+      this.store$.pipe(select(selectReadableCollections)),
+      this.store$.pipe(select(selectReadableLinkTypesWithCollections)),
+    ]).pipe(
+      map(([collections, linkTypes]) => [
+        ...collections.reduce(
+          (lists, collection) => [...lists, ...collectionAttributeCustomSelectionLists(collection)],
+          []
+        ),
+        ...linkTypes.reduce((lists, linkType) => [...lists, ...linkTypeAttributeCustomSelectionLists(linkType)], []),
+      ])
+    );
   }
 
   private setOptionsValidator() {
@@ -168,5 +197,10 @@ export class SelectionListModalComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public onListSelected(list: AttributeSelectionList) {
+    this.form.patchValue({name: list.shortName, displayValues: list.displayValues});
+    this.list$.next({...list, id: null, options: [...list.options]});
   }
 }

@@ -18,9 +18,21 @@
            i18n="@@selection.lists.modal.name.error.notUnique">List name already exists</small>
   </div>
 
-  <select-constraint-options-form class="d-block mt-1"
+  <div #optionsOrigin>
+    <button *ngIf="selectionListsOptions?.length" class="btn btn-link mt-2 px-0" (click)="optionsDropdown.toggle()">
+      <span i18n="@@selection.lists.modal.action.copy">Copy values from attribute</span>&nbsp;<i class="fa fa-caret-down"></i>
+    </button>
+  </div>
+
+  <select-constraint-options-form class="d-block mt-2"
                                   [form]="form"
                                   [options]="list.options">
   </select-constraint-options-form>
 
 </form>
+
+<options-dropdown #optionsDropdown
+                  [options]="selectionListsOptions"
+                  [origin]="optionsOrigin"
+                  (selectOption)="onSelectionListSelected($event)">
+</options-dropdown>

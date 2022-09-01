@@ -29,6 +29,7 @@ import {ModalWrapperModule} from '../../modal/wrapper/modal-wrapper.module';
 import {AttributeTypeModalModule} from '../../modal/attribute/type/attribute-type-modal.module';
 import {SelectionListModalContentComponent} from './content/modal/content/selection-list-modal-content.component';
 import {PipesModule} from '../../pipes/pipes.module';
+import {DropdownModule} from '../../dropdown/dropdown.module';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,14 @@ import {PipesModule} from '../../pipes/pipes.module';
     SelectionListModalComponent,
     SelectionListModalContentComponent,
   ],
-  imports: [CommonModule, ModalWrapperModule, AttributeTypeModalModule, ReactiveFormsModule, PipesModule],
+  imports: [
+    CommonModule,
+    ModalWrapperModule,
+    AttributeTypeModalModule,
+    ReactiveFormsModule,
+    PipesModule,
+    DropdownModule,
+  ],
   exports: [SelectionListsComponent],
 })
 export class SelectionListsModule {}
