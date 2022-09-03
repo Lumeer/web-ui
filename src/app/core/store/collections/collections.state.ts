@@ -53,7 +53,7 @@ export const selectCollectionByWorkspace = createSelector(
   selectCollectionsDictionary,
   selectWorkspace,
   (collections, workspace) => {
-    return workspace && workspace.collectionId ? collections[workspace.collectionId] : null;
+    return workspace?.collectionId ? collections[workspace.collectionId] : null;
   }
 );
 

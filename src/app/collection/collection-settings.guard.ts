@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Observable, of} from 'rxjs';
-import {catchError, filter, mergeMap, take, tap} from 'rxjs/operators';
+import {catchError, mergeMap, take, tap} from 'rxjs/operators';
 import {selectCollectionById, selectCollectionsLoaded} from '../core/store/collections/collections.state';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../core/store/app.state';
@@ -34,6 +34,7 @@ import {User} from '../core/store/users/user';
 import {Project} from '../core/store/projects/project';
 import {CollectionService} from '../core/data-service';
 import {userCanManageCollectionDetail} from '../shared/utils/permission.utils';
+import {ResourcesGuardService} from '../workspace/resources-guard.service';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
@@ -41,7 +42,8 @@ export class CollectionSettingsGuard implements CanActivate {
     private router: Router,
     private collectionService: CollectionService,
     private workspaceService: WorkspaceService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private resourcesGuardService: ResourcesGuardService
   ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -76,22 +78,8 @@ export class CollectionSettingsGuard implements CanActivate {
   }
 
   private selectCollection(organization: Organization, project: Project, collectionId: string): Observable<Collection> {
-    return this.loadCollections(organization, project).pipe(
+    return this.resourcesGuardService.selectCollections$(organization, project).pipe(
       mergeMap(() => this.store$.pipe(select(selectCollectionById(collectionId)))),
-      take(1)
-    );
-  }
-
-  private loadCollections(organization: Organization, project: Project): Observable<boolean> {
-    return this.store$.pipe(
-      select(selectCollectionsLoaded),
-      tap(loaded => {
-        if (!loaded) {
-          const workspace = {organizationId: organization.id, projectId: project.id};
-          this.store$.dispatch(new CollectionsAction.Get({workspace}));
-        }
-      }),
-      filter(loaded => loaded),
       take(1)
     );
   }

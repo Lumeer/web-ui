@@ -17,23 +17,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {SelectionList} from '../../../selection-list';
+import {DropdownOption} from '../../../../../dropdown/options/dropdown-option';
+import {AttributeSelectionList} from '../../attribute-selection-list';
 
 @Component({
   selector: 'selection-list-modal-content',
   templateUrl: './selection-list-modal-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectionListModalContentComponent {
+export class SelectionListModalContentComponent implements OnChanges {
   @Input()
   public form: FormGroup;
 
   @Input()
   public list: SelectionList;
 
+  @Input()
+  public attributesSelectionLists: AttributeSelectionList[];
+
+  @Output()
+  public listSelected = new EventEmitter<AttributeSelectionList>();
+
+  public selectionListsOptions: DropdownOption[];
+
   public get nameControl(): AbstractControl {
     return this.form.controls.name;
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.attributesSelectionLists) {
+      this.selectionListsOptions = (this.attributesSelectionLists || []).map(list => ({
+        value: list.id,
+        displayValue: list.name,
+        icons: list.icons,
+        iconColors: list.colors,
+      }));
+    }
+  }
+
+  public onSelectionListSelected(option: DropdownOption) {
+    const selectionList = this.attributesSelectionLists?.find(list => list.id === option.value);
+    if (selectionList) {
+      this.listSelected.emit(selectionList);
+    }
   }
 }

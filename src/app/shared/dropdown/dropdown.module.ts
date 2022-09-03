@@ -28,7 +28,6 @@ import {FilterDropdownOptionsPipe} from './pipes/filter-dropdown-options.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropdown-position.pipe';
 import {GroupDropdownOptionsPipe} from './pipes/group-dropdown-options.pipe';
-import {DropdownDirective} from './dropdown.directive';
 import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
 import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-options.pipe';
 

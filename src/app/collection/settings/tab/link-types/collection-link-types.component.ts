@@ -37,6 +37,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {selectLinkTypesPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {mapLinkTypeCollections} from '../../../../shared/utils/link-type.utils';
 
 @Component({
   templateUrl: './collection-link-types.component.html',
@@ -74,15 +75,7 @@ export class CollectionLinkTypesComponent implements OnInit {
       this.store$.pipe(select(selectLinkTypesByCollectionId(collectionId))),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
-      map(([linkTypes, collectionsMap]) =>
-        linkTypes.map(linkType => {
-          const collections: [Collection, Collection] = [
-            collectionsMap[linkType.collectionIds[0]],
-            collectionsMap[linkType.collectionIds[1]],
-          ];
-          return {...linkType, collections};
-        })
-      )
+      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
     );
   }
 

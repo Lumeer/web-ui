@@ -18,7 +18,6 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../core/store/collections/collection';
 import {combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions.selectors';
@@ -26,6 +25,7 @@ import {selectCollectionsDictionary} from '../../core/store/collections/collecti
 import {map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
+import {mapLinkTypeCollections} from '../utils/link-type.utils';
 
 @Pipe({
   name: 'collectionLinkTypes',
@@ -39,15 +39,7 @@ export class CollectionLinkTypesPipe implements PipeTransform {
       this.store$.pipe(select(selectLinkTypesByCollectionId(collectionId))),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
-      map(([linkTypes, collectionsMap]) =>
-        linkTypes.map(linkType => {
-          const collections: [Collection, Collection] = [
-            collectionsMap[linkType.collectionIds[0]],
-            collectionsMap[linkType.collectionIds[1]],
-          ];
-          return {...linkType, collections};
-        })
-      )
+      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
     );
   }
 }

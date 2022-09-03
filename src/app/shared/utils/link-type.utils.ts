@@ -29,6 +29,10 @@ export function getOtherLinkedCollectionId(linkType: LinkType, collectionId: str
     : null;
 }
 
+export function mapLinkTypesCollections(linkTypes: LinkType[], collectionsMap: Record<string, Collection>): LinkType[] {
+  return (linkTypes || []).map(linkType => mapLinkTypeCollections(linkType, collectionsMap));
+}
+
 export function mapLinkTypeCollections(linkType: LinkType, collectionsMap: Record<string, Collection>): LinkType {
   const collections = linkType.collectionIds
     .map(collectionId => collectionsMap[collectionId])
