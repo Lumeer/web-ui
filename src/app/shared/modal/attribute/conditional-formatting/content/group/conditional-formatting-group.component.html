@@ -1,29 +1,44 @@
-<div class="d-flex align-items-center">
-  <i class="fa fa-bold me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Bold" (click)="toggleStyle(fontStyle.Bold)"></i>
-  <i class="fa fa-italic me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Italic" (click)="toggleStyle(fontStyle.Italic)"></i>
-  <i class="fa fa-text me-2 format-icon" [style.color]="colorControl.value" #colorElement (click)="colorPicker.toggle()"></i>
-  <i class="fa fa-fill me-2 format-icon" [style.color]="backgroundControl.value" #backgroundElement (click)="backgroundPicker.toggle()"></i>
-</div>
+<ng-container *ngIf="{style: style$| async} as data">
+  <div i18n="resource.attribute.lock.group.conditions.title">Format values if...</div>
+  <constraint-conditions-form class="d-block mt-1"
+                              [resource]="resource"
+                              [filtersArray]="filtersControl"
+                              buttonLabel="Add another rule"
+                              i18n-buttonLabel="@@resource.attribute.formatting.condition.add"
+                              [equation]="group?.equation">
+  </constraint-conditions-form>
 
-<constraint-conditions-form class="d-block mt-2"
-                            [resource]="resource"
-                            [filtersArray]="filtersControl"
-                            buttonLabel="Add condition"
-                            i18n-buttonLabel="@@resource.attribute.formatting.condition.add"
-                            [equation]="group?.equation">
-</constraint-conditions-form>
+  <div class="mt-2" i18n="resource.attribute.lock.group.format.title">Formatting style</div>
+  <div class="card mt-1">
+    <div class="card-header px-3 py-2"
+         [style.color]="data.style.color"
+         [style.background-color]="data.style.background"
+         [ngClass]="data.style.classes"
+         i18n="@@example">Example
+    </div>
+    <div class="card-body d-flex align-items-center mt-1 px-3 py-2">
+      <i class="fa fa-bold me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Bold" (click)="toggleStyle(fontStyle.Bold)"></i>
+      <i class="fa fa-italic me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Italic" (click)="toggleStyle(fontStyle.Italic)"></i>
+      <i class="fa fa-underline me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Underline" (click)="toggleStyle(fontStyle.Underline)"></i>
+      <i class="fa fa-strikethrough me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.StrikeThrough" (click)="toggleStyle(fontStyle.StrikeThrough)"></i>
+      <i class="fa fa-text me-2 format-icon" [style.color]="colorControl.value" #colorElement (click)="colorPicker.toggle()"></i>
+      <i class="fa fa-fill me-2 format-icon" [style.color]="backgroundControl.value" #backgroundElement (click)="backgroundPicker.toggle()"></i>
+      <i class="fa fa-text-slash me-2 format-icon" (click)="resetStyle()"></i>
+    </div>
+  </div>
 
-<color-picker #colorPicker
-              [color]="colorControl.value"
-              [origin]="colorElement"
-              (save)="onColorChange($event)">
-</color-picker>
+  <color-picker #colorPicker
+                [color]="colorControl.value"
+                [origin]="colorElement"
+                (save)="onColorChange($event)">
+  </color-picker>
 
-<color-picker #backgroundPicker
-              [color]="backgroundControl.value"
-              [origin]="backgroundElement"
-              (save)="onBackgroundChange($event)">
-</color-picker>
+  <color-picker #backgroundPicker
+                [color]="backgroundControl.value"
+                [origin]="backgroundElement"
+                (save)="onBackgroundChange($event)">
+  </color-picker>
+</ng-container>
 
 <i class="fal fa-trash-alt delete-icon text-danger clickable"
    tooltip="Delete whole set"

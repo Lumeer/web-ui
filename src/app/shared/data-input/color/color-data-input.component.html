@@ -6,6 +6,7 @@
        [class.bg-transparent]="!readonly || !(value | serializeDataValue) || !valid"
        [class.bg-danger-light]="!commonConfiguration?.skipValidation && readonly && !valid"
        [class.invalid-value]="!commonConfiguration?.skipValidation && readonly && !(value | isDataValueValid)"
+       [style.color]="fontColor"
        (input)="onInput($event.target.value)"
        (blur)="!readonly && onBlur()"
        (focus)="!readonly && onFocus()"

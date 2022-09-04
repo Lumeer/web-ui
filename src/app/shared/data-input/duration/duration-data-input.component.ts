@@ -54,6 +54,9 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public commonConfiguration: CommonDataInputConfiguration;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<DurationDataValue>();
 

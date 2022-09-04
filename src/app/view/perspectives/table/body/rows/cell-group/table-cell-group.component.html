@@ -5,29 +5,34 @@
   <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
     <ng-container *ngIf="column | isCompoundColumn; else emptyCell">
       <ng-container *ngIf="!(cursor | cellCollapsed | async); else collapsedCell">
-        <table-data-cell
-          *ngIf="{document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0]: query:data.collection :data.constraintData,
-                  linkInstance: data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0]} as cellData"
-          tableCellScroll
-          [column]="column"
-          [cursor]="cursor | columnCursor:columnIndex"
-          [document]="cellData.document"
-          [view]="view"
-          [correlationId]="correlationId"
-          [canManageConfig]="canManageConfig"
-          [linkInstance]="cellData.linkInstance"
-          [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
-          [table]="table$ | async"
-          [resource]="data.resource"
-          [allowedPermissions]="data.permissions"
-          [linkAllowedPermissions]="data.linkTypePermissions"
-          [dataPermissions]="(cellData.document || cellData.linkInstance) | dataResourcePermissions:data.resource:data.permissions:data.currentUser:data.constraintData"
-          [linkDataPermissions]="cellData.linkInstance | dataResourcePermissions:data.linkType:data.linkTypePermissions:data.currentUser:data.constraintData"
-          [query]="query"
-          data-test="table-data-cell"
-          [constraintData]="data.constraintData"
-          (affect)="onAffect()">
-        </table-data-cell>
+        <ng-container *ngIf="{document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0]: query:data.collection :data.constraintData,
+                  linkInstance: data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0]} as cellData">
+          <table-data-cell
+            *ngIf="{style: data.resource | resourceAttributeFormattingStyle:column.attributeIds[0]:(cellData.document || cellData.linkInstance):data.constraintData } as styleData"
+            tableCellScroll
+            [column]="column"
+            [cursor]="cursor | columnCursor:columnIndex"
+            [document]="cellData.document"
+            [view]="view"
+            [correlationId]="correlationId"
+            [canManageConfig]="canManageConfig"
+            [linkInstance]="cellData.linkInstance"
+            [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
+            [table]="table$ | async"
+            [resource]="data.resource"
+            [allowedPermissions]="data.permissions"
+            [linkAllowedPermissions]="data.linkTypePermissions"
+            [dataPermissions]="(cellData.document || cellData.linkInstance) | dataResourcePermissions:data.resource:data.permissions:data.currentUser:data.constraintData"
+            [linkDataPermissions]="cellData.linkInstance | dataResourcePermissions:data.linkType:data.linkTypePermissions:data.currentUser:data.constraintData"
+            [fontColor]="styleData.style.color"
+            [query]="query"
+            data-test="table-data-cell"
+            [constraintData]="data.constraintData"
+            [ngClass]="styleData.style.classes"
+            [style.background-color]="styleData.style.background"
+            (affect)="onAffect()">
+          </table-data-cell>
+        </ng-container>
       </ng-container>
 
       <ng-template #collapsedCell>

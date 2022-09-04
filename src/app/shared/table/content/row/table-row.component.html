@@ -13,8 +13,7 @@
           [style.width.px]="group.width"
           [style.height.px]="row.height"
           [style.max-height.px]="row.height"
-          [style.background]="data.cell.background"
-          [style.color]="data.cell.color"
+          [style.background-color]="data.cell.background"
           [class.px-1]="!dataInputInfo.showDataInput || row.hierarchy"
           [ngClass]="dataInputInfo.showDataInput ? data.cell.classes : 'text-pre overflow-hidden align-middle ' + data.cell.classes"
           [class.focused]="selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row"
@@ -49,6 +48,7 @@
           [style.margin-left.px]="row.hierarchy && group.column.id === hierarchyColumnId ? (row.hierarchy.level + 1) * hierarchyStepWidth : 0"
           [dataValue]="(editedValue | isNotNullOrUndefined) && dataInputInfo.editing ? editedValue : data.dataValue"
           [focus]="true"
+          [fontColor]="data.cell.color"
           [readonly]="dataInputInfo.readonly"
           [configuration]="configuration"
           (keydown)="onDataInputKeyDown($event)"
@@ -59,6 +59,7 @@
         <div class="d-flex align-items-center html-input"
              *ngIf="group.column && !dataInputInfo.showDataInput && dataInputInfo.hasValue"
              [style.margin-left.px]="row.hierarchy && group.column.id === hierarchyColumnId ? (row.hierarchy.level + 1) * hierarchyStepWidth : 0"
+             [style.color]="data.cell.color"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
         <ng-container *ngIf="{
@@ -68,6 +69,7 @@
           <div *ngIf="hoverData.showDetail" class="detail-trigger small ps-1 pe-1 cursor-pointer"
                [class.has-comments]="row.commentsCount"
                [class.has-lock]="hoverData.showLock"
+               [style.background-color]="data.cell.background"
                (click)="onDetailClick($event)"
                (dblclick)="$event.preventDefault(); $event.stopPropagation()">
             <span class="detail-text btn-link ps-1 me-2">Detail&nbsp;&gt;</span>

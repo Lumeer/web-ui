@@ -60,6 +60,9 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   @Input()
   public value: DateTimeDataValue;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<DateTimeDataValue>();
 

@@ -20,14 +20,32 @@
 export enum FontStyle {
   Italic = 'italic',
   Bold = 'bold',
+  Underline = 'underline',
+  StrikeThrough = 'strikeThrough',
 }
 
-export function fontStyleClass(style: FontStyle): string {
+export function fontStylesClass(styles: FontStyle[]): string {
+  let stylesCopy = [...(styles || [])];
+  const classes = [];
+  if (stylesCopy.includes(FontStyle.Underline) && stylesCopy.includes(FontStyle.StrikeThrough)) {
+    classes.push('text-underline-line-through');
+    stylesCopy = stylesCopy.filter(style => style !== FontStyle.Underline && style !== FontStyle.StrikeThrough);
+  }
+
+  classes.push(...stylesCopy.map(style => fontStyleClass(style)).filter(c => !!c));
+  return classes.join(' ');
+}
+
+function fontStyleClass(style: FontStyle): string {
   switch (style) {
     case FontStyle.Bold:
       return 'fw-bold';
     case FontStyle.Italic:
       return 'fst-italic';
+    case FontStyle.Underline:
+      return 'text-underline';
+    case FontStyle.StrikeThrough:
+      return 'text-line-through';
     default:
       return '';
   }

@@ -1,4 +1,4 @@
-<ng-container *ngIf="{rows: dataRowService.rows$ | async, resource: resource$ | async, writable: dataResource | dataResourceIsWritable:resource:permissions:user:constraintData} as data">
+<ng-container *ngIf="{rows: dataRowService.rows$ | async, writable: dataResource | dataResourceIsWritable:resource:permissions:user:constraintData} as data">
 
   <hidden-input (newInput)="onNewHiddenInput($event)"
                 class="position-fixed">
@@ -11,12 +11,13 @@
                           [permissions]="permissions"
                           [cursor]="dataResource | dataCursor:row.attribute?.id:view?.id"
                           [constraintData]="constraintData"
-                          [lockStats]="data.resource | attributeLockStats :dataResource: row.attribute:constraintData"
+                          [lockStats]="resource | attributeLockStats :dataResource: row.attribute:constraintData"
                           [readonly]="!editableValues || !data.writable"
                           [unusedAttributes]="unusedAttributes$ | async"
                           [preventEventBubble]="preventEventBubble"
                           [workspace]="workspace"
                           [editableKey]="editableKeys"
+                          [formattingStyle]="resource | resourceAttributeFormattingStyle:row.attribute?.id:dataResource:constraintData"
                           (newValue)="onNewValue($event, row, index)"
                           (newKey)="onNewKey($event, index)"
                           (deleteRow)="onRemoveRow(index)"

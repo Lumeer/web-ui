@@ -55,6 +55,9 @@ export class LinkDataInputComponent implements OnChanges {
   @Input()
   public value: LinkDataValue;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<LinkDataValue>();
 

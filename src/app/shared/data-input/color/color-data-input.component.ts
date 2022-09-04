@@ -61,6 +61,9 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public configuration: ColorDataInputConfiguration;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<ColorDataValue>();
 

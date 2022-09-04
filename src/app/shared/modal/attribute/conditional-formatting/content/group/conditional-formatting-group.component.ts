@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {AttributesResource} from '../../../../../../core/model/resource';
 import {AttributeFormattingGroup} from '../../../../../../core/store/collections/collection';
 import {FontStyle} from '../../../../../../core/model/font-style';
+import {computeAttributeFormattingStyle, AttributeFormattingStyle} from '../../../../../utils/attribute.utils';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'conditional-formatting-group',
@@ -29,7 +32,7 @@ import {FontStyle} from '../../../../../../core/model/font-style';
   styleUrls: ['./conditional-formatting-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConditionalFormattingGroupComponent {
+export class ConditionalFormattingGroupComponent implements OnInit {
   @Input()
   public form: FormGroup;
 
@@ -43,6 +46,8 @@ export class ConditionalFormattingGroupComponent {
   public delete = new EventEmitter();
 
   public readonly fontStyle = FontStyle;
+
+  public style$: Observable<AttributeFormattingStyle>;
 
   public get stylesControl(): AbstractControl {
     return this.form.controls.styles;
@@ -58,6 +63,13 @@ export class ConditionalFormattingGroupComponent {
 
   public get filtersControl(): FormArray {
     return <FormArray>this.form.controls.filters;
+  }
+
+  public ngOnInit() {
+    this.style$ = this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      map(() => computeAttributeFormattingStyle(this.form.value))
+    );
   }
 
   public toggleStyle(style: FontStyle) {
@@ -77,5 +89,11 @@ export class ConditionalFormattingGroupComponent {
 
   public onBackgroundChange(color: string) {
     this.backgroundControl.setValue(color);
+  }
+
+  public resetStyle() {
+    this.stylesControl.setValue([]);
+    this.backgroundControl.setValue(null);
+    this.colorControl.setValue(null);
   }
 }

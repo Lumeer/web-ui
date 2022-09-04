@@ -10,7 +10,7 @@
         <span class="select-tag"
               [class.m-1]="configuration?.wrapItems"
               [style.background]="option.background"
-              [style.color]="option.background | contrastColor"
+              [style.color]="fontColor || (option.background | contrastColor)"
               [class.invalid-value]="!commonConfiguration?.skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions?.length)"
               [spellcheck]="false"
               [innerHTML]="option.displayValue || option.value"

@@ -111,6 +111,7 @@ import {IsAttributeEnabledByLockStatsPipe} from './is-attribute-enabled-by-lock-
 import {ResourceAttributesMapPipe} from './resource-attributes-map.pipe';
 import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
 import {IndicesPipe} from './indices.pipe';
+import {ResourceAttributeFormattingStylePipe} from './resource-attribute-formatting-group-style.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -204,6 +205,7 @@ import {IndicesPipe} from './indices.pipe';
     ViewColorPipe,
     ViewLinkPipe,
     CanShowAttributeHintsPipe,
+    ResourceAttributeFormattingStylePipe,
   ],
   exports: [
     DataPipesModule,
@@ -298,6 +300,7 @@ import {IndicesPipe} from './indices.pipe';
     ViewColorPipe,
     ViewLinkPipe,
     CanShowAttributeHintsPipe,
+    ResourceAttributeFormattingStylePipe,
   ],
 })
 export class PipesModule {}

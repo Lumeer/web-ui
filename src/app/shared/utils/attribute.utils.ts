@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, AttributeFunction} from '../../core/store/collections/collection';
+import {Attribute, AttributeFormattingGroup, AttributeFunction} from '../../core/store/collections/collection';
 import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
 import {objectsByIdMap, objectValues} from './common.utils';
 import {
@@ -41,7 +41,7 @@ import {
 import {createAttributesSettingsOrder} from '../settings/settings.util';
 import {AttributesResource, DataResource} from '../../core/model/resource';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
-import {fontStyleClass} from '../../core/model/font-style';
+import {fontStylesClass} from '../../core/model/font-style';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX = /\./g;
@@ -376,14 +376,23 @@ export function computeAttributeFormatting(
   dataValues: Record<string, DataValue>,
   attributesMap: Record<string, Attribute>,
   constraintData?: ConstraintData
-): {color?: string; background?: string; classes?: string} {
+): Partial<AttributeFormattingStyle> {
   const groups = attribute?.formatting?.groups || [];
   for (const group of groups) {
     if (dataValuesSatisfyEquation(dataValues, attributesMap, group.equation, constraintData)) {
-      const classes = group.styles?.map(style => fontStyleClass(style)).filter(c => !!c) || [];
-      return {color: group.color, background: group.background, classes: classes.join(' ')};
+      return computeAttributeFormattingStyle(group);
     }
   }
 
   return {};
+}
+
+export interface AttributeFormattingStyle {
+  color: string;
+  background: string;
+  classes: string;
+}
+
+export function computeAttributeFormattingStyle(group: AttributeFormattingGroup): AttributeFormattingStyle {
+  return {color: group.color, background: group.background, classes: fontStylesClass(group.styles)};
 }

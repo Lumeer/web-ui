@@ -94,6 +94,9 @@ export class ActionDataInputComponent implements OnChanges {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public cancel = new EventEmitter();
 

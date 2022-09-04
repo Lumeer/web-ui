@@ -80,6 +80,12 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public fontColor: string;
+
+  @Input()
+  public backgroundColor: string;
+
   @Output()
   public valueChange = new EventEmitter<DataValue>();
 
