@@ -231,17 +231,17 @@ export class WorkflowTablesMenuService {
           group: 0,
         },
         {
-          id: HeaderMenuId.Lock,
-          title: this.translateHeaderMenuItem(HeaderMenuId.Lock),
-          disabled: !permissions?.roles?.AttributeEdit,
-          icons: ['fa fa-lock-open'],
-          group: 0,
-        },
-        {
           id: HeaderMenuId.Formatting,
           title: this.translateHeaderMenuItem(HeaderMenuId.Formatting),
           disabled: !permissions?.roles?.AttributeEdit,
           icons: ['fa fa-palette'],
+          group: 0,
+        },
+        {
+          id: HeaderMenuId.Lock,
+          title: this.translateHeaderMenuItem(HeaderMenuId.Lock),
+          disabled: !permissions?.roles?.AttributeEdit,
+          icons: ['fa fa-lock-open'],
           group: 0,
         },
         {

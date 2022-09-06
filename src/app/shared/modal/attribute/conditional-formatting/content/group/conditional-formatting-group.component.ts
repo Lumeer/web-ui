@@ -25,6 +25,7 @@ import {FontStyle} from '../../../../../../core/model/font-style';
 import {computeAttributeFormattingStyle, AttributeFormattingStyle} from '../../../../../utils/attribute.utils';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import {POPUP_DELAY} from '../../../../../../core/constants';
 
 @Component({
   selector: 'conditional-formatting-group',
@@ -48,6 +49,8 @@ export class ConditionalFormattingGroupComponent implements OnInit {
   public readonly fontStyle = FontStyle;
 
   public style$: Observable<AttributeFormattingStyle>;
+
+  public readonly popupDelay = POPUP_DELAY;
 
   public get stylesControl(): AbstractControl {
     return this.form.controls.styles;

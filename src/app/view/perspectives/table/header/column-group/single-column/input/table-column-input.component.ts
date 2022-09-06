@@ -35,6 +35,7 @@ import {
 } from '../../../../../../../shared/utils/attribute.utils';
 import {HtmlModifier} from '../../../../../../../shared/utils/html-modifier';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
+import {POPUP_DELAY} from '../../../../../../../core/constants';
 
 @Component({
   selector: 'table-column-input',
@@ -71,6 +72,8 @@ export class TableColumnInputComponent implements OnChanges {
   public textInput: ElementRef<HTMLInputElement>;
 
   public readonly placeholder: string;
+
+  public readonly popupDelay = POPUP_DELAY;
 
   private preventSave: boolean;
 

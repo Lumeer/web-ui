@@ -3,12 +3,12 @@
   <constraint-conditions-form class="d-block mt-1"
                               [resource]="resource"
                               [filtersArray]="filtersControl"
-                              buttonLabel="Add another rule"
+                              buttonLabel="Add condition"
                               i18n-buttonLabel="@@resource.attribute.formatting.condition.add"
                               [equation]="group?.equation">
   </constraint-conditions-form>
 
-  <div class="mt-2" i18n="resource.attribute.lock.group.format.title">Formatting style</div>
+  <div class="mt-2" i18n="resource.attribute.formatting.format.title">Formatting style</div>
   <div class="card mt-1">
     <div class="card-header px-3 py-2"
          [style.color]="data.style.color"
@@ -17,13 +17,13 @@
          i18n="@@example">Example
     </div>
     <div class="card-body d-flex align-items-center mt-1 px-3 py-2">
-      <i class="fa fa-bold me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Bold" (click)="toggleStyle(fontStyle.Bold)"></i>
-      <i class="fa fa-italic me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Italic" (click)="toggleStyle(fontStyle.Italic)"></i>
-      <i class="fa fa-underline me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Underline" (click)="toggleStyle(fontStyle.Underline)"></i>
-      <i class="fa fa-strikethrough me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.StrikeThrough" (click)="toggleStyle(fontStyle.StrikeThrough)"></i>
-      <i class="fa fa-text me-2 format-icon" [style.color]="colorControl.value" #colorElement (click)="colorPicker.toggle()"></i>
-      <i class="fa fa-fill me-2 format-icon" [style.color]="backgroundControl.value" #backgroundElement (click)="backgroundPicker.toggle()"></i>
-      <i class="fa fa-text-slash me-2 format-icon" (click)="resetStyle()"></i>
+      <i class="fa fa-bold me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Bold" (click)="toggleStyle(fontStyle.Bold)" tooltip="Bold" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.bold"></i>
+      <i class="fa fa-italic me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Italic" (click)="toggleStyle(fontStyle.Italic)" tooltip="Italic" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.italic"></i>
+      <i class="fa fa-underline me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Underline" (click)="toggleStyle(fontStyle.Underline)" tooltip="Underline" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.underline"></i>
+      <i class="fa fa-strikethrough me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.StrikeThrough" (click)="toggleStyle(fontStyle.StrikeThrough)" tooltip="Strike through" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.strikeThrough"></i>
+      <i class="fa-duotone fa-palette me-2 format-icon" [style.color]="colorControl.value" #colorElement (click)="colorPicker.toggle()" tooltip="Color" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.color"></i>
+      <i class="fa-duotone fa-fill-drip me-2 format-icon" [style]="{'--fa-primary-color': backgroundControl.value}" #backgroundElement (click)="backgroundPicker.toggle()" tooltip="Background" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.background"></i>
+      <i class="fa fa-text-slash me-2 format-icon" (click)="resetStyle()" tooltip="Clear format" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.clearFormat"></i>
     </div>
   </div>
 
