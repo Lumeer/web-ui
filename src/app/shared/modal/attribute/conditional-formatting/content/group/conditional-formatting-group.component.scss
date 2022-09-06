@@ -11,6 +11,7 @@
   border: 1px solid $primary;
   border-radius: $border-radius-base;
   cursor: pointer;
+  --fa-secondary-opacity: 1;
 
   &.active {
     color: $success;

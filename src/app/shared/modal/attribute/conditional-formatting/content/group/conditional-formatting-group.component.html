@@ -17,13 +17,13 @@
          i18n="@@example">Example
     </div>
     <div class="card-body d-flex align-items-center mt-1 px-3 py-2">
-      <i class="fa fa-bold me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Bold" (click)="toggleStyle(fontStyle.Bold)" tooltip="Bold" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.bold"></i>
-      <i class="fa fa-italic me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Italic" (click)="toggleStyle(fontStyle.Italic)" tooltip="Italic" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.italic"></i>
-      <i class="fa fa-underline me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Underline" (click)="toggleStyle(fontStyle.Underline)" tooltip="Underline" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.underline"></i>
-      <i class="fa fa-strikethrough me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.StrikeThrough" (click)="toggleStyle(fontStyle.StrikeThrough)" tooltip="Strike through" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.strikeThrough"></i>
-      <i class="fa-duotone fa-palette me-2 format-icon" [style.color]="colorControl.value" #colorElement (click)="colorPicker.toggle()" tooltip="Color" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.color"></i>
-      <i class="fa-duotone fa-fill-drip me-2 format-icon" [style]="{'--fa-primary-color': backgroundControl.value}" #backgroundElement (click)="backgroundPicker.toggle()" tooltip="Background" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.background"></i>
-      <i class="fa fa-text-slash me-2 format-icon" (click)="resetStyle()" tooltip="Clear format" tooltipPlacement="top" [tooltipPopupDelay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.clearFormat"></i>
+      <i class="fa fa-bold me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Bold" (click)="toggleStyle(fontStyle.Bold)" tooltip="Bold" placement="top" [delay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.bold"></i>
+      <i class="fa fa-italic me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Italic" (click)="toggleStyle(fontStyle.Italic)" tooltip="Italic" placement="top" [delay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.italic"></i>
+      <i class="fa fa-underline me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.Underline" (click)="toggleStyle(fontStyle.Underline)" tooltip="Underline" placement="top" [delay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.underline"></i>
+      <i class="fa fa-strikethrough me-2 format-icon" [class.active]="stylesControl.value | includes:fontStyle.StrikeThrough" (click)="toggleStyle(fontStyle.StrikeThrough)" tooltip="Strike through" placement="top" [delay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.strikeThrough"></i>
+      <i class="fa-duotone fa-pen-paintbrush me-2 format-icon" [style]="{'--fa-secondary-color': colorControl.value}" #colorElement (click)="colorPicker.toggle()" tooltip="Color" placement="top" [delay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.color"></i>
+      <i class="fa-duotone fa-fill-drip me-2 format-icon" [style]="{'--fa-secondary-color': backgroundControl.value}" #backgroundElement (click)="backgroundPicker.toggle()" tooltip="Background" placement="top" [delay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.background"></i>
+      <i class="fa fa-text-slash me-2 format-icon" (click)="resetStyle()" tooltip="Clear format" placement="top" [delay]="popupDelay" i18n-tooltip="resource.attribute.formatting.style.clearFormat"></i>
     </div>
   </div>
 
