@@ -47,3 +47,9 @@
     border-top-right-radius: 0.5rem;
   }
 }
+
+.help-icon {
+  color: white;
+  --fa-secondary-color: #{$danger};
+  --fa-secondary-opacity: 1;
+}

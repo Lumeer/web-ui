@@ -36,7 +36,7 @@
     <div class="header py-2 text-nowrap"
          [ngClass]="data.state === buttonState.Open || data.state === buttonState.Closed ? 'px-3 ' + data.state : 'px-2 ' + data.state"
          (click)="toggleContent()">
-      <i class="fa far fa-life-ring fa-fw color-danger" [@scale]="data.state"></i>
+      <i class="fa-duotone fa-life-ring fa-fw help-icon" [@scale]="data.state"></i>
       <div *ngIf="data.state === buttonState.Closed || data.state === buttonState.Open"
            [@shrinkOut]="" class="flex-grow-1 header-label">
         <div class="spacer">&nbsp;</div>
