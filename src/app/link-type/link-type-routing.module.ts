@@ -73,7 +73,7 @@ const linkTypeRoutes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'activity',
+        redirectTo: 'attributes',
         pathMatch: 'full',
       },
     ],

@@ -10,7 +10,9 @@
 
   <div class="body m-3">
     <selection-list-modal-content [form]="form"
-                                  [list]="list">
+                                  [list]="list$ | async"
+                                  [attributesSelectionLists]="attributesSelectionLists$ | async"
+                                  (listSelected)="onListSelected($event)">
     </selection-list-modal-content>
 
   </div>

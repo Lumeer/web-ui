@@ -2004,7 +2004,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="selection.lists.modal.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="selection.lists.modal.add" datatype="html">
         <source>Add a new list</source><target state="final">Add a new list</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="selection.lists.modal.adding.sample" datatype="html">
@@ -4159,11 +4159,11 @@
       <trans-unit id="file.not.exist" datatype="html">
         <source>Table does not exist</source><target state="final">Table does not exist</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">117</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">105</context></context-group></trans-unit>
       <trans-unit id="file.permission.missing" datatype="html">
         <source>You do not have permission to access this table</source><target state="final">You do not have permission to access this table</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">110</context></context-group></trans-unit>
       <trans-unit id="collection.delete.dialog.message" datatype="html">
         <source>Do you really want to delete this table?</source><target state="final">Do you really want to delete this table?</target>
 
@@ -4232,12 +4232,12 @@
         <source>Organization does not exist</source><target state="final">Organization does not exist</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
       <trans-unit id="project.not.exist" datatype="html">
         <source>Project does not exist</source><target state="final">Project does not exist</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
 
       <trans-unit id="notification.service.Success" datatype="html">
         <source>Success</source><target state="final">Success</target>
@@ -5639,6 +5639,12 @@
           <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/content/selection-list-modal-content.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
+      </trans-unit><trans-unit id="selection.lists.modal.action.copy" datatype="html">
+        <source>Copy values from attribute</source><target state="final">Copy values from attribute</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/content/selection-list-modal-content.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
       </trans-unit><trans-unit id="selection.lists.modal.update.title" datatype="html">
         <source>Update selection list</source><target state="final">Update selection list</target>
         <context-group purpose="location">
@@ -6259,10 +6265,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/attributes/resource-attributes.component.ts</context><context context-type="linenumber">139</context></context-group></trans-unit><trans-unit id="collection.tab.linktypes.delete.title" datatype="html">
         <source>Delete link type?</source><target state="final">Delete link type?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">102</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="collection.tab.linktypes.delete.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">95</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="collection.tab.linktypes.delete.message" datatype="html">
         <source>Do you really want to delete the link type "<x id="name" equiv-text="linkType.name"/>" and all its usages?</source><target state="final">Do you really want to delete the link type "<x id="name" equiv-text="linkType.name"/>" and all its usages?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">103</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
         <source>Copy of</source><target state="final">Copy of</target>
 
 

@@ -106,7 +106,7 @@ import {
 } from '../../../shared/utils/permission.utils';
 import {User} from '../users/user';
 import {filterVisibleAttributesBySettings} from '../../../shared/utils/attribute.utils';
-import {mapLinkTypeCollections} from '../../../shared/utils/link-type.utils';
+import {mapLinkTypeCollections, mapLinkTypesCollections} from '../../../shared/utils/link-type.utils';
 import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../../../shared/utils/dashboard.utils';
 import {filterDefaultDashboardTabs} from '../../model/dashboard-tab';
 import {selectSearchesDictionary} from '../searches/searches.state';
@@ -168,6 +168,12 @@ const selectLinkTypesByViewAndPermission = (view: View, roles: RoleType[]) =>
   );
 
 export const selectReadableLinkTypes = selectLinkTypesByPermission([RoleType.Read]);
+
+export const selectReadableLinkTypesWithCollections = createSelector(
+  selectCollectionsDictionary,
+  selectReadableLinkTypes,
+  (collections, linkTypes) => mapLinkTypesCollections(linkTypes, collections)
+);
 
 export const selectReadableLinkTypesByView = (view: View) => selectLinkTypesByViewAndPermission(view, [RoleType.Read]);
 

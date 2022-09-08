@@ -1008,7 +1008,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
             <trans-unit id="selection.lists.modal.add" datatype="html">
                 <source>Add a new list</source>
                 <target state="new">Add list</target>
@@ -3187,15 +3187,9 @@
                 <source>Do you really want to delete the link type "<x id="name" equiv-text="linkType.name"/>" and all its usages?</source>
                 <target>Biztosan törölni szeretnéd a "
                     <x id="name" equiv-text="{{name}}"/>" hivatkozástípust és annak összes használatát?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
-                    <context context-type="linenumber">103</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.ts</context>
-                    <context context-type="linenumber">87</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit>
             <trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
                 <source>Copy of</source>
                 <target>Másolata a</target>
@@ -3213,15 +3207,9 @@
             <trans-unit datatype="html" id="collection.tab.linktypes.delete.title">
                 <source>Delete link type?</source>
                 <target>Törlöd a hivatkozás típusát?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
-                    <context context-type="linenumber">102</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.ts</context>
-                    <context context-type="linenumber">86</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">95</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit>
             <trans-unit datatype="html" id="collection.tab.linktypes.name.placeholder">
                 <source>Enter link type name</source>
                 <target>Hivatkozástípus nevének megadása</target>
@@ -5822,19 +5810,13 @@
             <trans-unit datatype="html" id="file.not.exist">
                 <source>Table does not exist</source>
                 <target>A táblázat nem létezik.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
-                    <context context-type="linenumber">117</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">105</context></context-group></trans-unit>
             <trans-unit datatype="html" id="file.permission.missing">
                 <source>You do not have permission to access this table</source>
                 <target>Nincs engedélyed a tábla eléréséhez.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
-                    <context context-type="linenumber">122</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">110</context></context-group></trans-unit>
             <trans-unit datatype="html" id="file.upload.max.size.error">
                 <source>Cannot process files bigger than <x id="size" equiv-text="size"/> MB. Please upload smaller file.</source>
                 <target>
@@ -7034,31 +7016,13 @@
             <trans-unit datatype="html" id="organization.not.exist">
                 <source>Organization does not exist</source>
                 <target>A szervezet nem létezik</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
-                    <context context-type="linenumber">55</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
-                    <context context-type="linenumber">49</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context>
-                    <context context-type="linenumber">55</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context>
-                    <context context-type="linenumber">51</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
-                    <context context-type="linenumber">65</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
-                    <context context-type="linenumber">49</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/workspace/workspace-user-settings.guard.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
             <trans-unit datatype="html" id="organization.payment.create.fail">
                 <source>Could not create your new service order</source>
                 <target>Nem lehet létrehozni az új szolgáltatási megrendelést</target>
@@ -8585,7 +8549,7 @@
 				<trans-unit datatype="html" id="project.not.exist">
 					<source>Project does not exist</source>
 					<target>A projekt nem létezik</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.permission.change.fail">
 					<source>Could not change the project permissions</source>
 					<target>Nem lehet módosítani a projekt engedélyeit</target>
@@ -9444,6 +9408,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/content/selection-list-modal-content.component.html</context>
           <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="selection.lists.modal.action.copy" datatype="html">
+        <source>Copy values from attribute</source><target state="new">Copy values from attribute</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/content/selection-list-modal-content.component.html</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit><trans-unit id="selection.lists.modal.update.title" datatype="html">
         <source>Update selection list</source><target state="new">Update selection list</target>

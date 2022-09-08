@@ -544,9 +544,8 @@ export class ProjectsEffects {
 
         const nextActionUsed = false;
         if (
-          !currentWorkspace ||
-          currentWorkspace.organizationId !== organizationId ||
-          currentWorkspace.projectId !== projectId
+          (currentWorkspace?.organizationId && currentWorkspace.organizationId !== organizationId) ||
+          (currentWorkspace?.projectId && currentWorkspace.projectId !== projectId)
         ) {
           actions.push(new ProjectsAction.ClearWorkspaceData({nextAction}));
         }
