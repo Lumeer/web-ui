@@ -6,7 +6,7 @@
           [tooltip]="statsTooltip"
           containerClass="bigger-tooltip"
           [isDisabled]="!data.stats?.disabled || !(!!cursor?.documentId || !!cursor?.linkInstanceId)"
-          [style.color]="value?.config?.background | contrastColor:null:buttonData.opacity"
+          [style.color]="fontColor || (value?.config?.background | contrastColor:null:buttonData.opacity)"
           (click)="onClick($event)">
     <span *ngIf="data.loading" class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>
     <i *ngIf="icon" [ngClass]="icon"></i>

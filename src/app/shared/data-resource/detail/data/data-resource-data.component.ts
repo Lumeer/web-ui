@@ -33,6 +33,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+import {ConstraintData} from '@lumeer/data-filters';
 import {Attribute} from '../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DataRow, DataRowService} from '../../../data/data-row.service';
@@ -41,18 +42,13 @@ import {DataResourceDataRowComponent} from './row/data-resource-data-row.compone
 import {filterUnusedAttributes} from '../../../utils/attribute.utils';
 import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
 import {DataRowFocusService} from '../../../data/data-row-focus-service';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectCollectionById} from '../../../../core/store/collections/collections.state';
-import {selectDocumentById} from '../../../../core/store/documents/documents.state';
+import {Store} from '@ngrx/store';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
-import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 import {ResourceAttributeSettings, View} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
-import {ConstraintData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
 
 @Component({
@@ -126,8 +122,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   public dataResourceChanged = new EventEmitter<DataResource>();
 
   public unusedAttributes$ = new BehaviorSubject<Attribute[]>([]);
-  public resource$: Observable<AttributesResource>;
-  public dataResource$: Observable<DataResource>;
 
   private dataRowFocusService: DataRowFocusService;
   private subscriptions = new Subscription();
@@ -154,8 +148,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldRefreshObservables(changes)) {
       this.dataRowService.init(this.resource, this.dataResource, this.attributeSettings);
-      this.resource$ = this.selectResource$();
-      this.dataResource$ = this.selectDataResource$();
     } else if (changes.attributeSettings || changes.permissions) {
       this.dataRowService.setSettings(this.attributeSettings);
     }
@@ -171,23 +163,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.dataRowFocusService.isFocusing() && !this.dataRowFocusService.isEditing()) {
       setTimeout(() => this.rows?.first?.onValueFocus());
     }
-  }
-
-  private selectResource$(): Observable<AttributesResource> {
-    if (this.resourceType === AttributesResourceType.Collection) {
-      return this.store$.pipe(select(selectCollectionById(this.resource.id)));
-    }
-    return this.store$.pipe(select(selectLinkTypeById(this.resource.id)));
-  }
-
-  private selectDataResource$(): Observable<DataResource> {
-    if (!this.dataResource.id) {
-      return of(this.dataResource);
-    }
-    if (this.resourceType === AttributesResourceType.Collection) {
-      return this.store$.pipe(select(selectDocumentById(this.dataResource.id)));
-    }
-    return this.store$.pipe(select(selectLinkInstanceById(this.dataResource.id)));
   }
 
   private shouldRefreshObservables(changes: SimpleChanges): boolean {

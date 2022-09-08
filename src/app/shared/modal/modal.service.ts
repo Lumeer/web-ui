@@ -63,6 +63,7 @@ import {QueryStem} from '../../core/store/navigation/query/query';
 import {ChooseResourceModalComponent} from './choose-resource/choose-resource-modal.component';
 import {ChooseStemModalComponent} from './choose-stem/choose-stem-modal.component';
 import {LimitsService} from '../../core/service/limits.service';
+import {ConditionalFormattingModalComponent} from './attribute/conditional-formatting/conditional-formatting-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -283,6 +284,16 @@ export class ModalService {
   ): BsModalRef {
     const initialState = {attributeId, collectionId, linkTypeId, workspace, overrideLock, handleSubmit};
     return this.showStaticDialog(initialState, AttributeLockModalComponent, 'modal-lg');
+  }
+
+  public showAttributeConditionalFormatting(
+    attributeId: string,
+    collectionId: string,
+    linkTypeId?: string,
+    workspace?: Workspace
+  ): BsModalRef {
+    const initialState = {attributeId, collectionId, linkTypeId, workspace};
+    return this.showStaticDialog(initialState, ConditionalFormattingModalComponent, 'modal-lg');
   }
 
   public showStaticDialog(

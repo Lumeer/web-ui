@@ -46,7 +46,7 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {isAttributeLockEnabledByLockStats} from '../../../../utils/attribute.utils';
+import {AttributeFormattingStyle, isAttributeLockEnabledByLockStats} from '../../../../utils/attribute.utils';
 
 @Component({
   selector: 'data-resource-data-row',
@@ -84,6 +84,9 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   @Input()
   public editableKey = false;
+
+  @Input()
+  public formattingStyle: Partial<AttributeFormattingStyle>;
 
   @Output()
   public newValue = new EventEmitter<any>();

@@ -56,6 +56,9 @@ export class SelectDataInputCompactComponent implements OnChanges {
   @Input()
   public readonly: boolean;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public save = new EventEmitter<SelectDataValue>();
 

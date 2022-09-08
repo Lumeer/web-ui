@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild, HostListener} from '@angular/core';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
@@ -33,6 +33,7 @@ import {CollectionsAction} from '../../../../core/store/collections/collections.
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
 import {AttributeLock} from '@lumeer/data-filters';
+import {keyboardEventCode, KeyCode} from '../../../key-code';
 
 @Component({
   templateUrl: './attribute-lock-modal.component.html',
@@ -136,6 +137,13 @@ export class AttributeLockModalComponent implements OnInit {
 
   public hideDialog() {
     this.bsModalRef.hide();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
+      this.hideDialog();
+    }
   }
 }
 

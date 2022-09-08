@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, AttributeFunction} from '../../core/store/collections/collection';
+import {Attribute, AttributeFormattingGroup, AttributeFunction} from '../../core/store/collections/collection';
 import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
 import {objectsByIdMap, objectValues} from './common.utils';
 import {
@@ -27,8 +27,10 @@ import {
   AttributeLockFiltersStats,
   collectAttributeLockFilters,
   computeAttributeLockStats,
+  dataValuesSatisfyEquation,
   ConstraintData,
   ConstraintType,
+  DataValue,
   SelectConstraint,
   SelectConstraintConfig,
   UserConstraint,
@@ -39,6 +41,7 @@ import {
 import {createAttributesSettingsOrder} from '../settings/settings.util';
 import {AttributesResource, DataResource} from '../../core/model/resource';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
+import {fontStylesClass} from '../../core/model/font-style';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX = /\./g;
@@ -366,4 +369,30 @@ const NO_HINTS_CONSTRAINT_TYPES = [
 
 export function canShowAttributeHints(type: ConstraintType): boolean {
   return !NO_HINTS_CONSTRAINT_TYPES.includes(type);
+}
+
+export function computeAttributeFormatting(
+  attribute: Attribute,
+  dataValues: Record<string, DataValue>,
+  attributesMap: Record<string, Attribute>,
+  constraintData?: ConstraintData
+): Partial<AttributeFormattingStyle> {
+  const groups = attribute?.formatting?.groups || [];
+  for (const group of groups) {
+    if (dataValuesSatisfyEquation(dataValues, attributesMap, group.equation, constraintData)) {
+      return computeAttributeFormattingStyle(group);
+    }
+  }
+
+  return {};
+}
+
+export interface AttributeFormattingStyle {
+  color: string;
+  background: string;
+  classes: string;
+}
+
+export function computeAttributeFormattingStyle(group: AttributeFormattingGroup): AttributeFormattingStyle {
+  return {color: group.color, background: group.background, classes: fontStylesClass(group.styles)};
 }

@@ -40,6 +40,7 @@ import {TableColumn} from '../../../../model/table-column';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../../core/store/app.state';
+import {POPUP_DELAY} from '../../../../../../core/constants';
 
 @Component({
   selector: 'table-header-input',
@@ -76,6 +77,8 @@ export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
   public textInput: ElementRef<HTMLInputElement>;
 
   public readonly placeholder: string;
+
+  public readonly popupDelay = POPUP_DELAY;
 
   private preventSave: boolean;
   private setFocus: boolean;

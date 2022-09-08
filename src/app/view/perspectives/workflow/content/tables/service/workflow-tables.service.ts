@@ -182,6 +182,9 @@ export class WorkflowTablesService {
       case HeaderMenuId.Lock:
         this.dataService.showAttributeLock(column);
         break;
+      case HeaderMenuId.Formatting:
+        this.dataService.showAttributeFormatting(column);
+        break;
       case HeaderMenuId.Delete:
         this.deleteColumn(column);
         break;

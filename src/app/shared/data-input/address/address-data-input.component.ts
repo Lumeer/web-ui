@@ -63,6 +63,9 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   @Input()
   public value: AddressDataValue;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<AddressDataValue>();
 

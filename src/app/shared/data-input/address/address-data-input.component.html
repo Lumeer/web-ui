@@ -5,6 +5,7 @@
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [ngClass]="inputClass"
        (focus)="!readonly && onFocused()"
+       [style.color]="readonly ? fontColor : null"
        (blur)="!readonly && onBlur()"
        (input)="onInput($event)"
        spellcheck="false"

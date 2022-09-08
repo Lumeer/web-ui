@@ -73,6 +73,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   @Input()
   public editableInReadonly: boolean;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<DataValue>();
 

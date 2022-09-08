@@ -1,94 +1,94 @@
-<ng-container *ngIf="{attribute: attribute$ | async, dataValue: dataValue$ | async} as data">
-  <table-data-cell-menu *ngIf="selected"
-                        [cursor]="cursor"
-                        [document]="document"
-                        [view]="view"
-                        [linkInstance]="linkInstance"
-                        [canManageConfig]="canManageConfig"
-                        [allowedPermissions]="allowedPermissions"
-                        [linkAllowedPermissions]="linkAllowedPermissions"
-                        [dataPermissions]="dataPermissions"
-                        [linkDataPermissions]="linkDataPermissions"
-                        (edit)="onEdit()">
-  </table-data-cell-menu>
+<table-data-cell-menu *ngIf="selected"
+                      [cursor]="cursor"
+                      [document]="document"
+                      [view]="view"
+                      [linkInstance]="linkInstance"
+                      [canManageConfig]="canManageConfig"
+                      [allowedPermissions]="allowedPermissions"
+                      [linkAllowedPermissions]="linkAllowedPermissions"
+                      [dataPermissions]="dataPermissions"
+                      [linkDataPermissions]="linkDataPermissions"
+                      (edit)="onEdit()">
+</table-data-cell-menu>
 
+<ng-container
+  *ngIf="{lockStats: (resource | attributeLockStats:(document || linkInstance):attribute:constraintData)} as dataInputData">
   <ng-container
-    *ngIf="{lockStats: (resource | attributeLockStats:(document || linkInstance):data.attribute:constraintData)} as dataInputData">
-    <ng-container
-      *ngIf="data.attribute | dataInputEditInfo:data.dataValue:editableByPermissions: (editing$ | async):dataInputData.lockStats as dataInputInfo">
+    *ngIf="attribute | dataInputEditInfo:dataValue:editableByPermissions: (editing$ | async):dataInputData.lockStats as dataInputInfo">
 
-      <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
-           [innerHTML]="data.dataValue | previewDataValue | safeHtml"
-           class="text-pre overflow-hidden mx-1 align-middle"
-           [title]="data.dataValue | formatDataValueTitle"
-           [ngClass]="data.attribute?.constraint | constraintClass"
-           [class.invalid-value]="!(data.dataValue | isDataValueValid)"
-           readonly data-test="table-data-input">
-      </div>
+    <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
+         [innerHTML]="dataValue | previewDataValue | safeHtml"
+         class="text-pre overflow-hidden mx-1 align-middle"
+         [title]="dataValue | formatDataValueTitle"
+         [style.color]="fontColor"
+         [ngClass]="attribute?.constraint | constraintClass"
+         [class.invalid-value]="!(dataValue | isDataValueValid)"
+         readonly data-test="table-data-input">
+    </div>
 
-      <data-input *ngIf="dataInputInfo.showDataInput"
-                  [style.width.px]="columnWidth"
-                  [constraint]="data.attribute?.constraint"
-                  [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id:view?.id"
-                  [dataValue]="data.dataValue"
-                  [focus]="true"
-                  [configuration]="configuration"
-                  [readonly]="dataInputInfo.readonly"
-                  [editableInReadonly]="dataInputInfo.editable"
-                  (valueChange)="onValueChange($event)"
-                  (save)="onValueSave($event)"
-                  (cancel)="onCancelEditing()"
-                  (enterInvalid)="onEnterInvalid()"
-                  class="d-block h-100 data-input"
-                  [ngClass]="data.attribute?.constraint?.type | lowercase"
-                  [class.me-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
-                  [class.ms-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"
-                  [class.cursor-default]="!dataInputInfo.editable"
-                  data-test="table-data-input">
-      </data-input>
+    <data-input *ngIf="dataInputInfo.showDataInput"
+                [style.width.px]="columnWidth"
+                [constraint]="attribute?.constraint"
+                [cursor]="(document || linkInstance) | dataCursor : attribute?.id:view?.id"
+                [dataValue]="dataValue"
+                [focus]="true"
+                [fontColor]="fontColor"
+                [configuration]="configuration"
+                [readonly]="dataInputInfo.readonly"
+                [editableInReadonly]="dataInputInfo.editable"
+                (valueChange)="onValueChange($event)"
+                (save)="onValueSave($event)"
+                (cancel)="onCancelEditing()"
+                (enterInvalid)="onEnterInvalid()"
+                class="d-block h-100 data-input"
+                [ngClass]="attribute?.constraint?.type | lowercase"
+                [class.me-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
+                [class.ms-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"
+                [class.cursor-default]="!dataInputInfo.editable"
+                data-test="table-data-input">
+    </data-input>
 
-      <div *ngIf="(mouseEntered$ | async) && dataInputInfo.showLockStats && !(data.attribute | isAttributeEnabledByLockStats:dataInputData.lockStats)"
-           @enterOpacityAnimation
-           class="lock-icon cursor-pointer"
-           [class.table-bg-light]="striped"
-           [class.table-bg-white]="!striped"
-           [tooltip]="statsTooltip" containerClass="bigger-tooltip">
-        <i class="fas fa-sm fa-lock"></i>
+    <div *ngIf="(mouseEntered$ | async) && dataInputInfo.showLockStats && !(attribute | isAttributeEnabledByLockStats:dataInputData.lockStats)"
+         @enterOpacityAnimation
+         class="lock-icon cursor-pointer"
+         [class.table-bg-light]="striped"
+         [class.table-bg-white]="!striped"
+         [tooltip]="statsTooltip" containerClass="bigger-tooltip">
+      <i class="fas fa-sm fa-lock"></i>
 
-        <ng-template #statsTooltip>
-          <attribute-lock-filters-stats [lock]="data.attribute?.lock"
-                                        [stats]="dataInputData.lockStats"
-                                        [constraintData]="constraintData"
-                                        [attributesMap]="resource | resourceAttributesMap">
-          </attribute-lock-filters-stats>
-        </ng-template>
-      </div>
+      <ng-template #statsTooltip>
+        <attribute-lock-filters-stats [lock]="attribute?.lock"
+                                      [stats]="dataInputData.lockStats"
+                                      [constraintData]="constraintData"
+                                      [attributesMap]="resource | resourceAttributesMap">
+        </attribute-lock-filters-stats>
+      </ng-template>
+    </div>
 
-    </ng-container>
   </ng-container>
+</ng-container>
 
-  <ng-container
-    *ngIf="selected && (table | part:cursor)?.collectionId && (data.attribute | canShowAttributeHints) && (suggesting$ | async) && editedValue">
-    <document-hints
-      *ngIf="{row: row$ | async, columns: table | documentHintColumns:cursor:canManageConfig} as hintsData"
-      [attributeId]="column.attributeIds[0]"
-      [collectionId]="(table | part:cursor)?.collectionId"
-      [constraintData]="constraintData"
-      [viewId]="view?.id"
-      [columns]="hintsData.columns"
-      [excludedDocumentIds]="document && document.id ? [document.id] : []"
-      [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
-      [linkTypeId]="table.config?.parts[cursor.partIndex - 1]?.linkTypeId"
-      [linkInstanceId]="hintsData.row?.linkInstanceId"
-      [correlationId]="hintsData.row?.correlationId"
-      [offsetLeft]="hintsData.columns | documentHintsOffset:column.attributeIds[0]"
-      [dataValue]="editedValue"
-      [origin]="element"
-      [showDetail]="cursor | isFirstPart"
-      [createLinkDirectly]="!(cursor | isFirstPart)"
-      (useHint)="onUseDocumentHint()"
-      (createLink)="onCreateLink($event)"
-      (updateLink)="onUpdateLink($event)">
-    </document-hints>
-  </ng-container>
+<ng-container
+  *ngIf="selected && (table | part:cursor)?.collectionId && (attribute | canShowAttributeHints) && (suggesting$ | async) && editedValue">
+  <document-hints
+    *ngIf="{row: row$ | async, columns: table | documentHintColumns:cursor:canManageConfig} as hintsData"
+    [attributeId]="column.attributeIds[0]"
+    [collectionId]="(table | part:cursor)?.collectionId"
+    [constraintData]="constraintData"
+    [viewId]="view?.id"
+    [columns]="hintsData.columns"
+    [excludedDocumentIds]="document && document.id ? [document.id] : []"
+    [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
+    [linkTypeId]="table.config?.parts[cursor.partIndex - 1]?.linkTypeId"
+    [linkInstanceId]="hintsData.row?.linkInstanceId"
+    [correlationId]="hintsData.row?.correlationId"
+    [offsetLeft]="hintsData.columns | documentHintsOffset:column.attributeIds[0]"
+    [dataValue]="editedValue"
+    [origin]="element"
+    [showDetail]="cursor | isFirstPart"
+    [createLinkDirectly]="!(cursor | isFirstPart)"
+    (useHint)="onUseDocumentHint()"
+    (createLink)="onCreateLink($event)"
+    (updateLink)="onUpdateLink($event)">
+  </document-hints>
 </ng-container>

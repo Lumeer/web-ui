@@ -34,9 +34,17 @@
       </button>
       <button mat-menu-item
               [disabled]="!allowedPermissions?.roles?.AttributeEdit"
-              (click)="onClick($event); lockSettings.emit()">
-        <i class="fa fa-fw fa-lock-open me-1"
+              (click)="onClick($event); conditionalFormatting.emit()">
+        <i class="fa fa-fw fa-palette me-1"
            aria-hidden="true">
+        </i>
+        <span i18n="@@table.header.menu.formatting">Conditional formatting...</span>
+      </button>
+      <button mat-menu-item
+      [disabled]="!allowedPermissions?.roles?.AttributeEdit"
+      (click)="onClick($event); lockSettings.emit()">
+        <i class="fa fa-fw fa-lock-open me-1"
+        aria-hidden="true">
         </i>
         <span i18n="@@table.header.menu.lockSettings">Locking...</span>
       </button>

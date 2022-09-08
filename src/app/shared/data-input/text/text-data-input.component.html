@@ -8,6 +8,7 @@
        (focus)="!readonly && onFocused()"
        [placeholder]="placeholder || ''"
        [spellcheck]="false"
+       [style.color]="fontColor"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [ngClass]="readonly || valid || configuration?.skipValidation ? 'bg-transparent ' + inputClass : 'bg-danger-light ' + inputClass"
        type="text">

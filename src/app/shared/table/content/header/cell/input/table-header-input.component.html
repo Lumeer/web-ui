@@ -3,7 +3,7 @@
        [tooltip]="descriptionTooltip"
        [isDisabled]="!column?.attribute"
        placement="bottom"
-       [delay]="700"
+       [delay]="popupDelay"
        [class.text-default-attribute]="default"
        [placeholder]="column?.attribute ? null : placeholder"
        class="w-100 p-0"
@@ -13,7 +13,7 @@
   <input #textInput
          [readonly]="!edited"
          [value]="value"
-         [delay]="700"
+         [delay]="popupDelay"
          [tooltip]="descriptionTooltip"
          [isDisabled]="!column?.attribute"
          placement="bottom"

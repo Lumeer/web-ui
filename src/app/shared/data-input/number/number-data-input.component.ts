@@ -54,6 +54,9 @@ export class NumberDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public commonConfiguration: CommonDataInputConfiguration;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<NumberDataValue>();
 

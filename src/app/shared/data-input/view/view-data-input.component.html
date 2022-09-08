@@ -14,6 +14,7 @@
       <a data-test="view-data-input" class="d-inline-block view"
          [class.color-inherit]="commonConfiguration?.inheritColor"
          [target]="newWindow ? '_blank' : null"
+         [style.color]="fontColor"
          [routerLink]="view | viewLink:data.workspace">{{view.name}}</a>
     </ng-container>
   </ng-container>

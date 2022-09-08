@@ -61,6 +61,9 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public placeholder: string;
 
   @Input()
+  public fontColor: string;
+
+  @Input()
   public suggestions: DataSuggestion[];
 
   @Output()

@@ -67,6 +67,9 @@ export class UserDataInputCompactComponent implements OnChanges {
   @Input()
   public configuration: UserDataInputConfiguration;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public save = new EventEmitter<UserDataValue>();
 

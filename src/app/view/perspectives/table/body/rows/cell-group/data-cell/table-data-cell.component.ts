@@ -35,24 +35,20 @@ import {
 } from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, map, skip, take, tap, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {
-  selectAllCollections,
-  selectCollectionAttributeById,
-} from '../../../../../../../core/store/collections/collections.state';
+import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {generateDocumentDataByResourceQuery} from '../../../../../../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
-import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
 import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
@@ -90,6 +86,7 @@ import {View} from '../../../../../../../core/store/views/view';
 import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 import {AttributesResource} from '../../../../../../../core/model/resource';
 import {animateOpacityEnterLeave} from '../../../../../../../shared/animations';
+import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 
 @Component({
   selector: 'table-data-cell',
@@ -125,6 +122,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public correlationId: string;
+
+  @Input()
+  public fontColor: string;
 
   @Input()
   public allowedPermissions: AllowedPermissions;
@@ -175,13 +175,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public editing$ = new BehaviorSubject(false);
   public mouseEntered$ = new BehaviorSubject(false);
   public suggesting$ = new BehaviorSubject(false);
-  public dataValue$: Observable<DataValue>;
 
-  public attribute$: Observable<Attribute>;
   public row$: Observable<TableConfigRow>;
 
   public editableByPermissions: boolean;
   public editedValue: DataValue;
+  public attribute: Attribute;
+  public dataValue: DataValue;
 
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
@@ -193,7 +193,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public striped: boolean;
   private hintWasUsed = false;
-  private attribute: Attribute;
   private selectedSubscriptions = new Subscription();
   private affectedSubscription = new Subscription();
   private subscriptions = new Subscription();
@@ -213,39 +212,28 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToEditing(): Subscription {
-    return this.editing$
-      .pipe(skip(1), distinctUntilChanged(), withLatestFrom(this.attribute$))
-      .subscribe(([editing, attribute]) => {
-        this.edited = editing && !attribute?.constraint?.isDirectlyEditable;
-        if (editing) {
-          this.setEditedAttribute();
-          this.editedValue = attribute?.constraint?.createDataValue(this.getValue(), this.constraintData);
-          this.setSuggesting();
-        } else {
-          this.clearEditedAttribute();
-          this.editedValue = null;
-          this.resetSuggesting();
+    return this.editing$.pipe(skip(1), distinctUntilChanged()).subscribe(editing => {
+      this.edited = editing && !this.attribute?.constraint?.isDirectlyEditable;
+      if (editing) {
+        this.setEditedAttribute();
+        this.editedValue = this.attribute?.constraint?.createDataValue(this.getValue(), this.constraintData);
+        this.setSuggesting();
+      } else {
+        this.clearEditedAttribute();
+        this.editedValue = null;
+        this.resetSuggesting();
 
-          if (this.selected) {
-            // sets focus to hidden input
-            this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
-          }
+        if (this.selected) {
+          // sets focus to hidden input
+          this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
         }
-      });
+      }
+    });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if ((changes.column || changes.document) && this.column && this.document) {
-      this.attribute$ = this.store$.pipe(
-        select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0])),
-        tap(attribute => (this.attribute = attribute))
-      );
-    }
-    if ((changes.column || changes.linkInstance) && this.column && this.linkInstance && !this.document) {
-      this.attribute$ = this.store$.pipe(
-        select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0])),
-        tap(attribute => (this.attribute = attribute))
-      );
+    if ((changes.column || changes.resource) && this.column && this.resource) {
+      this.attribute = findAttribute(this.resource?.attributes, this.column.attributeIds[0]);
     }
     if (
       changes.selected &&
@@ -273,7 +261,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
     if (changes.column || changes.document || changes.linkInstance || changes.constraintData) {
       if (!this.editing$.value) {
-        this.dataValue$ = this.createDataValue$();
+        this.dataValue = this.createDataValue();
       }
     }
     if (
@@ -329,25 +317,19 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return false;
   }
 
-  private createDataValue$(): Observable<DataValue> {
-    return this.createDataValueByValue$(this.getValue());
+  private createDataValue(): DataValue {
+    return this.createDataValueByValue(this.getValue());
   }
 
-  private createDataValueByValue$(value: any, typed?: boolean): Observable<DataValue> {
-    if (this.attribute$) {
-      return this.attribute$.pipe(
-        map(attribute => {
-          const constraint = attribute?.constraint || new UnknownConstraint();
-          if (typed) {
-            return constraint.createInputDataValue(value, this.getValue(), this.constraintData);
-          }
-          return constraint.createDataValue(value, this.constraintData);
-        }),
-        tap(dataValue => typed && (this.editedValue = dataValue)),
-        take(typed ? 1 : Number.MAX_SAFE_INTEGER)
-      );
+  private createDataValueByValue(value: any, typed?: boolean): DataValue {
+    if (this.attribute) {
+      const constraint = this.attribute?.constraint || new UnknownConstraint();
+      if (typed) {
+        return constraint.createInputDataValue(value, this.getValue(), this.constraintData);
+      }
+      return constraint.createDataValue(value, this.constraintData);
     }
-    return of(new UnknownDataValue(value));
+    return new UnknownDataValue(value);
   }
 
   private subscribeToAffected(): Subscription {
@@ -380,17 +362,17 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
-      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
-      .subscribe(([action, attribute]) => {
+      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
+      .subscribe(action => {
         if (
           this.editableByPermissions &&
-          this.isAttributeEditable(attribute) &&
+          this.isAttributeEditable(this.attribute) &&
           action.payload.correlationId === this.correlationId
         ) {
           if (action.payload.clear) {
             this.startEditingAndClear();
           } else {
-            this.startEditingAndChangeValue(action.payload.value, attribute);
+            this.startEditingAndChangeValue(action.payload.value, this.attribute);
           }
         }
       });
@@ -401,7 +383,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private startEditingAndClear() {
-    this.dataValue$ = this.createDataValueByValue$('', true);
+    this.dataValue = this.createDataValueByValue('', true);
     this.editing$.next(true);
   }
 
@@ -412,7 +394,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       }
     } else {
       if (value) {
-        this.dataValue$ = this.createDataValueByValue$(value, true);
+        this.dataValue = this.createDataValueByValue(value, true);
       }
       this.editing$.next(true);
     }
@@ -542,7 +524,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private clearEditedAttribute() {
-    this.dataValue$ = this.createDataValue$();
+    this.dataValue = this.createDataValue();
     if (this.document?.id) {
       this.store$.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
     }
@@ -864,7 +846,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onCancelEditing() {
-    this.dataValue$ = this.createDataValue$();
+    this.dataValue = this.createDataValue();
     this.editing$.next(false);
   }
 

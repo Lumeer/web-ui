@@ -40,10 +40,13 @@
      [class.value-focused]="valueFocused$ | async">
   <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
        [innerHTML]="dataValue | previewDataValue | safeHtml"
-       class="text-pre overflow-hidden p-1 align-middle data-input-readonly w-100"
+       class="text-pre overflow-hidden p-1 align-middle data-input-readonly w-100 mx-1"
        [title]="dataValue | formatDataValueTitle"
        [class.invalid-value]="!(dataValue | isDataValueValid)"
        [class.bigger-default-attribute]="postItLayoutType.Zero === layoutType && isDefaultAttribute"
+       [style.background-color]="formattingStyle?.background"
+       [style.color]="formattingStyle?.color"
+       [ngClass]="formattingStyle?.classes"
        [class.value-focused]="valueFocused$ | async">
   </div>
   <data-input class="h-100 w-100 p-1 data-input value"
@@ -56,6 +59,9 @@
               [editableInReadonly]="dataInputInfo.editable"
               [configuration]="configuration"
               [readonly]="dataInputInfo.readonly"
+              [backgroundColor]="formattingStyle?.background"
+              [fontColor]="formattingStyle?.color"
+              [ngClass]="formattingStyle?.classes"
               (save)="onNewValue($event)"
               (cancel)="onDataInputCancel()"
               (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"

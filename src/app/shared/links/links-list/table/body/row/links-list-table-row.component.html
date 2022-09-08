@@ -5,13 +5,16 @@
         *ngIf="{dataValue: !(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : (column.linkTypeId ? row.linkInstance?.data || {} : row.document?.data || {})[column.attribute.id] | dataValue:column.attribute?.constraint:constraintData,
           editing: data.columnEditing === index, focused: data.columnFocused === index,
           lockStats: (column.linkTypeId ? linkType : collection) | attributeLockStats :(column.linkTypeId ? row.linkInstance : row.document): column.attribute:constraintData,
+          styles: (column.linkTypeId ? linkType : collection) | resourceAttributeFormattingStyle:column.attribute?.id:(column.linkTypeId ? row.linkInstance : row.document):constraintData,
           editable: column.linkTypeId ? linkEditable : documentEditable} as columnData"
         [style.width.px]="column.width"
+        [style.background-color]="columnData.styles?.background"
         [class.focused]="columnData.focused"
         [class.editing]="columnData.editing && !column?.attribute?.constraint?.isDirectlyEditable"
         [class.affected]="!(attributeEditing?.documentId | isNullOrUndefined) &&
       (row.document?.id === attributeEditing?.documentId) &&
       (column.collectionId && column.attribute.id === attributeEditing?.attributeId)"
+        [ngClass]="columnData.styles?.classes"
         (click)="onDataInputFocus(index, $event)"
         (dblclick)="onDataInputDblClick(index, $event)"
         (mouseenter)="onMouseEnter(column?.id)"
@@ -26,6 +29,7 @@
                     [editableInReadonly]="dataInputInfo.editable"
                     [preventEventBubble]="preventEventBubble"
                     [configuration]="configuration"
+                    [fontColor]="columnData.styles?.color"
                     [readonly]="dataInputInfo.readonly"
                     [class.cursor-pointer]="!dataInputInfo.readonly"
                     (save)="onNewValue(index, $event)"
@@ -42,6 +46,7 @@
                     [editableInReadonly]="dataInputInfo.editable"
                     [preventEventBubble]="preventEventBubble"
                     [configuration]="configuration"
+                    [fontColor]="columnData.styles?.color"
                     [readonly]="dataInputInfo.readonly"
                     [class.cursor-pointer]="!dataInputInfo.readonly"
                     (save)="onNewValue(index, $event)"

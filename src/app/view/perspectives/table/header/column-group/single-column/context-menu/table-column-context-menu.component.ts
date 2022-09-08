@@ -72,6 +72,9 @@ export class TableColumnContextMenuComponent {
   public lockSettings = new EventEmitter();
 
   @Output()
+  public conditionalFormatting = new EventEmitter();
+
+  @Output()
   public edit = new EventEmitter();
 
   @Output()

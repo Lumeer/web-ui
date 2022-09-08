@@ -36,6 +36,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {ConstraintType, PercentageDataValue, PercentageDisplayStyle} from '@lumeer/data-filters';
+import {POPUP_DELAY} from '../../../core/constants';
 
 @Component({
   selector: 'percentage-data-input',
@@ -55,6 +56,9 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
 
   @Input()
   public commonConfiguration: CommonDataInputConfiguration;
+
+  @Input()
+  public fontColor: string;
 
   @Output()
   public valueChange = new EventEmitter<PercentageDataValue>();
@@ -78,6 +82,8 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
 
   public valid = true;
   public numericValue: number;
+
+  public readonly popupDelay = POPUP_DELAY;
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;

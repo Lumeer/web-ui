@@ -33,6 +33,7 @@
       [cursor]="dataResource | dataCursor : row.attribute?.id:viewId"
       [constraintData]="constraintData"
       [lockStats]="resource | attributeLockStats :dataResource: row.attribute:constraintData"
+      [formattingStyle]="resource | resourceAttributeFormattingStyle:row.attribute?.id:dataResource:constraintData"
       [readonly]="!dataPermissions?.edit"
       [unusedAttributes]="unusedAttributes"
       [editableKey]="editableKeys"

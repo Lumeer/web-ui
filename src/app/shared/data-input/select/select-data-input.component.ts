@@ -66,6 +66,9 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public placeholder: string;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<SelectDataValue>();
 

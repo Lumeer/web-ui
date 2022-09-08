@@ -2,7 +2,7 @@
               [color]="value?.config?.color"
               [style.height.px]="15"
               [tooltip]="value | formatDataValueTitle"
-              [delay]="700"
+              [delay]="popupDelay"
               [value]="numericValue">
 </progress-bar>
 
@@ -10,6 +10,7 @@
        *ngIf="!isProgressStyle"
        [title]="value | formatDataValueTitle"
        [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
+       [style.color]="readonly ? fontColor : null"
        type="text"
        percentage
        class="border-0 w-100 h-100 px-1 bg-transparent"

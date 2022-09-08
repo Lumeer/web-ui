@@ -53,4 +53,7 @@ export interface TableRowCell {
   data: any;
   editable: boolean;
   lockStats: AttributeLockFiltersStats;
+  background?: string;
+  color?: string;
+  classes?: string;
 }

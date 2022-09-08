@@ -3,6 +3,7 @@
        [title]="value | formatDataValueTitle"
        [value]="readonly ? (value | formatDataValue  | unescapeHtml) : (value | formatDataValueForEdit)"
        [class.invalid-value]="commonConfiguration?.skipValidation ? false : !(value | isDataValueValid)"
+       [style.color]="readonly ? fontColor : null"
        (input)="onInput($event)"
        (blur)="!readonly && onBlur()"
        (focus)="!readonly && onFocus()"

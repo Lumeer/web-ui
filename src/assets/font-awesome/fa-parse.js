@@ -49,20 +49,20 @@ Object.keys(loadJsonFile).forEach(function (key) {
       brands += ',\n';
     }
     first_brands = false;
-    brands += "'fa-" + key + "':" + "'\\u" + icon.unicode + "'";
+    brands += "'fa-" + key + "':" + "'\\u" + icon.unicode.padStart(4, '0') + "'";
   } else {
     if (!first) {
       icons += ',\n';
     }
     first = false;
-    icons += "'fa-" + key + "':" + "'\\u" + icon.unicode + "'";
+    icons += "'fa-" + key + "':" + "'\\u" + icon.unicode.padStart(4, '0') + "'";
   }
 
   registerVocab(String(key), String(key));
 
-  if (icon.search && icon.search.terms) {
-    Object.keys(icon.search.terms).forEach(function (value) {
-      registerVocab(String(key), icon.search.terms[value]);
+  if (icon.aliases && icon.aliases.names) {
+    Object.keys(icon.aliases.names).forEach(function (value) {
+      registerVocab(String(key), icon.aliases.names[value]);
     });
   }
 });
@@ -104,9 +104,9 @@ Object.keys(loadJsonFile).forEach(function (key) {
   var icon = loadJsonFile[key];
 
   if (icon.styles.includes('brands')) {
-    unicodeIcons += "['fab fa-" + key + "', '\\u" + icon.unicode + "'],\n";
+    unicodeIcons += "['fab fa-" + key + "', '\\u" + icon.unicode.padStart(4, '0') + "'],\n";
   } else {
-    unicodeIcons += "['fas fa-" + key + "', '\\u" + icon.unicode + "'],\n";
+    unicodeIcons += "['fas fa-" + key + "', '\\u" + icon.unicode.padStart(4, '0') + "'],\n";
   }
 });
 

@@ -77,6 +77,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public configuration: UserDataInputConfiguration;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<UserDataValue>();
 

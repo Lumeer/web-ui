@@ -2849,7 +2849,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">338</context>
+          <context context-type="linenumber">346</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.editAutomation" datatype="html">
@@ -2876,7 +2876,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">344</context>
+          <context context-type="linenumber">354</context>
         </context-group>
       </trans-unit>
       <trans-unit id="remove.attribute" datatype="html">
@@ -3684,7 +3684,7 @@
         <source>Confirmation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-input/action/action-data-input.component.ts</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">229</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/action/confirmation/action-constraint-confirmation-form.component.html</context>
@@ -3717,6 +3717,10 @@
           <context context-type="linenumber">20</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/conditional-formatting-modal.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
@@ -3726,7 +3730,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context>
@@ -3929,6 +3933,10 @@
           <context context-type="linenumber">21</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/conditional-formatting-modal.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
@@ -3938,7 +3946,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context>
@@ -4024,7 +4032,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.constraint.type.teams" datatype="html">
@@ -4066,7 +4074,7 @@
         <source>Enter attribute name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/data-resource-data-row.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.changeType" datatype="html">
@@ -4461,7 +4469,7 @@
         <source>Show detail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/links/links-list/table/body/row/links-list-table-row.component.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it/header/post-it-header.component.html</context>
@@ -4472,7 +4480,7 @@
         <source>Unlink</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/links/links-list/table/body/row/links-list-table-row.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.column.settings" datatype="html">
@@ -4498,11 +4506,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">340</context>
+          <context context-type="linenumber">348</context>
         </context-group>
       </trans-unit>
       <trans-unit id="copy" datatype="html">
@@ -4513,11 +4521,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">360</context>
         </context-group>
       </trans-unit>
       <trans-unit id="edit" datatype="html">
@@ -4646,6 +4654,10 @@
       <trans-unit id="resource.attribute.deleted" datatype="html">
         <source>Such an attribute does not exist.</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/conditional-formatting-modal.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
@@ -4655,11 +4667,116 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context>
           <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.attribute.formatting.group.add" datatype="html">
+        <source>Add a Formatting Rule
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/conditional-formatting-content.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7f376233bc4ca7b0c6263d736131e9101c34b3a8" datatype="html">
+        <source>Format values if...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.lock.group.conditions.title</note>
+      </trans-unit>
+      <trans-unit id="resource.attribute.formatting.condition.add" datatype="html">
+        <source>Add condition</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c051b8c6365cd6f60b9b867f88f6ce74e491f002" datatype="html">
+        <source>Formatting style</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.formatting.format.title</note>
+      </trans-unit>
+      <trans-unit id="example" datatype="html">
+        <source>Example </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">17,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d235ae9c2af04d4b113c0fad596ab23c2fe884f9" datatype="html">
+        <source>Bold</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.formatting.style.bold</note>
+      </trans-unit>
+      <trans-unit id="5d03f644fa70efc613805db7af74801cebf33bf6" datatype="html">
+        <source>Italic</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.formatting.style.italic</note>
+      </trans-unit>
+      <trans-unit id="46bceaa64c9270b80c5b57d8a4fc96951c059539" datatype="html">
+        <source>Underline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.formatting.style.underline</note>
+      </trans-unit>
+      <trans-unit id="b46d58c7abf123fb80d054ce7fab7fb072462d70" datatype="html">
+        <source>Strike through</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.formatting.style.strikeThrough</note>
+      </trans-unit>
+      <trans-unit id="8fa4d523f7b91df4390120b85ed0406138273e1a" datatype="html">
+        <source>Color</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.formatting.style.color</note>
+      </trans-unit>
+      <trans-unit id="0fbc41e0f42a75a58ea34ffd7c89b54cdc569ea3" datatype="html">
+        <source>Background</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.formatting.style.background</note>
+      </trans-unit>
+      <trans-unit id="6b0460bbbf17c12ade36d54fd2e6b7ef49d92a23" datatype="html">
+        <source>Clear format</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">resource.attribute.formatting.style.clearFormat</note>
+      </trans-unit>
+      <trans-unit id="resource.attribute.lock.group.action.delete" datatype="html">
+        <source>Delete whole set</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.description" datatype="html">
@@ -4780,7 +4897,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/attribute-lock-content.component.html</context>
-          <context context-type="linenumber">37,38</context>
+          <context context-type="linenumber">36,37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.attribute.lock.group.type.users.placeholder" datatype="html">
@@ -4825,25 +4942,18 @@
           <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="resource.attribute.lock.group.action.delete" datatype="html">
-        <source>Delete whole set</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="resource.attribute.lock.group.type.everyone" datatype="html">
         <source>Everyone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.attribute.lock.group.type.users" datatype="html">
         <source>Users and Teams</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="attribute.type.label" datatype="html">
@@ -8016,11 +8126,11 @@
         <source>Add Column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/table/content/header/cell/input/table-header-input.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/input/table-column-input.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="create.new.row" datatype="html">
@@ -10919,7 +11029,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.show.detail" datatype="html">
@@ -10930,7 +11040,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.copy.value" datatype="html">
@@ -10941,7 +11051,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.link.above" datatype="html">
@@ -10998,7 +11108,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.outdent" datatype="html">
@@ -11013,7 +11123,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.body.row.clone" datatype="html">
@@ -11031,7 +11141,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="row.remove" datatype="html">
@@ -11042,14 +11152,14 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.data.cell.linked.row.uninitialized" datatype="html">
         <source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context>
-          <context context-type="linenumber">518</context>
+          <context context-type="linenumber">500</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.row.noResults" datatype="html">
@@ -11124,73 +11234,73 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">334</context>
+          <context context-type="linenumber">342</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="table.header.menu.lockSettings" datatype="html">
-        <source>Locking...</source>
+      <trans-unit id="table.header.menu.formatting" datatype="html">
+        <source>Conditional formatting...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">352</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.header.menu.lockSettings" datatype="html">
+        <source>Locking...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
+          <context context-type="linenumber">350</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.defaultAttribute" datatype="html">
         <source>Set as displayed attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">346</context>
+          <context context-type="linenumber">356</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.add.column.next" datatype="html">
         <source>Add column right</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">362</context>
+          <context context-type="linenumber">372</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.add.column.previous" datatype="html">
         <source>Add column left</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">360</context>
+          <context context-type="linenumber">370</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.split" datatype="html">
         <source>Split column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.hide" datatype="html">
         <source>Hide column</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">348</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="table.header.menu.remove" datatype="html">
-        <source>Delete column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
           <context context-type="linenumber">111</context>
@@ -11200,37 +11310,48 @@
           <context context-type="linenumber">358</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="table.header.menu.remove" datatype="html">
+        <source>Delete column</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
+          <context context-type="linenumber">368</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="resource.attribute.name" datatype="html">
         <source>Copy column name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">352</context>
+          <context context-type="linenumber">362</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.copy.values" datatype="html">
         <source>Copy all column values</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">354</context>
+          <context context-type="linenumber">364</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.copy.values.unique" datatype="html">
         <source>Copy unique column values</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">356</context>
+          <context context-type="linenumber">366</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.title" datatype="html">
@@ -11241,7 +11362,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1370</context>
+          <context context-type="linenumber">1375</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
@@ -11252,7 +11373,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1371</context>
+          <context context-type="linenumber">1376</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.add.link.column" datatype="html">
@@ -11287,14 +11408,14 @@
         <source>Attribute settings...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">336</context>
+          <context context-type="linenumber">344</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.add.linkColumn" datatype="html">
         <source>Add Link column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">364</context>
+          <context context-type="linenumber">374</context>
         </context-group>
       </trans-unit>
       <trans-unit id="workflow.table.empty" datatype="html">

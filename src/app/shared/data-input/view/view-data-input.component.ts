@@ -68,6 +68,9 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   @Input()
   public value: ViewDataValue;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<ViewDataValue>();
 

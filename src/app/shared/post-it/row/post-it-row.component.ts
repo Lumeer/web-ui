@@ -44,6 +44,7 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {animateOpacityEnterLeave} from '../../animations';
+import {AttributeFormattingStyle} from '../../utils/attribute.utils';
 
 @Component({
   selector: 'post-it-row',
@@ -73,6 +74,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   @Input()
   public lockStats: AttributeLockFiltersStats;
+
+  @Input()
+  public formattingStyle: Partial<AttributeFormattingStyle>;
 
   @Input()
   public layoutType: PostItLayoutType;

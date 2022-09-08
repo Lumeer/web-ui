@@ -21,12 +21,14 @@ import {createConstraint} from '../../../shared/utils/constraint/create-constrai
 import {convertToBig} from '../../../shared/utils/data.utils';
 import {
   AttributeDto,
+  AttributeFormattingDto,
+  AttributeFormattingGroupDto,
   AttributeFunctionDto,
   AttributeLockDto,
   AttributeLockExceptionGroupDto,
   ConstraintDto,
 } from '../../dto/attribute.dto';
-import {Attribute, AttributeFunction} from './collection';
+import {Attribute, AttributeFormatting, AttributeFormattingGroup, AttributeFunction} from './collection';
 import {
   Constraint,
   ConstraintConfig,
@@ -45,6 +47,7 @@ import {
   convertAttributeFilterEquationToDto,
   convertAttributeFilterEquationToModel,
 } from '../../dto/attribute-filter-equation.dto';
+import {FontStyle} from '../../model/font-style';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
   return {
@@ -54,9 +57,23 @@ export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: st
     constraint: convertAttributeConstraintDtoToModel(dto.constraint),
     function: convertAttributeFunctionDtoToModel(dto.function),
     lock: convertAttributeLockDtoToModel(dto.lock),
+    formatting: convertAttributeFormattingDtoToModel(dto.formatting),
     usageCount: dto.usageCount,
     correlationId: correlationId,
     suggestValues: dto.suggestValues,
+  };
+}
+
+export function convertAttributeModelToDto(model: Attribute): AttributeDto {
+  return {
+    id: model.id,
+    name: model.name,
+    description: model.description,
+    constraint: convertAttributeConstraintModelToDto(model.constraint),
+    function: convertAttributeFunctionModelToDto(model.function),
+    lock: convertAttributeLockModelToDto(model.lock),
+    formatting: convertAttributeFormattingModelToDto(model.formatting),
+    suggestValues: model.suggestValues,
   };
 }
 
@@ -77,15 +94,20 @@ export function convertAttributeLockGroupDtoToModel(dto: AttributeLockExceptionG
   };
 }
 
-export function convertAttributeModelToDto(model: Attribute): AttributeDto {
+export function convertAttributeFormattingDtoToModel(dto: AttributeFormattingDto): AttributeFormatting {
+  return (
+    dto && {
+      groups: (dto.groups || []).map(group => convertAttributeFormattingGroupDtoToModel(group)),
+    }
+  );
+}
+
+export function convertAttributeFormattingGroupDtoToModel(dto: AttributeFormattingGroupDto): AttributeFormattingGroup {
   return {
-    id: model.id,
-    name: model.name,
-    description: model.description,
-    constraint: convertAttributeConstraintModelToDto(model.constraint),
-    function: convertAttributeFunctionModelToDto(model.function),
-    lock: convertAttributeLockModelToDto(model.lock),
-    suggestValues: model.suggestValues,
+    color: dto.color,
+    background: dto.background,
+    styles: <FontStyle[]>dto.styles,
+    equation: convertAttributeFilterEquationToModel(dto.equation),
   };
 }
 
@@ -104,6 +126,25 @@ export function convertAttributeLockGroupModelToDto(
   return {
     type: model.type?.toString(),
     typeValue: model.typeValue,
+    equation: convertAttributeFilterEquationToDto(model.equation),
+  };
+}
+
+export function convertAttributeFormattingModelToDto(model: AttributeFormatting): AttributeFormattingDto {
+  return (
+    model && {
+      groups: (model.groups || []).map(group => convertAttributeFormattingGroupModelToDto(group)),
+    }
+  );
+}
+
+export function convertAttributeFormattingGroupModelToDto(
+  model: AttributeFormattingGroup
+): AttributeFormattingGroupDto {
+  return {
+    styles: model.styles,
+    color: model.color,
+    background: model.background,
     equation: convertAttributeFilterEquationToDto(model.equation),
   };
 }

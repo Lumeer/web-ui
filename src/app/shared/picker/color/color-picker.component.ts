@@ -46,6 +46,9 @@ export class ColorPickerComponent {
   @Input()
   public color: string;
 
+  @Input()
+  public showClearIcon: boolean;
+
   @Output()
   public valueChange = new EventEmitter<string>();
 

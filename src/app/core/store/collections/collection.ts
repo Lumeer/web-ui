@@ -21,6 +21,8 @@ import {Resource} from '../../model/resource';
 import {Rule} from '../../model/rule';
 import {Constraint, AttributeLock} from '@lumeer/data-filters';
 import {RoleType} from '../../model/role-type';
+import {AttributeFilterEquation} from '@lumeer/data-filters/dist/model/attribute-filter';
+import {FontStyle} from '../../model/font-style';
 
 export interface Attribute {
   id?: string;
@@ -30,6 +32,7 @@ export interface Attribute {
   constraint?: Constraint;
   function?: AttributeFunction;
   lock?: AttributeLock;
+  formatting?: AttributeFormatting;
   mandatory?: boolean;
   suggestValues?: boolean;
 
@@ -47,6 +50,17 @@ export interface AttributeFunction {
   dryRun?: boolean;
   dryRunResult?: string;
   recursive?: boolean;
+}
+
+export interface AttributeFormatting {
+  groups?: AttributeFormattingGroup[];
+}
+
+export interface AttributeFormattingGroup {
+  equation?: AttributeFilterEquation;
+  background?: string;
+  color?: string;
+  styles?: FontStyle[];
 }
 
 export interface Collection extends Resource {

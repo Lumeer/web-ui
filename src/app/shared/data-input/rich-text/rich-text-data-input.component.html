@@ -5,6 +5,7 @@
                  [content]="value | previewDataValue"
                  [title]="value | formatDataValueTitle"
                  (dblclick)="onDoubleClick()"
+                 [style.color]="fontColor"
                  [class.invalid-value]="!commonConfiguration?.skipValidation && !valid">
 </quill-view-html>
 

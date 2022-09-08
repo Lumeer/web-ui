@@ -33,6 +33,7 @@
         <span data-test="user-data-input"
               [class.invalid-value]="!commonConfiguration?.skipValidation && !(user | userIsValid:users:value.config:data.selectedUsers.length)"
               [class.ms-2]="first"
+              [style.color]="fontColor"
               class="d-inline-block user">
           {{user.name || user.email}}
         </span>

@@ -54,6 +54,9 @@ export class CoordinatesDataInputComponent implements AfterViewChecked, OnChange
   @Input()
   public value: CoordinatesDataValue;
 
+  @Input()
+  public fontColor: string;
+
   @Output()
   public valueChange = new EventEmitter<CoordinatesDataValue>();
 
