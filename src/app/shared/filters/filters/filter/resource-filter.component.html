@@ -7,6 +7,7 @@
                   [disabled]="false"
                   [stopEventsPropagation]="true"
                   emptyValue="Select attribute"
+                  i18n-emptyValue="@@select.attribute"
                   [items]="attributeSelectItems"
                   (click)="$event.stopPropagation()"
                   [selectedPath]="[data.attribute?.id]"
