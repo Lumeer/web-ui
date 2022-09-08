@@ -2261,8 +2261,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">350</context></context-group></trans-unit><trans-unit id="table.header.menu.formatting" datatype="html">
         <source>Conditional formatting...</source><target>Podmíněné formátování...</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">352</context></context-group></trans-unit>
             <trans-unit id="copy" datatype="html">
                 <source>Copy</source>
@@ -2342,8 +2342,8 @@
                 <target>Zobrazit detail</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/body/row/links-list-table-row.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
 
             <trans-unit id="table.header.menu.hide" datatype="html">
@@ -3528,7 +3528,7 @@
                 <source>Split column</source>
                 <target state="final">Rozdělit sloupec</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">102</context></context-group></trans-unit>
             <trans-unit id="table.header.switch.parts" datatype="html">
                 <source>Switch tables order</source>
@@ -3739,8 +3739,8 @@
                 </context-group>
             </trans-unit><trans-unit id="column.add.placeholder" datatype="html">
         <source>Add Column</source><target>Přidat sloupec</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/input/table-header-input.component.ts</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/input/table-column-input.component.ts</context><context context-type="linenumber">81</context></context-group></trans-unit>
             <trans-unit id="create.new.row" datatype="html">
                 <source>Add new row</source>
@@ -4764,7 +4764,7 @@
                 <source>Enter attribute name</source>
                 <target>Zadejte název atributu</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">141</context></context-group></trans-unit>
             <trans-unit id="document.detail.header.createdOn" datatype="html">
                 <source>Created on</source>
@@ -6091,7 +6091,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
         <source>Size</source><target>Velikost</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="perspective.chart.config.attribute.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="select.attribute" datatype="html">
         <source>Select attribute</source><target>Vyberte atribut</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
@@ -9551,10 +9551,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.type.everyone" datatype="html">
         <source>Everyone</source><target>Kdokoliv</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.ts</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.type.users" datatype="html">
         <source>Users and Teams</source><target>Uživatelé a týmy</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.restricted" datatype="html">
         <source>Could not edit function for selected attribute.</source>
         <target>Na tomto atributu nelze upravit funkci.</target>

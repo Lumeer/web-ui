@@ -42,7 +42,7 @@ export class UserActivityService {
     if (this.configurationService.getConfiguration().publicView) {
       return Date.now();
     }
-    if (localStorage.getItem(STORE_KEY)) {
+    if (localStorage?.getItem(STORE_KEY)) {
       return parseInt(localStorage.getItem(STORE_KEY), 10);
     }
     return this.lastActivity;
@@ -56,7 +56,7 @@ export class UserActivityService {
   private setLastActivity(lastActivity: number) {
     if (!this.configurationService.getConfiguration().publicView) {
       // some browsers doesn't support access to localStorage in iframe
-      localStorage.setItem(STORE_KEY, lastActivity.toString());
+      localStorage?.setItem(STORE_KEY, lastActivity.toString());
     }
     this.lastActivity = lastActivity;
   }

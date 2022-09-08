@@ -98,12 +98,12 @@ export class AuthService {
       redirectUri,
       scope: 'openid profile email offline_access',
     });
-    this.accessToken$ = new BehaviorSubject<string>(localStorage.getItem(ACCESS_TOKEN_KEY));
+    this.accessToken$ = new BehaviorSubject<string>(localStorage?.getItem(ACCESS_TOKEN_KEY));
   }
 
   public setSessionType(method: SessionType, code: string) {
     const expires = moment().add(6, 'months').toDate();
-    Cookies.set(SESSION_HANDLING_KEY, method, {expires});
+    Cookies.set(SESSION_HANDLING_KEY, method, {expires, sameSite: 'strict'});
 
     this.handleAuthenticationCode(code);
   }
@@ -233,12 +233,12 @@ export class AuthService {
     this.expiresAt = new Date(authResult.expiresIn * 1000 + new Date().getTime()).getTime();
 
     if (this.configurationService.getConfiguration().authPersistence) {
-      localStorage.setItem(ACCESS_TOKEN_KEY, this.accessToken);
-      localStorage.setItem(EXPIRES_AT_KEY, String(this.expiresAt));
+      localStorage?.setItem(ACCESS_TOKEN_KEY, this.accessToken);
+      localStorage?.setItem(EXPIRES_AT_KEY, String(this.expiresAt));
 
       if (this.shouldSaveRefreshToken() && authResult.refreshToken) {
         const expires = moment().add(6, 'months').toDate();
-        Cookies.set(REFRESH_TOKEN_KEY, authResult.refreshToken, {secure: true, expires});
+        Cookies.set(REFRESH_TOKEN_KEY, authResult.refreshToken, {secure: true, expires, sameSite: 'strict'});
       }
     }
   }
@@ -259,9 +259,9 @@ export class AuthService {
 
     if (this.configurationService.getConfiguration().authPersistence) {
       // Remove tokens and expiry time from localStorage
-      localStorage.removeItem(ACCESS_TOKEN_KEY);
-      localStorage.removeItem(ID_TOKEN_KEY);
-      localStorage.removeItem(EXPIRES_AT_KEY);
+      localStorage?.removeItem(ACCESS_TOKEN_KEY);
+      localStorage?.removeItem(ID_TOKEN_KEY);
+      localStorage?.removeItem(EXPIRES_AT_KEY);
     }
 
     Cookies.remove(REFRESH_TOKEN_KEY);
@@ -295,7 +295,7 @@ export class AuthService {
   }
 
   public getAccessToken(): string {
-    return this.accessToken || localStorage.getItem(ACCESS_TOKEN_KEY);
+    return this.accessToken || localStorage?.getItem(ACCESS_TOKEN_KEY);
   }
 
   public getAccessToken$(): Observable<string> {
@@ -311,8 +311,8 @@ export class AuthService {
   }
 
   public getExpiresAt(): number {
-    if (localStorage.getItem(EXPIRES_AT_KEY)) {
-      return Number(localStorage.getItem(EXPIRES_AT_KEY));
+    if (localStorage?.getItem(EXPIRES_AT_KEY)) {
+      return Number(localStorage?.getItem(EXPIRES_AT_KEY));
     }
     return this.expiresAt;
   }
@@ -423,14 +423,14 @@ export class AuthService {
   }
 
   public getAndClearLoginRedirectPath(): string {
-    const redirectPath = localStorage.getItem(REDIRECT_KEY) || '/';
-    localStorage.removeItem(REDIRECT_KEY);
+    const redirectPath = localStorage?.getItem(REDIRECT_KEY) || '/';
+    localStorage?.removeItem(REDIRECT_KEY);
     return redirectPath;
   }
 
   public saveLoginRedirectPath(redirectPath: string) {
     if (!this.isPathOutsideApp(redirectPath)) {
-      localStorage.setItem(REDIRECT_KEY, redirectPath);
+      localStorage?.setItem(REDIRECT_KEY, redirectPath);
     }
   }
 

@@ -141,31 +141,31 @@
                 <source>Record Count</source>
                 <target state="final">Record Count</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
             <trans-unit id="collection.favorite.remove" datatype="html">
                 <source>Remove from favorites</source>
                 <target state="final">Remove from favorites</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
             <trans-unit id="collection.favorite.add" datatype="html">
                 <source>Add to favorites</source>
                 <target state="final">Add to favorites</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit>
             <trans-unit id="collection.button.configure" datatype="html">
                 <source>Configure</source>
                 <target state="final">Configure</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit>
             <trans-unit id="collection.button.remove" datatype="html">
                 <source>Delete Table</source>
                 <target state="final">Delete Table</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit>
             <trans-unit id="search.result.more" datatype="html">
                 <source>See More</source>
@@ -2853,10 +2853,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/content/group/conditional-formatting-group.component.html</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.type.everyone" datatype="html">
         <source>Everyone</source><target state="final">Everyone</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.ts</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="resource.attribute.lock.group.type.users" datatype="html">
         <source>Users and Teams</source><target state="final">Users and Teams</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/content/exception-group/attribute-lock-exception-group.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.restricted" datatype="html">
         <source>Could not edit function for selected attribute.</source><target state="final">Could not edit function for selected attribute.</target>
 
@@ -3289,7 +3289,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
         <source>Size</source><target state="final">Size</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="perspective.chart.config.attribute.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="select.attribute" datatype="html">
         <source>Select attribute</source><target state="final">Select attribute</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
@@ -3835,8 +3835,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">350</context></context-group></trans-unit><trans-unit id="table.header.menu.formatting" datatype="html">
         <source>Conditional formatting...</source><target state="final">Conditional formatting...</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">352</context></context-group></trans-unit><trans-unit id="copy" datatype="html">
         <source>Copy</source><target state="final">Copy</target>
 
@@ -3989,8 +3989,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/hidden-menu/table-header-hidden-menu.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/hidden-column/table-hidden-column.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="column.add.placeholder" datatype="html">
         <source>Add Column</source><target state="final">Add Column</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/input/table-header-input.component.ts</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/input/table-column-input.component.ts</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="create.new.row" datatype="html">
         <source>Add new row</source><target state="final">Add new row</target>
 
