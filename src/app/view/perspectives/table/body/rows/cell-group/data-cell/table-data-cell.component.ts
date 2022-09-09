@@ -259,7 +259,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.affectedSubscription.unsubscribe();
       this.affectedSubscription = this.subscribeToAffected();
     }
-    if (changes.column || changes.document || changes.linkInstance || changes.constraintData) {
+    if (changes.column || changes.document || changes.linkInstance || changes.constraintData || changes.resource) {
       if (!this.editing$.value) {
         this.dataValue = this.createDataValue();
       }

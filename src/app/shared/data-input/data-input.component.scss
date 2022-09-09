@@ -3,6 +3,7 @@
 :host {
   & > * {
     height: 100%;
+    text-decoration: inherit;
   }
 
   &::ng-deep input:focus {
@@ -11,5 +12,8 @@
 
   &::ng-deep input[readonly] {
     cursor: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    text-decoration: inherit;
   }
 }

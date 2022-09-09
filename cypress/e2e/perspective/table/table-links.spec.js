@@ -30,8 +30,8 @@ describe('Table perspective :: Links', () => {
 
     cy.focused().should('have.class', 'text-input').type('first value').blur();
 
-    cy.wait('@createAttribute').its('status').should('eq', 200);
-    cy.wait('@createDocument').its('status').should('eq', 200);
+    cy.wait('@createAttribute').its('response.statusCode').should('eq', 200);
+    cy.wait('@createDocument').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-test="table-column-input"].text-default-attribute').first().should('have.text', 'A');
     cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
@@ -41,7 +41,7 @@ describe('Table perspective :: Links', () => {
     cy.get('[data-test="table-data-cell"]').eq(2).click({force: true});
     cy.focused().should('have.attr', 'data-test', 'table-hidden-input').type('s');
     cy.focused().should('have.class', 'text-input').type('econd value').blur();
-    cy.wait('@createDocument').its('status').should('eq', 200);
+    cy.wait('@createDocument').its('response.statusCode').should('eq', 200);
     cy.get('.text-input').should('have.length', 2);
     cy.get('[data-test="table-data-cell"]').should('have.length', 6);
 
@@ -67,9 +67,9 @@ describe('Table perspective :: Links', () => {
     cy.focused().should('have.attr', 'data-test', 'table-hidden-input').type('l');
     cy.focused().should('have.class', 'text-input').type('inked value').blur();
 
-    cy.wait('@createAttribute').its('status').should('eq', 200);
-    cy.wait('@createDocument').its('status').should('eq', 200);
-    cy.wait('@createLinkInstance').its('status').should('eq', 200);
+    cy.wait('@createAttribute').its('response.statusCode').should('eq', 200);
+    cy.wait('@createDocument').its('response.statusCode').should('eq', 200);
+    cy.wait('@createLinkInstance').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-test="table-column-input"]').should('have.length', 4).last().should('have.text', 'Add Column');
     cy.get('.text-input').should('have.length', 3);
@@ -81,7 +81,7 @@ describe('Table perspective :: Links', () => {
     cy.get('[data-test="document-hint"]').contains('linked value').click();
     cy.get('[data-test="document-hints"]').should('not.exist');
 
-    cy.wait('@createLinkInstance').its('status').should('eq', 200);
+    cy.wait('@createLinkInstance').its('response.statusCode').should('eq', 200);
 
     cy.get('.text-input[title="linked value"]').should('have.length', 2);
   });

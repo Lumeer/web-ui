@@ -37,13 +37,11 @@ import {UserService} from '../core/data-service';
 import {ConfigurationService} from '../configuration/configuration.service';
 import {createLanguageUrl, languageCodeMap} from '../core/model/language';
 import {UsersAction} from '../core/store/users/users.action';
-import Cookies from 'js-cookie';
 import {SessionType} from './common/session-type';
-import * as moment from 'moment';
+import {AuthStorage} from './auth.storage';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
-const ID_TOKEN_KEY = 'auth_id_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';
 const REFRESH_TOKEN_KEY = 'auth_refresh_token';
 const SESSION_HANDLING_KEY = 'auth_session_handling';
@@ -59,9 +57,6 @@ export class AuthService {
   private auth0: WebAuth;
   private loggingIn: boolean;
   private refreshing: boolean;
-
-  private accessToken: string;
-  private expiresAt: number;
 
   private lastRenewedAt: number;
   private intervalId: number;
@@ -98,18 +93,17 @@ export class AuthService {
       redirectUri,
       scope: 'openid profile email offline_access',
     });
-    this.accessToken$ = new BehaviorSubject<string>(localStorage?.getItem(ACCESS_TOKEN_KEY));
+    this.accessToken$ = new BehaviorSubject<string>(AuthStorage.get(ACCESS_TOKEN_KEY));
   }
 
   public setSessionType(method: SessionType, code: string) {
-    const expires = moment().add(6, 'months').toDate();
-    Cookies.set(SESSION_HANDLING_KEY, method, {expires, sameSite: 'strict'});
+    AuthStorage.set(SESSION_HANDLING_KEY, method);
 
     this.handleAuthenticationCode(code);
   }
 
   private getSessionType(): SessionType {
-    return <SessionType>Cookies.get(SESSION_HANDLING_KEY);
+    return <SessionType>AuthStorage.get(SESSION_HANDLING_KEY);
   }
 
   private shouldSaveRefreshToken(): boolean {
@@ -227,18 +221,17 @@ export class AuthService {
   }
 
   private setSession(authResult: AuthResult) {
-    this.accessToken = authResult.accessToken;
     this.accessToken$.next(authResult.accessToken);
-    // Set the time that the access token will expire at
-    this.expiresAt = new Date(authResult.expiresIn * 1000 + new Date().getTime()).getTime();
 
     if (this.configurationService.getConfiguration().authPersistence) {
-      localStorage?.setItem(ACCESS_TOKEN_KEY, this.accessToken);
-      localStorage?.setItem(EXPIRES_AT_KEY, String(this.expiresAt));
+      AuthStorage.setSecure(ACCESS_TOKEN_KEY, authResult.accessToken);
+
+      // Set the time that the access token will expire at
+      const expiresAt = new Date(authResult.expiresIn * 1000 + new Date().getTime()).getTime();
+      AuthStorage.set(EXPIRES_AT_KEY, String(expiresAt));
 
       if (this.shouldSaveRefreshToken() && authResult.refreshToken) {
-        const expires = moment().add(6, 'months').toDate();
-        Cookies.set(REFRESH_TOKEN_KEY, authResult.refreshToken, {secure: true, expires, sameSite: 'strict'});
+        AuthStorage.setSecure(REFRESH_TOKEN_KEY, authResult.refreshToken);
       }
     }
   }
@@ -254,19 +247,15 @@ export class AuthService {
   }
 
   private clearLoginData() {
-    this.accessToken = null;
-    this.expiresAt = null;
-
     if (this.configurationService.getConfiguration().authPersistence) {
-      // Remove tokens and expiry time from localStorage
-      localStorage?.removeItem(ACCESS_TOKEN_KEY);
-      localStorage?.removeItem(ID_TOKEN_KEY);
-      localStorage?.removeItem(EXPIRES_AT_KEY);
+      // Remove tokens and expiry time from authStorage
+      AuthStorage.remove(ACCESS_TOKEN_KEY);
+      AuthStorage.remove(EXPIRES_AT_KEY);
     }
 
-    Cookies.remove(REFRESH_TOKEN_KEY);
+    AuthStorage.remove(REFRESH_TOKEN_KEY);
     if (this.getSessionType() !== SessionType.NeverAsk) {
-      Cookies.remove(SESSION_HANDLING_KEY);
+      AuthStorage.remove(SESSION_HANDLING_KEY);
     }
 
     window.clearInterval(this.intervalId);
@@ -295,7 +284,7 @@ export class AuthService {
   }
 
   public getAccessToken(): string {
-    return this.accessToken || localStorage?.getItem(ACCESS_TOKEN_KEY);
+    return AuthStorage.get(ACCESS_TOKEN_KEY);
   }
 
   public getAccessToken$(): Observable<string> {
@@ -307,14 +296,14 @@ export class AuthService {
   }
 
   private getRefreshToken(): string {
-    return Cookies.get(REFRESH_TOKEN_KEY);
+    return AuthStorage.get(REFRESH_TOKEN_KEY);
   }
 
   public getExpiresAt(): number {
-    if (localStorage?.getItem(EXPIRES_AT_KEY)) {
-      return Number(localStorage?.getItem(EXPIRES_AT_KEY));
+    if (AuthStorage.get(EXPIRES_AT_KEY)) {
+      return Number(AuthStorage.get(EXPIRES_AT_KEY));
     }
-    return this.expiresAt;
+    return null;
   }
 
   private renewToken() {
@@ -327,7 +316,7 @@ export class AuthService {
     });
   }
 
-  private refreshToken() {
+  public refreshToken() {
     if (this.refreshing) {
       return;
     }
@@ -423,14 +412,14 @@ export class AuthService {
   }
 
   public getAndClearLoginRedirectPath(): string {
-    const redirectPath = localStorage?.getItem(REDIRECT_KEY) || '/';
-    localStorage?.removeItem(REDIRECT_KEY);
+    const redirectPath = AuthStorage.get(REDIRECT_KEY) || '/';
+    AuthStorage.remove(REDIRECT_KEY);
     return redirectPath;
   }
 
   public saveLoginRedirectPath(redirectPath: string) {
     if (!this.isPathOutsideApp(redirectPath)) {
-      localStorage?.setItem(REDIRECT_KEY, redirectPath);
+      AuthStorage.set(REDIRECT_KEY, redirectPath);
     }
   }
 

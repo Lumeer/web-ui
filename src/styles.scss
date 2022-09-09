@@ -15,9 +15,9 @@
 @import 'styles/overrides/bootstrap';
 @import 'styles/overrides/full-calendar';
 
-$flag-icon-css-path: '~flag-icon-css/flags' !default;
+$flag-icons-path: '~flag-icons/flags' !default;
 $include: cz, gb, hu !default;
-@import '~flag-icon-css/sass/flag-icons';
+@import '~flag-icons/sass/flag-icons';
 
 *[contenteditable] {
   -webkit-user-select: auto !important;
