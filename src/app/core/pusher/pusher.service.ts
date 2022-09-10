@@ -174,6 +174,7 @@ export class PusherService implements OnDestroy {
 
     this.channel = this.pusher.subscribe('private-' + userId);
 
+    this.bindPusherErrors();
     this.bindOrganizationEvents();
     this.bindProjectEvents();
     this.bindViewEvents();
@@ -195,6 +196,14 @@ export class PusherService implements OnDestroy {
     this.bindSelectionListEvents();
     this.bindResourceVariablesEvents();
     this.bindDashboardDataEvents();
+  }
+
+  private bindPusherErrors() {
+    this.channel.bind('pusher:subscription_error', data => {
+      if (data.status === 401) {
+        this.authService.refreshToken();
+      }
+    });
   }
 
   private bindOrganizationEvents() {
