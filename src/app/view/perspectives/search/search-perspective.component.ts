@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
@@ -31,7 +31,17 @@ import {
 } from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
-import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  pairwise,
+  startWith,
+  switchMap,
+  take,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
@@ -63,7 +73,12 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   private searchId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private router: Router,
+    private modalService: ModalService,
+    private elementRef: ElementRef
+  ) {}
 
   public ngOnInit() {
     this.initialSearchTab = parseSearchTabFromUrl(this.router.url);
@@ -110,6 +125,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         select(selectCurrentView),
         startWith(null as View),
         pairwise(),
+        tap(([previousView, view]) => this.checkNewView(previousView, view)),
         switchMap(([previousView, view]) =>
           view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
         ),
@@ -130,6 +146,12 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         this.searchId = searchId;
       });
     this.subscriptions.add(subscription);
+  }
+
+  private checkNewView(previousView: View, currentView: View) {
+    if (!previousView && currentView?.perspective === Perspective.Search) {
+      this.elementRef?.nativeElement?.scrollTo(0, 0);
+    }
   }
 
   private subscribeToView(

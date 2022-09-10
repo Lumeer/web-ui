@@ -13,12 +13,12 @@ describe('Search Perspective :: Collections', () => {
     cy.get('[data-test="icon-picker-dropdown"]').click();
     cy.get('[data-test="color-picker-saturated-color"]').first().click();
     cy.get('[data-test="icon-picker-search-input"]').type('train');
-    cy.get('[data-test="icon-picker-option"]').should('have.length', 2).first().click();
+    cy.get('[data-test="icon-picker-option"]').should('have.length', 6).first().click();
     cy.get('[data-test="icon-picker-select-button"]').click();
 
     cy.get('[data-test="collection-card-name-input"]').type('Trains').blur();
 
-    cy.wait('@createCollection').its('status').should('eq', 200);
+    cy.wait('@createCollection').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-test="collection-card-icon"]').click();
 

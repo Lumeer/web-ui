@@ -1,8 +1,10 @@
 import {WebAuth} from 'auth0-js';
 import './commands/rest.commands.js';
 import './commands/visit.commands.js';
-import Cookies from 'js-cookie';
 import {SessionType} from '../../src/app/auth/common/session-type';
+
+const ACCESS_TOKEN_KEY = 'auth_access_token';
+const EXPIRES_AT_KEY = 'auth_expires_at';
 
 Cypress.Commands.add('login', () => {
   const auth = new WebAuth({
@@ -19,23 +21,25 @@ Cypress.Commands.add('login', () => {
     // restore tokens from previous login
     const {authAccessToken, authExpiresAt} = lumeerAuth;
     Cypress.env('authAccessToken', authAccessToken);
-    window.localStorage.setItem('auth_access_token', authAccessToken);
-    window.localStorage.setItem('auth_expires_at', authExpiresAt);
+    cy.setCookie(ACCESS_TOKEN_KEY, authAccessToken);
+    cy.setCookie(EXPIRES_AT_KEY, authExpiresAt);
   } else {
     // we will skip session type screen
-    Cookies.set('auth_session_handling', SessionType.NeverAsk);
+    cy.setCookie('auth_session_handling', SessionType.NeverAsk);
     // login via auth0 API
     auth.login({username: Cypress.env('username'), password: Cypress.env('password')});
 
-    // wait for the token
-    cy.window({timeout: 30000}).should(() => {
-      expect(window.localStorage.getItem('auth_access_token')).not.to.be.empty;
-      Cypress.env('authAccessToken', window.localStorage.getItem('auth_access_token'));
-      window['lumeerAuth'] = {
-        authAccessToken: window.localStorage.getItem('auth_access_token'),
-        authExpiresAt: window.localStorage.getItem('auth_expires_at'),
-      };
-    });
+    cy.waitForLogin();
+
+    cy.getCookie(ACCESS_TOKEN_KEY)
+      .then(cookie => cookie?.value)
+      .then(token => {
+        expect(token || '').not.to.be.empty;
+
+        Cypress.env('authAccessToken', token);
+        const authExpiresAt = new Date(24 * 60 * 60 * 1000 + new Date().getTime()).getTime();
+        window['lumeerAuth'] = {authAccessToken: token, authExpiresAt: String(authExpiresAt)};
+      });
   }
 });
 
@@ -48,24 +52,6 @@ Cypress.Commands.add('loginAndDismissAgreement', () => {
     cy.dismissAgreement();
     cy.dismissOnboardingVideo();
   }
-});
-
-// allows to perform actions using access token like calling backend API
-Cypress.Commands.add('withToken', fn => {
-  cy.window()
-    .its('localStorage')
-    .invoke('getItem', 'auth_access_token')
-    .then(token => fn(token));
-});
-
-Cypress.Commands.add('logout', () => {
-  // remove tokens from local storage
-  cy.window()
-    .its('localStorage')
-    .then(localStorage => {
-      localStorage.removeItem('auth_access_token');
-      localStorage.removeItem('auth_expires_at');
-    });
 });
 
 Cypress.Commands.add('dismissAgreement', () => {
@@ -95,4 +81,30 @@ Cypress.Commands.add('waitForModalShown', () => {
 
 Cypress.Commands.add('waitForModalHidden', () => {
   cy.get('modal-container').should('not.exist');
+});
+
+Cypress.Commands.add('waitForLogin', () => {
+  const interval = 500;
+  const timeout = 30000;
+  let retries = Math.floor(timeout / interval);
+
+  const check = result => {
+    if (result) {
+      return result;
+    }
+    if (retries < 1) {
+      throw new Error('Waiting for login expired');
+    }
+    console.log('checking', retries);
+    cy.wait(interval, {log: false}).then(() => {
+      retries--;
+      return resolveValue();
+    });
+  };
+
+  const resolveValue = () => {
+    return cy.getCookie(ACCESS_TOKEN_KEY).then(cookie => check(cookie?.value));
+  };
+
+  return resolveValue();
 });

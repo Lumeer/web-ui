@@ -60,6 +60,7 @@
         "no-useless-escape": "off",
         "no-constant-condition": "off",
         "no-extra-boolean-cast": "off",
+        "no-inner-declarations": "off",
         "no-multiple-empty-lines": "error",
         "rxjs/no-internal": "error",
         "header/header": [2, "company-header.js"]

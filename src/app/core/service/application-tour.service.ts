@@ -38,6 +38,7 @@ import {NotificationsAction} from '../store/notifications/notifications.action';
 import {UsersAction} from '../store/users/users.action';
 import {AllowedPermissions} from '../model/allowed-permissions';
 import {AppPropertiesAction} from '../store/app-properties/app-properties.action';
+import {scrollToTopInSearchPerspective} from '../../shared/utils/app.utils';
 
 @Injectable({providedIn: 'root'})
 export class ApplicationTourService {
@@ -155,7 +156,7 @@ export class ApplicationTourService {
   }
 
   private scrollToTop() {
-    document.getElementsByClassName('search-perspective')?.[0]?.scrollTo(0, 0);
+    scrollToTopInSearchPerspective();
   }
 
   private dismissWizard() {

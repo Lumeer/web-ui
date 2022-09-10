@@ -44,19 +44,19 @@ export const availableLanguages: Language[] = [
     code: LanguageCode.CZ,
     name: 'Čeština',
     translatedName: $localize`:@@language.czech:Czech`,
-    icon: 'flag-icon flag-icon-cz',
+    icon: 'fi fi-cz',
   },
   {
     code: LanguageCode.EN,
     name: 'English',
     translatedName: $localize`:@@language.english:English`,
-    icon: 'flag-icon flag-icon-gb',
+    icon: 'fi fi-gb',
   },
   {
     code: LanguageCode.HU,
     name: 'Magyar',
     translatedName: $localize`:@@language.hungary:Hungarian`,
-    icon: 'flag-icon flag-icon-hu',
+    icon: 'fi fi-hu',
   },
 ];
 

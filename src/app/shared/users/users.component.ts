@@ -26,7 +26,7 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {User} from '../../core/store/users/user';
 import {filter, map, tap} from 'rxjs/operators';
 import {UsersAction} from '../../core/store/users/users.action';
-import {selectCurrentUser, selectUsersForWorkspace} from '../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../core/store/users/users.state';
 import {ResourceType} from '../../core/model/resource-type';
 import {Resource} from '../../core/model/resource';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
@@ -160,7 +160,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
 
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
 
     this.resource$ = this.store$.pipe(
       select(this.getSelector()),

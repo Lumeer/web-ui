@@ -23,7 +23,7 @@ beforeEach(() => {
   cy.getOrganizationByCode(Cypress.env('organizationCode')).then(organization => {
     // create a new project for each test
 
-    const projectCode = Math.random().toString(36).substr(2, 5);
+    const projectCode = Math.random().toString(36).substring(2, 7);
     Cypress.env('projectCode', projectCode);
     cy.createProject(organization.id, projectCode, 'Test project').then(project => {
       // save default workspace to newly created project
@@ -42,12 +42,12 @@ beforeEach(() => {
 
       cy.server();
 
-      cy.route('POST', `${projectRestUrl}/collections`).as('createCollection');
-      cy.route('POST', `${collectionRestUrl}/attributes`).as('createAttribute');
-      cy.route('PUT', `${collectionRestUrl}/attributes/**`).as('updateAttribute');
-      cy.route('POST', `${collectionRestUrl}/documents`).as('createDocument');
-      cy.route('PATCH', `${collectionRestUrl}/documents/**/data`).as('patchDocumentData');
-      cy.route('POST', `${projectRestUrl}/link-instances`).as('createLinkInstance');
+      cy.intercept('POST', `${projectRestUrl}/collections`).as('createCollection');
+      cy.intercept('POST', `${collectionRestUrl}/attributes`).as('createAttribute');
+      cy.intercept('PUT', `${collectionRestUrl}/attributes/**`).as('updateAttribute');
+      cy.intercept('POST', `${collectionRestUrl}/documents`).as('createDocument');
+      cy.intercept('PATCH', `${collectionRestUrl}/documents/**/data`).as('patchDocumentData');
+      cy.intercept('POST', `${projectRestUrl}/link-instances`).as('createLinkInstance');
     });
   });
 });
