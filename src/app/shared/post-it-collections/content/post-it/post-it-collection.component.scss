@@ -3,6 +3,7 @@
 
 :host {
   position: relative;
+  border-radius: 0.25rem;
 }
 
 .buttons a {
@@ -95,7 +96,7 @@
 }
 
 .button-remove {
-  top: 0;
+  top: 3px;
   right: 4px;
 }
 
