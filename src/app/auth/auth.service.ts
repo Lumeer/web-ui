@@ -48,7 +48,7 @@ const SESSION_HANDLING_KEY = 'auth_session_handling';
 const CHECK_INTERVAL = 5000; // millis
 const RENEW_TOKEN_EXPIRATION = 10; // minutes
 const RENEW_TOKEN_MINUTES = 4;
-const REFRESH_TOKEN_MINUTES = -1000;
+const REFRESH_TOKEN_MINUTES = 2;
 
 @Injectable({
   providedIn: 'root',
