@@ -39,7 +39,7 @@ export function fontStylesClass(styles: FontStyle[]): string {
 function fontStyleClass(style: FontStyle): string {
   switch (style) {
     case FontStyle.Bold:
-      return 'fw-bold';
+      return 'fw-black';
     case FontStyle.Italic:
       return 'fst-italic';
     case FontStyle.Underline:
