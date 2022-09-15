@@ -16,7 +16,7 @@
              [(ngModel)]="searchString">
     </div>
   </div>
-  <div><i class="fa fa-fw fa-none m-1"></i></div>
+  <div><i class="fa fa-fw m-1"></i></div>
 </div>
 <user-component *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
                 class="user"

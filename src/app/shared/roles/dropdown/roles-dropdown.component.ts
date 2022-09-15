@@ -69,6 +69,8 @@ export class RolesDropdownComponent implements OnChanges {
 
   public selectedRoles$ = new BehaviorSubject<Role[]>([]);
 
+  public expandedGroups$ = new BehaviorSubject<number[]>([]);
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.selectedRoles && !this.isOpen()) {
       this.selectedRoles$.next(this.selectedRoles || []);
@@ -153,6 +155,14 @@ export class RolesDropdownComponent implements OnChanges {
     this.selectedRoles$.next(roles);
     if (this.emitAllChanges) {
       this.change.emit(roles);
+    }
+  }
+
+  public onOpenChange(opened: boolean, order: number) {
+    if (opened) {
+      this.expandedGroups$.next([...this.expandedGroups$.value, order]);
+    } else {
+      this.expandedGroups$.next(this.expandedGroups$.value.filter(o => o !== order));
     }
   }
 }

@@ -21,6 +21,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   OnDestroy,
@@ -59,6 +60,7 @@ import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {computeElementPositionInParent, preventEvent} from '../../../../../../shared/utils/common.utils';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {View} from '../../../../../../core/store/views/view';
+import {initForceTouch} from '../../../../../../shared/utils/html-modifier';
 
 @Component({
   selector: 'table-single-column',
@@ -125,12 +127,15 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
     private attributeNameChangedPipe: AttributeNameChangedPipe,
     private changeDetector: ChangeDetectorRef,
     private modalService: ModalService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private element: ElementRef
   ) {}
 
   public ngOnInit() {
     this.selected$ = this.bindSelected();
     this.subscriptions.add(this.subscribeToSelected());
+
+    initForceTouch(this.element.nativeElement, event => this.onContextMenu(event));
   }
 
   private bindSelected(): Observable<boolean> {
