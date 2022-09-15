@@ -56,6 +56,8 @@ import {
   computeAttributeFormatting,
   isAttributeLockEnabledByLockStats,
 } from '../../../../../../shared/utils/attribute.utils';
+import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
+import {aggregateDataValues, DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
@@ -444,4 +446,30 @@ export function viewCursorToWorkflowCell(cursor: ViewCursor, tables: TableModel[
   }
 
   return null;
+}
+
+export function createWorkflowTableFooter(
+  rows: TableRow[],
+  columns: TableColumn[],
+  config: WorkflowStemConfig,
+  constraintData: ConstraintData
+): TableFooter {
+  const cellsMap = columns.reduce<TableFooterCellsMap>((map, column) => {
+    if (column.attribute) {
+      const values = rows.map(row => row.cellsMap?.[column.id]?.data);
+      const data = aggregateDataValues(
+        DataAggregationType.Sum,
+        values,
+        column.attribute.constraint,
+        true,
+        constraintData
+      );
+      map[column.id] = {data};
+    }
+    return map;
+  }, {});
+  return {
+    height: TABLE_ROW_HEIGHT,
+    cellsMap,
+  };
 }

@@ -19,6 +19,7 @@
 
 import {TableColumn} from './table-column';
 import {TableRow} from './table-row';
+import {TableFooter} from './table-footer';
 
 export const TABLE_ROW_HEIGHT = 37;
 export const TABLE_ROW_BORDER = 1;
@@ -34,6 +35,7 @@ export interface TableModel {
   columns: TableColumn[];
   rows: TableRow[];
   newRow?: TableNewRow;
+  footer?: TableFooter;
   bottomToolbar: boolean;
   color?: string;
 }

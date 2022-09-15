@@ -57,6 +57,7 @@ import {FilterBuilderModule} from '../builder/filter-builder/filter-builder.modu
 import {FilterPreviewModule} from '../builder/filter-preview/filter-preview.module';
 import {TableCellAffectedPipe} from './pipes/table-cell-affected.pipe';
 import {ResourceCommentsModule} from '../resource/comments/resource-comments.module';
+import {TableFooterComponent} from './content/footer/table-footer.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import {ResourceCommentsModule} from '../resource/comments/resource-comments.mod
     DocumentHintsColumnsPipe,
     CalculateHintsOffsetPipe,
     CellFilterBuilderComponent,
+    TableFooterComponent,
   ],
   imports: [
     CommonModule,

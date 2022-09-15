@@ -11,6 +11,7 @@
   table-layout: fixed;
   width: min-content;
   border: 0.5px $gray-200 dotted;
+  margin: 0;
 }
 
 .more-content {
@@ -22,4 +23,9 @@
   .new-row {
     background: rgba(255, 255, 255, 0.75);
   }
+}
+
+.table-footer {
+  position: absolute;
+  background: $gray-100;
 }

@@ -213,7 +213,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.viewPort?.checkViewportSize();
       const sortedRows = sortAndFilterTableRowsByHierarchy(this.tableModel?.rows);
       if (this.tableModel.bottomToolbar) {
-        this.rows = [...sortedRows, null];
+        this.rows = [...sortedRows, null, null];
       } else {
         this.rows = sortedRows;
       }

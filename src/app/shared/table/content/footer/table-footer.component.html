@@ -1,0 +1,16 @@
+<ng-container *ngFor="let group of columnGroups; let index = index; trackBy: trackByColumn">
+
+  <td class="table-cell position-relative align-middle"
+      [style.width.px]="group.width"
+      [style.height.px]="footer.height"
+      [style.max-height.px]="footer.height">
+    <data-input-preview *ngIf="group.column"
+                        class="d-block px-1"
+                        [constraint]="group.column.attribute?.constraint"
+                        [style.max-height.px]="footer.height - 1"
+                        [dataValue]="group.column &&  (footer.cellsMap[group.column.id]?.data | dataValue:group.column?.attribute?.constraint:constraintData)">
+
+    </data-input-preview>
+  </td>
+
+</ng-container>
