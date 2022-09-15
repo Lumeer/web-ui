@@ -22,11 +22,14 @@
 
       <accordion-group
         *ngFor="let group of groups | filterGroupedRolesWithHeader; trackBy:trackByGroup"
+        [isOpen]="(expandedGroups$ | async) | includes:group.order"
+        (isOpenChange)="onOpenChange($event, group.order)"
         panelClass="lmr-accordion">
 
         <role-group class="header-wrapper" accordion-heading
                     [group]="group"
                     [selectedRoles]="selectedRoles"
+                    [isOpened]="(expandedGroups$ | async) | includes:group.order"
                     (checkedChange)="toggleAllInGroup(group, $event)">
         </role-group>
         <role *ngFor="let role of group.roles; trackBy:trackByRole"

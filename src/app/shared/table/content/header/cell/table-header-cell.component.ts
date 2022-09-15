@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  OnInit,
+  ElementRef,
+} from '@angular/core';
 import {TableColumn} from '../../../model/table-column';
 import {computeElementPositionInParent, preventEvent} from '../../../../utils/common.utils';
 import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
@@ -26,6 +35,7 @@ import {MenuItem} from '../../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../../menu/static-menu/static-menu.component';
 import {CellFilterBuilderComponent} from './filter-builder/cell-filter-builder.component';
 import {ConditionType, ConditionValue} from '@lumeer/data-filters';
+import {initForceTouch} from '../../../../utils/html-modifier';
 
 @Component({
   selector: 'table-header-cell',
@@ -34,7 +44,7 @@ import {ConditionType, ConditionValue} from '@lumeer/data-filters';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block'},
 })
-export class TableHeaderCellComponent {
+export class TableHeaderCellComponent implements OnInit {
   @Input()
   public column: TableColumn;
 
@@ -89,6 +99,12 @@ export class TableHeaderCellComponent {
   public filterBuilderComponent: CellFilterBuilderComponent;
 
   public readonly sortType = AttributeSortType;
+
+  constructor(public element: ElementRef) {}
+
+  public ngOnInit() {
+    initForceTouch(this.element.nativeElement, event => this.onContextMenu(event));
+  }
 
   public onHeaderCancel() {
     this.onCancel.emit();

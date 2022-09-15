@@ -35,6 +35,9 @@ export class RoleGroupComponent implements OnChanges {
   @Input()
   public selectedRoles: Role[];
 
+  @Input()
+  public isOpened: boolean;
+
   @Output()
   public checkedChange = new EventEmitter<boolean>();
 
