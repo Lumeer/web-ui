@@ -64,6 +64,7 @@ import {MenuItem} from '../../../../../shared/menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
 import {WorkflowPerspectiveConfiguration} from '../../../perspective-configuration';
+import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 
 @Component({
   selector: 'workflow-tables',
@@ -311,11 +312,15 @@ export class WorkflowTablesComponent implements OnChanges {
     this.tablesService.onNewRow(table);
   }
 
-  public onRowLinkedDocumentSelect(data: {row: TableRow; document: DocumentModel}) {
+  public onRowLinkedDocumentSelected(data: {row: TableRow; document: DocumentModel}) {
     this.tablesService.onRowLinkedDocumentSelect(data.row, data.document);
   }
 
   public onCopy() {
     this.tablesService.onCopy();
+  }
+
+  public onFooterAggregationSelected(data: {column: TableColumn; aggregation: DataAggregationType}) {
+    this.tablesService.onFooterAggregationSelected(data.column, data.aggregation);
   }
 }

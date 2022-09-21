@@ -31,6 +31,7 @@ export interface WorkflowConfig {
   version: WorkflowConfigVersion;
   tables: WorkflowTableConfig[];
   columns: WorkflowColumnsSettings;
+  footers: WorkflowFooterConfig[];
 }
 
 export interface WorkflowTableConfig {
@@ -61,11 +62,12 @@ export interface WorkflowStemConfig {
   stem?: QueryStem;
   attribute?: WorkflowAttribute;
   collection?: WorkflowResource;
-  footers?: Record<string, WorkflowFooterConfig>;
 }
 
 export interface WorkflowFooterConfig {
-  aggregation: DataAggregationType;
+  stem: QueryStem;
+  attributeId: string;
+  aggregation?: DataAggregationType;
 }
 
 export interface WorkflowAttribute extends QueryAttribute {}

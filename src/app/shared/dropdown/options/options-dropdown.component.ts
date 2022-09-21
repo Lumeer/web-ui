@@ -90,6 +90,9 @@ export class OptionsDropdownComponent implements OnChanges {
   public maxSelected: number;
 
   @Input()
+  public showSelection: boolean;
+
+  @Input()
   public editable = true;
 
   @Input()

@@ -46,6 +46,7 @@ import {WorkflowTable} from '../../../model/workflow-table';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -396,6 +397,10 @@ export class WorkflowTablesService {
 
   public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {
     this.dataService.createOrUpdateLink(row, document);
+  }
+
+  public onFooterAggregationSelected(column: TableColumn, aggregation: DataAggregationType) {
+    this.dataService.setColumnAggregation(column, aggregation);
   }
 
   public onCopy() {

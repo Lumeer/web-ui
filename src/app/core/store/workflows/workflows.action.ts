@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Workflow, WorkflowConfig} from './workflow';
+import {Workflow, WorkflowConfig, WorkflowFooterConfig} from './workflow';
 import {QueryStem} from '../navigation/query/query';
 import {TableCell} from '../../../shared/table/model/table-model';
 import {TableColumn} from '../../../shared/table/model/table-column';
@@ -30,6 +30,7 @@ export enum WorkflowsActionType {
   SET_CONFIG = '[Workflow] Set config',
   SET_COLUMN_WIDTH = '[Workflow] Set column width',
   SET_TABLE_HEIGHT = '[Workflow] Set table height',
+  SET_FOOTER_CONFIG = '[Workflow] Set footer config',
   TOGGLE_HIERARCHY = '[Workflow] Toggle hierarchy',
   SET_OPENED_DOCUMENT = '[Workflow] Set opened document',
   RESET_OPENED_DOCUMENT = '[Workflow] Reset opened document',
@@ -79,6 +80,14 @@ export namespace WorkflowsAction {
     ) {}
   }
 
+  export class SetFooterConfig implements Action {
+    public readonly type = WorkflowsActionType.SET_FOOTER_CONFIG;
+
+    public constructor(
+      public payload: {workflowId: string; stem: QueryStem; attributeId: string; config: Partial<WorkflowFooterConfig>}
+    ) {}
+  }
+
   export class ToggleHierarchy implements Action {
     public readonly type = WorkflowsActionType.TOGGLE_HIERARCHY;
 
@@ -125,6 +134,7 @@ export namespace WorkflowsAction {
     | RemoveWorkflow
     | SetConfig
     | SetTableHeight
+    | SetFooterConfig
     | SetColumnWidth
     | SetOpenedDocument
     | ResetOpenedDocument

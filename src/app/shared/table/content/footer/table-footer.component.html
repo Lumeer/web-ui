@@ -4,13 +4,34 @@
       [style.width.px]="group.width"
       [style.height.px]="footer.height"
       [style.max-height.px]="footer.height">
-    <data-input-preview *ngIf="group.column"
-                        class="d-block px-1"
-                        [constraint]="group.column.attribute?.constraint"
-                        [style.max-height.px]="footer.height - 1"
-                        [dataValue]="group.column &&  (footer.cellsMap[group.column.id]?.data | dataValue:group.column?.attribute?.constraint:constraintData)">
+    <div *ngIf="group.column && footer.cellsMap[group.column.id] as footerCell"
+         class="footer-cell" #cellElement
+         (contextmenu)="dropdownComponent?.open(); $event.stopPropagation(); $event.preventDefault()">
+      <data-input-preview class="d-block px-1 text-truncate"
+                          [constraint]="group.column.attribute?.constraint"
+                          [style.max-height.px]="footer.height - 1"
+                          [configuration]="configuration"
+                          [dataValue]="footerCell?.data | dataValue:group.column.attribute?.constraint:constraintData">
+      </data-input-preview>
+      <i *ngIf="footerCell?.selectedType"
+         [ngClass]="footerCell?.selectedType | aggregationTypeIcon" class="fa-fw icon-small ms-2 cursor-pointer"
+         (click)="dropdownComponent.toggle()">
+      </i>
+      <i *ngIf="!footerCell?.selectedType"
+         title="Footer settings..."
+         i18n-title="@@table.footer.cell.settings"
+         class="fas fa-fw fa-caret-down ms-2 cursor-pointer"
+         (click)="dropdownComponent.toggle()">
+      </i>
 
-    </data-input-preview>
+      <options-dropdown #dropdownComponent
+                        [origin]="cellElement"
+                        [options]="footerCell?.types | aggregationDropdownOptions"
+                        [showSelection]="!!footerCell?.selectedType"
+                        [selectedValues]="footerCell?.selectedType ? [footerCell?.selectedType] : []"
+                        (selectOption)="onSelected(group.column, $event)">
+      </options-dropdown>
+    </div>
   </td>
 
 </ng-container>

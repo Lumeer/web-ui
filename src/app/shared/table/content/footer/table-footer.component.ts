@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {ConstraintData} from '@lumeer/data-filters';
-import {TableColumnGroup} from '../../model/table-column';
+import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {TableFooter} from '../../model/table-footer';
 import {SelectedTableCell} from '../../model/table-model';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {DropdownOption} from '../../../dropdown/options/dropdown-option';
+import {DataAggregationType} from '../../../utils/data/data-aggregation';
 
 @Component({
   selector: '[table-footer]',
@@ -42,7 +45,16 @@ export class TableFooterComponent {
   @Input()
   public constraintData: ConstraintData;
 
+  @Output()
+  public aggregationSelect = new EventEmitter<{column: TableColumn; aggregation: DataAggregationType}>();
+
+  public configuration: DataInputConfiguration = {common: {inline: true}};
+
   public trackByColumn(index: number, column: TableColumnGroup): string {
     return column.id;
+  }
+
+  public onSelected(column: TableColumn, option: DropdownOption) {
+    this.aggregationSelect.emit({column, aggregation: option.value});
   }
 }

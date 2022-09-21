@@ -144,8 +144,7 @@ import {generateAttributeName} from '../../../../../../shared/utils/attribute.ut
 import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
 import {Translation} from '../../../../../../shared/utils/translation';
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
-import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
-import {aggregateDataValues, DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
+import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -451,7 +450,7 @@ export class WorkflowTablesDataService {
                 width: columnsWidth + 1, // + 1 for border
                 newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated, actionTitle} : undefined,
                 linkingQueryStem,
-                footer: createWorkflowTableFooter(rows, columns, stemConfig, constraintData),
+                footer: createWorkflowTableFooter(rows, columns, stemConfig, config.footers, constraintData),
               };
               tables.push(workflowTable);
             }
@@ -492,7 +491,7 @@ export class WorkflowTablesDataService {
             newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap, actionTitle} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
             linkingQueryStem: linkingCollectionId ? {collectionId: linkingCollectionId} : null,
-            footer: createWorkflowTableFooter(rows, columns, stemConfig, constraintData),
+            footer: createWorkflowTableFooter(rows, columns, stemConfig, config.footers, constraintData),
           };
           tables.push(workflowTable);
         }
@@ -1000,6 +999,20 @@ export class WorkflowTablesDataService {
         linkType,
       })
     );
+  }
+
+  public setColumnAggregation(column: TableColumn, aggregation: DataAggregationType) {
+    const table = this.stateService.findTableByColumn(column);
+    if (column.attribute) {
+      this.store$.dispatch(
+        new WorkflowsAction.SetFooterConfig({
+          workflowId: this.perspectiveId,
+          attributeId: column.attribute.id,
+          stem: table.stem,
+          config: {aggregation},
+        })
+      );
+    }
   }
 
   public removeFilter(column: TableColumn, index: number) {

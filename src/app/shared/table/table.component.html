@@ -72,7 +72,8 @@
         [columnGroups]="data.columnGroups"
         [constraintData]="constraintData"
         [selectedCell]="selectedCell"
-        [footer]="tableModel.footer">
+        [footer]="tableModel.footer"
+        (aggregationSelect)="footerAggregationSelected.emit($event)">
     </tr>
     </tbody>
   </table>

@@ -35,9 +35,9 @@
              (click)="onContextMenu($event)">
           <i *ngIf="(column.attribute | attributeFunctionDefined)"
              [class.mb-1]="typeData.iconName"
-             class="fas fa-function fa-fw">
+             class="fas fa-function fa-fw icon-small">
           </i>
-          <i *ngIf="typeData.iconName" class=" a-fw"
+          <i *ngIf="typeData.iconName" class="fa-fw icon-small"
              [ngClass]="typeData.iconName"
              [title]="column.attribute?.constraint | constraintTypeIconTitle"></i>
           <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"

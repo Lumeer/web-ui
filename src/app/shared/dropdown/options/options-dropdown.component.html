@@ -29,7 +29,7 @@
            data-test="select-item-option"
            tabindex>
 
-          <i *ngIf="multiSelect || maxSelected" class="fa-fw far me-2" [ngClass]="(selectedValues | includes:option.value) ? 'fa-check' : ''"></i>
+          <i *ngIf="multiSelect || maxSelected || showSelection" class="fa-fw far me-2" [ngClass]="(selectedValues | includes:option.value) ? 'fa-check' : ''"></i>
 
           <div class="option d-inline-block"
                [ngClass]="option.classList"

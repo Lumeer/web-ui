@@ -112,6 +112,8 @@ import {ResourceAttributesMapPipe} from './resource-attributes-map.pipe';
 import {CanShowAttributeHintsPipe} from './can-show-attribute-hints.pipe';
 import {IndicesPipe} from './indices.pipe';
 import {ResourceAttributeFormattingStylePipe} from './resource-attribute-formatting-group-style.pipe';
+import {AggregationDropdownOptionsPipe} from './aggregation-dropdown-options.pipe';
+import {AggregationTypeIconPipe} from './aggregation-type-icon.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -206,6 +208,8 @@ import {ResourceAttributeFormattingStylePipe} from './resource-attribute-formatt
     ViewLinkPipe,
     CanShowAttributeHintsPipe,
     ResourceAttributeFormattingStylePipe,
+    AggregationDropdownOptionsPipe,
+    AggregationTypeIconPipe,
   ],
   exports: [
     DataPipesModule,
@@ -301,6 +305,8 @@ import {ResourceAttributeFormattingStylePipe} from './resource-attribute-formatt
     ViewLinkPipe,
     CanShowAttributeHintsPipe,
     ResourceAttributeFormattingStylePipe,
+    AggregationDropdownOptionsPipe,
+    AggregationTypeIconPipe,
   ],
 })
 export class PipesModule {}

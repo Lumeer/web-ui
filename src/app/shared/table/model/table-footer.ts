@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DataAggregationType} from '../../utils/data/data-aggregation';
+
 export interface TableFooter {
   height: number;
   cellsMap?: TableFooterCellsMap; // columnId -> string
@@ -25,5 +27,7 @@ export interface TableFooter {
 export type TableFooterCellsMap = Record<string, TableFooterCell>;
 
 export interface TableFooterCell {
-  data: any;
+  data?: any;
+  selectedType?: DataAggregationType;
+  types?: DataAggregationType[];
 }

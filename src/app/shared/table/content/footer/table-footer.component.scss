@@ -1,0 +1,17 @@
+@import 'src/styles/variables';
+
+.footer-cell {
+  border-left: 1px $gray-200 dotted;
+  border-top: 1px $gray-200 dotted;
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  align-items: center;
+
+  &.last {
+    border-right: 1px $gray-200 dotted;
+  }
+}
+
+.fa-caret-down {
+  color: $gray-700;
+}

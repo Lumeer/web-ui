@@ -7926,7 +7926,7 @@
                     <context context-type="linenumber">149</context>
                 </context-group>
             </trans-unit>
-            <trans-unit datatype="html" id="perspective.chart.config.aggregation.name">
+            <trans-unit datatype="html" id="data.aggregation.type">
                 <source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</source>
                 <target>{type, select, sum {Összeg} avg {Átlag} min {Minimum} max {Maximum} count {Számol} unique {Egyedi} median {Medián} join {Egyesít} }</target>
                 <context-group purpose="location">

@@ -7046,7 +7046,7 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
+      <trans-unit id="data.aggregation.type" datatype="html">
         <source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/aggregation-select-items.pipe.ts</context>

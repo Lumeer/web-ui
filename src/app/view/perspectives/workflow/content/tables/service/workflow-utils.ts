@@ -23,11 +23,14 @@ import {
   createDataValuesMap,
   objectsByIdMap,
 } from '@lumeer/data-filters';
-import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
+import {
+  queryStemAttributesResourcesOrder,
+  queryStemsAreSame,
+} from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
 import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
@@ -452,19 +455,32 @@ export function createWorkflowTableFooter(
   rows: TableRow[],
   columns: TableColumn[],
   config: WorkflowStemConfig,
+  footers: WorkflowFooterConfig[],
   constraintData: ConstraintData
 ): TableFooter {
+  const stemFootersByAttribute = (footers || [])
+    .filter(f => queryStemsAreSame(f.stem, config.stem))
+    .reduce((map, footer) => ({...map, [footer.attributeId]: footer}), {});
+  if (!stemFootersByAttribute) {
+    // TODO return null;
+  }
   const cellsMap = columns.reduce<TableFooterCellsMap>((map, column) => {
     if (column.attribute) {
-      const values = rows.map(row => row.cellsMap?.[column.id]?.data);
-      const data = aggregateDataValues(
-        DataAggregationType.Sum,
-        values,
-        column.attribute.constraint,
-        true,
-        constraintData
-      );
-      map[column.id] = {data};
+      const footerConfig = stemFootersByAttribute?.[column.attribute.id];
+      if (footerConfig?.aggregation) {
+        const values = rows.map(row => row.cellsMap?.[column.id]?.data);
+        const data = aggregateDataValues(
+          footerConfig.aggregation,
+          values,
+          column.attribute.constraint,
+          true,
+          constraintData
+        );
+        map[column.id] = {data, selectedType: footerConfig.aggregation, types: objectValues(DataAggregationType)};
+      } else {
+        map[column.id] = {types: objectValues(DataAggregationType)};
+      }
+      // TODO filter aggregations by constraint
     }
     return map;
   }, {});

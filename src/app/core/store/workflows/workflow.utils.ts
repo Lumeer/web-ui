@@ -21,6 +21,7 @@ import {
   latestWorkflowVersion,
   WorkflowColumnsSettings,
   WorkflowConfig,
+  WorkflowFooterConfig,
   WorkflowResource,
   WorkflowStemConfig,
   WorkflowTableConfig,
@@ -53,6 +54,10 @@ export function isWorkflowConfigChanged(previousConfig: WorkflowConfig, currentC
   }
 
   if (!deepObjectsEquals(previous?.tables, current?.tables)) {
+    return true;
+  }
+
+  if (!deepObjectsEquals(previous?.footers, current?.footers)) {
     return true;
   }
 
@@ -148,7 +153,7 @@ function createDefaultConfig(query: Query): WorkflowConfig {
     configs.push({stem, collection: resource});
     return configs;
   }, []);
-  return {stemsConfigs, version: latestWorkflowVersion, columns: {}, tables: []};
+  return {stemsConfigs, version: latestWorkflowVersion, columns: {}, tables: [], footers: []};
 }
 
 export function createWorkflowSaveConfig(config: WorkflowConfig): WorkflowConfig {
@@ -157,6 +162,7 @@ export function createWorkflowSaveConfig(config: WorkflowConfig): WorkflowConfig
       ...config,
       tables: cleanWorkflowTables(config),
       columns: cleanWorkflowColumns(config),
+      footers: cleanWorkflowFooters(config),
     }
   );
 }
@@ -167,6 +173,12 @@ function cleanWorkflowTables(config: WorkflowConfig): WorkflowTableConfig[] {
       stemConfig =>
         queryStemsAreSame(table.stem, stemConfig.stem) && table.collectionId === stemConfig.collection?.resourceId
     )
+  );
+}
+
+function cleanWorkflowFooters(config: WorkflowConfig): WorkflowFooterConfig[] {
+  return config.footers?.filter(footer =>
+    config.stemsConfigs.some(stemConfig => queryStemsAreSame(footer.stem, stemConfig.stem))
   );
 }
 

@@ -22,6 +22,7 @@ import {DataResource} from '../../../core/model/resource';
 import {Attribute} from '../../../core/store/collections/collection';
 import {Constraint, ConstraintData, UnknownConstraint} from '@lumeer/data-filters';
 import {uniqueValues} from '../array.utils';
+import {parseSelectTranslation} from '../translation.utils';
 
 export enum DataAggregationType {
   Sum = 'sum',
@@ -33,6 +34,24 @@ export enum DataAggregationType {
   Median = 'median',
   Join = 'join',
 }
+
+export function dataAggregationName(type: DataAggregationType): string {
+  return parseSelectTranslation(
+    $localize`:@@data.aggregation.type:{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }`,
+    {type}
+  );
+}
+
+export const dataAggregationIconMap = {
+  [DataAggregationType.Sum]: 'far fa-sigma',
+  [DataAggregationType.Min]: 'far fa-arrow-up-1-9',
+  [DataAggregationType.Max]: 'far fa-arrow-down-1-9',
+  [DataAggregationType.Median]: 'far fa-gauge',
+  [DataAggregationType.Avg]: 'fad fa-bars',
+  [DataAggregationType.Count]: 'fad fa-grid',
+  [DataAggregationType.Unique]: 'far fa-shapes',
+  [DataAggregationType.Join]: 'far fa-input-text',
+};
 
 export const defaultDataAggregationType = Object.values(DataAggregationType)[0];
 

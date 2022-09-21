@@ -5926,7 +5926,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="perspective.chart.config.rangeSlider" datatype="html">
         <source>Show range slider</source><target state="final">Show range slider</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="data.aggregation.type" datatype="html">
         <source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</source><target state="final">{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/aggregation-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="chart.type" datatype="html">
