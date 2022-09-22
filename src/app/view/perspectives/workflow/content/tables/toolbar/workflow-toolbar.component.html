@@ -7,7 +7,7 @@
 </select-item2>
 
 <select-item-with-constraint2 *ngIf="hasAttribute"
-                              class="d-inline-block mw-100 text-truncate"
+                              class="d-inline-block me-4 mw-100 text-truncate"
                               [attributesResources]="attributesResourcesOrder"
                               [restrictedIds]="[]"
                               [disabled]="!editable"
@@ -19,3 +19,10 @@
                               (select)="onAttributeSelected($event)"
                               (remove)="onAttributeRemoved()">
 </select-item-with-constraint2>
+
+<toggle-checkbox [checked]="!!footerConfig"
+                 [disabled]="!editable"
+                 label="Enable footer"
+                 i18n-label="@@perspective.workflow.footer.enable"
+                 (checkedChange)="onFooterToggle($event)">
+</toggle-checkbox>

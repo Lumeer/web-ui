@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNotNullOrUndefined} from '../common.utils';
+import {isNotNullOrUndefined, objectValues} from '../common.utils';
 import {DataResource} from '../../../core/model/resource';
 import {Attribute} from '../../../core/store/collections/collection';
-import {Constraint, ConstraintData, UnknownConstraint} from '@lumeer/data-filters';
+import {Constraint, ConstraintData, ConstraintType, NumberConstraint, UnknownConstraint} from '@lumeer/data-filters';
 import {uniqueValues} from '../array.utils';
 import {parseSelectTranslation} from '../translation.utils';
 
@@ -57,6 +57,36 @@ export const defaultDataAggregationType = Object.values(DataAggregationType)[0];
 
 export function isValueAggregation(aggregation: DataAggregationType): boolean {
   return !aggregation || ![DataAggregationType.Count, DataAggregationType.Unique].includes(aggregation);
+}
+
+export function dataAggregationConstraint(aggregation: DataAggregationType): Constraint {
+  if (!isValueAggregation(aggregation)) {
+    return new NumberConstraint({});
+  }
+}
+
+export function dataAggregationsByConstraint(constraint: Constraint): DataAggregationType[] {
+  switch (constraint?.type) {
+    case ConstraintType.Number:
+    case ConstraintType.Percentage:
+    case ConstraintType.Duration:
+      return objectValues(DataAggregationType);
+    case ConstraintType.Address:
+    case ConstraintType.Coordinates:
+    case ConstraintType.Link:
+    case ConstraintType.Select:
+    case ConstraintType.Text:
+    case ConstraintType.Unknown:
+    case ConstraintType.View:
+    case ConstraintType.User:
+      return [
+        DataAggregationType.Min,
+        DataAggregationType.Max,
+        DataAggregationType.Count,
+        DataAggregationType.Unique,
+        DataAggregationType.Join,
+      ];
+  }
 }
 
 export function aggregateDataResources(

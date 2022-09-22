@@ -66,6 +66,10 @@ export interface WorkflowStemConfig {
 
 export interface WorkflowFooterConfig {
   stem: QueryStem;
+  attributes: WorkflowFooterAttributeConfig[];
+}
+
+export interface WorkflowFooterAttributeConfig {
   attributeId: string;
   aggregation?: DataAggregationType;
 }

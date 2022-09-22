@@ -17,19 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '@lumeer/data-filters';
-import {DataAggregationType} from '../../utils/data/data-aggregation';
+import {Pipe, PipeTransform} from '@angular/core';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../core/store/workflows/workflow';
+import {queryStemsAreSame} from '../../../../core/store/navigation/query/query.util';
 
-export interface TableFooter {
-  height: number;
-  cellsMap?: TableFooterCellsMap; // columnId -> string
-}
-
-export type TableFooterCellsMap = Record<string, TableFooterCell>;
-
-export interface TableFooterCell {
-  data?: any;
-  selectedType?: DataAggregationType;
-  types?: DataAggregationType[];
-  constraint?: Constraint;
+@Pipe({
+  name: 'filterStemFooter',
+})
+export class FilterStemFooterPipe implements PipeTransform {
+  public transform(footers: WorkflowFooterConfig[], stemConfig: WorkflowStemConfig): WorkflowFooterConfig {
+    return (footers || []).find(footer => queryStemsAreSame(footer.stem, stemConfig.stem));
+  }
 }

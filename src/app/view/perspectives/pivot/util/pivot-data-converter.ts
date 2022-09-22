@@ -33,6 +33,7 @@ import {SelectItemWithConstraintFormatter} from '../../../../shared/select/selec
 import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {
   aggregateDataResources,
+  dataAggregationConstraint,
   DataAggregationType,
   isValueAggregation,
 } from '../../../../shared/utils/data/data-aggregation';
@@ -641,12 +642,10 @@ export class PivotDataConverter {
     return (valueAttributes || []).reduce(
       ({titles, constraints}, pivotAttribute) => {
         const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
+        constraints.push(
+          dataAggregationConstraint(pivotAttribute.aggregation) || this.pivotAttributeConstraint(pivotAttribute)
+        );
 
-        if (isValueAggregation(pivotAttribute.aggregation)) {
-          constraints.push(this.pivotAttributeConstraint(pivotAttribute));
-        } else {
-          constraints.push(new NumberConstraint({}));
-        }
         const title = this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
         titles.push(title);
 

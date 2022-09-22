@@ -1005,7 +1005,7 @@ export class WorkflowTablesDataService {
     const table = this.stateService.findTableByColumn(column);
     if (column.attribute) {
       this.store$.dispatch(
-        new WorkflowsAction.SetFooterConfig({
+        new WorkflowsAction.SetFooterAttributeConfig({
           workflowId: this.perspectiveId,
           attributeId: column.attribute.id,
           stem: table.stem,

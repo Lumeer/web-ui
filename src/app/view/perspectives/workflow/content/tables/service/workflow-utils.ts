@@ -60,7 +60,11 @@ import {
   isAttributeLockEnabledByLockStats,
 } from '../../../../../../shared/utils/attribute.utils';
 import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
-import {aggregateDataValues, DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
+import {
+  aggregateDataValues,
+  dataAggregationConstraint,
+  dataAggregationsByConstraint,
+} from '../../../../../../shared/utils/data/data-aggregation';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
@@ -458,29 +462,33 @@ export function createWorkflowTableFooter(
   footers: WorkflowFooterConfig[],
   constraintData: ConstraintData
 ): TableFooter {
-  const stemFootersByAttribute = (footers || [])
-    .filter(f => queryStemsAreSame(f.stem, config.stem))
-    .reduce((map, footer) => ({...map, [footer.attributeId]: footer}), {});
-  if (!stemFootersByAttribute) {
-    // TODO return null;
+  const stemFooter = (footers || []).find(f => queryStemsAreSame(f.stem, config.stem));
+  if (!stemFooter) {
+    return null;
   }
+
+  const footersByAttribute = (stemFooter.attributes || []).reduce(
+    (map, footer) => ({...map, [footer.attributeId]: footer}),
+    {}
+  );
+
   const cellsMap = columns.reduce<TableFooterCellsMap>((map, column) => {
     if (column.attribute) {
-      const footerConfig = stemFootersByAttribute?.[column.attribute.id];
-      if (footerConfig?.aggregation) {
+      const footerConfig = footersByAttribute?.[column.attribute.id];
+      const types = dataAggregationsByConstraint(column.attribute.constraint);
+      const selectedType = types.includes(footerConfig?.aggregation) ? footerConfig.aggregation : null;
+      if (selectedType) {
         const values = rows.map(row => row.cellsMap?.[column.id]?.data);
-        const data = aggregateDataValues(
-          footerConfig.aggregation,
-          values,
-          column.attribute.constraint,
-          true,
-          constraintData
-        );
-        map[column.id] = {data, selectedType: footerConfig.aggregation, types: objectValues(DataAggregationType)};
+        const data = aggregateDataValues(selectedType, values, column.attribute.constraint, false, constraintData);
+        map[column.id] = {
+          data,
+          selectedType,
+          types,
+          constraint: dataAggregationConstraint(selectedType) || column.attribute.constraint,
+        };
       } else {
-        map[column.id] = {types: objectValues(DataAggregationType)};
+        map[column.id] = {types};
       }
-      // TODO filter aggregations by constraint
     }
     return map;
   }, {});

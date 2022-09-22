@@ -45,6 +45,7 @@ import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table
 import {PresenterModule} from '../../../shared/presenter/presenter.module';
 import {FilterUniqueStemsConfigsPipe} from './pipes/filter-unique-stems-configs.pipe';
 import {DirectivesModule} from '../../../shared/directives/directives.module';
+import {FilterStemFooterPipe} from './pipes/filter-stem-footer.pipe';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import {DirectivesModule} from '../../../shared/directives/directives.module';
     WorkflowTablesIdsPipe,
     WorkflowTableTitleComponent,
     FilterUniqueStemsConfigsPipe,
+    FilterStemFooterPipe,
   ],
   imports: [
     CommonModule,

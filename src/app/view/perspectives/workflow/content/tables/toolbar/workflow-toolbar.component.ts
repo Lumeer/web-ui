@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
@@ -39,6 +39,7 @@ import {ViewSettingsAction} from '../../../../../../core/store/view-settings/vie
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 import {Constraint} from '@lumeer/data-filters';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
+import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
 
 @Component({
   selector: 'workflow-toolbar',
@@ -67,6 +68,12 @@ export class WorkflowToolbarComponent implements OnChanges {
 
   @Input()
   public editable: boolean;
+
+  @Input()
+  public footerConfig: WorkflowFooterConfig;
+
+  @Input()
+  public workflowId: string;
 
   @Output()
   public configChange = new EventEmitter<WorkflowStemConfig>();
@@ -150,5 +157,15 @@ export class WorkflowToolbarComponent implements OnChanges {
 
   private onConfigChange(config: WorkflowStemConfig) {
     this.configChange.next(config);
+  }
+
+  public onFooterToggle(checked: boolean) {
+    this.store$.dispatch(
+      new WorkflowsAction.SetFooterEnabled({
+        workflowId: this.workflowId,
+        stem: this.stem,
+        enabled: checked,
+      })
+    );
   }
 }
