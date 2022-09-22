@@ -11,7 +11,9 @@
                        [colors]="datum.colors">
       </icons-presenter>
       <span class="ps-1 fw-bold">{{datum.name}}</span>
-      <span class="ms-2 badge bg-primary">{{datum.roles | rolesCount: datum.transitiveRoles}}</span>
+      <span class="ms-2 badge bg-primary"
+            tooltip="Number of enabled user rights"
+            i18n-tooltip="@@user.resources.roles.count">{{datum.roles | rolesCount: datum.transitiveRoles}}</span>
     </div>
   </li>
 </ul>

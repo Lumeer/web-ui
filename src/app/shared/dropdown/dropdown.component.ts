@@ -275,7 +275,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   private syncWidth() {
-    if (!this.overlayRef || !this.fitParent) {
+    if (!this.overlayRef?.overlayElement || !this.fitParent) {
       return;
     }
 

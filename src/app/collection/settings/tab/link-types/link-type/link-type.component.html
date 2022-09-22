@@ -16,6 +16,12 @@
     <span>{{linkType.linksCount || 0}}</span>
   </span>
 
+  <a [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'l', linkType.id]">
+    <i class="fas fa-fw fa-cog me-2"
+       title="Settings" i18n-title="@@settings"
+       aria-hidden="true"></i>
+  </a>
+
   <i *ngIf="permissions?.roles?.Manage" class="far fa-fw fa-trash-alt text-danger cursor-pointer delete"
      (click)="onDelete()"
      title="Delete" i18n-title="@@delete"
