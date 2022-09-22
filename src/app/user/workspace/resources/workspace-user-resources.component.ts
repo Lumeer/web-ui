@@ -67,7 +67,7 @@ export class WorkspaceUserResourcesComponent implements OnInit, OnDestroy {
           .map(project => this.computeData(project, organization, user))
           .filter(datum => datum.roles.length || datum.transitiveRoles.length);
 
-        const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.Project, user.id === currentUser?.id);
+        const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.Project, user?.id === currentUser?.id);
         return {objects, emptyTitle};
       })
     );

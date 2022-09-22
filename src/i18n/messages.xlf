@@ -457,11 +457,26 @@
           <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="settings" datatype="html">
+        <source>Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type/link-type.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-views/common/view-detail/view-detail.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="delete" datatype="html">
         <source>Delete</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type/link-type.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/link-type/settings/header/link-type-header.component.html</context>
@@ -1008,7 +1023,7 @@
         <source>Dismiss</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context>
@@ -1019,14 +1034,14 @@
         <source>Onward!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.next" datatype="html">
         <source>Next</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
@@ -1037,7 +1052,7 @@
         <source>Previous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
@@ -1048,154 +1063,154 @@
         <source>Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.basic" datatype="html">
         <source>Access your information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">205</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.basic" datatype="html">
         <source>Lumeer organizes your information in tables. Later, you can use this button to add your tables. Then you can open the table by simply clicking on it.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.welcome" datatype="html">
         <source>Welcome to Lumeer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">211</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.welcome" datatype="html">
         <source>Let me guide you around briefly! By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.searchViewsNoView" datatype="html">
         <source>Create views of your data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">235</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.searchViewsNoView" datatype="html">
         <source>Views are the central nerve of Lumeer. They are the main booster of your productivity and save your precious time. Your first task is to create a View!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">237</context>
+          <context context-type="linenumber">238</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.searchViews" datatype="html">
         <source>Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">262</context>
+          <context context-type="linenumber">263</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.tablesView" datatype="html">
         <source>See the tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">272</context>
+          <context context-type="linenumber">273</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.tablesTab" datatype="html">
         <source>The raw data are stored in Tables which can be accessed on their own tab.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">275</context>
+          <context context-type="linenumber">276</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.search" datatype="html">
         <source>Search for information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">285</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.search" datatype="html">
         <source>The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">287</context>
+          <context context-type="linenumber">288</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.perspectives" datatype="html">
         <source>Perspectives</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">296</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.perspectives" datatype="html">
         <source>When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">298</context>
+          <context context-type="linenumber">299</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.views" datatype="html">
         <source>Views and sharing</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">308</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.views" datatype="html">
         <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">310</context>
+          <context context-type="linenumber">311</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.getHelp" datatype="html">
         <source>Help with Lumeer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">320</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.getHelp" datatype="html">
         <source>Here you can always get help in case you got lost.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">322</context>
+          <context context-type="linenumber">323</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.inviteUsers" datatype="html">
         <source>Invite teammates</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">331</context>
+          <context context-type="linenumber">332</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.inviteUsers" datatype="html">
         <source>Working together can make difference. Invite teammates and boost your productivity.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">334</context>
+          <context context-type="linenumber">335</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.userMenu" datatype="html">
         <source>Return to this Tour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">343</context>
+          <context context-type="linenumber">344</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.userMenu" datatype="html">
         <source>You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context>
-          <context context-type="linenumber">346</context>
+          <context context-type="linenumber">347</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.stem.choose" datatype="html">
@@ -4292,6 +4307,25 @@
           <context context-type="linenumber">213</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="select.attribute" datatype="html">
+        <source>Select attribute</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/filters/filters/filter/resource-filter.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute/common/conditions/condition/constraint-condition-form.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="modal.links.modify.filter.add" datatype="html">
         <source>Add a filter</source>
         <context-group purpose="location">
@@ -4495,7 +4529,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.editDescription" datatype="html">
@@ -6908,17 +6942,6 @@
           <context context-type="linenumber">99,100</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="settings" datatype="html">
-        <source>Settings</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-views/common/view-detail/view-detail.component.html</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="views.delete.message" datatype="html">
         <source>Do you really want to permanently delete this view?</source>
         <context-group purpose="location">
@@ -9328,11 +9351,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/tasks-toolbar.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.records.empty.project.title" datatype="html">
@@ -9446,6 +9469,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user/workspace/activity/workspace-user-activity.component.html</context>
           <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="user.resources.roles.count" datatype="html">
+        <source>Number of enabled user rights</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user/workspace/resources/projects/user-projects.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.permission.missing" datatype="html">
@@ -9658,17 +9688,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="select.attribute" datatype="html">
-        <source>Select attribute</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.chart.config.axis.color" datatype="html">
@@ -11358,7 +11377,7 @@
         <source>Delete this column?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context>
-          <context context-type="linenumber">382</context>
+          <context context-type="linenumber">387</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
@@ -11369,7 +11388,7 @@
         <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context>
-          <context context-type="linenumber">383</context>
+          <context context-type="linenumber">388</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
@@ -12098,7 +12117,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="organizations.tab.detail.basic.allInclusive" datatype="html">
-        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;far faw fa-list-ul me-2&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>All features included<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;far fa-fw fa-list-ul me-2&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>All features included<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">36,37</context>

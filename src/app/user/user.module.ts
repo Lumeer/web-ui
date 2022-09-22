@@ -44,6 +44,7 @@ import {ResourceActivityModule} from '../shared/resource/activity/resource-activ
 import {SelectModule} from '../shared/select/select.module';
 import {UserProjectsComponent} from './workspace/resources/projects/user-projects.component';
 import {WorkspaceUserCleanUpGuard} from './workspace/workspace-user-clean-up.guard';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import {WorkspaceUserCleanUpGuard} from './workspace/workspace-user-clean-up.gua
     PresenterModule,
     ResourceActivityModule,
     SelectModule,
+    TooltipModule,
   ],
   providers: [WorkspaceUserSettingsGuard, WorkspaceUserTabGuard, WorkspaceUserCleanUpGuard],
 })

@@ -136,8 +136,8 @@
   </mat-menu>
   <mat-menu #languageMenu="matMenu">
     <ng-template matMenuContent>
-      <button mat-menu-item *ngFor="let language of languages">
-        <a class="color-inherit" (click)="selectLanguage(data.currentUser, language.code)">
+      <button mat-menu-item *ngFor="let language of languages" (click)="selectLanguage(data.currentUser, language.code)">
+        <a class="color-inherit">
           <span [ngClass]="language.icon"></span>
           <span>{{language.name}}</span>&nbsp;(<span>{{language.translatedName}}</span>)
         </a>
