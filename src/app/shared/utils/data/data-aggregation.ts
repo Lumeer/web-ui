@@ -86,6 +86,8 @@ export function dataAggregationsByConstraint(constraint: Constraint): DataAggreg
         DataAggregationType.Unique,
         DataAggregationType.Join,
       ];
+    default:
+      return [];
   }
 }
 
