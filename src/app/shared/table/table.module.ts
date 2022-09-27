@@ -58,6 +58,7 @@ import {FilterPreviewModule} from '../builder/filter-preview/filter-preview.modu
 import {TableCellAffectedPipe} from './pipes/table-cell-affected.pipe';
 import {ResourceCommentsModule} from '../resource/comments/resource-comments.module';
 import {TableFooterComponent} from './content/footer/table-footer.component';
+import {TableFooterCellDropdownOptionsPipe} from './pipes/table-footer-cell-dropdown-options.pipe';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import {TableFooterComponent} from './content/footer/table-footer.component';
     TableNewRowComponent,
     DocumentHintsColumnsPipe,
     CalculateHintsOffsetPipe,
+    TableFooterCellDropdownOptionsPipe,
     CellFilterBuilderComponent,
     TableFooterComponent,
   ],

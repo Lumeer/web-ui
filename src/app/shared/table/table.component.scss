@@ -27,5 +27,6 @@
 
 .table-footer {
   position: absolute;
+  overflow-x: auto;
   background: $gray-100;
 }

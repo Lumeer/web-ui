@@ -5,6 +5,7 @@
           [origin]="origin"
           [pushOnScreen]="true"
           [minWidth]="minWidth || 100"
+          [maxWidth]="maxWidth"
           [positions]="dropdownPositions"
           (positionChange)="onPositionChange($event)"
           (onClose)="onClose.emit()">

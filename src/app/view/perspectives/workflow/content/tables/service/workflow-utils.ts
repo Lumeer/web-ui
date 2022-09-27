@@ -22,6 +22,7 @@ import {
   ConstraintData,
   createDataValuesMap,
   objectsByIdMap,
+  UnknownConstraint,
 } from '@lumeer/data-filters';
 import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
@@ -64,6 +65,7 @@ import {
   aggregateDataValues,
   dataAggregationConstraint,
   dataAggregationsByConstraint,
+  DataAggregationType,
 } from '../../../../../../shared/utils/data/data-aggregation';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
@@ -474,20 +476,28 @@ export function createWorkflowTableFooter(
 
   const cellsMap = columns.reduce<TableFooterCellsMap>((map, column) => {
     if (column.attribute) {
+      const constraint = column.attribute.constraint || new UnknownConstraint();
       const footerConfig = footersByAttribute?.[column.attribute.id];
-      const types = dataAggregationsByConstraint(column.attribute.constraint);
+      const types = dataAggregationsByConstraint(constraint);
+      const values = rows.map(row => row.cellsMap?.[column.id]?.data);
+      const typesFormattedValues = types.reduce((map, type) => {
+        const data = aggregateDataValues(type, values, constraint, false, constraintData);
+        const typeConstraint = dataAggregationConstraint(type) || constraint;
+        map[type] = typeConstraint.createDataValue(data, constraintData).format();
+        return map;
+      }, {} as Record<DataAggregationType, any>);
       const selectedType = types.includes(footerConfig?.aggregation) ? footerConfig.aggregation : null;
       if (selectedType) {
-        const values = rows.map(row => row.cellsMap?.[column.id]?.data);
-        const data = aggregateDataValues(selectedType, values, column.attribute.constraint, false, constraintData);
+        const data = aggregateDataValues(selectedType, values, constraint, false, constraintData);
         map[column.id] = {
           data,
           selectedType,
           types,
-          constraint: dataAggregationConstraint(selectedType) || column.attribute.constraint,
+          typesFormattedValues,
+          constraint: dataAggregationConstraint(selectedType) || constraint,
         };
-      } else {
-        map[column.id] = {types};
+      } else if (types.length) {
+        map[column.id] = {types, typesFormattedValues};
       }
     }
     return map;

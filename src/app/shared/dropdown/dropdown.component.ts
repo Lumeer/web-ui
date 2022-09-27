@@ -70,6 +70,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   public minWidth: number;
 
   @Input()
+  public maxWidth: number;
+
+  @Input()
   public minHeight: number;
 
   @Input()
@@ -111,9 +114,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.minWidth || changes.minHeight) {
+    if (changes.minWidth || changes.minHeight || changes.maxWidth) {
       if (this.overlayRef) {
-        this.overlayRef.updateSize({minWidth: this.minWidth, minHeight: this.minHeight});
+        this.overlayRef.updateSize({minWidth: this.minWidth, maxWidth: this.maxWidth, minHeight: this.minHeight});
         this.overlayRef.updatePosition();
       }
     }
@@ -204,6 +207,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
       minWidth: this.minWidth,
       minHeight: this.minHeight,
+      maxWidth: this.maxWidth,
       positionStrategy,
     };
   }

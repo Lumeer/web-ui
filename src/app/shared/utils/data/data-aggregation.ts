@@ -70,8 +70,17 @@ export function dataAggregationsByConstraint(constraint: Constraint): DataAggreg
     case ConstraintType.Number:
     case ConstraintType.Percentage:
     case ConstraintType.Duration:
-      return objectValues(DataAggregationType);
+      return [
+        DataAggregationType.Sum,
+        DataAggregationType.Min,
+        DataAggregationType.Max,
+        DataAggregationType.Avg,
+        DataAggregationType.Median,
+        DataAggregationType.Count,
+        DataAggregationType.Unique,
+      ];
     case ConstraintType.Address:
+    case ConstraintType.DateTime:
     case ConstraintType.Coordinates:
     case ConstraintType.Link:
     case ConstraintType.Select:

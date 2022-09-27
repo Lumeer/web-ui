@@ -87,6 +87,9 @@ export class OptionsDropdownComponent implements OnChanges {
   public minWidth: number;
 
   @Input()
+  public maxWidth: number;
+
+  @Input()
   public maxSelected: number;
 
   @Input()

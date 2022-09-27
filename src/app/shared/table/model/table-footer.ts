@@ -31,5 +31,6 @@ export interface TableFooterCell {
   data?: any;
   selectedType?: DataAggregationType;
   types?: DataAggregationType[];
+  typesFormattedValues?: Record<DataAggregationType, string>;
   constraint?: Constraint;
 }

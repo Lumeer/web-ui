@@ -27,7 +27,8 @@
       </div>
       <options-dropdown #dropdownComponent
                         [origin]="cellElement"
-                        [options]="footerCell?.types | aggregationDropdownOptions"
+                        [options]="footerCell | tableFooterCellDropdownOptions"
+                        [maxWidth]="500"
                         [showSelection]="!!footerCell?.selectedType"
                         [selectedValues]="footerCell?.selectedType ? [footerCell?.selectedType] : []"
                         (selectOption)="onSelected(group.column, $event)">
@@ -36,3 +37,5 @@
   </td>
 
 </ng-container>
+
+<td class="empty-cell"></td>
