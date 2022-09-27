@@ -145,6 +145,7 @@ import {CreateDataResourceService} from '../../../../../../core/service/create-d
 import {Translation} from '../../../../../../shared/utils/translation';
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
+import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -434,6 +435,7 @@ export class WorkflowTablesDataService {
                 id: tableId,
                 columns: columns.map(column => ({...column, tableId})),
                 rows,
+                visibleRows: sortAndFilterTableRowsByHierarchy(rows),
                 collectionId: collection.id,
                 linkTypeId: linkType?.id,
                 color: shadeColor(collection.color, 0.5),
@@ -481,6 +483,7 @@ export class WorkflowTablesDataService {
             id: tableId,
             columns: columns.map(column => ({...column, tableId})),
             rows,
+            visibleRows: sortAndFilterTableRowsByHierarchy(rows),
             collectionId: collection.id,
             linkTypeId: linkType?.id,
             color: shadeColor(collection.color, 0.5),

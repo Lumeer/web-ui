@@ -114,6 +114,7 @@ import {IndicesPipe} from './indices.pipe';
 import {ResourceAttributeFormattingStylePipe} from './resource-attribute-formatting-group-style.pipe';
 import {AggregationDropdownOptionsPipe} from './aggregation-dropdown-options.pipe';
 import {AggregationTypeIconPipe} from './aggregation-type-icon.pipe';
+import {AggregationTypeNamePipe} from './aggregation-type-name.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -210,6 +211,7 @@ import {AggregationTypeIconPipe} from './aggregation-type-icon.pipe';
     ResourceAttributeFormattingStylePipe,
     AggregationDropdownOptionsPipe,
     AggregationTypeIconPipe,
+    AggregationTypeNamePipe,
   ],
   exports: [
     DataPipesModule,
@@ -307,6 +309,7 @@ import {AggregationTypeIconPipe} from './aggregation-type-icon.pipe';
     ResourceAttributeFormattingStylePipe,
     AggregationDropdownOptionsPipe,
     AggregationTypeIconPipe,
+    AggregationTypeNamePipe,
   ],
 })
 export class PipesModule {}

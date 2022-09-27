@@ -1,7 +1,7 @@
 @import 'src/styles/variables';
 
 th {
-  z-index: 4;
+  z-index: 4 !important;
   position: sticky;
   vertical-align: middle !important;
   padding: 0 !important;

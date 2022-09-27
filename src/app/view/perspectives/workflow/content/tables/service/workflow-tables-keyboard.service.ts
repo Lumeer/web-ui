@@ -174,10 +174,10 @@ export class WorkflowTablesKeyboardService {
       case TableCellType.Header:
         if (tableIndex > 0) {
           const nextTableIndex = tableIndex - 1;
-          if (this.numberOfRowsInTable(nextTableIndex) > 0) {
+          if (this.numberOfVisibleRowsInTable(nextTableIndex) > 0) {
             // selecting last row in previous table
-            const nextRowIndex = this.numberOfRowsInTable(nextTableIndex) - 1;
-            const nextColumnIndex = Math.min(columnIndex, this.numberOfColumnsInTable(nextTableIndex) - 1);
+            const nextRowIndex = this.numberOfVisibleRowsInTable(nextTableIndex) - 1;
+            const nextColumnIndex = Math.min(columnIndex, this.numberOfVisibleColumnsInTable(nextTableIndex) - 1);
             this.stateService.selectCell(nextTableIndex, nextRowIndex, nextColumnIndex);
           } else {
             // selecting header in previous table
@@ -191,16 +191,16 @@ export class WorkflowTablesKeyboardService {
   private onArrowDown(type: TableCellType, tableIndex: number, columnIndex: number, rowIndex: number) {
     switch (type) {
       case TableCellType.Body:
-        if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
+        if (this.numberOfVisibleRowsInTable(tableIndex) - 1 === rowIndex) {
           const nextTableIndex = tableIndex + 1;
-          const nextColumnIndex = Math.min(columnIndex, this.numberOfColumnsInTable(nextTableIndex) - 1);
+          const nextColumnIndex = Math.min(columnIndex, this.numberOfVisibleColumnsInTable(nextTableIndex) - 1);
           this.stateService.selectCell(nextTableIndex, null, nextColumnIndex, TableCellType.Header);
         } else {
           this.stateService.selectCell(tableIndex, rowIndex + 1, columnIndex);
         }
         break;
       case TableCellType.Header:
-        if (this.numberOfRowsInTable(tableIndex) > 0) {
+        if (this.numberOfVisibleRowsInTable(tableIndex) > 0) {
           this.stateService.selectCell(tableIndex, 0, columnIndex);
         } else {
           this.stateService.selectCell(tableIndex + 1, null, columnIndex, TableCellType.Header);
@@ -229,12 +229,12 @@ export class WorkflowTablesKeyboardService {
     }
   }
 
-  private numberOfRowsInTable(tableIndex: number): number {
-    return this.tables[tableIndex]?.rows?.length || 0;
+  private numberOfVisibleRowsInTable(tableIndex: number): number {
+    return this.stateService.numberOfVisibleRowsInTable(tableIndex);
   }
 
-  private numberOfColumnsInTable(tableIndex: number): number {
-    return this.tables[tableIndex]?.columns?.length || 0;
+  private numberOfVisibleColumnsInTable(tableIndex: number): number {
+    return this.stateService.numberOfVisibleColumnsInTable(tableIndex);
   }
 
   private isEditing(): boolean {

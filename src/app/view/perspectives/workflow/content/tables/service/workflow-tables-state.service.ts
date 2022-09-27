@@ -49,6 +49,7 @@ import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {addRowByParentId} from './workflow-utils';
+import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -315,7 +316,7 @@ export class WorkflowTablesStateService {
     const table = this.tables[tableIndex];
     if (table) {
       const column = table.columns[columnIndex];
-      const row = type === TableCellType.Body ? table.rows[rowIndex] : null;
+      const row = type === TableCellType.Body ? table.visibleRows[rowIndex] : null;
       if (column && (row || type !== TableCellType.Body)) {
         action({
           tableId: table.id,
@@ -331,7 +332,7 @@ export class WorkflowTablesStateService {
 
   public moveSelectionDownFromEdited() {
     const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell);
-    if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
+    if (this.numberOfVisibleRowsInTable(tableIndex) - 1 === rowIndex) {
       this.setSelectedCell(this.editedCell);
     } else {
       this.selectCell(tableIndex, rowIndex + 1, columnIndex);
@@ -339,8 +340,13 @@ export class WorkflowTablesStateService {
     }
   }
 
-  private numberOfRowsInTable(tableIndex: number): number {
-    return this.tables[tableIndex]?.rows?.length || 0;
+  public numberOfVisibleRowsInTable(tableIndex: number): number {
+    return this.tables[tableIndex]?.visibleRows?.length || 0;
+  }
+
+  public numberOfVisibleColumnsInTable(tableIndex: number): number {
+    // TODO
+    return this.tables[tableIndex]?.columns?.length || 0;
   }
 
   public getCellIndexes(cell: TableCell): {
@@ -352,7 +358,8 @@ export class WorkflowTablesStateService {
     const tableIndex = this.tables.findIndex(table => table.id === cell.tableId);
     const tableByIndex = this.tables[tableIndex];
     const columnIndex = tableByIndex?.columns.findIndex(column => column.id === cell.columnId);
-    const rowIndex = cell.type === TableCellType.Body ? tableByIndex?.rows.findIndex(row => row.id === cell.rowId) : 0;
+    const rowIndex =
+      cell.type === TableCellType.Body ? tableByIndex?.visibleRows.findIndex(row => row.id === cell.rowId) : 0;
     return {tableIndex, columnIndex, rowIndex, type: cell.type};
   }
 
@@ -391,7 +398,7 @@ export class WorkflowTablesStateService {
       const rowIndex = rows.findIndex(r => r.id === rowId);
       if (rowIndex !== -1) {
         rows[rowIndex] = setObjectProperties(rows[rowIndex], properties);
-        newTables[tableIndex] = {...newTables[tableIndex], rows};
+        newTables[tableIndex] = {...newTables[tableIndex], rows, visibleRows: sortAndFilterTableRowsByHierarchy(rows)};
 
         this.setTables(newTables);
       }
@@ -460,7 +467,7 @@ export class WorkflowTablesStateService {
       const newTables = [...this.tables];
       const rows = [...newTables[tableIndex].rows];
       rows.splice(rowIndex, 1);
-      newTables[tableIndex] = {...newTables[tableIndex], rows};
+      newTables[tableIndex] = {...newTables[tableIndex], rows, visibleRows: sortAndFilterTableRowsByHierarchy(rows)};
 
       this.setTables(newTables);
     }
@@ -483,7 +490,7 @@ export class WorkflowTablesStateService {
       const newTables = [...this.tables];
       const rows = addRowByParentId(newRow, newTables[tableIndex].rows);
       const rowIndex = rows.findIndex(row => row.id === newRow.id);
-      newTables[tableIndex] = {...newTables[tableIndex], rows};
+      newTables[tableIndex] = {...newTables[tableIndex], rows, visibleRows: sortAndFilterTableRowsByHierarchy(rows)};
 
       this.setTables(newTables);
 

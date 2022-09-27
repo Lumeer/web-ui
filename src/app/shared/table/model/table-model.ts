@@ -34,6 +34,7 @@ export interface TableModel {
   linkTypeId?: string;
   columns: TableColumn[];
   rows: TableRow[];
+  visibleRows: TableRow[];
   newRow?: TableNewRow;
   footer?: TableFooter;
   bottomToolbar: boolean;

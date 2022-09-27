@@ -54,7 +54,6 @@ import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
-import {sortAndFilterTableRowsByHierarchy} from './model/table-hierarchy';
 import {DataAggregationType} from '../utils/data/data-aggregation';
 
 @Component({
@@ -215,11 +214,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.tableModel) {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
-      const sortedRows = sortAndFilterTableRowsByHierarchy(this.tableModel?.rows);
       if (this.tableModel.bottomToolbar) {
-        this.rows = [...sortedRows, null, null];
+        this.rows = [...(this.tableModel?.visibleRows || []), null, null];
       } else {
-        this.rows = sortedRows;
+        this.rows = this.tableModel?.visibleRows || [];
       }
       setTimeout(() => this.setScrollbarMargin());
     }

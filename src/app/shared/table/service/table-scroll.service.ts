@@ -59,11 +59,11 @@ export class TableScrollService {
 
     let scrollTop = undefined;
     if (selectedCell?.type === TableCellType.Body) {
-      const rowIndex = tableModel.rows.findIndex(
+      const rowIndex = tableModel.visibleRows.findIndex(
         row => row.id === selectedCell.rowId && row.linkInstanceId === selectedCell.linkId
       );
-      const selectedRow = tableModel.rows[rowIndex];
-      const rowTop = tableModel.rows.slice(0, rowIndex).reduce((sum, row) => sum + row.height, 0);
+      const selectedRow = tableModel.visibleRows[rowIndex];
+      const rowTop = tableModel.visibleRows.slice(0, rowIndex).reduce((sum, row) => sum + row.height, 0);
 
       if (rowTop < top) {
         scrollTop = rowTop;

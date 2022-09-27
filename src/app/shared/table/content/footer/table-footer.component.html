@@ -5,8 +5,9 @@
       [style.height.px]="footer.height"
       [style.max-height.px]="footer.height">
     <ng-container *ngIf="group.column && footer.cellsMap[group.column.id] as footerCell">
-      <div class="footer-cell h-100" #cellElement
-           (contextmenu)="dropdownComponent?.open(); $event.stopPropagation(); $event.preventDefault()">
+      <div class="footer-cell h-100 cursor-pointer" #cellElement
+           (contextmenu)="dropdownComponent?.open(); $event.stopPropagation(); $event.preventDefault()"
+           (click)="dropdownComponent.toggle()">
         <data-input-preview class="d-block px-1 text-truncate"
                             [constraint]="footerCell?.constraint"
                             [style.max-height.px]="footer.height - 1"
@@ -14,14 +15,13 @@
                             [dataValue]="footerCell?.data | dataValue:footerCell?.constraint:constraintData">
         </data-input-preview>
         <i *ngIf="footerCell?.selectedType"
-           [ngClass]="footerCell?.selectedType | aggregationTypeIcon" class="fa-fw icon-small ms-2 cursor-pointer"
-           (click)="dropdownComponent.toggle()">
+           [ngClass]="footerCell?.selectedType | aggregationTypeIcon" class="fa-fw ms-2 color-gray-700"
+           [tooltip]="footerCell?.selectedType | aggregationTypeName">
         </i>
         <i *ngIf="!footerCell?.selectedType"
            title="Footer settings..."
            i18n-title="@@table.footer.cell.settings"
-           class="fas fa-fw fa-caret-down ms-2 cursor-pointer"
-           (click)="dropdownComponent.toggle()">
+           class="fas fa-fw fa-caret-down ms-2 color-gray-700">
         </i>
 
       </div>
