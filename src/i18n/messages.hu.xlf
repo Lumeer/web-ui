@@ -7929,11 +7929,8 @@
             <trans-unit datatype="html" id="data.aggregation.type">
                 <source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</source>
                 <target>{type, select, sum {Összeg} avg {Átlag} min {Minimum} max {Maximum} count {Számol} unique {Egyedi} median {Medián} join {Egyesít} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/pipes/aggregation-select-items.pipe.ts</context>
-                    <context context-type="linenumber">35</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/data/data-aggregation.ts</context><context context-type="linenumber">40</context></context-group></trans-unit>
             <trans-unit datatype="html" id="perspective.chart.config.axis.color">
                 <source>Color</source>
                 <target>Szín</target>
@@ -8364,7 +8361,7 @@
 				<trans-unit datatype="html" id="perspective.workflow.table.resize">
 					<source>Resize table</source>
 					<target>Táblázat átméretezése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="groupBy">
 					<source>Group By</source>
 					<target>Csoportosítás szerint</target>
@@ -9731,11 +9728,11 @@
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1376</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1397</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.title">
 					<source>Delete this column?</source>
 					<target>Törlöd ezt az oszlopot?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1375</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1396</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.add-button">
 					<source>Link table</source>
 					<target>Hivatkozási tábla</target>
@@ -9764,7 +9761,13 @@
 				<trans-unit datatype="html" id="table.header.menu.add.linkColumn">
 					<source>Add Link column</source>
 					<target>Hivatkozási oszlop hozzáadása</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">374</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">374</context></context-group></trans-unit><trans-unit id="perspective.workflow.footer.enable" datatype="html">
+        <source>Footer</source><target state="new">Footer</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="table.header.menu.changeAttribute">
 					<source>Attribute settings...</source>
 					<target>Tulajdonságbeállítások...</target>
@@ -10541,7 +10544,13 @@
 				<trans-unit datatype="html" id="view.settings.includeChildren.help">
 					<source>If turned on, sub-items are always visible no matter of defined filters.</source>
 					<target>Ha be van kapcsolva, az alelemek mindig láthatóak, függetlenül a meghatározott szűrőktől.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/settings/data/data-settings.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="table.cell.sort.none" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/settings/data/data-settings.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="table.footer.cell.settings" datatype="html">
+        <source>Footer settings...</source><target state="new">Footer settings...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/table/content/footer/table-footer.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.cell.sort.none" datatype="html">
         <source>None</source><target>Nincs</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/filter-builder/cell-filter-builder.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="table.cell.sort.ascending" datatype="html">
@@ -10630,7 +10639,7 @@
 				<trans-unit datatype="html" id="workflow.table.empty">
 					<source> There are no rows to display and you are not allowed to create any. </source>
 					<target>Nincsenek megjelenítendő sorok, és nem hozhatsz létre ilyeneket.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.linkDocumentsNoReturnBlock">
 					<source>Links two records using the selected link type.</source>
 					<target>Két rekordot összekapcsol a kiválasztott linktípus segítségével.</target>
