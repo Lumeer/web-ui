@@ -4616,14 +4616,14 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1375</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1396</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.message" datatype="html">
                 <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
                 <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v tabulce.</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1376</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1397</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.changeAttribute" datatype="html">
                 <source>Attribute settings...</source>
                 <target>Nastavení attributu...</target>
@@ -4635,7 +4635,13 @@
                 <target>Přidat sloupec mezi tabulky</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">374</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">374</context></context-group></trans-unit><trans-unit id="perspective.workflow.footer.enable" datatype="html">
+        <source>Footer</source><target>Zápatí</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
 
             <trans-unit id="organization.delete.dialog.message" datatype="html">
                 <source>Do you really want to permanently delete this organization?</source>
@@ -7762,10 +7768,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="perspective.chart.config.rangeSlider" datatype="html">
         <source>Show range slider</source><target>Zobrazit výběr rozsahu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="data.aggregation.type" datatype="html">
         <source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</source><target>{type, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} median {Medián} join {Spojení} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/aggregation-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="chart.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/data/data-aggregation.ts</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="chart.type" datatype="html">
         <source>{type, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble}}</source><target>{type, select, line {Čárový} bar {Sloupcový} pie {Koláčový} bubble {Bublinový} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/pipes/chart-types-to-select.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="perspective.chart.config.sortType.name" datatype="html">
@@ -8717,12 +8723,12 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/group/wrapper/first-line/task-first-line.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source><target>Roztáhnout tabulku</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
         <source> There are no rows to display and you are not allowed to create any. </source><target>
     Nejsou žádné řádky k zobrazení a nemáte ani právo je vytvářet.
   </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="groupBy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="groupBy" datatype="html">
         <source>Group By</source><target>Seskupit podle</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/dashboard/search-tasks/content/toolbar/sort/dropdown/tasks-sort-dropdown.component.html</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="tasks.sort.group.order.hint" datatype="html">
@@ -9608,7 +9614,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/settings/data/data-settings.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="view.settings.includeChildren.help" datatype="html">
         <source>If turned on, sub-items are always visible no matter of defined filters.</source><target>Pokud se zapne, budou podřízené položky vždy viditelné bez ohledu na nastavení filtrů.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/settings/data/data-settings.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="table.cell.sort.none" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/settings/data/data-settings.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="table.footer.cell.settings" datatype="html">
+        <source>Footer settings...</source><target>Nastavení zápatí...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/table/content/footer/table-footer.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.cell.sort.none" datatype="html">
         <source>None</source><target>Žádné</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/filter-builder/cell-filter-builder.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="table.cell.sort.ascending" datatype="html">

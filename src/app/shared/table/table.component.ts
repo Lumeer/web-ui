@@ -54,7 +54,7 @@ import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
-import {sortAndFilterTableRowsByHierarchy} from './model/table-hierarchy';
+import {DataAggregationType} from '../utils/data/data-aggregation';
 
 @Component({
   selector: 'lmr-table',
@@ -148,7 +148,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public rowHierarchyToggle = new EventEmitter<TableRow>();
 
   @Output()
-  public rowLinkedDocumentSelect = new EventEmitter<{row: TableRow; document: DocumentModel}>();
+  public rowLinkedDocumentSelected = new EventEmitter<{row: TableRow; document: DocumentModel}>();
 
   @Output()
   public rowNewClick = new EventEmitter();
@@ -160,6 +160,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     item: MenuItem;
     cellType: TableCellType;
   }>();
+
+  @Output()
+  public footerAggregationSelected = new EventEmitter<{column: TableColumn; aggregation: DataAggregationType}>();
 
   @ViewChild(CdkVirtualScrollViewport, {static: false})
   public viewPort: CdkVirtualScrollViewport;
@@ -211,11 +214,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.tableModel) {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
-      const sortedRows = sortAndFilterTableRowsByHierarchy(this.tableModel?.rows);
       if (this.tableModel.bottomToolbar) {
-        this.rows = [...sortedRows, null];
+        this.rows = [...(this.tableModel?.visibleRows || []), null, null];
       } else {
-        this.rows = sortedRows;
+        this.rows = this.tableModel?.visibleRows || [];
       }
       setTimeout(() => this.setScrollbarMargin());
     }
@@ -360,7 +362,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {
-    this.rowLinkedDocumentSelect.emit({row, document});
+    this.rowLinkedDocumentSelected.emit({row, document});
   }
 
   public containsElement(element: any): boolean {

@@ -1,7 +1,7 @@
 <ng-container *ngFor="let group of columnGroups; let index = index; trackBy: trackByColumn">
 
   <ng-container
-    *ngIf="{dataValue: group.column &&  (row.cellsMap[group.column.id]?.data | dataValue:group.column?.attribute?.constraint:constraintData),
+    *ngIf="{dataValue: group.column && (row.cellsMap[group.column.id]?.data | dataValue:group.column?.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
     cell: row.cellsMap[group.column?.id],
     editable: (group.column?.collectionId ? (row.documentEditable || row.suggestLinks) : row.linkEditable),
@@ -26,7 +26,7 @@
           (mouseenter)="onMouseEnter(group.column?.id)"
           (mouseleave)="onMouseLeave(group.column?.id)"
           (contextmenu)="onContextMenu(group.column?.id, $event)">
-        <ng-container *ngIf="row.hierarchy && group.column.id === hierarchyColumnId">
+        <ng-container *ngIf="row.hierarchy && group.column && group.column.id === hierarchyColumnId">
           <svg class="hierarchy" [attr.width]="(row.hierarchy.level + 1) * hierarchyStepWidth" [attr.height]="hierarchyHeight">
             <path [attr.d]="hierarchyPath" [attr.stroke]="hierarchyLineColor" fill="transparent"/>
           </svg>
@@ -45,7 +45,7 @@
           [style.height.px]="row.height - 1"
           [editableInReadonly]="dataInputInfo.editable"
           [style.max-height.px]="row.height - 1"
-          [style.margin-left.px]="row.hierarchy && group.column.id === hierarchyColumnId ? (row.hierarchy.level + 1) * hierarchyStepWidth : 0"
+          [style.margin-left.px]="row.hierarchy && group.column && group.column.id === hierarchyColumnId ? (row.hierarchy.level + 1) * hierarchyStepWidth : 0"
           [dataValue]="(editedValue | isNotNullOrUndefined) && dataInputInfo.editing ? editedValue : data.dataValue"
           [focus]="true"
           [fontColor]="data.cell?.color"
@@ -58,7 +58,7 @@
         </data-input>
         <div class="d-flex align-items-center html-input"
              *ngIf="group.column && !dataInputInfo.showDataInput && dataInputInfo.hasValue"
-             [style.margin-left.px]="row.hierarchy && group.column.id === hierarchyColumnId ? (row.hierarchy.level + 1) * hierarchyStepWidth : 0"
+             [style.margin-left.px]="row.hierarchy && group.column && group.column.id === hierarchyColumnId ? (row.hierarchy.level + 1) * hierarchyStepWidth : 0"
              [style.color]="data.cell?.color"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>

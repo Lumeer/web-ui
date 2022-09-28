@@ -1,15 +1,15 @@
 <i *ngIf="attribute | attributeFunctionDefined"
    [class.mb-1]="attribute?.constraint"
-   class="fas fa-function">
+   class="fa-fw fas fa-function icon-small">
 </i>
 
 <i *ngIf="(attribute?.constraint | constraintTypeIcon) as iconName"
-   [ngClass]="iconName"
+   [ngClass]="iconName" class="fa-fw icon-small"
    [title]="attribute?.constraint | constraintTypeIconTitle">
 </i>
 
 <i *ngIf="!(attribute | attributeFunctionDefined) && !(attribute?.constraint | constraintTypeIcon)"
    title="Column settings..."
    i18n-title="@@table.header.column.settings"
-   class="fas fa-caret-down">
+   class="fa-fw fas fa-caret-down">
 </i>

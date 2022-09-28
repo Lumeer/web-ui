@@ -17,15 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {dataAggregationName, DataAggregationType} from '../utils/data/data-aggregation';
+import {Constraint} from '@lumeer/data-filters';
+import {DataAggregationType} from '../../utils/data/data-aggregation';
 
-@Pipe({
-  name: 'aggregationSelectItems',
-})
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: dataAggregationName(aggregation)}));
-  }
+export interface TableFooter {
+  height: number;
+  cellsMap?: TableFooterCellsMap; // columnId -> string
+}
+
+export type TableFooterCellsMap = Record<string, TableFooterCell>;
+
+export interface TableFooterCell {
+  data?: any;
+  selectedType?: DataAggregationType;
+  types?: DataAggregationType[];
+  typesFormattedValues?: Record<DataAggregationType, string>;
+  constraint?: Constraint;
 }

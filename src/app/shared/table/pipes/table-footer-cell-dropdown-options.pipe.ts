@@ -18,14 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {dataAggregationName, DataAggregationType} from '../utils/data/data-aggregation';
+import {TableFooterCell} from '../model/table-footer';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {dataAggregationIconMap, dataAggregationName, DataAggregationType} from '../../utils/data/data-aggregation';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'tableFooterCellDropdownOptions',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: dataAggregationName(aggregation)}));
+export class TableFooterCellDropdownOptionsPipe implements PipeTransform {
+  public transform(cell: TableFooterCell): DropdownOption[] {
+    return (cell.types || []).map(aggregation => ({
+      value: aggregation,
+      displayValue: this.dataAggregationName(cell, aggregation),
+      icons: [dataAggregationIconMap[aggregation]],
+    }));
+  }
+
+  private dataAggregationName(cell: TableFooterCell, aggregation: DataAggregationType): string {
+    const value = cell.typesFormattedValues?.[aggregation] ?? '';
+    return `${dataAggregationName(aggregation)}: ${value}`;
   }
 }

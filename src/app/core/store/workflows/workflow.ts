@@ -19,6 +19,7 @@
 
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute, QueryResource} from '../../model/query-attribute';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 
 export interface Workflow {
   id: string;
@@ -30,6 +31,7 @@ export interface WorkflowConfig {
   version: WorkflowConfigVersion;
   tables: WorkflowTableConfig[];
   columns: WorkflowColumnsSettings;
+  footers: WorkflowFooterConfig[];
 }
 
 export interface WorkflowTableConfig {
@@ -60,6 +62,16 @@ export interface WorkflowStemConfig {
   stem?: QueryStem;
   attribute?: WorkflowAttribute;
   collection?: WorkflowResource;
+}
+
+export interface WorkflowFooterConfig {
+  stem: QueryStem;
+  attributes: WorkflowFooterAttributeConfig[];
+}
+
+export interface WorkflowFooterAttributeConfig {
+  attributeId: string;
+  aggregation?: DataAggregationType;
 }
 
 export interface WorkflowAttribute extends QueryAttribute {}

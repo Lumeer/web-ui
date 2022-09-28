@@ -10,11 +10,14 @@
     <div *ngFor="let stemConfig of config | filterUniqueStemsConfigs; trackBy:trackByStem; let index = index;">
 
       <workflow-toolbar *ngIf="canManageConfig"
-                        class="mb-2" [config]="stemConfig"
+                        class="mb-2"
                         [class.mb-3]="data?.tables?.length > 1"
+                        [config]="stemConfig"
+                        [footerConfig]="config.footers | filterStemFooter:stemConfig"
                         [linkTypes]="linkTypes"
                         [collections]="collections"
                         [stem]="stemConfig.stem"
+                        [workflowId]="workflowId"
                         [viewSettings]="viewSettings"
                         [currentView]="currentView"
                         [editable]="canManageConfig"
@@ -63,7 +66,8 @@
             (rowMenuSelected)="onRowMenuSelected($event)"
             (rowDetail)="onRowDetail($event)"
             (rowNewClick)="onRowNewClick(table)"
-            (rowLinkedDocumentSelect)="onRowLinkedDocumentSelect($event)">
+            (rowLinkedDocumentSelected)="onRowLinkedDocumentSelected($event)"
+            (footerAggregationSelected)="onFooterAggregationSelected($event)">
           </lmr-table>
 
           <div resizer class="lmr-resizer"

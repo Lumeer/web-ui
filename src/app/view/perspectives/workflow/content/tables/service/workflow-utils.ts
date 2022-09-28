@@ -22,12 +22,16 @@ import {
   ConstraintData,
   createDataValuesMap,
   objectsByIdMap,
+  UnknownConstraint,
 } from '@lumeer/data-filters';
-import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
+import {
+  queryStemAttributesResourcesOrder,
+  queryStemsAreSame,
+} from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
 import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
@@ -56,6 +60,13 @@ import {
   computeAttributeFormatting,
   isAttributeLockEnabledByLockStats,
 } from '../../../../../../shared/utils/attribute.utils';
+import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
+import {
+  aggregateDataValues,
+  dataAggregationConstraint,
+  dataAggregationsByConstraint,
+  DataAggregationType,
+} from '../../../../../../shared/utils/data/data-aggregation';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
@@ -444,4 +455,55 @@ export function viewCursorToWorkflowCell(cursor: ViewCursor, tables: TableModel[
   }
 
   return null;
+}
+
+export function createWorkflowTableFooter(
+  rows: TableRow[],
+  columns: TableColumn[],
+  config: WorkflowStemConfig,
+  footers: WorkflowFooterConfig[],
+  constraintData: ConstraintData
+): TableFooter {
+  const stemFooter = (footers || []).find(f => queryStemsAreSame(f.stem, config.stem));
+  if (!stemFooter) {
+    return null;
+  }
+
+  const footersByAttribute = (stemFooter.attributes || []).reduce(
+    (map, footer) => ({...map, [footer.attributeId]: footer}),
+    {}
+  );
+
+  const cellsMap = columns.reduce<TableFooterCellsMap>((map, column) => {
+    if (column.attribute) {
+      const constraint = column.attribute.constraint || new UnknownConstraint();
+      const footerConfig = footersByAttribute?.[column.attribute.id];
+      const types = dataAggregationsByConstraint(constraint);
+      const values = rows.map(row => row.cellsMap?.[column.id]?.data);
+      const typesFormattedValues = types.reduce((map, type) => {
+        const data = aggregateDataValues(type, values, constraint, false, constraintData);
+        const typeConstraint = dataAggregationConstraint(type) || constraint;
+        map[type] = typeConstraint.createDataValue(data, constraintData).format();
+        return map;
+      }, {} as Record<DataAggregationType, any>);
+      const selectedType = types.includes(footerConfig?.aggregation) ? footerConfig.aggregation : null;
+      if (selectedType) {
+        const data = aggregateDataValues(selectedType, values, constraint, false, constraintData);
+        map[column.id] = {
+          data,
+          selectedType,
+          types,
+          typesFormattedValues,
+          constraint: dataAggregationConstraint(selectedType) || constraint,
+        };
+      } else if (types.length) {
+        map[column.id] = {types, typesFormattedValues};
+      }
+    }
+    return map;
+  }, {});
+  return {
+    height: TABLE_ROW_HEIGHT,
+    cellsMap,
+  };
 }

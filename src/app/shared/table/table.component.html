@@ -64,9 +64,24 @@
       </tbody>
     </table>
   </cdk-virtual-scroll-viewport>
-  <div *ngIf="tableModel?.bottomToolbar" class="more-content"
+  <div *ngIf="tableModel.footer" [id]="scrollId"
+       class="table-footer invisible-scroll-y w-100" cdkScrollable [style.bottom.px]="toolbarMarginBottom">
+    <table class="table table-without-padding table-borderless">
+      <tbody>
+      <tr table-footer
+          [columnGroups]="data.columnGroups"
+          [constraintData]="constraintData"
+          [selectedCell]="selectedCell"
+          [footer]="tableModel.footer"
+          (aggregationSelect)="footerAggregationSelected.emit($event)">
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="tableModel?.bottomToolbar"
+       class="more-content"
        [style.height.px]="toolbarHeight"
-       [style.bottom.px]="toolbarMarginBottom"
+       [style.bottom.px]="toolbarMarginBottom + (tableModel.footer?.height || 0)"
        [style.right.px]="toolbarMarginRight">
     <table-new-row *ngIf="tableModel?.newRow"
                    [actionTitle]="tableModel.newRow.actionTitle"

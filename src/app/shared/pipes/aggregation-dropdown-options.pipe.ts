@@ -18,14 +18,18 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {dataAggregationName, DataAggregationType} from '../utils/data/data-aggregation';
+import {dataAggregationIconMap, dataAggregationName, DataAggregationType} from '../utils/data/data-aggregation';
+import {DropdownOption} from '../dropdown/options/dropdown-option';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'aggregationDropdownOptions',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: dataAggregationName(aggregation)}));
+export class AggregationDropdownOptionsPipe implements PipeTransform {
+  public transform(aggregations: DataAggregationType[]): DropdownOption[] {
+    return (aggregations || []).map(aggregation => ({
+      value: aggregation,
+      displayValue: dataAggregationName(aggregation),
+      icons: [dataAggregationIconMap[aggregation]],
+    }));
   }
 }

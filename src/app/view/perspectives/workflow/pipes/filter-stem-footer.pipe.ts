@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {dataAggregationName, DataAggregationType} from '../utils/data/data-aggregation';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../core/store/workflows/workflow';
+import {queryStemsAreSame} from '../../../../core/store/navigation/query/query.util';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'filterStemFooter',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: dataAggregationName(aggregation)}));
+export class FilterStemFooterPipe implements PipeTransform {
+  public transform(footers: WorkflowFooterConfig[], stemConfig: WorkflowStemConfig): WorkflowFooterConfig {
+    return (footers || []).find(footer => queryStemsAreSame(footer.stem, stemConfig.stem));
   }
 }

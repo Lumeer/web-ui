@@ -18,14 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {dataAggregationName, DataAggregationType} from '../utils/data/data-aggregation';
+import {dataAggregationIconMap, DataAggregationType} from '../utils/data/data-aggregation';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'aggregationTypeIcon',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: dataAggregationName(aggregation)}));
+export class AggregationTypeIconPipe implements PipeTransform {
+  public transform(aggregation: DataAggregationType): string {
+    return dataAggregationIconMap[aggregation];
   }
 }

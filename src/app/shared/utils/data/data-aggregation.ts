@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNotNullOrUndefined} from '../common.utils';
+import {isNotNullOrUndefined, objectValues} from '../common.utils';
 import {DataResource} from '../../../core/model/resource';
 import {Attribute} from '../../../core/store/collections/collection';
-import {Constraint, ConstraintData, UnknownConstraint} from '@lumeer/data-filters';
+import {Constraint, ConstraintData, ConstraintType, NumberConstraint, UnknownConstraint} from '@lumeer/data-filters';
 import {uniqueValues} from '../array.utils';
+import {parseSelectTranslation} from '../translation.utils';
 
 export enum DataAggregationType {
   Sum = 'sum',
@@ -34,10 +35,69 @@ export enum DataAggregationType {
   Join = 'join',
 }
 
+export function dataAggregationName(type: DataAggregationType): string {
+  return parseSelectTranslation(
+    $localize`:@@data.aggregation.type:{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }`,
+    {type}
+  );
+}
+
+export const dataAggregationIconMap = {
+  [DataAggregationType.Sum]: 'far fa-sigma',
+  [DataAggregationType.Min]: 'far fa-arrow-up-1-9',
+  [DataAggregationType.Max]: 'far fa-arrow-down-1-9',
+  [DataAggregationType.Median]: 'far fa-gauge',
+  [DataAggregationType.Avg]: 'fad fa-bars',
+  [DataAggregationType.Count]: 'fad fa-grid',
+  [DataAggregationType.Unique]: 'far fa-shapes',
+  [DataAggregationType.Join]: 'far fa-input-text',
+};
+
 export const defaultDataAggregationType = Object.values(DataAggregationType)[0];
 
 export function isValueAggregation(aggregation: DataAggregationType): boolean {
   return !aggregation || ![DataAggregationType.Count, DataAggregationType.Unique].includes(aggregation);
+}
+
+export function dataAggregationConstraint(aggregation: DataAggregationType): Constraint {
+  if (!isValueAggregation(aggregation)) {
+    return new NumberConstraint({});
+  }
+}
+
+export function dataAggregationsByConstraint(constraint: Constraint): DataAggregationType[] {
+  switch (constraint?.type) {
+    case ConstraintType.Number:
+    case ConstraintType.Percentage:
+    case ConstraintType.Duration:
+      return [
+        DataAggregationType.Sum,
+        DataAggregationType.Min,
+        DataAggregationType.Max,
+        DataAggregationType.Avg,
+        DataAggregationType.Median,
+        DataAggregationType.Count,
+        DataAggregationType.Unique,
+      ];
+    case ConstraintType.Address:
+    case ConstraintType.DateTime:
+    case ConstraintType.Coordinates:
+    case ConstraintType.Link:
+    case ConstraintType.Select:
+    case ConstraintType.Text:
+    case ConstraintType.Unknown:
+    case ConstraintType.View:
+    case ConstraintType.User:
+      return [
+        DataAggregationType.Min,
+        DataAggregationType.Max,
+        DataAggregationType.Count,
+        DataAggregationType.Unique,
+        DataAggregationType.Join,
+      ];
+    default:
+      return [];
+  }
 }
 
 export function aggregateDataResources(

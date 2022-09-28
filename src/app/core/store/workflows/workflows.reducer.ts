@@ -19,7 +19,7 @@
 
 import {initialWorkflowsState, workflowsAdapter, WorkflowsState} from './workflow.state';
 import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
-import {WorkflowColumnSettings, WorkflowTableConfig} from './workflow';
+import {WorkflowColumnSettings, WorkflowFooterAttributeConfig, WorkflowTableConfig} from './workflow';
 import {queryStemsAreSame, queryStemWithoutFilters} from '../navigation/query/query.util';
 import {QueryStem} from '../navigation/query/query';
 import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
@@ -35,6 +35,10 @@ export function workflowsReducer(
       return workflowsAdapter.removeOne(action.payload.workflowId, state);
     case WorkflowsActionType.SET_TABLE_HEIGHT:
       return setTableHeight(state, action);
+    case WorkflowsActionType.SET_FOOTER_ENABLED:
+      return setFooterEnabled(state, action);
+    case WorkflowsActionType.SET_FOOTER_CONFIG:
+      return setFooterConfig(state, action);
     case WorkflowsActionType.TOGGLE_HIERARCHY:
       return toggleHierarchy(state, action);
     case WorkflowsActionType.SET_COLUMN_WIDTH:
@@ -54,6 +58,19 @@ export function workflowsReducer(
 function setTableHeight(state: WorkflowsState, action: WorkflowsAction.SetTableHeight): WorkflowsState {
   const {workflowId, collectionId, height, stem, value} = action.payload;
   return setTableProperty(state, workflowId, collectionId, stem, value, table => ({...table, height}));
+}
+
+function setFooterConfig(state: WorkflowsState, action: WorkflowsAction.SetFooterAttributeConfig): WorkflowsState {
+  const {workflowId, attributeId, stem, config} = action.payload;
+  return setFooterProperty(state, workflowId, stem, attributeId, footer => ({...footer, ...config}));
+}
+
+function setFooterEnabled(state: WorkflowsState, action: WorkflowsAction.SetFooterEnabled): WorkflowsState {
+  const {workflowId, stem, enabled} = action.payload;
+  if (enabled) {
+    return setFooterProperty(state, workflowId, stem);
+  }
+  return removeFooter(state, workflowId, stem);
 }
 
 function toggleHierarchy(state: WorkflowsState, action: WorkflowsAction.ToggleHierarchy): WorkflowsState {
@@ -89,6 +106,54 @@ function setTableProperty(
       );
     }
     return workflowsAdapter.updateOne({id: workflowId, changes: {config: {...workflow.config, tables}}}, state);
+  }
+
+  return state;
+}
+
+function setFooterProperty(
+  state: WorkflowsState,
+  workflowId: string,
+  stem: QueryStem,
+  attributeId?: string,
+  modifier?: (table: WorkflowFooterAttributeConfig) => WorkflowFooterAttributeConfig
+): WorkflowsState {
+  const workflow = state.entities[workflowId];
+  if (workflow) {
+    const footers = [...(workflow.config.footers || [])];
+    let footerIndex = footers.findIndex(f => queryStemsAreSame(f.stem, stem));
+    if (footerIndex === -1) {
+      footers.push({stem: queryStemWithoutFilters(stem), attributes: []});
+      footerIndex = footers.length - 1;
+    }
+    if (attributeId) {
+      const attributes = [...(footers[footerIndex].attributes || [])];
+      const attributeIndex = attributes.findIndex(a => a.attributeId === attributeId);
+      if (attributeIndex !== -1) {
+        attributes[attributeIndex] = modifier(attributes[attributeIndex]);
+      } else {
+        attributes.push(modifier({attributeId}));
+      }
+
+      footers[footerIndex] = {...footers[footerIndex], attributes};
+    }
+
+    return workflowsAdapter.updateOne({id: workflowId, changes: {config: {...workflow.config, footers}}}, state);
+  }
+
+  return state;
+}
+
+function removeFooter(state: WorkflowsState, workflowId: string, stem: QueryStem): WorkflowsState {
+  const workflow = state.entities[workflowId];
+  if (workflow) {
+    const footers = [...(workflow.config.footers || [])];
+    const footerIndex = footers.findIndex(f => queryStemsAreSame(f.stem, stem));
+    if (footerIndex !== -1) {
+      footers.splice(footerIndex, 1);
+    }
+
+    return workflowsAdapter.updateOne({id: workflowId, changes: {config: {...workflow.config, footers}}}, state);
   }
 
   return state;

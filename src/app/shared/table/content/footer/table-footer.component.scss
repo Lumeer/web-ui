@@ -1,0 +1,18 @@
+@import 'src/styles/variables';
+
+.footer-cell {
+  border-left: 1px $gray-200 dotted;
+  border-top: 1px $gray-200 dotted;
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  align-items: center;
+
+  &.last {
+    border-right: 1px $gray-200 dotted;
+  }
+}
+
+.empty-cell {
+  width: 0.75rem;
+  min-width: 0.75rem;
+}
