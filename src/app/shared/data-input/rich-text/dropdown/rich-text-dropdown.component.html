@@ -1,0 +1,20 @@
+<fullscreen-dropdown>
+  <div class="card" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+    <quill-editor
+      [(ngModel)]="content"
+      [readOnly]="readonly"
+      [maxLength]="maxLength"
+      [minLength]="minLength"
+      placeholder="Insert text here..."
+      i18n-placeholder="@@textEditor.insertTextPlaceholder"
+      [modules]="defaultOptions"
+      (onEditorCreated)="focusEditor($event)"
+      (onContentChanged)="contentChanged($event)">
+    </quill-editor>
+
+    <div *ngIf="!valid" class="text-danger px-2 py-1 small" id="invalid-warning">
+      <span *ngIf="minLength" i18n="textEditor.minLength">Minimal text length must be {{minLength}} characters.&nbsp;</span>
+      <span *ngIf="maxLength" i18n="textEditor.maxLength">Maximal text length can be {{maxLength}} characters.</span>
+    </div>
+  </div>
+</fullscreen-dropdown>

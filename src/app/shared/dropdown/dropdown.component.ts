@@ -44,7 +44,6 @@ import {deepObjectsEquals, preventEvent} from '../utils/common.utils';
 @Component({
   selector: 'dropdown',
   templateUrl: './dropdown.component.html',
-  styleUrls: ['./dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {

@@ -175,26 +175,26 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   public openTextEditor(event?: MouseEvent) {
     event && preventEvent(event);
-
-    const content = this.text;
     this.preventSaveAndBlur();
 
-    this.modalRef = this.modalService.show(TextEditorModalComponent, {
-      keyboard: true,
-      backdrop: 'static',
-      class: 'modal-xxl modal-h-100',
-      initialState: {
-        readonly: this.readonly && !this.editableInReadonly,
-        content,
-        minLength: this.value?.config?.minLength,
-        maxLength: this.value?.config?.maxLength,
-      },
-    });
+    const content = this.text;
 
-    this.modalSubscription.add(
-      this.modalRef.content.onSave$.subscribe(value => this.saveValue(value, DataInputSaveAction.Button))
-    );
-    this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit()));
+    // this.modalRef = this.modalService.show(TextEditorModalComponent, {
+    //   keyboard: true,
+    //   backdrop: 'static',
+    //   class: 'modal-xxl modal-h-100',
+    //   initialState: {
+    //     readonly: this.readonly && !this.editableInReadonly,
+    //     content,
+    //     minLength: this.value?.config?.minLength,
+    //     maxLength: this.value?.config?.maxLength,
+    //   },
+    // });
+    //
+    // this.modalSubscription.add(
+    //   this.modalRef.content.onSave$.subscribe(value => this.saveValue(value, DataInputSaveAction.Button))
+    // );
+    // this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit()));
   }
 
   public ngOnDestroy() {
