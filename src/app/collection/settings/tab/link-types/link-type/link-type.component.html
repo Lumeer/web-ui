@@ -1,12 +1,15 @@
-<td class="d-flex flex-row no-wrap align-items-center ps-2 py-3">
-  <icons-presenter
-    [colors]="linkType.collections | colors"
-    [icons]="linkType.collections | icons"
-    [title]="linkType.name">
-  </icons-presenter>
+<td class="ps-2 py-3">
+  <a class="d-flex flex-row no-wrap align-items-center"
+     [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'l', linkType.id]">
+    <icons-presenter
+      [colors]="linkType.collections | colors"
+      [icons]="linkType.collections | icons"
+      [title]="linkType.name">
+    </icons-presenter>
 
-  <a class="ms-2 flex-grow-1" [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'l', linkType.id]">{{linkType.name}}</a>
+    <span class="ms-2 flex-grow-1">{{linkType.name}}</span>
 
+  </a>
 </td>
 
 <td class="text-end align-middle">

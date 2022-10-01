@@ -467,7 +467,7 @@ function filterDocumentsAndLinksByQuerySorted(
   };
 }
 
-export const selectTasksDocumentsByCustomQuery = (view: View, query: DataQuery) =>
+export const selectTasksDocumentsByCustomQuery = (view: View, query: DataQuery, tasksConfig?: SearchTasksConfig) =>
   createSelector(
     selectAllDocuments,
     selectTasksCollectionsByViewAndQuery(view),
@@ -485,7 +485,7 @@ export const selectTasksDocumentsByCustomQuery = (view: View, query: DataQuery) 
         query,
         permissions,
         constraintData,
-        config?.documents
+        tasksConfig || config?.documents
       )
   );
 
@@ -851,17 +851,17 @@ export const selectSearchPerspectiveTabs = createSelector(
     if (currentView) {
       const search = searchesMap[currentView.code];
       if (search?.config) {
-        return createSearchPerspectiveTabs(search?.config, defaultTabs);
+        return createSearchPerspectiveTabs(search?.config);
       }
-      return createSearchPerspectiveTabsByView(currentView, defaultTabs);
+      return createSearchPerspectiveTabsByView(currentView);
     }
 
     if (isViewValidForDashboard(dashboardView)) {
       const search = searchesMap[dashboardView.code];
       if (search?.config) {
-        return createSearchPerspectiveTabs(search?.config, defaultTabs);
+        return createSearchPerspectiveTabs(search?.config);
       }
-      return createSearchPerspectiveTabsByView(dashboardView, defaultTabs);
+      return createSearchPerspectiveTabsByView(dashboardView);
     }
 
     return createSearchPerspectiveTabs(searchesMap[DEFAULT_PERSPECTIVE_ID]?.config, defaultTabs);
@@ -873,9 +873,9 @@ export const selectSearchPerspectiveTabsByView = (view: View, defaultConfig?: Se
     if (isViewValidForDashboard(view)) {
       const search = searchesMap[view.code];
       if (search?.config) {
-        return createSearchPerspectiveTabs(search?.config, defaultTabs);
+        return createSearchPerspectiveTabs(search?.config);
       }
-      return createSearchPerspectiveTabsByView(view, defaultTabs);
+      return createSearchPerspectiveTabsByView(view);
     }
 
     return createSearchPerspectiveTabs(defaultConfig || searchesMap[DEFAULT_PERSPECTIVE_ID]?.config, defaultTabs);
