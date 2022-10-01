@@ -165,10 +165,10 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeDocuments$(): Observable<DocumentModel[]> {
     const pageObservable = this.page$.asObservable();
-    return combineLatest([this.view$, this.query$]).pipe(
-      switchMap(([view, query]) =>
+    return combineLatest([this.view$, this.query$, this.selectDocumentsConfig$()]).pipe(
+      switchMap(([view, query, documentsConfig]) =>
         this.store$.pipe(
-          select(selectTasksDocumentsByCustomQuery(view, query)),
+          select(selectTasksDocumentsByCustomQuery(view, query, documentsConfig)),
           switchMap(documents => pageObservable.pipe(map(page => (documents || []).slice(0, PAGE_SIZE * (page + 1)))))
         )
       )

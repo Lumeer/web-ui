@@ -111,18 +111,39 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
     user: User,
     viewCode: string
   ): Observable<{view: View; tabs: DashboardTab[]; defaultViewConfig: DefaultViewConfig}> {
+    return this.selectDefaultSearchTabs(organization, project, user, viewCode).pipe(
+      mergeMap(({view, tabs, defaultViewConfig}) =>
+        this.store$.pipe(
+          select(selectSearchConfigById(view?.code || DEFAULT_PERSPECTIVE_ID)),
+          take(1),
+          map(searchConfig => ({
+            view,
+            defaultViewConfig,
+            tabs: createSearchPerspectiveTabs(
+              searchConfig || view?.config?.search || defaultViewConfig?.config?.search,
+              tabs
+            ).filter(tab => !tab.hidden),
+          }))
+        )
+      )
+    );
+  }
+
+  private selectDefaultSearchTabs(
+    organization: Organization,
+    project: Project,
+    user: User,
+    viewCode: string
+  ): Observable<{tabs: DashboardTab[]; defaultViewConfig: DefaultViewConfig; view: View}> {
     return this.resourcesGuardService.selectDefaultSearchTabs(organization, project, user).pipe(
-      withLatestFrom(this.store$.pipe(select(selectSearchConfigById(viewCode || DEFAULT_PERSPECTIVE_ID)))),
-      map(([{views, tabs, defaultViewConfig}, searchConfig]) => {
-        const view = viewCode ? views.find(v => v.code === viewCode) : null;
-        return {
-          view,
-          defaultViewConfig,
-          tabs: createSearchPerspectiveTabs(
-            searchConfig || view?.config?.search || defaultViewConfig?.config?.search,
-            tabs
-          ).filter(tab => !tab.hidden),
-        };
+      map(data => {
+        const viewId = data.defaultViewConfig?.config?.search?.dashboard?.viewId;
+        const view = viewCode
+          ? data.views.find(v => v.code === viewCode)
+          : viewId
+          ? data.views.find(v => v.id === viewId)
+          : null;
+        return {...data, view};
       })
     );
   }

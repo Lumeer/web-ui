@@ -1,56 +1,58 @@
 <div class="row mt-4 mb-6" *ngIf="linkType$ | async as linkType">
-  <ul class="list-group ps-5 flex-fill"
-      *ngIf="{rulesLimit: rulesCountLimit$ | async, ruleNames: ruleNames$ | async, editingRules: editingRules$ | async} as data">
-    <li
-      *ngIf="!(linkType?.rules)"
-      no-rules
-      class="list-group-item flex-column align-items-center">
-    </li>
+  <div class="col">
+    <ul class="list-group"
+        *ngIf="{rulesLimit: rulesCountLimit$ | async, ruleNames: ruleNames$ | async, editingRules: editingRules$ | async} as data">
+      <li
+        *ngIf="!(linkType?.rules)"
+        no-rules
+        class="list-group-item flex-column align-items-center">
+      </li>
 
-    <li
-      *ngFor="let rule of linkType?.rules; let idx = index; trackBy:trackByRuleName"
-      class="list-group-item flex-column align-items-center">
-      <add-rule-form
-        *ngIf="data.editingRules[rule.id]"
-        [linkType]="linkType"
-        [rule]="rule"
-        [ruleIndex]="idx"
-        [ruleNames]="data.ruleNames"
-        [originalRuleName]="rule.name"
-        (onCancelNewRule)="onCancelRuleEdit(rule)"
-        (onSaveRule)="onSaveRule(linkType, idx, $event)">
-      </add-rule-form>
-      <single-rule
-        *ngIf="!data.editingRules[rule.id]"
-        [attributes]="linkType.attributes"
-        [canDuplicate]="linkType && (data.rulesLimit === -1 || data.rulesLimit > linkType?.rules?.length)"
-        (onEdit)="onEditStart(rule)"
-        (onDelete)="deleteRule(linkType, rule)"
-        (onDuplicate)="onDuplicateRule($event)"
-        [rule]="rule">
-      </single-rule>
-    </li>
+      <li
+        *ngFor="let rule of linkType?.rules; let idx = index; trackBy:trackByRuleName"
+        class="list-group-item flex-column align-items-center">
+        <add-rule-form
+          *ngIf="data.editingRules[rule.id]"
+          [linkType]="linkType"
+          [rule]="rule"
+          [ruleIndex]="idx"
+          [ruleNames]="data.ruleNames"
+          [originalRuleName]="rule.name"
+          (onCancelNewRule)="onCancelRuleEdit(rule)"
+          (onSaveRule)="onSaveRule(linkType, idx, $event)">
+        </add-rule-form>
+        <single-rule
+          *ngIf="!data.editingRules[rule.id]"
+          [attributes]="linkType.attributes"
+          [canDuplicate]="linkType && (data.rulesLimit === -1 || data.rulesLimit > linkType?.rules?.length)"
+          (onEdit)="onEditStart(rule)"
+          (onDelete)="deleteRule(linkType, rule)"
+          (onDuplicate)="onDuplicateRule($event)"
+          [rule]="rule">
+        </single-rule>
+      </li>
 
-    <li
-      *ngFor="let newRule of addingRules; let idx = index;"
-      class="list-group-item flex-column align-items-center">
-      <add-rule-form
-        [linkType]="linkType"
-        [rule]="newRule"
-        [ruleIndex]="idx"
-        [ruleNames]="data.ruleNames"
-        (onCancelNewRule)="onCancelNewRule($event)"
-        (onSaveRule)="onSaveRule(linkType, idx, $event)">
-      </add-rule-form>
-    </li>
+      <li
+        *ngFor="let newRule of addingRules; let idx = index;"
+        class="list-group-item flex-column align-items-center">
+        <add-rule-form
+          [linkType]="linkType"
+          [rule]="newRule"
+          [ruleIndex]="idx"
+          [ruleNames]="data.ruleNames"
+          (onCancelNewRule)="onCancelNewRule($event)"
+          (onSaveRule)="onSaveRule(linkType, idx, $event)">
+        </add-rule-form>
+      </li>
 
-    <li
-      *ngIf="linkType && (data.rulesLimit === -1 || data.rulesLimit > linkType?.rules?.length); else freePlan"
-      add-rule
-      (click)="onNewRule()"
-      class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">
-    </li>
-  </ul>
+      <li
+        *ngIf="linkType && (data.rulesLimit === -1 || data.rulesLimit > linkType?.rules?.length); else freePlan"
+        add-rule
+        (click)="onNewRule()"
+        class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">
+      </li>
+    </ul>
+  </div>
 </div>
 
 <ng-template #freePlan>

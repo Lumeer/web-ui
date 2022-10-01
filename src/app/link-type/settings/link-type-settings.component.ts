@@ -28,6 +28,7 @@ import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {
   selectNavigatingToOtherWorkspace,
+  selectPreviousUrl,
   selectPreviousWorkspaceUrl,
   selectWorkspace,
 } from '../../core/store/navigation/navigation.state';
@@ -115,7 +116,7 @@ export class LinkTypeSettingsComponent implements OnInit, OnDestroy {
       .subscribe(permissions => this.checkCurrentTab(permissions));
     this.subscriptions.add(sub3);
 
-    this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url));
+    this.store$.pipe(select(selectPreviousUrl), take(1)).subscribe(url => (this.previousUrl = url));
 
     this.allLinkTypes$ = this.store$.pipe(select(selectAllLinkTypes));
   }
