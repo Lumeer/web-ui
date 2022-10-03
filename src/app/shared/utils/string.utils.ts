@@ -97,3 +97,5 @@ export function createUniqueNameWithSuffix(name: string, otherNames: string[]): 
 
   return currentNamePrefix + ` (${index})`;
 }
+
+// export function parse

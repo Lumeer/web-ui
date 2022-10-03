@@ -17,16 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Input, ElementRef, ViewChild, Directive} from '@angular/core';
+import {Input, ElementRef, ViewChild, Directive, AfterViewInit, OnDestroy} from '@angular/core';
 import {FullscreenDropdownComponent} from './fullscreen-dropdown.component';
+import {BehaviorSubject, Subscription} from 'rxjs';
 
 @Directive()
-export abstract class FullscreenDropdownDirective {
+export abstract class FullscreenDropdownDirective implements AfterViewInit, OnDestroy {
   @Input()
   public origin: ElementRef | HTMLElement;
 
   @ViewChild(FullscreenDropdownComponent)
   public dropdown: FullscreenDropdownComponent;
+
+  public isOpen$ = new BehaviorSubject(false);
+
+  private subscription = new Subscription();
+
+  public ngAfterViewInit() {
+    if (this.dropdown) {
+      this.subscription.add(this.dropdown.isOpen$().subscribe(open => this.isOpen$.next(open)));
+    }
+  }
 
   public toggle() {
     if (this.isOpen()) {
@@ -46,5 +57,9 @@ export abstract class FullscreenDropdownDirective {
 
   public close() {
     this.dropdown?.close();
+  }
+
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

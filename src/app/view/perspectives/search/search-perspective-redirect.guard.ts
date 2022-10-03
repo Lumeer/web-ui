@@ -31,7 +31,7 @@ import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
-import {map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {map, mergeMap, take} from 'rxjs/operators';
 import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {WorkspaceService} from '../../../workspace/workspace.service';

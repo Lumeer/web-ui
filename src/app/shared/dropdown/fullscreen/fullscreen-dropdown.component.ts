@@ -17,27 +17,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, ViewContainerRef, Renderer2, AfterViewInit, ViewChild, TemplateRef, Input} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ViewContainerRef,
+  Renderer2,
+  AfterViewInit,
+  ViewChild,
+  TemplateRef,
+  Input,
+} from '@angular/core';
 import {GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
+import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 @Component({
   selector: 'fullscreen-dropdown',
   templateUrl: './fullscreen-dropdown.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./fullscreen-dropdown.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FullscreenDropdownComponent implements AfterViewInit {
+  @Input()
+  public height: number;
 
   @Input()
   public showBackdrop = true;
+
+  @Input()
+  public minHeight: number = 100;
+
+  @Input()
+  public minWidth: number = 100;
+
+  @Input()
+  public minSize: number;
 
   @ViewChild('dropdown')
   public dropdown: TemplateRef<any>;
 
   private overlayRef: OverlayRef;
   private portal: Portal<any>;
-  private opened$ = new BehaviorSubject(false);
+
+  private initialBoundingRect: DOMRect;
+  private initialResizePosition: {x: number; y: number};
+
+  public opened$ = new BehaviorSubject(false);
+  public resizePosition$ = new BehaviorSubject({x: 0, y: 0});
 
   constructor(private overlay: Overlay, private viewContainer: ViewContainerRef, private renderer: Renderer2) {}
 
@@ -56,29 +83,23 @@ export class FullscreenDropdownComponent implements AfterViewInit {
 
     this.overlayRef = this.overlay.create(overlayConfig);
     this.overlayRef.attach(this.portal);
+    this.overlayRef.addPanelClass('m-5');
+    this.overlayRef.backdropClick().subscribe(() => this.close());
   }
 
   private createOverlayConfig(offsetX?: number): OverlayConfig {
     const positionStrategy = this.createPositionStrategy();
 
     return {
-      backdropClass: this.showBackdrop ? 'cdk-overlay-transparent-backdrop' : undefined,
+      backdropClass: this.showBackdrop ? 'cdk-overlay-dark-backdrop' : undefined,
       disposeOnNavigation: true,
       hasBackdrop: this.showBackdrop,
-      // scrollStrategy: this.overlay.scrollStrategies.reposition(),
       positionStrategy,
     };
   }
 
   private createPositionStrategy(): GlobalPositionStrategy {
-    return this.overlay
-      .position()
-      .global()
-      .centerHorizontally()
-      .centerVertically()
-      .top('200px')
-      .right('100px')
-      .left('100px');
+    return this.overlay.position().global();
   }
 
   public close() {
@@ -98,4 +119,94 @@ export class FullscreenDropdownComponent implements AfterViewInit {
     return this.opened$.asObservable();
   }
 
+  public onResizeStart(element: HTMLDivElement) {
+    this.initialBoundingRect = element.getBoundingClientRect();
+    this.initialResizePosition = this.resizePosition$.value;
+  }
+
+  public onResizedRight(event: CdkDragMove, element: HTMLDivElement) {
+    this.onResizeHorizontally(event, element);
+  }
+
+  public onResizedLeft(event: CdkDragMove, element: HTMLDivElement) {
+    this.onResizeHorizontally(event, element, -1);
+
+    if (this.initialResizePosition) {
+      this.resizePosition$.next({...this.initialResizePosition, x: this.initialResizePosition.x + event.distance.x});
+    }
+  }
+
+  private onResizeHorizontally(event: CdkDragMove, element: HTMLDivElement, multiplier: number = 1) {
+    if (this.initialBoundingRect) {
+      const newWidth = Math.max(this.initialBoundingRect.width + event.distance.x * multiplier, this.minWidth);
+      if (newWidth !== this.initialBoundingRect.width) {
+        this.setWidth(newWidth, element);
+        this.checkHeight(newWidth, this.initialBoundingRect.height, element);
+      }
+    }
+  }
+
+  public onResizedBottom(event: CdkDragMove, element: HTMLDivElement) {
+    this.onResizeVertically(event, element, 1);
+  }
+
+  public onResizedTop(event: CdkDragMove, element: HTMLDivElement) {
+    this.onResizeVertically(event, element, -1);
+
+    if (this.initialResizePosition) {
+      this.resizePosition$.next({...this.initialResizePosition, y: this.initialResizePosition.y + event.distance.y});
+    }
+  }
+
+  private onResizeVertically(event: CdkDragMove, element: HTMLDivElement, multiplier: number = 1) {
+    if (this.initialBoundingRect) {
+      const newHeight = Math.max(this.initialBoundingRect.height + event.distance.y * multiplier, this.minHeight);
+      if (newHeight !== this.initialBoundingRect.height) {
+        this.setHeight(newHeight, element);
+        this.checkWidth(newHeight, this.initialBoundingRect.width, element);
+      }
+    }
+  }
+
+  private checkWidth(newHeight: number, width: number, element: HTMLDivElement) {
+    if (!this.minSize) {
+      return;
+    }
+
+    if (newHeight + width < this.minSize) {
+      this.setWidth(this.minSize - newHeight, element);
+    }
+  }
+
+  private checkHeight(newWidth: number, height: number, element: HTMLDivElement) {
+    if (!this.minSize) {
+      return;
+    }
+
+    if (newWidth + height < this.minSize) {
+      this.setHeight(this.minSize - newWidth, element);
+    }
+  }
+
+  private setHeight(height: number, element: HTMLDivElement) {
+    this.renderer.setStyle(element, 'height', `${height}px`);
+    this.renderer.setStyle(element.parentElement, 'height', `${height}px`);
+  }
+
+  private setWidth(width: number, element: HTMLDivElement) {
+    this.renderer.setStyle(element, 'width', `${width}px`);
+    this.renderer.setStyle(element.parentElement, 'width', `${width}px`);
+  }
+
+  public onResizeEnd(event: CdkDragEnd) {
+    event.source.reset();
+    this.initialBoundingRect = undefined;
+  }
+
+  public onDragEnd(event: CdkDragEnd) {
+    this.resizePosition$.next({
+      x: this.resizePosition$.value.x + event.distance.x,
+      y: this.resizePosition$.value.y + event.distance.y,
+    });
+  }
 }

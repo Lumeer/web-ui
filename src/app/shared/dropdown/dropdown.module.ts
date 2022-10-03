@@ -30,10 +30,11 @@ import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropd
 import {GroupDropdownOptionsPipe} from './pipes/group-dropdown-options.pipe';
 import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
 import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-options.pipe';
-import { FullscreenDropdownComponent } from './fullscreen/fullscreen-dropdown.component';
+import {FullscreenDropdownComponent} from './fullscreen/fullscreen-dropdown.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
-  imports: [CommonModule, PresenterModule, GravatarModule, PipesModule],
+  imports: [CommonModule, PresenterModule, GravatarModule, PipesModule, DragDropModule],
   declarations: [
     DropdownComponent,
     DropdownOptionDirective,

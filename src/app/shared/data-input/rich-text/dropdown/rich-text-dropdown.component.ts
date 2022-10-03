@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {defaultTextEditorOptions} from '../../../modal/text-editor/text-editor.utils';
 import {FullscreenDropdownDirective} from '../../../dropdown/fullscreen/fullscreen-dropdown.directive';
@@ -26,10 +26,9 @@ import {FullscreenDropdownDirective} from '../../../dropdown/fullscreen/fullscre
   selector: 'rich-text-dropdown',
   templateUrl: './rich-text-dropdown.component.html',
   styleUrls: ['./rich-text-dropdown.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RichTextDropdownComponent extends FullscreenDropdownDirective implements OnInit {
-
+export class RichTextDropdownComponent extends FullscreenDropdownDirective {
   @Input()
   public readonly = false;
 
@@ -47,9 +46,6 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective imple
 
   public valid = true;
   public readonly defaultOptions = defaultTextEditorOptions;
-
-  public ngOnInit() {
-  }
 
   public contentChanged(event: ContentChange) {
     this.checkValid(event.text);
@@ -78,5 +74,4 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective imple
       editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
     }, 200);
   }
-
 }

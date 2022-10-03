@@ -1,6 +1,10 @@
-<fullscreen-dropdown>
-  <div class="card" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<fullscreen-dropdown [showBackdrop]="true"
+                     [minWidth]="170"
+                     [minHeight]="170"
+                     [minSize]="600">
+  <div class="card h-100" *ngIf="isOpen$ | async">
     <quill-editor
+      class="h-100 editor"
       [(ngModel)]="content"
       [readOnly]="readonly"
       [maxLength]="maxLength"
