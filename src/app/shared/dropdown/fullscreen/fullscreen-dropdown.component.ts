@@ -25,12 +25,18 @@ import {
   AfterViewInit,
   ViewChild,
   TemplateRef,
+  OnInit,
   Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {convertRemToPixels} from '../../utils/html-modifier';
+
+const initialMargin = 3;
 
 @Component({
   selector: 'fullscreen-dropdown',
@@ -38,9 +44,12 @@ import {BehaviorSubject, Observable} from 'rxjs';
   styleUrls: ['./fullscreen-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FullscreenDropdownComponent implements AfterViewInit {
+export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()
-  public height: number;
+  public relativeHeight: number;
+
+  @Input()
+  public relativeWidth: number;
 
   @Input()
   public showBackdrop = true;
@@ -63,10 +72,30 @@ export class FullscreenDropdownComponent implements AfterViewInit {
   private initialBoundingRect: DOMRect;
   private initialResizePosition: {x: number; y: number};
 
+  public currentWidth: number;
+  public currentHeight: number;
+
   public opened$ = new BehaviorSubject(false);
-  public resizePosition$ = new BehaviorSubject({x: 0, y: 0});
+  public resizePosition$ = new BehaviorSubject({
+    x: convertRemToPixels(initialMargin),
+    y: convertRemToPixels(initialMargin),
+  });
 
   constructor(private overlay: Overlay, private viewContainer: ViewContainerRef, private renderer: Renderer2) {}
+
+  public ngOnInit() {
+    this.currentWidth = this.currentWidth || this.initialWidth();
+    this.currentHeight = this.currentHeight || this.initialHeight();
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.relativeHeight) {
+      this.currentHeight = this.relativeHeight || this.initialHeight();
+    }
+    if (changes.relativeWidth) {
+      this.currentWidth = this.relativeWidth || this.initialWidth();
+    }
+  }
 
   public ngAfterViewInit() {
     this.portal = new TemplatePortal(this.dropdown, this.viewContainer);
@@ -83,8 +112,10 @@ export class FullscreenDropdownComponent implements AfterViewInit {
 
     this.overlayRef = this.overlay.create(overlayConfig);
     this.overlayRef.attach(this.portal);
-    this.overlayRef.addPanelClass('m-5');
     this.overlayRef.backdropClick().subscribe(() => this.close());
+
+    this.renderer.setStyle(this.overlayRef.overlayElement, 'height', `${this.currentHeight}vh`);
+    this.renderer.setStyle(this.overlayRef.overlayElement, 'width', `${this.currentWidth}vw`);
   }
 
   private createOverlayConfig(offsetX?: number): OverlayConfig {
@@ -138,7 +169,10 @@ export class FullscreenDropdownComponent implements AfterViewInit {
 
   private onResizeHorizontally(event: CdkDragMove, element: HTMLDivElement, multiplier: number = 1) {
     if (this.initialBoundingRect) {
-      const newWidth = Math.max(this.initialBoundingRect.width + event.distance.x * multiplier, this.minWidth);
+      const newWidth = Math.min(
+        Math.max(this.initialBoundingRect.width + event.distance.x * multiplier, this.minWidth),
+        this.currentMaxWidthPx()
+      );
       if (newWidth !== this.initialBoundingRect.width) {
         this.setWidth(newWidth, element);
         this.checkHeight(newWidth, this.initialBoundingRect.height, element);
@@ -160,7 +194,10 @@ export class FullscreenDropdownComponent implements AfterViewInit {
 
   private onResizeVertically(event: CdkDragMove, element: HTMLDivElement, multiplier: number = 1) {
     if (this.initialBoundingRect) {
-      const newHeight = Math.max(this.initialBoundingRect.height + event.distance.y * multiplier, this.minHeight);
+      const newHeight = Math.min(
+        Math.max(this.initialBoundingRect.height + event.distance.y * multiplier, this.minHeight),
+        this.currentMaxHeightPx()
+      );
       if (newHeight !== this.initialBoundingRect.height) {
         this.setHeight(newHeight, element);
         this.checkWidth(newHeight, this.initialBoundingRect.width, element);
@@ -189,13 +226,15 @@ export class FullscreenDropdownComponent implements AfterViewInit {
   }
 
   private setHeight(height: number, element: HTMLDivElement) {
-    this.renderer.setStyle(element, 'height', `${height}px`);
-    this.renderer.setStyle(element.parentElement, 'height', `${height}px`);
+    this.currentHeight = (height / window.innerHeight) * 100;
+    this.renderer.setStyle(element, 'height', `${this.currentHeight}vh`);
+    this.renderer.setStyle(element.parentElement, 'height', `${this.currentHeight}vh`);
   }
 
   private setWidth(width: number, element: HTMLDivElement) {
-    this.renderer.setStyle(element, 'width', `${width}px`);
-    this.renderer.setStyle(element.parentElement, 'width', `${width}px`);
+    this.currentWidth = (width / window.innerWidth) * 100;
+    this.renderer.setStyle(element, 'width', `${this.currentWidth}vw`);
+    this.renderer.setStyle(element.parentElement, 'width', `${this.currentWidth}vw`);
   }
 
   public onResizeEnd(event: CdkDragEnd) {
@@ -205,8 +244,32 @@ export class FullscreenDropdownComponent implements AfterViewInit {
 
   public onDragEnd(event: CdkDragEnd) {
     this.resizePosition$.next({
-      x: this.resizePosition$.value.x + event.distance.x,
-      y: this.resizePosition$.value.y + event.distance.y,
+      x: Math.max(Math.min(this.resizePosition$.value.x + event.distance.x, this.currentMaxXOffsetPx()), 0),
+      y: Math.max(Math.min(this.resizePosition$.value.y + event.distance.y, this.currentMaxYOffsetPx()), 0),
     });
+  }
+
+  private initialWidth(): number {
+    return ((window.innerWidth - convertRemToPixels(initialMargin * 2)) / window.innerWidth) * 100;
+  }
+
+  private initialHeight(): number {
+    return ((window.innerHeight - convertRemToPixels(initialMargin * 2)) / window.innerHeight) * 100;
+  }
+
+  private currentMaxWidthPx(): number {
+    return window.innerWidth - this.resizePosition$.value.x;
+  }
+
+  private currentMaxHeightPx(): number {
+    return window.innerHeight - this.resizePosition$.value.y;
+  }
+
+  private currentMaxXOffsetPx(): number {
+    return window.innerWidth - (this.currentWidth / 100) * window.innerWidth;
+  }
+
+  private currentMaxYOffsetPx(): number {
+    return window.innerHeight - (this.currentHeight / 100) * window.innerHeight;
   }
 }

@@ -2,9 +2,11 @@
   <div class="content-wrapper" #contentWrapper
        cdkDrag
        cdkDragRootElement=".cdk-overlay-pane"
+       cdkDragBoundary=".cdk-overlay-container"
        [style.min-height.px]="minHeight"
        [style.min-width.px]="minWidth"
-       [style.height]="height ? height + 'px' : 'calc(100vh - 6rem)'"
+       [style.height.vh]="currentHeight"
+       [style.width.vw]="currentWidth"
        [cdkDragFreeDragPosition]="resizePosition$ | async"
        (cdkDragEnded)="onDragEnd($event)">
     <div cdkDrag cdkDragLockAxis="x"
