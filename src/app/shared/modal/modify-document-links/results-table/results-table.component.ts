@@ -36,12 +36,13 @@ import {DataInputConfiguration} from '../../../data-input/data-input-configurati
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {objectsByIdMap, objectValues} from '../../../utils/common.utils';
 import {isResultRowChecked} from './pipes/is-result-row-checked.pipe';
-import {ResourceAttributeSettings, View} from '../../../../core/store/views/view';
+import {View} from '../../../../core/store/views/view';
 import {
   filterVisibleAttributesByResourceSettings,
   filterVisibleAttributesBySettings,
 } from '../../../utils/attribute.utils';
 import {sortDataObjectsByResourceAttributesSettings} from '../../../utils/data-resource.utils';
+import {ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
 
 export type ResultTableRow = {document: DocumentModel; linkInstance?: LinkInstance};
 

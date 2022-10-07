@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceAttributeSettings} from '../../../../core/store/views/view';
+import {ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Pipe({
   name: 'countShowedAttributes',

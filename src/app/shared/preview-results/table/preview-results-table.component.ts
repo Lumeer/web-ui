@@ -35,7 +35,7 @@ import {
 import {Collection} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {Constraint, ConstraintData} from '@lumeer/data-filters';
-import {AttributesSettings, View} from '../../../core/store/views/view';
+import {View} from '../../../core/store/views/view';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {clickedInsideElement, shadeColor} from '../../utils/html-modifier';
@@ -46,6 +46,7 @@ import {filter, map, tap} from 'rxjs/operators';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {KeyCode} from '../../key-code';
+import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
 
 const ROW_HEIGHT = 32;
 const COLUMN_WIDTH = 120;

@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, ViewChild, Output, EventEmitter} from '@angular/core';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {defaultTextEditorOptions} from '../../../modal/text-editor/text-editor.utils';
 import {FullscreenDropdownDirective} from '../../../dropdown/fullscreen/fullscreen-dropdown.directive';
+import {ModalData} from '../../../../core/model/modal-data';
 
 @Component({
   selector: 'rich-text-dropdown',
@@ -29,6 +30,9 @@ import {FullscreenDropdownDirective} from '../../../dropdown/fullscreen/fullscre
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RichTextDropdownComponent extends FullscreenDropdownDirective {
+  @Input()
+  public modalData: ModalData;
+
   @Input()
   public readonly = false;
 
@@ -40,6 +44,9 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
 
   @Input()
   public minLength: number;
+
+  @Output()
+  public dataChange = new EventEmitter<ModalData>();
 
   @ViewChild(QuillEditorComponent)
   public quillEditorComponent: QuillEditorComponent;

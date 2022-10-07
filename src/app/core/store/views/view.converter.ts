@@ -103,7 +103,11 @@ function convertViewConfigDtoToModel(perspective: Perspective, config: any): Vie
 }
 
 export function convertDefaultViewConfigDtoToModel(dto: DefaultViewConfigDto): DefaultViewConfig {
-  return {...dto, updatedAt: dto.updatedAt ? new Date(dto.updatedAt) : new Date()};
+  return {
+    ...dto,
+    updatedAt: dto.updatedAt ? new Date(dto.updatedAt) : new Date(),
+    perspective: perspectivesMap[dto.perspective],
+  };
 }
 
 export function convertDefaultViewConfigModelToDto(model: DefaultViewConfig): DefaultViewConfigDto {

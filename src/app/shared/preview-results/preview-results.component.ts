@@ -47,8 +47,9 @@ import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.s
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataQuery} from '../../core/model/data-query';
-import {AttributesSettings, View} from '../../core/store/views/view';
+import {View} from '../../core/store/views/view';
 import {objectChanged} from '../utils/common.utils';
+import {AttributesSettings} from '../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'preview-results',

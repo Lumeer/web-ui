@@ -21,7 +21,7 @@ import {createAction, props} from '@ngrx/store';
 
 import {Detail, DetailConfig} from './detail';
 import {QueryStem} from '../navigation/query/query';
-import {AttributesSettings} from '../views/view';
+import {AttributesSettings} from '../view-settings/view-settings';
 
 export const add = createAction('[Detail] Add', props<{detail: Detail}>());
 

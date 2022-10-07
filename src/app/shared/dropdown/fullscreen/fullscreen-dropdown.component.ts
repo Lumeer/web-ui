@@ -29,12 +29,16 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import {GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {convertRemToPixels} from '../../utils/html-modifier';
+import {ModalData} from '../../../core/model/modal-data';
+import {isNotNullOrUndefined} from '../../utils/common.utils';
 
 const initialMargin = 3;
 
@@ -46,10 +50,7 @@ const initialMargin = 3;
 })
 export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()
-  public relativeHeight: number;
-
-  @Input()
-  public relativeWidth: number;
+  public data: ModalData;
 
   @Input()
   public showBackdrop = true;
@@ -65,6 +66,9 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterView
 
   @ViewChild('dropdown')
   public dropdown: TemplateRef<any>;
+
+  @Output()
+  public dataChange = new EventEmitter<ModalData>();
 
   private overlayRef: OverlayRef;
   private portal: Portal<any>;
@@ -89,11 +93,13 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterView
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.relativeHeight) {
-      this.currentHeight = this.relativeHeight || this.initialHeight();
-    }
-    if (changes.relativeWidth) {
-      this.currentWidth = this.relativeWidth || this.initialWidth();
+    if (changes.data) {
+      this.currentHeight = this.data?.relativeHeight || this.initialHeight();
+      this.currentWidth = this.data?.relativeWidth || this.initialWidth();
+
+      if (isNotNullOrUndefined(this.data?.x) && isNotNullOrUndefined(this.data?.y)) {
+        this.resizePosition$.next({x: this.data.x, y: this.data.y});
+      }
     }
   }
 
@@ -101,14 +107,14 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterView
     this.portal = new TemplatePortal(this.dropdown, this.viewContainer);
   }
 
-  public open(offsetX?: number) {
+  public open() {
     if (this.overlayRef) {
       return;
     }
 
     this.opened$.next(true);
 
-    const overlayConfig = this.createOverlayConfig(offsetX);
+    const overlayConfig = this.createOverlayConfig();
 
     this.overlayRef = this.overlay.create(overlayConfig);
     this.overlayRef.attach(this.portal);
@@ -118,7 +124,7 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterView
     this.renderer.setStyle(this.overlayRef.overlayElement, 'width', `${this.currentWidth}vw`);
   }
 
-  private createOverlayConfig(offsetX?: number): OverlayConfig {
+  private createOverlayConfig(): OverlayConfig {
     const positionStrategy = this.createPositionStrategy();
 
     return {
@@ -240,12 +246,24 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterView
   public onResizeEnd(event: CdkDragEnd) {
     event.source.reset();
     this.initialBoundingRect = undefined;
+
+    this.emitDataChange();
   }
 
   public onDragEnd(event: CdkDragEnd) {
     this.resizePosition$.next({
       x: Math.max(Math.min(this.resizePosition$.value.x + event.distance.x, this.currentMaxXOffsetPx()), 0),
       y: Math.max(Math.min(this.resizePosition$.value.y + event.distance.y, this.currentMaxYOffsetPx()), 0),
+    });
+
+    this.emitDataChange();
+  }
+
+  private emitDataChange() {
+    this.dataChange.emit({
+      ...this.resizePosition$.value,
+      relativeHeight: this.currentHeight,
+      relativeWidth: this.currentWidth,
     });
   }
 

@@ -31,7 +31,6 @@ import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
-import {ViewSettings} from '../../../../../../core/store/views/view';
 import {
   deepObjectCopy,
   isNotNullOrUndefined,
@@ -50,6 +49,7 @@ import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {addRowByParentId} from './workflow-utils';
 import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
+import {ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 @Injectable()
 export class WorkflowTablesStateService {

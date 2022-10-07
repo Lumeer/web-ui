@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AttributesSettings} from '../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
@@ -34,6 +33,7 @@ import {preventEvent} from '../../utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'links-accordeon',

@@ -26,7 +26,7 @@ import {
   setAttributeToAttributeSettings,
 } from '../../../shared/settings/settings.util';
 import {AttributesResource, AttributesResourceType} from '../../model/resource';
-import {ViewSettings} from '../views/view';
+import {ViewSettings} from './view-settings';
 
 export function viewSettingsReducer(
   state: ViewSettingsState = initialViewSettingsState,
@@ -45,6 +45,8 @@ export function viewSettingsReducer(
       return setAttribute(state, action);
     case ViewSettingsActionType.SET_SETTINGS:
       return {...state, [action.payload.settingsId]: action.payload.settings};
+    case ViewSettingsActionType.SET_MODAL:
+      return setModal(state, action);
     case ViewSettingsActionType.RESET_SETTINGS:
       return {...state, [action.payload.settingsId]: {}};
     case ViewSettingsActionType.CLEAR:
@@ -120,6 +122,22 @@ function setAttribute(state: ViewSettingsState, action: ViewSettingsAction.SetAt
     settingAttributes => setAttributeToAttributeSettings(attributeId, settingAttributes, settings)
   );
   return setViewSettings(state, action.payload.settingsId, newSettings);
+}
+
+function setModal(state: ViewSettingsState, action: ViewSettingsAction.SetModal): ViewSettingsState {
+  const {modal} = action.payload;
+  const currentSettings = getViewSettings(state, action.payload.settingsId) || {};
+  const modalsSettings = [...(currentSettings.modals?.settings || [])];
+  const currentIndex = modalsSettings.findIndex(s => s.key === modal.key);
+  if (currentIndex !== -1) {
+    modalsSettings[currentIndex] = modal;
+  } else {
+    modalsSettings.push(modal);
+  }
+  return setViewSettings(state, action.payload.settingsId, {
+    ...currentSettings,
+    modals: {...currentSettings.modals, settings: modalsSettings},
+  });
 }
 
 function getViewSettings(state: ViewSettingsState, settingsId: string): ViewSettings {

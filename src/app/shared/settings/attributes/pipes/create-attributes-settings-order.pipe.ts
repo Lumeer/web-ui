@@ -19,8 +19,8 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
-import {ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../settings.util';
+import {ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Pipe({
   name: 'createAttributesSettingsOrder',

@@ -44,7 +44,7 @@ import {
 } from '@lumeer/data-filters';
 import {LinkInstance} from '../link-instances/link.instance';
 import {defaultTasksSortBy, TaskConfigAttribute, TasksConfigSort, TasksConfigSortBy} from '../searches/search';
-import {AttributeSortType} from '../views/view';
+import {AttributeSortType} from '../view-settings/view-settings';
 
 export function createDocumentRequestAdditionalData(
   collection: Collection,

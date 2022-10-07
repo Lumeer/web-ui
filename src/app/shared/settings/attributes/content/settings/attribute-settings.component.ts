@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {AttributeSortType, ResourceAttributeSettings} from '../../../../../core/store/views/view';
+import {AttributeSortType, ResourceAttributeSettings} from '../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'attribute-settings',

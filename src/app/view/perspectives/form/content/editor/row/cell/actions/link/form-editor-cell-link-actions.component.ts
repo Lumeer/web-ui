@@ -21,7 +21,7 @@ import {Component, ChangeDetectionStrategy, OnChanges, Input, SimpleChanges, Out
 import {AppState} from '../../../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {FormLinkCellConfig} from '../../../../../../../../../core/store/form/form-model';
-import {AttributesSettings, View, ViewSettings} from '../../../../../../../../../core/store/views/view';
+import {View} from '../../../../../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {selectViewSettingsByView} from '../../../../../../../../../core/store/view-settings/view-settings.state';
 import {map, switchMap, tap} from 'rxjs/operators';
@@ -35,6 +35,7 @@ import {CollectionAttributeFilter} from '../../../../../../../../../core/store/n
 import {AttributesResourceType} from '../../../../../../../../../core/model/resource';
 import {DropdownOption} from '../../../../../../../../../shared/dropdown/options/dropdown-option';
 import {viewSettingsIdByView} from '../../../../../../../../../core/store/view-settings/view-settings.util';
+import {AttributesSettings, ViewSettings} from '../../../../../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'form-editor-cell-link-actions',

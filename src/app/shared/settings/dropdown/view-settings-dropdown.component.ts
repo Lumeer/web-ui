@@ -29,7 +29,6 @@ import {
 } from '@angular/core';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {AttributesSettings, DataSettings, ViewSettings} from '../../../core/store/views/view';
 import {select, Store} from '@ngrx/store';
 import {selectLinkTypesInQuery} from '../../../core/store/common/permissions.selectors';
 import {combineLatest, Observable} from 'rxjs';
@@ -45,6 +44,7 @@ import {getDefaultAttributeId} from '../../../core/store/collections/collection.
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectPerspective} from '../../../core/store/navigation/navigation.state';
 import {PerspectiveService} from '../../../core/service/perspective.service';
+import {AttributesSettings, DataSettings, ViewSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'view-settings-dropdown',

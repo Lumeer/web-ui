@@ -31,7 +31,7 @@ import {AppState} from '../../core/store/app.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectCurrentView, selectSidebarOpened, selectViewAdditionalQueries} from '../../core/store/views/views.state';
 import {debounceTime, distinctUntilChanged, filter, map, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {View, ViewSettings} from '../../core/store/views/view';
+import {View} from '../../core/store/views/view';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {
   selectCanManageViewConfig,
@@ -50,6 +50,7 @@ import {User} from '../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
+import {ViewSettings} from '../../core/store/view-settings/view-settings';
 
 @Directive()
 export abstract class DataPerspectiveDirective<T>

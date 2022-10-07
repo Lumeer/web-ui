@@ -18,10 +18,10 @@
  */
 
 import {Attribute} from '../../../core/store/collections/collection';
-import {AttributeSortType} from '../../../core/store/views/view';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {MenuItem} from '../../menu/model/menu-item';
 import {AttributeFilter, Constraint, UnknownConstraint} from '@lumeer/data-filters';
+import {AttributeSortType} from '../../../core/store/view-settings/view-settings';
 
 export interface TableColumnGroup {
   id: string;

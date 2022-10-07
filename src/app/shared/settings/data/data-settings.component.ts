@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {DataSettings} from '../../../core/store/views/view';
+import {DataSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'data-settings',

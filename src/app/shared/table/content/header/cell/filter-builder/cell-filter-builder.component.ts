@@ -29,7 +29,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {AttributeSortType} from '../../../../../../core/store/views/view';
 import {
   ConditionType,
   ConditionValue,
@@ -45,6 +44,7 @@ import {FilterBuilderContentComponent} from '../../../../../builder/filter-build
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {modifyAttributeForQueryFilter} from '../../../../../utils/attribute.utils';
 import {ColumnFilter} from '../../../../model/table-column';
+import {AttributeSortType} from '../../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'cell-filter-builder',

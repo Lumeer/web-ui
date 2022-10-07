@@ -24,7 +24,8 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {generateId} from '../../../../../shared/utils/resource.utils';
 import {collectAttributesIdsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {AttributesSettings, View} from '../../../../../core/store/views/view';
+import {View} from '../../../../../core/store/views/view';
+import {AttributesSettings} from '../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'form-editor',

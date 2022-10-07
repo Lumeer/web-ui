@@ -28,7 +28,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {AttributesSettings} from '../../../../../../core/store/views/view';
 import {DropdownComponent} from '../../../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../../../dropdown/dropdown-position';
 import {select, Store} from '@ngrx/store';
@@ -47,6 +46,7 @@ import {AttributesResourceData} from '../../../../../settings/attributes/attribu
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {AttributesSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'detail-settings-dropdown',

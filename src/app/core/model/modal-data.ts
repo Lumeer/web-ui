@@ -17,14 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {View} from '../views/view';
-import {Workspace} from '../navigation/workspace';
-import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
-
-export function viewSettingsIdByView(view: View) {
-  return view?.code || DEFAULT_PERSPECTIVE_ID;
-}
-
-export function viewSettingsIdByWorkspace(workspace: Workspace) {
-  return workspace?.viewCode || DEFAULT_PERSPECTIVE_ID;
+export interface ModalData {
+  x: number;
+  y: number;
+  relativeHeight: number;
+  relativeWidth: number;
 }

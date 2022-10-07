@@ -40,7 +40,7 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {View, ViewSettings} from '../../../../core/store/views/view';
+import {View} from '../../../../core/store/views/view';
 import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
 import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
@@ -48,6 +48,7 @@ import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
 import {KanbanPerspectiveConfiguration} from '../../perspective-configuration';
 import {moveItemInArray} from '../../../../shared/utils/array.utils';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 
 interface Data {
   collections: Collection[];

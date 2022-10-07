@@ -52,6 +52,7 @@ import {initForceTouch} from '../../../utils/html-modifier';
 import {animateOpacityEnterLeave} from '../../../animations';
 import {createTableHierarchyPath} from '../../model/table-hierarchy';
 import {COLOR_GRAY300, COLOR_PRIMARY} from '../../../../core/constants';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 
 @Component({
   selector: '[table-row]',
@@ -92,7 +93,7 @@ export class TableRowComponent implements OnInit, OnChanges {
   public linkTypeId: string;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Input()
   public tableColor: string;

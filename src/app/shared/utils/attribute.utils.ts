@@ -40,8 +40,8 @@ import {
 } from '@lumeer/data-filters';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
 import {AttributesResource, DataResource} from '../../core/model/resource';
-import {ResourceAttributeSettings} from '../../core/store/views/view';
 import {fontStylesClass} from '../../core/model/font-style';
+import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX = /\./g;

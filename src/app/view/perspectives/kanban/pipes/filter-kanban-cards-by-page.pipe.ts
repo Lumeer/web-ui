@@ -19,9 +19,9 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {KanbanCard} from '../util/kanban-data';
-import {ResourceAttributeSettings, ViewSettings} from '../../../../core/store/views/view';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {createAttributesSettingsOrder} from '../../../../shared/settings/settings.util';
+import {ResourceAttributeSettings, ViewSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Pipe({
   name: 'filterKanbanCardsByPage',

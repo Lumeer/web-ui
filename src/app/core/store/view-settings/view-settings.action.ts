@@ -18,9 +18,9 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ResourceAttributeSettings, ViewSettings} from '../views/view';
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
+import {ModalSettings, ResourceAttributeSettings, ViewSettings} from './view-settings';
 
 export enum ViewSettingsActionType {
   SET_SETTINGS = '[View Settings] Set Settings',
@@ -31,6 +31,7 @@ export enum ViewSettingsActionType {
   MOVE_ATTRIBUTE = '[View Settings] Move Attribute',
   ADD_ATTRIBUTE = '[View Settings] Add Attribute',
   SET_ATTRIBUTE = '[View Settings] Set Attribute',
+  SET_MODAL = '[View Settings] Set Modal',
 
   CLEAR = '[View Settings] Clear',
 }
@@ -112,6 +113,17 @@ export namespace ViewSettingsAction {
     ) {}
   }
 
+  export class SetModal implements Action {
+    public readonly type = ViewSettingsActionType.SET_MODAL;
+
+    public constructor(
+      public payload: {
+        settingsId: string;
+        modal: ModalSettings;
+      }
+    ) {}
+  }
+
   export class Clear implements Action {
     public readonly type = ViewSettingsActionType.CLEAR;
   }
@@ -124,5 +136,6 @@ export namespace ViewSettingsAction {
     | MoveAttribute
     | AddAttribute
     | SetAttribute
+    | SetModal
     | Clear;
 }

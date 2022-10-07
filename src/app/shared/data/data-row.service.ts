@@ -39,9 +39,9 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
-import {ResourceAttributeSettings} from '../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
 import {Workspace} from '../../core/store/navigation/workspace';
+import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
 
 export interface DataRow {
   id: string;

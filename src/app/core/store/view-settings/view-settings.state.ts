@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ViewSettings} from '../views/view';
 import {createSelector} from '@ngrx/store';
 import {selectCollectionsDictionary} from '../collections/collections.state';
 import {selectLinkTypesDictionary} from '../link-types/link-types.state';
@@ -26,6 +25,7 @@ import {selectCurrentView, selectViewQuery} from '../views/views.state';
 import {AppState} from '../app.state';
 import {selectWorkspace} from '../navigation/navigation.state';
 import {viewSettingsIdByView, viewSettingsIdByWorkspace} from './view-settings.util';
+import {ViewSettings} from './view-settings';
 
 export interface ViewSettingsState extends Record<string, ViewSettings> {}
 

@@ -50,7 +50,7 @@ import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AttributesSettings, View, ViewConfig} from '../../../core/store/views/view';
+import {View, ViewConfig} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById, selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {distinctUntilChanged, filter, map, switchMap, tap} from 'rxjs/operators';
@@ -76,6 +76,7 @@ import {User} from '../../../core/store/users/user';
 import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
 import {composeViewSettingsLinkTypeCollectionId} from '../../settings/settings.util';
 import {createCollectionQueryStem} from '../../../core/store/navigation/query/query.util';
+import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'data-resource-detail',
@@ -179,7 +180,7 @@ export class DataResourceDetailComponent
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.workspace$ = combineLatest([this.store$.pipe(select(selectWorkspace)), this.defaultView$]).pipe(
-      map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id})),
+      map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id, viewCode: defaultView?.code})),
       tap(workspace => (this.workspace = workspace))
     );
     this.currentView$ = combineLatest([this.defaultView$, this.store$.pipe(select(selectCurrentView))]).pipe(

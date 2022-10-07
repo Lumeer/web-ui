@@ -18,9 +18,9 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AttributesSettings, ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {composeViewSettingsLinkTypeCollectionId} from '../../settings.util';
+import {AttributesSettings, ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Pipe({
   name: 'resourceAttributesSettings',

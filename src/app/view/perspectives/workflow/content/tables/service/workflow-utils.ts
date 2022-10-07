@@ -48,7 +48,6 @@ import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {sortDataObjectsByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
@@ -67,6 +66,7 @@ import {
   dataAggregationsByConstraint,
   DataAggregationType,
 } from '../../../../../../shared/utils/data/data-aggregation';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 

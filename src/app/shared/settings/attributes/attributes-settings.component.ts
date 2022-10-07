@@ -18,8 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {AttributesSettings} from '../../../core/store/views/view';
 import {AttributesResourceData} from './attributes-settings-configuration';
+import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'attributes-settings',

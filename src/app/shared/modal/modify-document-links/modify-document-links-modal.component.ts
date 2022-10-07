@@ -45,9 +45,10 @@ import {mergeDocuments} from '../../../core/store/documents/document.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {generateCorrelationId} from '../../utils/resource.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {ResourceAttributeSettings, View} from '../../../core/store/views/view';
+import {View} from '../../../core/store/views/view';
 import {selectCurrentView, selectViewById} from '../../../core/store/views/views.state';
 import {AttributesResourceType} from '../../../core/model/resource';
+import {ResourceAttributeSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',

@@ -27,8 +27,8 @@ import {
   TasksConfigSort,
   TasksConfigSortBy,
 } from '../../../../../../../../core/store/searches/search';
-import {AttributeSortType} from '../../../../../../../../core/store/views/view';
 import {SelectItemComponent} from '../../../../../../../../shared/select/select-item/select-item.component';
+import {AttributeSortType} from '../../../../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'tasks-sort-dropdown',

@@ -20,11 +20,11 @@
 import {Component, OnInit, ChangeDetectionStrategy, ElementRef, Input, OnDestroy} from '@angular/core';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {AttributesSettings, DataSettings, ViewSettings} from '../../../../core/store/views/view';
 import {Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {selectViewSettings, selectViewSettingsId} from '../../../../core/store/view-settings/view-settings.state';
 import {ViewSettingsAction} from '../../../../core/store/view-settings/view-settings.action';
+import {AttributesSettings, DataSettings, ViewSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'settings-button',

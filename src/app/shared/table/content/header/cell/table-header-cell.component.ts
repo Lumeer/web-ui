@@ -30,12 +30,12 @@ import {
 import {TableColumn} from '../../../model/table-column';
 import {computeElementPositionInParent, preventEvent} from '../../../../utils/common.utils';
 import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
-import {AttributeSortType} from '../../../../../core/store/views/view';
 import {MenuItem} from '../../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../../menu/static-menu/static-menu.component';
 import {CellFilterBuilderComponent} from './filter-builder/cell-filter-builder.component';
 import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 import {initForceTouch} from '../../../../utils/html-modifier';
+import {AttributeSortType} from '../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'table-header-cell',

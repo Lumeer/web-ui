@@ -54,7 +54,6 @@ import {selectDocumentById, selectDocumentsByIds} from '../../../../core/store/d
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
-import {AttributesSettings} from '../../../../core/store/views/view';
 import {
   composeViewSettingsLinkTypeCollectionId,
   createAndModifyAttributesSettings,
@@ -66,6 +65,7 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {User} from '../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
+import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 
 const columnWidth = 100;
 

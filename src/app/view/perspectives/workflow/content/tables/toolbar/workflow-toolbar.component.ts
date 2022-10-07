@@ -32,7 +32,7 @@ import {AttributesResource, AttributesResourceType} from '../../../../../../core
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {SelectItem2Model} from '../../../../../../shared/select/select-item2/select-item2.model';
-import {AttributeSortType, View, ViewSettings} from '../../../../../../core/store/views/view';
+import {View} from '../../../../../../core/store/views/view';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
@@ -40,6 +40,7 @@ import {resourceAttributeSettings} from '../../../../../../shared/settings/setti
 import {Constraint} from '@lumeer/data-filters';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'workflow-toolbar',

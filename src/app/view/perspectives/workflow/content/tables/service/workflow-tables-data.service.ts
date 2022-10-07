@@ -34,12 +34,7 @@ import {distinctUntilChanged, map, mergeMap, skip, take} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {
-  AttributeSortType,
-  ResourceAttributeSettings,
-  View,
-  ViewSettings,
-} from '../../../../../../core/store/views/view';
+import {View} from '../../../../../../core/store/views/view';
 import {
   TABLE_BOTTOM_TOOLBAR_HEIGHT,
   TABLE_COLUMN_WIDTH,
@@ -146,6 +141,11 @@ import {Translation} from '../../../../../../shared/utils/translation';
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
+import {
+  AttributeSortType,
+  ResourceAttributeSettings,
+  ViewSettings,
+} from '../../../../../../core/store/view-settings/view-settings';
 
 @Injectable()
 export class WorkflowTablesDataService {

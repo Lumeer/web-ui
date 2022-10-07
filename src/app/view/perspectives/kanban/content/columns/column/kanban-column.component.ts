@@ -34,11 +34,11 @@ import {DataResource} from '../../../../../../core/model/resource';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../../util/kanban-data';
 import {PostItLayoutType} from '../../../../../../shared/post-it/post-it-layout-type';
-import {ViewSettings} from '../../../../../../core/store/views/view';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, throttleTime} from 'rxjs/operators';
 import {ConstraintData} from '@lumeer/data-filters';
 import {User} from '../../../../../../core/store/users/user';
+import {ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'kanban-column',

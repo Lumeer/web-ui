@@ -34,10 +34,10 @@ import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/head
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
-import {AttributeSortType} from '../../../../core/store/views/view';
 import {computeElementPositionInParent} from '../../../utils/common.utils';
 import {MenuItem} from '../../../menu/model/menu-item';
 import {ConditionType, ConditionValue} from '@lumeer/data-filters';
+import {AttributeSortType} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: '[table-header]',

@@ -76,10 +76,10 @@ import {
   UserConstraint,
 } from '@lumeer/data-filters';
 import {Configuration} from '../../../../../environments/configuration-type';
-import {ViewSettings} from '../../../../core/store/views/view';
 import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
 import {queryResourcesAreSame} from '../../../../core/model/query-attribute';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 
 export interface GanttTaskMetadata {
   dataResource: DataResource;

@@ -33,8 +33,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
-import {BehaviorSubject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
@@ -46,6 +45,17 @@ import {ConstraintType, DataValue, TextDataValue} from '@lumeer/data-filters';
 import {clickedInsideElement} from '../../utils/html-modifier';
 import {defaultTextEditorBubbleOptions} from '../../modal/text-editor/text-editor.utils';
 import {animateOpacityEnterLeave} from '../../animations';
+import {ModalData} from '../../../core/model/modal-data';
+import {AppState} from '../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {ViewSettingsAction} from '../../../core/store/view-settings/view-settings.action';
+import {ModalSettings} from '../../../core/store/view-settings/view-settings';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {viewSettingsIdByWorkspace} from '../../../core/store/view-settings/view-settings.util';
+import {selectViewSettingsById} from '../../../core/store/view-settings/view-settings.state';
+import {map} from 'rxjs/operators';
+
+const modalKey = 'rich-text';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -75,6 +85,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   @Input()
   public fontColor: string;
+
+  @Input()
+  public workspace: Workspace;
 
   @Output()
   public valueChange = new EventEmitter<DataValue>();
@@ -110,10 +123,16 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private pasteValueAfterEditorCreation: boolean;
 
   public mouseEntered$ = new BehaviorSubject(false);
+  public modalData$: Observable<ModalData>;
 
   public readonly modules = defaultTextEditorBubbleOptions;
 
-  constructor(private modalService: DataInputModalService, private renderer: Renderer2, private element: ElementRef) {}
+  constructor(
+    private modalService: DataInputModalService,
+    private renderer: Renderer2,
+    private element: ElementRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     let valueSet = false;
@@ -128,6 +147,12 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     }
     if (!valueSet && changes.value && this.value) {
       this.initValue();
+    }
+    if (changes.workspace) {
+      this.modalData$ = this.store$.pipe(
+        select(selectViewSettingsById(viewSettingsIdByWorkspace(this.workspace))),
+        map(settings => settings?.modals?.settings?.find(s => s.key === modalKey)?.data)
+      );
     }
     this.refreshBackgroundClass(this.value);
   }
@@ -319,6 +344,15 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   @HostListener('mouseleave')
   public onMouseLeave() {
     this.mouseEntered$.next(false);
+  }
+
+  public onModalDataChange(data: ModalData) {
+    const modal: ModalSettings = {
+      key: modalKey,
+      data,
+    };
+    const settingsId = viewSettingsIdByWorkspace(this.workspace);
+    this.store$.dispatch(new ViewSettingsAction.SetModal({settingsId, modal}));
   }
 }
 
