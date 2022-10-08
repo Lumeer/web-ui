@@ -20,11 +20,8 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewContainerRef,
   Renderer2,
-  AfterViewInit,
   ViewChild,
-  TemplateRef,
   OnInit,
   Input,
   OnChanges,
@@ -33,7 +30,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import {GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
-import {Portal, TemplatePortal} from '@angular/cdk/portal';
+import {TemplatePortal} from '@angular/cdk/portal';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {convertRemToPixels} from '../../utils/html-modifier';
@@ -48,7 +45,7 @@ const initialMargin = 3;
   styleUrls: ['./fullscreen-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterViewInit {
+export class FullscreenDropdownComponent implements OnInit, OnChanges {
   @Input()
   public data: ModalData;
 
@@ -65,13 +62,12 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterView
   public minSize: number;
 
   @ViewChild('dropdown')
-  public dropdown: TemplateRef<any>;
+  public portal: TemplatePortal;
 
   @Output()
   public dataChange = new EventEmitter<ModalData>();
 
   private overlayRef: OverlayRef;
-  private portal: Portal<any>;
 
   private initialBoundingRect: DOMRect;
   private initialResizePosition: {x: number; y: number};
@@ -85,7 +81,7 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterView
     y: convertRemToPixels(initialMargin),
   });
 
-  constructor(private overlay: Overlay, private viewContainer: ViewContainerRef, private renderer: Renderer2) {}
+  constructor(private overlay: Overlay, private renderer: Renderer2) {}
 
   public ngOnInit() {
     this.currentWidth = this.currentWidth || this.initialWidth();
@@ -101,10 +97,6 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, AfterView
         this.resizePosition$.next({x: this.data.x, y: this.data.y});
       }
     }
-  }
-
-  public ngAfterViewInit() {
-    this.portal = new TemplatePortal(this.dropdown, this.viewContainer);
   }
 
   public open() {
