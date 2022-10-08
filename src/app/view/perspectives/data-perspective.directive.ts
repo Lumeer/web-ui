@@ -193,7 +193,7 @@ export abstract class DataPerspectiveDirective<T>
     this.permissions$ = this.currentView$.pipe(
       switchMap(view => this.store$.pipe(select(selectResourcesPermissionsByView(view))))
     );
-    this.workspace$ = this.currentView$.pipe(map(view => ({viewId: view?.id})));
+    this.workspace$ = this.currentView$.pipe(map(view => ({viewId: view?.id, viewCode: view?.code})));
     this.canManageConfig$ = this.currentView$.pipe(
       switchMap(view => this.store$.pipe(select(selectCanManageViewConfig(view))))
     );

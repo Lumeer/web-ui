@@ -39,6 +39,7 @@ import {distinctUntilChanged, throttleTime} from 'rxjs/operators';
 import {ConstraintData} from '@lumeer/data-filters';
 import {User} from '../../../../../../core/store/users/user';
 import {ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'kanban-column',
@@ -66,7 +67,7 @@ export class KanbanColumnComponent implements OnInit {
   public query: Query;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Input()
   public currentUser: User;

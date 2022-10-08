@@ -25,7 +25,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
   name: 'viewWorkspace',
 })
 export class ViewWorkspacePipe implements PipeTransform {
-  public transform(view: View): Workspace {
-    return view && {viewId: view.id, viewCode: view.code};
+  public transform(view: View, workspace?: Workspace): Workspace {
+    return view && {...workspace, viewId: view.id, viewCode: view.code};
   }
 }

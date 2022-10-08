@@ -13,7 +13,7 @@
       *ngIf="!readonly || (mouseEntered$ | async)"
       [class.always-visible]="!readonly"
       (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
-      (click)="openTextEditor($event); dropdown.toggle()">
+      (click)="openTextEditor($event)">
   <i class="fa fa-expand-alt"></i>
 </span>
 
@@ -33,11 +33,12 @@
               (onContentChanged)="contentChanged($event)">
 </quill-editor>
 
-<rich-text-dropdown #dropdown
-                    [modalData]="modalData$ | async"
+<rich-text-dropdown [modalData]="modalData$ | async"
                     [content]="text"
                     [readonly]="readonly && !editableInReadonly"
                     [minLength]="value?.config?.minLength"
                     [maxLength]="value?.config?.maxLength"
+                    (save)="onSave($event)"
+                    (cancel)="onCancel()"
                     (dataChange)="onModalDataChange($event)">
 </rich-text-dropdown>

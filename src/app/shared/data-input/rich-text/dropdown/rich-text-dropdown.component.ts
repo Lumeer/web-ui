@@ -22,6 +22,8 @@ import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {defaultTextEditorOptions} from '../../../modal/text-editor/text-editor.utils';
 import {FullscreenDropdownDirective} from '../../../dropdown/fullscreen/fullscreen-dropdown.directive';
 import {ModalData} from '../../../../core/model/modal-data';
+import {isMacOS} from '../../../utils/system.utils';
+import {textContainsOnlyBrTags} from '../../../utils/string.utils';
 
 @Component({
   selector: 'rich-text-dropdown',
@@ -46,13 +48,21 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
   public minLength: number;
 
   @Output()
+  public save = new EventEmitter<string>();
+
+  @Output()
+  public cancel = new EventEmitter();
+
+  @Output()
   public dataChange = new EventEmitter<ModalData>();
 
   @ViewChild(QuillEditorComponent)
   public quillEditorComponent: QuillEditorComponent;
 
-  public valid = true;
   public readonly defaultOptions = defaultTextEditorOptions;
+  public readonly macOS = isMacOS();
+
+  public valid = true;
 
   public contentChanged(event: ContentChange) {
     this.checkValid(event.text);
@@ -80,5 +90,26 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
       editor.setSelection({index: Number.MAX_SAFE_INTEGER, length: 1});
       editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
     }, 200);
+  }
+
+  public onCancel() {
+    this.dropdown?.close();
+    this.cancel.emit();
+  }
+
+  public onSave() {
+    this.dropdown?.close();
+    this.save.emit(this.getSaveContent());
+  }
+
+  private getSaveContent(): string {
+    return textContainsOnlyBrTags(this.content) ? null : this.content;
+  }
+
+  public onEditorMouseDown(event: MouseEvent) {
+    const target = <HTMLElement>event.target;
+    if (!target?.classList.contains('ql-toolbar')) {
+      event.stopPropagation();
+    }
   }
 }

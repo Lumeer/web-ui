@@ -182,7 +182,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public editedValue: DataValue;
   public attribute: Attribute;
   public dataValue: DataValue;
-  public workspace: Workspace;
 
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
@@ -273,9 +272,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       changes.linkAllowedPermissions
     ) {
       this.checkIsEditable();
-    }
-    if (changes.view) {
-      this.workspace = this.currentWorkspace();
     }
   }
 

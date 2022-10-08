@@ -57,6 +57,7 @@ import {selectConstraintData} from '../../../../../../../core/store/constraint-d
 import {mergeAttributeOverride} from '../../../../../../../shared/utils/attribute.utils';
 import {DataInputSaveAction} from '../../../../../../../shared/data-input/data-input-save-action';
 import {AttributesSettings} from '../../../../../../../core/store/view-settings/view-settings';
+import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'form-view-cell',
@@ -87,7 +88,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public editing: boolean;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Input()
   public hintsOrigin: ElementRef | HTMLElement;

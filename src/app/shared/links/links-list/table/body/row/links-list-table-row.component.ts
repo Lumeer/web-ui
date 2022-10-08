@@ -48,6 +48,7 @@ import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {isAttributeEditable} from '../../../../../utils/attribute.utils';
 import {animateOpacityEnterLeave} from '../../../../../animations';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -67,7 +68,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public row: LinkRow;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Input()
   public linkPermissions: DataResourcePermissions;

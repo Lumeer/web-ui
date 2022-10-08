@@ -87,9 +87,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public query: Query;
 
   @Input()
-  public viewId: string;
-
-  @Input()
   public currentUser: User;
 
   @Input()

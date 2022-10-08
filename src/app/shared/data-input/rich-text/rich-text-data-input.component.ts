@@ -54,6 +54,9 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {viewSettingsIdByWorkspace} from '../../../core/store/view-settings/view-settings.util';
 import {selectViewSettingsById} from '../../../core/store/view-settings/view-settings.state';
 import {map} from 'rxjs/operators';
+import {RichTextDropdownComponent} from './dropdown/rich-text-dropdown.component';
+import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 const modalKey = 'rich-text';
 
@@ -110,6 +113,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   @ViewChild(QuillEditorComponent)
   public textEditor: QuillEditorComponent;
 
+  @ViewChild(RichTextDropdownComponent)
+  public dropdown: RichTextDropdownComponent;
+
   public readonly inputClass = constraintTypeClass(ConstraintType.Text);
 
   public text = '';
@@ -131,7 +137,8 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     private modalService: DataInputModalService,
     private renderer: Renderer2,
     private element: ElementRef,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private deviceDetector: DeviceDetectorService
   ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -202,24 +209,37 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     event && preventEvent(event);
     this.preventSaveAndBlur();
 
-    const content = this.text;
+    if (this.deviceDetector.isMobile()) {
+      this.openModal();
+    } else {
+      this.dropdown?.open();
+    }
+  }
 
-    // this.modalRef = this.modalService.show(TextEditorModalComponent, {
-    //   keyboard: true,
-    //   backdrop: 'static',
-    //   class: 'modal-xxl modal-h-100',
-    //   initialState: {
-    //     readonly: this.readonly && !this.editableInReadonly,
-    //     content,
-    //     minLength: this.value?.config?.minLength,
-    //     maxLength: this.value?.config?.maxLength,
-    //   },
-    // });
-    //
-    // this.modalSubscription.add(
-    //   this.modalRef.content.onSave$.subscribe(value => this.saveValue(value, DataInputSaveAction.Button))
-    // );
-    // this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit()));
+  private openModal() {
+    const content = this.text;
+    this.modalRef = this.modalService.show(TextEditorModalComponent, {
+      keyboard: true,
+      backdrop: 'static',
+      class: 'modal-xxl modal-h-100',
+      initialState: {
+        readonly: this.readonly && !this.editableInReadonly,
+        content,
+        minLength: this.value?.config?.minLength,
+        maxLength: this.value?.config?.maxLength,
+      },
+    });
+
+    this.modalSubscription.add(this.modalRef.content.onSave$.subscribe(value => this.onSave(value)));
+    this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.onCancel()));
+  }
+
+  public onSave(value: string) {
+    this.saveValue(value, DataInputSaveAction.Button);
+  }
+
+  public onCancel() {
+    this.cancel.emit();
   }
 
   public ngOnDestroy() {

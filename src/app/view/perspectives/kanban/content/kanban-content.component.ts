@@ -247,8 +247,4 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   public onColumnsChanged(data: {columns: KanbanDataColumn[]; otherColumn: KanbanDataColumn}) {
     this.data$.next({...this.data$.value, ...data});
   }
-
-  private currentWorkspace(): Workspace {
-    return {viewId: this.view?.id};
-  }
 }

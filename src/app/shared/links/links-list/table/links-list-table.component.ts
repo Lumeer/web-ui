@@ -66,6 +66,7 @@ import {AttributesResourceType} from '../../../../core/model/resource';
 import {User} from '../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
 import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 
 const columnWidth = 100;
 
@@ -92,7 +93,7 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
   public query: Query;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Input()
   public collectionPermissions: AllowedPermissions;

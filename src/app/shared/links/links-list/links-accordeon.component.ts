@@ -34,6 +34,7 @@ import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'links-accordeon',
@@ -67,7 +68,7 @@ export class LinksAccordeonComponent implements OnInit {
   public attributesSettings: AttributesSettings;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();

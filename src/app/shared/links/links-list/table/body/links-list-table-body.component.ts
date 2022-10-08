@@ -48,6 +48,7 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {Action} from '@ngrx/store';
 import {User} from '../../../../../core/store/users/user';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: '[links-list-table-body]',
@@ -83,7 +84,7 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   public document: DocumentModel;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Input()
   public preventEventBubble: boolean;

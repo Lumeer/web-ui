@@ -14,13 +14,24 @@
       placeholder="Insert text here..."
       i18n-placeholder="@@textEditor.insertTextPlaceholder"
       [modules]="defaultOptions"
+      (mousedown)="onEditorMouseDown($event)"
       (onEditorCreated)="focusEditor($event)"
       (onContentChanged)="contentChanged($event)">
     </quill-editor>
 
-    <div *ngIf="!valid" class="text-danger px-2 py-1 small" id="invalid-warning">
+    <div *ngIf="!valid" class="text-danger px-2 py-1 small errors-content" id="invalid-warning">
       <span *ngIf="minLength" i18n="textEditor.minLength">Minimal text length must be {{minLength}} characters.&nbsp;</span>
       <span *ngIf="maxLength" i18n="textEditor.maxLength">Maximal text length can be {{maxLength}} characters.</span>
+    </div>
+
+    <div class="footer-content p-3">
+      <button class="btn btn-outline-primary text-nowrap float-start" (click)="onCancel()">
+        <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+      </button>
+
+      <button class="btn btn-primary text-nowrap float-end" (click)="onSave()">
+        <i class="far fa-check"></i>&nbsp;<span i18n="@@button.save">Save</span>&nbsp;<small class="text-muted small">{{macOS ? '⌘ ⏎' : 'Ctrl + ⏎'}}</small>
+      </button>
     </div>
   </div>
 </fullscreen-dropdown>

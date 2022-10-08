@@ -54,6 +54,7 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {User} from '../../core/store/users/user';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 export interface PostItTag {
   title: string;
@@ -82,7 +83,7 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Input()
   public tag: PostItTag;
@@ -155,8 +156,8 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
     if (changes.resource || changes.dataResource) {
       this.unusedAttributes = filterUnusedAttributes(this.resource?.attributes, this.dataResource?.data);
     }
-    if (changes.viewId) {
-      this.dataRowService.setWorkspace({viewId: this.viewId});
+    if (changes.workspace) {
+      this.dataRowService.setWorkspace(this.workspace);
     }
   }
 
@@ -215,6 +216,6 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public onDetail() {
-    this.modalService.showDataResourceDetail(this.dataResource, this.resource, this.viewId);
+    this.modalService.showDataResourceDetail(this.dataResource, this.resource, this.workspace?.viewId);
   }
 }

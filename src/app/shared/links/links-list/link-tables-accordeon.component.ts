@@ -46,6 +46,7 @@ import {selectLinkInstanceById} from '../../../core/store/link-instances/link-in
 import {ConstraintData} from '@lumeer/data-filters';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'link-tables-accordeon',
@@ -76,7 +77,7 @@ export class LinkTablesAccordeonComponent implements OnInit, OnChanges {
   public attributesSettings: AttributesSettings;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
