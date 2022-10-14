@@ -81,10 +81,13 @@ export class LinkInputDropdownComponent implements OnInit, AfterViewInit {
   public invalid$: Observable<boolean>;
 
   constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      link: ['', linkValidator()],
-      title: '',
-    });
+    this.form = this.fb.group(
+      {
+        link: '',
+        title: '',
+      },
+      {validators: linkValidator}
+    );
   }
 
   public get linkControl(): AbstractControl {
@@ -188,11 +191,17 @@ export class LinkInputDropdownComponent implements OnInit, AfterViewInit {
 }
 
 function linkValidator(): ValidatorFn {
-  return (form: FormControl): ValidationErrors | null => {
-    if (isUrlValid(form.value)) {
+  return (form: FormGroup): ValidationErrors | null => {
+    const link = form.controls.link?.value || '';
+    const title = form.controls.title?.value?.trim() || '';
+    if (!link && !title) {
       return null;
     }
 
-    return {urlInvalid: true};
+    if (!isUrlValid(form.value)) {
+      return {urlInvalid: true};
+    }
+
+    return null;
   };
 }

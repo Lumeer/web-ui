@@ -171,6 +171,7 @@ import {UserDataInputCompactComponent} from './compact/user/user-data-input-comp
     ActionDataInputComponent,
     ViewDataInputComponent,
     AttributeLockFiltersStatsComponent,
+    LinkDataInputComponent,
   ],
 })
 export class DataInputModule {}

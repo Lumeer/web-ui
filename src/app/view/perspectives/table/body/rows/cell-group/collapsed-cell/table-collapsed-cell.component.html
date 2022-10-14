@@ -1,6 +1,6 @@
 <table-collapsed-cell-menu (expand)="onExpand()"></table-collapsed-cell-menu>
 
-<div *ngIf="{stringValues: stringValues$ | async, constraint: constraint$ | async} as data"
+<div *ngIf="{stringValues: stringValues$ | async, constraint: constraint$ | async, titleValue: titleValue$ | async} as data"
      [class.affected]="affected$ | async"
      [class.selected]="selected"
      [style.cursor]="'default'"
@@ -32,7 +32,7 @@
 
     <user-data-input *ngSwitchCase="constraintType.User"
                      [readonly]="true"
-                     [title]="data.stringValues | join"
+                     [title]="data.titleValue"
                      [commonConfiguration]="userConfiguration"
                      [value]="values | createCombinedUserValue:data.constraint:constraintData"
                      class="h-100">
@@ -41,10 +41,17 @@
 
     <select-data-input *ngSwitchCase="constraintType.Select"
                        [readonly]="true"
-                       [title]="data.stringValues | join"
+                       [title]="data.titleValue"
                        [value]="values | createCombinedSelectValue:data.constraint"
                        class="h-100">
     </select-data-input>
+
+    <link-collapsed-cell *ngSwitchCase="constraintType.Link"
+                         [values]="values"
+                         [title]="data.titleValue"
+                         [constraint]="data.constraint"
+                         class="h-100">
+    </link-collapsed-cell>
 
     <div *ngSwitchCase="constraintType.Text"
          class="h-100 d-flex align-items-center px-1"
@@ -67,7 +74,7 @@
   </ng-container>
 
   <ng-template #defaultCollapsedCell>
-    <div [title]="data.stringValues | join"
+    <div [title]="data.titleValue"
          class="h-100 px-1 d-flex align-items-center"
          tabindex="0">
       {{ (data.stringValues | join) || '&nbsp;' }}

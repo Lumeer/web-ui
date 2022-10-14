@@ -17,37 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {BooleanConstraint} from '@lumeer/data-filters';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {LinkConstraint, LinkDataValue} from '@lumeer/data-filters';
 
 @Component({
-  selector: 'boolean-collapsed-cell',
-  templateUrl: './boolean-collapsed-cell.component.html',
+  selector: 'link-collapsed-cell',
+  templateUrl: './link-collapsed-cell.component.html',
+  styleUrls: ['./link-collapsed-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooleanCollapsedCellComponent implements OnChanges {
+export class LinkCollapsedCellComponent implements OnChanges {
   @Input()
-  public constraint: BooleanConstraint;
+  public constraint: LinkConstraint;
 
   @Input()
   public values: any[];
 
-  public booleanValue: string;
+  public dataValues: LinkDataValue[] = [];
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.values && this.values) {
-      this.booleanValue = createBooleanValue(this.values);
+    if ((changes.values || changes.constraint) && this.constraint) {
+      this.dataValues = (this.values || [])
+        .filter(value => !!value)
+        .map(value => this.constraint?.createDataValue(value));
     }
   }
-}
-
-function createBooleanValue(values: any[]): string {
-  if (values.every(value => !!value)) {
-    return 'true';
-  }
-
-  if (values.every(value => !value)) {
-    return 'false';
-  }
-  return 'indeterminate';
 }
