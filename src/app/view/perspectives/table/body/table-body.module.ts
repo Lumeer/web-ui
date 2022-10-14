@@ -51,6 +51,7 @@ import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/file
 import {CreateCombinedSelectValuePipe} from './rows/cell-group/collapsed-cell/select/create-combined-select-value.pipe';
 import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user/create-combined-user-value.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {LinkCollapsedCellComponent} from './rows/cell-group/collapsed-cell/link/link-collapsed-cell.component';
 
 @NgModule({
   imports: [
@@ -88,6 +89,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     FilesCollapsedCellComponent,
     CreateCombinedSelectValuePipe,
     CreateCombinedUserValuePipe,
+    LinkCollapsedCellComponent,
   ],
   exports: [TableBodyComponent],
 })

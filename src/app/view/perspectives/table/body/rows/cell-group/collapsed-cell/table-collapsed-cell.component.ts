@@ -74,6 +74,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   public values: any[];
   public stringValues$: Observable<string[]>;
+  public titleValue$: Observable<string>;
 
   public readonly userConfiguration: UserDataInputConfiguration = {allowCenterOnlyIcon: true};
   public readonly actionConfiguration: ActionDataInputConfiguration = {center: true};
@@ -102,7 +103,8 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     if (changes.column || changes.documents || changes.linkInstances) {
       this.constraint$ = this.bindConstraint();
       this.values = this.getValues();
-      this.stringValues$ = this.bindStringValue(this.values, this.constraint$);
+      this.stringValues$ = this.bindStringValue$(this.values, this.constraint$);
+      this.titleValue$ = this.bindTitleValue$(this.values, this.constraint$);
     }
   }
 
@@ -138,12 +140,23 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     );
   }
 
-  private bindStringValue(values: any[], constraintObservable$: Observable<Constraint>): Observable<string[]> {
+  private bindStringValue$(values: any[], constraintObservable$: Observable<Constraint>): Observable<string[]> {
     return constraintObservable$.pipe(
       map(constraint =>
         values
           .map(value => (constraint || new UnknownConstraint()).createDataValue(value, this.constraintData).format())
           .filter(value => !!value)
+      )
+    );
+  }
+
+  private bindTitleValue$(values: any[], constraintObservable$: Observable<Constraint>): Observable<string> {
+    return constraintObservable$.pipe(
+      map(constraint =>
+        values
+          .map(value => (constraint || new UnknownConstraint()).createDataValue(value, this.constraintData).title())
+          .filter(value => !!value)
+          .join(', ')
       )
     );
   }

@@ -87,7 +87,7 @@
     </td>
   </tr>
   <tr *ngIf="!resource.attributes?.length">
-    <td colspan="4" class="align-middle text-center" i18n="@@collection.tab.attributes.none">There are no attributes
+    <td [colSpan]="hasDefaultAttribute ? 4 : 3" class="align-middle text-center" i18n="@@collection.tab.attributes.none">There are no attributes
       yet. Create one!
     </td>
   </tr>

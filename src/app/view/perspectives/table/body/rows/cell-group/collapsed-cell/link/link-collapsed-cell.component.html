@@ -1,0 +1,8 @@
+<ng-container *ngFor="let dataValue of dataValues; let last = last">
+  <link-data-input class="d-inline-block w-auto"
+                   [readonly]="true"
+                   [focus]="false"
+                   [value]="dataValue">
+  </link-data-input>
+  <div *ngIf="!last">,&nbsp;</div>
+</ng-container>
