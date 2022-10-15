@@ -134,9 +134,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public readonly modules = defaultTextEditorBubbleOptions;
 
   constructor(
+    public element: ElementRef,
     private modalService: DataInputModalService,
     private renderer: Renderer2,
-    private element: ElementRef,
     private store$: Store<AppState>,
     private deviceDetector: DeviceDetectorService
   ) {}

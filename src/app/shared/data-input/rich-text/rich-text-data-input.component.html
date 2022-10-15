@@ -34,6 +34,7 @@
 </quill-editor>
 
 <rich-text-dropdown [modalData]="modalData$ | async"
+                    [origin]="element"
                     [content]="text"
                     [readonly]="readonly && !editableInReadonly"
                     [minLength]="value?.config?.minLength"

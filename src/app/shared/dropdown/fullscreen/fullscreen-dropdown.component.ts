@@ -28,11 +28,13 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
+  OnDestroy,
+  ElementRef,
 } from '@angular/core';
 import {GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, interval, Observable, Subscription} from 'rxjs';
 import {convertRemToPixels} from '../../utils/html-modifier';
 import {ModalData} from '../../../core/model/modal-data';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
@@ -46,9 +48,12 @@ const initialMargin = 3;
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CdkDrag],
 })
-export class FullscreenDropdownComponent implements OnInit, OnChanges {
+export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public data: ModalData;
+
+  @Input()
+  public origin: ElementRef | HTMLElement;
 
   @Input()
   public showBackdrop = true;
@@ -72,6 +77,7 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges {
 
   private initialBoundingRect: DOMRect;
   private initialResizePosition: {x: number; y: number};
+  private positionSubscription: Subscription;
 
   public currentWidth: number;
   public currentHeight: number;
@@ -115,6 +121,18 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges {
 
     this.renderer.setStyle(this.overlayRef.overlayElement, 'height', `${this.currentHeight}vh`);
     this.renderer.setStyle(this.overlayRef.overlayElement, 'width', `${this.currentWidth}vw`);
+
+    this.subscribeOrigin();
+  }
+
+  private subscribeOrigin() {
+    this.positionSubscription?.unsubscribe();
+    this.positionSubscription = interval(500).subscribe(() => {
+      const element = (<ElementRef>this.origin)?.nativeElement || (this.origin as HTMLElement);
+      if (!document.contains(element)) {
+        this.close();
+      }
+    });
   }
 
   private createOverlayConfig(): OverlayConfig {
@@ -282,5 +300,10 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges {
 
   private currentMaxYOffsetPx(): number {
     return window.innerHeight - (this.currentHeight / 100) * window.innerHeight;
+  }
+
+  public ngOnDestroy() {
+    this.close();
+    this.positionSubscription?.unsubscribe();
   }
 }
