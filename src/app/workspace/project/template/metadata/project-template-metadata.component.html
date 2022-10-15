@@ -109,6 +109,24 @@
     <div class="row m-0 mt-2">
 
       <label class="col-sm-3 px-0 col-lg-2 col-form-label"
+             i18n="@@projects.tab.template.metadata.timer">Timer</label>
+
+      <div class="col-sm-9 col-lg-10 p-0 d-flex align-items-center">
+        <div class="d-flex flex-row flex-nowrap align-items-center">
+          <label class="switch" for="allowRunTimer">
+            <input type="checkbox" formControlName="allowRunTimer" id="allowRunTimer" #allowRunTimer>
+            <span class="slider round" (click)="$event.stopPropagation()"></span>
+          </label>
+          <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.allowRunTimer"
+                (click)="allowRunTimer.click()">Allow to run the timer in tables and link types</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row m-0 mt-2">
+
+      <label class="col-sm-3 px-0 col-lg-2 col-form-label"
              i18n="@@projects.tab.template.metadata.topPanel">Top panel</label>
 
       <div class="col-sm-9 col-lg-10 p-0 d-flex align-items-center">

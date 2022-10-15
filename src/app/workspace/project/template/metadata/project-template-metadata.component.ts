@@ -119,6 +119,7 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnChanges, OnDe
           defaultView: this.project?.templateMetadata?.defaultView,
           relativeDate: this.project?.templateMetadata?.relativeDate,
           editable: this.fb.control(this.project?.templateMetadata?.editable, {updateOn: 'change'}),
+          allowRunTimer: this.fb.control(this.project?.templateMetadata?.editable, {updateOn: 'change'}),
           showTopPanel: this.fb.control(this.project?.templateMetadata?.showTopPanel, {updateOn: 'change'}),
           tags: this.fb.array(this.project?.templateMetadata?.tags || []),
         },

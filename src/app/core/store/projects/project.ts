@@ -32,6 +32,7 @@ export interface TemplateMetadata {
   defaultView?: string;
   allowedDomains?: string;
   relativeDate?: Date;
+  allowRunTimer?: boolean;
   editable?: boolean;
   tags?: string[];
   showTopPanel?: boolean;
