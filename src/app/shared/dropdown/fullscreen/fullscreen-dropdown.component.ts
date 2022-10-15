@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {convertRemToPixels} from '../../utils/html-modifier';
 import {ModalData} from '../../../core/model/modal-data';
@@ -44,6 +44,7 @@ const initialMargin = 3;
   templateUrl: './fullscreen-dropdown.component.html',
   styleUrls: ['./fullscreen-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [CdkDrag],
 })
 export class FullscreenDropdownComponent implements OnInit, OnChanges {
   @Input()
