@@ -33,6 +33,7 @@ import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
 import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-options.pipe';
 import {FullscreenDropdownComponent} from './fullscreen/fullscreen-dropdown.component';
 import {PortalModule} from '@angular/cdk/portal';
+import {FsCdkDragDirective} from './fullscreen/fs-cdk-drag.directive';
 
 @NgModule({
   imports: [CommonModule, PresenterModule, GravatarModule, PipesModule, DragDropModule, PortalModule],
@@ -46,6 +47,7 @@ import {PortalModule} from '@angular/cdk/portal';
     DropdownOptionsValuesPipe,
     SelectItemsDropdownOptionsPipe,
     FullscreenDropdownComponent,
+    FsCdkDragDirective,
   ],
   exports: [
     DropdownComponent,
