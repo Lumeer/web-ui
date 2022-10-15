@@ -802,7 +802,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private currentWorkspace(): Workspace {
-    return {viewId: this.view?.id};
+    return {viewId: this.view?.id, viewCode: this.view?.code};
   }
 
   private createLinkTypeAttribute(attributeName: string, onSuccess: (attribute: Attribute) => void) {

@@ -30,7 +30,7 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
-import {AttributeSortType, View, ViewSettings} from '../../../../../../core/store/views/view';
+import {View} from '../../../../../../core/store/views/view';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
@@ -47,6 +47,7 @@ import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 @Injectable()
 export class WorkflowTablesService {

@@ -32,7 +32,7 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {DataSettings, PerspectiveConfig, View, ViewConfig, ViewSettings} from './view';
+import {PerspectiveConfig, View, ViewConfig} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
@@ -54,6 +54,8 @@ import {SearchConfig} from '../searches/search';
 import {AllowedPermissions} from '../../model/allowed-permissions';
 import {formViewConfigLinkQueries} from '../../../view/perspectives/form/form-utils';
 import {FormConfig} from '../form/form-model';
+import {DataSettings, ModalsSettings, ViewSettings} from '../view-settings/view-settings';
+import {areArraysSame} from '../../../shared/utils/array.utils';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -201,7 +203,8 @@ export function viewSettingsChanged(
       currentSettings?.attributes,
       collectionsMap,
       linkTypesMap
-    )
+    ) ||
+    viewModalSettingsChanged(previousSettings?.modals, currentSettings?.modals)
   );
 }
 
@@ -211,6 +214,10 @@ export function viewSettingsSortChanged(previousSettings: ViewSettings, currentS
 
 export function viewDataSettingsChanged(previousSettings: DataSettings, currentSettings: DataSettings): boolean {
   return !!previousSettings?.includeSubItems !== !!currentSettings?.includeSubItems;
+}
+
+export function viewModalSettingsChanged(previousSettings: ModalsSettings, currentSettings: ModalsSettings): boolean {
+  return !areArraysSame(previousSettings?.settings, currentSettings?.settings);
 }
 
 export function createSaveViewSettings(

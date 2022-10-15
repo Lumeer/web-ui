@@ -27,7 +27,8 @@ import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
 import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
 import {FormCoordinates} from '../model/form-coordinates';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {AttributesSettings} from '../../../../../../core/store/views/view';
+import {AttributesSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'form-view-row',
@@ -55,7 +56,7 @@ export class FormViewRowComponent implements OnChanges {
   public documentId: string;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Input()
   public documentEditable: boolean;

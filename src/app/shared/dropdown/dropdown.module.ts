@@ -19,6 +19,7 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {DropdownOptionDirective} from './options/dropdown-option.directive';
 import {DropdownComponent} from './dropdown.component';
 import {OptionsDropdownComponent} from './options/options-dropdown.component';
@@ -30,9 +31,12 @@ import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropd
 import {GroupDropdownOptionsPipe} from './pipes/group-dropdown-options.pipe';
 import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
 import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-options.pipe';
+import {FullscreenDropdownComponent} from './fullscreen/fullscreen-dropdown.component';
+import {PortalModule} from '@angular/cdk/portal';
+import {FsCdkDragDirective} from './fullscreen/fs-cdk-drag.directive';
 
 @NgModule({
-  imports: [CommonModule, PresenterModule, GravatarModule, PipesModule],
+  imports: [CommonModule, PresenterModule, GravatarModule, PipesModule, DragDropModule, PortalModule],
   declarations: [
     DropdownComponent,
     DropdownOptionDirective,
@@ -42,6 +46,8 @@ import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-opti
     GroupDropdownOptionsPipe,
     DropdownOptionsValuesPipe,
     SelectItemsDropdownOptionsPipe,
+    FullscreenDropdownComponent,
+    FsCdkDragDirective,
   ],
   exports: [
     DropdownComponent,
@@ -51,6 +57,7 @@ import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-opti
     ReverseArrayByDropdownPositionPipe,
     DropdownOptionsValuesPipe,
     SelectItemsDropdownOptionsPipe,
+    FullscreenDropdownComponent,
   ],
 })
 export class DropdownModule {}

@@ -47,9 +47,9 @@ import {ResourcesPermissions} from '../../../../../core/model/allowed-permission
 import {DataResource} from '../../../../../core/model/resource';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {User} from '../../../../../core/store/users/user';
-import {ViewSettings} from '../../../../../core/store/views/view';
 import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration';
 import {CreateDataResourceService} from '../../../../../core/service/create-data-resource.service';
+import {ViewSettings} from '../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'kanban-columns',
@@ -85,9 +85,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public query: Query;
-
-  @Input()
-  public viewId: string;
 
   @Input()
   public currentUser: User;

@@ -97,3 +97,14 @@ export function createUniqueNameWithSuffix(name: string, otherNames: string[]): 
 
   return currentNamePrefix + ` (${index})`;
 }
+
+export function textContainsOnlyBrTags(text: string): boolean {
+  if (!text) {
+    return false;
+  }
+
+  return !text
+    .replace(/<br>/g, '')
+    .replace(/<p>\s*?<\/p>/g, '')
+    .trim();
+}

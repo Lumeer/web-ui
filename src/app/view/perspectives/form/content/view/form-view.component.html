@@ -26,7 +26,7 @@
                        [section]="section"
                        [collection]="data.collection"
                        [documentId]="data.document?.id"
-                       [viewId]="view?.id"
+                       [workspace]="view | viewWorkspace"
                        [originalDocument]="data.originalDocument"
                        [attributesSettings]="attributesSettings"
                        [constraintData]="constraintData"

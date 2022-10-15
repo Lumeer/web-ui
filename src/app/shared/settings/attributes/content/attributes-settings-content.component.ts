@@ -22,10 +22,10 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {AttributesSettings, ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {AttributesResourceData} from '../attributes-settings-configuration';
 import {composeViewSettingsLinkTypeCollectionId} from '../../settings.util';
+import {AttributesSettings, ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'attributes-settings-content',

@@ -81,7 +81,7 @@ export class ActionDataInputComponent implements OnChanges {
 
   @Input()
   public config: ActionConstraintConfig;
-
+  w;
   @Input()
   public readonly: boolean;
 

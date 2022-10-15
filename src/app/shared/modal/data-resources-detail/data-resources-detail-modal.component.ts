@@ -39,9 +39,9 @@ import {groupLinkInstancesByLinkTypes} from '../../../core/store/link-instances/
 import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../animations';
 import {Query} from '../../../core/store/navigation/query/query';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 import {selectViewById} from '../../../core/store/views/views.state';
+import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   templateUrl: './data-resources-detail-modal.component.html',

@@ -1,0 +1,34 @@
+@import '~src/styles/variables';
+
+::ng-deep {
+  .ql-container.ql-snow,
+  .ql-toolbar {
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid $gray-200 !important;
+  }
+
+  .ql-toolbar {
+    cursor: move;
+  }
+}
+
+.card {
+  display: grid;
+  grid-template-rows: 1fr min-content min-content;
+
+  .editor {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+  }
+}
+
+.errors-content {
+  cursor: move;
+}
+
+.footer-content {
+  background: $gray-100;
+  cursor: move;
+}

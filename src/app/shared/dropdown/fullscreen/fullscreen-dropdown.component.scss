@@ -1,0 +1,38 @@
+$resize-size: 8px;
+
+.content-wrapper {
+  position: relative;
+
+  .resize-handle {
+    position: absolute;
+    z-index: 10;
+  }
+
+  .resize-handle-right {
+    width: $resize-size;
+    right: calc(-#{$resize-size} / 2);
+    height: 100%;
+    cursor: col-resize;
+  }
+
+  .resize-handle-top {
+    height: $resize-size;
+    top: calc(-#{$resize-size} / 2);
+    width: 100%;
+    cursor: row-resize;
+  }
+
+  .resize-handle-left {
+    width: $resize-size;
+    left: calc(-#{$resize-size} / 2);
+    height: 100%;
+    cursor: col-resize;
+  }
+
+  .resize-handle-bottom {
+    height: $resize-size;
+    bottom: calc(-#{$resize-size} / 2);
+    width: 100%;
+    cursor: row-resize;
+  }
+}

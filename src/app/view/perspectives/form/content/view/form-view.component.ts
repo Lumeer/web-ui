@@ -40,7 +40,7 @@ import {DataResourceData} from '../../../../../core/model/resource';
 import {distinctUntilChanged, map, take, tap} from 'rxjs/operators';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {AttributesSettings, View} from '../../../../../core/store/views/view';
+import {View} from '../../../../../core/store/views/view';
 import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
 import {
   createDocumentRequestAdditionalData,
@@ -66,6 +66,7 @@ import {CommonAction} from '../../../../../core/store/common/common.action';
 import {FormStateService} from './service/form-state.service';
 import {FormCoordinates} from './model/form-coordinates';
 import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
+import {AttributesSettings} from '../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'form-view',

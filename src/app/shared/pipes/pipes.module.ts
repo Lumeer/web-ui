@@ -115,6 +115,7 @@ import {ResourceAttributeFormattingStylePipe} from './resource-attribute-formatt
 import {AggregationDropdownOptionsPipe} from './aggregation-dropdown-options.pipe';
 import {AggregationTypeIconPipe} from './aggregation-type-icon.pipe';
 import {AggregationTypeNamePipe} from './aggregation-type-name.pipe';
+import {ViewWorkspacePipe} from './view-workspace.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -207,6 +208,7 @@ import {AggregationTypeNamePipe} from './aggregation-type-name.pipe';
     ViewIconPipe,
     ViewColorPipe,
     ViewLinkPipe,
+    ViewWorkspacePipe,
     CanShowAttributeHintsPipe,
     ResourceAttributeFormattingStylePipe,
     AggregationDropdownOptionsPipe,
@@ -305,6 +307,7 @@ import {AggregationTypeNamePipe} from './aggregation-type-name.pipe';
     ViewIconPipe,
     ViewColorPipe,
     ViewLinkPipe,
+    ViewWorkspacePipe,
     CanShowAttributeHintsPipe,
     ResourceAttributeFormattingStylePipe,
     AggregationDropdownOptionsPipe,

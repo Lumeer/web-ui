@@ -164,3 +164,7 @@ export function initForceTouch(element: HTMLElement, callback: (event: MouseEven
 export function isElementActive(element: Element): boolean {
   return element && document.activeElement === element;
 }
+
+export function convertRemToPixels(value: number) {
+  return value * parseFloat(getComputedStyle(document.documentElement).fontSize);
+}

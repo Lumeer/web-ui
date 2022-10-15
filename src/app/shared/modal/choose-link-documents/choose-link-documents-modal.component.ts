@@ -34,8 +34,9 @@ import {selectDocumentsByCollectionAndQuery} from '../../../core/store/common/pe
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResource} from '../../../core/model/resource';
 import {selectViewById} from '../../../core/store/views/views.state';
-import {View, ViewSettings} from '../../../core/store/views/view';
+import {View} from '../../../core/store/views/view';
 import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
+import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   templateUrl: './choose-link-documents-modal.component.html',

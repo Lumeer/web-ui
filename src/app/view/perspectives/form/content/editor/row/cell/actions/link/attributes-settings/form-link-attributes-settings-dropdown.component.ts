@@ -18,13 +18,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {AttributesSettings} from '../../../../../../../../../../core/store/views/view';
 import {LinkType} from '../../../../../../../../../../core/store/link-types/link.type';
 import {AttributesResourceData} from '../../../../../../../../../../shared/settings/attributes/attributes-settings-configuration';
 import {AttributesResourceType} from '../../../../../../../../../../core/model/resource';
 import {Collection} from '../../../../../../../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../../../../../../../core/store/collections/collection.util';
 import {DropdownDirective} from '../../../../../../../../../../shared/dropdown/dropdown.directive';
+import {AttributesSettings} from '../../../../../../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'form-link-attributes-settings-dropdown',

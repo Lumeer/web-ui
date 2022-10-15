@@ -59,7 +59,7 @@ import {
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor, viewCursorsAreSame} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {selectViewDataQuery, selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
-import {View, ViewSettings} from '../../../core/store/views/view';
+import {View} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {createFlatResourcesSettingsQuery, modifyDetailPerspectiveQuery} from '../../../core/store/details/detail.utils';
@@ -68,6 +68,7 @@ import {defaultDetailPerspectiveConfiguration, DetailPerspectiveConfiguration} f
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
+import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'detail-perspective',

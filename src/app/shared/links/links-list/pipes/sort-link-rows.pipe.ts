@@ -21,9 +21,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {LinkRow} from '../model/link-row';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {AttributesSettings} from '../../../../core/store/views/view';
 import {ConstraintData} from '@lumeer/data-filters';
 import {sortDataObjectsByViewSettings} from '../../../utils/data-resource.utils';
+import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Pipe({
   name: 'sortLinkRows',

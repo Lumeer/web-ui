@@ -21,10 +21,10 @@ import {createReducer, on} from '@ngrx/store';
 import * as DetailActions from './detail.actions';
 import {detailsAdapter, DetailsState, initialDetailsState} from './detail.state';
 import {QueryStem} from '../navigation/query/query';
-import {AttributesSettings} from '../views/view';
 import {areQueryStemsEqual} from '../navigation/query/query.helper';
 import {uniqueValues} from '../../../shared/utils/array.utils';
 import {DetailConfig} from './detail';
+import {AttributesSettings} from '../view-settings/view-settings';
 
 export const detailsReducer = createReducer(
   initialDetailsState,

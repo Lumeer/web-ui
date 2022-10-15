@@ -59,8 +59,9 @@ import {normalizeQueryStem} from './query.converter';
 import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
-import {AttributesSettings, ResourceAttributeSettings, View} from '../../views/view';
+import {View} from '../../views/view';
 import {isAttributeVisibleInResourceSettings} from '../../../../shared/utils/attribute.utils';
+import {AttributesSettings, ResourceAttributeSettings} from '../../view-settings/view-settings';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {

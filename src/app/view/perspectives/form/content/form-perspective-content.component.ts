@@ -31,7 +31,7 @@ import {FormConfig} from '../../../../core/store/form/form-model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {AttributesSettings, View} from '../../../../core/store/views/view';
+import {View} from '../../../../core/store/views/view';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {objectChanged} from '../../../../shared/utils/common.utils';
 import {FormPerspectiveConfiguration} from '../../perspective-configuration';
@@ -40,6 +40,7 @@ import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {Observable} from 'rxjs';
 import {ConstraintData} from '@lumeer/data-filters';
+import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'form-perspective-content',

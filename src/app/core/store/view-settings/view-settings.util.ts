@@ -26,5 +26,5 @@ export function viewSettingsIdByView(view: View) {
 }
 
 export function viewSettingsIdByWorkspace(workspace: Workspace) {
-  return workspace.viewCode || DEFAULT_PERSPECTIVE_ID;
+  return workspace?.viewCode || DEFAULT_PERSPECTIVE_ID;
 }

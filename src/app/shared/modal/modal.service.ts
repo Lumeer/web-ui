@@ -33,7 +33,7 @@ import {selectAllCollections, selectCollectionById} from '../../core/store/colle
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
-import {ResourceAttributeSettings, View} from '../../core/store/views/view';
+import {View} from '../../core/store/views/view';
 import {ShareViewModalComponent} from './view-modal/share/share-view-modal.component';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
 import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
@@ -64,6 +64,7 @@ import {ChooseResourceModalComponent} from './choose-resource/choose-resource-mo
 import {ChooseStemModalComponent} from './choose-stem/choose-stem-modal.component';
 import {LimitsService} from '../../core/service/limits.service';
 import {ConditionalFormattingModalComponent} from './attribute/conditional-formatting/conditional-formatting-modal.component';
+import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
 
 type Options = ModalOptions & {initialState: any};
 

@@ -18,8 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, ElementRef, Input, Output, EventEmitter} from '@angular/core';
-import {AttributesSettings, ViewSettings} from '../../../../../core/store/views/view';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
+import {AttributesSettings, ViewSettings} from '../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'detail-settings-button',

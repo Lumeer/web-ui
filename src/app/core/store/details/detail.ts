@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesSettings} from '../views/view';
 import {QueryStem} from '../navigation/query/query';
+import {AttributesSettings} from '../view-settings/view-settings';
 
 export interface Detail {
   id: string;

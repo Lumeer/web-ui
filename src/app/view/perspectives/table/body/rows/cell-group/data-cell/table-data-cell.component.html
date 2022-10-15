@@ -36,6 +36,7 @@
                 [configuration]="configuration"
                 [readonly]="dataInputInfo.readonly"
                 [editableInReadonly]="dataInputInfo.editable"
+                [workspace]="view | viewWorkspace"
                 (valueChange)="onValueChange($event)"
                 (save)="onValueSave($event)"
                 (cancel)="onCancelEditing()"

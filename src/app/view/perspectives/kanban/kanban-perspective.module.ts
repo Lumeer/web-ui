@@ -18,12 +18,13 @@
  */
 
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {KanbanPerspectiveComponent} from './kanban-perspective.component';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
-import {SharedModule} from '../../../shared/shared.module';
 import {KanbanPerspectiveRoutingModule} from './kanban-perspective-routing.module';
 import {KanbanConfigComponent} from './content/config/kanban-config.component';
 import {KanbanColumnsComponent} from './content/columns/kanban-columns.component';
@@ -49,6 +50,12 @@ import {PostItModule} from '../../../shared/post-it/post-it.module';
 import {KanbanAggregationDefinedPipe} from './pipes/kanban-aggregation-defined.pipe';
 import {KanbanContentComponent} from './content/kanban-content.component';
 import {FilterKanbanCardsByPagePipe} from './pipes/filter-kanban-cards-by-page.pipe';
+import {CollapsibleSidebarModule} from '../../../shared/collapsible-sidebar/collapsible-sidebar.module';
+import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
+import {PipesModule} from '../../../shared/pipes/pipes.module';
+import {SliderModule} from '../../../shared/slider/slider.module';
+import {SelectModule} from '../../../shared/select/select.module';
+import {AttributesSettingsModule} from '../../../shared/settings/attributes/attributes-settings.module';
 
 @NgModule({
   declarations: [
@@ -75,15 +82,22 @@ import {FilterKanbanCardsByPagePipe} from './pipes/filter-kanban-cards-by-page.p
     FilterKanbanCardsByPagePipe,
   ],
   imports: [
-    SharedModule,
+    CommonModule,
     RouterModule,
     KanbanPerspectiveRoutingModule,
     DataInputModule,
     DragDropModule,
     DropdownModule,
     PickerModule,
+    PipesModule,
     PresenterModule,
     PostItModule,
+    CollapsibleSidebarModule,
+    WarningMessageModule,
+    SliderModule,
+    SelectModule,
+    InfiniteScrollModule,
+    AttributesSettingsModule,
   ],
   exports: [KanbanPerspectiveComponent],
 })

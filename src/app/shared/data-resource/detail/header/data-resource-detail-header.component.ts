@@ -46,9 +46,10 @@ import {findAttribute, getDefaultAttributeId} from '../../../../core/store/colle
 import {User} from '../../../../core/store/users/user';
 
 import {ConstraintData} from '@lumeer/data-filters';
-import {AttributesSettings, View} from '../../../../core/store/views/view';
+import {View} from '../../../../core/store/views/view';
 import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
 import {ClipboardService} from '../../../../core/service/clipboard.service';
+import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'data-resource-detail-header',

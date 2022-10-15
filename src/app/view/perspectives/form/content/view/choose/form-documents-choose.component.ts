@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {ConstraintData} from '@lumeer/data-filters';
-import {AttributesSettings, View} from '../../../../../../core/store/views/view';
+import {View} from '../../../../../../core/store/views/view';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
@@ -34,6 +34,7 @@ import {FormConfig} from '../../../../../../core/store/form/form-model';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {AttributesSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'form-documents-choose',

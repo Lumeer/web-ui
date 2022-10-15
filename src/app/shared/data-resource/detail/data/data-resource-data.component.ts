@@ -47,9 +47,10 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {ResourceAttributeSettings, View} from '../../../../core/store/views/view';
+import {View} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
 import {User} from '../../../../core/store/users/user';
+import {ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'data-resource-data',

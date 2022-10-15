@@ -72,7 +72,7 @@ import {
   DurationDataValue,
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
-import {View, ViewSettings} from '../../../../core/store/views/view';
+import {View} from '../../../../core/store/views/view';
 import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
 import {
   CreateDataResourceDataGrouping,
@@ -82,6 +82,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 import {QueryAttribute} from '../../../../core/model/query-attribute';
 import {Translation} from '../../../../shared/utils/translation';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 
 interface Data {
   collections: Collection[];

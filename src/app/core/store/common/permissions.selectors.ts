@@ -57,7 +57,7 @@ import {
   queryWithoutLinks,
   tasksCollectionsQuery,
 } from '../navigation/query/query.util';
-import {View, ViewSettings} from '../views/view';
+import {View} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
 import {
   selectAllViews,
@@ -112,6 +112,7 @@ import {filterDefaultDashboardTabs} from '../../model/dashboard-tab';
 import {selectSearchesDictionary} from '../searches/searches.state';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 import {SearchConfig, SearchTasksConfig} from '../searches/search';
+import {ViewSettings} from '../view-settings/view-settings';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>

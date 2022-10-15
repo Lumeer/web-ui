@@ -29,7 +29,6 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AttributesSettings} from '../../../core/store/views/view';
 import {Observable, of} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
@@ -46,6 +45,8 @@ import {map, switchMap} from 'rxjs/operators';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'link-tables-accordeon',
@@ -76,7 +77,7 @@ export class LinkTablesAccordeonComponent implements OnInit, OnChanges {
   public attributesSettings: AttributesSettings;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();

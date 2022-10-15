@@ -20,7 +20,8 @@
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {AttributesResource, DataResource} from '../../../../core/model/resource';
 import {ConstraintData} from '@lumeer/data-filters';
-import {View, ViewSettings} from '../../../../core/store/views/view';
+import {View} from '../../../../core/store/views/view';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'data-resources-preview',

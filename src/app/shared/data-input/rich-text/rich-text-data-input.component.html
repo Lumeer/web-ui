@@ -32,3 +32,14 @@
               (onEditorCreated)="onEditorCreated($event)"
               (onContentChanged)="contentChanged($event)">
 </quill-editor>
+
+<rich-text-dropdown [modalData]="modalData$ | async"
+                    [origin]="element"
+                    [content]="text"
+                    [readonly]="readonly && !editableInReadonly"
+                    [minLength]="value?.config?.minLength"
+                    [maxLength]="value?.config?.maxLength"
+                    (save)="onSave($event)"
+                    (cancel)="onCancel()"
+                    (dataChange)="onModalDataChange($event)">
+</rich-text-dropdown>

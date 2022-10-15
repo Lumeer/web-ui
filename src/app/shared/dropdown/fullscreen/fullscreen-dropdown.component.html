@@ -1,0 +1,34 @@
+<ng-template #dropdown="cdkPortal" cdkPortal>
+  <div class="content-wrapper" #contentWrapper
+       fsCdkDrag
+       cdkDragRootElement=".cdk-overlay-pane"
+       cdkDragBoundary=".cdk-overlay-container"
+       [style.min-height.px]="minHeight"
+       [style.min-width.px]="minWidth"
+       [style.height.vh]="currentHeight"
+       [style.width.vw]="currentWidth"
+       [cdkDragFreeDragPosition]="resizePosition$ | async"
+       (cdkDragEnded)="onDragEnd($event)">
+    <div cdkDrag cdkDragLockAxis="x"
+         class="resize-handle resize-handle-right"
+         (cdkDragStarted)="onResizeStart(contentWrapper)"
+         (cdkDragMoved)="onResizedRight($event, contentWrapper)"
+         (cdkDragEnded)="onResizeEnd($event)"></div>
+    <div cdkDrag cdkDragLockAxis="x"
+         class="resize-handle resize-handle-left"
+         (cdkDragStarted)="onResizeStart(contentWrapper)"
+         (cdkDragMoved)="onResizedLeft($event, contentWrapper)"
+         (cdkDragEnded)="onResizeEnd($event)"></div>
+    <div cdkDrag cdkDragLockAxis="y"
+         class="resize-handle resize-handle-top"
+         (cdkDragStarted)="onResizeStart(contentWrapper)"
+         (cdkDragMoved)="onResizedTop($event, contentWrapper)"
+         (cdkDragEnded)="onResizeEnd($event)"></div>
+    <div cdkDrag cdkDragLockAxis="y"
+         class="resize-handle resize-handle-bottom"
+         (cdkDragStarted)="onResizeStart(contentWrapper)"
+         (cdkDragMoved)="onResizedBottom($event, contentWrapper)"
+         (cdkDragEnded)="onResizeEnd($event)"></div>
+    <ng-content></ng-content>
+  </div>
+</ng-template>

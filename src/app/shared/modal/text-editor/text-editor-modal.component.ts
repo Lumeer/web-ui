@@ -35,6 +35,7 @@ import {isMacOS} from '../../utils/system.utils';
 import {defaultTextEditorOptions} from './text-editor.utils';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {stripTextHtmlTags} from '../../utils/data.utils';
+import {textContainsOnlyBrTags} from '../../utils/string.utils';
 
 export interface TextEditorChanged {
   html: string;
@@ -88,22 +89,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   }
 
   private getSaveContent(): string {
-    if (this.containsOnlyBrTags()) {
-      return null;
-    }
-    return this.content;
-  }
-
-  private containsOnlyBrTags(): boolean {
-    if (!this.content) {
-      return false;
-    }
-
-    const content = this.content
-      .replace(/<br>/g, '')
-      .replace(/<p>\s*?<\/p>/g, '')
-      .trim();
-    return !content;
+    return textContainsOnlyBrTags(this.content) ? null : this.content;
   }
 
   public cancelDialog() {

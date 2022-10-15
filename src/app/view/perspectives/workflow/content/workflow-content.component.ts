@@ -27,7 +27,7 @@ import {
   AfterViewInit,
   HostListener,
 } from '@angular/core';
-import {View, ViewSettings} from '../../../../core/store/views/view';
+import {View} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -42,6 +42,7 @@ import {WorkflowTablesDataService} from './tables/service/workflow-tables-data.s
 import {WorkflowTablesKeyboardService} from './tables/service/workflow-tables-keyboard.service';
 import {WorkflowPerspectiveConfiguration} from '../../perspective-configuration';
 import {BehaviorSubject} from 'rxjs';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'workflow-content',

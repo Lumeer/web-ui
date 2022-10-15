@@ -41,7 +41,7 @@
             [syncScrollIds]="stemData.tables | workflowTablesIds"
             class="lmr-table"
             [tableModel]="table"
-            [viewId]="currentView?.id"
+            [workspace]="currentView | viewWorkspace"
             [style.height.px]="table.height"
             [style.min-height.px]="table.minHeight"
             [constraintData]="constraintData"

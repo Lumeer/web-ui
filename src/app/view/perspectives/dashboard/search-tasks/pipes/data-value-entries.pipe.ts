@@ -25,9 +25,10 @@ import {SearchTasksConfig} from '../../../../../core/store/searches/search';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 import {Constraint, ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {TaskAttributes} from '../model/task-attributes';
-import {ResourceAttributeSettings, View} from '../../../../../core/store/views/view';
+import {View} from '../../../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../../../../shared/settings/settings.util';
 import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
+import {ResourceAttributeSettings} from '../../../../../core/store/view-settings/view-settings';
 
 @Pipe({
   name: 'dataValueEntries',

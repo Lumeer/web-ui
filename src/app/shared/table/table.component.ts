@@ -50,11 +50,12 @@ import {
 import {TableScrollService} from './service/table-scroll.service';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn} from './model/table-column';
-import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
 import {DataAggregationType} from '../utils/data/data-aggregation';
+import {AttributeSortType} from '../../core/store/view-settings/view-settings';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 @Component({
   selector: 'lmr-table',
@@ -91,7 +92,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public detailPanel: boolean;
 
   @Input()
-  public viewId: string;
+  public workspace: Workspace;
 
   @Output()
   public columnResize = new EventEmitter<{column: TableColumn; width: number}>();

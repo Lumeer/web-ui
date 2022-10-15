@@ -45,6 +45,7 @@ import {
 } from '@lumeer/data-filters';
 import {animateOpacityEnterLeave} from '../../animations';
 import {AttributeFormattingStyle} from '../../utils/attribute.utils';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'post-it-row',
@@ -83,6 +84,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   @Input()
   public editableKey = false;
+
+  @Input()
+  public workspace: Workspace;
 
   @Input()
   public isDefaultAttribute: boolean;

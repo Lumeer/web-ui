@@ -20,12 +20,6 @@
 import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
 import {groupDocumentsByCollection} from '../../core/store/documents/document.utils';
 import {groupLinkInstancesByLinkTypes} from '../../core/store/link-instances/link-instance.utils';
-import {
-  AttributeSortType,
-  AttributesSettings,
-  ResourceAttributeSettings,
-  ViewSettings,
-} from '../../core/store/views/view';
 import {isArray, objectsByIdMap, objectValues} from './common.utils';
 import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {Attribute, Collection} from '../../core/store/collections/collection';
@@ -34,6 +28,12 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {composeViewSettingsLinkTypeCollectionId} from '../settings/settings.util';
 import {getAttributesResourceType} from './resource.utils';
+import {
+  AttributeSortType,
+  AttributesSettings,
+  ResourceAttributeSettings,
+  ViewSettings,
+} from '../../core/store/view-settings/view-settings';
 
 export function sortDataResourcesByViewSettings<T extends DataResource>(
   dataResources: T[],

@@ -32,6 +32,7 @@ import {WorkflowConfig} from '../workflows/workflow';
 import {DetailConfig} from '../details/detail';
 import {RoleType} from '../../model/role-type';
 import {FormConfig} from '../form/form-model';
+import {ViewSettings} from '../view-settings/view-settings';
 
 export interface View extends Resource {
   perspective?: Perspective;
@@ -80,36 +81,9 @@ export interface ViewGlobalConfig {
 
 export interface DefaultViewConfig {
   key: string;
-  perspective: string;
+  perspective: Perspective;
   config: ViewConfig;
   updatedAt?: Date;
-}
-
-export interface ViewSettings {
-  attributes?: AttributesSettings;
-  data?: DataSettings;
-}
-
-export interface DataSettings {
-  includeSubItems?: boolean;
-}
-
-export interface AttributesSettings {
-  collections?: Record<string, ResourceAttributeSettings[]>;
-  linkTypes?: Record<string, ResourceAttributeSettings[]>;
-  linkTypesCollections?: Record<string, ResourceAttributeSettings[]>; // key is constructed as `${linkTypeId}:${collectionId}`
-}
-
-export interface ResourceAttributeSettings {
-  attributeId: string;
-  hidden?: boolean;
-  sort?: AttributeSortType;
-  width?: number;
-}
-
-export enum AttributeSortType {
-  Ascending = 'asc',
-  Descending = 'desc',
 }
 
 export const viewRoleTypes = [

@@ -82,6 +82,7 @@ import {DataIdCursorPipe} from './pipes/data-id-cursor.pipe';
 import {DataInputCompactComponent} from './compact/data-input-compact.component';
 import {SelectDataInputCompactComponent} from './compact/select/select-data-input-compact.component';
 import {UserDataInputCompactComponent} from './compact/user/user-data-input-compact.component';
+import {RichTextDropdownComponent} from './rich-text/dropdown/rich-text-dropdown.component';
 
 @NgModule({
   imports: [
@@ -151,6 +152,7 @@ import {UserDataInputCompactComponent} from './compact/user/user-data-input-comp
     ViewDataInputComponent,
     FileButtonComponent,
     FileAttachmentTooltipComponent,
+    RichTextDropdownComponent,
   ],
   exports: [
     DataInputComponent,

@@ -58,8 +58,8 @@ import {
   SelectConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {ViewSettings} from '../../../../core/store/views/view';
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 
 interface AggregatedColumnData {
   count: number;

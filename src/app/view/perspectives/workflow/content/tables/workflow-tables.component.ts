@@ -33,7 +33,7 @@ import {
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {AttributeSortType, View, ViewSettings} from '../../../../../core/store/views/view';
+import {View} from '../../../../../core/store/views/view';
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
 import {WorkflowTablesService} from './service/workflow-tables.service';
@@ -65,6 +65,7 @@ import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} fr
 import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
 import {WorkflowPerspectiveConfiguration} from '../../../perspective-configuration';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
+import {AttributeSortType, ViewSettings} from '../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'workflow-tables',

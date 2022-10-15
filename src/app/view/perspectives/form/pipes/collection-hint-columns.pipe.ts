@@ -20,9 +20,9 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentHintColumn} from '../../../../shared/document-hints/document-hint-column';
-import {AttributesSettings} from '../../../../core/store/views/view';
 import {filterVisibleAttributesBySettings} from '../../../../shared/utils/attribute.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 
 const defaultColumnWidth = 100;
 
