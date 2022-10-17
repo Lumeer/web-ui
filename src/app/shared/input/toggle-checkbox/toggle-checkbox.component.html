@@ -7,7 +7,7 @@
     <span class="slider round" (click)="$event.stopPropagation()"></span>
   </label>
   <i *ngIf="icon" class="ps-3 cursor-pointer" [ngClass]="icon" (click)="!disabled && toggleElement.click()"></i>
-  <span class="cursor-pointer user-select-none"
+  <span class="cursor-pointer user-select-none flex-1"
         [class.ps-1]="icon"
         [class.ps-2]="!icon"
         (click)="!disabled && toggleElement.click()">{{label}}</span>

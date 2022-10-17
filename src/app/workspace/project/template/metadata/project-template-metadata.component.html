@@ -5,7 +5,7 @@
       <input type="checkbox" formControlName="isPublic" id="isPublic" #isPublicCheckbox>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.isPublic"
+    <span class="ps-2 cursor-pointer user-select-none flex-1" i18n="@@projects.tab.template.isPublic"
           (click)="isPublicCheckbox.click()">Public Access to the Project</span>
   </div>
 
@@ -113,12 +113,12 @@
 
       <div class="col-sm-9 col-lg-10 p-0 d-flex align-items-center">
         <div class="d-flex flex-row flex-nowrap align-items-center">
-          <label class="switch" for="allowRunTimer">
-            <input type="checkbox" formControlName="allowRunTimer" id="allowRunTimer" #allowRunTimer>
+          <label class="switch" for="template">
+            <input type="checkbox" formControlName="template" id="template" #template>
             <span class="slider round" (click)="$event.stopPropagation()"></span>
           </label>
-          <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.templateProject.description"
-                (click)="allowRunTimer.click()">When turned on, no task notifications will be sent and no timers are automatically executed so that the project can be used as a template for creating other projects.</span>
+          <span class="ps-2 cursor-pointer user-select-none flex-1" i18n="@@projects.tab.template.metadata.templateProject.description"
+                (click)="template.click()">When turned on, no task notifications will be sent and no timers are automatically executed so that the project can be used as a template for creating other projects.</span>
         </div>
       </div>
 
@@ -135,7 +135,7 @@
             <input type="checkbox" formControlName="showTopPanel" id="showTopPanel" #showTopPanelCheckbox>
             <span class="slider round" (click)="$event.stopPropagation()"></span>
           </label>
-          <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.showTopPanel"
+          <span class="ps-2 cursor-pointer user-select-none flex-1" i18n="@@projects.tab.template.metadata.showTopPanel"
                 (click)="showTopPanelCheckbox.click()">Show application controls (the upper panel)</span>
         </div>
       </div>
