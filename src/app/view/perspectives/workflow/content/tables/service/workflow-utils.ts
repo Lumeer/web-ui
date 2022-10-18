@@ -30,10 +30,10 @@ import {Attribute, Collection} from '../../../../../../core/store/collections/co
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {
-  areFiltersEqual,
   getQueryStemFiltersForResource,
   queryStemAttributesResourcesOrder,
   queryStemsAreSame,
+  subtractFilters,
 } from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
@@ -522,16 +522,7 @@ export function getColumnMergedFilters(
       filter => filter.attributeId === attribute.id
     );
 
-    for (const currentFilter of currentFilters) {
-      const index = stemFilters.findIndex(filter => {
-        return areFiltersEqual(filter, currentFilter);
-      });
-      if (index !== -1) {
-        stemFilters.splice(index, 1);
-      }
-    }
-
-    currentFilters.push(...stemFilters);
+    currentFilters.push(...subtractFilters(currentFilters, stemFilters));
     return currentFilters;
   }, []);
 }

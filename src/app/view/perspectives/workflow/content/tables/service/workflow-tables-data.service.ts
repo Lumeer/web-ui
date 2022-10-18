@@ -347,7 +347,6 @@ export class WorkflowTablesDataService {
         const currentLinkColumns = (tableByCollection?.columns || []).filter(column => column.linkTypeId);
         const {columns: linkColumns, actions: linkActions} = this.createLinkTypeColumns(
           config,
-          stemConfig,
           currentLinkColumns,
           linkType,
           linkPermissions,
@@ -606,7 +605,6 @@ export class WorkflowTablesDataService {
         AttributesResourceType.Collection,
         collectionPermissions,
         query,
-        stemConfig.stem,
         collectionSettings,
         config.columns?.collections?.[collection.id] || [],
         linkTypePermissions
@@ -617,7 +615,6 @@ export class WorkflowTablesDataService {
 
   private createLinkTypeColumns(
     config: WorkflowConfig,
-    stemConfig: WorkflowStemConfig,
     currentColumns: TableColumn[],
     linkType: LinkType,
     permissions: AllowedPermissions,
@@ -634,7 +631,6 @@ export class WorkflowTablesDataService {
           AttributesResourceType.LinkType,
           permissions,
           query,
-          stemConfig.stem,
           linkTypeSettings,
           config.columns?.linkTypes?.[linkType.id] || []
         ),
@@ -650,7 +646,6 @@ export class WorkflowTablesDataService {
     resourceType: AttributesResourceType,
     permissions: AllowedPermissions,
     query: Query,
-    stem: QueryStem,
     attributeSettings: ResourceAttributeSettings[],
     columnsSettings: WorkflowColumnSettings[],
     otherPermissions?: AllowedPermissions
@@ -694,7 +689,7 @@ export class WorkflowTablesDataService {
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
         color,
-        filters: this.createColumnFilters(attribute, query, stem, resource.id, resourceType),
+        filters: this.createColumnFilters(attribute, query, resource.id, resourceType),
         default: attribute.id === defaultAttributeId,
         hidden: setting.hidden,
         permissions: permissions,
@@ -775,7 +770,6 @@ export class WorkflowTablesDataService {
   private createColumnFilters(
     attribute: Attribute,
     query: Query,
-    stem: QueryStem,
     resourceId: string,
     resourceType: AttributesResourceType
   ): ColumnFilter[] {
@@ -784,7 +778,8 @@ export class WorkflowTablesDataService {
       return attributeFilters.map(filter => ({...filter, deletable: true}));
     }
 
-    const currentViewSameStems = this.currentView?.query?.stems?.filter(s => queryStemsAreSame(s, stem)) || [];
+    const currentViewSameStems =
+      this.currentView?.query?.stems?.filter(s => queryStemsAreSame(s, query.stems[0])) || [];
     const currentViewFilters = getColumnMergedFilters(
       attribute,
       {stems: currentViewSameStems},

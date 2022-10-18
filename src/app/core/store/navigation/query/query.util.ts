@@ -775,13 +775,13 @@ export function appendQueryFiltersByVisibleAttributes(
 
     const otherStem = q2.stems?.find(s => s.id === stem.id);
     if (otherStem) {
-      const newFilters = (otherStem.filters || []).filter(filter => {
+      const newFilters = subtractFilters(filters, otherStem.filters || []).filter(filter => {
         const settings = attributesSettings?.collections?.[filter.collectionId];
         return shouldAppendVisibleFilter(filter, filters, settings);
       });
       filters.push(...newFilters);
 
-      const newLinkFilters = (otherStem.linkFilters || []).filter(filter => {
+      const newLinkFilters = subtractFilters(linkFilters, otherStem.linkFilters || []).filter(filter => {
         const settings = attributesSettings?.linkTypes?.[filter.linkTypeId];
         return shouldAppendVisibleFilter(filter, linkFilters, settings);
       });
@@ -798,10 +798,20 @@ function shouldAppendVisibleFilter(
   currentFilters: AttributeFilter[],
   settings: ResourceAttributeSettings[]
 ): boolean {
-  if (settings?.some(s => s.attributeId === filter.attributeId && s.hidden)) {
-    return false;
+  return !settings?.some(s => s.attributeId === filter.attributeId && s.hidden);
+}
+
+export function subtractFilters<T extends AttributeFilter>(f1: T[], f2: T[]): T[] {
+  const result = [...(f2 || [])];
+  for (const currentFilter of f1 || []) {
+    const index = result.findIndex(filter => {
+      return areFiltersEqual(filter, currentFilter);
+    });
+    if (index !== -1) {
+      result.splice(index, 1);
+    }
   }
-  return !currentFilters.some(currentFilter => areFiltersEqual(currentFilter, filter));
+  return result;
 }
 
 export function cleanQueryFromHiddenAttributes(
