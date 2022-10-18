@@ -18,6 +18,7 @@
  */
 
 import {
+  AttributeFilter,
   computeAttributeLockStatsByDataValues,
   ConstraintData,
   createDataValuesMap,
@@ -29,6 +30,8 @@ import {Attribute, Collection} from '../../../../../../core/store/collections/co
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {
+  areFiltersEqual,
+  getQueryStemFiltersForResource,
   queryStemAttributesResourcesOrder,
   queryStemsAreSame,
 } from '../../../../../../core/store/navigation/query/query.util';
@@ -53,7 +56,7 @@ import {sortDataObjectsByViewSettings} from '../../../../../../shared/utils/data
 import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 import {isNotNullOrUndefined, objectValues} from '../../../../../../shared/utils/common.utils';
-import {QueryStem} from '../../../../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
 import {
   computeAttributeFormatting,
@@ -506,4 +509,29 @@ export function createWorkflowTableFooter(
     height: TABLE_ROW_HEIGHT,
     cellsMap,
   };
+}
+
+export function getColumnMergedFilters(
+  attribute: Attribute,
+  query: Query,
+  resourceId: string,
+  resourceType: AttributesResourceType
+): AttributeFilter[] {
+  return (query?.stems || []).reduce((currentFilters, stem) => {
+    const stemFilters = getQueryStemFiltersForResource(stem, resourceId, resourceType).filter(
+      filter => filter.attributeId === attribute.id
+    );
+
+    for (const currentFilter of currentFilters) {
+      const index = stemFilters.findIndex(filter => {
+        return areFiltersEqual(filter, currentFilter);
+      });
+      if (index !== -1) {
+        stemFilters.splice(index, 1);
+      }
+    }
+
+    currentFilters.push(...stemFilters);
+    return currentFilters;
+  }, []);
 }

@@ -312,7 +312,29 @@ export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): Li
 }
 
 export function areFiltersEqual(f1: AttributeFilter, f2: AttributeFilter): boolean {
-  return deepObjectsEquals(f1, f2);
+  return (
+    f1.attributeId === f2.attributeId &&
+    f1.condition === f2.condition &&
+    conditionValuesArrayAreSame(f1.conditionValues || [], f2.conditionValues || [])
+  );
+}
+
+function conditionValuesArrayAreSame(cv1: ConditionValue[], cv2: ConditionValue[]): boolean {
+  if (cv1.length !== cv2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < cv1.length; i++) {
+    if (!conditionValuesAreSame(cv1[i], cv2[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function conditionValuesAreSame(cv1: ConditionValue, cv2: ConditionValue): boolean {
+  return deepObjectsEquals(cv1.value ?? '', cv2.value ?? '') && (cv1.type ?? '') === (cv2.type ?? '');
 }
 
 export function getAllLinkTypeIdsFromView(view: View): string[] {
