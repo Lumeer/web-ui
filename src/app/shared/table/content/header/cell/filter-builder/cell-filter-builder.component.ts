@@ -30,6 +30,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AttributeFilter,
   ConditionType,
   ConditionValue,
   ConstraintData,
@@ -45,6 +46,8 @@ import {Attribute} from '../../../../../../core/store/collections/collection';
 import {modifyAttributeForQueryFilter} from '../../../../../utils/attribute.utils';
 import {ColumnFilter} from '../../../../model/table-column';
 import {AttributeSortType} from '../../../../../../core/store/view-settings/view-settings';
+import {findLastIndex} from '../../../../../utils/common.utils';
+import {areFiltersEqual} from '../../../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'cell-filter-builder',
@@ -123,7 +126,18 @@ export class CellFilterBuilderComponent implements OnChanges, AfterViewInit {
       this.filterAttribute = modifyAttributeForQueryFilter(this.attribute);
     }
     if (changes.filters) {
+      this.checkSelectedIndex();
       setTimeout(() => this.dropdown?.updatePosition());
+    }
+  }
+
+  private checkSelectedIndex() {
+    const condition = initialConditionType(this.attribute?.constraint);
+    const conditionValues = initialConditionValues(condition, this.attribute?.constraint);
+    const emptyFilter: AttributeFilter = {attributeId: this.attribute?.id, condition, conditionValues};
+    const lastIndex = findLastIndex(this.filters, filter => areFiltersEqual(filter, emptyFilter));
+    if (lastIndex >= 0) {
+      this.selectedIndex = lastIndex;
     }
   }
 
@@ -168,7 +182,7 @@ export class CellFilterBuilderComponent implements OnChanges, AfterViewInit {
   public onNewFilter() {
     const condition = initialConditionType(this.attribute?.constraint);
     const values = initialConditionValues(condition, this.attribute?.constraint);
-    this.selectedIndex = this.filters?.length || 0;
+    this.selectedIndex = undefined;
     this.filterChange.emit({condition, values, index: this.selectedIndex, new: true});
   }
 
