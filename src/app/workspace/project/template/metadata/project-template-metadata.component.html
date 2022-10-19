@@ -5,8 +5,8 @@
       <input type="checkbox" formControlName="isPublic" id="isPublic" #isPublicCheckbox>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.isPublic"
-          (click)="isPublicCheckbox.click()">Public access to the project</span>
+    <span class="ps-2 cursor-pointer user-select-none flex-1" i18n="@@projects.tab.template.isPublic"
+          (click)="isPublicCheckbox.click()">Public Access to the Project</span>
   </div>
 
   <div class="mt-4" formGroupName="metadata" *ngIf="isPublicControl.value">
@@ -22,7 +22,7 @@
     <div class="row m-0 mt-4">
       <label class="col-sm-3 px-0 col-lg-2 col-form-label" for="imageUrl"
              i18n="@@projects.tab.template.metadata.imageUrl">
-        Image address
+        Image Address
       </label>
       <div class="col-sm-9 col-lg-10 px-0 mb-2">
         <input class="form-control" type="text" formControlName="imageUrl" id="imageUrl"
@@ -109,7 +109,25 @@
     <div class="row m-0 mt-2">
 
       <label class="col-sm-3 px-0 col-lg-2 col-form-label"
-             i18n="@@projects.tab.template.metadata.topPanel">Top panel</label>
+             i18n="@@projects.tab.template.metadata.templateProject">This Project is a Template</label>
+
+      <div class="col-sm-9 col-lg-10 p-0 d-flex align-items-center">
+        <div class="d-flex flex-row flex-nowrap align-items-center">
+          <label class="switch" for="template">
+            <input type="checkbox" formControlName="template" id="template" #template>
+            <span class="slider round" (click)="$event.stopPropagation()"></span>
+          </label>
+          <span class="ps-2 cursor-pointer user-select-none flex-1" i18n="@@projects.tab.template.metadata.templateProject.description"
+                (click)="template.click()">When turned on, no task notifications will be sent and no timers are automatically executed so that the project can be used as a template for creating other projects.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row m-0 mt-2">
+
+      <label class="col-sm-3 px-0 col-lg-2 col-form-label"
+             i18n="@@projects.tab.template.metadata.topPanel">Top Panel</label>
 
       <div class="col-sm-9 col-lg-10 p-0 d-flex align-items-center">
         <div class="d-flex flex-row flex-nowrap align-items-center">
@@ -117,7 +135,7 @@
             <input type="checkbox" formControlName="showTopPanel" id="showTopPanel" #showTopPanelCheckbox>
             <span class="slider round" (click)="$event.stopPropagation()"></span>
           </label>
-          <span class="ps-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.showTopPanel"
+          <span class="ps-2 cursor-pointer user-select-none flex-1" i18n="@@projects.tab.template.metadata.showTopPanel"
                 (click)="showTopPanelCheckbox.click()">Show application controls (the upper panel)</span>
         </div>
       </div>

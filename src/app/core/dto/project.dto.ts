@@ -31,6 +31,7 @@ export interface TemplateMetadataDto {
   allowedDomains?: string;
   relativeDate?: number;
   editable?: boolean;
+  template?: boolean;
   tags?: string[];
   showTopPanel?: boolean;
   organizationId?: string;
