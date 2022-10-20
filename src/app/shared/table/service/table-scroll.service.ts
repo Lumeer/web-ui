@@ -53,7 +53,8 @@ export class TableScrollService {
       scrollLeft = columnLeft + (width > selectedGroup.width ? selectedGroup.width - width : 0);
     }
 
-    const height = viewPort.getViewportSize() - TABLE_ROW_HEIGHT - TABLE_BOTTOM_TOOLBAR_HEIGHT;
+    const height =
+      viewPort.getViewportSize() - TABLE_ROW_HEIGHT - TABLE_BOTTOM_TOOLBAR_HEIGHT - (tableModel.footer?.height || 0);
     const top = viewPort.measureScrollOffset('top');
     const bottom = top + height;
 
