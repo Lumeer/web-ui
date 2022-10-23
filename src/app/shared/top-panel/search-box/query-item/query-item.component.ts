@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {QueryItem} from './model/query-item';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {ConstraintData} from '@lumeer/data-filters';
 import {QueryItemType} from './model/query-item-type';
 
@@ -35,7 +35,7 @@ export class QueryItemComponent {
   public queryItem: QueryItem;
 
   @Input()
-  public queryItemForm: FormGroup;
+  public queryItemForm: UntypedFormGroup;
 
   @Input()
   public readonly: boolean;

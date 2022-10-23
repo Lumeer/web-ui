@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {SelectionList} from '../../../selection-list';
 import {DropdownOption} from '../../../../../dropdown/options/dropdown-option';
 import {AttributeSelectionList} from '../../attribute-selection-list';
@@ -30,7 +30,7 @@ import {AttributeSelectionList} from '../../attribute-selection-list';
 })
 export class SelectionListModalContentComponent implements OnChanges {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public list: SelectionList;

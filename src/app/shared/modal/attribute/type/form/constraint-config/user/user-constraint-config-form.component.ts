@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {UserConstraintFormControl} from './user-constraint-form-control';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {UserConstraintConfig, UserConstraintType} from '@lumeer/data-filters';
@@ -36,7 +36,7 @@ export class UserConstraintConfigFormComponent implements OnChanges {
   public config: UserConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly formControlName = UserConstraintFormControl;
   public readonly typeItems: SelectItemModel[];
@@ -68,12 +68,12 @@ export class UserConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(UserConstraintFormControl.ExternalUsers, new FormControl(this.config?.externalUsers));
-    this.form.addControl(UserConstraintFormControl.Multi, new FormControl(this.config?.multi));
-    this.form.addControl(UserConstraintFormControl.OnlyIcon, new FormControl(!this.config?.onlyIcon));
+    this.form.addControl(UserConstraintFormControl.ExternalUsers, new UntypedFormControl(this.config?.externalUsers));
+    this.form.addControl(UserConstraintFormControl.Multi, new UntypedFormControl(this.config?.multi));
+    this.form.addControl(UserConstraintFormControl.OnlyIcon, new UntypedFormControl(!this.config?.onlyIcon));
     this.form.addControl(
       UserConstraintFormControl.Type,
-      new FormControl(this.config?.type || UserConstraintType.Users)
+      new UntypedFormControl(this.config?.type || UserConstraintType.Users)
     );
   }
 

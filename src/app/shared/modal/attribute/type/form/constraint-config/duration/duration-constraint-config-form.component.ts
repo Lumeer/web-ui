@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {
   DurationConstraintConversionFormControl,
   DurationConstraintFormControl,
@@ -51,7 +51,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   public config: DurationConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly controls = DurationConstraintFormControl;
   public readonly type = DurationType;
@@ -100,11 +100,11 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
 
   private createForm() {
     const type = this.config?.type || DurationType.Work;
-    this.form.addControl(DurationConstraintFormControl.Type, new FormControl(type));
-    this.form.addControl(DurationConstraintFormControl.MaxUnit, new FormControl(this.config?.maxUnit || null));
+    this.form.addControl(DurationConstraintFormControl.Type, new UntypedFormControl(type));
+    this.form.addControl(DurationConstraintFormControl.MaxUnit, new UntypedFormControl(this.config?.maxUnit || null));
     this.form.addControl(
       DurationConstraintFormControl.Conversions,
-      new FormArray(this.createConversionControls(type), [])
+      new UntypedFormArray(this.createConversionControls(type), [])
     );
   }
 
@@ -123,11 +123,11 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
     return this.units.map(unit => this.createConversionUnitControl(type, unit));
   }
 
-  private createConversionUnitControl(type: DurationType, unit: DurationUnit): FormGroup {
+  private createConversionUnitControl(type: DurationType, unit: DurationUnit): UntypedFormGroup {
     const unitMaxValue = durationConstraintUnitMaxValue(unit);
-    return new FormGroup({
-      [DurationConstraintConversionFormControl.Unit]: new FormControl(unit),
-      [DurationConstraintConversionFormControl.Value]: new FormControl(this.getUnitConversion(type, unit), [
+    return new UntypedFormGroup({
+      [DurationConstraintConversionFormControl.Unit]: new UntypedFormControl(unit),
+      [DurationConstraintConversionFormControl.Value]: new UntypedFormControl(this.getUnitConversion(type, unit), [
         Validators.min(1),
         Validators.max(unitMaxValue),
       ]),
@@ -162,8 +162,8 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
     return this.form.get(DurationConstraintFormControl.MaxUnit);
   }
 
-  public get conversionsControl(): FormArray {
-    return this.form.get(DurationConstraintFormControl.Conversions) as FormArray;
+  public get conversionsControl(): UntypedFormArray {
+    return this.form.get(DurationConstraintFormControl.Conversions) as UntypedFormArray;
   }
 
   private createTypeItems(): SelectItemModel[] {

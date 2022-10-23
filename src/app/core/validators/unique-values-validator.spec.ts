@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {uniqueValuesValidator} from './unique-values-validator';
 
 describe('uniqueValuesValidator', () => {
@@ -54,12 +54,12 @@ describe('uniqueValuesValidator', () => {
   });
 });
 
-function createFormArray(controlName?: string, ...values: any[]): FormArray {
-  return new FormArray(
+function createFormArray(controlName?: string, ...values: any[]): UntypedFormArray {
+  return new UntypedFormArray(
     values.map(
       value =>
-        new FormGroup({
-          [controlName]: new FormControl(value),
+        new UntypedFormGroup({
+          [controlName]: new UntypedFormControl(value),
         })
     )
   );

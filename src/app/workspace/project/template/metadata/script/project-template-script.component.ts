@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {map, startWith} from 'rxjs/operators';
@@ -36,7 +36,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 })
 export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
   @Input()
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   @Input()
   public workspace: Workspace;

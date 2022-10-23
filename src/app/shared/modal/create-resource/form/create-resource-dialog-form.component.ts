@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 import {ResourceType} from '../../../../core/model/resource-type';
 import {safeGetRandomIcon} from '../../../picker/icons';
@@ -39,7 +39,7 @@ export class CreateResourceDialogFormComponent implements OnInit {
   public parentId: string;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public resourceType: ResourceType;

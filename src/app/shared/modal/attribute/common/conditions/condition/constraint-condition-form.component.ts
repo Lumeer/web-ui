@@ -27,7 +27,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {SelectItem2Model} from '../../../../../select/select-item2/select-item2.model';
 import {FilterBuilderComponent} from '../../../../../builder/filter-builder/filter-builder.component';
@@ -56,7 +56,7 @@ export class ConstraintConditionFormComponent implements OnInit {
   public attributes: Attribute[];
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public attributeSelectItems: SelectItem2Model[];

@@ -17,20 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormArray, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 
-export function removeAllFormControls(formGroup: FormGroup) {
+export function removeAllFormControls(formGroup: UntypedFormGroup) {
   Object.keys(formGroup.controls).forEach(name => formGroup.removeControl(name));
 }
 
-export function removeAllFormArrayControls(formArray: FormArray) {
+export function removeAllFormArrayControls(formArray: UntypedFormArray) {
   formArray.controls
     .map((control, index) => index)
     .reverse()
     .forEach(index => formArray.removeAt(index));
 }
 
-export function moveFormArrayItem(formArray: FormArray, previousIndex: number, nextIndex: number) {
+export function moveFormArrayItem(formArray: UntypedFormArray, previousIndex: number, nextIndex: number) {
   const item = formArray.at(previousIndex);
   formArray.removeAt(previousIndex);
   formArray.insert(nextIndex, item);

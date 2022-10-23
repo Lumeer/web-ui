@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {uniqueValuesValidator} from '../../../../../../../core/validators/unique-values-validator';
@@ -53,7 +53,7 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges, O
   public config: SelectConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public resource: AttributesResource;
@@ -146,16 +146,16 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges, O
 
   private addFormControls() {
     const selectionId = this.config?.selectionListId;
-    this.form.addControl(SelectConstraintFormControl.Multi, new FormControl(this.config?.multi));
+    this.form.addControl(SelectConstraintFormControl.Multi, new UntypedFormControl(this.config?.multi));
     this.form.addControl(
       SelectConstraintFormControl.DisplayValues,
-      new FormControl({value: this.config?.displayValues, disabled: !!selectionId})
+      new UntypedFormControl({value: this.config?.displayValues, disabled: !!selectionId})
     );
-    this.form.addControl(SelectConstraintFormControl.SelectionList, new FormControl(selectionId));
+    this.form.addControl(SelectConstraintFormControl.SelectionList, new UntypedFormControl(selectionId));
   }
 
   private addOptionsFormArray() {
-    this.form.addControl(SelectConstraintFormControl.Options, new FormArray([]));
+    this.form.addControl(SelectConstraintFormControl.Options, new UntypedFormArray([]));
 
     this.setOptionsValidator();
 

@@ -27,7 +27,7 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {AddressConstraintFormControl} from './constraint-config/address/address-constraint-form-control';
 import {CoordinatesConstraintFormControl} from './constraint-config/coordinates/coordinates-constraint-form-control';
 import {PercentageConstraintFormControl} from './constraint-config/percentage/percentage-constraint-form-control';
@@ -72,11 +72,11 @@ export class AttributeTypeFormComponent implements OnChanges {
   @Output()
   public attributeChange = new EventEmitter<Attribute>();
 
-  public form = new FormGroup({
-    type: new FormControl(),
-    config: new FormGroup({}),
-    commonConfig: new FormGroup({suggestValues: new FormControl()}),
-    lock: new FormControl(),
+  public form = new UntypedFormGroup({
+    type: new UntypedFormControl(),
+    config: new UntypedFormGroup({}),
+    commonConfig: new UntypedFormGroup({suggestValues: new UntypedFormControl()}),
+    lock: new UntypedFormControl(),
   });
 
   constructor(private notificationService: NotificationService) {}
@@ -182,7 +182,7 @@ export class AttributeTypeFormComponent implements OnChanges {
           selectionListId: this.configForm.get(SelectConstraintFormControl.SelectionList).value,
           displayValues,
           options: parseSelectOptionsFromForm(
-            this.configForm.get(SelectConstraintFormControl.Options) as FormArray,
+            this.configForm.get(SelectConstraintFormControl.Options) as UntypedFormArray,
             displayValues
           ),
         };
@@ -278,23 +278,23 @@ export class AttributeTypeFormComponent implements OnChanges {
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.attributeChange.emit(attribute));
   }
 
-  public get typeControl(): FormControl {
-    return this.form.get('type') as FormControl;
+  public get typeControl(): UntypedFormControl {
+    return this.form.get('type') as UntypedFormControl;
   }
 
-  public get commonConfigForm(): FormGroup {
-    return this.form.get('commonConfig') as FormGroup;
+  public get commonConfigForm(): UntypedFormGroup {
+    return this.form.get('commonConfig') as UntypedFormGroup;
   }
 
-  public get suggestValuesControl(): FormControl {
-    return this.commonConfigForm.get('suggestValues') as FormControl;
+  public get suggestValuesControl(): UntypedFormControl {
+    return this.commonConfigForm.get('suggestValues') as UntypedFormControl;
   }
 
-  public get configForm(): FormGroup {
-    return this.form.get('config') as FormGroup;
+  public get configForm(): UntypedFormGroup {
+    return this.form.get('config') as UntypedFormGroup;
   }
 
-  public get lockControl(): FormControl {
-    return this.form.get('lock') as FormControl;
+  public get lockControl(): UntypedFormControl {
+    return this.form.get('lock') as UntypedFormControl;
   }
 }

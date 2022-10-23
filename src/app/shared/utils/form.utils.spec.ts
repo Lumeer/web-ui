@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormArray, FormControl} from '@angular/forms';
+import {UntypedFormArray, UntypedFormControl} from '@angular/forms';
 import {moveFormArrayItem} from './form.utils';
 
 describe('moveFormArrayItem', () => {
@@ -34,11 +34,11 @@ describe('moveFormArrayItem', () => {
   });
 });
 
-function createFormArray(controls: number): FormArray {
-  return new FormArray(
+function createFormArray(controls: number): UntypedFormArray {
+  return new UntypedFormArray(
     new Array(controls)
       .fill(0)
       .map((value, index) => index + 1)
-      .map(index => new FormControl(index))
+      .map(index => new UntypedFormControl(index))
   );
 }

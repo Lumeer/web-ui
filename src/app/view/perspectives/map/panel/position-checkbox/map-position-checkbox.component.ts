@@ -28,7 +28,7 @@ import {
   SimpleChanges,
   OnDestroy,
 } from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, FormControl, UntypedFormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -45,11 +45,11 @@ export class MapPositionCheckboxComponent implements OnInit, OnChanges, OnDestro
   public valueChange = new EventEmitter<boolean>();
 
   public readonly formControlName = 'positionSaved';
-  public readonly form: FormGroup;
+  public readonly form: UntypedFormGroup;
 
   private subscriptions = new Subscription();
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.form = this.fb.group({[this.formControlName]: false});
   }
 

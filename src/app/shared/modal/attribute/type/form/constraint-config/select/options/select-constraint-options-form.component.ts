@@ -30,7 +30,14 @@ import {
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
 import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../../utils/form.utils';
 import {ColorPickerComponent} from '../../../../../../../picker/color/color-picker.component';
@@ -48,7 +55,7 @@ import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 })
 export class SelectConstraintOptionsFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public options: SelectConstraintOption[];
@@ -149,23 +156,25 @@ export class SelectConstraintOptionsFormComponent implements OnInit, OnChanges, 
     }
   }
 
-  private createOptionForm(index: number, option?: SelectConstraintOption): FormGroup {
+  private createOptionForm(index: number, option?: SelectConstraintOption): UntypedFormGroup {
     const initialBackground = selectDefaultPalette[index % selectDefaultPalette.length];
     const value = unescapeHtml(option?.value || '');
     const displayValue = unescapeHtml(option?.displayValue || '');
     const displayValues = this.displayValuesControl.value;
-    return new FormGroup(
+    return new UntypedFormGroup(
       {
-        [SelectConstraintOptionsFormControl.Value]: new FormControl(displayValues ? value : null),
-        [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl(displayValue || value),
-        [SelectConstraintOptionsFormControl.Background]: new FormControl(option?.background || initialBackground),
+        [SelectConstraintOptionsFormControl.Value]: new UntypedFormControl(displayValues ? value : null),
+        [SelectConstraintOptionsFormControl.DisplayValue]: new UntypedFormControl(displayValue || value),
+        [SelectConstraintOptionsFormControl.Background]: new UntypedFormControl(
+          option?.background || initialBackground
+        ),
       },
       this.createRequiredValueValidator()
     );
   }
 
   private createRequiredValueValidator(): ValidatorFn {
-    return (formGroup: FormGroup): ValidationErrors | null => {
+    return (formGroup: UntypedFormGroup): ValidationErrors | null => {
       const valueControl = formGroup.get(SelectConstraintOptionsFormControl.Value);
       const displayValueControl = formGroup.get(SelectConstraintOptionsFormControl.DisplayValue);
       return this.displayValuesControl?.value &&
@@ -200,8 +209,8 @@ export class SelectConstraintOptionsFormComponent implements OnInit, OnChanges, 
     this.patchBackground(optionIndex, this.backgroundInitialValues[optionIndex]);
   }
 
-  public get optionsForm(): FormArray {
-    return this.form.get(SelectConstraintFormControl.Options) as FormArray;
+  public get optionsForm(): UntypedFormArray {
+    return this.form.get(SelectConstraintFormControl.Options) as UntypedFormArray;
   }
 
   public get displayValuesControl(): AbstractControl {

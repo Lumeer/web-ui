@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {
   Attribute,
@@ -43,9 +43,9 @@ export class ConditionalFormattingContentComponent implements OnInit {
   @Output()
   public formattingChange = new EventEmitter<AttributeFormatting>();
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: UntypedFormBuilder) {}
 
   public ngOnInit() {
     this.form = this.fb.group({
@@ -53,7 +53,7 @@ export class ConditionalFormattingContentComponent implements OnInit {
     });
   }
 
-  private createGroupControl(group?: AttributeFormattingGroup): FormGroup {
+  private createGroupControl(group?: AttributeFormattingGroup): UntypedFormGroup {
     return this.fb.group({
       color: group?.color,
       background: group?.background,
@@ -62,8 +62,8 @@ export class ConditionalFormattingContentComponent implements OnInit {
     });
   }
 
-  public get groupsControl(): FormArray {
-    return <FormArray>this.form.controls.groups;
+  public get groupsControl(): UntypedFormArray {
+    return <UntypedFormArray>this.form.controls.groups;
   }
 
   public onAddGroup() {
@@ -78,8 +78,8 @@ export class ConditionalFormattingContentComponent implements OnInit {
     const groups: AttributeFormattingGroup[] = createRange(0, this.groupsControl.length).reduce<
       AttributeFormattingGroup[]
     >((groups, index) => {
-      const group = this.groupsControl.at(index) as FormGroup;
-      const filtersArray = group.controls.filters as FormArray;
+      const group = this.groupsControl.at(index) as UntypedFormGroup;
+      const filtersArray = group.controls.filters as UntypedFormArray;
 
       groups.push({
         styles: group.value.styles,

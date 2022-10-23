@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -35,11 +35,11 @@ import {UsersAction} from '../../../core/store/users/users.action';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookProductDemoModalComponent implements OnInit {
-  public readonly form = new FormGroup({
-    name: new FormControl('', notEmptyValidator()),
-    industry: new FormControl('', notEmptyValidator()),
-    numEmployees: new FormControl('', notEmptyValidator()),
-    useCase: new FormControl('', notEmptyValidator()),
+  public readonly form = new UntypedFormGroup({
+    name: new UntypedFormControl('', notEmptyValidator()),
+    industry: new UntypedFormControl('', notEmptyValidator()),
+    numEmployees: new UntypedFormControl('', notEmptyValidator()),
+    useCase: new UntypedFormControl('', notEmptyValidator()),
   });
 
   public readonly dialogType = DialogType;

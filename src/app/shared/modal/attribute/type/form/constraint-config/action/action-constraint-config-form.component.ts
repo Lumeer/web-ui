@@ -18,7 +18,14 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {ActionConstraintFormControl} from './action-constraint-form-control';
 import {COLOR_SUCCESS} from '../../../../../../../core/constants';
@@ -43,10 +50,10 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   public config: ActionConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
-  public lockControl: FormControl;
+  public lockControl: UntypedFormControl;
 
   @Input()
   public resource: AttributesResource;
@@ -77,20 +84,20 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
     return this.form.controls[ActionConstraintFormControl.Title];
   }
 
-  public get ruleControl(): FormControl {
-    return <FormControl>this.form.controls[ActionConstraintFormControl.Rule];
+  public get ruleControl(): UntypedFormControl {
+    return <UntypedFormControl>this.form.controls[ActionConstraintFormControl.Rule];
   }
 
-  public get titleUserControl(): FormControl {
-    return <FormControl>this.form.controls[ActionConstraintFormControl.TitleUser];
+  public get titleUserControl(): UntypedFormControl {
+    return <UntypedFormControl>this.form.controls[ActionConstraintFormControl.TitleUser];
   }
 
-  public get colorControl(): FormControl {
-    return <FormControl>this.form.controls[ActionConstraintFormControl.Background];
+  public get colorControl(): UntypedFormControl {
+    return <UntypedFormControl>this.form.controls[ActionConstraintFormControl.Background];
   }
 
-  public get iconControl(): FormControl {
-    return <FormControl>this.form.controls[ActionConstraintFormControl.Icon];
+  public get iconControl(): UntypedFormControl {
+    return <UntypedFormControl>this.form.controls[ActionConstraintFormControl.Icon];
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -126,12 +133,12 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   private addButtonForms() {
     const currentTitle = cleanTitle(this.config?.title);
     const title = currentTitle || (this.attribute?.constraint?.type === ConstraintType.Action ? '' : this.defaultTitle);
-    this.form.addControl(ActionConstraintFormControl.Icon, new FormControl(this.config?.icon));
-    this.form.addControl(ActionConstraintFormControl.Title, new FormControl(title));
-    this.form.addControl(ActionConstraintFormControl.TitleUser, new FormControl(title));
+    this.form.addControl(ActionConstraintFormControl.Icon, new UntypedFormControl(this.config?.icon));
+    this.form.addControl(ActionConstraintFormControl.Title, new UntypedFormControl(title));
+    this.form.addControl(ActionConstraintFormControl.TitleUser, new UntypedFormControl(title));
     this.form.addControl(
       ActionConstraintFormControl.Background,
-      new FormControl(this.config?.background || COLOR_SUCCESS)
+      new UntypedFormControl(this.config?.background || COLOR_SUCCESS)
     );
     this.form.setValidators(titleOrIconValidator());
     this.subscription.add(
@@ -144,18 +151,18 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   private addConfirmationForms() {
     this.form.addControl(
       ActionConstraintFormControl.RequiresConfirmation,
-      new FormControl(this.config?.requiresConfirmation)
+      new UntypedFormControl(this.config?.requiresConfirmation)
     );
     this.form.addControl(
       ActionConstraintFormControl.ConfirmationTitle,
-      new FormControl(this.config?.confirmationTitle)
+      new UntypedFormControl(this.config?.confirmationTitle)
     );
   }
 
   private addRuleForm() {
     this.form.addControl(
       ActionConstraintFormControl.Rule,
-      new FormControl(this.getCurrentRule()?.id, Validators.required)
+      new UntypedFormControl(this.getCurrentRule()?.id, Validators.required)
     );
   }
 
@@ -198,7 +205,7 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
 }
 
 export function titleOrIconValidator(): ValidatorFn {
-  return (form: FormGroup): ValidationErrors | null => {
+  return (form: UntypedFormGroup): ValidationErrors | null => {
     const icon = form.get(ActionConstraintFormControl.Icon)?.value;
     const title = form.get(ActionConstraintFormControl.Title)?.value;
 

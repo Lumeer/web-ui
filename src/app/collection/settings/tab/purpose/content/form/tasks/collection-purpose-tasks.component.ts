@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Collection, TaskPurposeMetadata} from '../../../../../../../core/store/collections/collection';
 import {TaskPurposeFormControl} from './task-purpose-form-control';
 import {removeAllFormControls} from '../../../../../../../shared/utils/form.utils';
@@ -53,7 +53,7 @@ import {selectAllCollections} from '../../../../../../../core/store/collections/
 })
 export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public collection: Collection;
@@ -175,25 +175,25 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   private createForm() {
     const metaData = <TaskPurposeMetadata>this.collection?.purpose?.metaData;
     const assigneeAttribute = findAttribute(this.collection?.attributes, metaData?.assigneeAttributeId);
-    this.form.addControl(TaskPurposeFormControl.Assignee, new FormControl(assigneeAttribute?.id));
+    this.form.addControl(TaskPurposeFormControl.Assignee, new UntypedFormControl(assigneeAttribute?.id));
 
     const dueDateAttribute = findAttribute(this.collection?.attributes, metaData?.dueDateAttributeId);
-    this.form.addControl(TaskPurposeFormControl.DueDate, new FormControl(dueDateAttribute?.id));
+    this.form.addControl(TaskPurposeFormControl.DueDate, new UntypedFormControl(dueDateAttribute?.id));
 
     const stateAttribute = findAttribute(this.collection?.attributes, metaData?.stateAttributeId);
-    this.form.addControl(TaskPurposeFormControl.State, new FormControl(stateAttribute?.id));
-    this.form.addControl(TaskPurposeFormControl.StateList, new FormControl(metaData?.finalStatesList));
+    this.form.addControl(TaskPurposeFormControl.State, new UntypedFormControl(stateAttribute?.id));
+    this.form.addControl(TaskPurposeFormControl.StateList, new UntypedFormControl(metaData?.finalStatesList));
 
     const observerAttribute = findAttribute(this.collection?.attributes, metaData?.observersAttributeId);
-    this.form.addControl(TaskPurposeFormControl.Observers, new FormControl(observerAttribute?.id));
+    this.form.addControl(TaskPurposeFormControl.Observers, new UntypedFormControl(observerAttribute?.id));
 
     const priorityAttribute = findAttribute(this.collection?.attributes, metaData?.priorityAttributeId);
-    this.form.addControl(TaskPurposeFormControl.Priority, new FormControl(priorityAttribute?.id));
+    this.form.addControl(TaskPurposeFormControl.Priority, new UntypedFormControl(priorityAttribute?.id));
 
     const tagsAttribute = findAttribute(this.collection?.attributes, metaData?.tagsAttributeId);
-    this.form.addControl(TaskPurposeFormControl.Tags, new FormControl(tagsAttribute?.id));
+    this.form.addControl(TaskPurposeFormControl.Tags, new UntypedFormControl(tagsAttribute?.id));
 
-    this.form.addControl(TaskPurposeFormControl.View, new FormControl(metaData?.defaultViewCode));
+    this.form.addControl(TaskPurposeFormControl.View, new UntypedFormControl(metaData?.defaultViewCode));
   }
 
   public onSelectValue(control: AbstractControl, value: any) {

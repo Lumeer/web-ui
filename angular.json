@@ -105,7 +105,6 @@
               "namedChunks": true,
               "optimization": true,
               "outputHashing": "all",
-              "showCircularDependencies": false,
               "sourceMap": true,
               "vendorChunk": false
             },
@@ -128,7 +127,6 @@
               "namedChunks": true,
               "optimization": true,
               "outputHashing": "all",
-              "showCircularDependencies": false,
               "sourceMap": true,
               "vendorChunk": false
             },
@@ -151,7 +149,6 @@
               "namedChunks": true,
               "optimization": true,
               "outputHashing": "all",
-              "showCircularDependencies": false,
               "sourceMap": true,
               "vendorChunk": false
             },
@@ -208,7 +205,6 @@
               "namedChunks": true,
               "optimization": true,
               "outputHashing": "all",
-              "showCircularDependencies": true,
               "sourceMap": true,
               "vendorChunk": false
             },
@@ -309,8 +305,7 @@
       }
     }
   },
-  "defaultProject": "lumeer",
   "cli": {
-    "defaultCollection": "@ngrx/schematics"
+    "schematicCollections": ["@ngrx/schematics"]
   }
 }

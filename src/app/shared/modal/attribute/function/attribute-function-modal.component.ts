@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {Attribute, AttributeFunction, Collection} from '../../../../core/store/collections/collection';
@@ -85,13 +85,13 @@ export class AttributeFunctionModalComponent implements OnInit {
 
   public performingAction$ = new BehaviorSubject(false);
 
-  public form: FormGroup = new FormGroup({
-    js: new FormControl(),
-    xml: new FormControl(),
-    editable: new FormControl(),
-    display: new FormControl(),
-    dryRun: new FormControl(),
-    recursive: new FormControl(),
+  public form: UntypedFormGroup = new UntypedFormGroup({
+    js: new UntypedFormControl(),
+    xml: new UntypedFormControl(),
+    editable: new UntypedFormControl(),
+    display: new UntypedFormControl(),
+    dryRun: new UntypedFormControl(),
+    recursive: new UntypedFormControl(),
   });
   public resource: AttributesResource;
 

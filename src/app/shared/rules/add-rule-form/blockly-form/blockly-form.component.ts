@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {BlocklyRuleConfiguration} from '../../../../core/model/rule';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -53,7 +53,7 @@ export class BlocklyFormComponent implements OnInit {
   public linkType: LinkType;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;

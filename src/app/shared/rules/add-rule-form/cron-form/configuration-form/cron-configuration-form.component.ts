@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, OnInit} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import * as moment from 'moment';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -55,7 +55,7 @@ interface DayOfWeek {
 })
 export class CronConfigurationFormComponent implements OnInit, OnChanges {
   @Input()
-  public configForm: FormGroup;
+  public configForm: UntypedFormGroup;
 
   @Input()
   public collection: Collection;

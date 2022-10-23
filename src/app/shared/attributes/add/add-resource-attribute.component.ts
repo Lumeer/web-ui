@@ -27,7 +27,14 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 import {Attribute} from '../../../core/store/collections/collection';
 import {notEmptyValidator} from '../../../core/validators/custom-validators';
 import {KeyCode} from '../../key-code';
@@ -46,9 +53,9 @@ export class AddResourceAttributeComponent implements OnInit, OnChanges {
   @Output()
   public save = new EventEmitter<string>();
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: UntypedFormBuilder) {}
 
   public get attributeControl(): AbstractControl {
     return this.form?.controls?.attribute;
@@ -92,7 +99,7 @@ export class AddResourceAttributeComponent implements OnInit, OnChanges {
 }
 
 function uniqueAttributeValidator(attributes: Attribute[]): ValidatorFn {
-  return (control: FormControl): ValidationErrors | null => {
+  return (control: UntypedFormControl): ValidationErrors | null => {
     const attributeName = String(control.value || '').trim();
     if (attributes.find(attribute => attribute.name === attributeName)) {
       return {notUnique: true};

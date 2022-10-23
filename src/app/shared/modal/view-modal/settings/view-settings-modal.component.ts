@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {DialogType} from '../../dialog-type';
 import {View} from '../../../../core/store/views/view';
@@ -58,7 +58,7 @@ export class ViewSettingsModalComponent implements OnInit {
 
   public readonly dialogType = DialogType;
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public defaultIcon: string;
   public defaultColor: string;
 
@@ -66,7 +66,7 @@ export class ViewSettingsModalComponent implements OnInit {
     private bsModalRef: BsModalRef,
     private store$: Store<AppState>,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {}
 
   public ngOnInit() {

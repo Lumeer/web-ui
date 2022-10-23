@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {createRange} from '../../../../utils/array.utils';
 import {createActionEquationFromFormArray} from '../../common/conditions/constraint-conditions-form.component';
 import {AttributeLock, AttributeLockExceptionGroup, AttributeLockGroupType} from '@lumeer/data-filters';
@@ -41,9 +41,9 @@ export class AttributeLockContentComponent implements OnInit {
   @Output()
   public lockChange = new EventEmitter<AttributeLock>();
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: UntypedFormBuilder) {}
 
   public ngOnInit() {
     this.form = this.fb.group({
@@ -52,8 +52,8 @@ export class AttributeLockContentComponent implements OnInit {
     });
   }
 
-  private createGroupControl(group?: AttributeLockExceptionGroup): FormGroup {
-    return new FormGroup({
+  private createGroupControl(group?: AttributeLockExceptionGroup): UntypedFormGroup {
+    return new UntypedFormGroup({
       type: this.fb.control(group?.type || AttributeLockGroupType.Everyone),
       typeValue: this.fb.control(group?.typeValue),
       filters: this.fb.array([]),
@@ -64,16 +64,16 @@ export class AttributeLockContentComponent implements OnInit {
     return this.form.controls.locked;
   }
 
-  public get groupsControl(): FormArray {
-    return <FormArray>this.form.controls.groups;
+  public get groupsControl(): UntypedFormArray {
+    return <UntypedFormArray>this.form.controls.groups;
   }
 
   public onSubmit() {
     const exceptionGroups: AttributeLockExceptionGroup[] = createRange(0, this.groupsControl.length).reduce<
       AttributeLockExceptionGroup[]
     >((groups, index) => {
-      const group = this.groupsControl.at(index) as FormGroup;
-      const filtersArray = group.controls.filters as FormArray;
+      const group = this.groupsControl.at(index) as UntypedFormGroup;
+      const filtersArray = group.controls.filters as UntypedFormArray;
 
       groups.push({
         type: group.value.type,

@@ -41,7 +41,7 @@ import {
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {NavigationExtras} from '@angular/router';
-import {AsyncValidatorFn, FormBuilder, FormGroup} from '@angular/forms';
+import {AsyncValidatorFn, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ProjectValidators} from '../../../core/validators/project.validators';
 import {OrganizationValidators} from '../../../core/validators/organization.validators';
 import {minLengthValidator} from '../../../core/validators/custom-validators';
@@ -67,7 +67,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
   @ViewChild(CreateResourceDialogFormComponent)
   public resourceFormComponent: CreateResourceDialogFormComponent;
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public contentValid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);
@@ -82,7 +82,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
   constructor(
     private bsModalRef: BsModalRef,
     private store$: Store<AppState>,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private projectValidators: ProjectValidators,
     private organizationValidators: OrganizationValidators
   ) {}

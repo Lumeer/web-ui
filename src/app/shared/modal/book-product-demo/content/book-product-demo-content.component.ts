@@ -18,7 +18,7 @@
  */
 
 import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {SelectItemModel} from '../../../select/select-item/select-item.model';
 
 @Component({
@@ -29,7 +29,7 @@ import {SelectItemModel} from '../../../select/select-item/select-item.model';
 })
 export class BookProductDemoContentComponent {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public numEmployeesItems: SelectItemModel[] = [
     {id: '1-10', value: '1-10'},

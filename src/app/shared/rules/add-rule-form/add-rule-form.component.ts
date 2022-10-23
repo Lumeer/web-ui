@@ -28,7 +28,14 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import {
   ChronoUnit,
   createRuleTiming,
@@ -85,14 +92,14 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly types = objectValues(ruleTypeMap);
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public typeItems: SelectItemModel[];
 
   private formSubscription: Subscription;
 
   public readonly ruleType = RuleType;
 
-  constructor(private fb: FormBuilder, private configuration: ConfigurationService) {}
+  constructor(private fb: UntypedFormBuilder, private configuration: ConfigurationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.ruleNames) {
@@ -231,16 +238,16 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     return this.form?.get('timingDelete');
   }
 
-  public get configAutoLink(): FormGroup {
-    return this.form.get('configAutoLink') as FormGroup;
+  public get configAutoLink(): UntypedFormGroup {
+    return this.form.get('configAutoLink') as UntypedFormGroup;
   }
 
-  public get configBlockly(): FormGroup {
-    return this.form.get('configBlockly') as FormGroup;
+  public get configBlockly(): UntypedFormGroup {
+    return this.form.get('configBlockly') as UntypedFormGroup;
   }
 
-  public get configCron(): FormGroup {
-    return this.form.get('configCron') as FormGroup;
+  public get configCron(): UntypedFormGroup {
+    return this.form.get('configCron') as UntypedFormGroup;
   }
 
   public getRuleConfiguration(ruleType: RuleType): RuleConfiguration {
@@ -300,7 +307,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public formValidator(): ValidatorFn {
-    return (form: FormGroup): ValidationErrors | null => {
+    return (form: UntypedFormGroup): ValidationErrors | null => {
       const configCron = form.get('configCron');
       if (form.get('type').value === RuleType.AutoLink) {
         const config = form.get('configAutoLink');

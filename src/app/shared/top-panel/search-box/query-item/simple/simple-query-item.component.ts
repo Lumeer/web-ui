@@ -31,7 +31,7 @@ import {
   OnChanges,
 } from '@angular/core';
 import {QueryItem} from '../model/query-item';
-import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {
   ConditionType,
   conditionTypeNumberOfInputs,
@@ -57,7 +57,7 @@ export class SimpleQueryItemComponent implements OnInit, OnChanges {
   public queryItem: QueryItem;
 
   @Input()
-  public queryItemForm: FormGroup;
+  public queryItemForm: UntypedFormGroup;
 
   @Input()
   public readonly: boolean;
@@ -94,8 +94,8 @@ export class SimpleQueryItemComponent implements OnInit, OnChanges {
     return this.queryItemForm?.controls?.fromSuggestion;
   }
 
-  public get conditionValuesControl(): FormArray {
-    return this.queryItemForm?.controls?.conditionValues as FormArray;
+  public get conditionValuesControl(): UntypedFormArray {
+    return this.queryItemForm?.controls?.conditionValues as UntypedFormArray;
   }
 
   public ngOnChanges(changes: SimpleChanges) {

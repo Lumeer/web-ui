@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {PercentageConstraintFormControl} from './percentage-constraint-form-control';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {minMaxValidator} from '../../../../../../../core/validators/min-max-validator';
@@ -36,7 +36,7 @@ export class PercentageConstraintConfigFormComponent implements OnChanges {
   public config: PercentageConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -51,13 +51,16 @@ export class PercentageConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(PercentageConstraintFormControl.Decimals, new FormControl(this.config?.decimals));
-    this.form.addControl(PercentageConstraintFormControl.MinValue, new FormControl(this.config?.minValue));
-    this.form.addControl(PercentageConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue));
-    this.form.addControl(PercentageConstraintFormControl.Color, new FormControl(this.config?.color || COLOR_SUCCESS));
+    this.form.addControl(PercentageConstraintFormControl.Decimals, new UntypedFormControl(this.config?.decimals));
+    this.form.addControl(PercentageConstraintFormControl.MinValue, new UntypedFormControl(this.config?.minValue));
+    this.form.addControl(PercentageConstraintFormControl.MaxValue, new UntypedFormControl(this.config?.maxValue));
+    this.form.addControl(
+      PercentageConstraintFormControl.Color,
+      new UntypedFormControl(this.config?.color || COLOR_SUCCESS)
+    );
     this.form.addControl(
       PercentageConstraintFormControl.Style,
-      new FormControl(this.config?.style || PercentageDisplayStyle.Text)
+      new UntypedFormControl(this.config?.style || PercentageDisplayStyle.Text)
     );
     this.form.setValidators(
       minMaxValidator(PercentageConstraintFormControl.MinValue, PercentageConstraintFormControl.MaxValue)

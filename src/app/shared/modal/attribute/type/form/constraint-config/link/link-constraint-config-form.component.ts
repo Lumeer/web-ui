@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LinkConstraintFormControl} from './link-constraint-form-control';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {LinkConstraintConfig} from '@lumeer/data-filters';
@@ -33,7 +33,7 @@ export class LinkConstraintConfigFormComponent implements OnChanges {
   public config: LinkConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly formControlName = LinkConstraintFormControl;
 
@@ -50,6 +50,6 @@ export class LinkConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(LinkConstraintFormControl.OpenInApp, new FormControl(this.config?.openInApp));
+    this.form.addControl(LinkConstraintFormControl.OpenInApp, new UntypedFormControl(this.config?.openInApp));
   }
 }

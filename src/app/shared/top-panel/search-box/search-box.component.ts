@@ -39,7 +39,7 @@ import {
   convertQueryItemsToString,
   QueryItemsConverter,
 } from './query-item/query-items.converter';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {isQueryItemEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
@@ -76,7 +76,7 @@ const ALLOW_AUTOMATIC_SUBMISSION = true;
 export class SearchBoxComponent implements OnInit, OnDestroy {
   public currentView$ = new BehaviorSubject<View>(null);
   public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
-  public form$ = new BehaviorSubject<FormGroup>(null);
+  public form$ = new BehaviorSubject<UntypedFormGroup>(null);
 
   public users$: Observable<User[]>;
   public constraintData$: Observable<ConstraintData>;
@@ -86,7 +86,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public canChangeQuery$: Observable<boolean>;
   public searchBoxData$: Observable<SearchBoxData>;
 
-  public queryItemsControl: FormArray;
+  public queryItemsControl: UntypedFormArray;
 
   private subscriptions = new Subscription();
 
@@ -97,7 +97,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private queryData: QueryData;
   private searchBoxService: SearchBoxService;
 
-  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {
+  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: UntypedFormBuilder) {
     const queryItemsObservable$ = this.queryItems$.pipe(skip(1));
     this.searchBoxService = new SearchBoxService(store$, queryItemsObservable$);
   }
@@ -308,7 +308,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       const form = this.formBuilder.group({
         queryItems: this.formBuilder.array(queryItems.map(qi => queryItemToForm(qi))),
       });
-      this.queryItemsControl = form.get('queryItems') as FormArray;
+      this.queryItemsControl = form.get('queryItems') as UntypedFormArray;
       this.form$.next(form);
     }
   }

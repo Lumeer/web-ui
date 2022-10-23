@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ViewConstraintFormControl} from './view-constraint-form-control';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {ViewConstraintConfig} from '@lumeer/data-filters';
@@ -33,7 +33,7 @@ export class ViewConstraintConfigFormComponent implements OnChanges {
   public config: ViewConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly formControlName = ViewConstraintFormControl;
 
@@ -50,7 +50,10 @@ export class ViewConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(ViewConstraintFormControl.Multi, new FormControl(this.config?.multi));
-    this.form.addControl(ViewConstraintFormControl.OpenInNewWindow, new FormControl(this.config?.openInNewWindow));
+    this.form.addControl(ViewConstraintFormControl.Multi, new UntypedFormControl(this.config?.multi));
+    this.form.addControl(
+      ViewConstraintFormControl.OpenInNewWindow,
+      new UntypedFormControl(this.config?.openInNewWindow)
+    );
   }
 }

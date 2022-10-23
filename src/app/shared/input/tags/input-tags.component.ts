@@ -28,7 +28,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {KeyCode} from '../../key-code';
@@ -44,7 +44,7 @@ import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.
 })
 export class InputTagsComponent implements OnInit, OnChanges {
   @Input()
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   @Input()
   public controlName: string;
@@ -80,8 +80,8 @@ export class InputTagsComponent implements OnInit, OnChanges {
     this.placeholderTitleDefault = $localize`:@@projects.tab.template.metadata.tags.placeholder:Type tag name and press Enter`;
   }
 
-  public get tagsControl(): FormArray {
-    return <FormArray>this.formGroup.get(this.controlName);
+  public get tagsControl(): UntypedFormArray {
+    return <UntypedFormArray>this.formGroup.get(this.controlName);
   }
 
   public get tags(): string[] {
@@ -134,7 +134,7 @@ export class InputTagsComponent implements OnInit, OnChanges {
     const hasText = !!this.text;
     const tag = (this.text || '').trim();
     if (tag && !this.tags.includes(tag)) {
-      this.tagsControl?.push(new FormControl(tag));
+      this.tagsControl?.push(new UntypedFormControl(tag));
       this.text = '';
     }
     if (!hasText) {
@@ -153,7 +153,7 @@ export class InputTagsComponent implements OnInit, OnChanges {
   }
 
   public onSelectOption(option: DropdownOption) {
-    this.tagsControl?.push(new FormControl(option.value));
+    this.tagsControl?.push(new UntypedFormControl(option.value));
     this.text = '';
     this.updateDropdown();
   }

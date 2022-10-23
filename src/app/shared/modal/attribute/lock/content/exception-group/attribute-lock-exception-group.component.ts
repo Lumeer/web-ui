@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
@@ -45,7 +45,7 @@ export class AttributeLockExceptionGroupComponent implements OnInit {
   public locked: boolean;
 
   @Input()
-  public group: FormGroup;
+  public group: UntypedFormGroup;
 
   @Input()
   public exceptionGroup: AttributeLockExceptionGroup;
@@ -104,8 +104,8 @@ export class AttributeLockExceptionGroupComponent implements OnInit {
     return this.group.controls.typeValue;
   }
 
-  public get filtersControl(): FormArray {
-    return <FormArray>this.group.controls.filters;
+  public get filtersControl(): UntypedFormArray {
+    return <UntypedFormArray>this.group.controls.filters;
   }
 
   public onSave(data: {dataValue: UserDataValue}) {

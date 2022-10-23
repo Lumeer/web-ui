@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
 import {Attribute, AttributeFunction, Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -54,7 +54,7 @@ export class AttributeFunctionContentComponent implements OnInit {
   public attributeFunction: AttributeFunction;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public ngOnInit() {
     this.form.patchValue({

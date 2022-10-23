@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -33,8 +33,8 @@ import {AppState} from '../../../core/store/app.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GetInTouchModalComponent implements OnInit {
-  public readonly form = new FormGroup({
-    message: new FormControl('', Validators.required),
+  public readonly form = new UntypedFormGroup({
+    message: new UntypedFormControl('', Validators.required),
   });
 
   public readonly dialogType = DialogType;

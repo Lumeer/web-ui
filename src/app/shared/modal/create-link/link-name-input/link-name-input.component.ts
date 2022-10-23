@@ -26,7 +26,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'link-name-input',
@@ -41,7 +41,7 @@ export class LinkNameInputComponent implements OnChanges {
   public icons: string[];
 
   @Input()
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   @Input()
   public focused: boolean;

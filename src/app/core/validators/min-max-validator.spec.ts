@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {minMaxValidator} from './min-max-validator';
 
 describe('minMaxValidator', () => {
-  let form: FormGroup;
+  let form: UntypedFormGroup;
   let min: AbstractControl;
   let max: AbstractControl;
 
   beforeEach(() => {
-    form = new FormGroup({
-      min: new FormControl(),
-      max: new FormControl(),
+    form = new UntypedFormGroup({
+      min: new UntypedFormControl(),
+      max: new UntypedFormControl(),
     });
     min = form.get('min');
     max = form.get('max');
