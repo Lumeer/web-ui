@@ -26,9 +26,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v11-dependencies-{{ checksum "package-lock.json" }}
+            - v10-dependencies-{{ checksum "package-lock.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v11-dependencies-
+            - v10-dependencies-
 
       - run:
           name: install
@@ -37,7 +37,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v11-dependencies-{{ checksum "package-lock.json" }}
+          key: v10-dependencies-{{ checksum "package-lock.json" }}
 
       - run: # run AOT build
           name: build
