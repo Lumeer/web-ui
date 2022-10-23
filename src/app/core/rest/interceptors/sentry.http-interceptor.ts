@@ -20,7 +20,6 @@
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import * as Sentry from '@sentry/browser';
-import {Severity} from '@sentry/browser';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ConfigurationService} from '../../../configuration/configuration.service';
@@ -49,7 +48,7 @@ export class SentryHttpInterceptor implements HttpInterceptor {
         Sentry.captureException(error.error);
       }
 
-      Sentry.captureMessage(`${error.status}: ${error.error}`, Severity.Error);
+      Sentry.captureMessage(`${error.status}: ${error.error}`, 'error');
     } else {
       Sentry.captureException(error?.originalError || error?.error || error);
     }

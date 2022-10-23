@@ -78,9 +78,16 @@
               "coordinate-parser",
               "util",
               "pressure",
+              "moment",
               "dompurify",
+              "pusher-js",
+              "driver.js",
+              "fast-deep-equal",
+              "ts-md5/dist/md5",
               "crc-32",
-              "@lumeer/lumeer-gantt"
+              "quill",
+              "@lumeer/lumeer-gantt",
+              "mapbox-gl/dist/mapbox-gl"
             ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",

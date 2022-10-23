@@ -17,7 +17,7 @@
 
 $flag-icons-path: '~flag-icons/flags' !default;
 $include: cz, gb, hu !default;
-@import '~flag-icons/sass/flag-icons';
+@import 'flag-icons/sass/flag-icons';
 
 *[contenteditable] {
   -webkit-user-select: auto !important;
