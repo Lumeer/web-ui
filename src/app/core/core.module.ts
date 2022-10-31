@@ -48,21 +48,7 @@ import {SequenceService} from './rest/sequence.service';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {TemplateService} from './rest/template.service';
 import {DataServiceModule} from './data-service/data-service.module';
-import {FullCalendarModule} from '@fullcalendar/angular';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import listPlugin from '@fullcalendar/list';
-import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import {DocumentRedirectComponent} from './components/document-redirect.component';
-
-FullCalendarModule.registerPlugins([
-  dayGridPlugin,
-  timeGridPlugin,
-  interactionPlugin,
-  listPlugin,
-  resourceTimeGridPlugin,
-]);
 
 @NgModule({
   imports: [
@@ -84,7 +70,6 @@ FullCalendarModule.registerPlugins([
     TimepickerModule.forRoot(),
     TypeaheadModule.forRoot(),
     DataServiceModule,
-    FullCalendarModule,
   ],
   declarations: [HomeComponent, RedirectComponent, DocumentRedirectComponent],
   providers: [

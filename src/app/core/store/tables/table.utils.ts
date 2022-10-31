@@ -266,7 +266,7 @@ export function getAttributeIdFromColumn(column: TableConfigColumn) {
 export function maxColumnDepth(columns: TableConfigColumn[]): number {
   return Math.max(
     ...columns.map(column => {
-      if (column.type === TableColumnType.COMPOUND) {
+      if (column?.type === TableColumnType.COMPOUND) {
         return column.children.length ? maxColumnDepth(column.children) + 1 : 1;
       }
       return 1;
