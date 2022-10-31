@@ -4613,14 +4613,14 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1396</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1369</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.message" datatype="html">
                 <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
                 <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v tabulce.</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1397</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1370</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.changeAttribute" datatype="html">
                 <source>Attribute settings...</source>
                 <target>Nastavení attributu...</target>
@@ -9150,7 +9150,19 @@
         <source>Deletes an existing record. To prevent large damage, only up to <x id="limit" equiv-text="limit"/> documents can be deleted within a single sequence of automations and functions.</source>
         <target>Smaže existující záznam. Z důvodu zabránění nechtěných škod je počet smazaných záznamů omezen na <x id="limit" equiv-text="{{limit}}"/> v rámci jedné série spuštěných automatizací.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="blockly.tooltip.escapeHtmlBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="blockly.tooltip.displayAttributeBlock" datatype="html">
+        <source>Display the value of an attribute in the given record or link in a new browser window.</source><target>Zobrazí hodnotu atributu z daného záznamu v novém okně prohlížeče.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/display-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.displayTextBlock" datatype="html">
+        <source>Displays the given text string in a new browser window.</source><target>Zobrazí daný řetězec v novém okně prohlížeče.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/display-text-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.escapeHtmlBlock" datatype="html">
         <source>Escape HTML entities in a string.</source><target>Escapuje HTML entity v řetězci.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/escape-html-blockly-component.ts</context>

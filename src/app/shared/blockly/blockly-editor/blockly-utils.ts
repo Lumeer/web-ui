@@ -114,6 +114,8 @@ export class BlocklyUtils {
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
   public static readonly PRINT_TEXT = 'print_text';
+  public static readonly DISPLAY_ATTRIBUTE = 'display_attribute';
+  public static readonly DISPLAY_TEXT = 'display_text';
   public static readonly GENERATE_PDF = 'generate_pdf';
   public static readonly SEND_EMAIL = 'send_email';
   public static readonly SEND_SMTP_EMAIL = 'send_smtp_email';

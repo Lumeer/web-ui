@@ -3150,6 +3150,20 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="blockly.tooltip.displayAttributeBlock" datatype="html">
+        <source>Display the value of an attribute in the given record or link in a new browser window.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/display-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.displayTextBlock" datatype="html">
+        <source>Displays the given text string in a new browser window.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/display-text-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="blockly.tooltip.escapeHtmlBlock" datatype="html">
         <source>Escape HTML entities in a string.</source>
         <context-group purpose="location">
@@ -11408,7 +11422,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1396</context>
+          <context context-type="linenumber">1369</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
@@ -11419,7 +11433,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1397</context>
+          <context context-type="linenumber">1370</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.add.link.column" datatype="html">

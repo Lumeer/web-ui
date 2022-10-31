@@ -47,28 +47,37 @@ export class PrintComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.value$ = this.activatedRoute.paramMap.pipe(
-      tap(paramMap => this.fetchDocument(paramMap)),
-      mergeMap(paramMap => {
+    this.value$ = combineLatest([this.activatedRoute.paramMap, this.activatedRoute.queryParams]).pipe(
+      tap(([paramMap]) => this.fetchDocument(paramMap)),
+      mergeMap(([paramMap, queryParams]) => {
         const resourceType = paramMap.get('resourceType');
         const documentId = paramMap.get('documentId');
         const attributeId = paramMap.get('attributeId');
+        const skipDialog = JSON.parse(queryParams['skipDialog']);
 
+        let observable;
         if (resourceType === 'text') {
-          return of(this.printService.getContent());
+          observable = of(this.printService.getContent());
+        } else {
+          observable = combineLatest([
+            this.store$.pipe(select(selectWorkspace)),
+            resourceType === ResourceType.Collection
+              ? this.store$.pipe(select(selectDocumentById(documentId)))
+              : this.store$.pipe(select(selectLinkInstanceById(documentId))),
+          ]).pipe(
+            filter(([w, d]) => !!w && !!d),
+            map(([, d]) => d.data[attributeId])
+          );
         }
 
-        return combineLatest([
-          this.store$.pipe(select(selectWorkspace)),
-          resourceType === ResourceType.Collection
-            ? this.store$.pipe(select(selectDocumentById(documentId)))
-            : this.store$.pipe(select(selectLinkInstanceById(documentId))),
-        ]).pipe(
-          filter(([w, d]) => !!w && !!d),
-          map(([, d]) => d.data[attributeId])
+        return observable.pipe(
+          tap(() => {
+            if (!skipDialog) {
+              setTimeout(() => window.print(), 3000);
+            }
+          })
         );
-      }),
-      tap(() => setTimeout(() => window.print(), 3000))
+      })
     );
   }
 

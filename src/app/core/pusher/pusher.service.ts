@@ -441,7 +441,7 @@ export class PusherService implements OnDestroy {
           data.object.projectCode
         }/${data.object.type.toLowerCase()}/${data.object.resourceId}/${data.object.documentId}/${
           data.object.attributeId
-        }`;
+        }?skipDialog=${data.object.skipPrintDialog}`;
         a.target = '_blank';
         a.click();
       }
@@ -453,7 +453,7 @@ export class PusherService implements OnDestroy {
         const a = document.createElement('a');
         a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
           data.object.projectCode
-        }/text`;
+        }/text?skipDialog=${data.object.skipPrintDialog}`;
         a.target = '_blank';
         a.click();
       }

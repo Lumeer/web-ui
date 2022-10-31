@@ -5141,7 +5141,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-to-ms-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.deleteDocumentBlock" datatype="html">
         <source>Deletes an existing record. To prevent large damage, only up to <x id="limit" equiv-text="limit"/> documents can be deleted within a single sequence of automations and functions.</source><target state="final">Deletes an existing record. To prevent large damage, only up to <x id="limit" equiv-text="limit"/> documents can be deleted within a single sequence of automations and functions.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="blockly.tooltip.escapeHtmlBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="blockly.tooltip.displayAttributeBlock" datatype="html">
+        <source>Display the value of an attribute in the given record or link in a new browser window.</source><target state="final">Display the value of an attribute in the given record or link in a new browser window.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/display-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.displayTextBlock" datatype="html">
+        <source>Displays the given text string in a new browser window.</source><target state="final">Displays the given text string in a new browser window.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/display-text-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.escapeHtmlBlock" datatype="html">
         <source>Escape HTML entities in a string.</source><target state="final">Escape HTML entities in a string.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/escape-html-blockly-component.ts</context>
@@ -6089,11 +6101,11 @@
       <trans-unit id="table.delete.column.dialog.title" datatype="html">
         <source>Delete this column?</source><target state="final">Delete this column?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1396</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1369</context></context-group></trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
         <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source><target state="final">Do you really want to delete the column? This will permanently remove the attribute and all its data.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1397</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1370</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
         <source>Attribute settings...</source><target state="final">Attribute settings...</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">344</context></context-group></trans-unit><trans-unit id="table.header.menu.add.linkColumn" datatype="html">
