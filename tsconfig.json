@@ -10,7 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2020",
+    "target": "es2018",
     "module": "esnext",
     "lib": ["es2018", "dom"],
     "typeRoots": ["node_modules/@types"],
