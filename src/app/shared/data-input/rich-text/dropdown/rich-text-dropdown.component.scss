@@ -1,6 +1,10 @@
 @import '~src/styles/variables';
 
 ::ng-deep {
+  .ql-container.ql-snow {
+    overflow: auto;
+  }
+
   .ql-container.ql-snow,
   .ql-toolbar {
     border-top: 0 !important;
@@ -16,7 +20,7 @@
 
 .card {
   display: grid;
-  grid-template-rows: 1fr min-content min-content;
+  grid-template-rows: minmax(0, 1fr) min-content min-content;
 
   .editor {
     display: grid;
