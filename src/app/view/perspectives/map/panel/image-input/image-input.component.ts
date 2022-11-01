@@ -28,7 +28,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {LanguageCode} from '../../../../../core/model/language';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
@@ -47,12 +47,12 @@ export class ImageInputComponent implements OnChanges, OnInit, OnDestroy {
   public valueChange = new EventEmitter<string>();
 
   public readonly formControlName = 'imageUrl';
-  public readonly form: FormGroup;
+  public readonly form: UntypedFormGroup;
   public helpLink: string;
 
   private subscriptions = new Subscription();
 
-  constructor(private fb: FormBuilder, private configurationService: ConfigurationService) {
+  constructor(private fb: UntypedFormBuilder, private configurationService: ConfigurationService) {
     this.form = this.fb.group({[this.formControlName]: null}, {updateOn: 'blur'});
   }
 

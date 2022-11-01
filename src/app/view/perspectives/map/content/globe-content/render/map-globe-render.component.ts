@@ -56,6 +56,7 @@ import {
   createMapClustersLayer,
   createMapMarker,
   createMapMarkersBounds,
+  createMapMarkersGeoJson,
   createMapPopupMarker,
 } from './map-globe-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
@@ -338,7 +339,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
 
     const source = this.mapboxMap.getSource(MAP_SOURCE_ID) as GeoJSONSource;
     if (source) {
-      source.setData(createMapClusterMarkersSource(markers).data);
+      source.setData(createMapMarkersGeoJson(markers));
     } else {
       this.addSourceAndLayers(markers);
     }

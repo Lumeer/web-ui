@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {View} from '../../../../../core/store/views/view';
 
 @Component({
@@ -29,7 +29,7 @@ import {View} from '../../../../../core/store/views/view';
 })
 export class ViewSettingsModalBodyComponent {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public views: View[];

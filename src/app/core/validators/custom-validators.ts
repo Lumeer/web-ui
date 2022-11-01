@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {UntypedFormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 export function notEmptyValidator(): ValidatorFn {
-  return (control: FormControl): ValidationErrors | null => {
+  return (control: UntypedFormControl): ValidationErrors | null => {
     return String(control.value || '').trim() ? null : {notEmpty: true};
   };
 }
 
 export function integerValidator(): ValidatorFn {
-  return (control: FormControl): ValidationErrors | null => {
+  return (control: UntypedFormControl): ValidationErrors | null => {
     const value = control.value;
 
     if (isNullOrUndefined(value)) {
@@ -45,7 +45,7 @@ export function integerValidator(): ValidatorFn {
 }
 
 export function minLengthValidator(length: number): ValidatorFn {
-  return (control: FormControl): ValidationErrors | null => {
+  return (control: UntypedFormControl): ValidationErrors | null => {
     return String(control.value || '').trim().length >= length ? null : {minLength: true};
   };
 }

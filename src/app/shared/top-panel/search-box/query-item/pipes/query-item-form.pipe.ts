@@ -21,13 +21,13 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {QueryItem} from '../model/query-item';
 import {queryItemToForm} from '../../../../../core/store/navigation/query/query.util';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 @Pipe({
   name: 'queryItemForm',
 })
 export class QueryItemFormPipe implements PipeTransform {
-  public transform(queryItem: QueryItem): FormGroup {
-    return queryItemToForm(queryItem) as FormGroup;
+  public transform(queryItem: QueryItem): UntypedFormGroup {
+    return queryItemToForm(queryItem) as UntypedFormGroup;
   }
 }

@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {minMaxValidator} from '../../../../../../../core/validators/min-max-validator';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {NumberConstraintFormControl} from './number-constraint-form-control';
@@ -49,7 +49,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   public config: NumberConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly formControlName = NumberConstraintFormControl;
   public readonly currencySelectItems: SelectItemModel[];
@@ -77,14 +77,20 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(NumberConstraintFormControl.Decimals, new FormControl(this.config?.decimals));
-    this.form.addControl(NumberConstraintFormControl.Compact, new FormControl(this.config?.compact));
-    this.form.addControl(NumberConstraintFormControl.ForceSign, new FormControl(this.config?.forceSign));
-    this.form.addControl(NumberConstraintFormControl.Separated, new FormControl(this.config?.separated));
-    this.form.addControl(NumberConstraintFormControl.Negative, new FormControl(this.config?.negative));
-    this.form.addControl(NumberConstraintFormControl.MinValue, new FormControl(this.config?.minValue?.toFixed()));
-    this.form.addControl(NumberConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue?.toFixed()));
-    this.form.addControl(NumberConstraintFormControl.Currency, new FormControl(this.config?.currency));
+    this.form.addControl(NumberConstraintFormControl.Decimals, new UntypedFormControl(this.config?.decimals));
+    this.form.addControl(NumberConstraintFormControl.Compact, new UntypedFormControl(this.config?.compact));
+    this.form.addControl(NumberConstraintFormControl.ForceSign, new UntypedFormControl(this.config?.forceSign));
+    this.form.addControl(NumberConstraintFormControl.Separated, new UntypedFormControl(this.config?.separated));
+    this.form.addControl(NumberConstraintFormControl.Negative, new UntypedFormControl(this.config?.negative));
+    this.form.addControl(
+      NumberConstraintFormControl.MinValue,
+      new UntypedFormControl(this.config?.minValue?.toFixed())
+    );
+    this.form.addControl(
+      NumberConstraintFormControl.MaxValue,
+      new UntypedFormControl(this.config?.maxValue?.toFixed())
+    );
+    this.form.addControl(NumberConstraintFormControl.Currency, new UntypedFormControl(this.config?.currency));
     this.form.setValidators(
       minMaxValidator(NumberConstraintFormControl.MinValue, NumberConstraintFormControl.MaxValue)
     );

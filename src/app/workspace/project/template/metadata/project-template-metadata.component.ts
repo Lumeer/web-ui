@@ -20,7 +20,13 @@
 import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, OnChanges, SimpleChanges} from '@angular/core';
 import {Project, TemplateMetadata} from '../../../../core/store/projects/project';
 import {View} from '../../../../core/store/views/view';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {UpdateProjectService} from '../update-project.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
@@ -55,27 +61,27 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnChanges, OnDe
     adaptivePosition: true,
   };
 
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
   public editingControl: string;
 
   private subscriptions = new Subscription();
 
-  constructor(private fb: FormBuilder, private updateProjectService: UpdateProjectService) {}
+  constructor(private fb: UntypedFormBuilder, private updateProjectService: UpdateProjectService) {}
 
   public get isPublicControl(): AbstractControl {
     return this.formGroup.controls.isPublic;
   }
 
-  public get metadataFormGroup(): FormGroup {
-    return <FormGroup>this.formGroup.controls.metadata;
+  public get metadataFormGroup(): UntypedFormGroup {
+    return <UntypedFormGroup>this.formGroup.controls.metadata;
   }
 
-  public get scriptFormGroup(): FormGroup {
-    return <FormGroup>this.formGroup.controls.script;
+  public get scriptFormGroup(): UntypedFormGroup {
+    return <UntypedFormGroup>this.formGroup.controls.script;
   }
 
-  public get tagsFormArray(): FormArray {
-    return <FormArray>this.metadataFormGroup.controls.tags;
+  public get tagsFormArray(): UntypedFormArray {
+    return <UntypedFormArray>this.metadataFormGroup.controls.tags;
   }
 
   public get defaultViewControl(): AbstractControl {
@@ -104,7 +110,7 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnChanges, OnDe
       this.metadataFormGroup.patchValue(metadata, {emitEvent: false});
       if (metadata.tags) {
         removeAllFormArrayControls(this.tagsFormArray);
-        metadata.tags.forEach(tag => this.tagsFormArray.push(new FormControl(tag)));
+        metadata.tags.forEach(tag => this.tagsFormArray.push(new UntypedFormControl(tag)));
       }
     }
   }

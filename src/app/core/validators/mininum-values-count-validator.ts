@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {UntypedFormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
 
 export function minimumValuesCountValidator(valueControlName: string, minimumCount: number): ValidatorFn {
-  return (formArray: FormArray): ValidationErrors | null => {
+  return (formArray: UntypedFormArray): ValidationErrors | null => {
     const values = formArray.controls
       .map(form => form.get(valueControlName))
       .filter(control => !!control)

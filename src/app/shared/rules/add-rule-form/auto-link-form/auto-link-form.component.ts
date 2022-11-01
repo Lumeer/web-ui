@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 
@@ -33,7 +33,7 @@ export class AutoLinkFormComponent implements OnInit {
   public collection: Collection;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public linkTypes: LinkType[];

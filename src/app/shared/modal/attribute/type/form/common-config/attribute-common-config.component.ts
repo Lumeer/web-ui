@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {ConstraintType} from '@lumeer/data-filters';
 import {canShowAttributeHints} from '../../../../../utils/attribute.utils';
 
@@ -29,7 +29,7 @@ import {canShowAttributeHints} from '../../../../../utils/attribute.utils';
 })
 export class AttributeCommonConfigComponent implements OnChanges {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public type: ConstraintType;

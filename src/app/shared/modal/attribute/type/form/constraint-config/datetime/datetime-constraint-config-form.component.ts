@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Observable, Subscription} from 'rxjs';
 import {map, startWith, withLatestFrom} from 'rxjs/operators';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
@@ -45,7 +45,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges,
   public config: DateTimeConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public helpUrl: string;
 
@@ -124,14 +124,14 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges,
   private createForm() {
     const format = this.config?.format || this.formats[0];
     const selectFormat = this.formats.includes(format) ? format : '';
-    this.form.addControl(DatetimeConstraintFormControl.Format, new FormControl(selectFormat));
-    this.form.addControl(DatetimeConstraintFormControl.CustomFormat, new FormControl(format));
+    this.form.addControl(DatetimeConstraintFormControl.Format, new UntypedFormControl(selectFormat));
+    this.form.addControl(DatetimeConstraintFormControl.CustomFormat, new UntypedFormControl(format));
 
     const asUtc = this.config ? this.config.asUtc || false : isFormatInUtc(format);
-    this.form.addControl(DatetimeConstraintFormControl.Utc, new FormControl(asUtc));
+    this.form.addControl(DatetimeConstraintFormControl.Utc, new UntypedFormControl(asUtc));
 
-    this.form.addControl(DatetimeConstraintFormControl.MinValue, new FormControl(this.config?.minValue));
-    this.form.addControl(DatetimeConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue));
+    this.form.addControl(DatetimeConstraintFormControl.MinValue, new UntypedFormControl(this.config?.minValue));
+    this.form.addControl(DatetimeConstraintFormControl.MaxValue, new UntypedFormControl(this.config?.maxValue));
     this.form.setValidators([
       minMaxValidator(DatetimeConstraintFormControl.MinValue, DatetimeConstraintFormControl.MaxValue),
       customFormatValidator(),
@@ -185,7 +185,7 @@ function isFormatInUtc(format: string): boolean {
 }
 
 function customFormatValidator(): ValidatorFn {
-  return (form: FormGroup): ValidationErrors | null => {
+  return (form: UntypedFormGroup): ValidationErrors | null => {
     const format = form.get(DatetimeConstraintFormControl.Format).value;
     const customFormat = form.get(DatetimeConstraintFormControl.CustomFormat).value;
 

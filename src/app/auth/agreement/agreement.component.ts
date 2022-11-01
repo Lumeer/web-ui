@@ -18,7 +18,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
@@ -60,9 +60,9 @@ export class AgreementComponent implements OnInit, OnDestroy {
 
   public stage = 0;
 
-  public form = new FormGroup({
-    [this.agreementName]: new FormControl(false, Validators.requiredTrue),
-    [this.newsletterName]: new FormControl(false),
+  public form = new UntypedFormGroup({
+    [this.agreementName]: new UntypedFormControl(false, Validators.requiredTrue),
+    [this.newsletterName]: new UntypedFormControl(false),
   });
 
   public loading: boolean;

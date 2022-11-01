@@ -21,7 +21,7 @@ import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
 import {CronRuleConfiguration, Rule} from '../../../../core/model/rule';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {RuleVariable} from '../../../blockly/rule-variable-type';
 import {BlocklyDebugDisplay} from '../../../blockly/blockly-debugger/blockly-debugger.component';
@@ -57,7 +57,7 @@ export class CronFormComponent implements OnInit {
   public linkType: LinkType;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;

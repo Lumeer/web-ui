@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {FormArray, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {
   DurationConstraintConversionFormControl,
   DurationConstraintFormControl,
@@ -31,7 +31,7 @@ import {
 })
 export class DurationConstraintConfigFormConversionsComponent {
   @Input()
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
 
   @Input()
   public editable: boolean;
@@ -39,7 +39,7 @@ export class DurationConstraintConfigFormConversionsComponent {
   public readonly controls = DurationConstraintFormControl;
   public readonly conversionsControls = DurationConstraintConversionFormControl;
 
-  public get conversionsControl(): FormArray {
-    return this.formGroup.get(DurationConstraintFormControl.Conversions) as FormArray;
+  public get conversionsControl(): UntypedFormArray {
+    return this.formGroup.get(DurationConstraintFormControl.Conversions) as UntypedFormArray;
   }
 }

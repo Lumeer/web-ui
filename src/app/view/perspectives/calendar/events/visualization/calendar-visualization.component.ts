@@ -32,9 +32,10 @@ import {
   ButtonTextCompoundInput,
   CalendarOptions,
   CustomButtonInput,
-  FullCalendarComponent,
+  defineFullCalendarElement,
+  FullCalendarElement,
   ToolbarInput,
-} from '@fullcalendar/angular';
+} from '@fullcalendar/web-component';
 import {ViewApi} from '@fullcalendar/common';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -51,6 +52,9 @@ import {
 import * as moment from 'moment';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {CalendarApi} from '@fullcalendar/core';
+
+defineFullCalendarElement();
 
 @Component({
   selector: 'calendar-visualization',
@@ -95,7 +99,7 @@ export class CalendarVisualizationComponent implements OnChanges {
   public listToggle = new EventEmitter<boolean>();
 
   @ViewChild('calendar', {static: true})
-  public calendarComponent: FullCalendarComponent;
+  public calendarRef: ElementRef<FullCalendarElement>;
 
   public readonly locale: string;
   public readonly calendarPlugins = [
@@ -188,7 +192,7 @@ export class CalendarVisualizationComponent implements OnChanges {
       this.checkCalendarModeChanged(!!changes.list, this.currentMode, this.currentDate);
     }
     if (changes.toolbarOpened) {
-      this.calendarComponent?.getApi()?.updateSize();
+      this.getCalendarApi()?.updateSize();
     }
     this.createCalendarOptions();
   }
@@ -292,9 +296,9 @@ export class CalendarVisualizationComponent implements OnChanges {
   }
 
   private checkCalendarModeChanged(force: boolean, mode: CalendarMode, date: Date) {
-    const currentView = this.calendarComponent?.getApi()?.view?.type;
+    const currentView = this.getCalendarApi()?.view?.type;
     const currentMode = this.calendarModeByDefaultView(currentView);
-    const currentDate = this.calendarComponent?.getApi()?.getDate();
+    const currentDate = this.getCalendarApi()?.getDate();
 
     if (
       force ||
@@ -302,7 +306,7 @@ export class CalendarVisualizationComponent implements OnChanges {
       this.defaultView !== this.getCalendarModeString(mode)
     ) {
       this.defaultView = this.getCalendarModeString(mode);
-      this.calendarComponent?.getApi()?.changeView(this.getCalendarModeString(mode), date);
+      this.getCalendarApi()?.changeView(this.getCalendarModeString(mode), date);
     }
   }
 
@@ -312,7 +316,11 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   public onNavLinkDayClick(date: Date) {
     const defaultView = this.getCalendarModeString(CalendarMode.Day);
-    this.calendarComponent.getApi().changeView(defaultView, date);
+    this.getCalendarApi()?.changeView(defaultView, date);
+  }
+
+  private getCalendarApi(): CalendarApi {
+    return this.calendarRef?.nativeElement?.getApi();
   }
 
   public onRangeSelected(data: {start: Date; end: Date; resource?: {id: string}}) {

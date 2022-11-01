@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {removeAllFormArrayControls} from '../../../../utils/form.utils';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {SelectItem2Model} from '../../../../select/select-item2/select-item2.model';
@@ -49,7 +49,7 @@ export enum ConstraintFiltersFormControl {
 })
 export class ConstraintConditionsFormComponent implements OnChanges {
   @Input()
-  public filtersArray: FormArray;
+  public filtersArray: UntypedFormArray;
 
   @Input()
   public equation: AttributeFilterEquation;
@@ -95,15 +95,19 @@ export class ConstraintConditionsFormComponent implements OnChanges {
     this.filtersArray.push(this.createFormGroup(operator || EquationOperator.And));
   }
 
-  private createFormGroup(operator: EquationOperator, attribute?: Attribute, filter?: AttributeFilter): FormGroup {
-    return new FormGroup({
-      [ConstraintFiltersFormControl.Attribute]: new FormControl(attribute?.id),
-      [ConstraintFiltersFormControl.ConstraintType]: new FormControl(
+  private createFormGroup(
+    operator: EquationOperator,
+    attribute?: Attribute,
+    filter?: AttributeFilter
+  ): UntypedFormGroup {
+    return new UntypedFormGroup({
+      [ConstraintFiltersFormControl.Attribute]: new UntypedFormControl(attribute?.id),
+      [ConstraintFiltersFormControl.ConstraintType]: new UntypedFormControl(
         attribute?.constraint?.type || ConstraintType.Unknown
       ),
-      [ConstraintFiltersFormControl.Condition]: new FormControl(filter?.condition),
-      [ConstraintFiltersFormControl.ConditionValues]: new FormControl(filter?.conditionValues),
-      [ConstraintFiltersFormControl.Operator]: new FormControl(operator),
+      [ConstraintFiltersFormControl.Condition]: new UntypedFormControl(filter?.condition),
+      [ConstraintFiltersFormControl.ConditionValues]: new UntypedFormControl(filter?.conditionValues),
+      [ConstraintFiltersFormControl.Operator]: new UntypedFormControl(operator),
     });
   }
 
@@ -123,7 +127,7 @@ export class ConstraintConditionsFormComponent implements OnChanges {
   }
 }
 
-export function createActionEquationFromFormArray(filtersArray: FormArray): AttributeFilterEquation {
+export function createActionEquationFromFormArray(filtersArray: UntypedFormArray): AttributeFilterEquation {
   const filters = <{[key in ConstraintFiltersFormControl]: any}[]>filtersArray.value;
   const equations: AttributeFilterEquation[] = (filters || [])
     .filter(

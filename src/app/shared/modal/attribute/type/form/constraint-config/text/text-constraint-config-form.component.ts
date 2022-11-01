@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {minMaxValidator} from '../../../../../../../core/validators/min-max-validator';
 import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
@@ -36,7 +36,7 @@ export class TextConstraintConfigFormComponent implements OnChanges {
   public config: TextConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly items: SelectItemModel[];
 
@@ -66,10 +66,16 @@ export class TextConstraintConfigFormComponent implements OnChanges {
 
   private createForm() {
     const caseStyle = (this.config && this.config.caseStyle) || CaseStyle.None;
-    this.form.addControl(TextConstraintFormControl.CaseStyle, new FormControl(caseStyle));
+    this.form.addControl(TextConstraintFormControl.CaseStyle, new UntypedFormControl(caseStyle));
 
-    this.form.addControl(TextConstraintFormControl.MinLength, new FormControl(this.config && this.config.minLength));
-    this.form.addControl(TextConstraintFormControl.MaxLength, new FormControl(this.config && this.config.maxLength));
+    this.form.addControl(
+      TextConstraintFormControl.MinLength,
+      new UntypedFormControl(this.config && this.config.minLength)
+    );
+    this.form.addControl(
+      TextConstraintFormControl.MaxLength,
+      new UntypedFormControl(this.config && this.config.maxLength)
+    );
 
     this.form.setValidators(minMaxValidator(TextConstraintFormControl.MinLength, TextConstraintFormControl.MaxLength));
   }

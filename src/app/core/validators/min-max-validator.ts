@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AbstractControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 
 export function minMaxValidator(minControlName: string, maxControlName: string): ValidatorFn {
-  return (form: FormGroup): ValidationErrors | null => {
+  return (form: UntypedFormGroup): ValidationErrors | null => {
     const minControl = form.get(minControlName);
     const maxControl = form.get(maxControlName);
 

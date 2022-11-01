@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {
   BLOCKLY_FUNCTION_TOOLBOX,
   BLOCKLY_VALUE_TOOLBOX,
@@ -66,7 +66,7 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
   public attributeFunction: AttributeFunction;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public variables: RuleVariable[];
   public masterType: MasterBlockType;

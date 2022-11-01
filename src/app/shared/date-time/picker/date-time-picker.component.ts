@@ -31,7 +31,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import * as moment from 'moment';
 import {BsDatepickerInlineConfig, BsDatepickerInlineDirective} from 'ngx-bootstrap/datepicker';
 import {Subscription} from 'rxjs';
@@ -93,9 +93,9 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     DropdownPosition.Left,
   ];
 
-  public form = new FormGroup({
-    date: new FormControl(),
-    time: new FormControl(),
+  public form = new UntypedFormGroup({
+    date: new UntypedFormControl(),
+    time: new UntypedFormControl(),
   });
 
   public datePickerConfig: Partial<BsDatepickerInlineConfig>;

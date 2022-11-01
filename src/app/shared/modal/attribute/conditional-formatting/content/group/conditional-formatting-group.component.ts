@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {AttributesResource} from '../../../../../../core/model/resource';
 import {AttributeFormattingGroup} from '../../../../../../core/store/collections/collection';
 import {FontStyle} from '../../../../../../core/model/font-style';
@@ -35,7 +35,7 @@ import {POPUP_DELAY} from '../../../../../../core/constants';
 })
 export class ConditionalFormattingGroupComponent implements OnInit {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public group: AttributeFormattingGroup;
@@ -64,8 +64,8 @@ export class ConditionalFormattingGroupComponent implements OnInit {
     return this.form.controls.background;
   }
 
-  public get filtersControl(): FormArray {
-    return <FormArray>this.form.controls.filters;
+  public get filtersControl(): UntypedFormArray {
+    return <UntypedFormArray>this.form.controls.filters;
   }
 
   public ngOnInit() {

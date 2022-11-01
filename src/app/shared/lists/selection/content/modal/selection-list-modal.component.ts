@@ -22,7 +22,13 @@ import {SelectionList} from '../../selection-list';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
-import {AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+} from '@angular/forms';
 import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
 import {DialogType} from '../../../../modal/dialog-type';
 import {minLengthValidator} from '../../../../../core/validators/custom-validators';
@@ -66,10 +72,10 @@ export class SelectionListModalComponent implements OnInit, OnDestroy {
   public performingAction$ = new BehaviorSubject(false);
   public list$ = new BehaviorSubject<SelectionList>(null);
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   private subscriptions = new Subscription();
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: FormBuilder) {}
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: UntypedFormBuilder) {}
 
   public ngOnInit() {
     this.createForm();
@@ -145,7 +151,7 @@ export class SelectionListModalComponent implements OnInit, OnDestroy {
 
   public onSubmit() {
     const displayValues = this.form.controls.displayValues.value;
-    const options = parseSelectOptionsFromForm(this.form.controls.options as FormArray, displayValues);
+    const options = parseSelectOptionsFromForm(this.form.controls.options as UntypedFormArray, displayValues);
     const name = this.form.value.name.trim();
     const list = {
       ...this.list,

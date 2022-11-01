@@ -1,6 +1,6 @@
 @import 'styles/variables';
 @import 'styles/bootstrap_var';
-@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap';
 @import 'styles/bootswatch';
 @import 'styles/custom/cursor';
 @import 'styles/custom/checkbox';
@@ -17,7 +17,7 @@
 
 $flag-icons-path: '~flag-icons/flags' !default;
 $include: cz, gb, hu !default;
-@import '~flag-icons/sass/flag-icons';
+@import 'flag-icons/sass/flag-icons';
 
 *[contenteditable] {
   -webkit-user-select: auto !important;

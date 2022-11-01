@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-control';
@@ -38,7 +38,7 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   public config: CoordinatesConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly controls = CoordinatesConstraintFormControl;
   public readonly formats = objectValues(CoordinatesFormat);
@@ -76,11 +76,13 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   private createForm() {
     this.form.addControl(
       CoordinatesConstraintFormControl.Format,
-      new FormControl(this.config?.format || CoordinatesFormat.DecimalDegrees)
+      new UntypedFormControl(this.config?.format || CoordinatesFormat.DecimalDegrees)
     );
     this.form.addControl(
       CoordinatesConstraintFormControl.Precision,
-      new FormControl(this.config ? this.config.precision : getDefaultPrecision(this.config && this.config.format))
+      new UntypedFormControl(
+        this.config ? this.config.precision : getDefaultPrecision(this.config && this.config.format)
+      )
     );
 
     this.exampleValue$ = this.bindExampleValue();

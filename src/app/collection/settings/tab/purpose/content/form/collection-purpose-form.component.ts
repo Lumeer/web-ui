@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {removeAllFormControls} from '../../../../../../shared/utils/form.utils';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
@@ -30,7 +30,7 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 })
 export class CollectionPurposeFormComponent implements OnChanges {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   @Input()
   public type: CollectionPurposeType;

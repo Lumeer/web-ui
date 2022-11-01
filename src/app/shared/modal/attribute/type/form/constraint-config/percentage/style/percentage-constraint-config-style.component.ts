@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {PercentageConstraintFormControl} from '../percentage-constraint-form-control';
 import {PercentageDisplayStyle} from '@lumeer/data-filters';
 import {Observable} from 'rxjs';
@@ -38,7 +38,7 @@ interface PercentageStyleItem {
 })
 export class PercentageConstraintConfigStyleComponent implements OnInit {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly style = PercentageDisplayStyle;
   public readonly items: PercentageStyleItem[];

@@ -18,7 +18,7 @@
  */
 
 import {SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
-import {FormArray} from '@angular/forms';
+import {UntypedFormArray} from '@angular/forms';
 import {escapeHtml} from '../../../../../../utils/common.utils';
 
 export function isSelectConstraintOptionValueRemoved(
@@ -31,7 +31,7 @@ export function isSelectConstraintOptionValueRemoved(
   return previousValues.some(value => !nextValues.includes(value));
 }
 
-export function parseSelectOptionsFromForm(array: FormArray, displayValues: boolean): SelectConstraintOption[] {
+export function parseSelectOptionsFromForm(array: UntypedFormArray, displayValues: boolean): SelectConstraintOption[] {
   return array.value
     .filter(option => isSelectOptionValid(option, displayValues))
     .map(option => mapSelectOption(option, displayValues));

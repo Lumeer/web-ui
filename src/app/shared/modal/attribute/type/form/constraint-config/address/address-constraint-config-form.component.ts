@@ -19,7 +19,7 @@
 
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {AddressConstraintFormControl} from './address-constraint-form-control';
@@ -45,7 +45,7 @@ export class AddressConstraintConfigFormComponent implements OnChanges {
   public config: AddressConstraintConfig;
 
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public exampleValue$: Observable<AddressDataValue>;
 
@@ -78,7 +78,7 @@ export class AddressConstraintConfigFormComponent implements OnChanges {
   private createForm() {
     this.form.addControl(
       AddressConstraintFormControl.Fields,
-      new FormControl(
+      new UntypedFormControl(
         this.config ? this.config.fields : addressDefaultFields(this.configurationService.getConfiguration()),
         fieldsValidator()
       )
@@ -124,7 +124,7 @@ export class AddressConstraintConfigFormComponent implements OnChanges {
 }
 
 function fieldsValidator(): ValidatorFn {
-  return (formControl: FormControl): ValidationErrors | null => {
+  return (formControl: UntypedFormControl): ValidationErrors | null => {
     return (formControl.value || []).length ? null : {emptyFields: true};
   };
 }

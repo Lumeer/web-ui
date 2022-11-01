@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'resource-code-input',
@@ -27,7 +27,7 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 })
 export class ResourceCodeInputComponent {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public get codeInput(): AbstractControl {
     return this.form.get('code');

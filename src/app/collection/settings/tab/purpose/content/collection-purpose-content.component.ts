@@ -27,7 +27,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {
   Collection,
@@ -57,9 +57,9 @@ export class CollectionPurposeContentComponent implements OnInit, OnChanges, OnD
   @Input()
   public documents: DocumentModel[];
 
-  public form = new FormGroup({
-    type: new FormControl(),
-    metaData: new FormGroup({}),
+  public form = new UntypedFormGroup({
+    type: new UntypedFormControl(),
+    metaData: new UntypedFormGroup({}),
   });
 
   private subscriptions = new Subscription();

@@ -32,7 +32,14 @@ import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {preventEvent} from '../../../utils/common.utils';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  FormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 import {isUrlValid} from '../../../utils/url.utils';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
@@ -76,11 +83,11 @@ export class LinkInputDropdownComponent implements OnInit, AfterViewInit {
     DropdownPosition.TopEnd,
   ];
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public invalid$: Observable<boolean>;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.form = this.fb.group(
       {
         link: '',
@@ -191,7 +198,7 @@ export class LinkInputDropdownComponent implements OnInit, AfterViewInit {
 }
 
 function linkValidator(): ValidatorFn {
-  return (form: FormGroup): ValidationErrors | null => {
+  return (form: UntypedFormGroup): ValidationErrors | null => {
     const link = form.controls.link?.value || '';
     const title = form.controls.title?.value?.trim() || '';
     if (!link && !title) {

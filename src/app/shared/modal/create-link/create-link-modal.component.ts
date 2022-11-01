@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -50,8 +50,8 @@ export class CreateLinkModalComponent implements OnInit {
 
   public readonly dialogType = DialogType;
 
-  public form: FormGroup;
-  public linkTypeFormGroup: FormGroup;
+  public form: UntypedFormGroup;
+  public linkTypeFormGroup: UntypedFormGroup;
 
   public collections$: Observable<Collection[]>;
   public formInvalid$: Observable<boolean>;
@@ -59,7 +59,7 @@ export class CreateLinkModalComponent implements OnInit {
 
   private collections: Collection[];
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: FormBuilder) {}
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: UntypedFormBuilder) {}
 
   public get linkNameControl(): AbstractControl {
     return this.linkTypeFormGroup.get('linkName');
@@ -102,7 +102,7 @@ export class CreateLinkModalComponent implements OnInit {
   private createForm() {
     this.linkTypeFormGroup = this.createLinkTypeFormGroup();
 
-    this.form = new FormGroup({
+    this.form = new UntypedFormGroup({
       linkType: this.linkTypeFormGroup,
     });
   }

@@ -17,7 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 
 import {
   AttributeFilter,
@@ -69,24 +76,24 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
     case QueryItemType.Document:
     case QueryItemType.Collection:
     case QueryItemType.Link:
-      return new FormGroup({
-        value: new FormControl(queryItem.value, Validators.required),
-        text: new FormControl(queryItem.text, Validators.required),
+      return new UntypedFormGroup({
+        value: new UntypedFormControl(queryItem.value, Validators.required),
+        text: new UntypedFormControl(queryItem.text, Validators.required),
       });
     case QueryItemType.Deleted:
     case QueryItemType.Fulltext:
-      return new FormGroup({
-        value: new FormControl(queryItem.value, Validators.required),
+      return new UntypedFormGroup({
+        value: new UntypedFormControl(queryItem.value, Validators.required),
       });
     case QueryItemType.Attribute:
     case QueryItemType.LinkAttribute:
-      return new FormGroup(
+      return new UntypedFormGroup(
         {
-          text: new FormControl(queryItem.text, Validators.required),
-          condition: new FormControl(queryItem.condition),
-          conditionValues: new FormArray(attributeConditionValuesForms(queryItem)),
-          constraintType: new FormControl(queryItemConstraintType(queryItem)),
-          fromSuggestion: new FormControl(queryItem.fromSuggestion),
+          text: new UntypedFormControl(queryItem.text, Validators.required),
+          condition: new UntypedFormControl(queryItem.condition),
+          conditionValues: new UntypedFormArray(attributeConditionValuesForms(queryItem)),
+          constraintType: new UntypedFormControl(queryItemConstraintType(queryItem)),
+          fromSuggestion: new UntypedFormControl(queryItem.fromSuggestion),
         },
         attributeQueryValidator
       );
@@ -177,17 +184,17 @@ function queryItemConstraintType(queryItem: QueryItem): ConstraintType {
   return attribute?.constraint?.type || ConstraintType.Unknown;
 }
 
-function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
+function attributeConditionValuesForms(queryItem: QueryItem): UntypedFormGroup[] {
   return createRange(0, 2).map(index => {
     const conditionValue = queryItem.conditionValues?.[index];
-    return new FormGroup({
-      type: new FormControl(conditionValue?.type),
-      value: new FormControl(conditionValue?.value),
+    return new UntypedFormGroup({
+      type: new UntypedFormControl(conditionValue?.type),
+      value: new UntypedFormControl(conditionValue?.value),
     });
   });
 }
 
-function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
+function attributeQueryValidator(group: UntypedFormGroup): ValidationErrors | null {
   const condition = group.controls.condition.value;
   const conditionValue = group.controls.conditionValues.value;
   const constraintType = group.controls.constraintType.value;

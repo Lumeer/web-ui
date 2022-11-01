@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
 import {ActionConstraintFormControl} from '../action-constraint-form-control';
 import {Observable} from 'rxjs';
@@ -32,22 +32,22 @@ import {actionConstraintConfirmationPlaceholder} from '../action-constraint.util
 })
 export class ActionConstraintConfirmationFormComponent implements OnInit {
   @Input()
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public readonly formControlName = ActionConstraintFormControl;
 
   public placeholder$: Observable<string>;
 
-  public get requiresConfirmationControl(): FormControl {
-    return <FormControl>this.form.controls[ActionConstraintFormControl.RequiresConfirmation];
+  public get requiresConfirmationControl(): UntypedFormControl {
+    return <UntypedFormControl>this.form.controls[ActionConstraintFormControl.RequiresConfirmation];
   }
 
-  public get confirmationTitleControl(): FormControl {
-    return <FormControl>this.form.controls[ActionConstraintFormControl.ConfirmationTitle];
+  public get confirmationTitleControl(): UntypedFormControl {
+    return <UntypedFormControl>this.form.controls[ActionConstraintFormControl.ConfirmationTitle];
   }
 
-  public get titleUserControl(): FormControl {
-    return <FormControl>this.form.controls[ActionConstraintFormControl.Title];
+  public get titleUserControl(): UntypedFormControl {
+    return <UntypedFormControl>this.form.controls[ActionConstraintFormControl.Title];
   }
 
   public ngOnInit() {
