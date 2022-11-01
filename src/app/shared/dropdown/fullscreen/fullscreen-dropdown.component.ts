@@ -291,7 +291,9 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy
 
   @HostListener('window:resize')
   public onWindowResize() {
-    this.checkLegacyPosition();
+    if (this.data) {
+      this.checkLegacyPosition();
+    }
   }
 
   private emitDataChange() {
