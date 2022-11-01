@@ -18,8 +18,10 @@
  */
 
 export interface ModalData {
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
+  xRelative: number;
+  yRelative: number;
   relativeHeight: number;
   relativeWidth: number;
 }

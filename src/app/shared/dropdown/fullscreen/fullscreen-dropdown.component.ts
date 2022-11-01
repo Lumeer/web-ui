@@ -30,6 +30,7 @@ import {
   EventEmitter,
   OnDestroy,
   ElementRef,
+  HostListener,
 } from '@angular/core';
 import {GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
@@ -100,10 +101,28 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy
       this.currentHeight = this.data?.relativeHeight || this.initialHeight();
       this.currentWidth = this.data?.relativeWidth || this.initialWidth();
 
-      if (isNotNullOrUndefined(this.data?.x) && isNotNullOrUndefined(this.data?.y)) {
-        this.resizePosition$.next({x: this.data.x, y: this.data.y});
-      }
+      this.checkPosition();
     }
+  }
+
+  private checkPosition() {
+    if (isNotNullOrUndefined(this.data?.xRelative) && isNotNullOrUndefined(this.data?.yRelative)) {
+      this.resizePosition$.next({
+        x: (this.data.xRelative * this.windowWidth) / 100,
+        y: (this.data.yRelative * this.windowHeight) / 100,
+      });
+    } else if (isNotNullOrUndefined(this.data?.x) && isNotNullOrUndefined(this.data?.y)) {
+      this.checkLegacyPosition();
+    }
+  }
+
+  private checkLegacyPosition() {
+    const widthPx = (this.currentWidth * this.windowWidth) / 100;
+    const heightPx = (this.currentHeight * this.windowHeight) / 100;
+    this.resizePosition$.next({
+      x: Math.min(this.data.x, this.windowWidth - widthPx),
+      y: Math.min(this.data.y, this.windowHeight - heightPx),
+    });
   }
 
   public open() {
@@ -243,13 +262,13 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy
   }
 
   private setHeight(height: number, element: HTMLDivElement) {
-    this.currentHeight = (height / window.innerHeight) * 100;
+    this.currentHeight = (height / this.windowHeight) * 100;
     this.renderer.setStyle(element, 'height', `${this.currentHeight}vh`);
     this.renderer.setStyle(element.parentElement, 'height', `${this.currentHeight}vh`);
   }
 
   private setWidth(width: number, element: HTMLDivElement) {
-    this.currentWidth = (width / window.innerWidth) * 100;
+    this.currentWidth = (width / this.windowWidth) * 100;
     this.renderer.setStyle(element, 'width', `${this.currentWidth}vw`);
     this.renderer.setStyle(element.parentElement, 'width', `${this.currentWidth}vw`);
   }
@@ -270,36 +289,58 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy
     this.emitDataChange();
   }
 
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.checkLegacyPosition();
+  }
+
   private emitDataChange() {
     this.dataChange.emit({
       ...this.resizePosition$.value,
+      ...this.getRelativePosition(),
       relativeHeight: this.currentHeight,
       relativeWidth: this.currentWidth,
     });
   }
 
+  private getRelativePosition(): {xRelative: number; yRelative: number} {
+    const {x, y} = this.resizePosition$.value;
+    return {
+      xRelative: (x / this.windowWidth) * 100,
+      yRelative: (y / this.windowHeight) * 100,
+    };
+  }
+
   private initialWidth(): number {
-    return ((window.innerWidth - convertRemToPixels(initialMargin * 2)) / window.innerWidth) * 100;
+    return ((this.windowWidth - convertRemToPixels(initialMargin * 2)) / this.windowWidth) * 100;
   }
 
   private initialHeight(): number {
-    return ((window.innerHeight - convertRemToPixels(initialMargin * 2)) / window.innerHeight) * 100;
+    return ((this.windowHeight - convertRemToPixels(initialMargin * 2)) / this.windowHeight) * 100;
   }
 
   private currentMaxWidthPx(): number {
-    return window.innerWidth - this.resizePosition$.value.x;
+    return this.windowWidth - this.resizePosition$.value.x;
   }
 
   private currentMaxHeightPx(): number {
-    return window.innerHeight - this.resizePosition$.value.y;
+    return this.windowHeight - this.resizePosition$.value.y;
   }
 
   private currentMaxXOffsetPx(): number {
-    return window.innerWidth - (this.currentWidth / 100) * window.innerWidth;
+    return this.windowWidth - (this.currentWidth / 100) * this.windowWidth;
   }
 
   private currentMaxYOffsetPx(): number {
-    return window.innerHeight - (this.currentHeight / 100) * window.innerHeight;
+    return this.windowHeight - (this.currentHeight / 100) * this.windowHeight;
+  }
+
+  private get windowWidth(): number {
+    return window.innerWidth;
+  }
+
+  private get windowHeight(): number {
+    return window.innerHeight;
   }
 
   public ngOnDestroy() {
