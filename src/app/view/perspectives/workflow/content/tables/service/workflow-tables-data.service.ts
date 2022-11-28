@@ -118,7 +118,6 @@ import {selectDocumentById} from '../../../../../../core/store/documents/documen
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 import {
-  AttributeFilter,
   ConditionType,
   ConditionValue,
   Constraint,
@@ -1013,6 +1012,7 @@ export class WorkflowTablesDataService {
         new WorkflowsAction.SetFooterAttributeConfig({
           workflowId: this.perspectiveId,
           attributeId: column.attribute.id,
+          resourceType: column.collectionId ? AttributesResourceType.Collection : AttributesResourceType.LinkType,
           stem: table.stem,
           config: {aggregation},
         })

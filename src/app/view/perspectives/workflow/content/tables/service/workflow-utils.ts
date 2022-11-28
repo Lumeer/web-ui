@@ -472,15 +472,20 @@ export function createWorkflowTableFooter(
     return null;
   }
 
-  const footersByAttribute = (stemFooter.attributes || []).reduce(
-    (map, footer) => ({...map, [footer.attributeId]: footer}),
-    {}
-  );
+  const footersByCollectionAttribute = (stemFooter.attributes || [])
+    .filter(footer => footer.resourceType !== AttributesResourceType.LinkType)
+    .reduce((map, footer) => ({...map, [footer.attributeId]: footer}), {});
+
+  const footersByLinkTypeAttribute = (stemFooter.attributes || [])
+    .filter(footer => footer.resourceType === AttributesResourceType.LinkType)
+    .reduce((map, footer) => ({...map, [footer.attributeId]: footer}), {});
 
   const cellsMap = columns.reduce<TableFooterCellsMap>((map, column) => {
     if (column.attribute) {
       const constraint = column.attribute.constraint || new UnknownConstraint();
-      const footerConfig = footersByAttribute?.[column.attribute.id];
+      const footerConfig = (column.collectionId ? footersByCollectionAttribute : footersByLinkTypeAttribute)?.[
+        column.attribute.id
+      ];
       const types = dataAggregationsByConstraint(constraint);
       const values = rows.map(row => row.cellsMap?.[column.id]?.data);
       const typesFormattedValues = types.reduce((map, type) => {

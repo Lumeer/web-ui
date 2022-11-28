@@ -23,6 +23,7 @@ import {WorkflowColumnSettings, WorkflowFooterAttributeConfig, WorkflowTableConf
 import {queryStemsAreSame, queryStemWithoutFilters} from '../navigation/query/query.util';
 import {QueryStem} from '../navigation/query/query';
 import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
+import {AttributesResourceType} from '../../model/resource';
 
 export function workflowsReducer(
   state: WorkflowsState = initialWorkflowsState,
@@ -61,8 +62,8 @@ function setTableHeight(state: WorkflowsState, action: WorkflowsAction.SetTableH
 }
 
 function setFooterConfig(state: WorkflowsState, action: WorkflowsAction.SetFooterAttributeConfig): WorkflowsState {
-  const {workflowId, attributeId, stem, config} = action.payload;
-  return setFooterProperty(state, workflowId, stem, attributeId, footer => ({...footer, ...config}));
+  const {workflowId, attributeId, resourceType, stem, config} = action.payload;
+  return setFooterProperty(state, workflowId, stem, attributeId, resourceType, footer => ({...footer, ...config}));
 }
 
 function setFooterEnabled(state: WorkflowsState, action: WorkflowsAction.SetFooterEnabled): WorkflowsState {
@@ -116,6 +117,7 @@ function setFooterProperty(
   workflowId: string,
   stem: QueryStem,
   attributeId?: string,
+  resourceType?: AttributesResourceType,
   modifier?: (table: WorkflowFooterAttributeConfig) => WorkflowFooterAttributeConfig
 ): WorkflowsState {
   const workflow = state.entities[workflowId];
@@ -128,11 +130,13 @@ function setFooterProperty(
     }
     if (attributeId) {
       const attributes = [...(footers[footerIndex].attributes || [])];
-      const attributeIndex = attributes.findIndex(a => a.attributeId === attributeId);
+      const attributeIndex = attributes.findIndex(
+        a => a.attributeId === attributeId && a.resourceType === resourceType
+      );
       if (attributeIndex !== -1) {
         attributes[attributeIndex] = modifier(attributes[attributeIndex]);
       } else {
-        attributes.push(modifier({attributeId}));
+        attributes.push(modifier({attributeId, resourceType}));
       }
 
       footers[footerIndex] = {...footers[footerIndex], attributes};
