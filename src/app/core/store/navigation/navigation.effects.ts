@@ -27,7 +27,7 @@ import {ModuleLazyLoadingService} from '../../service/module-lazy-loading.servic
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
-import {selectNavigation, selectUrl} from './navigation.state';
+import {selectNavigatingUrl, selectNavigation, selectUrl} from './navigation.state';
 import {QueryParam} from './query-param';
 import {Query, QueryStem} from './query/query';
 import {convertQueryModelToString} from './query/query.converter';
@@ -72,13 +72,13 @@ export class NavigationEffects {
     () =>
       this.actions$.pipe(
         ofType<NavigationAction.RedirectToLanguage>(NavigationActionType.REDIRECT_TO_LANGUAGE),
-        withLatestFrom(this.store$.pipe(select(selectUrl))),
-        tap(([action, url]) => {
+        withLatestFrom(this.store$.pipe(select(selectUrl)), this.store$.pipe(select(selectNavigatingUrl))),
+        tap(([action, url, navigatingUrl]) => {
           const currentLanguage = this.configurationService.getConfiguration().locale;
           const {language} = action.payload;
           if (this.configurationService.getConfiguration().languageRedirect && language !== currentLanguage) {
             const a = document.createElement('a');
-            a.href = createLanguageUrl(url, action.payload.language);
+            a.href = createLanguageUrl(navigatingUrl || url, action.payload.language);
             a.click();
           }
         })

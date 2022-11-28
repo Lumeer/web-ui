@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {selectCurrentUser} from '../store/users/users.state';
 import {AppState} from '../store/app.state';
-import {filter} from 'rxjs/operators';
+import {filter, throttleTime} from 'rxjs/operators';
 import {User} from '../store/users/user';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {languageCodeMap} from '../model/language';
@@ -35,7 +35,8 @@ export class CurrentUserCheckService {
     this.store$
       .pipe(
         select(selectCurrentUser),
-        filter(currentUser => !!currentUser)
+        filter(currentUser => !!currentUser),
+        throttleTime(1000)
       )
       .subscribe(currentUser => this.checkUserLanguage(currentUser));
 
