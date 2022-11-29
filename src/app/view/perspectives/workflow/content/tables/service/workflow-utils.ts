@@ -47,7 +47,7 @@ import {
   TableCellType,
   TableModel,
 } from '../../../../../../shared/table/model/table-model';
-import {generateId} from '../../../../../../shared/utils/resource.utils';
+import {generateId, getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
@@ -277,7 +277,7 @@ export function createAggregatedLinkingDocumentsIds(item: AggregatedDataItem, ch
 
 export function createRowObjectsFromAggregated(
   parentItem: AggregatedDataItem,
-  item: AggregatedDataItem,
+  item: Partial<AggregatedDataItem>,
   collection: Collection,
   linkType: LinkType,
   linkInstancesMap: Record<string, LinkInstance>,
@@ -329,7 +329,7 @@ export function createTableRowCellsMapForResource(
   const dataValues = createDataValuesMap(object?.data, resource?.attributes, constraintData);
   const attributesMap = objectsByIdMap(resource?.attributes);
 
-  return (columns || []).reduce<TableRowCellsMap>((cellsMap, column) => {
+  return filterColumnsByResource(columns, resource).reduce<TableRowCellsMap>((cellsMap, column) => {
     const data = isNotNullOrUndefined(overrideData?.[column.id])
       ? overrideData[column.id]
       : object.data?.[column.attribute?.id];
@@ -344,6 +344,13 @@ export function createTableRowCellsMapForResource(
     cellsMap[column.id] = {data, lockStats, editable, ...formatting};
     return cellsMap;
   }, {});
+}
+
+function filterColumnsByResource(columns: TableColumn[], resource: AttributesResource): TableColumn[] {
+  if (getAttributesResourceType(resource) === AttributesResourceType.LinkType) {
+    return (columns || []).filter(column => !!column.linkTypeId);
+  }
+  return (columns || []).filter(column => !!column.collectionId);
 }
 
 export function createTableRowCellsMapForAttribute(
@@ -472,15 +479,20 @@ export function createWorkflowTableFooter(
     return null;
   }
 
-  const footersByAttribute = (stemFooter.attributes || []).reduce(
-    (map, footer) => ({...map, [footer.attributeId]: footer}),
-    {}
-  );
+  const footersByCollectionAttribute = (stemFooter.attributes || [])
+    .filter(footer => footer.resourceType !== AttributesResourceType.LinkType)
+    .reduce((map, footer) => ({...map, [footer.attributeId]: footer}), {});
+
+  const footersByLinkTypeAttribute = (stemFooter.attributes || [])
+    .filter(footer => footer.resourceType === AttributesResourceType.LinkType)
+    .reduce((map, footer) => ({...map, [footer.attributeId]: footer}), {});
 
   const cellsMap = columns.reduce<TableFooterCellsMap>((map, column) => {
     if (column.attribute) {
       const constraint = column.attribute.constraint || new UnknownConstraint();
-      const footerConfig = footersByAttribute?.[column.attribute.id];
+      const footerConfig = (column.collectionId ? footersByCollectionAttribute : footersByLinkTypeAttribute)?.[
+        column.attribute.id
+      ];
       const types = dataAggregationsByConstraint(constraint);
       const values = rows.map(row => row.cellsMap?.[column.id]?.data);
       const typesFormattedValues = types.reduce((map, type) => {

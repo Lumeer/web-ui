@@ -135,6 +135,10 @@ export class WorkflowTablesKeyboardService {
 
     const {tableIndex, rowIndex, columnIndex} = this.stateService.getCellIndexes(cell);
     const table = this.tables[tableIndex];
+    if (!table) {
+      return;
+    }
+
     const arrowLeftIndex = firstNonHiddenColumnIndex(table, 0, columnIndex - 1, true);
     const arrowRightIndex = firstNonHiddenColumnIndex(table, columnIndex + 1, table.columns.length);
     switch (keyboardEventCode(event)) {

@@ -60,8 +60,8 @@ export class TemplatesTagsComponent implements OnChanges {
 
 export function createTagsFromTemplates(templates: Project[]): string[] {
   const tags = templates?.reduce((arr, template) => {
-    arr.push(...(template.templateMetadata?.tags || []));
+    arr.push(...(template.templateMetadata?.tags || []).filter(tag => !!tag));
     return arr;
   }, []);
-  return uniqueValues(tags.sort());
+  return uniqueValues(tags.sort((a, b) => a.localeCompare(b)));
 }

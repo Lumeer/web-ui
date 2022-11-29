@@ -39,7 +39,7 @@ import {convertStringToViewCursor} from './view-cursor/view-cursor';
 import {convertStringToPerspectiveSettings} from './settings/perspective-settings';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
-  const {params, queryParams} = action.payload.routerState;
+  const {params, queryParams, url} = action.payload.routerState;
 
   const navigatingWorkspace = {
     organizationCode: params['organizationCode'],
@@ -49,7 +49,11 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
     viewCode: params['vc'],
   };
 
-  return {...state, navigatingWorkspace};
+  return {
+    ...state,
+    navigatingWorkspace,
+    navigatingUrl: url,
+  };
 }
 
 function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction<RouterStateUrl>): NavigationState {

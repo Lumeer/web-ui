@@ -22,6 +22,7 @@ import {Workflow, WorkflowConfig, WorkflowFooterAttributeConfig} from './workflo
 import {QueryStem} from '../navigation/query/query';
 import {TableCell} from '../../../shared/table/model/table-model';
 import {TableColumn} from '../../../shared/table/model/table-column';
+import {AttributesResourceType} from '../../model/resource';
 
 export enum WorkflowsActionType {
   ADD_KANBAN = '[Workflow] Add workflow',
@@ -89,6 +90,7 @@ export namespace WorkflowsAction {
         workflowId: string;
         stem: QueryStem;
         attributeId: string;
+        resourceType: AttributesResourceType;
         config: Partial<WorkflowFooterAttributeConfig>;
       }
     ) {}

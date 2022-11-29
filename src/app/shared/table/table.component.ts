@@ -367,13 +367,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public containsElement(element: any): boolean {
-    if (this.table.nativeElement.contains(element)) {
-      return true;
-    }
-    if (this.tableNewRow?.nativeElement.contains(element)) {
-      return true;
-    }
-
-    return false;
+    return this.table.nativeElement.contains(element) || this.tableNewRow?.nativeElement.contains(element);
   }
 }

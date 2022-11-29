@@ -118,7 +118,6 @@ import {selectDocumentById} from '../../../../../../core/store/documents/documen
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 import {
-  AttributeFilter,
   ConditionType,
   ConditionValue,
   Constraint,
@@ -395,7 +394,10 @@ export class WorkflowTablesDataService {
             const titleDataValue = constraint.createDataValue(title, constraintData);
             const linkingQueryStem = this.createLinkingQueryStem(linkingCollectionId, titleDataValue, attribute, query);
             const titleDataResources = aggregatedDataItem.dataResources;
-            for (const childItem of aggregatedDataItem.children || []) {
+            const children = (aggregatedDataItem.children || []).length
+              ? aggregatedDataItem.children
+              : [{dataResources: []}];
+            for (const childItem of children) {
               const currentTable = currentTables.find(table => table.id === tableId) || tableByCollection;
               const tableSettings = stemTableSettings?.find(tab => tab.value === title);
               const {rows, newRow} = this.createRows(
@@ -1013,6 +1015,7 @@ export class WorkflowTablesDataService {
         new WorkflowsAction.SetFooterAttributeConfig({
           workflowId: this.perspectiveId,
           attributeId: column.attribute.id,
+          resourceType: column.collectionId ? AttributesResourceType.Collection : AttributesResourceType.LinkType,
           stem: table.stem,
           config: {aggregation},
         })
