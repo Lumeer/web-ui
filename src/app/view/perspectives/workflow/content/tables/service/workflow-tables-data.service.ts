@@ -394,7 +394,10 @@ export class WorkflowTablesDataService {
             const titleDataValue = constraint.createDataValue(title, constraintData);
             const linkingQueryStem = this.createLinkingQueryStem(linkingCollectionId, titleDataValue, attribute, query);
             const titleDataResources = aggregatedDataItem.dataResources;
-            for (const childItem of aggregatedDataItem.children || []) {
+            const children = (aggregatedDataItem.children || []).length
+              ? aggregatedDataItem.children
+              : [{dataResources: []}];
+            for (const childItem of children) {
               const currentTable = currentTables.find(table => table.id === tableId) || tableByCollection;
               const tableSettings = stemTableSettings?.find(tab => tab.value === title);
               const {rows, newRow} = this.createRows(
