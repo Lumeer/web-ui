@@ -51,6 +51,8 @@ import {DirectivesModule} from '../shared/directives/directives.module';
 import {PresenterModule} from '../shared/presenter/presenter.module';
 import {ResourceModule} from '../shared/resource/resource.module';
 import {TopPanelModule} from '../shared/top-panel/top-panel.module';
+import {CollectionUploadComponent} from './settings/upload/collection-upload.component';
+import {CollectionUploadModalModule} from '../shared/modal/collection-upload/collection-upload-modal.module';
 
 @NgModule({
   imports: [
@@ -70,6 +72,7 @@ import {TopPanelModule} from '../shared/top-panel/top-panel.module';
     PresenterModule,
     ResourceModule,
     TopPanelModule,
+    CollectionUploadModalModule,
   ],
   declarations: [
     LinkTypeFilterPipe,
@@ -86,6 +89,7 @@ import {TopPanelModule} from '../shared/top-panel/top-panel.module';
     CollectionPurposeTasksComponent,
     CollectionTeamsComponent,
     CollectionActivityComponent,
+    CollectionUploadComponent,
   ],
   providers: [CollectionSettingsGuard, CollectionTabGuard],
 })

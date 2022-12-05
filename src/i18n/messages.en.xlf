@@ -38,14 +38,14 @@
                 <target state="final">Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </target>
 
                 <note priority="1" from="description">textEditor.minLength</note>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/rich-text/dropdown/rich-text-dropdown.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
             <trans-unit id="81a825c813cc67a514bb711507b538569209cd79" datatype="html">
                 <source>Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</source>
                 <target state="final">Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</target>
 
                 <note priority="1" from="description">textEditor.maxLength</note>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/rich-text/dropdown/rich-text-dropdown.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
             <trans-unit id="collection.name.placeholder" datatype="html">
                 <source>Click to set name</source>
@@ -619,25 +619,25 @@
                 <source>Unconfirmed changes</source>
                 <target state="final">Unconfirmed changes</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">449</context></context-group></trans-unit>
             <trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
                 <source>There are some changes in form that was not saved. Are you sure to select another record?</source>
                 <target state="final">There are some changes in form that was not saved. Are you sure to select another record?</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">450</context></context-group></trans-unit>
             <trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
                 <source>Yes, Select Record</source>
                 <target state="final">Yes, Select Record</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">451</context></context-group></trans-unit>
             <trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
                 <source>No, Keep Editing</source>
                 <target state="final">No, Keep Editing</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">452</context></context-group></trans-unit>
             <trans-unit id="perspective.form.view.submit.delete" datatype="html">
                 <source>Delete This Record</source>
@@ -3291,8 +3291,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="select.attribute" datatype="html">
         <source>Select attribute</source><target state="final">Select attribute</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/filters/filters/filter/resource-filter.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/common/conditions/condition/constraint-condition-form.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
         <source>Tasks have long timespan</source><target state="final">Tasks have long timespan</target>
 
@@ -5837,10 +5837,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context><context context-type="linenumber">323</context></context-group></trans-unit><trans-unit id="appTour.title.inviteUsers" datatype="html">
         <source>Invite teammates</source><target state="final">Invite teammates</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context><context context-type="linenumber">332</context></context-group></trans-unit><trans-unit id="appTour.description.inviteUsers" datatype="html">
         <source>Working together can make difference. Invite teammates and boost your productivity.</source><target state="final">Working together can make difference. Invite teammates and boost your productivity.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context><context context-type="linenumber">335</context></context-group></trans-unit><trans-unit id="appTour.title.userMenu" datatype="html">
         <source>Return to this Tour</source><target state="final">Return to this Tour</target>
 
@@ -6213,14 +6213,14 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="project.settings.upload.inProgress" datatype="html">
         <source>Previous upload is already in progress. Please wait for it to finish first.</source><target state="final">Previous upload is already in progress. Please wait for it to finish first.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="project.settings.upload.tooLarge" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/collection-upload.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="project.settings.upload.tooLarge" datatype="html">
         <source>The file size is above the upload limit (<x id="size" equiv-text="this.fileSizeMb.toFixed(
         0
       )"/> MB).</source><target state="final">The file size is above the upload limit (<x id="size" equiv-text="this.fileSizeMb.toFixed(
         0
       )"/> MB).</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="projects.tab.variables.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/collection-upload.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="projects.tab.variables.title" datatype="html">
         <source>Create a new variable</source><target state="final">Create a new variable</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/variables/project-variables.component.html</context>

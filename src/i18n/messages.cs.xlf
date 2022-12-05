@@ -2077,7 +2077,7 @@
                 <source>Enter name</source>
                 <target>Zadejte název</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it/row/post-it-row.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
             <trans-unit id="view.perspective.name" datatype="html">
                 <source>{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} form {Form}}</source>
@@ -4745,8 +4745,8 @@
                 <source>Copied!</source>
                 <target>Zkopírováno!</target>
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.ts</context><context context-type="linenumber">229</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/copy-text-box/copy-text-box.component.ts</context><context context-type="linenumber">46</context></context-group></trans-unit>
             <trans-unit id="dataResource.attribute.placeholder" datatype="html">
                 <source>Enter attribute name</source>
@@ -4759,36 +4759,36 @@
                 <target>Vytvořeno</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/comment-item/comment-item.component.ts</context><context context-type="linenumber">59</context></context-group></trans-unit>
             <trans-unit id="document.detail.header.createdBy" datatype="html">
                 <source>Created by</source>
                 <target>Vytvořil(a)</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.ts</context><context context-type="linenumber">130</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/comment-item/comment-item.component.ts</context><context context-type="linenumber">60</context></context-group></trans-unit>
             <trans-unit id="document.detail.header.action.copyUrl" datatype="html">
                 <source>Copy link to this record</source>
                 <target>Zkopírovat odkaz na tento záznam</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit>
             <trans-unit id="document.detail.header.updatedOn" datatype="html">
                 <source>Updated on</source>
                 <target>Upraveno</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.ts</context><context context-type="linenumber">131</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/comment-item/comment-item.component.ts</context><context context-type="linenumber">61</context></context-group></trans-unit>
             <trans-unit id="document.detail.header.updatedBy" datatype="html">
                 <source>Updated by</source>
                 <target>Upravil(a)</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/data-resource-detail-header.component.ts</context><context context-type="linenumber">132</context></context-group></trans-unit>
             <trans-unit id="audit.automation.function" datatype="html">
                 <source>Function</source>
@@ -6986,13 +6986,13 @@
         <source>Previous upload is already in progress. Please wait for it to finish first.</source>
         <target>Předcházející nahrávání projektu stále probíhá. Prosím počkejte dokud se nedokončí.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="project.settings.upload.tooLarge" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/collection-upload.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="project.settings.upload.tooLarge" datatype="html">
         <source>The file size is above the upload limit (<x id="size" equiv-text="this.fileSizeMb.toFixed(
         0
       )"/> MB).</source>
         <target>Velikost souboru je nad maximální povolenou hranicí (<x id="size" equiv-text="size.toFixed(0)"/> MB).</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="projects.tab.variables.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/collection-upload.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="projects.tab.variables.title" datatype="html">
         <source>Create a new variable</source><target>Vytvoření nové proměnné</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/variables/project-variables.component.html</context>

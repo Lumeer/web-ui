@@ -1,0 +1,24 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  (onClose)="hideDialog()"
+  icon="far fa-upload"
+  (onSubmit)="onSubmit()"
+  [performingAction]="performingAction$ | async">
+
+  <span class="title" i18n="@@collection.import.content.title">Import table content</span>
+
+  <div class="body p-3">
+    <collection-upload-body [form]="form"
+                            [collection]="collection$ | async">
+    </collection-upload-body>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="far fa-upload"></i>&nbsp;<span i18n="@@button.import">Import</span>
+  </span>
+
+</modal-wrapper>

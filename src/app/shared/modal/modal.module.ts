@@ -43,6 +43,7 @@ import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loadi
 import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-link-documents-modal.module';
 import {ChooseResourceModalModule} from './choose-resource/choose-resource-modal.module';
 import {ChooseStemModalModule} from './choose-stem/choose-stem-modal.module';
+import {CollectionUploadModalModule} from './collection-upload/collection-upload-modal.module';
 
 @NgModule({
   imports: [
@@ -71,6 +72,7 @@ import {ChooseStemModalModule} from './choose-stem/choose-stem-modal.module';
     ChooseLinkDocumentsModalModule,
     ChooseResourceModalModule,
     ChooseStemModalModule,
+    CollectionUploadModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -97,6 +99,7 @@ import {ChooseStemModalModule} from './choose-stem/choose-stem-modal.module';
     ChooseLinkDocumentsModalModule,
     ChooseResourceModalModule,
     ChooseStemModalModule,
+    CollectionUploadModalModule,
   ],
 })
 export class ModalModule {}

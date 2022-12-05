@@ -526,3 +526,18 @@ label.form-label.required:after {
   content: '*';
   color: $danger;
 }
+
+a.list-group-item {
+  transition: color 0ms ease-out;
+
+  &.active {
+    font-weight: bold;
+    border-color: $success;
+    color: white;
+    background-color: $success;
+
+    small.text-muted span {
+      color: white;
+    }
+  }
+}

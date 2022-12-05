@@ -81,8 +81,10 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
 
 export function convertImportedCollectionModelToDto(model: ImportedCollection): ImportedCollectionDto {
   return {
-    collection: convertCollectionModelToDto(model.collection),
+    collection: model.collection && convertCollectionModelToDto(model.collection),
     data: model.data,
+    type: model.type?.toString(),
+    mergeAttributeId: model.mergeAttributeId,
   };
 }
 

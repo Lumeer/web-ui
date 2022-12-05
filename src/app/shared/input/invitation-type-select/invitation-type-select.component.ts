@@ -23,7 +23,6 @@ import {InvitationType} from '../../../core/model/invitation-type';
 @Component({
   selector: 'invitation-type-select',
   templateUrl: './invitation-type-select.component.html',
-  styleUrls: ['./invitation-type-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvitationTypeSelectComponent {

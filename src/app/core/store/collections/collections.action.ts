@@ -147,9 +147,11 @@ export namespace CollectionsAction {
 
     public constructor(
       public payload: {
+        collectionId?: string;
         format: string;
         importedCollection: ImportedCollection;
         onSuccess?: (collection: Collection) => void;
+        onFailure?: () => void;
       }
     ) {}
   }

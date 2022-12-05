@@ -12518,7 +12518,7 @@
       <trans-unit id="project.settings.upload.inProgress" datatype="html">
         <source>Previous upload is already in progress. Please wait for it to finish first.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context>
+          <context context-type="sourcefile">src/app/workspace/project/upload/collection-upload.component.ts</context>
           <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
@@ -12527,7 +12527,7 @@
         0
       )"/> MB).</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context>
+          <context context-type="sourcefile">src/app/workspace/project/upload/collection-upload.component.ts</context>
           <context context-type="linenumber">89,91</context>
         </context-group>
       </trans-unit>

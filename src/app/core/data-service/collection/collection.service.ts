@@ -23,6 +23,7 @@ import {Workspace} from '../../store/navigation/workspace';
 import {PermissionService} from '../common/permission.service';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
 import {RuleDto} from '../../dto/rule.dto';
+import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 
 export abstract class CollectionService extends PermissionService {
   public abstract createCollection(collection: CollectionDto): Observable<CollectionDto>;
@@ -68,4 +69,6 @@ export abstract class CollectionService extends PermissionService {
   public abstract removeAttribute(collectionId: string, id: string): Observable<any>;
 
   public abstract runRule(collectionId: string, ruleId: string): Observable<any>;
+
+  public abstract import(collectionId: string, format: string, dto: ImportedCollectionDto): Observable<CollectionDto>;
 }

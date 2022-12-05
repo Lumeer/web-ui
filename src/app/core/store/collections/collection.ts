@@ -94,8 +94,16 @@ export const collectionPurposesMap: Record<string, CollectionPurposeType> = {
 };
 
 export interface ImportedCollection {
-  collection: Collection;
+  collection?: Collection;
   data: string;
+  type?: ImportType;
+  mergeAttributeId?: string;
+}
+
+export enum ImportType {
+  Append = 'APPEND',
+  Merge = 'MERGE',
+  Overwrite = 'OVERWRITE',
 }
 
 export type CollectionPurposeMetadata = TaskPurposeMetadata;

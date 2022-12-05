@@ -1,0 +1,35 @@
+<div class="list-group list-group-horizontal py-3">
+  <a class="list-group-item list-group-item-action" [class.active]="typeControl.value === importType.Append" (click)="setType(importType.Append)">
+    <div class="text-center py-2"><i class="fa fa-2x fa-plus"></i></div>
+    <div class="text-center py-2" i18n="@@collection.import.type.append">Append</div>
+  </a>
+  <a class="list-group-item list-group-item-action" [class.active]="typeControl.value === importType.Merge" (click)="setType(importType.Merge)">
+    <div class="text-center py-2"><i class="fa fa-2x fa-merge"></i></div>
+    <div class="text-center py-2" i18n="@@collection.import.type.merge">Merge</div>
+  </a>
+  <a class="list-group-item list-group-item-action" [class.active]="typeControl.value === importType.Overwrite" (click)="setType(importType.Overwrite)">
+    <div class="text-center py-2"><i class="fa fa-2x fa-pencil"></i></div>
+    <div class="text-center py-2" i18n="@@collection.import.type.overwrite">Overwrite</div>
+  </a>
+</div>
+
+<div *ngIf="typeControl.value === importType.Append" i18n="@@collection.import.type.append.description">
+  Rows will be added to the end of the table.
+</div>
+
+<div *ngIf="typeControl.value === importType.Merge" i18n="@@collection.import.type.merge.description">
+  Rows will be merged by selected attribute.
+</div>
+
+<div *ngIf="typeControl.value === importType.Overwrite" i18n="@@collection.import.type.ovewrite.description">
+  Current rows will be deleted and replaced with new ones.
+</div>
+
+<select-item *ngIf="typeControl.value === importType.Merge"
+             class="d-block mt-2"
+             [items]="collectionSelectItems"
+             emptyValue="Select merge attribute"
+             i18n-emptyValue="@@collection.import.type.merge.select"
+             [selectedId]="mergeAttributeIdControl.value"
+             (selected)="onSelectAttribute($event)">
+</select-item>
