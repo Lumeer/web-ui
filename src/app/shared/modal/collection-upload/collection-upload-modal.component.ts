@@ -26,6 +26,8 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {Collection, ImportedCollection, ImportType} from '../../../core/store/collections/collection';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './collection-upload-modal.component.html',
@@ -44,6 +46,7 @@ export class CollectionUploadModalComponent implements OnInit {
   public readonly dialogType = DialogType;
 
   public collection$: Observable<Collection>;
+  public permissions$: Observable<AllowedPermissions>;
   public performingAction$ = new BehaviorSubject(false);
 
   public form: FormGroup = this.fb.group({
@@ -55,6 +58,7 @@ export class CollectionUploadModalComponent implements OnInit {
 
   public ngOnInit() {
     this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
+    this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.collectionId)));
   }
 
   public hideDialog() {
@@ -64,10 +68,11 @@ export class CollectionUploadModalComponent implements OnInit {
   public onSubmit() {
     this.performingAction$.next(true);
 
+    const type = this.form.value.type;
     const importedCollection: ImportedCollection = {
       data: this.data,
-      type: this.form.value.type,
-      mergeAttributeId: this.form.value.mergeAttributeId,
+      type,
+      mergeAttributeId: type === ImportType.Merge ? this.form.value.mergeAttributeId : undefined,
     };
     const format = 'csv';
 

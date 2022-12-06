@@ -22,6 +22,7 @@ import {Collection, ImportType} from '../../../../core/store/collections/collect
 import {SelectItemModel} from '../../../select/select-item/select-item.model';
 import {resourceAttributesSelectItems} from '../../../select/select-item.utils';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'collection-upload-body',
@@ -36,15 +37,54 @@ export class CollectionUploadBodyComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
+  @Input()
+  public permissions: AllowedPermissions;
+
   public readonly importType = ImportType;
 
-  public collectionSelectItems: SelectItemModel[];
+  private readonly importItemsMap: Record<ImportType, SelectItemModel> = {
+    [ImportType.Append]: {
+      id: ImportType.Append,
+      value: $localize`:@@collection.import.type.append:Append`,
+      icons: ['fa fa-2x fa-plus'],
+    },
+    [ImportType.Merge]: {
+      id: ImportType.Merge,
+      value: $localize`:@@collection.import.type.merge:Merge`,
+      icons: ['fa fa-2x fa-merge'],
+    },
+    [ImportType.Overwrite]: {
+      id: ImportType.Overwrite,
+      value: $localize`:@@collection.import.type.overwrite:Overwrite`,
+      icons: ['fa fa-2x fa-pencil'],
+    },
+  };
+
+  public collectionSelectItems: SelectItemModel[] = [];
+  public importItems: SelectItemModel[] = [];
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection) {
       this.collectionSelectItems = resourceAttributesSelectItems(this.collection);
       this.checkMergeAttribute();
     }
+    if (changes.permissions) {
+      this.importItems = this.filterImportItems();
+      this.checkSelectedType();
+    }
+  }
+
+  private filterImportItems(): SelectItemModel[] {
+    const items = [this.importItemsMap[ImportType.Append]];
+
+    if (this.permissions?.roles?.DataWrite) {
+      items.push(this.importItemsMap[ImportType.Merge]);
+    }
+    if (this.permissions?.roles?.DataDelete) {
+      items.push(this.importItemsMap[ImportType.Overwrite]);
+    }
+
+    return items;
   }
 
   private checkMergeAttribute() {
@@ -54,6 +94,12 @@ export class CollectionUploadBodyComponent implements OnChanges {
       if (defaultAttribute) {
         this.mergeAttributeIdControl.setValue(defaultAttribute.id);
       }
+    }
+  }
+
+  private checkSelectedType() {
+    if (!this.importItems.some(item => item.id === this.typeControl.value)) {
+      this.typeControl.setValue(this.importItems[0].id);
     }
   }
 

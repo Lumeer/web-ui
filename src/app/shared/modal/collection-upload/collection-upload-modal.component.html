@@ -9,7 +9,8 @@
 
   <div class="body p-3">
     <collection-upload-body [form]="form"
-                            [collection]="collection$ | async">
+                            [collection]="collection$ | async"
+                            [permissions]="permissions$ | async">
     </collection-upload-body>
   </div>
 
