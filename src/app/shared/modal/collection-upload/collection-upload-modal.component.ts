@@ -72,7 +72,7 @@ export class CollectionUploadModalComponent implements OnInit {
     const importedCollection: ImportedCollection = {
       data: this.data,
       type,
-      mergeAttributeId: type === ImportType.Merge ? this.form.value.mergeAttributeId : undefined,
+      mergeAttributeId: type === ImportType.Update ? this.form.value.mergeAttributeId : undefined,
     };
     const format = 'csv';
 

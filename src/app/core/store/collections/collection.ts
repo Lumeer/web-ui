@@ -102,8 +102,8 @@ export interface ImportedCollection {
 
 export enum ImportType {
   Append = 'APPEND',
-  Merge = 'MERGE',
-  Overwrite = 'OVERWRITE',
+  Update = 'UPDATE',
+  Replace = 'REPLACE',
 }
 
 export type CollectionPurposeMetadata = TaskPurposeMetadata;

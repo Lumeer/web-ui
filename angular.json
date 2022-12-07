@@ -315,6 +315,7 @@
     }
   },
   "cli": {
-    "schematicCollections": ["@ngrx/schematics"]
+    "schematicCollections": ["@ngrx/schematics"],
+    "analytics": false
   }
 }

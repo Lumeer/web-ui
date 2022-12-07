@@ -8,22 +8,22 @@
 </div>
 
 <div *ngIf="typeControl.value === importType.Append" i18n="@@collection.import.type.append.description">
-  Rows will be added to the end of the table.
+  New imported rows will be added to the end of the table.
 </div>
 
-<div *ngIf="typeControl.value === importType.Merge" i18n="@@collection.import.type.merge.description">
-  Rows will be merged by selected attribute.
+<div *ngIf="typeControl.value === importType.Update" i18n="@@collection.import.type.update.description">
+  Rows with the same value of the selected key attribute will be updated (overwritten). Remaining rows will be added to the end of the table.
 </div>
 
-<div *ngIf="typeControl.value === importType.Overwrite" i18n="@@collection.import.type.overwrite.description">
-  Current rows will be deleted and replaced with new ones.
+<div *ngIf="typeControl.value === importType.Replace" i18n="@@collection.import.type.replace.description">
+  The content of the table will be completely replaced by new data. All existing rows will be deleted!
 </div>
 
-<select-item *ngIf="typeControl.value === importType.Merge"
+<select-item *ngIf="typeControl.value === importType.Update"
              class="d-block mt-2"
              [items]="collectionSelectItems"
              emptyValue="Select merge attribute"
-             i18n-emptyValue="@@collection.import.type.merge.select"
+             i18n-emptyValue="@@collection.import.type.update.select"
              [selectedId]="mergeAttributeIdControl.value"
              (selected)="onSelectAttribute($event)">
 </select-item>

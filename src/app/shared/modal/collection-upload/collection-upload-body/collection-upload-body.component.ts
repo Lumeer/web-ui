@@ -48,14 +48,14 @@ export class CollectionUploadBodyComponent implements OnChanges {
       value: $localize`:@@collection.import.type.append:Append`,
       icons: ['fa fa-2x fa-plus'],
     },
-    [ImportType.Merge]: {
-      id: ImportType.Merge,
-      value: $localize`:@@collection.import.type.merge:Merge`,
+    [ImportType.Update]: {
+      id: ImportType.Update,
+      value: $localize`:@@collection.import.type.merge:Update`,
       icons: ['fa fa-2x fa-merge'],
     },
-    [ImportType.Overwrite]: {
-      id: ImportType.Overwrite,
-      value: $localize`:@@collection.import.type.overwrite:Overwrite`,
+    [ImportType.Replace]: {
+      id: ImportType.Replace,
+      value: $localize`:@@collection.import.type.overwrite:Replace`,
       icons: ['fa fa-2x fa-pencil'],
     },
   };
@@ -78,10 +78,10 @@ export class CollectionUploadBodyComponent implements OnChanges {
     const items = [this.importItemsMap[ImportType.Append]];
 
     if (this.permissions?.roles?.DataWrite) {
-      items.push(this.importItemsMap[ImportType.Merge]);
+      items.push(this.importItemsMap[ImportType.Update]);
     }
     if (this.permissions?.roles?.DataDelete) {
-      items.push(this.importItemsMap[ImportType.Overwrite]);
+      items.push(this.importItemsMap[ImportType.Replace]);
     }
 
     return items;
