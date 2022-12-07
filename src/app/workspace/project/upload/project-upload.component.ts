@@ -17,17 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {FileAttachment} from '../../../core/store/file-attachments/file-attachment.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -41,12 +31,6 @@ import {DEFAULT_FILE_SIZE_MB} from '../../../core/constants';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectUploadComponent implements OnInit, OnDestroy {
-  @Input()
-  public files: FileAttachment[];
-
-  @Input()
-  public origin: ElementRef | HTMLElement;
-
   @Input()
   public uploadProgress: number;
 

@@ -22,4 +22,6 @@ import {CollectionDto} from './collection.dto';
 export interface ImportedCollectionDto {
   collection: CollectionDto;
   data: string;
+  type: string;
+  mergeAttributeId: string;
 }

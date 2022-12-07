@@ -39,6 +39,7 @@ import {CollectionPurposeDto} from '../../dto/collection.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {collectionRoleTypes} from '../../store/collections/collection';
 import {RuleDto} from '../../dto/rule.dto';
+import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 
 @Injectable()
 export class PublicCollectionService extends PublicPermissionService implements CollectionService {
@@ -174,6 +175,14 @@ export class PublicCollectionService extends PublicPermissionService implements 
     return `${
       this.configurationService.getConfiguration().apiUrl
     }/rest/p/organizations/${organizationId}/projects/${projectId}/collections`;
+  }
+
+  public import(collectionId: string, format: string, dto: ImportedCollectionDto): Observable<CollectionDto> {
+    return this.store$.pipe(
+      select(selectCollectionById(collectionId)),
+      take(1),
+      map(collection => convertCollectionModelToDto(collection))
+    );
   }
 }
 

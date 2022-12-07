@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
@@ -32,6 +32,7 @@ import {CollectionPurposeDto} from '../../dto/collection.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {RuleDto} from '../../dto/rule.dto';
 import {AppIdService} from '../../service/app-id.service';
+import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 
 @Injectable()
 export class ApiCollectionService extends ApiPermissionService implements CollectionService {
@@ -131,6 +132,13 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
 
   public runRule(collectionId: string, ruleId: string): Observable<any> {
     return this.httpClient.post(`${this.apiPrefix()}/${collectionId}/rule/${ruleId}`, {});
+  }
+
+  public import(collectionId: string, format: string, dto: ImportedCollectionDto): Observable<CollectionDto> {
+    const queryParams = new HttpParams().set('format', format);
+    return this.httpClient.post<CollectionDto>(`${this.apiPrefix()}/${collectionId}/import`, dto, {
+      params: queryParams,
+    });
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {

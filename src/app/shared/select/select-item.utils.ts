@@ -69,9 +69,12 @@ export function resourceAttributesSelectItems(
   type?: ConstraintType,
   id?: (Attribute) => any
 ): SelectItemModel[] {
+  if (!resource) {
+    return [];
+  }
   const attributes = type
-    ? resource?.attributes.filter(attribute => attribute.constraint?.type === type)
-    : resource?.attributes;
+    ? resource.attributes.filter(attribute => attribute.constraint?.type === type)
+    : resource.attributes;
   if (getAttributesResourceType(resource) === AttributesResourceType.Collection) {
     const collection = <Collection>resource;
     return (

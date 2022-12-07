@@ -163,20 +163,21 @@ export class CollectionsEffects {
     this.actions$.pipe(
       ofType<CollectionsAction.Import>(CollectionsActionType.IMPORT),
       mergeMap(action => {
-        const dto = convertImportedCollectionModelToDto(action.payload.importedCollection);
-        return this.importService.importFile(action.payload.format, dto).pipe(
+        const {importedCollection, format, collectionId, onSuccess, onFailure} = action.payload;
+        const dto = convertImportedCollectionModelToDto(importedCollection);
+        let observable$: Observable<CollectionDto>;
+        if (collectionId) {
+          observable$ = this.collectionService.import(collectionId, format, dto);
+        } else {
+          observable$ = this.importService.importFile(format, dto);
+        }
+        return observable$.pipe(
           map(collection => convertCollectionDtoToModel(collection)),
-          mergeMap(collection => {
-            const actions: Action[] = [new CollectionsAction.ImportSuccess({collection: collection})];
-
-            const {onSuccess} = action.payload;
-            if (onSuccess) {
-              actions.push(...createCallbackActions(onSuccess, collection));
-            }
-
-            return actions;
-          }),
-          catchError(error => of(new CollectionsAction.ImportFailure({error})))
+          mergeMap(collection => [
+            new CollectionsAction.ImportSuccess({collection: collection}),
+            ...createCallbackActions(onSuccess, collection),
+          ]),
+          catchError(error => of(new CollectionsAction.ImportFailure({error}), ...createCallbackActions(onFailure)))
         );
       })
     )

@@ -65,6 +65,7 @@ import {ChooseStemModalComponent} from './choose-stem/choose-stem-modal.componen
 import {LimitsService} from '../../core/service/limits.service';
 import {ConditionalFormattingModalComponent} from './attribute/conditional-formatting/conditional-formatting-modal.component';
 import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
+import {CollectionUploadModalComponent} from './collection-upload/collection-upload-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -408,5 +409,9 @@ export class ModalService {
 
   public showBookProductDemoDialog(): BsModalRef {
     return this.showStaticDialog({}, BookProductDemoModalComponent, '');
+  }
+
+  public showImportCollection(collectionId: string, data: string): BsModalRef {
+    return this.showStaticDialog({collectionId, data}, CollectionUploadModalComponent);
   }
 }
