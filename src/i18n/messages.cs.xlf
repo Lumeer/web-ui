@@ -3474,14 +3474,8 @@
       </trans-unit><trans-unit id="collection.import.type.replace.description" datatype="html">
         <source> The content of the table will be completely replaced by new data. All existing rows will be deleted!
 </source>
-             <target> Obsah tabulky bude kompletně nahrazen novými údaji. Všechny existující řádky budou smazány!
-<x id="START_TAG_DIV" ctype="x-div" equiv-text="&lt;div>"/><x id="START_TAG_SELECT_ITEM" ctype="x-select_item" equiv-text="&lt;select-item *ngIf=&quot;typeControl.value === importType.Update&quot;
-             class=&quot;d-block mt-2&quot;
-             [items]=&quot;collectionSelectItems&quot;
-             emptyValue=&quot;Select merge attribute&quot;
-             i18n-emptyValue=&quot;@@collection.import.type.update.select&quot;
-             [selectedId]=&quot;mergeAttributeIdControl.value&quot;
-             (selected)=&quot;onSelectAttribute($event)&quot;>"/><x id="CLOSE_TAG_SELECT_ITEM" ctype="x-select_item" equiv-text="&lt;/select-item>"/><x id="CLOSE_TAG_DIV" ctype="x-div" equiv-text="&lt;div>"/></target>
+        <target> Obsah tabulky bude kompletně nahrazen novými údaji. Všechny existující řádky budou smazány!
+</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-body/collection-upload-body.component.html</context>
           <context context-type="linenumber">18,20</context>
