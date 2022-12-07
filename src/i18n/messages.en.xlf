@@ -3950,26 +3950,14 @@
         </context-group>
       </trans-unit><trans-unit id="collection.import.type.replace.description" datatype="html">
         <source> The content of the table will be completely replaced by new data. All existing rows will be deleted!
-<x id="START_TAG_DIV" ctype="x-div" equiv-text="&lt;div>"/><x id="START_TAG_SELECT_ITEM" ctype="x-select_item" equiv-text="&lt;select-item *ngIf=&quot;typeControl.value === importType.Update&quot;
-             class=&quot;d-block mt-2&quot;
-             [items]=&quot;collectionSelectItems&quot;
-             emptyValue=&quot;Select merge attribute&quot;
-             i18n-emptyValue=&quot;@@collection.import.type.update.select&quot;
-             [selectedId]=&quot;mergeAttributeIdControl.value&quot;
-             (selected)=&quot;onSelectAttribute($event)&quot;>"/><x id="CLOSE_TAG_SELECT_ITEM" ctype="x-select_item" equiv-text="&lt;/select-item>"/><x id="CLOSE_TAG_DIV" ctype="x-div" equiv-text="&lt;div>"/></source><target state="final"> The content of the table will be completely replaced by new data. All existing rows will be deleted!
-<x id="START_TAG_DIV" ctype="x-div" equiv-text="&lt;div>"/><x id="START_TAG_SELECT_ITEM" ctype="x-select_item" equiv-text="&lt;select-item *ngIf=&quot;typeControl.value === importType.Update&quot;
-             class=&quot;d-block mt-2&quot;
-             [items]=&quot;collectionSelectItems&quot;
-             emptyValue=&quot;Select merge attribute&quot;
-             i18n-emptyValue=&quot;@@collection.import.type.update.select&quot;
-             [selectedId]=&quot;mergeAttributeIdControl.value&quot;
-             (selected)=&quot;onSelectAttribute($event)&quot;>"/><x id="CLOSE_TAG_SELECT_ITEM" ctype="x-select_item" equiv-text="&lt;/select-item>"/><x id="CLOSE_TAG_DIV" ctype="x-div" equiv-text="&lt;div>"/></target>
+</source><target state="final"> The content of the table will be completely replaced by new data. All existing rows will be deleted!
+</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-body/collection-upload-body.component.html</context>
           <context context-type="linenumber">18,20</context>
         </context-group>
       </trans-unit><trans-unit id="collection.import.type.update.select" datatype="html">
-        <source>Select merge attribute</source><target state="final">Select merge attribute</target>
+        <source>Select the key attribute</source><target state="final">Select the key attribute</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-body/collection-upload-body.component.html</context>
           <context context-type="linenumber">25</context>
@@ -6333,17 +6321,17 @@
         <source>This automation is being used in an action button.</source><target state="final">This automation is being used in an action button.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">177</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/tab/rules/link-type-rules.component.ts</context><context context-type="linenumber">165</context></context-group></trans-unit><trans-unit id="collection.import.content.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">177</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/link-type/settings/tab/rules/link-type-rules.component.ts</context><context context-type="linenumber">165</context></context-group></trans-unit><trans-unit id="collection.import.content.icon" datatype="html">
         <source>Import table content</source><target state="final">Import table content</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/upload/collection-upload.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-modal.component.html</context>
-          <context context-type="linenumber">8,12</context>
-        </context-group>
-      </trans-unit><trans-unit id="tasks.type" datatype="html">
+      </trans-unit><trans-unit id="collection.import.content.title" datatype="html">
+        <source>Import Table Content</source><target state="final">Import Table Content</target>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-modal.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="tasks.type" datatype="html">
         <source>{type, select, None {Generic} Tasks {Tasks}}</source><target state="final">{type, select, None {Generic} Tasks {Tasks}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.run.title" datatype="html">

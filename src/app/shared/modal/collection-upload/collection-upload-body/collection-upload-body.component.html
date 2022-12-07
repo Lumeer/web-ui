@@ -22,7 +22,7 @@
 <select-item *ngIf="typeControl.value === importType.Update"
              class="d-block mt-2"
              [items]="collectionSelectItems"
-             emptyValue="Select merge attribute"
+             emptyValue="Select the key attribute"
              i18n-emptyValue="@@collection.import.type.update.select"
              [selectedId]="mergeAttributeIdControl.value"
              (selected)="onSelectAttribute($event)">

@@ -819,15 +819,11 @@
           <context context-type="linenumber">165</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collection.import.content.title" datatype="html">
+      <trans-unit id="collection.import.content.icon" datatype="html">
         <source>Import table content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/upload/collection-upload.component.html</context>
           <context context-type="linenumber">3</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-modal.component.html</context>
-          <context context-type="linenumber">8,12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="notification.document.notVisible" datatype="html">
@@ -6044,20 +6040,14 @@
       </trans-unit>
       <trans-unit id="collection.import.type.replace.description" datatype="html">
         <source> The content of the table will be completely replaced by new data. All existing rows will be deleted!
-<x id="START_TAG_DIV" ctype="x-div" equiv-text="&lt;div&gt;"/><x id="START_TAG_SELECT_ITEM" ctype="x-select_item" equiv-text="&lt;select-item *ngIf=&quot;typeControl.value === importType.Update&quot;
-             class=&quot;d-block mt-2&quot;
-             [items]=&quot;collectionSelectItems&quot;
-             emptyValue=&quot;Select merge attribute&quot;
-             i18n-emptyValue=&quot;@@collection.import.type.update.select&quot;
-             [selectedId]=&quot;mergeAttributeIdControl.value&quot;
-             (selected)=&quot;onSelectAttribute($event)&quot;&gt;"/><x id="CLOSE_TAG_SELECT_ITEM" ctype="x-select_item" equiv-text="&lt;/select-item&gt;"/><x id="CLOSE_TAG_DIV" ctype="x-div" equiv-text="&lt;div&gt;"/></source>
+</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-body/collection-upload-body.component.html</context>
           <context context-type="linenumber">18,20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.import.type.update.select" datatype="html">
-        <source>Select merge attribute</source>
+        <source>Select the key attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-body/collection-upload-body.component.html</context>
           <context context-type="linenumber">25</context>
@@ -6082,6 +6072,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-body/collection-upload-body.component.ts</context>
           <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.import.content.title" datatype="html">
+        <source>Import Table Content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-modal.component.html</context>
+          <context context-type="linenumber">8,12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.import" datatype="html">
