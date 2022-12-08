@@ -658,7 +658,7 @@ export class TablesEffects {
     this.actions$.pipe(
       ofType<TablesAction.SyncPrimaryRows>(TablesActionType.SYNC_PRIMARY_ROWS),
       groupBy(action => action.payload.view?.id || ''),
-      map(group => group.pipe(debounceTime(100))),
+      map(group => group.pipe(debounceTime(100))), // otherwise unwanted parallel syncing occurs
       mergeAll(),
       switchMap(action =>
         combineLatest([
