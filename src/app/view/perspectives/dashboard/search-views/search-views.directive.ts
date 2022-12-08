@@ -21,9 +21,9 @@ import {Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@an
 import {select, Store} from '@ngrx/store';
 
 import {AppState} from '../../../../core/store/app.state';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {View} from '../../../../core/store/views/view';
+import {DefaultViewConfig, View, ViewConfig} from '../../../../core/store/views/view';
 import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {ViewsAction} from '../../../../core/store/views/views.action';
@@ -35,15 +35,21 @@ import {selectSearchConfigById} from '../../../../core/store/searches/searches.s
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
-import {selectViewQuery} from '../../../../core/store/views/views.state';
+import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../../core/store/views/views.state';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
+import {ViewConfigPerspectiveComponent} from '../../view-config-perspective.component';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Directive()
-export abstract class SearchViewsDirective implements OnInit, OnChanges, OnDestroy {
+export abstract class SearchViewsDirective
+  extends ViewConfigPerspectiveComponent<SearchViewsConfig>
+  implements OnInit, OnChanges, OnDestroy
+{
   @Input()
   public view: View;
 
@@ -53,19 +59,19 @@ export abstract class SearchViewsDirective implements OnInit, OnChanges, OnDestr
   public views$: Observable<View[]>;
   public queryData$: Observable<QueryData>;
   public query$: Observable<Query>;
-  public view$: Observable<View>;
+  public currentView$: Observable<View>;
   public workspace$: Observable<Workspace>;
-  public viewsConfig$: Observable<SearchViewsConfig>;
   public permissions$: Observable<AllowedPermissionsMap>;
   public searchId$: Observable<string>;
 
   private config: SearchConfig;
   private searchId: string;
-  private subscriptions = new Subscription();
   private isEmbedded: boolean;
   private overrideView$ = new BehaviorSubject<View>(null);
 
-  constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {}
+  constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {
+    super(store$);
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.view) {
@@ -75,12 +81,27 @@ export abstract class SearchViewsDirective implements OnInit, OnChanges, OnDestr
   }
 
   public ngOnInit() {
+    this.initSubscriptions();
+    super.ngOnInit();
+
+    this.subscribeSearchId();
+  }
+
+  private initSubscriptions() {
     this.query$ = this.overrideView$.pipe(
       switchMap(view => {
         if (view) {
           return of(view.query);
         }
         return this.store$.pipe(select(selectViewQuery));
+      })
+    );
+    this.currentView$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view);
+        }
+        return this.store$.pipe(select(selectCurrentView));
       })
     );
     this.searchId$ = this.overrideView$.pipe(
@@ -97,47 +118,67 @@ export abstract class SearchViewsDirective implements OnInit, OnChanges, OnDestr
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
     ]).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
-    this.viewsConfig$ = this.selectViewsConfig$();
     this.permissions$ = this.store$.pipe(select(selectViewsPermissions));
-
-    this.subscribeSearchId();
   }
 
   private subscribeSearchId() {
     this.subscriptions.add(this.searchId$.subscribe(searchId => (this.searchId = searchId)));
   }
 
-  private selectViewsConfig$(): Observable<SearchViewsConfig> {
-    return this.searchId$.pipe(
-      switchMap(id =>
-        this.store$.pipe(
-          select(selectSearchConfigById(id)),
-          tap(config => (this.config = config)),
-          map(config => config?.views)
-        )
-      )
-    );
-  }
-
   public onConfigChange(viewsConfig: SearchViewsConfig) {
-    if (this.searchId) {
-      const searchConfig = {...this.config, views: viewsConfig};
-      this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config: searchConfig}));
-      if (this.searchId === DEFAULT_PERSPECTIVE_ID) {
-        this.store$.dispatch(
-          new ViewsAction.SetDefaultConfig({
-            model: {
-              key: DEFAULT_PERSPECTIVE_ID,
-              perspective: Perspective.Search,
-              config: {search: searchConfig},
-            },
-          })
-        );
-      }
+    this.configChanged(this.searchId, viewsConfig);
+
+    if (this.searchId === DEFAULT_PERSPECTIVE_ID) {
+      this.store$.dispatch(
+        new ViewsAction.SetDefaultConfig({
+          model: {
+            key: DEFAULT_PERSPECTIVE_ID,
+            perspective: Perspective.Search,
+            config: {search: {...this.config, views: viewsConfig}},
+          },
+        })
+      );
     }
   }
 
+  protected selectCurrentView$(): Observable<View> {
+    return this.currentView$;
+  }
+
+  protected selectViewQuery$(): Observable<Query> {
+    return this.query$;
+  }
+
+  protected selectDefaultViewConfig$(): Observable<DefaultViewConfig> {
+    return this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID)));
+  }
+
+  protected subscribeConfig$(perspectiveId: string): Observable<SearchViewsConfig> {
+    return this.store$.pipe(
+      select(selectSearchConfigById(perspectiveId)),
+      tap(config => (this.config = config)),
+      map(config => config?.views)
+    );
+  }
+
+  protected configChanged(perspectiveId: string, views: SearchViewsConfig) {
+    this.store$.dispatch(new SearchesAction.SetConfig({searchId: perspectiveId, config: {...this.config, views}}));
+  }
+
+  protected getConfig(viewConfig: ViewConfig): SearchViewsConfig {
+    return viewConfig?.search?.views;
+  }
+
+  protected checkOrTransformConfig(
+    config: SearchViewsConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): SearchViewsConfig {
+    return config;
+  }
+
   public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    super.ngOnDestroy();
   }
 }

@@ -1,6 +1,6 @@
 <div class="row mb-4" *ngIf="dashboardViews?.length">
   <label class="col-12" i18n="@@dashboard.tabs.settings.dialog.override.view.title">Select an existing view to use its settings. Leave empty for your own configuration.</label>
-  <div class="col-12 col-lg-6 override-view">
+  <div class="col-12 col-lg-6 override-view mt-1">
     <select-item id="select"
                  [selectedId]="selectedView?.id"
                  [items]="viewSelectItems"
@@ -15,7 +15,7 @@
        i18n-tooltip="@@search.tabs.settings.dialog.override.view.tooltip"></i>
   </div>
 
-  <div *ngIf="selectedView" class="col-12 mt-1 text-muted" i18n="@@search.tabs.settings.dialog.override.view.warning">
+  <div *ngIf="selectedView" class="col-12 mt-3 text-muted" i18n="@@search.tabs.settings.dialog.override.view.warning">
     The dashboard cannot be updated when an existing view is selected above. If you want to update the settings, either duplicate the settings, or remove the selection.
   </div>
 </div>
