@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, EMPTY, Observable} from 'rxjs';
+import {combineLatest, EMPTY, groupBy, mergeAll, Observable} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -657,7 +657,9 @@ export class TablesEffects {
   public syncPrimaryRows$ = createEffect(() =>
     this.actions$.pipe(
       ofType<TablesAction.SyncPrimaryRows>(TablesActionType.SYNC_PRIMARY_ROWS),
-      debounceTime(100), // otherwise unwanted parallel syncing occurs
+      groupBy(action => action.payload.view?.id || ''),
+      map(group => group.pipe(debounceTime(100))), // otherwise unwanted parallel syncing occurs
+      mergeAll(),
       switchMap(action =>
         combineLatest([
           this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),

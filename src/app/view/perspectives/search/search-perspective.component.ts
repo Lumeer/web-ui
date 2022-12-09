@@ -262,14 +262,22 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       withLatestFrom(this.store$.pipe(select(selectSearch))),
       withLatestFrom(this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID)))),
       filter(([[searchTab, search], defaultConfig]) => {
-        const config =
-          defaultConfig?.config?.search && search?.id === DEFAULT_PERSPECTIVE_ID
-            ? defaultConfig.config.search
-            : search?.config;
-        return search && config?.searchTab !== searchTab;
+        const currentSearch = this.currentSearch(search, defaultConfig);
+        return currentSearch && currentSearch.config?.searchTab !== searchTab;
       }),
-      map(([[searchTab, search]]) => ({searchTab: searchTab, search}))
+      map(([[searchTab, search], defaultConfig]) => ({
+        searchTab: searchTab,
+        search: this.currentSearch(search, defaultConfig),
+      }))
     );
+  }
+
+  private currentSearch(search: Search, defaultConfig: DefaultViewConfig): Search {
+    const config =
+      defaultConfig?.config?.search && search?.id === DEFAULT_PERSPECTIVE_ID
+        ? defaultConfig.config.search
+        : search?.config;
+    return search && {...search, config};
   }
 
   public ngOnDestroy() {
