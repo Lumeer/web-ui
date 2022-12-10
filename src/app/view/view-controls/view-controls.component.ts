@@ -32,7 +32,7 @@ import {
 import {NavigationExtras} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {debounceTime, map, take, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, take, tap} from 'rxjs/operators';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
@@ -179,12 +179,12 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.pipe(select(selectViewPerspectiveChanged)),
       this.store$.pipe(select(selectViewSettingsChanged)),
     ]).pipe(
-      debounceTime(100),
       tap(([, configChanged, queryChanged]) => {
         this.configChanged = configChanged;
         this.queryChanged = queryChanged;
       }),
-      map(changedItems => changedItems.some(changed => changed))
+      map(changedItems => changedItems.some(changed => changed)),
+      distinctUntilChanged()
     );
   }
 
@@ -269,6 +269,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public startSaveLoading() {
     this.setSaveLoading(true);
+    this.nameChanged$.next(false);
   }
 
   public endSaveLoading() {

@@ -1,7 +1,6 @@
 <ng-container
   *ngIf="{permissions: view | viewControlsInfo:(projectPermissions$ | async):(collectionsPermissions$ | async):(viewsPermissions$ | async):(linkTypes$ | async), viewChanged: viewChanged$ | async} as state">
-  <ng-container
-    *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canSave)} as buttonsData">
+  <ng-container *ngIf="{disabled: (saveLoading$ | async) || !state.viewChanged || !(name && (!view.code || state.viewChanged) && state.permissions.canSave)} as buttonsData">
     <form class="view-controls-grid">
       <div class="perspective d-flex align-items-center justify-content-start">
         <div class="input-group flex-nowrap me-2 mb-2" data-tour="perspective">
@@ -86,15 +85,11 @@
         </div>
       </div>
     </form>
-    <div *ngIf="state.viewChanged && state.permissions.canSave"
+    <div *ngIf="!buttonsData.disabled"
          class="small text-end text-warning">
-      <i class="far fa-exclamation-triangle me-1 text-warning"
-         title="Changes are not saved yet!" i18n-title="@@view.changes.not.saved">
-      </i>
+      <i class="far fa-exclamation-triangle me-1 text-warning" title="Changes are not saved yet!" i18n-title="@@view.changes.not.saved"></i>
       <span class="text-warning" i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
-      <span *ngIf="!buttonsData.disabled"
-            class="btn-link text-success ms-1 cursor-pointer text-underline" (click)="revertChanges()"
-            i18n="@@view.changes.not.saved.undo">Undo changes</span>
+      <span class="btn-link text-success ms-1 cursor-pointer text-underline" (click)="revertChanges()" i18n="@@view.changes.not.saved.undo">Undo changes</span>
     </div>
   </ng-container>
 </ng-container>
