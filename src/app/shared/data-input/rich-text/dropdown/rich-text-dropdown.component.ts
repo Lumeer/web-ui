@@ -24,6 +24,7 @@ import {FullscreenDropdownDirective} from '../../../dropdown/fullscreen/fullscre
 import {ModalData} from '../../../../core/model/modal-data';
 import {isMacOS} from '../../../utils/system.utils';
 import {textContainsOnlyBrTags} from '../../../utils/string.utils';
+import {keyboardEventCode, KeyCode} from '../../../key-code';
 
 @Component({
   selector: 'rich-text-dropdown',
@@ -67,6 +68,13 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
 
   public valid = true;
 
+  private keyboardEventListener = (event: KeyboardEvent) => {
+    const code = keyboardEventCode(event);
+    if (this.isOpen() && this.valid && code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
+      this.onSave();
+    }
+  };
+
   public contentChanged(event: ContentChange) {
     this.checkValid(event.text);
   }
@@ -96,13 +104,15 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
   }
 
   public onCancel() {
-    this.dropdown?.close();
+    this.close();
     this.cancel.emit();
   }
 
   public onSave() {
-    this.dropdown?.close();
-    this.save.emit(this.getSaveContent());
+    this.close();
+    if (!this.readonly) {
+      this.save.emit(this.getSaveContent());
+    }
   }
 
   private getSaveContent(): string {
@@ -114,5 +124,15 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
     if (!target?.classList.contains('ql-toolbar')) {
       event.stopPropagation();
     }
+  }
+
+  public open() {
+    super.open();
+    document.addEventListener('keydown', this.keyboardEventListener, {capture: true});
+  }
+
+  public close() {
+    super.close();
+    document.removeEventListener('keydown', this.keyboardEventListener, {capture: true});
   }
 }

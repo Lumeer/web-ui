@@ -58,7 +58,7 @@ export class DataRowFocusService {
         }
         break;
       case KeyCode.Tab:
-        this.onTabKeyDown(event);
+        this.onTabKeyDown(event, lockPosition);
         break;
       case KeyCode.NumpadEnter:
       case KeyCode.Enter:
@@ -183,21 +183,27 @@ export class DataRowFocusService {
     }
   }
 
-  private onTabKeyDown(event: KeyboardEvent) {
+  private onTabKeyDown(event: KeyboardEvent, lockPosition: PositionLock) {
     event.preventDefault();
     event.stopPropagation();
 
     if (this.isEditing()) {
-      const {offsetX, offsetY} = this.computeTabKeyDownOffset(event, this.edited);
+      const {offsetX, offsetY} = this.computeTabKeyDownOffset(event, lockPosition);
       this.focused = {...this.edited};
       this.moveFocus(offsetX, offsetY);
     } else if (this.isFocusing()) {
-      const {offsetX, offsetY} = this.computeTabKeyDownOffset(event, this.focused);
+      const {offsetX, offsetY} = this.computeTabKeyDownOffset(event, lockPosition);
       this.moveFocus(offsetX, offsetY);
     }
   }
 
-  private computeTabKeyDownOffset(event: KeyboardEvent, position: DataRowPosition): {offsetX: number; offsetY: number} {
+  private computeTabKeyDownOffset(
+    event: KeyboardEvent,
+    lockPosition: PositionLock
+  ): {offsetX: number; offsetY: number} {
+    if (lockPosition.column) {
+      return {offsetY: event.shiftKey ? -1 : 1, offsetX: 0};
+    }
     return {offsetX: event.shiftKey ? -1 : 1, offsetY: 0};
   }
 

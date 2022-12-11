@@ -114,6 +114,7 @@ const workspaceRoutes: Routes = [
     canActivate: [AuthGuard, CurrentUserGuard, OrganizationSettingsGuard],
     canActivateChild: [OrganizationTabGuard],
     resolve: {
+      organizations: OrganizationsProjectsGuard,
       limits: ServiceLimitsGuard,
       users: UsersGuard,
       groups: GroupsGuard,

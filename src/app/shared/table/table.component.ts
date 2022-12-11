@@ -215,10 +215,12 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.tableModel) {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
+      this.rows = [...(this.tableModel?.visibleRows || [])];
       if (this.tableModel.bottomToolbar) {
-        this.rows = [...(this.tableModel?.visibleRows || []), null, null];
-      } else {
-        this.rows = this.tableModel?.visibleRows || [];
+        this.rows.push(null);
+      }
+      if (this.tableModel.footer) {
+        this.rows.push(null);
       }
       setTimeout(() => this.setScrollbarMargin());
     }

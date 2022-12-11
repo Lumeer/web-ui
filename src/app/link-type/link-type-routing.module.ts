@@ -35,6 +35,7 @@ import {LinkTypeActivityComponent} from './settings/tab/activity/link-type-activ
 import {LinkTypeAttributesComponent} from './settings/tab/attributes/link-type-attributes.component';
 import {LinkTypeRulesComponent} from './settings/tab/rules/link-type-rules.component';
 import {LinkTypeCollectionsComponent} from './settings/tab/collections/link-type-collections.component';
+import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
 
 const linkTypeRoutes: Routes = [
   {
@@ -43,6 +44,7 @@ const linkTypeRoutes: Routes = [
     canActivateChild: [LinkTypeTabGuard],
     component: LinkTypeSettingsComponent,
     resolve: {
+      organizations: OrganizationsProjectsGuard,
       linkTypes: LinkTypesGuard,
       collections: CollectionsGuard,
       serviceLimits: ServiceLimitsGuard,

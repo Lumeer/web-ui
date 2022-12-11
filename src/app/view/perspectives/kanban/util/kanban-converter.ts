@@ -74,6 +74,7 @@ export class KanbanConverter {
   private collections: Collection[];
   private data: DocumentsAndLinksData;
   private linkTypes: LinkType[];
+  private settings: ViewSettings;
   private constraintData: ConstraintData;
 
   constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
@@ -91,7 +92,7 @@ export class KanbanConverter {
     settings: ViewSettings,
     constraintData?: ConstraintData
   ): {config: KanbanConfig; data: KanbanData} {
-    this.updateData(collections, linkTypes, data, constraintData);
+    this.updateData(collections, linkTypes, data, settings, constraintData);
     const {columnsMap, otherColumn} = this.groupDataByColumns(config, permissions);
 
     const kanbanData = createKanbanData(
@@ -111,11 +112,13 @@ export class KanbanConverter {
     collections: Collection[],
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
+    settings: ViewSettings,
     constraintData?: ConstraintData
   ) {
     this.collections = collections;
     this.linkTypes = linkTypes;
     this.data = data;
+    this.settings = settings;
     this.constraintData = constraintData;
   }
 
@@ -551,7 +554,7 @@ function createKanbanData(
 
   const newColumns: KanbanDataColumn[] = [];
   for (const currentColumn of currentConfig.columns || []) {
-    const title = currentColumn.title;
+    const title = String(currentColumn.title);
     if (
       newColumnsTitles.includes(title) ||
       kanbanAttributesIntersect(currentColumn.createdFromAttributes, selectedAttributes)
