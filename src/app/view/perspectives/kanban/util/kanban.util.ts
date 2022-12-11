@@ -66,14 +66,14 @@ export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: K
     return true;
   }
 
-  const currentColumns = currentConfig.columns || [];
+  const currentColumns = mergeKanbanColumns(currentConfig.columns);
   return (
-    (viewConfig.columns || []).some((column, index) => {
+    mergeKanbanColumns(viewConfig.columns).some((column, index) => {
       if (index > currentColumns.length - 1) {
         return true;
       }
 
-      const currentColumn = (currentConfig.columns || [])[index];
+      const currentColumn = currentColumns[index];
       return kanbanColumnChanged(column, currentColumn);
     }) || kanbanColumnChanged(viewConfig.otherColumn, currentConfig.otherColumn)
   );
@@ -108,6 +108,20 @@ function kanbanColumnChanged(column1: KanbanColumn, column2: KanbanColumn): bool
   return column1?.title !== column2?.title || column1?.width !== column2?.width;
 }
 
+function mergeKanbanColumns(columns: KanbanColumn[]): KanbanColumn[] {
+  return (columns || []).reduce(
+    (data, column) => {
+      const title = String(column.title).trim();
+      if (isNotNullOrUndefined(column.title) && title !== '' && !data.usedTitles.includes(title)) {
+        data.columns.push({...column, title});
+        data.usedTitles.push(title);
+      }
+      return data;
+    },
+    {columns: [], usedTitles: []}
+  ).columns;
+}
+
 export function checkOrTransformKanbanConfig(
   config: KanbanConfig,
   query: Query,
@@ -121,6 +135,7 @@ export function checkOrTransformKanbanConfig(
   return {
     ...config,
     stemsConfigs: checkOrTransformKanbanStemsConfig(config.stemsConfigs || [], query, collections, linkTypes),
+    columns: mergeKanbanColumns(config.columns),
   };
 }
 

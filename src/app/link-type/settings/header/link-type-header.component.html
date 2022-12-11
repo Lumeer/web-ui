@@ -3,6 +3,7 @@
    (click)="onBack.emit()"></i>
 
 <icons-presenter
+  [style.scale]="1.5"
   [colors]="linkType.collections | colors"
   [icons]="linkType.collections | icons"
   [title]="linkType.name">

@@ -30,7 +30,7 @@
         <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
       </button>
 
-      <button class="btn btn-primary text-nowrap float-end" (click)="onSave()">
+      <button class="btn btn-primary text-nowrap float-end" [disabled]="readonly" (click)="onSave()">
         <i class="far fa-check"></i>&nbsp;<span i18n="@@button.save">Save</span>&nbsp;<small class="text-muted small">{{macOS ? '⌘ ⏎' : 'Ctrl + ⏎'}}</small>
       </button>
     </div>

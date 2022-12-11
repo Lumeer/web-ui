@@ -44,8 +44,6 @@ import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.com
 import {DataRowFocusService} from '../../../data/data-row-focus-service';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {AppState} from '../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {View} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
@@ -127,7 +125,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   private dataRowFocusService: DataRowFocusService;
   private subscriptions = new Subscription();
 
-  constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
+  constructor(public dataRowService: DataRowService) {
     this.dataRowFocusService = new DataRowFocusService(
       () => 2,
       () => this.dataRowService.rows$.value.length,
