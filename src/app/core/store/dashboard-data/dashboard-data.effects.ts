@@ -37,7 +37,7 @@ export class DashboardDataEffects {
     this.actions$.pipe(
       ofType(DashboardDataActions.get),
       withLatestFrom(this.store$.pipe(select(selectDashboardDataLoaded))),
-      filter(([, loaded]) => !loaded),
+      filter(([action, loaded]) => action.force || !loaded),
       mergeMap(([action]) =>
         this.service.getAll(action.workspace).pipe(
           map(dtos => dtos.map(dto => convertDashboardDataDtoToModel(dto))),

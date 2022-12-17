@@ -50,9 +50,6 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
   public resource: Resource;
 
   @Input()
-  public restrictedValues: string[];
-
-  @Input()
   public permissions: AllowedPermissions;
 
   @Output()
@@ -145,7 +142,7 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
     if (this.shouldEmitFirstLine) {
       this.emitFirstLine(value);
     } else {
-      this.checkDuplicate(value);
+      // TODO
     }
   }
 
@@ -158,10 +155,6 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
       }
     }
     this.shouldEmitFirstLine = false;
-  }
-
-  private checkDuplicate(value: string) {
-    this.isDuplicate = !!(this.restrictedValues || []).find(restrictedValue => restrictedValue === value);
   }
 
   public onNewSecondLine(value: string) {

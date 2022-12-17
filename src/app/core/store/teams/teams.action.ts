@@ -21,6 +21,8 @@ import {Action} from '@ngrx/store';
 import {Team} from './team';
 
 export enum TeamsActionType {
+  GET_ALL_SUCCESS = '[Teams] Get All :: Success',
+
   GET = '[Teams] Get',
   GET_SUCCESS = '[Teams] Get :: Success',
   GET_FAILURE = '[Teams] Get :: Failure',
@@ -41,10 +43,16 @@ export enum TeamsActionType {
 }
 
 export namespace TeamsAction {
+  export class GetAllSuccess implements Action {
+    public readonly type = TeamsActionType.GET_ALL_SUCCESS;
+
+    public constructor(public payload: {teamsByOrganizations: Record<string, Team[]>}) {}
+  }
+
   export class Get implements Action {
     public readonly type = TeamsActionType.GET;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: {organizationId: string; force?: boolean}) {}
   }
 
   export class GetSuccess implements Action {
@@ -118,6 +126,7 @@ export namespace TeamsAction {
   }
 
   export type All =
+    | GetAllSuccess
     | Get
     | GetSuccess
     | GetFailure

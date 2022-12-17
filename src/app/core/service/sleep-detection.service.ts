@@ -17,19 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {initialServiceLimitsState, serviceLimitsAdapter, ServiceLimitsState} from './service-limits.state';
-import {ServiceLimitsAction, ServiceLimitsActionType} from './service-limits.action';
+import {Injectable} from '@angular/core';
+import {AppState} from '../store/app.state';
+import {Store} from '@ngrx/store';
+import {ProjectsAction} from '../store/projects/projects.action';
 
-export function serviceLimitsReducer(
-  state: ServiceLimitsState = initialServiceLimitsState,
-  action: ServiceLimitsAction.All
-): ServiceLimitsState {
-  switch (action.type) {
-    case ServiceLimitsActionType.GET_ALL_SUCCESS:
-      return serviceLimitsAdapter.setAll(action.payload.serviceLimits, {...state, loaded: true});
-    case ServiceLimitsActionType.GET_SERVICE_LIMITS_SUCCESS:
-      return serviceLimitsAdapter.upsertOne(action.payload.serviceLimits, state);
-    default:
-      return state;
+@Injectable({
+  providedIn: 'root',
+})
+export class SleepDetectionService {
+  constructor(private store$: Store<AppState>) {
+    this.setupWorker();
+  }
+
+  private setupWorker() {
+    const worker = new Worker('sleep-detection.js');
+    worker.onmessage = event => {
+      if (event.data === 'wakeup') {
+        this.syncData();
+      }
+    };
+  }
+
+  private syncData() {
+    this.store$.dispatch(new ProjectsAction.RefreshWorkspace());
   }
 }

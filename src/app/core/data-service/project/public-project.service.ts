@@ -46,8 +46,8 @@ export class PublicProjectService extends PublicPermissionService implements Pro
     return this.getCurrentPublicProject(organizationId).pipe(map(project => [project]));
   }
 
-  public getProjectCodes(organizationId: string): Observable<string[]> {
-    return of([]);
+  public checkCodeValid(organizationId: string, code: string): Observable<boolean> {
+    return of(true);
   }
 
   public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {

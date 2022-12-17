@@ -20,13 +20,13 @@
 import {EMPTY, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {convertTeamDtoToModel, convertTeamModelToDto} from './teams.converter';
 import {TeamsAction, TeamsActionType} from './teams.action';
 import {AppState} from '../app.state';
 import {select, Store} from '@ngrx/store';
-import {selectTeamsDictionary} from './teams.state';
+import {selectTeamsDictionary, selectTeamsLoaded} from './teams.state';
 import {TeamService} from '../../data-service/team/team.service';
 
 @Injectable()
@@ -34,7 +34,9 @@ export class TeamsEffects {
   public get$ = createEffect(() =>
     this.actions$.pipe(
       ofType<TeamsAction.Get>(TeamsActionType.GET),
-      mergeMap(action =>
+      withLatestFrom(this.store$.pipe(select(selectTeamsLoaded))),
+      filter(([action, teamsLoaded]) => action.payload.force || !teamsLoaded[action.payload.organizationId]),
+      mergeMap(([action]) =>
         this.teamService.getAll(action.payload.organizationId).pipe(
           map(dtos => dtos.map(dto => convertTeamDtoToModel(dto))),
           map(teams => new TeamsAction.GetSuccess({teams, organizationId: action.payload.organizationId})),

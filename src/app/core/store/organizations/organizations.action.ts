@@ -22,11 +22,11 @@ import {Organization} from './organization';
 import {Permission, PermissionType} from '../permissions/permissions';
 
 export enum OrganizationsActionType {
-  GET = '[Organizations] Get',
-  GET_SINGLE = '[Organizations] Get Single',
+  GET_ALL_WORKSPACES = '[Organizations] Get All Workspaces',
   GET_SUCCESS = '[Organizations] Get :: Success',
   GET_FAILURE = '[Organizations] Get :: Failure',
 
+  GET_ONE = '[Organizations] Get one',
   GET_ONE_SUCCESS = '[Organizations] Get one :: Success',
 
   GET_CODES = '[Organizations] Get codes',
@@ -58,14 +58,10 @@ export enum OrganizationsActionType {
 }
 
 export namespace OrganizationsAction {
-  export class Get implements Action {
-    public readonly type = OrganizationsActionType.GET;
-  }
+  export class GetAllWorkspaces implements Action {
+    public readonly type = OrganizationsActionType.GET_ALL_WORKSPACES;
 
-  export class GetSingle implements Action {
-    public readonly type = OrganizationsActionType.GET_SINGLE;
-
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: {force?: boolean}) {}
   }
 
   export class GetSuccess implements Action {
@@ -80,26 +76,16 @@ export namespace OrganizationsAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class GetOne implements Action {
+    public readonly type = OrganizationsActionType.GET_ONE;
+
+    public constructor(public payload: {organizationId: string}) {}
+  }
+
   export class GetOneSuccess implements Action {
     public readonly type = OrganizationsActionType.GET_ONE_SUCCESS;
 
     public constructor(public payload: {organization: Organization}) {}
-  }
-
-  export class GetCodes implements Action {
-    public readonly type = OrganizationsActionType.GET_CODES;
-  }
-
-  export class GetCodesSuccess implements Action {
-    public readonly type = OrganizationsActionType.GET_CODES_SUCCESS;
-
-    public constructor(public payload: {organizationCodes: string[]}) {}
-  }
-
-  export class GetCodesFailure implements Action {
-    public readonly type = OrganizationsActionType.GET_CODES_FAILURE;
-
-    public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
@@ -205,14 +191,11 @@ export namespace OrganizationsAction {
   }
 
   export type All =
-    | Get
-    | GetSingle
+    | GetAllWorkspaces
+    | GetOne
     | GetSuccess
     | GetFailure
     | GetOneSuccess
-    | GetCodes
-    | GetCodesSuccess
-    | GetCodesFailure
     | Create
     | CreateSuccess
     | CreateFailure

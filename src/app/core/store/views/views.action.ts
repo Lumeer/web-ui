@@ -272,7 +272,7 @@ export namespace ViewsAction {
   export class GetDefaultConfigs implements Action {
     public readonly type = ViewsActionType.GET_DEFAULT_CONFIGS;
 
-    public constructor(public payload: {workspace: Workspace}) {}
+    public constructor(public payload: {workspace: Workspace; force?: boolean}) {}
   }
 
   export class GetDefaultConfigsSuccess implements Action {

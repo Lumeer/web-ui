@@ -21,14 +21,10 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
-import {filter, first, map, switchMap, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {filter, first, switchMap, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
 import {Organization} from '../../store/organizations/organization';
-import {ProjectsAction} from '../../store/projects/projects.action';
-import {TeamsAction} from '../../store/teams/teams.action';
-import {selectProjectsLoaded} from '../../store/projects/projects.state';
-import {selectTeamsLoaded} from '../../store/teams/teams.state';
 import {selectAllOrganizations, selectOrganizationsLoaded} from '../../store/organizations/organizations.state';
 import {OrganizationsAction} from '../../store/organizations/organizations.action';
 import {PublicDataAction} from '../../store/public-data/public-data.action';
@@ -40,24 +36,7 @@ export class OrganizationsProjectsGuard implements Resolve<Organization[]> {
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Organization[]> {
     this.initPublicData(route);
 
-    return combineLatest([
-      this.getOrganizations().pipe(
-        tap(organizations =>
-          organizations.forEach(org => {
-            this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id}));
-            this.store$.dispatch(new TeamsAction.Get({organizationId: org.id}));
-          })
-        )
-      ),
-      this.store$.pipe(select(selectProjectsLoaded)),
-      this.store$.pipe(select(selectTeamsLoaded)),
-    ]).pipe(
-      filter(([organizations, projectsLoaded, teamsLoaded]) =>
-        organizations.every(org => projectsLoaded[org.id] && teamsLoaded[org.id])
-      ),
-      map(([organizations]) => organizations),
-      first()
-    );
+    return this.getOrganizations().pipe(first());
   }
 
   private initPublicData(route: ActivatedRouteSnapshot) {
@@ -80,8 +59,7 @@ export class OrganizationsProjectsGuard implements Resolve<Organization[]> {
     return this.store$.select(selectOrganizationsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new OrganizationsAction.Get());
-          this.store$.dispatch(new OrganizationsAction.GetCodes());
+          this.store$.dispatch(new OrganizationsAction.GetAllWorkspaces({}));
         }
       }),
       filter(loaded => loaded),

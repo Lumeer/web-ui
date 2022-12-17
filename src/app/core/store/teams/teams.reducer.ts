@@ -18,10 +18,13 @@
  */
 
 import {TeamsAction, TeamsActionType} from './teams.action';
-import {teamsAdapter, TeamsState, initialTeamsState} from './teams.state';
+import {initialTeamsState, teamsAdapter, TeamsState} from './teams.state';
+import {objectValues} from '../../../shared/utils/common.utils';
 
 export function teamsReducer(state: TeamsState = initialTeamsState, action: TeamsAction.All): TeamsState {
   switch (action.type) {
+    case TeamsActionType.GET_ALL_SUCCESS:
+      return setAllTeams(state, action);
     case TeamsActionType.GET_SUCCESS:
       const newState = {...state, loaded: {...state.loaded, [action.payload.organizationId]: true}};
       return teamsAdapter.upsertMany(action.payload.teams, newState);
@@ -36,4 +39,11 @@ export function teamsReducer(state: TeamsState = initialTeamsState, action: Team
     default:
       return state;
   }
+}
+
+function setAllTeams(state: TeamsState, action: TeamsAction.GetAllSuccess): TeamsState {
+  const loaded = Object.keys(action.payload.teamsByOrganizations).reduce((map, id) => ({...map, [id]: true}), {});
+  const allTeams = objectValues(action.payload.teamsByOrganizations).reduce((array, teams) => [...array, ...teams], []);
+
+  return teamsAdapter.setAll(allTeams, {...state, loaded});
 }

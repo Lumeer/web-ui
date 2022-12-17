@@ -4,7 +4,6 @@
     <resource-header
       [resource]="data.project"
       [resourceType]="projectType"
-      [restrictedValues]="projectCodes$ | async"
       [permissions]="data.permissions"
       (back)="goBack()"
       (delete)="onDelete()"

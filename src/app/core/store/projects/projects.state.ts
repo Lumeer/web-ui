@@ -29,7 +29,6 @@ import {sortResourcesByOrder} from '../../../shared/utils/resource.utils';
 import {selectProjectsPermissions} from '../user-permissions/user-permissions.state';
 
 export interface ProjectsState extends EntityState<Project> {
-  projectCodes: {[organizationId: string]: string[]};
   loaded: {[organizationId: string]: boolean};
   templates: Project[];
   templatesState: LoadingState;
@@ -39,7 +38,6 @@ export interface ProjectsState extends EntityState<Project> {
 export const projectsAdapter = createEntityAdapter<Project>({selectId: project => project.id});
 
 export const initialProjectsState: ProjectsState = projectsAdapter.getInitialState({
-  projectCodes: {},
   loaded: {},
   templates: [],
   templatesState: LoadingState.NotLoaded,
@@ -67,11 +65,6 @@ export const selectProjectsDictionary = createSelector(
   projectsAdapter.getSelectors().selectEntities
 );
 export const selectProjectsLoaded = createSelector(selectProjectsState, projectState => projectState.loaded);
-
-export const selectProjectsCodes = createSelector(selectProjectsState, projectState => projectState.projectCodes);
-
-export const selectProjectsCodesForOrganization = id =>
-  createSelector(selectProjectsCodes, projectCodes => projectCodes[id]);
 
 export const selectProjectsLoadedForOrganization = id => createSelector(selectProjectsLoaded, loaded => loaded[id]);
 

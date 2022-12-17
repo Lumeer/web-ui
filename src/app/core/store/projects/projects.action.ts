@@ -27,10 +27,12 @@ import {HttpResponse} from '@angular/common/http';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
-  GET_SINGLE = '[Projects] Get Single',
   GET_SUCCESS = '[Projects] Get :: Success',
   GET_FAILURE = '[Projects] Get :: Failure',
 
+  GET_ALL_SUCCESS = '[Projects] Get All :: Success',
+
+  GET_ONE = '[Projects] Get One',
   GET_ONE_SUCCESS = '[Projects] Get one :: Success',
 
   GET_CODES = '[Projects] Get codes',
@@ -70,6 +72,7 @@ export enum ProjectsActionType {
 
   DISMISS_WARNING_MESSAGE = '[Projects] Dismiss Warning Message',
   SWITCH_WORKSPACE = '[Projects] Switch Workspace',
+  REFRESH_WORKSPACE = '[Projects] Refresh Workspace',
   CLEAR_WORKSPACE_DATA = '[Projects] Clear Workspace Data',
 
   DOWNLOAD_RAW_CONTENT = '[Projects] Download Raw Content',
@@ -86,12 +89,6 @@ export namespace ProjectsAction {
     public constructor(public payload: {organizationId: string; force?: boolean}) {}
   }
 
-  export class GetSingle implements Action {
-    public readonly type = ProjectsActionType.GET_SINGLE;
-
-    public constructor(public payload: {organizationId: string; projectId: string}) {}
-  }
-
   export class GetSuccess implements Action {
     public readonly type = ProjectsActionType.GET_SUCCESS;
 
@@ -104,22 +101,22 @@ export namespace ProjectsAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class GetAllSuccess implements Action {
+    public readonly type = ProjectsActionType.GET_ALL_SUCCESS;
+
+    public constructor(public payload: {projectsByOrganizations: Record<string, Project[]>}) {}
+  }
+
+  export class GetOne implements Action {
+    public readonly type = ProjectsActionType.GET_ONE;
+
+    public constructor(public payload: {organizationId: string; projectId: string}) {}
+  }
+
   export class GetOneSuccess implements Action {
     public readonly type = ProjectsActionType.GET_ONE_SUCCESS;
 
     public constructor(public payload: {project: Project}) {}
-  }
-
-  export class GetCodes implements Action {
-    public readonly type = ProjectsActionType.GET_CODES;
-
-    public constructor(public payload: {organizationIds: string[]}) {}
-  }
-
-  export class GetCodesSuccess implements Action {
-    public readonly type = ProjectsActionType.GET_CODES_SUCCESS;
-
-    public constructor(public payload: {codesMap: Record<string, string[]>}) {}
   }
 
   export class GetCodesFailure implements Action {
@@ -289,6 +286,10 @@ export namespace ProjectsAction {
     public constructor(public payload: {organizationId: string; projectId: string; nextAction?: Action}) {}
   }
 
+  export class RefreshWorkspace implements Action {
+    public readonly type = ProjectsActionType.REFRESH_WORKSPACE;
+  }
+
   export class ClearWorkspaceData implements Action {
     public readonly type = ProjectsActionType.CLEAR_WORKSPACE_DATA;
 
@@ -319,12 +320,11 @@ export namespace ProjectsAction {
 
   export type All =
     | Get
-    | GetSingle
     | GetSuccess
     | GetFailure
+    | GetAllSuccess
+    | GetOne
     | GetOneSuccess
-    | GetCodes
-    | GetCodesSuccess
     | GetCodesFailure
     | Create
     | CreateSuccess

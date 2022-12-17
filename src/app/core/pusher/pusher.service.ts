@@ -212,7 +212,7 @@ export class PusherService implements OnDestroy {
       this.store$.dispatch(new OrganizationsAction.CreateSuccess({organization: OrganizationConverter.fromDto(data)}));
     });
     this.channel.bind('Organization:create:ALT', data => {
-      this.store$.dispatch(new OrganizationsAction.GetSingle({organizationId: data.id}));
+      this.store$.dispatch(new OrganizationsAction.GetOne({organizationId: data.id}));
     });
     this.channel.bind('Organization:update', data => {
       if (data.id === this.getCurrentOrganizationId()) {
@@ -276,17 +276,7 @@ export class PusherService implements OnDestroy {
   }
 
   private forceRefreshWorkspaceData() {
-    const organizationId = this.getCurrentOrganizationId();
-    const projectId = this.getCurrentProjectId();
-    if (organizationId) {
-      this.store$.dispatch(new ProjectsAction.Get({organizationId, force: true}));
-      if (projectId) {
-        const workspace = {organizationId, projectId};
-        this.store$.dispatch(new CollectionsAction.Get({workspace, force: true}));
-        this.store$.dispatch(new LinkTypesAction.Get({workspace, force: true}));
-        this.store$.dispatch(new ViewsAction.Get({workspace, force: true}));
-      }
-    }
+    this.store$.dispatch(new ProjectsAction.RefreshWorkspace());
   }
 
   private bindProjectEvents() {
@@ -296,7 +286,7 @@ export class PusherService implements OnDestroy {
       );
     });
     this.channel.bind('Project:create:ALT', data => {
-      this.store$.dispatch(new ProjectsAction.GetSingle({organizationId: data.organizationId, projectId: data.id}));
+      this.store$.dispatch(new ProjectsAction.GetOne({organizationId: data.organizationId, projectId: data.id}));
     });
     this.channel.bind('Project:update', data => {
       this.getProject(data.object.id, oldProject => {
@@ -973,7 +963,7 @@ export class PusherService implements OnDestroy {
       const usersBefore = originalTeam?.users || [];
       const usersNow = team.users || [];
       if (!usersBefore.includes(this.user.id) && usersNow.includes(this.user.id)) {
-        this.store$.dispatch(new OrganizationsAction.GetSingle({organizationId: team.organizationId}));
+        this.store$.dispatch(new OrganizationsAction.GetOne({organizationId: team.organizationId}));
         if (isCurrentOrganization) {
           this.forceRefreshWorkspaceData();
         }

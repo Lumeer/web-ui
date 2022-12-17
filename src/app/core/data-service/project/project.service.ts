@@ -24,7 +24,7 @@ import {PermissionService} from '../common/permission.service';
 export abstract class ProjectService extends PermissionService {
   public abstract getProjects(organizationId: string): Observable<ProjectDto[]>;
 
-  public abstract getProjectCodes(organizationId: string): Observable<string[]>;
+  public abstract checkCodeValid(organizationId: string, code: string): Observable<boolean>;
 
   public abstract getProject(organizationId: string, projectId: string): Observable<ProjectDto>;
 

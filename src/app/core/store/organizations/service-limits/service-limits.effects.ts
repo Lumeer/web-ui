@@ -31,35 +31,6 @@ import {convertServiceLimitsDtoToModel} from './service-limits.converter';
 
 @Injectable()
 export class ServiceLimitsEffects {
-  public getAll$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<ServiceLimitsAction.GetAll>(ServiceLimitsActionType.GET_ALL),
-      mergeMap(() => {
-        return this.organizationService.getAllServiceLimits().pipe(
-          map(mapOfLimits =>
-            Object.keys(mapOfLimits).reduce((acc, organizationId) => {
-              acc.push(convertServiceLimitsDtoToModel(organizationId, mapOfLimits[organizationId]));
-              return acc;
-            }, [])
-          ),
-          map(serviceLimits => new ServiceLimitsAction.GetAllSuccess({allServiceLimits: serviceLimits})),
-          catchError(error => of(new ServiceLimitsAction.GetAllFailure({error})))
-        );
-      })
-    )
-  );
-
-  public getAllFailure$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<ServiceLimitsAction.GetAllFailure>(ServiceLimitsActionType.GET_ALL_FAILURE),
-      tap(action => console.error(action.payload.error)),
-      map(() => {
-        const message = $localize`:@@organization.serviceLimits.getAll.fail:Could not read information about your service levels and subscriptions`;
-        return new NotificationsAction.Error({message});
-      })
-    )
-  );
-
   public getServiceLimits$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ServiceLimitsAction.GetServiceLimits>(ServiceLimitsActionType.GET_SERVICE_LIMITS),

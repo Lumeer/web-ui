@@ -22,10 +22,10 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {EMPTY, forkJoin, Observable, of} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
-import {PermissionDto, ProjectDto} from '../../dto';
+import {PermissionDto} from '../../dto';
 import {AppState} from '../app.state';
 import {CollectionsAction} from '../collections/collections.action';
 import {CommonAction} from '../common/common.action';
@@ -42,7 +42,7 @@ import {selectCurrentUser} from '../users/users.state';
 import {ViewsAction} from '../views/views.action';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
-import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
+import {selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationService} from '../../notifications/notification.service';
 import ApplyTemplate = ProjectsAction.ApplyTemplate;
@@ -65,6 +65,9 @@ import * as FormActions from './../form/form.actions';
 import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
 import * as AuditLogsActions from './../audit-logs/audit-logs.actions';
 import {ViewSettingsAction} from '../view-settings/view-settings.action';
+import {TeamsAction} from '../teams/teams.action';
+import {SelectionListsAction} from '../selection-lists/selection-lists.action';
+import * as ResourceVariableActions from '../resource-variables/resource-variables.actions';
 
 @Injectable()
 export class ProjectsEffects {
@@ -73,9 +76,6 @@ export class ProjectsEffects {
       ofType<ProjectsAction.Get>(ProjectsActionType.GET),
       withLatestFrom(this.store$.pipe(select(selectProjectsLoaded))),
       filter(([action, projectsLoaded]) => action.payload.force || !projectsLoaded[action.payload.organizationId]),
-      tap(([action]) =>
-        this.store$.dispatch(new ProjectsAction.GetCodes({organizationIds: [action.payload.organizationId]}))
-      ),
       mergeMap(([action]) => {
         const organizationId = action.payload.organizationId;
         return this.projectService.getProjects(action.payload.organizationId).pipe(
@@ -87,14 +87,14 @@ export class ProjectsEffects {
     )
   );
 
-  public getSingle$ = createEffect(() =>
+  public getOne$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<ProjectsAction.GetSingle>(ProjectsActionType.GET_SINGLE),
+      ofType<ProjectsAction.GetOne>(ProjectsActionType.GET_ONE),
       mergeMap(action => {
         const {organizationId, projectId} = action.payload;
         return this.projectService.getProject(organizationId, projectId).pipe(
-          map((dto: ProjectDto) => ({organizationId, projects: [ProjectConverter.fromDto(dto, organizationId)]})),
-          map(payload => new ProjectsAction.GetSuccess(payload)),
+          map(dto => ProjectConverter.fromDto(dto, organizationId)),
+          map(project => new ProjectsAction.GetOneSuccess({project})),
           catchError(error => of(new ProjectsAction.GetFailure({error})))
         );
       })
@@ -110,35 +110,6 @@ export class ProjectsEffects {
         return new NotificationsAction.Error({message});
       })
     )
-  );
-
-  public getCodes$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<ProjectsAction.GetCodes>(ProjectsActionType.GET_CODES),
-      mergeMap(action => {
-        const {organizationIds} = action.payload;
-        const observables: Observable<string[]>[] = organizationIds.map(organizationId =>
-          this.projectService.getProjectCodes(organizationId).pipe(catchError(() => of([])))
-        );
-
-        return forkJoin(observables).pipe(
-          map(arrayOfCodes =>
-            organizationIds.reduce((codesMap, id, index) => ({...codesMap, [id]: arrayOfCodes[index]}), {})
-          ),
-          map(codesMap => new ProjectsAction.GetCodesSuccess({codesMap})),
-          catchError(error => of(new ProjectsAction.GetCodesFailure({error})))
-        );
-      })
-    )
-  );
-
-  public getCodesFailure$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType<ProjectsAction.GetCodesFailure>(ProjectsActionType.GET_CODES_FAILURE),
-        tap((action: ProjectsAction.GetCodesFailure) => console.error(action.payload.error))
-      ),
-    {dispatch: false}
   );
 
   public create$ = createEffect(() =>
@@ -202,19 +173,6 @@ export class ProjectsEffects {
     )
   );
 
-  public createSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<ProjectsAction.CreateSuccess>(ProjectsActionType.CREATE_SUCCESS),
-      withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
-      map(([action, codes]) => {
-        const project = action.payload.project;
-        const codesByOrg = (codes && codes[project.organizationId]) || [];
-        const newCodes = [...codesByOrg, project.code];
-        return new ProjectsAction.GetCodesSuccess({codesMap: {[project.organizationId]: newCodes}});
-      })
-    )
-  );
-
   public createFailure$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE),
@@ -251,21 +209,8 @@ export class ProjectsEffects {
   public updateSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ProjectsAction.UpdateSuccess>(ProjectsActionType.UPDATE_SUCCESS),
-      withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
-      mergeMap(([action, codes]) => {
+      mergeMap(action => {
         const {project, oldCode} = action.payload;
-        const codesByOrg = (codes && codes[project.organizationId]) || [];
-        let newCodes = [...codesByOrg];
-        if (oldCode) {
-          newCodes = newCodes.map(code => (code === oldCode ? project.code : code));
-        } else {
-          newCodes.push(project.code);
-        }
-
-        const actions: Action[] = [
-          new ProjectsAction.GetCodesSuccess({codesMap: {[project.organizationId]: newCodes}}),
-        ];
-
         const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
         const projCodeInRoute = paramMap.get('projectCode');
 
@@ -274,11 +219,11 @@ export class ProjectsEffects {
           const index = paths.indexOf(oldCode, 2);
           if (index !== -1) {
             paths[index] = project.code;
-            actions.push(new RouterAction.Go({path: paths}));
+            return [new RouterAction.Go({path: paths})];
           }
         }
 
-        return actions;
+        return [];
       })
     )
   );
@@ -312,23 +257,14 @@ export class ProjectsEffects {
   public deleteSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ProjectsAction.DeleteSuccess>(ProjectsActionType.DELETE_SUCCESS),
-      withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
       withLatestFrom(this.store$.pipe(select(selectNavigation))),
-      mergeMap(([[action, codes], navigation]) => {
-        const {organizationId, projectCode} = action.payload;
-        const codesByOrg = codes?.[organizationId] || [];
-        const actions: Action[] = [];
-        let newCodes = [...codesByOrg];
-        if (projectCode) {
-          newCodes = newCodes.filter(code => code !== projectCode);
-          actions.push(new ProjectsAction.GetCodesSuccess({codesMap: {[action.payload.organizationId]: newCodes}}));
-        }
-
+      mergeMap(([action, navigation]) => {
+        const {projectCode} = action.payload;
         if (navigation?.workspace?.projectCode === projectCode) {
-          actions.push(new RouterAction.Go({path: ['/']}));
+          return [new RouterAction.Go({path: ['/']})];
         }
 
-        return actions;
+        return [];
       })
     )
   );
@@ -590,6 +526,35 @@ export class ProjectsEffects {
 
         if (nextAction) {
           actions.push(nextAction);
+        }
+
+        return actions;
+      })
+    )
+  );
+
+  public refreshWorkspace$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ProjectsAction.RefreshWorkspace>(ProjectsActionType.REFRESH_WORKSPACE),
+      withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
+      mergeMap(([, workspace]) => {
+        const actions: Action[] = [
+          new OrganizationsAction.GetAllWorkspaces({force: true}),
+          new CollectionsAction.Get({force: true}),
+          new LinkTypesAction.Get({force: true}),
+          new ViewsAction.Get({force: true}),
+        ];
+
+        // TODO clear queries and read current data
+
+        const {organizationId} = workspace;
+        if (organizationId) {
+          actions.push(new UsersAction.Get({organizationId, force: true}));
+          actions.push(new TeamsAction.Get({organizationId, force: true}));
+          actions.push(new SelectionListsAction.Get({organizationId, force: true}));
+          actions.push(ResourceVariableActions.get({workspace, force: true}));
+          actions.push(DashboardDataActions.get({workspace, force: true}));
+          actions.push(new ViewsAction.GetDefaultConfigs({workspace}));
         }
 
         return actions;

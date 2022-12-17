@@ -30,40 +30,73 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {RouterAction} from '../router/router.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
-import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
-import {OrganizationDto, PermissionDto} from '../../dto';
+import {selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
+import {PermissionDto} from '../../dto';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {CommonAction} from '../common/common.action';
 import {ServiceLimitsAction} from './service-limits/service-limits.action';
-import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
 import {OrganizationService} from '../../data-service';
 import {ModalService} from '../../../shared/modal/modal.service';
+import {convertServiceLimitsDtoToModel} from './service-limits/service-limits.converter';
+import {ProjectsAction} from '../projects/projects.action';
+import {ProjectConverter} from '../projects/project.converter';
+import {convertTeamDtoToModel} from '../teams/teams.converter';
+import {TeamsAction} from '../teams/teams.action';
 
 @Injectable()
 export class OrganizationsEffects {
   public get$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<OrganizationsAction.Get>(OrganizationsActionType.GET),
+      ofType<OrganizationsAction.GetAllWorkspaces>(OrganizationsActionType.GET_ALL_WORKSPACES),
       withLatestFrom(this.store$.pipe(select(selectOrganizationsLoaded))),
       filter(([, loaded]) => !loaded),
       mergeMap(() =>
-        this.organizationService.getOrganizations().pipe(
-          map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
-          map(organizations => new OrganizationsAction.GetSuccess({organizations: organizations})),
+        this.organizationService.getAllWorkspaces().pipe(
+          mergeMap(workspaces => {
+            const organizations = workspaces.organizations.map(dto => OrganizationConverter.fromDto(dto));
+            const serviceLimits = Object.keys(workspaces.serviceLimits).map(organizationId =>
+              convertServiceLimitsDtoToModel(organizationId, workspaces.serviceLimits[organizationId])
+            );
+            const projectsByOrganizations = Object.keys(workspaces.projects).reduce(
+              (data, organizationId) => ({
+                ...data,
+                [organizationId]: workspaces.projects[organizationId].map(dto =>
+                  ProjectConverter.fromDto(dto, organizationId)
+                ),
+              }),
+              {}
+            );
+            const teamsByOrganizations = Object.keys(workspaces.teams).reduce(
+              (data, organizationId) => ({
+                ...data,
+                [organizationId]: workspaces.teams[organizationId].map(dto =>
+                  convertTeamDtoToModel(dto, organizationId)
+                ),
+              }),
+              {}
+            );
+
+            return [
+              new TeamsAction.GetAllSuccess({teamsByOrganizations}),
+              new ProjectsAction.GetAllSuccess({projectsByOrganizations}),
+              new ServiceLimitsAction.GetAllSuccess({serviceLimits}),
+              new OrganizationsAction.GetSuccess({organizations}),
+            ];
+          }),
           catchError(error => of(new OrganizationsAction.GetFailure({error})))
         )
       )
     )
   );
 
-  public getSingle$ = createEffect(() =>
+  public getOne$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<OrganizationsAction.GetSingle>(OrganizationsActionType.GET_SINGLE),
+      ofType<OrganizationsAction.GetOne>(OrganizationsActionType.GET_ONE),
       mergeMap(action =>
         this.organizationService.getOrganization(action.payload.organizationId).pipe(
-          map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
+          map(dto => OrganizationConverter.fromDto(dto)),
           map(organization => new OrganizationsAction.GetOneSuccess({organization})),
           catchError(error => of(new OrganizationsAction.GetFailure({error})))
         )
@@ -80,29 +113,6 @@ export class OrganizationsEffects {
         return new NotificationsAction.Error({message});
       })
     )
-  );
-
-  public getCodes$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<OrganizationsAction.GetCodes>(OrganizationsActionType.GET_CODES),
-      withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
-      filter(([, codes]) => isNullOrUndefined(codes)),
-      mergeMap(() =>
-        this.organizationService.getOrganizationsCodes().pipe(
-          map(organizationCodes => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
-          catchError(error => of(new OrganizationsAction.GetCodesFailure({error})))
-        )
-      )
-    )
-  );
-
-  public getCodesFailure$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType<OrganizationsAction.GetCodesFailure>(OrganizationsActionType.GET_CODES_FAILURE),
-        tap((action: OrganizationsAction.GetCodesFailure) => console.error(action.payload.error))
-      ),
-    {dispatch: false}
   );
 
   public create$ = createEffect(() =>
@@ -134,20 +144,6 @@ export class OrganizationsEffects {
             return of(...actions);
           })
         );
-      })
-    )
-  );
-
-  public createSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<OrganizationsAction.CreateSuccess>(OrganizationsActionType.CREATE_SUCCESS),
-      withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
-      map(([action, codes]) => {
-        const newCodes = (codes && [...codes]) || [];
-        if (!newCodes.includes(action.payload.organization.code)) {
-          newCodes.push(action.payload.organization.code);
-        }
-        return new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes});
       })
     )
   );
@@ -188,17 +184,8 @@ export class OrganizationsEffects {
   public updateSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType<OrganizationsAction.UpdateSuccess>(OrganizationsActionType.UPDATE_SUCCESS),
-      withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
-      mergeMap(([action, codes]) => {
+      mergeMap(action => {
         const {organization, oldCode} = action.payload;
-        let newCodes = (codes && [...codes]) || [];
-        if (oldCode) {
-          newCodes = newCodes.map(code => (code === oldCode ? organization.code : code));
-        } else {
-          newCodes.push(organization.code);
-        }
-
-        const actions: Action[] = [new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes})];
 
         const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
         const orgCodeInRoute = paramMap.get('organizationCode');
@@ -207,10 +194,10 @@ export class OrganizationsEffects {
           const index = paths.indexOf(oldCode, 1);
           if (index !== -1) {
             paths[index] = organization.code;
-            actions.push(new RouterAction.Go({path: paths}));
+            return [new RouterAction.Go({path: paths})];
           }
         }
-        return actions;
+        return [];
       })
     )
   );
@@ -244,22 +231,15 @@ export class OrganizationsEffects {
   public deleteSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType<OrganizationsAction.DeleteSuccess>(OrganizationsActionType.DELETE_SUCCESS),
-      withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
       withLatestFrom(this.store$.pipe(select(selectNavigation))),
-      mergeMap(([[action, codes], navigation]) => {
+      mergeMap(([action, navigation]) => {
         const {organizationCode} = action.payload;
-        let newCodes = (codes && [...codes]) || [];
-        if (organizationCode) {
-          newCodes = newCodes.filter(code => code !== organizationCode);
-        }
-
-        const actions: Action[] = [new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes})];
 
         if (navigation && navigation.workspace && navigation.workspace.organizationCode === organizationCode) {
-          actions.push(new RouterAction.Go({path: ['/']}));
+          return [new RouterAction.Go({path: ['/']})];
         }
 
-        return actions;
+        return [];
       })
     )
   );

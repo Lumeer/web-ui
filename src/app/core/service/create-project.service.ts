@@ -18,16 +18,13 @@
  */
 
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
 import {Organization} from '../store/organizations/organization';
 import * as Colors from '../../shared/picker/colors';
 import {safeGetRandomIcon} from '../../shared/picker/icons';
-import {createUniqueCode} from '../../shared/utils/string.utils';
 import {Project} from '../store/projects/project';
 import {ProjectsAction} from '../store/projects/projects.action';
-import {selectProjectsCodesForOrganization} from '../store/projects/projects.state';
-import {take} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
 
 type ProjectCreatePayload = {
@@ -45,22 +42,10 @@ export class CreateProjectService {
   constructor(private store$: Store<AppState>) {}
 
   public createProjectInOrganization(organization: Organization, initialCode: string, payload: ProjectCreatePayload) {
-    this.store$
-      .pipe(select(selectProjectsCodesForOrganization(organization.id)), take(1))
-      .subscribe(codes => this.createProject(organization, initialCode, codes, payload));
-  }
-
-  private createProject(
-    organization: Organization,
-    initialCode: string,
-    usedCodes: string[],
-    payload: ProjectCreatePayload
-  ) {
     const colors = Colors.palette;
     const color = colors[Math.round(Math.random() * colors.length)];
     const icon = safeGetRandomIcon();
-    const code = createUniqueCode(initialCode, usedCodes);
-    const project: Project = {code, name: '', organizationId: organization.id, icon, color};
+    const project: Project = {code: initialCode, name: '', organizationId: organization.id, icon, color};
 
     this.store$.dispatch(
       new ProjectsAction.Create({
