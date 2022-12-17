@@ -629,7 +629,7 @@ export class PusherService implements OnDestroy {
       }
     });
     this.channel.bind('Document:remove', data => {
-      if (this.isCurrentWorkspace(data) && !this.isCurrentAppTab(data)) {
+      if (this.isCurrentWorkspace(data) && (this.isFromAutomation(data) || !this.isCurrentAppTab(data))) {
         this.store$.dispatch(new DocumentsAction.DeleteSuccess({documentId: data.id}));
       }
     });
@@ -1137,6 +1137,10 @@ export class PusherService implements OnDestroy {
 
   private isCurrentAppTab(data: any): boolean {
     return data.appId === this.appId.getAppId();
+  }
+
+  private isFromAutomation(data: any): boolean {
+    return !!data.automationSource;
   }
 
   private isCurrentOrganization(data: any): boolean {
