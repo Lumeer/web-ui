@@ -27,7 +27,6 @@ import {PageNotFoundGuard} from './page-not-found.guard';
 import {ViewRedirectGuard} from './view-redirect.guard';
 import {UsersGuard} from './data/users.guard';
 import {ViewDefaultConfigsGuard} from './data/view-default-configs.guard';
-import {GroupsGuard} from './data/groups.guard';
 import {SelectionListsGuard} from './selection-lists.guard';
 import {DashboardDataGuard} from './data/dashboard-data.guard';
 import {ResourceVariablesGuard} from './data/resource-variables.guard';
@@ -44,7 +43,6 @@ import {OrganizationsProjectsGuard} from './data/organizations-projects.guard';
     ViewRedirectGuard,
     CurrentUserGuard,
     UsersGuard,
-    GroupsGuard,
     SelectionListsGuard,
     ViewDefaultConfigsGuard,
     DashboardDataGuard,

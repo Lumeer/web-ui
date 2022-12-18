@@ -65,7 +65,6 @@ import * as FormActions from './../form/form.actions';
 import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
 import * as AuditLogsActions from './../audit-logs/audit-logs.actions';
 import {ViewSettingsAction} from '../view-settings/view-settings.action';
-import {TeamsAction} from '../teams/teams.action';
 import {SelectionListsAction} from '../selection-lists/selection-lists.action';
 import * as ResourceVariableActions from '../resource-variables/resource-variables.actions';
 
@@ -550,7 +549,6 @@ export class ProjectsEffects {
         const {organizationId} = workspace;
         if (organizationId) {
           actions.push(new UsersAction.Get({organizationId, force: true}));
-          actions.push(new TeamsAction.Get({organizationId, force: true}));
           actions.push(new SelectionListsAction.Get({organizationId, force: true}));
           actions.push(ResourceVariableActions.get({workspace, force: true}));
           actions.push(DashboardDataActions.get({workspace, force: true}));

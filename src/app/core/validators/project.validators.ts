@@ -21,6 +21,7 @@ import {Injectable} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {ProjectService} from '../data-service';
+import {Observable, of} from 'rxjs';
 
 @Injectable()
 export class ProjectValidators {
@@ -32,10 +33,17 @@ export class ProjectValidators {
     this.currentOrganizationId = id;
   }
 
+  public checkCodeValid(value: string): Observable<boolean> {
+    return this.projectService.checkCodeValid(this.currentOrganizationId, value);
+  }
+
   public uniqueCode(): AsyncValidatorFn {
     return (control: AbstractControl) => {
-      const value = control.value.trim().toLowerCase();
-      return this.projectService.checkCodeValid(this.currentOrganizationId, value).pipe(
+      const value = control.value.trim();
+      if (value.length < 2) {
+        return of(null);
+      }
+      return this.checkCodeValid(value).pipe(
         map(valid => {
           if (valid) {
             return null;

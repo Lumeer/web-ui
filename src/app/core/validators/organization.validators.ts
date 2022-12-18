@@ -21,15 +21,23 @@ import {Injectable} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {OrganizationService} from '../data-service';
+import {Observable, of} from 'rxjs';
 
 @Injectable()
 export class OrganizationValidators {
   constructor(private organizationService: OrganizationService) {}
 
-  public uniqueCode(): AsyncValidatorFn {
+  public checkCodeValid(value: string): Observable<boolean> {
+    return this.organizationService.checkCodeValid(value);
+  }
+
+  public uniqueCodeValidator(): AsyncValidatorFn {
     return (control: AbstractControl) => {
-      const value = control.value.trim().toLowerCase();
-      return this.organizationService.checkCodeValid(value).pipe(
+      const value = control.value.trim();
+      if (value.length < 2) {
+        return of(null);
+      }
+      return this.checkCodeValid(value).pipe(
         map(valid => {
           if (valid) {
             return null;

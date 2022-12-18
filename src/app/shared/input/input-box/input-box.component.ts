@@ -64,6 +64,7 @@ export class InputBoxComponent implements OnInit, OnChanges {
   @Input() public innerClass: string = '';
   @Input() public filter: RegExp;
   @Input() public filterAllChanges = true;
+  @Input() public minLength = 0;
   @Input() public maxLength = 0;
   @Input() public secure: boolean;
 
@@ -145,6 +146,8 @@ export class InputBoxComponent implements OnInit, OnChanges {
     } else if (value !== this.mCurrentValue) {
       if (value.length === 0 && !this.canStayEmpty) {
         this.emptyValue.emit();
+        element.textContent = this.mCurrentValue;
+      } else if (value.length < this.minLength) {
         element.textContent = this.mCurrentValue;
       } else {
         this.mCurrentValue = value;

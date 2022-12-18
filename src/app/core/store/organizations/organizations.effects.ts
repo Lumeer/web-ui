@@ -56,8 +56,8 @@ export class OrganizationsEffects {
         this.organizationService.getAllWorkspaces().pipe(
           mergeMap(workspaces => {
             const organizations = workspaces.organizations.map(dto => OrganizationConverter.fromDto(dto));
-            const serviceLimits = Object.keys(workspaces.serviceLimits).map(organizationId =>
-              convertServiceLimitsDtoToModel(organizationId, workspaces.serviceLimits[organizationId])
+            const serviceLimits = Object.keys(workspaces.limits).map(organizationId =>
+              convertServiceLimitsDtoToModel(organizationId, workspaces.limits[organizationId])
             );
             const projectsByOrganizations = Object.keys(workspaces.projects).reduce(
               (data, organizationId) => ({
@@ -68,10 +68,10 @@ export class OrganizationsEffects {
               }),
               {}
             );
-            const teamsByOrganizations = Object.keys(workspaces.teams).reduce(
+            const teamsByOrganizations = Object.keys(workspaces.groups).reduce(
               (data, organizationId) => ({
                 ...data,
-                [organizationId]: workspaces.teams[organizationId].map(dto =>
+                [organizationId]: workspaces.groups[organizationId].map(dto =>
                   convertTeamDtoToModel(dto, organizationId)
                 ),
               }),

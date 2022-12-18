@@ -43,8 +43,7 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
   }
 
   public checkCodeValid(organizationId: string, code: string): Observable<boolean> {
-    // TODO
-    return undefined;
+    return this.httpClient.post<boolean>(`${this.baseApiPrefix(organizationId)}/code/${code}/check`, {});
   }
 
   public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {

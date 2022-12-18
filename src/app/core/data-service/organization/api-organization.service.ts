@@ -43,15 +43,14 @@ export class ApiOrganizationService extends ApiPermissionService implements Orga
   public getAllWorkspaces(): Observable<{
     organizations: OrganizationDto[];
     projects: Record<string, ProjectDto[]>;
-    serviceLimits: Record<string, ServiceLimitsDto>;
-    teams: Record<string, TeamDto[]>;
+    limits: Record<string, ServiceLimitsDto>;
+    groups: Record<string, TeamDto[]>;
   }> {
     return this.httpClient.get<any>(`${this.apiPrefix()}/workspaces/all`);
   }
 
   public checkCodeValid(code: string): Observable<boolean> {
-    // TODO
-    return undefined;
+    return this.httpClient.post<boolean>(`${this.apiPrefix()}/code/${code}/check`, {});
   }
 
   public getOrganization(id: string): Observable<OrganizationDto> {

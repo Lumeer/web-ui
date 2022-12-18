@@ -27,8 +27,8 @@ export abstract class OrganizationService extends PermissionService {
   public abstract getAllWorkspaces(): Observable<{
     organizations: OrganizationDto[];
     projects: Record<string, ProjectDto[]>;
-    serviceLimits: Record<string, ServiceLimitsDto>;
-    teams: Record<string, TeamDto[]>;
+    limits: Record<string, ServiceLimitsDto>;
+    groups: Record<string, TeamDto[]>;
   }>;
 
   public abstract checkCodeValid(code: string): Observable<boolean>;

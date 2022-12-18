@@ -32,7 +32,6 @@ import {UsersGuard} from '../core/guards/data/users.guard';
 import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
 import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purpose.component';
 import {ViewsGuard} from '../core/guards/data/views.guard';
-import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
 import {CollectionTabGuard} from './collection-tab.guard';
 import {RoleType} from '../core/model/role-type';
@@ -51,7 +50,6 @@ const collectionRoutes: Routes = [
       collections: CollectionsGuard,
       users: UsersGuard,
       views: ViewsGuard,
-      groups: GroupsGuard,
     },
     children: [
       {

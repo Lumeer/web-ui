@@ -42,8 +42,8 @@ export class PublicOrganizationService extends PublicPermissionService implement
   public getAllWorkspaces(): Observable<{
     organizations: OrganizationDto[];
     projects: Record<string, ProjectDto[]>;
-    serviceLimits: Record<string, ServiceLimitsDto>;
-    teams: Record<string, TeamDto[]>;
+    limits: Record<string, ServiceLimitsDto>;
+    groups: Record<string, TeamDto[]>;
   }> {
     return this.getOrganization('').pipe(
       mergeMap(organization =>
@@ -51,8 +51,8 @@ export class PublicOrganizationService extends PublicPermissionService implement
           map(projects => ({
             organizations: [organization],
             projects: {[organization.id]: projects},
-            serviceLimits: {},
-            teams: {},
+            limits: {},
+            groups: {},
           }))
         )
       )

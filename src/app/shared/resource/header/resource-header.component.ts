@@ -35,6 +35,11 @@ import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picke
 import {parseSelectTranslation} from '../../utils/translation.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {TRIM_REGEX} from '../../input/input-box/input-box.component';
+import {merge, Observable, of, Subject, switchMap} from 'rxjs';
+import {debounceTime, map, tap} from 'rxjs/operators';
+import {OrganizationValidators} from '../../../core/validators/organization.validators';
+import {ProjectValidators} from '../../../core/validators/project.validators';
+import {Project} from '../../../core/store/projects/project';
 
 @Component({
   selector: 'resource-header',
@@ -73,7 +78,7 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
   @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
-  public isDuplicate: boolean;
+  public isDuplicate$: Observable<boolean>;
   public deleteTitle: string;
   public codeVisible: boolean;
   public descriptionVisible: boolean;
@@ -84,7 +89,13 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
   public firstLineFilter: RegExp;
   public secondLineFilter: RegExp;
 
+  public codeSubject$ = new Subject<string>();
+
+  private isDuplicate: boolean;
   private shouldEmitFirstLine: boolean;
+  private isEditing: boolean;
+
+  constructor(private organizationValidators: OrganizationValidators, private projectValidators: ProjectValidators) {}
 
   public hasVisibleCode(): boolean {
     return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);
@@ -97,8 +108,12 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resource) {
+    if (changes.resource && this.resource) {
       this.checkValues();
+
+      if (!this.isEditing) {
+        this.codeSubject$.next(this.resource.code);
+      }
     }
   }
 
@@ -132,23 +147,25 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
 
   public onFirstLineBlur() {
     this.shouldEmitFirstLine = true;
+    this.isEditing = false;
   }
 
   public onFirstLineFocus() {
     this.shouldEmitFirstLine = false;
+    this.isEditing = true;
   }
 
   public onNewFirstLine(value: string) {
     if (this.shouldEmitFirstLine) {
       this.emitFirstLine(value);
-    } else {
-      // TODO
+    } else if (this.codeVisible) {
+      this.codeSubject$.next(value);
     }
   }
 
   private emitFirstLine(value: string) {
     if (!this.isDuplicate) {
-      if (this.hasVisibleCode()) {
+      if (this.codeVisible) {
         this.codeChange.emit(value);
       } else {
         this.nameChange.emit(value);
@@ -158,7 +175,7 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
   }
 
   public onNewSecondLine(value: string) {
-    if (this.hasVisibleCode()) {
+    if (this.codeVisible) {
       this.nameChange.emit(value);
     }
   }
@@ -193,5 +210,26 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
       $localize`:@@resource.settings.deleteResource.title:Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}`,
       {resourceType: this.resourceType}
     );
+
+    this.isDuplicate$ = merge(
+      this.codeSubject$.pipe(map(() => false)),
+      this.codeSubject$.pipe(
+        debounceTime(300),
+        switchMap(value => this.validateCode(value).pipe(map(valid => !valid)))
+      )
+    ).pipe(tap(isDuplicate => (this.isDuplicate = isDuplicate)));
+  }
+
+  private validateCode(code: string): Observable<boolean> {
+    if (!code || code.length <= 2 || this.resource?.code === code) {
+      return of(true);
+    }
+    if (this.resourceType === ResourceType.Organization) {
+      return this.organizationValidators.checkCodeValid(code);
+    } else if (this.resourceType === ResourceType.Project) {
+      this.projectValidators.setOrganizationId((<Project>this.resource).organizationId);
+      return this.projectValidators.checkCodeValid(code);
+    }
+    return of(true);
   }
 }

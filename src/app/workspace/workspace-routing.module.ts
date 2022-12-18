@@ -34,7 +34,6 @@ import {ProjectTemplateComponent} from './project/template/project-template.comp
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
-import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
 import {ProjectTeamsComponent} from './project/teams/project-teams.component';
 import {OrganizationTabGuard} from './organization/organization-tab.guard';
@@ -56,7 +55,6 @@ const workspaceRoutes: Routes = [
     resolve: {
       organizations: OrganizationsProjectsGuard,
       users: UsersGuard,
-      groups: GroupsGuard,
       selection: SelectionListsGuard,
       collections: CollectionsGuard,
       views: ViewsGuard,
@@ -114,7 +112,6 @@ const workspaceRoutes: Routes = [
     resolve: {
       organizations: OrganizationsProjectsGuard,
       users: UsersGuard,
-      groups: GroupsGuard,
     },
     children: [
       {
