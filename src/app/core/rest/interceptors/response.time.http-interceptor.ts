@@ -31,6 +31,7 @@ import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {isBackendUrl} from '../../api/api.utils';
 
 class CustomHttpRequest<T> extends HttpRequest<T> {
   // Prevent automatic adding of the Content-Type header
@@ -50,7 +51,9 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
   ) {}
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const random = Math.floor(Math.random() * 100);
+    if (!isBackendUrl(req.url, this.configurationService.getConfiguration())) {
+      return next.handle(req);
+    }
 
     if (req.url.indexOf('logz.io') >= 0) {
       const custReq = new CustomHttpRequest('POST', req.url, req.body);
@@ -61,6 +64,7 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
+    const random = Math.floor(Math.random() * 100);
     const startTimestamp = new Date().getTime();
 
     const newReq = req.clone({
