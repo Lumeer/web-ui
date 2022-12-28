@@ -51,16 +51,16 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
   ) {}
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!isBackendUrl(req.url, this.configurationService.getConfiguration())) {
-      return next.handle(req);
-    }
-
     if (req.url.indexOf('logz.io') >= 0) {
       const custReq = new CustomHttpRequest('POST', req.url, req.body);
       return next.handle(custReq);
     }
 
     if (!this.configurationService.getConfiguration().logzioKey) {
+      return next.handle(req);
+    }
+
+    if (!isBackendUrl(req.url, this.configurationService.getConfiguration())) {
       return next.handle(req);
     }
 
