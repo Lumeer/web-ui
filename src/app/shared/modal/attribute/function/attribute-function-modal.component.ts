@@ -53,6 +53,7 @@ import {BlocklyRule, Rule} from '../../../../core/model/rule';
 import {View} from '../../../../core/store/views/view';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {AttributeLock} from '@lumeer/data-filters';
+import {selectSelectionListNamesByWorkspaceSorted} from '../../../../core/store/selection-lists/selection-lists.state';
 
 @Component({
   selector: 'attribute-function-dialog',
@@ -82,6 +83,7 @@ export class AttributeFunctionModalComponent implements OnInit {
   public linkType$: Observable<LinkType>;
   public views$: Observable<View[]>;
   public variableNames$: Observable<string[]>;
+  public selectionLists$: Observable<string[]>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -101,6 +103,7 @@ export class AttributeFunctionModalComponent implements OnInit {
     this.collections$ = this.store$.pipe(select(selectReadableCollections));
     this.views$ = this.store$.pipe(select(selectViewsByRead));
     this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
+    this.selectionLists$ = this.store$.pipe(select(selectSelectionListNamesByWorkspaceSorted));
 
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(

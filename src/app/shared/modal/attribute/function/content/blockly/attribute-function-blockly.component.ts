@@ -54,6 +54,9 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
   public variableNames: string[];
 
   @Input()
+  public selectionLists: string[];
+
+  @Input()
   public collection: Collection;
 
   @Input()

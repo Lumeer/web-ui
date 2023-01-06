@@ -68,5 +68,15 @@ export const selectSelectionListsByWorkspace = createSelector(
     )
 );
 
+export const selectSelectionListNamesByWorkspaceSorted = createSelector(
+  selectAllSelectionListsSorted,
+  selectWorkspaceModels,
+  (lists, workspace) =>
+    lists
+      .filter(list => list.organizationId === workspace?.organization?.id && list.projectId === workspace?.project?.id)
+      .map(list => list.name)
+      .sort((a, b) => a.localeCompare(b))
+);
+
 export const selectSelectionListsLoaded = (organizationId: string) =>
   createSelector(selectSelectionListsState, state => state.loadedForOrganizationId === organizationId);
