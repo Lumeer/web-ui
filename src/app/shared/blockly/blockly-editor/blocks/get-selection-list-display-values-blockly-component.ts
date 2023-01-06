@@ -18,9 +18,8 @@
  */
 
 import {BlocklyComponent} from './blockly-component';
-import {COLOR_CYAN, COLOR_GREEN} from '../../../../core/constants';
+import {COLOR_CYAN} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {isNullOrUndefined} from '../../../utils/common.utils';
 
 declare var Blockly: any;
 
@@ -34,7 +33,7 @@ export class GetSelectionListDisplayValuesBlocklyComponent extends BlocklyCompon
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Rule, MasterBlockType.Link];
+    return [MasterBlockType.Rule, MasterBlockType.Link, MasterBlockType.Function];
   }
 
   public registerBlock(workspace: any) {
