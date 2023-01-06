@@ -36,6 +36,7 @@ import {
 } from '../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../core/store/views/view';
 import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
+import {selectSelectionListNamesByWorkspaceSorted} from '../../../../core/store/selection-lists/selection-lists.state';
 
 @Component({
   selector: 'cron-form',
@@ -63,6 +64,7 @@ export class CronFormComponent implements OnInit {
   public linkTypes$: Observable<LinkType[]>;
   public views$: Observable<View[]>;
   public variableNames$: Observable<string[]>;
+  public selectionLists$: Observable<string[]>;
 
   public variables: RuleVariable[];
   public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
@@ -105,6 +107,7 @@ export class CronFormComponent implements OnInit {
     this.views$ = this.store$.pipe(select(selectViewsByRead));
     this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
     this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
+    this.selectionLists$ = this.store$.pipe(select(selectSelectionListNamesByWorkspaceSorted));
 
     if (this.collection) {
       this.variables = [{name: 'records', collectionId: this.collection.id, list: true}];

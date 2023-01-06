@@ -36,6 +36,11 @@ import {
 import {View} from '../../../../core/store/views/view';
 import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
 import {RuleVariable} from '../../../blockly/rule-variable-type';
+import {
+  selectSelectionListNamesByWorkspaceSorted,
+  selectSelectionListsByWorkspace,
+} from '../../../../core/store/selection-lists/selection-lists.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'blockly-form',
@@ -59,6 +64,7 @@ export class BlocklyFormComponent implements OnInit {
   public linkTypes$: Observable<LinkType[]>;
   public views$: Observable<View[]>;
   public variableNames$: Observable<string[]>;
+  public selectionLists$: Observable<string[]>;
 
   public variables: RuleVariable[];
   public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
@@ -105,6 +111,7 @@ export class BlocklyFormComponent implements OnInit {
     this.views$ = this.store$.pipe(select(selectViewsByRead));
     this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
     this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
+    this.selectionLists$ = this.store$.pipe(select(selectSelectionListNamesByWorkspaceSorted));
 
     if (this.collection) {
       this.variables = [

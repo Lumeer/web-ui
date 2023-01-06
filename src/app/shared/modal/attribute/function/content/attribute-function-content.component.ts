@@ -42,6 +42,9 @@ export class AttributeFunctionContentComponent implements OnInit {
   public variableNames: string[];
 
   @Input()
+  public selectionLists: string[];
+
+  @Input()
   public collection: Collection;
 
   @Input()

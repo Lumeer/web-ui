@@ -94,6 +94,8 @@ export class BlocklyUtils {
   public static readonly FORMAT_CURRENCY = 'format_currency';
   public static readonly CREATE_DOCUMENT = 'create_document';
   public static readonly DELETE_DOCUMENT = 'delete_document';
+  public static readonly GET_SELECTION_LIST_VALUES = 'get_selection_list_values';
+  public static readonly GET_SELECTION_LIST_DISPLAY_VALUES = 'get_selection_list_display_values';
   public static readonly LINK_DOCUMENTS_NO_RETURN = 'link_documents_no_return';
   public static readonly LINK_DOCUMENTS_RETURN = 'link_documents_return';
   public static readonly READ_DOCUMENTS = 'read_documents';
@@ -151,7 +153,8 @@ export class BlocklyUtils {
     private collections: Collection[],
     private linkTypes: LinkType[],
     private views: View[],
-    private variables: RuleVariable[]
+    private variables: RuleVariable[],
+    private selectionLists: string[]
   ) {}
 
   public setLumeerVariable(variable: string) {
@@ -172,6 +175,10 @@ export class BlocklyUtils {
 
   public getVariables() {
     return this.variables;
+  }
+
+  public getSelectionLists() {
+    return this.selectionLists;
   }
 
   public registerComponent(component: BlocklyComponent) {

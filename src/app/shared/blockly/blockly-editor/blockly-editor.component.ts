@@ -119,6 +119,8 @@ import {CopyDocumentValuesSimpleBlocklyComponent} from './blocks/copy-document-v
 import {GetRecordsCountBlocklyComponent} from './blocks/get-records-count-blockly-component';
 import {DisplayTextBlocklyComponent} from './blocks/display-text-blockly-component';
 import {DisplayAttributeBlocklyComponent} from './blocks/display-attribute-blockly-component';
+import {GetSelectionListValuesBlocklyComponent} from './blocks/get-selection-list-values-blockly-component';
+import {GetSelectionListDisplayValuesBlocklyComponent} from './blocks/get-selection-list-display-values-blockly-component';
 
 declare var Blockly: any;
 
@@ -143,6 +145,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   public variables: RuleVariable[] = [];
+
+  @Input()
+  public selectionLists: string[] = [];
 
   @Input()
   public attribute: Attribute;
@@ -177,7 +182,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   private workspace: any;
   private initializing = false;
   private destroying = false;
-  private blocklyUtils = new BlocklyUtils(null, [], [], [], []);
+  private blocklyUtils = new BlocklyUtils(null, [], [], [], [], []);
 
   constructor(
     private store$: Store<AppState>,
@@ -191,7 +196,14 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   public ngAfterViewInit() {
     const lumeerVar = this.blocklyUtils?.getLumeerVariable() || null;
-    this.blocklyUtils = new BlocklyUtils(this.masterType, this.collections, this.linkTypes, this.views, this.variables);
+    this.blocklyUtils = new BlocklyUtils(
+      this.masterType,
+      this.collections,
+      this.linkTypes,
+      this.views,
+      this.variables,
+      this.selectionLists
+    );
     if (isNotNullOrUndefined(lumeerVar)) {
       this.blocklyUtils.setLumeerVariable(lumeerVar);
     }
@@ -271,6 +283,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetRecordsCountBlocklyComponent(this.blocklyUtils),
       new DisplayTextBlocklyComponent(this.blocklyUtils),
       new DisplayAttributeBlocklyComponent(this.blocklyUtils),
+      new GetSelectionListValuesBlocklyComponent(this.blocklyUtils),
+      new GetSelectionListDisplayValuesBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
