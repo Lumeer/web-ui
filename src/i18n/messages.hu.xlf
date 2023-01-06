@@ -445,17 +445,11 @@
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.getSelectionListDisplayValuesBlock" datatype="html">
         <source>Get display values of a project selection list.</source><target state="new">Get display values of a project selection list.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-selection-list-display-values-blockly-component.ts</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit><trans-unit id="blockly.tooltip.getSelectionListValuesBlock" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-selection-list-display-values-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getSelectionListValuesBlock" datatype="html">
         <source>Get values of a project selection list.</source><target state="new">Get values of a project selection list.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-selection-list-values-blockly-component.ts</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-selection-list-values-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit>
             <trans-unit id="blockly.tooltip.getSiblingsBlock" datatype="html">
                 <source>Follows the link from the given record and then all the links back to the original table, returning all siblings.</source>
                 <target>A megadott rekord linkjét követi, majd az összes linket visszavezeti az eredeti táblához, az összes testvért visszaadva.</target>
@@ -874,7 +868,13 @@
                     <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/string-replace-blockly-component.ts</context>
                     <context context-type="linenumber">31</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="blockly.tooltip.toNumberBlock" datatype="html">
+        <source>Tries to convert anything to a number.</source><target state="new">Tries to convert anything to a number.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/to-number-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="blockly.tooltip.unescapeHtmlBlock" datatype="html">
                 <source>Unescape HTML entities in a string.</source>
                 <target>Távolítsa el a HTML-entitásokat egy karakterláncban.</target>

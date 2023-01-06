@@ -18,18 +18,18 @@
  */
 
 import {BlocklyComponent} from './blockly-component';
-import {COLOR_CYAN} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
+import {COLOR_PINK} from '../../../../core/constants';
 
 declare var Blockly: any;
 
-export class GetSelectionListValuesBlocklyComponent extends BlocklyComponent {
+export class ToNumberBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.getSelectionListValuesBlock:Get values of a project selection list.`;
+    this.tooltip = $localize`:@@blockly.tooltip.toNumberBlock:Tries to convert anything to a number.`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -39,32 +39,32 @@ export class GetSelectionListValuesBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any) {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.GET_SELECTION_LIST_VALUES] = {
+    Blockly.Blocks[BlocklyUtils.TO_NUMBER] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.GET_SELECTION_LIST_VALUES,
-          message0: '%{BKY_BLOCK_GET_SELECTION_LIST_VALUES}', // get values of selection list %1,
+          type: BlocklyUtils.TO_NUMBER,
+          message0: '%{BKY_BLOCK_TO_NUMBER}', // to number %1
           args0: [
             {
-              type: 'field_dropdown',
-              name: 'SELECTION_LIST_NAME',
-              options: function () {
-                return (this_.blocklyUtils.getSelectionLists() || []).map(l => [l, l]);
-              },
+              type: 'input_value',
+              name: 'X',
             },
           ],
           output: '',
-          colour: COLOR_CYAN,
+          colour: '%{BKY_MATH_HUE}',
           tooltip: this_.tooltip,
           helpUrl: '',
         });
       },
     };
+    Blockly.JavaScript[BlocklyUtils.TO_NUMBER] = function (block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
-    Blockly.JavaScript[BlocklyUtils.GET_SELECTION_LIST_VALUES] = function (block) {
-      const selectionListName = block.getFieldValue('SELECTION_LIST_NAME');
+      if (!argument0) {
+        return '';
+      }
 
-      const code = this_.blocklyUtils.getLumeerVariable() + ".getSelectionListValues('" + selectionListName + "')";
+      const code = '(new Number(' + argument0 + '))';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

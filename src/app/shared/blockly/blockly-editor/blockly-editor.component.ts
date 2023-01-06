@@ -121,6 +121,7 @@ import {DisplayTextBlocklyComponent} from './blocks/display-text-blockly-compone
 import {DisplayAttributeBlocklyComponent} from './blocks/display-attribute-blockly-component';
 import {GetSelectionListValuesBlocklyComponent} from './blocks/get-selection-list-values-blockly-component';
 import {GetSelectionListDisplayValuesBlocklyComponent} from './blocks/get-selection-list-display-values-blockly-component';
+import {ToNumberBlocklyComponent} from './blocks/to-number-blockly-component';
 
 declare var Blockly: any;
 
@@ -285,6 +286,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new DisplayAttributeBlocklyComponent(this.blocklyUtils),
       new GetSelectionListValuesBlocklyComponent(this.blocklyUtils),
       new GetSelectionListDisplayValuesBlocklyComponent(this.blocklyUtils),
+      new ToNumberBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
