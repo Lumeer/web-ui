@@ -35,6 +35,7 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../../../core/store/collections/collection.util';
 import {FormLinkData} from '../model/form-link-data';
 import {ConstraintType} from '@lumeer/data-filters';
+import {isNotNullOrUndefined} from '../../../../../../shared/utils/common.utils';
 
 @Injectable()
 export class FormStateService {
@@ -115,6 +116,11 @@ export class FormStateService {
       this.setEditedCell({sectionId: possibleNextSection.id, rowId: row.id, cellId: cell.id});
       return;
     }
+
+    // when we do not find any cell to select, we should remove editing from current cell
+    if (this.isEditingCell(coordinate)) {
+      this.clearEditedCell();
+    }
   }
 
   private findPossibleNextRow(rows: FormRow[]): FormRow {
@@ -165,5 +171,12 @@ export class FormStateService {
 
   public onEditStart(coordinate: FormCoordinates) {
     this.setEditedCell(coordinate);
+  }
+
+  private isEditingCell(coordinate: FormCoordinates): boolean {
+    if (isNotNullOrUndefined(this.editedCellSubject$.value)) {
+      return formCoordinatesAreSame(coordinate, this.editedCellSubject$.value);
+    }
+    return false;
   }
 }
