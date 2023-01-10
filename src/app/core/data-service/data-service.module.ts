@@ -71,6 +71,9 @@ import {ApiDashboardDataService} from './dashboard-data/api-dashboard-data.servi
 import {ResourceVariablesService} from './resource-variables/resource-variables.service';
 import {PublicResourceVariablesService} from './resource-variables/public-resource-variables.service';
 import {ApiResourceVariablesService} from './resource-variables/api-resource-variables.service';
+import {InformationStoreService} from './information-store/information-store.service';
+import {PublicInformationStoreService} from './information-store/public-information-store.service';
+import {ApiInformationStoreService} from './information-store/api-information-store.service';
 
 @NgModule({
   declarations: [],
@@ -143,6 +146,10 @@ import {ApiResourceVariablesService} from './resource-variables/api-resource-var
     {
       provide: ResourceVariablesService,
       useClass: configuration.publicView ? PublicResourceVariablesService : ApiResourceVariablesService,
+    },
+    {
+      provide: InformationStoreService,
+      useClass: configuration.publicView ? PublicInformationStoreService : ApiInformationStoreService,
     },
   ],
 })
