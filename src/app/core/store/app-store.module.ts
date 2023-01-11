@@ -96,6 +96,7 @@ import {ResourceVariablesEffects} from './resource-variables/resource-variables.
 import {appPropertiesReducer} from './app-properties/app-properties.reducer';
 import {resourcesReducer} from './resources/data-resources.reducer';
 import {ResourcesEffects} from './resources/data-resources.effects';
+import {InformationRecordsEffects} from './information-store/information-records.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -174,6 +175,7 @@ const effects = [
   DashboardDataEffects,
   ResourceVariablesEffects,
   ResourcesEffects,
+  InformationRecordsEffects,
 ];
 
 @NgModule({

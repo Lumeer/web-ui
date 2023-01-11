@@ -66,7 +66,7 @@ import {ViewsAction} from '../store/views/views.action';
 import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
 import {convertSequenceDtoToModel} from '../store/sequences/sequence.converter';
-import {OrganizationService, ProjectService} from '../data-service';
+import {InformationStoreService, OrganizationService, ProjectService} from '../data-service';
 import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
 import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
 import {selectResourceCommentsDictionary} from '../store/resource-comments/resource-comments.state';
@@ -92,6 +92,7 @@ import {convertResourceVariableDtoToModel} from '../store/resource-variables/res
 import {Query} from '../store/navigation/query/query';
 import {ModalsAction} from '../store/modals/modals.action';
 import {convertServiceLimitsDtoToModel} from '../store/organizations/service-limits/service-limits.converter';
+import {InformationRecordsAction} from '../store/information-store/information-records.action';
 
 @Injectable({
   providedIn: 'root',
@@ -449,13 +450,20 @@ export class PusherService implements OnDestroy {
 
     this.channel.bind('TextPrintRequest', data => {
       if (this.isCurrentAppTab(data)) {
-        this.printService.setContent(data.object.text);
-        const a = document.createElement('a');
-        a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
-          data.object.projectCode
-        }/text?skipDialog=${data.object.skipPrintDialog}`;
-        a.target = '_blank';
-        a.click();
+        this.store$.dispatch(
+          new InformationRecordsAction.Get({
+            id: data.object.text,
+            onSuccess: informationRecord => {
+              this.printService.setContent(informationRecord.data);
+              const a = document.createElement('a');
+              a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
+                data.object.projectCode
+              }/text?skipDialog=${data.object.skipPrintDialog}`;
+              a.target = '_blank';
+              a.click();
+            },
+          })
+        );
       }
     });
   }
