@@ -19,6 +19,7 @@
 
 import {UntypedFormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {uniqueValues} from '../../shared/utils/array.utils';
+import {isNumeric, toNumber} from '../../shared/utils/common.utils';
 
 export function uniqueValuesValidator(valueControlName: string, skipEmpty?: boolean): ValidatorFn {
   return (formArray: UntypedFormArray): ValidationErrors | null => {
@@ -26,7 +27,8 @@ export function uniqueValuesValidator(valueControlName: string, skipEmpty?: bool
       .map(form => form.get(valueControlName))
       .filter(control => !!control)
       .map(control => control.value)
-      .filter(value => !skipEmpty || value || value === 0);
+      .filter(value => !skipEmpty || value || value === 0)
+      .map(value => (isNumeric(value) ? toNumber(value) : value));
     return values.length !== uniqueValues(values).length ? {uniqueValues: true} : null;
   };
 }

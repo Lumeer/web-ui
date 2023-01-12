@@ -38,7 +38,7 @@ import {minimumValuesCountValidator} from '../../../../../core/validators/mininu
 import {SelectionListsAction} from '../../../../../core/store/selection-lists/selection-lists.action';
 import {parseSelectOptionsFromForm} from '../../../../modal/attribute/type/form/constraint-config/select/select-constraint.utils';
 import {keyboardEventCode, KeyCode} from '../../../../key-code';
-import {distinctUntilChanged, map, startWith, take} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, startWith, take} from 'rxjs/operators';
 import {selectSelectionListsByProjectSorted} from '../../../../../core/store/selection-lists/selection-lists.state';
 import {
   selectReadableCollections,
@@ -93,9 +93,10 @@ export class SelectionListModalComponent implements OnInit, OnDestroy {
     this.setOptionsValidator();
 
     this.invalid$ = this.form.statusChanges.pipe(
-      startWith(() => this.form.invalid),
+      startWith(''),
       map(() => this.form.invalid),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      debounceTime(100)
     );
     this.subscriptions.add(this.displayValuesControl.valueChanges.subscribe(() => this.setOptionsValidator()));
 
