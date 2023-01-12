@@ -32,14 +32,7 @@ import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {preventEvent} from '../../../utils/common.utils';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  FormControl,
-  UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isUrlValid} from '../../../utils/url.utils';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';

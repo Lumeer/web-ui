@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
@@ -30,6 +30,7 @@ import {CalendarStemConfigComponent} from './config/stem-config/calendar-stem-co
 import {CalendarEventsComponent} from './events/calendar-events.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
 import {CalendarVisualizationComponent} from './events/visualization/calendar-visualization.component';
+import {FullCalendarModule} from '@fullcalendar/angular';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import {CalendarVisualizationComponent} from './events/visualization/calendar-vi
     CalendarPerspectiveRoutingModule,
     CalendarPipesModule,
     ModalModule,
+    FullCalendarModule,
   ],
   declarations: [
     CalendarPerspectiveComponent,
@@ -49,6 +51,5 @@ import {CalendarVisualizationComponent} from './events/visualization/calendar-vi
     CalendarVisualizationComponent,
   ],
   exports: [CalendarPerspectiveComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CalendarPerspectiveModule {}
