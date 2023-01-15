@@ -77,12 +77,14 @@ import {selectResourcesPermissionsByView} from '../../../core/store/common/permi
 import {composeViewSettingsLinkTypeCollectionId} from '../../settings/settings.util';
 import {createCollectionQueryStem} from '../../../core/store/navigation/query/query.util';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'data-resource-detail',
   templateUrl: './data-resource-detail.component.html',
   styleUrls: ['./data-resource-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class DataResourceDetailComponent
   extends ViewConfigPerspectiveComponent<DetailConfig>
@@ -164,7 +166,8 @@ export class DataResourceDetailComponent
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
     private modalService: ModalService,
-    private configurationService: ConfigurationService
+    private configurationService: ConfigurationService,
+    private loadDataService: LoadDataService
   ) {
     super(store$);
     this.contactUrl = configurationService.getConfiguration().contactUrl;
@@ -290,21 +293,25 @@ export class DataResourceDetailComponent
   private readLinkTypesData(linkTypes: LinkType[], workspace: Workspace) {
     const loadingCollections = new Set();
     const loadingLinkTypes = new Set();
+    const documentsQueries = [];
+    const linkQueries = [];
+
     linkTypes.forEach(linkType => {
       const otherCollectionId = getOtherLinkedCollectionId(linkType, this.resource.id);
 
       if (!loadingCollections.has(otherCollectionId)) {
         loadingCollections.add(otherCollectionId);
-        const documentsQuery: Query = {stems: [{collectionId: otherCollectionId}]};
-        this.store$.dispatch(new DocumentsAction.Get({query: documentsQuery, workspace}));
+        documentsQueries.push({stems: [{collectionId: otherCollectionId}]});
       }
 
       if (!loadingLinkTypes.has(linkType.id)) {
         loadingLinkTypes.add(linkType.id);
-        const query: Query = {stems: [{collectionId: this.resource.id, linkTypeIds: [linkType.id]}]};
-        this.store$.dispatch(new LinkInstancesAction.Get({query, workspace}));
+        linkQueries.push({stems: [{collectionId: this.resource.id, linkTypeIds: [linkType.id]}]});
       }
     });
+
+    this.loadDataService.setDocumentsQueries(documentsQueries, workspace);
+    this.loadDataService.setLinkInstancesQueries(linkQueries, workspace);
   }
 
   public onRemove() {
@@ -480,6 +487,7 @@ export class DataResourceDetailComponent
 
   public ngOnDestroy() {
     super.ngOnDestroy();
+    this.loadDataService.destroy();
   }
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {

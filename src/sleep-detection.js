@@ -4,7 +4,7 @@ const checkInterval = 5000;
 setInterval(function () {
   const currentTime = new Date().getTime();
 
-  if (currentTime > lastTime + checkInterval * 2) {
+  if (currentTime > lastTime + checkInterval * 12) {
     // ignore small delays
     postMessage('wakeup');
   }

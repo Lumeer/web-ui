@@ -44,6 +44,7 @@ import {LinkType} from '../../link-types/link.type';
 import {
   areArraysSame,
   arraySubtract,
+  containsSameElements,
   createRange,
   isArraySubset,
   uniqueValues,
@@ -69,6 +70,7 @@ import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/
 import {View} from '../../views/view';
 import {isAttributeVisibleInResourceSettings} from '../../../../shared/utils/attribute.utils';
 import {AttributesSettings, ResourceAttributeSettings} from '../../view-settings/view-settings';
+import {WorkspaceQuery} from './workspace-query';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -530,6 +532,14 @@ export function queryStemsAreSameById(s1: QueryStem, s2: QueryStem): boolean {
     return s1.id === s2.id;
   }
   return queryStemsAreSame(s1, s2);
+}
+
+export function queriesAreSame(s1: Query, s2: Query): boolean {
+  return isQuerySubset(s1, s2) && isQuerySubset(s2, s1) && containsSameElements(s1.fulltexts, s2.fulltexts);
+}
+
+export function workspaceQueriesAreSame(s1: WorkspaceQuery, s2: WorkspaceQuery): boolean {
+  return queriesAreSame(s1, s2) && deepObjectsEquals(s1.workspace, s2.workspace);
 }
 
 export function queryStemsAreSame(s1: QueryStem, s2: QueryStem): boolean {

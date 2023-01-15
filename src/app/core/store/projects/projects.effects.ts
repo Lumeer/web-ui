@@ -67,6 +67,12 @@ import * as AuditLogsActions from './../audit-logs/audit-logs.actions';
 import {ViewSettingsAction} from '../view-settings/view-settings.action';
 import {SelectionListsAction} from '../selection-lists/selection-lists.action';
 import * as ResourceVariableActions from '../resource-variables/resource-variables.actions';
+import {
+  getCurrentDataResourcesQueries,
+  getCurrentDocumentsQueries,
+  getCurrentLinkInstancesQueries,
+  getCurrentTasksQueries,
+} from '../../service/load-data.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -544,7 +550,25 @@ export class ProjectsEffects {
           new ViewsAction.Get({force: true}),
         ];
 
-        // TODO clear queries and read current data
+        const documentsQueries = getCurrentDocumentsQueries();
+        const tasksQueries = getCurrentTasksQueries();
+        const linkInstancesQueries = getCurrentLinkInstancesQueries();
+        const dataResourcesQueries = getCurrentDataResourcesQueries();
+
+        actions.push(
+          ...documentsQueries.map(query => new DocumentsAction.Get({query, workspace: query.workspace, force: true})),
+          ...dataResourcesQueries.map(
+            query => new DataResourcesAction.Get({query, workspace: query.workspace, force: true})
+          ),
+          ...linkInstancesQueries.map(
+            query => new LinkInstancesAction.Get({query, workspace: query.workspace, force: true})
+          ),
+          ...tasksQueries.map(
+            query => new DataResourcesAction.GetTasks({query, workspace: query.workspace, force: true})
+          )
+        );
+
+        // TODO clear queries
 
         const {organizationId} = workspace;
         if (organizationId) {

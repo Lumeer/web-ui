@@ -46,7 +46,6 @@ import {
   selectViewQuery,
 } from '../../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
-import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
 import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {DefaultViewConfig, View, ViewConfig} from '../../../../core/store/views/view';
@@ -56,6 +55,7 @@ import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions'
 import {selectCurrentUser} from '../../../../core/store/users/users.state';
 import {ViewConfigPerspectiveComponent} from '../../view-config-perspective.component';
 import {LinkType} from 'src/app/core/store/link-types/link.type';
+import {LoadDataService, LoadDataServiceProvider} from '../../../../core/service/load-data.service';
 
 const PAGE_SIZE = 50;
 
@@ -63,6 +63,7 @@ const PAGE_SIZE = 50;
   selector: 'search-tasks',
   templateUrl: './search-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class SearchTasksComponent
   extends ViewConfigPerspectiveComponent<SearchTasksConfig>
@@ -101,7 +102,7 @@ export class SearchTasksComponent
   private page$ = new BehaviorSubject<number>(0);
   private overrideView$ = new BehaviorSubject<View>(null);
 
-  constructor(protected store$: Store<AppState>) {
+  constructor(protected store$: Store<AppState>, private loadService: LoadDataService) {
     super(store$);
   }
 
@@ -235,9 +236,7 @@ export class SearchTasksComponent
     this.page$.next(this.page$.value + 1);
     this.selectFetchPayload$()
       .pipe(take(1))
-      .subscribe(([viewId, query]) => {
-        this.fetchTasks(query, viewId);
-      });
+      .subscribe(([viewId, query]) => this.loadService.setTasksQueries([query], {viewId}));
   }
 
   private selectFetchPayload$(): Observable<[string, Query]> {
@@ -250,10 +249,6 @@ export class SearchTasksComponent
     ]);
   }
 
-  private fetchTasks(query: Query, viewId: string) {
-    this.store$.dispatch(new DataResourcesAction.GetTasks({query, workspace: {viewId}}));
-  }
-
   private subscribeQueryChange() {
     const workspace$ = this.store$.pipe(select(selectWorkspace), distinctUntilChanged());
 
@@ -264,7 +259,7 @@ export class SearchTasksComponent
       )
       .subscribe(([viewId, query]) => {
         this.resetPage();
-        this.fetchTasks(query, viewId);
+        this.loadService.setTasksQueries([query], {viewId});
       });
     this.subscriptions.add(navigationSubscription);
   }
@@ -275,5 +270,7 @@ export class SearchTasksComponent
 
   public ngOnDestroy() {
     super.ngOnDestroy();
+
+    this.loadService.destroy();
   }
 }

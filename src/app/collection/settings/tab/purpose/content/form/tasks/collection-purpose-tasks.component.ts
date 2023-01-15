@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChange,
+  SimpleChanges,
+} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Collection, TaskPurposeMetadata} from '../../../../../../../core/store/collections/collection';
 import {TaskPurposeFormControl} from './task-purpose-form-control';
@@ -34,7 +43,6 @@ import {
   isNullOrUndefined,
   objectChanged,
 } from '../../../../../../../shared/utils/common.utils';
-import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {map, startWith} from 'rxjs/operators';
 import {ConstraintData, ConstraintType, DataValue} from '@lumeer/data-filters';
@@ -45,13 +53,15 @@ import {
 } from '../../../../../../../core/store/common/permissions.selectors';
 import {getBaseCollectionIdsFromQuery} from '../../../../../../../core/store/navigation/query/query.util';
 import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
+import {LoadDataService, LoadDataServiceProvider} from '../../../../../../../core/service/load-data.service';
 
 @Component({
   selector: 'collection-purpose-tasks',
   templateUrl: './collection-purpose-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
-export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
+export class CollectionPurposeTasksComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public form: UntypedFormGroup;
 
@@ -73,7 +83,7 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   public viewsByCollection$: Observable<View[]>;
   public collections$: Observable<Collection[]>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private loadDataService: LoadDataService) {}
 
   public get assigneeControl(): AbstractControl {
     return this.form.get(TaskPurposeFormControl.Assignee);
@@ -159,7 +169,7 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   }
 
   private updateData() {
-    this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId: this.collection.id}]}}));
+    this.loadDataService.setDocumentsQueries([{stems: [{collectionId: this.collection.id}]}]);
     this.documents$ = this.store$.pipe(select(selectDocumentsByCollectionAndReadPermission(this.collection.id)));
     this.viewsByCollection$ = this.store$.pipe(
       select(selectViewsByReadSorted),
@@ -231,5 +241,9 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
     } else {
       this.onSelectValue(this.stateListControl, []);
     }
+  }
+
+  public ngOnDestroy() {
+    this.loadDataService.destroy();
   }
 }

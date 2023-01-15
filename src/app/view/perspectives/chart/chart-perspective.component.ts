@@ -37,12 +37,14 @@ import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Query} from '../../../core/store/navigation/query/query';
 import {ChartPerspectiveConfiguration, defaultChartPerspectiveConfiguration} from '../perspective-configuration';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'chart-perspective',
   templateUrl: './chart-perspective.component.html',
   styleUrls: ['./chart-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class ChartPerspectiveComponent extends DataPerspectiveDirective<ChartConfig> implements OnInit, OnDestroy {
   @Input()
@@ -51,8 +53,8 @@ export class ChartPerspectiveComponent extends DataPerspectiveDirective<ChartCon
   @ViewChild(ChartDataComponent)
   public chartDataComponent: ChartDataComponent;
 
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
+  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+    super(store$, loadService);
   }
 
   public subscribeConfig$(perspectiveId: string): Observable<ChartConfig> {
@@ -98,5 +100,11 @@ export class ChartPerspectiveComponent extends DataPerspectiveDirective<ChartCon
   public onSidebarToggle() {
     super.onSidebarToggle();
     this.chartDataComponent?.resize();
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.loadService.destroy();
   }
 }

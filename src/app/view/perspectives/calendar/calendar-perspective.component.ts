@@ -36,12 +36,14 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {CalendarPerspectiveConfiguration, defaultCalendarPerspectiveConfiguration} from '../perspective-configuration';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'calendar-perspective',
   templateUrl: './calendar-perspective.component.html',
   styleUrls: ['./calendar-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class CalendarPerspectiveComponent
   extends DataPerspectiveDirective<CalendarConfig>
@@ -50,8 +52,8 @@ export class CalendarPerspectiveComponent
   @Input()
   public perspectiveConfiguration: CalendarPerspectiveConfiguration = defaultCalendarPerspectiveConfiguration;
 
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
+  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+    super(store$, loadService);
   }
 
   public checkOrTransformConfig(
@@ -92,5 +94,11 @@ export class CalendarPerspectiveComponent
     this.workspace$
       .pipe(take(1))
       .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace})));
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.loadService.destroy();
   }
 }

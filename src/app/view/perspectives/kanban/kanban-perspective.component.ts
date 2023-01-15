@@ -34,12 +34,14 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {defaultKanbanPerspectiveConfiguration, KanbanPerspectiveConfiguration} from '../perspective-configuration';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'kanban-perspective',
   templateUrl: './kanban-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['kanban-perspective.component.scss'],
+  providers: [LoadDataServiceProvider],
 })
 export class KanbanPerspectiveComponent extends DataPerspectiveDirective<KanbanConfig> implements OnInit, OnDestroy {
   @Input()
@@ -47,8 +49,8 @@ export class KanbanPerspectiveComponent extends DataPerspectiveDirective<KanbanC
 
   public workspace$: Observable<Workspace>;
 
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
+  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+    super(store$, loadService);
   }
 
   public ngOnInit() {
@@ -86,5 +88,11 @@ export class KanbanPerspectiveComponent extends DataPerspectiveDirective<KanbanC
 
   public onConfigChanged(config: KanbanConfig) {
     this.store$.dispatch(new KanbansAction.SetConfig({kanbanId: this.perspectiveId$.value, config}));
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.loadService.destroy();
   }
 }

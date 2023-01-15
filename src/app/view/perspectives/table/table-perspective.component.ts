@@ -63,7 +63,6 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save-config.util';
 import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
-import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 import {
   selectCurrentQueryDataResourcesLoaded,
   selectQueryDataResourcesLoaded,
@@ -74,6 +73,7 @@ import {defaultTablePerspectiveConfiguration, TablePerspectiveConfiguration} fro
 import {clickedInsideElement} from '../../../shared/utils/html-modifier';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -82,7 +82,7 @@ export const EDITABLE_EVENT = 'editableEvent';
   templateUrl: './table-perspective.component.html',
   styleUrls: ['./table-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TableRowNumberService],
+  providers: [TableRowNumberService, LoadDataServiceProvider],
 })
 export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
@@ -121,6 +121,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     private element: ElementRef,
     private scrollDispatcher: ScrollDispatcher,
     private store$: Store<AppState>,
+    private loadDataService: LoadDataService,
     private tableRowNumberService: TableRowNumberService
   ) {}
 
@@ -284,9 +285,8 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private waitForDataLoaded$(query?: DataQuery, viewId?: string): Observable<boolean> {
+  private waitForDataLoaded$(query?: DataQuery): Observable<boolean> {
     if (query) {
-      this.fetchData(query, viewId);
       return this.store$.pipe(
         select(selectQueryDataResourcesLoaded(query)),
         filter(loaded => loaded),
@@ -298,10 +298,6 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       filter(loaded => loaded),
       take(1)
     );
-  }
-
-  private fetchData(query: DataQuery, viewId: string) {
-    this.store$.dispatch(new DataResourcesAction.Get({query, workspace: {viewId}}));
   }
 
   private initTableByQuery() {
@@ -423,8 +419,10 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private addTablePart(query: DataQuery, tableId: string, viewId: string) {
+    this.loadDataService.addDataResourcesQueries([query], {viewId});
+
     const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
-    const subscription = this.waitForDataLoaded$(query, viewId).subscribe(() => {
+    const subscription = this.waitForDataLoaded$(query).subscribe(() => {
       this.store$.dispatch(new TablesAction.CreatePart({tableId, linkTypeId, last: true}));
     });
     this.subscriptions.add(subscription);
@@ -432,9 +430,11 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   private refreshTable(query: DataQuery, view: View, tableId: string, config: TableConfig) {
     if (queryIsEmpty(query) && tableId === DEFAULT_TABLE_ID) {
+      this.loadDataService.clearDataResourcesQueries();
       this.store$.dispatch(new TablesAction.DestroyTable({tableId: DEFAULT_TABLE_ID}));
     } else {
-      const subscription = this.waitForDataLoaded$(query, view?.id).subscribe(() => {
+      this.loadDataService.setDataResourcesQueries([query], {viewId: view?.id});
+      const subscription = this.waitForDataLoaded$(query).subscribe(() => {
         this.createTable(query, view, tableId, config);
       });
       this.subscriptions.add(subscription);

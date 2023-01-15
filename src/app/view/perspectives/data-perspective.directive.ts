@@ -41,7 +41,6 @@ import {
   selectLinkTypesInCustomViewAndQuery,
   selectResourcesPermissionsByView,
 } from '../../core/store/common/permissions.selectors';
-import {DataResourcesAction} from '../../core/store/data-resources/data-resources.action';
 import {selectViewDataQuery, selectViewSettingsByView} from '../../core/store/view-settings/view-settings.state';
 import {selectQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
@@ -51,6 +50,7 @@ import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state'
 import {Workspace} from '../../core/store/navigation/workspace';
 import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
 import {ViewSettings} from '../../core/store/view-settings/view-settings';
+import {LoadDataService} from '../../core/service/load-data.service';
 
 @Directive()
 export abstract class DataPerspectiveDirective<T>
@@ -81,7 +81,7 @@ export abstract class DataPerspectiveDirective<T>
   public sidebarOpened$ = new BehaviorSubject(false);
   public overrideView$ = new BehaviorSubject<View>(null);
 
-  protected constructor(protected store$: Store<AppState>) {
+  protected constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
     super(store$);
   }
 
@@ -118,6 +118,12 @@ export abstract class DataPerspectiveDirective<T>
       this.overrideView$.next(this.view);
     }
     this.isEmbedded = !!this.view;
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.loadService.destroy();
   }
 
   private initSubscriptions() {
@@ -174,7 +180,7 @@ export abstract class DataPerspectiveDirective<T>
   }
 
   private fetchData(query: Query, viewId: string) {
-    this.store$.dispatch(new DataResourcesAction.Get({query, workspace: {viewId}}));
+    this.loadService.setDataResourcesQueries([query], {viewId});
   }
 
   private subscribeData() {
