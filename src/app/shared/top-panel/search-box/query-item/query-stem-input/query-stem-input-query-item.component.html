@@ -17,7 +17,7 @@
                       class="cursor-default"
                       [origin]="searchInput"
                       [suggestByItems]="true"
-                      [restrictedTypes]="restrictedItemTypes"
+                      [restrictedTypes]="restrictedMode ? allRestrictedItemTypes : restrictedItemTypes"
                       [text]="suggesting ? (text || '') : null"
                       (useSuggestion)="onUseSuggestion($event)"
                       (onCloseByClickOutside)="searchInput.blur()">

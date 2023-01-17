@@ -73,7 +73,7 @@ import {
   selectViewSettings,
   selectViewSettingsByView,
 } from '../view-settings/view-settings.state';
-import {objectsByIdMap} from '../../../shared/utils/common.utils';
+import {objectsByIdMap, objectValues} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
 import {groupLinkInstancesByLinkTypes, sortLinkInstances} from '../link-instances/link-instance.utils';
@@ -817,6 +817,7 @@ export const selectLinkTypePermissionsByView = (view: View, linkTypeId: string) 
         workspace.project,
         linkTypesMap[linkTypeId],
         collections,
+        objectValues(linkTypesMap),
         view,
         user
       )

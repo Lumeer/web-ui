@@ -9,6 +9,7 @@
 
   <query-stem-input-query-item *ngSwitchCase="queryItemType.QueryStemInput"
                                [queryItem]="queryItem"
+                               [restrictedMode]="restrictedMode"
                                (addQueryItem)="onQueryItemAdd($event)"
                                (textChange)="onTextChange($event)">
   </query-stem-input-query-item>

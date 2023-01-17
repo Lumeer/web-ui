@@ -138,9 +138,9 @@ export function userPermissionsInCollection(
     const viewRoleTypes = userCollectionRoleTypesInView(
       organization,
       project,
-      currentView,
       collection,
       linkTypes,
+      currentView,
       user
     );
     if (getAllCollectionIdsFromView(currentView, linkTypes).includes(collection.id)) {
@@ -158,9 +158,9 @@ export function userPermissionsInCollection(
 function userCollectionRoleTypesInView(
   organization: Organization,
   project: Project,
-  view: View,
   collection: Collection,
   linkTypes: LinkType[],
+  view: View,
   user: User
 ): RoleType[] {
   const viewRoleTypes = userRoleTypesInResource(organization, project, view, user);
@@ -179,6 +179,7 @@ export function userPermissionsInLinkType(
   project: Project,
   linkType: LinkType,
   collections: Collection[],
+  linkTypes: LinkType[],
   currentView: View,
   user: User
 ): AllowedPermissions {
@@ -195,6 +196,30 @@ export function userPermissionsInLinkType(
       return {
         roles: roleTypesToMap(roleTypes),
         rolesWithView: roleTypesToMap(uniqueValues([...roleTypes, ...roleTypesWithView])),
+      };
+    } else {
+      const linkTypeCollections = (collections || []).filter(collection =>
+        linkType.collectionIds?.includes(collection.id)
+      );
+      const roleTypesWithCollections = linkTypeCollections.reduce((permissions, collection, index) => {
+        const collectionRoleTypes = userCollectionRoleTypesInView(
+          organization,
+          project,
+          collection,
+          linkTypes,
+          currentView,
+          user
+        );
+        if (index === 0) {
+          permissions.push(...collectionRoleTypes);
+          return permissions;
+        } else {
+          return arrayIntersection(permissions, collectionRoleTypes);
+        }
+      }, []);
+      return {
+        roles: roleTypesToMap(roleTypes),
+        rolesWithView: roleTypesToMap(uniqueValues([...roleTypes, ...roleTypesWithCollections])),
       };
     }
   }
@@ -571,6 +596,7 @@ export function computeResourcesPermissions(
           project,
           linkType,
           collections,
+          linkTypes,
           currentView,
           currentUser
         ),
@@ -624,6 +650,7 @@ export function computeLinkTypesPermissions(
           project,
           linkType,
           collections,
+          linkTypes,
           currentView,
           currentUser
         ),
