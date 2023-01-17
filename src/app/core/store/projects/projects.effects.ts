@@ -73,6 +73,7 @@ import {
   getCurrentLinkInstancesQueries,
   getCurrentTasksQueries,
 } from '../../service/load-data.service';
+import {UserNotificationsAction} from '../user-notifications/user-notifications.action';
 
 @Injectable()
 export class ProjectsEffects {
@@ -542,18 +543,23 @@ export class ProjectsEffects {
     this.actions$.pipe(
       ofType<ProjectsAction.RefreshWorkspace>(ProjectsActionType.REFRESH_WORKSPACE),
       withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
-      mergeMap(([, workspace]) => {
+      mergeMap(([action, workspace]) => {
         const actions: Action[] = [
           new OrganizationsAction.GetAllWorkspaces({force: true}),
           new CollectionsAction.Get({force: true}),
           new LinkTypesAction.Get({force: true}),
           new ViewsAction.Get({force: true}),
+          new UserNotificationsAction.Get({force: true}),
         ];
 
         const documentsQueries = getCurrentDocumentsQueries();
         const tasksQueries = getCurrentTasksQueries();
         const linkInstancesQueries = getCurrentLinkInstancesQueries();
         const dataResourcesQueries = getCurrentDataResourcesQueries();
+
+        if (action.payload.clearData) {
+          actions.push(new DocumentsAction.Clear(), new DataResourcesAction.Clear(), new LinkInstancesAction.Clear());
+        }
 
         actions.push(
           ...documentsQueries.map(query => new DocumentsAction.Get({query, workspace: query.workspace, force: true})),
@@ -567,8 +573,6 @@ export class ProjectsEffects {
             query => new DataResourcesAction.GetTasks({query, workspace: query.workspace, force: true})
           )
         );
-
-        // TODO clear queries
 
         const {organizationId} = workspace;
         if (organizationId) {

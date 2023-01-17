@@ -278,6 +278,8 @@ export namespace ProjectsAction {
 
   export class RefreshWorkspace implements Action {
     public readonly type = ProjectsActionType.REFRESH_WORKSPACE;
+
+    public constructor(public payload: {clearData?: boolean}) {}
   }
 
   export class ClearWorkspaceData implements Action {

@@ -66,7 +66,7 @@ import {ViewsAction} from '../store/views/views.action';
 import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
 import {convertSequenceDtoToModel} from '../store/sequences/sequence.converter';
-import {InformationStoreService, OrganizationService, ProjectService} from '../data-service';
+import {OrganizationService, ProjectService} from '../data-service';
 import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
 import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
 import {selectResourceCommentsDictionary} from '../store/resource-comments/resource-comments.state';
@@ -276,7 +276,7 @@ export class PusherService implements OnDestroy {
   }
 
   private forceRefreshWorkspaceData() {
-    this.store$.dispatch(new ProjectsAction.RefreshWorkspace());
+    this.store$.dispatch(new ProjectsAction.RefreshWorkspace({}));
   }
 
   private bindProjectEvents() {

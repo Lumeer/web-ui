@@ -36,7 +36,7 @@ export class UserNotificationsEffects {
     this.actions$.pipe(
       ofType<UserNotificationsAction.Get>(UserNotificationsActionType.GET),
       withLatestFrom(this.store$.pipe(select(selectUserNotificationsLoaded))),
-      filter(([, loaded]) => !loaded),
+      filter(([action, loaded]) => action.payload.force || !loaded),
       mergeMap(() =>
         this.userNotificationsService.getNotifications().pipe(
           map(

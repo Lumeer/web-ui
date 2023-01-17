@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Query} from '../store/navigation/query/query';
-import {Injectable, Injector} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AppState} from '../store/app.state';
 import {Store} from '@ngrx/store';
 import {DataResourcesAction} from '../store/data-resources/data-resources.action';
@@ -144,8 +144,8 @@ function addWorkspaceToQueries(queries: Query[], workspace: Workspace): Workspac
 
 export const LoadDataServiceProvider = {
   provide: LoadDataService,
-  useFactory: (injector: Injector, store$: Store<AppState>) => factory.create(store$),
-  deps: [Injector, Store],
+  useFactory: (store$: Store<AppState>) => factory.create(store$),
+  deps: [Store],
 };
 
 class LoadDataServiceFactory {
@@ -197,10 +197,9 @@ export function getCurrentDataResourcesQueries(): WorkspaceQuery[] {
 
 function filterUniqueWorkspaceQueries(queries: WorkspaceQuery[]): WorkspaceQuery[] {
   return queries.reduce((uniqueQueries, query) => {
-    if (uniqueQueries.some(q => workspaceQueriesAreSame(q, query))) {
-      return uniqueQueries;
+    if (!uniqueQueries.some(q => workspaceQueriesAreSame(q, query))) {
+      uniqueQueries.push(query);
     }
-    uniqueQueries.push(query);
     return uniqueQueries;
   }, []);
 }

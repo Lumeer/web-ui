@@ -1,10 +1,11 @@
 let lastTime = new Date().getTime();
-const checkInterval = 5000;
+const checkInterval = 3000;
+const sleepThreshold = 60_000;
 
 setInterval(function () {
   const currentTime = new Date().getTime();
 
-  if (currentTime > lastTime + checkInterval * 12) {
+  if (currentTime > lastTime + sleepThreshold) {
     // ignore small delays
     postMessage('wakeup');
   }

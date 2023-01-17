@@ -37,6 +37,8 @@ export enum UserNotificationsActionType {
 export namespace UserNotificationsAction {
   export class Get implements Action {
     public readonly type = UserNotificationsActionType.GET;
+
+    public constructor(public payload: {force?: boolean}) {}
   }
 
   export class GetSuccess implements Action {

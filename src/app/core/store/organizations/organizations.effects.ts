@@ -51,7 +51,7 @@ export class OrganizationsEffects {
     this.actions$.pipe(
       ofType<OrganizationsAction.GetAllWorkspaces>(OrganizationsActionType.GET_ALL_WORKSPACES),
       withLatestFrom(this.store$.pipe(select(selectOrganizationsLoaded))),
-      filter(([, loaded]) => !loaded),
+      filter(([action, loaded]) => action.payload.force || !loaded),
       mergeMap(() =>
         this.organizationService.getAllWorkspaces().pipe(
           mergeMap(workspaces => {

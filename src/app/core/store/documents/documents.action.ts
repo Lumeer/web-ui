@@ -81,6 +81,7 @@ export enum DocumentsActionType {
 
   CLEAR = '[Documents] Clear',
   CLEAR_QUERIES = '[Documents] Clear Queries',
+  CLEAR_QUERIES2 = '[Documents] Clear Queries2',
   CLEAR_BY_COLLECTION = '[Documents] Clear by collection',
 
   RUN_RULE = '[Documents] Run Rule',
