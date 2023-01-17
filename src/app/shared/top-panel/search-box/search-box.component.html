@@ -15,6 +15,7 @@
           [queryItem]="queryItemData.queryItem"
           [constraintData]="constraintData"
           [readonly]="!(queryItemData.realIndex | isQueryItemEditable:data.queryItems:data.canChangeQuery:data.currentView?.query)"
+          [restrictedMode]="!data.canChangeQuery"
           (change)="onQueryItemsChanged()"
           (remove)="onRemoveQueryItem(queryItemData.realIndex)"
           (focusInput)="searchInput.focusInput()"

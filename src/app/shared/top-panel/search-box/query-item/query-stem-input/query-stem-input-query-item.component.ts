@@ -45,6 +45,9 @@ export class QueryStemInputQueryItemComponent implements OnChanges {
   @Input()
   public queryItem: QueryStemInputQueryItem;
 
+  @Input()
+  public restrictedMode: boolean;
+
   @Output()
   public addQueryItem = new EventEmitter<QueryItem>();
 
@@ -58,6 +61,7 @@ export class QueryStemInputQueryItemComponent implements OnChanges {
   public searchSuggestions: SearchSuggestionsComponent;
 
   public readonly restrictedItemTypes = [QueryItemType.View, QueryItemType.Collection, QueryItemType.Fulltext];
+  public readonly allRestrictedItemTypes = [...this.restrictedItemTypes, QueryItemType.Link];
 
   public suggesting: boolean;
   public text = '';

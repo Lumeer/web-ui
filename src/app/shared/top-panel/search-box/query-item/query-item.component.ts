@@ -41,6 +41,9 @@ export class QueryItemComponent {
   public readonly: boolean;
 
   @Input()
+  public restrictedMode: boolean;
+
+  @Input()
   public constraintData: ConstraintData;
 
   @Output()
