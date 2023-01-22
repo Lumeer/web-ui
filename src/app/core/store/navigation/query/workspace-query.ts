@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Query} from './query';
 import {Workspace} from '../workspace';
+import {DataQuery} from '../../../model/data-query';
 
-export type WorkspaceQuery = Query & {workspace: Workspace};
+export type WorkspaceQuery = DataQuery & {workspace: Workspace};

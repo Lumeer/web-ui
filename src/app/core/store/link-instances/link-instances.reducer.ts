@@ -21,7 +21,6 @@ import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.act
 import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
 import {LinkInstance} from './link.instance';
 import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
-import SetDocumentLinksSuccess = LinkInstancesAction.SetDocumentLinksSuccess;
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,
@@ -39,6 +38,9 @@ export function linkInstancesReducer(
       return {...state, loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query)};
     case LinkInstancesActionType.SET_LOADING_QUERY:
       return {...state, loadingQueries: addDataQueryUnique(state.loadingQueries, action.payload.query)};
+    case LinkInstancesActionType.REFRESH_SUCCESS:
+      const refreshState = {...state, loadingQueries: [], queries: action.payload.queries};
+      return linkInstancesAdapter.setAll(action.payload.linkInstances, refreshState);
     case LinkInstancesActionType.CREATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.CREATE_MULTIPLE_SUCCESS:
@@ -100,7 +102,10 @@ export function linkInstancesReducer(
   }
 }
 
-function setDocumentLinks(state: LinkInstancesState, action: SetDocumentLinksSuccess): LinkInstancesState {
+function setDocumentLinks(
+  state: LinkInstancesState,
+  action: LinkInstancesAction.SetDocumentLinksSuccess
+): LinkInstancesState {
   let newState = state;
   if (action.payload.removedLinkInstancesIds?.length) {
     newState = linkInstancesAdapter.removeMany(action.payload.removedLinkInstancesIds, newState);

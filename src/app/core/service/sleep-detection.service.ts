@@ -40,6 +40,6 @@ export class SleepDetectionService {
   }
 
   private syncData() {
-    this.store$.dispatch(new ProjectsAction.RefreshWorkspace({clearData: true}));
+    this.store$.dispatch(new ProjectsAction.RefreshWorkspace());
   }
 }

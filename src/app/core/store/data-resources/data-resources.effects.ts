@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {of} from 'rxjs';
+import {of, combineLatest, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {DocumentsAction} from '../documents/documents.action';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -40,6 +40,9 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {DocumentModel} from '../documents/document.model';
+import {LinkInstance} from '../link-instances/link.instance';
+import {WorkspaceQuery} from '../navigation/query/workspace-query';
 
 @Injectable()
 export class DataResourcesEffects {
@@ -142,6 +145,90 @@ export class DataResourcesEffects {
       })
     )
   );
+
+  public refreshData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<DataResourcesAction.RefreshData>(DataResourcesActionType.REFRESH_DATA),
+      mergeMap(action => {
+        return combineLatest(this.refreshDataObservables(action)).pipe(
+          mergeMap(results => {
+            const documents = results.reduce((data, result) => [...data, ...result.documents], []);
+            const linkInstances = results.reduce((data, result) => [...data, ...result.linkInstances], []);
+            const documentsQueries = results.map(result => result.documentsQuery).filter(query => !!query);
+            const linkInstancesQueries = results.map(result => result.linkInstancesQuery).filter(query => !!query);
+            const dataResourcesQueries = results.map(result => result.dataResourcesQuery).filter(query => !!query);
+            const tasksQueries = results.map(result => result.tasksQuery).filter(query => !!query);
+            return [
+              new DocumentsAction.RefreshSuccess({documents, queries: documentsQueries}),
+              new LinkInstancesAction.RefreshSuccess({linkInstances, queries: linkInstancesQueries}),
+              new DataResourcesAction.RefreshDataSuccess({dataResourcesQueries, tasksQueries}),
+            ];
+          })
+        );
+      })
+    )
+  );
+
+  private refreshDataObservables(action: DataResourcesAction.RefreshData): Observable<{
+    documents: DocumentModel[];
+    linkInstances: LinkInstance[];
+    documentsQuery?: WorkspaceQuery;
+    tasksQuery?: WorkspaceQuery;
+    linkInstancesQuery?: WorkspaceQuery;
+    dataResourcesQuery?: WorkspaceQuery;
+  }>[] {
+    const {documentsQueries, tasksQueries, dataResourcesQueries, linkInstancesQueries} = action.payload;
+    const emptyResult = of({documents: [], linkInstances: []});
+
+    const documentsObservables = documentsQueries.map(query =>
+      this.searchService.searchDocuments(convertQueryModelToDto(query), query.includeSubItems, query.workspace).pipe(
+        map(documents => ({
+          documents: documents.map(dto => convertDocumentDtoToModel(dto)),
+          linkInstances: [],
+          documentsQuery: query,
+        })),
+        catchError(() => emptyResult)
+      )
+    );
+    const tasksObservables = tasksQueries.map(query =>
+      this.searchService
+        .searchTaskDocumentsAndLinks(convertQueryModelToDto(query), query.includeSubItems, query.workspace)
+        .pipe(
+          map(({documents, linkInstances}) => ({
+            documents: documents.map(dto => convertDocumentDtoToModel(dto)),
+            linkInstances: linkInstances.map(dto => convertLinkInstanceDtoToModel(dto)),
+            tasksQuery: query,
+          })),
+          catchError(() => emptyResult)
+        )
+    );
+    const linksObservables = linkInstancesQueries.map(query =>
+      this.searchService
+        .searchLinkInstances(convertQueryModelToDto(query), query.includeSubItems, query.workspace)
+        .pipe(
+          map(linkInstances => ({
+            documents: [],
+            linkInstances: linkInstances.map(dto => convertLinkInstanceDtoToModel(dto)),
+            linkInstancesQuery: query,
+          })),
+          catchError(() => emptyResult)
+        )
+    );
+    const dataResourcesObservables = dataResourcesQueries.map(query =>
+      this.searchService
+        .searchDocumentsAndLinks(convertQueryModelToDto(query), query.includeSubItems, query.workspace)
+        .pipe(
+          map(({documents, linkInstances}) => ({
+            documents: documents.map(dto => convertDocumentDtoToModel(dto)),
+            linkInstances: linkInstances.map(dto => convertLinkInstanceDtoToModel(dto)),
+            dataResourcesQuery: query,
+          })),
+          catchError(() => emptyResult)
+        )
+    );
+
+    return [...documentsObservables, ...linksObservables, ...dataResourcesObservables, ...tasksObservables];
+  }
 
   public getTasksFailure$ = createEffect(() =>
     this.actions$.pipe(

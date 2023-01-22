@@ -276,7 +276,7 @@ export class PusherService implements OnDestroy {
   }
 
   private forceRefreshWorkspaceData() {
-    this.store$.dispatch(new ProjectsAction.RefreshWorkspace({}));
+    this.store$.dispatch(new ProjectsAction.RefreshWorkspace());
   }
 
   private bindProjectEvents() {

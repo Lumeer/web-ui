@@ -543,7 +543,7 @@ export class ProjectsEffects {
     this.actions$.pipe(
       ofType<ProjectsAction.RefreshWorkspace>(ProjectsActionType.REFRESH_WORKSPACE),
       withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
-      mergeMap(([action, workspace]) => {
+      mergeMap(([, workspace]) => {
         const actions: Action[] = [
           new OrganizationsAction.GetAllWorkspaces({force: true}),
           new CollectionsAction.Get({force: true}),
@@ -557,21 +557,13 @@ export class ProjectsEffects {
         const linkInstancesQueries = getCurrentLinkInstancesQueries();
         const dataResourcesQueries = getCurrentDataResourcesQueries();
 
-        if (action.payload.clearData) {
-          actions.push(new DocumentsAction.Clear(), new DataResourcesAction.Clear(), new LinkInstancesAction.Clear());
-        }
-
         actions.push(
-          ...documentsQueries.map(query => new DocumentsAction.Get({query, workspace: query.workspace, force: true})),
-          ...dataResourcesQueries.map(
-            query => new DataResourcesAction.Get({query, workspace: query.workspace, force: true})
-          ),
-          ...linkInstancesQueries.map(
-            query => new LinkInstancesAction.Get({query, workspace: query.workspace, force: true})
-          ),
-          ...tasksQueries.map(
-            query => new DataResourcesAction.GetTasks({query, workspace: query.workspace, force: true})
-          )
+          new DataResourcesAction.RefreshData({
+            documentsQueries,
+            tasksQueries,
+            linkInstancesQueries,
+            dataResourcesQueries,
+          })
         );
 
         const {organizationId} = workspace;

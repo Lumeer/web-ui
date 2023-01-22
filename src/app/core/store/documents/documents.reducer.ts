@@ -36,6 +36,9 @@ export function documentsReducer(
         loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query),
       };
       return addDocuments(getSuccessState, action);
+    case DocumentsActionType.REFRESH_SUCCESS:
+      const refreshState = {...state, loadingQueries: [], queries: action.payload.queries};
+      return documentsAdapter.setAll(action.payload.documents, refreshState);
     case DocumentsActionType.GET_FAILURE:
       return {...state, loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query)};
     case DocumentsActionType.SET_LOADING_QUERY:

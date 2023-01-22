@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {DataQuery} from '../../model/data-query';
 import {Query} from '../navigation/query/query';
 import {DataQueryPayload} from '../utils/data-query-payload';
+import {WorkspaceQuery} from '../navigation/query/workspace-query';
 
 export enum DataResourcesActionType {
   GET = '[Data Resources] Get',
@@ -30,6 +31,9 @@ export enum DataResourcesActionType {
   GET_TASKS = '[Data Resources] Get Tasks',
   GET_TASKS_SUCCESS = '[Data Resources] Get Tasks :: Success',
   GET_TASKS_FAILURE = '[Data Resources] Get Tasks :: Failure',
+
+  REFRESH_DATA = '[Data Resources] Refresh Data',
+  REFRESH_DATA_SUCCESS = '[Data Resources] Refresh Data Success',
 
   SET_LOADING_QUERY = '[Data Resources] Set Loading Query',
   SET_LOADING_TASKS_QUERY = '[Data Resources] Set Loading Tasks Query',
@@ -75,6 +79,25 @@ export namespace DataResourcesAction {
     public constructor(public payload: {error: any; query: DataQuery}) {}
   }
 
+  export class RefreshData implements Action {
+    public readonly type = DataResourcesActionType.REFRESH_DATA;
+
+    public constructor(
+      public payload: {
+        documentsQueries: WorkspaceQuery[];
+        linkInstancesQueries: WorkspaceQuery[];
+        dataResourcesQueries: WorkspaceQuery[];
+        tasksQueries: WorkspaceQuery[];
+      }
+    ) {}
+  }
+
+  export class RefreshDataSuccess implements Action {
+    public readonly type = DataResourcesActionType.REFRESH_DATA_SUCCESS;
+
+    public constructor(public payload: {dataResourcesQueries: WorkspaceQuery[]; tasksQueries: WorkspaceQuery[]}) {}
+  }
+
   export class ClearQueries implements Action {
     public readonly type = DataResourcesActionType.CLEAR_QUERIES;
 
@@ -104,6 +127,8 @@ export namespace DataResourcesAction {
     | GetTasks
     | GetTasksSuccess
     | GetTasksFailure
+    | RefreshData
+    | RefreshDataSuccess
     | ClearQueries
     | SetLoadingQuery
     | SetLoadingTasksQuery
