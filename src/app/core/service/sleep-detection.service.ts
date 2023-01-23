@@ -21,25 +21,48 @@ import {Injectable} from '@angular/core';
 import {AppState} from '../store/app.state';
 import {Store} from '@ngrx/store';
 import {ProjectsAction} from '../store/projects/projects.action';
+import {UsersAction} from '../store/users/users.action';
+import {AuthService} from '../../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SleepDetectionService {
-  constructor(private store$: Store<AppState>) {
+  constructor(private store$: Store<AppState>, private authService: AuthService) {
     this.setupWorker();
   }
 
   private setupWorker() {
     const worker = new Worker('sleep-detection.js');
     worker.onmessage = event => {
-      if (event.data === 'wakeup') {
-        this.syncData();
+      if (event.data.type === 'wakeup' && this.shouldRefreshWorkspace()) {
+        this.syncData(event.data.elapsedMs);
       }
     };
   }
 
-  private syncData() {
+  private syncData(elapsedMs: number) {
     this.store$.dispatch(new ProjectsAction.RefreshWorkspace());
+
+    this.store$.dispatch(
+      new UsersAction.LogEvent({event: `Refreshing workspace after ${this.readableElapsedTime(elapsedMs)} inactivity`})
+    );
+  }
+
+  private readableElapsedTime(elapsedMs: number): string {
+    const elapsedMinutes = Math.round(elapsedMs / 1000 / 60);
+    if (elapsedMinutes > 120) {
+      const hours = Math.floor(elapsedMinutes / 60);
+      const minutes = elapsedMinutes - hours * 60;
+      return minutes > 0 ? `${hours} hours and ${minutes} minutes` : `${hours} hours`;
+    }
+    return `${elapsedMinutes} minutes`;
+  }
+
+  private shouldRefreshWorkspace(): boolean {
+    if (this.authService.isCurrentPathOutsideApp()) {
+      return false;
+    }
+    return this.authService.isAuthenticated() || this.authService.hasRefreshToken();
   }
 }

@@ -7,7 +7,7 @@ setInterval(function () {
 
   if (currentTime > lastTime + sleepThreshold) {
     // ignore small delays
-    postMessage('wakeup');
+    postMessage({type: 'wakeup', elapsedMs: currentTime - lastTime});
   }
 
   lastTime = currentTime;
