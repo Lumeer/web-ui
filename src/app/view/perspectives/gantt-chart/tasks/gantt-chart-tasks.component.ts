@@ -74,10 +74,7 @@ import {
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {View} from '../../../../core/store/views/view';
 import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
-import {
-  CreateDataResourceDataGrouping,
-  CreateDataResourceService,
-} from '../../../../core/service/create-data-resource.service';
+import {QueryAttributeGrouping, CreateDataResourceService} from '../../../../core/service/create-data-resource.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 import {QueryAttribute} from '../../../../core/model/query-attribute';
@@ -380,10 +377,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     });
   }
 
-  private createDataResourceDataGrouping(
-    task: GanttTask,
-    stemConfig: GanttChartStemConfig
-  ): CreateDataResourceDataGrouping[] {
+  private createDataResourceDataGrouping(task: GanttTask, stemConfig: GanttChartStemConfig): QueryAttributeGrouping[] {
     return task.swimlanes
       .map((swimlane, index) => ({value: swimlane.value, attribute: stemConfig.categories?.[index]}))
       .filter(group => !!group.attribute);

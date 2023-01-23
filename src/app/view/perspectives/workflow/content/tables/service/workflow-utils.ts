@@ -38,7 +38,6 @@ import {
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
 import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
-import {uniqueValues} from '../../../../../../shared/utils/array.utils';
 import {
   TABLE_BOTTOM_TOOLBAR_HEIGHT,
   TABLE_ROW_BORDER,
@@ -254,25 +253,6 @@ export function createLinkingCollectionId(
     return attributesResourcesOrder[collectionIndex]?.id;
   }
   return null;
-}
-
-export function createAggregatedLinkingDocumentsIds(item: AggregatedDataItem, childItem: AggregatedDataItem): string[] {
-  const linkingDocumentIds = [];
-  for (const parentChain of item.dataResourcesChains) {
-    for (const childChain of childItem.dataResourcesChains) {
-      const chain = [...parentChain, ...childChain];
-      if (chain.length > 2) {
-        // sequence of documentId, linkId, documentId
-        chain.reverse();
-        // skip first documentId which is showed in table
-        const documentId = chain.slice(1).find(ch => ch.documentId)?.documentId;
-        if (documentId) {
-          linkingDocumentIds.push(documentId);
-        }
-      }
-    }
-  }
-  return uniqueValues(linkingDocumentIds);
 }
 
 export function createRowObjectsFromAggregated(

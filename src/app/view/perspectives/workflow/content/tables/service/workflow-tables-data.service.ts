@@ -74,7 +74,6 @@ import {AttributesResource, AttributesResourceType} from '../../../../../../core
 import {
   areFiltersEqual,
   filterQueryByStem,
-  getQueryFiltersForCollection,
   queryStemsAreSame,
 } from '../../../../../../core/store/navigation/query/query.util';
 import {
@@ -122,7 +121,6 @@ import {
   ConditionValue,
   Constraint,
   ConstraintData,
-  DataValue,
   DocumentsAndLinksData,
   UnknownConstraint,
 } from '@lumeer/data-filters';
@@ -273,6 +271,7 @@ export class WorkflowTablesDataService {
       canManageConfig,
       perspectiveConfiguration
     );
+    this.createDataResourceService.setData(data, query, collections, linkTypes, constraintData);
 
     const {tables, actions} = this.createTablesAndSyncActions(
       currentTables,
@@ -392,7 +391,6 @@ export class WorkflowTablesDataService {
             const title = aggregatedDataItem.value?.toString() || '';
             const tableId = workflowTableId(stemConfig.stem, this.workflowId, title);
             const titleDataValue = constraint.createDataValue(title, constraintData);
-            const linkingQueryStem = this.createLinkingQueryStem(linkingCollectionId, titleDataValue, attribute, query);
             const titleDataResources = aggregatedDataItem.dataResources;
             const children = (aggregatedDataItem.children || []).length
               ? aggregatedDataItem.children
@@ -454,7 +452,7 @@ export class WorkflowTablesDataService {
                 bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
                 width: columnsWidth + 1, // + 1 for border
                 newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated, actionTitle} : undefined,
-                linkingQueryStem,
+                linkingCollectionId,
                 footer: createWorkflowTableFooter(rows, columns, stemConfig, config.footers, constraintData),
               };
               tables.push(workflowTable);
@@ -496,7 +494,7 @@ export class WorkflowTablesDataService {
             width: columnsWidth + 1, // + 1 for border
             newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap, actionTitle} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
-            linkingQueryStem: linkingCollectionId ? {collectionId: linkingCollectionId} : null,
+            linkingCollectionId,
             footer: createWorkflowTableFooter(rows, columns, stemConfig, config.footers, constraintData),
           };
           tables.push(workflowTable);
@@ -509,28 +507,6 @@ export class WorkflowTablesDataService {
       },
       {tables: [], actions: []}
     );
-  }
-
-  private createLinkingQueryStem(
-    collectionId: string,
-    titleDataValue: DataValue,
-    titleAttribute: Attribute,
-    query: Query
-  ): QueryStem {
-    if (collectionId) {
-      const collectionsFilters = getQueryFiltersForCollection(query, collectionId);
-      if (titleAttribute) {
-        collectionsFilters.push({
-          attributeId: titleAttribute.id,
-          collectionId,
-          condition: ConditionType.Equals,
-          conditionValues: [{value: titleDataValue.serialize()}],
-        });
-      }
-      return {collectionId, filters: collectionsFilters};
-    }
-
-    return null;
   }
 
   private createNewRowCellsMap(
@@ -798,8 +774,7 @@ export class WorkflowTablesDataService {
   }
 
   public createEmptyLinkColumn(table: WorkflowTable): TableColumn {
-    const config =
-      table && this.stateService.config.stemsConfigs.find(stemConfig => queryStemsAreSame(stemConfig.stem, table.stem));
+    const config = this.findStemConfigByTable(table);
     const {linkType, permissions} = createLinkTypeData(
       config,
       this.stateService.collections,
@@ -822,6 +797,12 @@ export class WorkflowTablesDataService {
       return lastColumn;
     }
     return null;
+  }
+
+  private findStemConfigByTable(table: WorkflowTable): WorkflowStemConfig {
+    return (
+      table && this.stateService.config.stemsConfigs.find(stemConfig => queryStemsAreSame(stemConfig.stem, table.stem))
+    );
   }
 
   private createRows(
@@ -1610,12 +1591,18 @@ export class WorkflowTablesDataService {
 
   public createNewRow(tableId: string, parentRowId?: string) {
     const table = this.stateService.findTable(tableId);
-    if (table.linkingQueryStem) {
-      this.createDataResourceService.chooseDocumentsPath(
+    if (table.linkingCollectionId) {
+      const config = this.findStemConfigByTable(table);
+      const groupingAttributes = config.attribute
+        ? [{attribute: config.attribute, value: table.title?.dataValue?.serialize()}]
+        : [];
+      const pathStems = this.createDataResourceService.prepareCreatePathStems(
         table.stem,
-        [table.linkingQueryStem],
-        this.currentView?.id,
-        documents => this.addRow(tableId, parentRowId, documents[0].id)
+        config.collection,
+        groupingAttributes
+      );
+      this.createDataResourceService.chooseDocumentsPath(table.stem, pathStems, this.currentView?.id, documents =>
+        this.addRow(tableId, parentRowId, documents[0].id)
       );
     } else {
       this.addRow(tableId, parentRowId);

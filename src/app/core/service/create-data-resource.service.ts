@@ -57,7 +57,7 @@ import {take} from 'rxjs/operators';
 
 export interface CreateDataResourceData {
   stem: QueryStem;
-  grouping: CreateDataResourceDataGrouping[];
+  grouping: QueryAttributeGrouping[];
   additionalAttributes?: QueryAttribute[];
   queryResource: QueryResource;
   dataResourcesChains: DataResourceChain[][];
@@ -75,7 +75,7 @@ export interface UpdateDataResourceData extends CreateDataResourceData {
   attributeId: string;
 }
 
-export interface CreateDataResourceDataGrouping {
+export interface QueryAttributeGrouping {
   attribute: QueryAttribute;
   value: any;
 }
@@ -100,7 +100,7 @@ export class CreateDataResourceService {
     collections: Collection[],
     linkTypes: LinkType[],
     constraintData: ConstraintData,
-    workspace: Workspace
+    workspace?: Workspace
   ) {
     this.data = data;
     this.query = query;
@@ -119,7 +119,7 @@ export class CreateDataResourceService {
     const chainRange = createChainRange(createData.queryResource, groupingAttributes);
 
     if (chainRange.length > 1) {
-      const choosePathStems = this.createChoosePathStems(createData, chainRange);
+      const choosePathStems = this.createChoosePathStemsByData(createData, chainRange);
       this.chooseDocumentsPath(
         createData.stem,
         choosePathStems,
@@ -158,12 +158,24 @@ export class CreateDataResourceService {
     }
   }
 
+  public prepareCreatePathStems(
+    stem: QueryStem,
+    queryResource: QueryResource,
+    groupingAttributes: QueryAttributeGrouping[]
+  ): QueryStem[] {
+    const chainRange = createChainRange(
+      queryResource,
+      groupingAttributes.map(g => g.attribute)
+    );
+    return this.createChoosePathStems(stem, queryResource, groupingAttributes, [], chainRange);
+  }
+
   public update(updateData: UpdateDataResourceData) {
     const groupingAttributes = updateData.grouping.map(g => g.attribute);
     const chainRange = createChainRange(updateData.queryResource, groupingAttributes);
     const resourceType = updateData.queryResource.resourceType;
     if (chainRange.length > 1) {
-      const choosePathStems = this.createChoosePathStems(updateData, chainRange);
+      const choosePathStems = this.createChoosePathStemsByData(updateData, chainRange);
       this.modalService.showChooseDocumentsPath(
         choosePathStems,
         this.workspace?.viewId,
@@ -227,12 +239,31 @@ export class CreateDataResourceService {
     );
   }
 
-  private createChoosePathStems(createData: CreateDataResourceData, chainRange: number[]): QueryStem[] {
+  private createChoosePathStemsByData(createData: CreateDataResourceData, chainRange: number[]): QueryStem[] {
+    return this.createChoosePathStems(
+      createData.stem,
+      createData.queryResource,
+      createData.grouping,
+      createData.additionalAttributes,
+      chainRange
+    );
+  }
+
+  private createChoosePathStems(
+    stem: QueryStem,
+    queryResource: QueryResource,
+    groupingAttributes: QueryAttributeGrouping[],
+    additionalAttributes: QueryAttribute[],
+    chainRange: number[]
+  ): QueryStem[] {
     const choosePathStems: QueryStem[] = [];
     for (const resourceIndex of chainRange) {
-      if (isCollectionIndex(resourceIndex) && this.shouldChoosePathStem(createData, resourceIndex)) {
-        const grouping = this.getGroupingByResourceIndex(createData, resourceIndex);
-        const collectionId = this.getResourceInStem(createData.stem, resourceIndex).id;
+      if (
+        isCollectionIndex(resourceIndex) &&
+        this.shouldChoosePathStem(queryResource, groupingAttributes, additionalAttributes, resourceIndex)
+      ) {
+        const grouping = this.getGroupingByResourceIndex(groupingAttributes, resourceIndex);
+        const collectionId = this.getResourceInStem(stem, resourceIndex).id;
         const collectionsFilters = getQueryFiltersForCollection(this.query, collectionId);
         if (grouping) {
           collectionsFilters.push({
@@ -249,16 +280,21 @@ export class CreateDataResourceService {
     return choosePathStems;
   }
 
-  private shouldChoosePathStem(createData: CreateDataResourceData, resourceIndex: number): boolean {
-    if (resourceIndex === createData.queryResource.resourceIndex) {
+  private shouldChoosePathStem(
+    queryResource: QueryResource,
+    grouping: QueryAttributeGrouping[],
+    attributes: QueryAttribute[],
+    resourceIndex: number
+  ): boolean {
+    if (resourceIndex === queryResource.resourceIndex) {
       return false;
     }
 
-    if (createData.grouping.some(grouping => grouping.attribute.resourceIndex === resourceIndex)) {
+    if (grouping.some(grouping => grouping.attribute.resourceIndex === resourceIndex)) {
       return true;
     }
 
-    if (createData.additionalAttributes.some(attribute => attribute.resourceIndex === resourceIndex)) {
+    if (attributes.some(attribute => attribute.resourceIndex === resourceIndex)) {
       return false;
     }
 
@@ -381,8 +417,8 @@ export class CreateDataResourceService {
     return attributesResourcesOrder[index];
   }
 
-  private getGroupingByResourceIndex(data: CreateDataResourceData, index: number): CreateDataResourceDataGrouping {
-    return data.grouping.find(gr => gr.attribute.resourceIndex === index);
+  private getGroupingByResourceIndex(grouping: QueryAttributeGrouping[], index: number): QueryAttributeGrouping {
+    return grouping.find(gr => gr.attribute.resourceIndex === index);
   }
 
   public chooseStemConfig<T extends {stem: QueryStem}>(

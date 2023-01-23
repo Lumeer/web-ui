@@ -28,7 +28,7 @@ export interface WorkflowTable extends TableModel {
   height: number;
   minHeight: number;
   width: number;
-  linkingQueryStem?: QueryStem;
+  linkingCollectionId?: string;
 }
 
 export interface WorkflowTableTitle {
