@@ -19,35 +19,33 @@
 
 import {Injectable} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn} from '@angular/forms';
-import {select, Store} from '@ngrx/store';
-import {filter, map, take} from 'rxjs/operators';
-import {isNullOrUndefined} from '../../shared/utils/common.utils';
-import {AppState} from '../store/app.state';
-import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectOrganizationCodes} from '../store/organizations/organizations.state';
+import {map} from 'rxjs/operators';
+import {OrganizationService} from '../data-service';
+import {Observable, of} from 'rxjs';
 
 @Injectable()
 export class OrganizationValidators {
-  constructor(private store$: Store<AppState>) {
-    this.store$.dispatch(new OrganizationsAction.GetCodes());
+  constructor(private organizationService: OrganizationService) {}
+
+  public checkCodeValid(value: string): Observable<boolean> {
+    return this.organizationService.checkCodeValid(value);
   }
 
-  public uniqueCode(excludeCode?: string): AsyncValidatorFn {
-    return (control: AbstractControl) =>
-      this.store$.pipe(
-        select(selectOrganizationCodes),
-        filter(codes => !isNullOrUndefined(codes)),
-        map(codes => {
-          const codesLowerCase = codes.map(code => code.toLowerCase());
-          const value = control.value.trim().toLowerCase();
-
-          if ((!excludeCode || excludeCode.toLowerCase() !== value) && codesLowerCase.includes(value)) {
-            return {notUniqueCode: true};
-          } else {
+  public uniqueCodeValidator(): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      const value = control.value.trim();
+      if (value.length < 2) {
+        return of(null);
+      }
+      return this.checkCodeValid(value).pipe(
+        map(valid => {
+          if (valid) {
             return null;
+          } else {
+            return {notUniqueCode: true};
           }
-        }),
-        take(1)
+        })
       );
+    };
   }
 }

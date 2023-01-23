@@ -55,12 +55,14 @@ import {AppState} from '../../../core/store/app.state';
 import {selectMap} from '../../../core/store/maps/maps.state';
 import {defaultMapPerspectiveConfiguration, MapPerspectiveConfiguration} from '../perspective-configuration';
 import {selectCollectionsInCustomQuery} from '../../../core/store/common/permissions.selectors';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'map-perspective',
   templateUrl: './map-perspective.component.html',
   styleUrls: ['./map-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig> implements OnInit, OnDestroy {
   @Input()
@@ -69,8 +71,13 @@ export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig>
   @ViewChild(MapContentComponent)
   public mapContentComponent: MapContentComponent;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, protected store$: Store<AppState>) {
-    super(store$);
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    protected store$: Store<AppState>,
+    protected loadService: LoadDataService
+  ) {
+    super(store$, loadService);
   }
 
   public ngOnInit() {
@@ -227,6 +234,12 @@ export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig>
 
   private resetDefaultConfigSnapshot() {
     this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({}));
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.loadService.destroy();
   }
 }
 

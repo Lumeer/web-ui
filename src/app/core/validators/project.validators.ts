@@ -19,40 +19,39 @@
 
 import {Injectable} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn} from '@angular/forms';
-import {select, Store} from '@ngrx/store';
-import {filter, map, take} from 'rxjs/operators';
-import {isNullOrUndefined} from '../../shared/utils/common.utils';
-import {AppState} from '../store/app.state';
-import {ProjectsAction} from '../store/projects/projects.action';
-import {selectProjectsCodesForOrganization} from '../store/projects/projects.state';
+import {map} from 'rxjs/operators';
+import {ProjectService} from '../data-service';
+import {Observable, of} from 'rxjs';
 
 @Injectable()
 export class ProjectValidators {
   private currentOrganizationId: string;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private projectService: ProjectService) {}
 
   public setOrganizationId(id: string) {
     this.currentOrganizationId = id;
-    this.store$.dispatch(new ProjectsAction.GetCodes({organizationIds: [id]}));
   }
 
-  public uniqueCode(excludeCode?: string): AsyncValidatorFn {
-    return (control: AbstractControl) =>
-      this.store$.pipe(
-        select(selectProjectsCodesForOrganization(this.currentOrganizationId)),
-        filter(codes => !isNullOrUndefined(codes)),
-        map(codes => {
-          const codesLowerCase = codes.map(code => code.toLowerCase());
-          const value = control.value.trim().toLowerCase();
+  public checkCodeValid(value: string): Observable<boolean> {
+    return this.projectService.checkCodeValid(this.currentOrganizationId, value);
+  }
 
-          if ((!excludeCode || excludeCode.toLowerCase() !== value) && codesLowerCase.includes(value)) {
-            return {notUniqueCode: true};
-          } else {
+  public uniqueCode(): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      const value = control.value.trim();
+      if (value.length < 2) {
+        return of(null);
+      }
+      return this.checkCodeValid(value).pipe(
+        map(valid => {
+          if (valid) {
             return null;
+          } else {
+            return {notUniqueCode: true};
           }
-        }),
-        take(1)
+        })
       );
+    };
   }
 }

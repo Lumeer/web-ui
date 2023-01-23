@@ -93,7 +93,7 @@ export namespace UsersAction {
   export class Get implements Action {
     public readonly type = UsersActionType.GET;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: {organizationId: string; force?: boolean}) {}
   }
 
   export class GetSuccess implements Action {

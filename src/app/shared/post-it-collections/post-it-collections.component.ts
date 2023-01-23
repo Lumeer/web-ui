@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
@@ -42,14 +42,15 @@ import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.s
 import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {View} from '../../core/store/views/view';
-import {DataResourcesAction} from '../../core/store/data-resources/data-resources.action';
+import {LoadDataService, LoadDataServiceProvider} from '../../core/service/load-data.service';
 
 @Component({
   selector: 'post-it-collections',
   templateUrl: './post-it-collections.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
-export class PostItCollectionsComponent implements OnInit, OnChanges {
+export class PostItCollectionsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public maxShown: number = -1;
 
@@ -71,7 +72,7 @@ export class PostItCollectionsComponent implements OnInit, OnChanges {
   private query: Query;
   private overrideView$ = new BehaviorSubject<View>(null);
 
-  constructor(private router: Router, private store$: Store<AppState>) {}
+  constructor(private router: Router, private store$: Store<AppState>, private loadDataService: LoadDataService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.view) {
@@ -115,7 +116,9 @@ export class PostItCollectionsComponent implements OnInit, OnChanges {
     this.query = query;
 
     if (queryContainsOnlyFulltexts(query)) {
-      this.store$.dispatch(new DataResourcesAction.Get({query}));
+      this.loadDataService.setDataResourcesQueries([query]);
+    } else {
+      this.loadDataService.clearDataResourcesQueries();
     }
   }
 
@@ -163,5 +166,9 @@ export class PostItCollectionsComponent implements OnInit, OnChanges {
       const query = {...this.view.query, stems: [...this.view.query.stems, {collectionId: collection.id}]};
       this.overrideView$.next({...this.view, query});
     }
+  }
+
+  public ngOnDestroy() {
+    this.loadDataService.destroy();
   }
 }

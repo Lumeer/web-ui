@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ApiPermissionService} from '../common/api-permission.service';
 import {OrganizationService} from './organization.service';
-import {ContactDto, OrganizationDto} from '../../dto';
+import {ContactDto, OrganizationDto, ProjectDto, TeamDto} from '../../dto';
 import {ServiceLimitsDto} from '../../dto/service-limits.dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {PaymentDto} from '../../dto/payment.dto';
@@ -40,12 +40,17 @@ export class ApiOrganizationService extends ApiPermissionService implements Orga
     super(httpClient, store$);
   }
 
-  public getOrganizations(): Observable<OrganizationDto[]> {
-    return this.httpClient.get<OrganizationDto[]>(this.apiPrefix());
+  public getAllWorkspaces(): Observable<{
+    organizations: OrganizationDto[];
+    projects: Record<string, ProjectDto[]>;
+    limits: Record<string, ServiceLimitsDto>;
+    groups: Record<string, TeamDto[]>;
+  }> {
+    return this.httpClient.get<any>(`${this.apiPrefix()}/workspaces/all`);
   }
 
-  public getOrganizationsCodes(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/codes`).pipe();
+  public checkCodeValid(code: string): Observable<boolean> {
+    return this.httpClient.post<boolean>(`${this.apiPrefix()}/code/${code}/check`, {});
   }
 
   public getOrganization(id: string): Observable<OrganizationDto> {
@@ -78,10 +83,6 @@ export class ApiOrganizationService extends ApiPermissionService implements Orga
 
   public getServiceLimits(id: string): Observable<ServiceLimitsDto> {
     return this.httpClient.get<ServiceLimitsDto>(`${this.apiPrefix(id)}/serviceLimit`);
-  }
-
-  public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}> {
-    return this.httpClient.get<{[organizationId: string]: ServiceLimitsDto}>(`${this.apiPrefix()}/info/serviceLimits`);
   }
 
   public getPayments(): Observable<PaymentDto[]> {

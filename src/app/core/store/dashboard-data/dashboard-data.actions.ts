@@ -23,7 +23,7 @@ import {DashboardData, DashboardDataType} from './dashboard-data';
 import {Workspace} from '../navigation/workspace';
 import {Dashboard} from '../searches/search';
 
-export const get = createAction('[DashboardData] Get', props<{workspace?: Workspace}>());
+export const get = createAction('[DashboardData] Get', props<{workspace?: Workspace; force?: boolean}>());
 
 export const getOne = createAction(
   '[DashboardData] Get One',

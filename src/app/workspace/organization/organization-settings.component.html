@@ -4,7 +4,6 @@
     <resource-header
       [resource]="organization"
       [resourceType]="organizationType"
-      [restrictedValues]="organizationCodes$ | async"
       (back)="goBack()"
       [permissions]="permissions$ | async"
       (delete)="onDelete()"

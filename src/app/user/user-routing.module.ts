@@ -22,8 +22,6 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
-import {GroupsGuard} from '../core/guards/data/groups.guard';
-import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
 import {RoleType} from '../core/model/role-type';
 import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
 import {WorkspaceUserComponent} from './workspace/workspace-user.component';
@@ -42,9 +40,7 @@ const userRoutes: Routes = [
     canActivateChild: [WorkspaceUserTabGuard],
     resolve: {
       organizations: OrganizationsProjectsGuard,
-      limits: ServiceLimitsGuard,
       users: UsersGuard,
-      groups: GroupsGuard,
     },
     children: [
       {

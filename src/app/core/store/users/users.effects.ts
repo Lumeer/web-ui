@@ -56,7 +56,10 @@ export class UsersEffects {
     this.actions$.pipe(
       ofType<UsersAction.Get>(UsersActionType.GET),
       withLatestFrom(this.store$.select(selectUsersLoadedForOrganization)),
-      filter(([action, loadedOrganizationId]) => loadedOrganizationId !== action.payload.organizationId),
+      filter(
+        ([action, loadedOrganizationId]) =>
+          action.payload.force || loadedOrganizationId !== action.payload.organizationId
+      ),
       map(([action]) => action),
       mergeMap(action =>
         this.userService.getUsers(action.payload.organizationId).pipe(

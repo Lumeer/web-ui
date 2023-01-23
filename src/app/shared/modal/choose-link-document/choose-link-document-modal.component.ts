@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -30,7 +30,6 @@ import {mergeMap, switchMap, tap} from 'rxjs/operators';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {uniqueValues} from '../../utils/array.utils';
 import {Query} from '../../../core/store/navigation/query/query';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
   selectDocumentsByCollectionAndQuery,
   selectDocumentsByIdsSorted,
@@ -41,13 +40,15 @@ import {selectViewById} from '../../../core/store/views/views.state';
 import {View} from '../../../core/store/views/view';
 import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 import {ViewSettings} from '../../../core/store/view-settings/view-settings';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
   styleUrls: ['./choose-link-document-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
-export class ChooseLinkDocumentModalComponent implements OnInit {
+export class ChooseLinkDocumentModalComponent implements OnInit, OnDestroy {
   @Input()
   public documentIds: string[];
 
@@ -72,7 +73,11 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
 
   private documents: DocumentModel[];
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private loadDataService: LoadDataService
+  ) {}
 
   public ngOnInit() {
     this.view$ = this.store$.pipe(select(selectViewById(this.viewId)));
@@ -81,7 +86,7 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
 
     if (this.collectionId) {
       const query: Query = {stems: [{collectionId: this.collectionId}]};
-      this.store$.dispatch(new DocumentsAction.Get({query}));
+      this.loadDataService.setDocumentsQueries([query]);
       this.documents$ = this.view$.pipe(
         switchMap(view =>
           this.store$.pipe(select(selectDocumentsByCollectionAndQuery(this.collectionId, query, view)))
@@ -150,5 +155,9 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
 
   public onSelectCollection(collection: Collection) {
     this.selectedCollectionId$.next(collection.id);
+  }
+
+  public ngOnDestroy() {
+    this.loadDataService.destroy();
   }
 }

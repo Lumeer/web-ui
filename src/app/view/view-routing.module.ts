@@ -33,11 +33,9 @@ import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {ViewDefaultConfigsGuard} from '../core/guards/data/view-default-configs.guard';
 import {DocumentRedirectComponent} from '../core/components/document-redirect.component';
-import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 import {DashboardDataGuard} from '../core/guards/data/dashboard-data.guard';
 import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
-import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
 import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
 
 const viewRoutes: Routes = [
@@ -47,13 +45,11 @@ const viewRoutes: Routes = [
     canDeactivate: [ViewConfigCleanUpGuard],
     resolve: {
       organizations: OrganizationsProjectsGuard,
-      limits: ServiceLimitsGuard,
       collections: CollectionsGuard,
       views: ViewsGuard,
       linkTypes: LinkTypesGuard,
       users: UsersGuard,
       selection: SelectionListsGuard,
-      groups: GroupsGuard,
       defaultConfigs: ViewDefaultConfigsGuard,
       dashboardData: DashboardDataGuard,
       variables: ResourceVariablesGuard,

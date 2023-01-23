@@ -18,15 +18,20 @@
  */
 
 import {Observable} from 'rxjs';
-import {ContactDto, OrganizationDto} from '../../dto';
+import {ContactDto, OrganizationDto, ProjectDto, TeamDto} from '../../dto';
 import {PermissionService} from '../common/permission.service';
 import {ServiceLimitsDto} from '../../dto/service-limits.dto';
 import {PaymentDto} from '../../dto/payment.dto';
 
 export abstract class OrganizationService extends PermissionService {
-  public abstract getOrganizations(): Observable<OrganizationDto[]>;
+  public abstract getAllWorkspaces(): Observable<{
+    organizations: OrganizationDto[];
+    projects: Record<string, ProjectDto[]>;
+    limits: Record<string, ServiceLimitsDto>;
+    groups: Record<string, TeamDto[]>;
+  }>;
 
-  public abstract getOrganizationsCodes(): Observable<string[]>;
+  public abstract checkCodeValid(code: string): Observable<boolean>;
 
   public abstract getOrganization(id: string): Observable<OrganizationDto>;
 
@@ -41,8 +46,6 @@ export abstract class OrganizationService extends PermissionService {
   public abstract getOrganizationContact(id: string): Observable<ContactDto>;
 
   public abstract setOrganizationContact(id: string, contact: ContactDto): Observable<ContactDto>;
-
-  public abstract getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}>;
 
   public abstract getServiceLimits(id: string): Observable<ServiceLimitsDto>;
 

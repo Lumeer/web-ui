@@ -35,7 +35,6 @@ import {AppIdService} from './core/service/app-id.service';
 import {PrintModule} from './print/print.module';
 import {ConfigurationService} from './configuration/configuration.service';
 import {configuration} from '../environments/configuration';
-import {TeamsLoadService} from './core/service/teams-load.service';
 import {LinkTypeModule} from './link-type/link-type.module';
 import {UserModule} from './user/user.module';
 import {CurrentUserCheckService} from './core/service/current-user-check.service';
@@ -101,13 +100,6 @@ const disableAnimations =
       provide: APP_INITIALIZER,
       useFactory: (currentUserCheckService: CurrentUserCheckService) => () => currentUserCheckService.init(),
       deps: [CurrentUserCheckService],
-      multi: true,
-    },
-    TeamsLoadService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (teamsLoadService: TeamsLoadService) => () => teamsLoadService.init(),
-      deps: [TeamsLoadService],
       multi: true,
     },
     AppIdService,

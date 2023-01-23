@@ -25,6 +25,7 @@
     [fontSizeRem]="2"
     [maxLines]="1"
     [editable]="permissions?.roles?.Manage"
+    [minLength]="codeVisible ? 2 : 0"
     [maxLength]="codeVisible ? 5 : undefined"
     [title]="firstLineValue"
     (blur)="onFirstLineBlur()"
@@ -46,8 +47,7 @@
 
 </div>
 
-<small class="position-relative text-danger" [style.left.px]="80"
-       *ngIf="isDuplicate" i18n="@@resource.value.error.duplicity">
+<small class="position-relative text-danger" [style.left.px]="80" *ngIf="isDuplicate$ | async" i18n="@@resource.value.error.duplicity">
   This {resourceType, select, organization {code} project {code} collection {name}} is already taken. Try another one!
 </small>
 

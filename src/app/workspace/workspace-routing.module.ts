@@ -34,10 +34,8 @@ import {ProjectTemplateComponent} from './project/template/project-template.comp
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
-import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
 import {ProjectTeamsComponent} from './project/teams/project-teams.component';
-import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
 import {OrganizationTabGuard} from './organization/organization-tab.guard';
 import {RoleType} from '../core/model/role-type';
 import {ProjectTabGuard} from './project/project-tab.guard';
@@ -57,11 +55,9 @@ const workspaceRoutes: Routes = [
     resolve: {
       organizations: OrganizationsProjectsGuard,
       users: UsersGuard,
-      groups: GroupsGuard,
       selection: SelectionListsGuard,
       collections: CollectionsGuard,
       views: ViewsGuard,
-      limits: ServiceLimitsGuard,
       linkTypes: LinkTypesGuard,
       variables: ResourceVariablesGuard,
     },
@@ -115,9 +111,7 @@ const workspaceRoutes: Routes = [
     canActivateChild: [OrganizationTabGuard],
     resolve: {
       organizations: OrganizationsProjectsGuard,
-      limits: ServiceLimitsGuard,
       users: UsersGuard,
-      groups: GroupsGuard,
     },
     children: [
       {

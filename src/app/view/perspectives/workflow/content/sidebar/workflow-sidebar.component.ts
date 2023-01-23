@@ -26,12 +26,11 @@ import {
   OnChanges,
   SimpleChanges,
   OnInit,
+  OnDestroy,
 } from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
-import {AttributesResourceType} from '../../../../../core/model/resource';
-import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {viewCursorToWorkflowTable, WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
@@ -46,14 +45,17 @@ import {
 import {WorkflowsAction} from '../../../../../core/store/workflows/workflows.action';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 import {View} from '../../../../../core/store/views/view';
+import {LoadDataService, LoadDataServiceProvider} from '../../../../../core/service/load-data.service';
+import {objectChanged} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: WORKFLOW_SIDEBAR_SELECTOR,
   templateUrl: './workflow-sidebar.component.html',
   styleUrls: ['./workflow-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
-export class WorkflowSidebarComponent implements OnInit, OnChanges {
+export class WorkflowSidebarComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public collection: Collection;
 
@@ -77,9 +79,11 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
 
   public currentStem$: Observable<QueryStem>;
 
-  public readonly collectionResourceType = AttributesResourceType.Collection;
-
-  constructor(private store$: Store<AppState>, private stateService: WorkflowTablesStateService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private stateService: WorkflowTablesStateService,
+    private loadDataService: LoadDataService
+  ) {}
 
   public ngOnInit() {
     this.currentStem$ = combineLatest([
@@ -89,7 +93,7 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.document) {
+    if (changes.document || objectChanged(changes.currentView)) {
       this.loadLinkInstances(this.document);
     }
   }
@@ -97,7 +101,9 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
   private loadLinkInstances(document: DocumentModel) {
     if (document) {
       const query: Query = {stems: [{...createCollectionQueryStem(document.collectionId), documentIds: [document.id]}]};
-      this.store$.dispatch(new LinkInstancesAction.Get({query}));
+      this.loadDataService.setLinkInstancesQueries([query], {viewId: this.currentView?.id});
+    } else {
+      this.loadDataService.clearLinkInstancesQueries();
     }
   }
 
@@ -114,5 +120,9 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
         attributeId: getDefaultAttributeId(data.collection),
       })
     );
+  }
+
+  public ngOnDestroy() {
+    this.loadDataService.destroy();
   }
 }

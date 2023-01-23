@@ -18,8 +18,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {ContactDto, OrganizationDto} from '../../dto';
+import {mergeMap, Observable, of} from 'rxjs';
+import {ContactDto, OrganizationDto, ProjectDto, TeamDto} from '../../dto';
 import {PublicPermissionService} from '../common/public-permission.service';
 import {map, take} from 'rxjs/operators';
 import {ServiceLimitsDto} from '../../dto/service-limits.dto';
@@ -31,19 +31,36 @@ import {selectPublicOrganizationId} from '../../store/public-data/public-data.st
 import {setDefaultUserPermissions} from '../common/public-api-util';
 import {DEFAULT_USER} from '../../constants';
 import {RoleType} from '../../model/role-type';
+import {PublicProjectService} from '../project/public-project.service';
 
 @Injectable()
 export class PublicOrganizationService extends PublicPermissionService implements OrganizationService {
-  constructor(protected store$: Store<AppState>) {
+  constructor(protected store$: Store<AppState>, private publicProjectService: PublicProjectService) {
     super(store$);
   }
 
-  public getOrganizations(): Observable<OrganizationDto[]> {
-    return this.getOrganization('').pipe(map(organization => [organization]));
+  public getAllWorkspaces(): Observable<{
+    organizations: OrganizationDto[];
+    projects: Record<string, ProjectDto[]>;
+    limits: Record<string, ServiceLimitsDto>;
+    groups: Record<string, TeamDto[]>;
+  }> {
+    return this.getOrganization('').pipe(
+      mergeMap(organization =>
+        this.publicProjectService.getProjects(organization.id).pipe(
+          map(projects => ({
+            organizations: [organization],
+            projects: {[organization.id]: projects},
+            limits: {},
+            groups: {},
+          }))
+        )
+      )
+    );
   }
 
-  public getOrganizationsCodes(): Observable<string[]> {
-    return of([]);
+  public checkCodeValid(code: string): Observable<boolean> {
+    return of(true);
   }
 
   public getOrganization(id: string): Observable<OrganizationDto> {
@@ -81,10 +98,6 @@ export class PublicOrganizationService extends PublicPermissionService implement
 
   public getServiceLimits(id: string): Observable<ServiceLimitsDto> {
     return of(null);
-  }
-
-  public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}> {
-    return of({});
   }
 
   public getPayments(): Observable<PaymentDto[]> {

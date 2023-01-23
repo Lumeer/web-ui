@@ -32,8 +32,6 @@ export function organizationsReducer(
       return addOrganizations(state, action.payload.organizations);
     case OrganizationsActionType.GET_ONE_SUCCESS:
       return addOrUpdateOrganization(state, action.payload.organization);
-    case OrganizationsActionType.GET_CODES_SUCCESS:
-      return {...state, organizationCodes: action.payload.organizationCodes};
     case OrganizationsActionType.CREATE_SUCCESS:
       return addOrUpdateOrganization(state, action.payload.organization);
     case OrganizationsActionType.UPDATE_SUCCESS:

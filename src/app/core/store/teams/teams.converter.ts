@@ -20,12 +20,12 @@
 import {Team} from './team';
 import {TeamDto} from '../../dto';
 
-export function convertTeamDtoToModel(dto: TeamDto): Team {
+export function convertTeamDtoToModel(dto: TeamDto, organizationId?: string): Team {
   return {
     id: dto.id,
     name: dto.name,
     description: dto.description,
-    organizationId: dto.organizationId,
+    organizationId: organizationId || dto.organizationId,
     users: dto.users,
     icon: dto.icon,
     color: dto.color,

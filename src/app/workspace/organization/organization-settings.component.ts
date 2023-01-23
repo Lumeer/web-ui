@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, mergeMap, take, takeUntil, tap} from 'rxjs/operators';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -33,10 +33,7 @@ import {
 } from '../../core/store/navigation/navigation.state';
 import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {
-  selectOrganizationByWorkspace,
-  selectOrganizationCodes,
-} from '../../core/store/organizations/organizations.state';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {Project} from '../../core/store/projects/project';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
@@ -54,7 +51,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
   public projectsCount$: Observable<number>;
   public permissions$: Observable<AllowedPermissions>;
-  public organizationCodes$: Observable<string[]>;
   public organization$ = new BehaviorSubject<Organization>(null);
 
   public readonly organizationType = ResourceType.Organization;
@@ -166,18 +162,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
           filter(workspace => !!workspace)
         )
         .subscribe(workspace => (this.workspace = workspace))
-    );
-
-    this.store$.dispatch(new OrganizationsAction.GetCodes());
-    this.organizationCodes$ = this.store$.pipe(
-      select(selectOrganizationCodes),
-      mergeMap(codes =>
-        this.store$.pipe(select(selectOrganizationByWorkspace)).pipe(
-          filter(organization => !!organization),
-          map(organization => ({codes, organization}))
-        )
-      ),
-      map(({codes, organization}) => (codes && codes.filter(code => code !== organization.code)) || [])
     );
   }
 

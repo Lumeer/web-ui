@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
@@ -69,12 +68,14 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 import {ViewSettings} from '../../../core/store/view-settings/view-settings';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'detail-perspective',
   templateUrl: './detail-perspective.component.html',
   styleUrls: ['./detail-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
@@ -105,7 +106,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   private newDocument: DocumentModel;
   private subscriptions = new Subscription();
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private loadDataService: LoadDataService) {}
 
   public ngOnInit() {
     this.initSubscriptions();
@@ -182,7 +183,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
     this.query = query;
 
     if (queryContainsOnlyFulltexts(query)) {
-      this.store$.dispatch(new DocumentsAction.Get({query, workspace: {viewId}}));
+      this.loadDataService.setDocumentsQueries([query], {viewId});
     }
   }
 
@@ -267,11 +268,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
     const collectionQuery = filterStemsForCollection(collection.id, query);
     return this.store$.pipe(
       select(selectQueryDocumentsLoaded(collectionQuery)),
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery, workspace: {viewId: view?.id}}));
-        }
-      }),
+      tap(() => this.loadDataService.setDocumentsQueries([collectionQuery], {viewId: view?.id})),
       filter(loaded => loaded),
       mergeMap(() => this.store$.pipe(select(selectDocumentsByViewAndCustomQuery(view, collectionQuery)))),
       switchMap(documents => {
@@ -303,11 +300,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
           const collectionQuery = filterStemsForCollection(collection.id, query);
           return this.store$.pipe(
             select(selectQueryDocumentsLoaded(collectionQuery)),
-            tap(loaded => {
-              if (!loaded) {
-                this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery, workspace: {viewId: view?.id}}));
-              }
-            }),
+            tap(() => this.loadDataService.setDocumentsQueries([collectionQuery], {viewId: view?.id})),
             filter(loaded => loaded),
             mergeMap(() =>
               this.store$.pipe(
@@ -361,8 +354,10 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
   private loadLinkInstances(document: DocumentModel, viewId: string) {
     if (document) {
-      const query: Query = {stems: [{...createCollectionQueryStem(document.collectionId), documentIds: [document.id]}]};
-      this.store$.dispatch(new LinkInstancesAction.Get({query, workspace: {viewId}}));
+      const query = {stems: [{...createCollectionQueryStem(document.collectionId), documentIds: [document.id]}]};
+      this.loadDataService.setLinkInstancesQueries([query], {viewId});
+    } else {
+      this.loadDataService.clearLinkInstancesQueries();
     }
   }
 
@@ -379,6 +374,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+    this.loadDataService.destroy();
   }
 
   public onDocumentChanged(document: DocumentModel) {

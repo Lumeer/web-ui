@@ -49,6 +49,7 @@ export enum LinkInstancesActionType {
   PATCH_DATA_INTERNAL = '[Link Instances] Patch Data :: Internal',
 
   REVERT_DATA = '[Link Instances] Revert Data',
+  REFRESH_SUCCESS = '[Link Instances] Refresh Success',
 
   UPDATE_SUCCESS = '[Link Instances] Update :: Success',
   UPDATE_FAILURE = '[Link Instances] Update :: Failure',
@@ -203,6 +204,12 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {error: any; originalLinkInstance?: LinkInstance}) {}
   }
 
+  export class RefreshSuccess implements Action {
+    public readonly type = LinkInstancesActionType.REFRESH_SUCCESS;
+
+    public constructor(public payload: {linkInstances: LinkInstance[]; queries: DataQuery[]}) {}
+  }
+
   export class SetDocumentLinks implements Action {
     public readonly type = LinkInstancesActionType.SET_DOCUMENT_LINKS;
 
@@ -352,6 +359,7 @@ export namespace LinkInstancesAction {
     | UpdateInternal
     | UpdateSuccess
     | UpdateFailure
+    | RefreshSuccess
     | Delete
     | DeleteConfirm
     | DeleteSuccess

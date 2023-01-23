@@ -32,19 +32,21 @@ import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {Observable} from 'rxjs';
 import {ViewConfig} from '../../../core/store/views/view';
 import {defaultPivotPerspectiveConfiguration, PivotPerspectiveConfiguration} from '../perspective-configuration';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'pivot-perspective',
   templateUrl: './pivot-perspective.component.html',
   styleUrls: ['./pivot-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class PivotPerspectiveComponent extends DataPerspectiveDirective<PivotConfig> implements OnInit, OnDestroy {
   @Input()
   public perspectiveConfiguration: PivotPerspectiveConfiguration = defaultPivotPerspectiveConfiguration;
 
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
+  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+    super(store$, loadService);
   }
 
   public checkOrTransformConfig(
@@ -77,5 +79,11 @@ export class PivotPerspectiveComponent extends DataPerspectiveDirective<PivotCon
 
   protected getDefaultConfig(query: Query): PivotConfig {
     return createDefaultPivotConfig(query);
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.loadService.destroy();
   }
 }

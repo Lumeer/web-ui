@@ -52,7 +52,7 @@ export namespace SelectionListsAction {
   export class Get implements Action {
     public readonly type = SelectionListsActionType.GET;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: {organizationId: string; force?: boolean}) {}
   }
 
   export class GetSuccess implements Action {

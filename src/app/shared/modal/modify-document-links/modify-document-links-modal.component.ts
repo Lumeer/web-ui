@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -34,7 +34,6 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../core/store/link-instances/link-instances.state';
 import {ResultTableRow} from './results-table/results-table.component';
@@ -49,12 +48,14 @@ import {View} from '../../../core/store/views/view';
 import {selectCurrentView, selectViewById} from '../../../core/store/views/views.state';
 import {AttributesResourceType} from '../../../core/model/resource';
 import {ResourceAttributeSettings} from '../../../core/store/view-settings/view-settings';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
-export class ModifyDocumentLinksModalComponent implements OnInit {
+export class ModifyDocumentLinksModalComponent implements OnInit, OnDestroy {
   @Input()
   public documentId: string;
 
@@ -90,7 +91,11 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
   public readonly resourceType = AttributesResourceType;
   public readonly dialogType = DialogType;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private loadDataService: LoadDataService
+  ) {}
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
@@ -163,9 +168,7 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
         this.store$.pipe(select(selectCollectionById(getOtherLinkedCollectionId(linkType, this.collectionId))))
       ),
       tap(collection =>
-        this.store$.dispatch(
-          new DocumentsAction.Get({query: {stems: [{collectionId: collection.id}]}, workspace: this.workspace})
-        )
+        this.loadDataService.setDocumentsQueries([{stems: [{collectionId: collection.id}]}], this.workspace)
       )
     );
   }
@@ -241,5 +244,9 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
   public onUnSelectAll(data: {documentsIds: string[]; linkInstancesIds: string[]}) {
     this.selectedDocumentIds$.next(data.documentsIds);
     this.removedLinkInstancesIds$.next(data.linkInstancesIds);
+  }
+
+  public ngOnDestroy() {
+    this.loadDataService.destroy();
   }
 }

@@ -35,7 +35,7 @@ import {
 import {Workspace} from '../../core/store/navigation/workspace';
 import {Project} from '../../core/store/projects/project';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {selectProjectByWorkspace, selectProjectsCodesForOrganization} from '../../core/store/projects/projects.state';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
@@ -57,7 +57,6 @@ import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 })
 export class ProjectSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
-  public projectCodes$: Observable<string[]>;
   public project$ = new BehaviorSubject<Project>(null);
   public permissions$: Observable<AllowedPermissions>;
   public uploadProgress$ = new BehaviorSubject<number>(null);
@@ -156,10 +155,6 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
         )
         .subscribe(project => {
           this.project$.next({...project});
-          this.projectCodes$ = this.store$.pipe(
-            select(selectProjectsCodesForOrganization(project.organizationId)),
-            map(codes => (codes && codes.filter(code => code !== project.code)) || [])
-          );
         })
     );
 

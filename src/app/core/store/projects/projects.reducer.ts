@@ -23,6 +23,7 @@ import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Project} from './project';
 import {LoadingState} from '../../model/loading-state';
 import {permissionsChanged} from '../../../shared/utils/permission.utils';
+import {objectValues} from '../../../shared/utils/common.utils';
 
 export function projectsReducer(
   state: ProjectsState = initialProjectsState,
@@ -31,11 +32,10 @@ export function projectsReducer(
   switch (action.type) {
     case ProjectsActionType.GET_SUCCESS:
       return addProjects(state, action);
+    case ProjectsActionType.GET_ALL_SUCCESS:
+      return setAllProjects(state, action);
     case ProjectsActionType.GET_ONE_SUCCESS:
       return addOrUpdateProject(state, action.payload.project);
-    case ProjectsActionType.GET_CODES_SUCCESS:
-      const projectCodes = {...state.projectCodes, ...action.payload.codesMap};
-      return {...state, projectCodes};
     case ProjectsActionType.CREATE_SUCCESS:
       return addOrUpdateProject(state, action.payload.project);
     case ProjectsActionType.UPDATE_SUCCESS:
@@ -59,6 +59,16 @@ export function projectsReducer(
     default:
       return state;
   }
+}
+
+function setAllProjects(state: ProjectsState, action: ProjectsAction.GetAllSuccess): ProjectsState {
+  const loaded = Object.keys(action.payload.projectsByOrganizations).reduce((map, id) => ({...map, [id]: true}), {});
+  const allProjects = objectValues(action.payload.projectsByOrganizations).reduce(
+    (array, projects) => [...array, ...projects],
+    []
+  );
+
+  return projectsAdapter.setAll(allProjects, {...state, loaded});
 }
 
 function addProjects(state: ProjectsState, action: ProjectsAction.GetSuccess): ProjectsState {

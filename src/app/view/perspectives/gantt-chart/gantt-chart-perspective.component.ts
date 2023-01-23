@@ -36,12 +36,14 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {defaultGanttPerspectiveConfiguration, GanttPerspectiveConfiguration} from '../perspective-configuration';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'gantt-chart-perspective',
   templateUrl: './gantt-chart-perspective.component.html',
   styleUrls: ['./gantt-chart-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class GanttChartPerspectiveComponent
   extends DataPerspectiveDirective<GanttChartConfig>
@@ -50,8 +52,8 @@ export class GanttChartPerspectiveComponent
   @Input()
   public perspectiveConfiguration: GanttPerspectiveConfiguration = defaultGanttPerspectiveConfiguration;
 
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
+  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+    super(store$, loadService);
   }
 
   public checkOrTransformConfig(
@@ -98,5 +100,11 @@ export class GanttChartPerspectiveComponent
     this.workspace$
       .pipe(take(1))
       .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace})));
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.loadService.destroy();
   }
 }

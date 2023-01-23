@@ -25,9 +25,7 @@ import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
 import {ViewsGuard} from '../core/guards/data/views.guard';
-import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {RoleType} from '../core/model/role-type';
-import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
 import {LinkTypeSettingsGuard} from './link-type-settings.guard';
 import {LinkTypeTabGuard} from './link-type-tab.guard';
 import {LinkTypeSettingsComponent} from './settings/link-type-settings.component';
@@ -47,10 +45,8 @@ const linkTypeRoutes: Routes = [
       organizations: OrganizationsProjectsGuard,
       linkTypes: LinkTypesGuard,
       collections: CollectionsGuard,
-      serviceLimits: ServiceLimitsGuard,
       users: UsersGuard,
       views: ViewsGuard,
-      groups: GroupsGuard,
     },
     children: [
       {

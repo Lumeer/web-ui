@@ -42,12 +42,14 @@ import {selectDocumentById} from '../../../core/store/documents/documents.state'
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {defaultWorkflowPerspectiveConfiguration, WorkflowPerspectiveConfiguration} from '../perspective-configuration';
 import {generateId} from '../../../shared/utils/resource.utils';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'workflow-perspective',
   templateUrl: './workflow-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block h-100'},
+  providers: [LoadDataServiceProvider],
 })
 export class WorkflowPerspectiveComponent
   extends DataPerspectiveDirective<WorkflowConfig>
@@ -61,8 +63,8 @@ export class WorkflowPerspectiveComponent
   public panelWidth$: Observable<number>;
   public workflowId$: Observable<string>;
 
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
+  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+    super(store$, loadService);
   }
 
   public ngOnInit() {
@@ -121,6 +123,7 @@ export class WorkflowPerspectiveComponent
   public ngOnDestroy() {
     super.ngOnDestroy();
     this.onCloseSidebar();
+    this.loadService.destroy();
   }
 
   public onCloseSidebar() {

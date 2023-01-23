@@ -42,8 +42,8 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
     return this.httpClient.get<ProjectDto[]>(this.apiPrefix(organizationId));
   }
 
-  public getProjectCodes(organizationId: string): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseApiPrefix(organizationId)}/info/codes`).pipe();
+  public checkCodeValid(organizationId: string, code: string): Observable<boolean> {
+    return this.httpClient.post<boolean>(`${this.baseApiPrefix(organizationId)}/code/${code}/check`, {});
   }
 
   public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {

@@ -423,6 +423,10 @@ export class AuthService {
     }
   }
 
+  public isCurrentPathOutsideApp(): boolean {
+    return this.isPathOutsideApp(this.router.url);
+  }
+
   public isPathOutsideApp(redirectPath: string): boolean {
     const restrictedPaths = ['/agreement', '/logout', '/auth', '/session-expired', '/session'];
     return restrictedPaths.some(path => {

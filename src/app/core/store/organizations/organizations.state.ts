@@ -26,7 +26,6 @@ import {sortResourcesByOrder} from '../../../shared/utils/resource.utils';
 import {selectOrganizationsPermissions} from '../user-permissions/user-permissions.state';
 
 export interface OrganizationsState extends EntityState<Organization> {
-  organizationCodes: string[];
   loaded: boolean;
 }
 
@@ -35,7 +34,6 @@ export const organizationsAdapter = createEntityAdapter<Organization>({
 });
 
 export const initialOrganizationsState: OrganizationsState = organizationsAdapter.getInitialState({
-  organizationCodes: undefined,
   loaded: false,
 });
 
@@ -87,10 +85,6 @@ export const selectOrganizationsDictionary = createSelector(
 export const selectOrganizationsLoaded = createSelector(
   selectOrganizationsState,
   organizationState => organizationState.loaded
-);
-export const selectOrganizationCodes = createSelector(
-  selectOrganizationsState,
-  organizationState => organizationState.organizationCodes
 );
 
 export const selectOrganizationByWorkspace = createSelector(

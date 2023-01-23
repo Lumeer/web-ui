@@ -58,6 +58,7 @@ export enum DocumentsActionType {
   PATCH_DATA_PENDING = '[Documents] Patch Data Pending',
 
   REVERT_DATA = '[Documents] Revert Data',
+  REFRESH_SUCCESS = '[Documents] Refresh Success',
 
   CHECK_DATA_HINT = '[Documents] Check Data Hint',
 
@@ -241,6 +242,12 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.UPDATE_FAILURE;
 
     public constructor(public payload: {error: any; originalDocument?: DocumentModel}) {}
+  }
+
+  export class RefreshSuccess implements Action {
+    public readonly type = DocumentsActionType.REFRESH_SUCCESS;
+
+    public constructor(public payload: {documents: DocumentModel[]; queries: DataQuery[]}) {}
   }
 
   export class Duplicate implements Action {
@@ -490,6 +497,7 @@ export namespace DocumentsAction {
     | DuplicateSuccess
     | UpdateData
     | UpdateDataInternal
+    | RefreshSuccess
     | RevertData
     | PatchData
     | PatchDataInternal

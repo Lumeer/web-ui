@@ -41,7 +41,13 @@ import {
   convertViewModelToDto,
 } from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
-import {selectDefaultViewConfig, selectViewsDictionary, selectViewsLoaded, selectViewsState} from './views.state';
+import {
+  selectDefaultViewConfig,
+  selectDefaultViewConfigsLoaded,
+  selectViewsDictionary,
+  selectViewsLoaded,
+  selectViewsState,
+} from './views.state';
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
@@ -586,7 +592,9 @@ export class ViewsEffects {
   public getDefaultConfigs$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ViewsAction.GetDefaultConfigs>(ViewsActionType.GET_DEFAULT_CONFIGS),
-      mergeMap(action => {
+      withLatestFrom(this.store$.pipe(select(selectDefaultViewConfigsLoaded))),
+      filter(([action, loaded]) => action.payload.force || !loaded),
+      mergeMap(([action]) => {
         return this.viewService.getDefaultConfigs(action.payload.workspace).pipe(
           map(dtos => dtos.map(dto => convertDefaultViewConfigDtoToModel(dto))),
           map(configs => new ViewsAction.GetDefaultConfigsSuccess({configs})),

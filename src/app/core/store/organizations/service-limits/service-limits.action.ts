@@ -21,9 +21,7 @@ import {Action} from '@ngrx/store';
 import {ServiceLimits} from './service.limits';
 
 export enum ServiceLimitsActionType {
-  GET_ALL = '[ServiceLimits] Get All',
   GET_ALL_SUCCESS = '[ServiceLimits] Get All :: Success',
-  GET_ALL_FAILURE = '[ServiceLimits] Get All :: Failure',
 
   GET_SERVICE_LIMITS = '[ServiceLimits] Get',
   GET_SERVICE_LIMITS_SUCCESS = '[ServiceLimits] Get :: Success',
@@ -31,20 +29,10 @@ export enum ServiceLimitsActionType {
 }
 
 export namespace ServiceLimitsAction {
-  export class GetAll implements Action {
-    public readonly type = ServiceLimitsActionType.GET_ALL;
-  }
-
   export class GetAllSuccess implements Action {
     public readonly type = ServiceLimitsActionType.GET_ALL_SUCCESS;
 
-    public constructor(public payload: {allServiceLimits: ServiceLimits[]}) {}
-  }
-
-  export class GetAllFailure implements Action {
-    public readonly type = ServiceLimitsActionType.GET_ALL_FAILURE;
-
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {serviceLimits: ServiceLimits[]}) {}
   }
 
   export class GetServiceLimits implements Action {
@@ -65,11 +53,5 @@ export namespace ServiceLimitsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export type All =
-    | GetAll
-    | GetAllSuccess
-    | GetAllFailure
-    | GetServiceLimits
-    | GetServiceLimitsSuccess
-    | GetServiceLimitsFailure;
+  export type All = GetAllSuccess | GetServiceLimits | GetServiceLimitsSuccess | GetServiceLimitsFailure;
 }

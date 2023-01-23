@@ -109,7 +109,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
 
   private createAsyncValidator(): AsyncValidatorFn {
     if (this.resourceType === ResourceType.Organization) {
-      return this.organizationValidators.uniqueCode();
+      return this.organizationValidators.uniqueCodeValidator();
     } else if (this.resourceType === ResourceType.Project) {
       this.projectValidators.setOrganizationId(this.parentId);
       return this.projectValidators.uniqueCode();

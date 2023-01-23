@@ -99,7 +99,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
     this.subscribeToResources();
     this.subscribeData();
 
-    this.store$.dispatch(new UserNotificationsAction.Get());
+    this.store$.dispatch(new UserNotificationsAction.Get({}));
   }
 
   private subscribeToNotifications() {

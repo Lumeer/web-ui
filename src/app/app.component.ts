@@ -51,6 +51,7 @@ import {ModalService} from './shared/modal/modal.service';
 import {selectWorkspace} from './core/store/navigation/navigation.state';
 import {ApplicationTourService} from './core/service/application-tour.service';
 import {ViewSettingsService} from './core/service/view-settings.service';
+import {SleepDetectionService} from './core/service/sleep-detection.service';
 
 @Component({
   selector: APP_NAME_SELECTOR,
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private title: Title,
     private pusherService: PusherService,
     private activityService: UserActivityService,
+    private sleepDetectionService: SleepDetectionService,
     private sessionService: SessionService,
     private tooltipConfig: TooltipConfig,
     private localeService: BsLocaleService,

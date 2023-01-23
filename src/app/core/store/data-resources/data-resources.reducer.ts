@@ -42,6 +42,20 @@ export function dataResourcesReducer(
         tasksQueries: addDataQueryUnique(state.tasksQueries, action.payload.query),
         loadingTasksQueries: removeDataQuery(state.loadingTasksQueries, action.payload.query),
       };
+    case DataResourcesActionType.REFRESH_DATA:
+      return {
+        ...state,
+        loadingQueries: action.payload.dataResourcesQueries,
+        loadingTasksQueries: action.payload.tasksQueries,
+      };
+    case DataResourcesActionType.REFRESH_DATA_SUCCESS:
+      return {
+        ...state,
+        queries: action.payload.dataResourcesQueries,
+        loadingQueries: [],
+        tasksQueries: action.payload.tasksQueries,
+        loadingTasksQueries: [],
+      };
     case DataResourcesActionType.GET_TASKS_FAILURE:
       return {...state, loadingTasksQueries: removeDataQuery(state.loadingTasksQueries, action.payload.query)};
     case DataResourcesActionType.SET_LOADING_TASKS_QUERY:

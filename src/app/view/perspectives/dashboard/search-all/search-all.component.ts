@@ -33,17 +33,18 @@ import {
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {selectCurrentView, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
 import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
 import {queryIsEmpty} from '../../../../core/store/navigation/query/query.util';
 import {View} from '../../../../core/store/views/view';
 import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LoadDataService, LoadDataServiceProvider} from '../../../../core/service/load-data.service';
 
 @Component({
   selector: 'search-all',
   templateUrl: './search-all.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoadDataServiceProvider],
 })
 export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
@@ -64,7 +65,7 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
   private overrideView$ = new BehaviorSubject<View>(null);
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private loadService: LoadDataService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.view) {
@@ -78,6 +79,7 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+    this.loadService.destroy();
   }
 
   private subscribeDataInfo() {
@@ -118,7 +120,7 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
         ),
         filter(([, query]) => !!query)
       )
-      .subscribe(([viewId, query]) => this.fetchDocuments(query, viewId));
+      .subscribe(([viewId, query]) => this.loadService.setTasksQueries([query], {viewId}));
     this.subscriptions.add(navigationSubscription);
 
     this.hasCollection$ = combineLatest([this.view$, this.query$]).pipe(
@@ -152,9 +154,5 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
     return combineLatest([this.view$, this.query$]).pipe(
       switchMap(([view, query]) => this.store$.pipe(select(selectTasksDocumentsByCustomQuery(view, query))))
     );
-  }
-
-  private fetchDocuments(query: Query, viewId: string) {
-    this.store$.dispatch(new DataResourcesAction.GetTasks({query, workspace: {viewId}}));
   }
 }
