@@ -202,6 +202,7 @@ export class PusherService implements OnDestroy {
   private bindPusherErrors() {
     this.channel.bind('pusher:subscription_error', data => {
       if (data.status === 401) {
+        this.unsubscribe();
         this.authService.refreshToken();
       }
     });
@@ -1192,5 +1193,6 @@ export class PusherService implements OnDestroy {
     this.channel?.unbind_all();
     this.channel?.unsubscribe();
     this.pusher?.unbind_all();
+    this.pusher?.disconnect();
   }
 }
