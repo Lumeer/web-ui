@@ -32,10 +32,11 @@ import {setDefaultUserPermissions} from '../common/public-api-util';
 import {DEFAULT_USER} from '../../constants';
 import {RoleType} from '../../model/role-type';
 import {PublicProjectService} from '../project/public-project.service';
+import {ProjectService} from '../project/project.service';
 
 @Injectable()
 export class PublicOrganizationService extends PublicPermissionService implements OrganizationService {
-  constructor(protected store$: Store<AppState>, private publicProjectService: PublicProjectService) {
+  constructor(protected store$: Store<AppState>, private publicProjectService: ProjectService) {
     super(store$);
   }
 
