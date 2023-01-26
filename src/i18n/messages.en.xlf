@@ -893,7 +893,7 @@
 </source><target state="final"> This <x id="ICU" equiv-text="{resourceType, select, organization {code} project {code} collection {name}}"/> is already taken. Try another one!
 </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="ba1f0128edbddbedec519987d91131b95cf7b6c8" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="ba1f0128edbddbedec519987d91131b95cf7b6c8" datatype="html">
         <source>{VAR_SELECT, select, organization {code} project {code} collection {name}}</source><target state="final">{VAR_SELECT, select, organization {code} project {code} collection {name}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="message.loading" datatype="html">
@@ -1176,7 +1176,7 @@
         <source>Activity</source><target state="final">Activity</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="perspective.detail.linkType.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/user/settings/user-settings.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="perspective.detail.linkType.add" datatype="html">
         <source>Create New Link</source><target state="final">Create New Link</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/links-toolbar/links-toolbar.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="files.dropdown.button.delete" datatype="html">
@@ -2494,10 +2494,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="dialog.productDemo.success" datatype="html">
         <source>We received your request and will get back to you soon.</source><target state="final">We received your request and will get back to you soon.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit><trans-unit id="dialog.productDemo.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">472</context></context-group></trans-unit><trans-unit id="dialog.productDemo.error" datatype="html">
         <source>Could not schedule product demo.</source><target state="final">Could not schedule product demo.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">480</context></context-group></trans-unit><trans-unit id="dialog.productDemo.form.name.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">483</context></context-group></trans-unit><trans-unit id="dialog.productDemo.form.name.label" datatype="html">
         <source>Your name:</source><target state="final">Your name:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/book-product-demo/content/book-product-demo-content.component.html</context>
@@ -2564,10 +2564,10 @@
       </trans-unit><trans-unit id="dialog.getInTouch.success" datatype="html">
         <source>Your message has been sent.</source><target state="final">Your message has been sent.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">518</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">521</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.error" datatype="html">
         <source>Could not send your message.</source><target state="final">Could not send your message.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">529</context></context-group></trans-unit><trans-unit id="topPanel.userMenu.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">532</context></context-group></trans-unit><trans-unit id="topPanel.userMenu.title" datatype="html">
         <source>User menu</source><target state="final">User menu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="topPanel.controlsToggle.tooltip" datatype="html">
@@ -2837,22 +2837,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="organization.settings.users.count" datatype="html">
         <source>Number of users</source><target state="final">Number of users</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="organization.settings.projects.count" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="organization.settings.projects.count" datatype="html">
         <source>Number of projects</source><target state="final">Number of projects</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="organizations.tab.detail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="organizations.tab.detail" datatype="html">
         <source>Detail</source><target state="final">Detail</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="organizations.tab.users" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="organizations.tab.users" datatype="html">
         <source>Users</source><target state="final">Users</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="organizations.tab.teams" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="organizations.tab.teams" datatype="html">
         <source>Teams</source><target state="final">Teams</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit><trans-unit id="organizations.tab.detail.contact.invoicingContact" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.contact.invoicingContact" datatype="html">
         <source>Invoicing Contact</source><target state="final">Invoicing Contact</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/contact-form/contact-form.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.contact.company" datatype="html">
@@ -2915,46 +2912,40 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/contact-form/contact-form.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="project.settings.users.count" datatype="html">
         <source>Number of users</source><target state="final">Number of users</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="project.settings.collections.count" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="project.settings.collections.count" datatype="html">
         <source>Number of tables</source><target state="final">Number of tables</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="project.settings.collections.downloadContent" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="project.settings.collections.downloadContent" datatype="html">
         <source>Download project content</source><target state="final">Download project content</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="project.settings.tab.users" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="project.settings.tab.users" datatype="html">
         <source>Users</source><target state="final">Users</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="project.settings.tab.teams" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="project.settings.tab.teams" datatype="html">
         <source>Teams</source><target state="final">Teams</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="project.settings.tab.sequences" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="project.settings.tab.sequences" datatype="html">
         <source>Sequences</source><target state="final">Sequences</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="project.settings.tab.template" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="project.settings.tab.template" datatype="html">
         <source>Publish Project</source><target state="final">Publish Project</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="project.settings.tab.selection" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="project.settings.tab.selection" datatype="html">
         <source>Selection Lists</source><target state="final">Selection Lists</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.settings.tab.variables" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="project.settings.tab.variables" datatype="html">
         <source>Variables</source><target state="final">Variables</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context>
-          <context context-type="linenumber">83</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.deleteSamples.dialog.description" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.description" datatype="html">
         <source>All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</source><target state="final">All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.title" datatype="html">
         <source>Do you want to erase all sample data in the project?</source><target state="final">Do you want to erase all sample data in the project?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.placeholder" datatype="html">
         <source>PERMANENTLY CLEAN</source><target state="final">PERMANENTLY CLEAN</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.prolong" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.prolong" datatype="html">
         <source>Keep your Lumeer for Business active!</source><target state="final">Keep your Lumeer for Business active!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.activeUntil" datatype="html">
@@ -3222,19 +3213,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="page.title" datatype="html">
         <source>Lumeer | Visual, easy project and team management</source><target state="final">Lumeer | Visual, easy project and team management</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/app.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.today" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/app.component.ts</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.today" datatype="html">
         <source>Today</source><target state="final">Today</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">151</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.month" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">141</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.month" datatype="html">
         <source>Month</source><target state="final">Month</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">152</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.week" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">142</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.week" datatype="html">
         <source>Week</source><target state="final">Week</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">153</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">143</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
         <source>Day</source><target state="final">Day</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">154</context></context-group></trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">144</context></context-group></trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
         <source> Main settings
 </source><target state="final"> Main settings
 </target>
@@ -4200,12 +4191,12 @@
         <source>Do you really want to delete this table?</source><target state="final">Do you really want to delete this table?</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">112</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">112</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">127</context></context-group></trans-unit>
       <trans-unit id="collection.delete.dialog.title" datatype="html">
         <source>Delete?</source><target state="final">Delete?</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">113</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">113</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">126</context></context-group></trans-unit>
       <trans-unit id="collection.tab.attributes.delete.message" datatype="html">
         <source>Do you really want to delete attribute "<x id="name" equiv-text="attribute.name"/>"?</source><target state="final">Do you really want to delete attribute "<x id="name" equiv-text="attribute.name"/>"?</target>
 
@@ -4235,16 +4226,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.success" datatype="html">
         <source>Success</source><target state="final">Success</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
         <source>Information</source><target state="final">Information</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
         <source>Warning</source><target state="final">Warning</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
         <source>Error</source><target state="final">Error</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="template.create.limitsExceeded" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">126</context></context-group></trans-unit><trans-unit id="template.create.limitsExceeded" datatype="html">
         <source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source><target state="final">I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/steps/choose-organization/choose-organization.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="template.create.empty" datatype="html">
@@ -4334,7 +4325,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">328</context></context-group></trans-unit><trans-unit id="collection.create.serviceLimits.noRights" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/service/limits.service.ts</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">308</context></context-group></trans-unit><trans-unit id="collection.create.serviceLimits.noRights" datatype="html">
         <source>You are currently on the Free plan which allows you to have only limited number of tables.</source><target state="final">You are currently on the Free plan which allows you to have only limited number of tables.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/limits.service.ts</context>
@@ -4414,7 +4405,7 @@
       </trans-unit><trans-unit id="tasks.get.fail" datatype="html">
         <source>Could not get tasks</source><target state="final">Could not get tasks</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/data-resources/data-resources.effects.ts</context><context context-type="linenumber">151</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/data-resources/data-resources.effects.ts</context><context context-type="linenumber">238</context></context-group></trans-unit>
       <trans-unit id="documents.get.fail" datatype="html">
         <source>Could not get records</source><target state="final">Could not get records</target>
 
@@ -4460,27 +4451,27 @@
         <source>Could not run the selected automation</source><target state="final">Could not run the selected rule</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">713</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">713</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit><trans-unit id="information.records.get" datatype="html">
+        <source>Could not get required information</source><target state="final">Could not get required information</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/information-store/information-records.effects.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="groups.get.fail" datatype="html">
         <source>Could not get groups</source><target state="final">Could not get groups</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">52</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">54</context></context-group></trans-unit>
       <trans-unit id="group.create.fail" datatype="html">
         <source>Could not create the group</source><target state="final">Could not create the group</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="team.update.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="team.update.fail" datatype="html">
         <source>Could not update the team</source><target state="final">Could not update the team</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context>
-          <context context-type="linenumber">108</context>
-        </context-group>
-      </trans-unit><trans-unit id="team.delete.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="team.delete.fail" datatype="html">
         <source>Could not delete the team</source><target state="final">Could not delete the team</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context>
-          <context context-type="linenumber">131</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">133</context></context-group></trans-unit>
 
 
       <trans-unit id="link.instances.get.fail" datatype="html">
@@ -4530,7 +4521,7 @@
         <source>OK</source><target state="final">OK</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">128</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source><target state="final">{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">233</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
@@ -4785,23 +4776,23 @@
       <trans-unit id="organizations.get.fail" datatype="html">
         <source>Could not get organizations</source><target state="final">Could not get organizations</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">79</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">112</context></context-group></trans-unit>
       <trans-unit id="organization.create.fail" datatype="html">
         <source>Could not create the organization</source><target state="final">Could not create the organization</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">160</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">156</context></context-group></trans-unit>
       <trans-unit id="organization.update.fail" datatype="html">
         <source>Could not update the organization</source><target state="final">Could not update the organization</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">223</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">210</context></context-group></trans-unit>
       <trans-unit id="organization.delete.fail" datatype="html">
         <source>Could not delete the organization</source><target state="final">Could not delete the organization</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">272</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">252</context></context-group></trans-unit>
       <trans-unit id="organization.permission.change.fail" datatype="html">
         <source>Could not change the organization permissions</source><target state="final">Could not change the organization permissions</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">318</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">298</context></context-group></trans-unit>
       <trans-unit id="organization.payments.get.fail" datatype="html">
         <source>Could not read information about your previous service orders</source><target state="final">Could not read information about your previous service orders</target>
 
@@ -4814,50 +4805,47 @@
         <source>Could not create your new service order</source><target state="final">Could not create your new service order</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
-      <trans-unit id="organization.serviceLimits.getAll.fail" datatype="html">
-        <source>Could not read information about your service levels and subscriptions</source><target state="final">Could not read information about your service levels and subscriptions</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/service-limits/service-limits.effects.ts</context><context context-type="linenumber">57</context></context-group></trans-unit>
+      
       <trans-unit id="organization.serviceLimits.get.fail" datatype="html">
         <source>Could not read information about your service level and subscription</source><target state="final">Could not read information about your service level and subscription</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/service-limits/service-limits.effects.ts</context><context context-type="linenumber">81</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/service-limits/service-limits.effects.ts</context><context context-type="linenumber">52</context></context-group></trans-unit>
       <trans-unit id="projects.get.fail" datatype="html">
         <source>Could not get projects</source><target state="final">Could not get projects</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">109</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
       <trans-unit id="project.create.serviceLimits" datatype="html">
         <source>You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?</source><target state="final">You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">329</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">309</context></context-group></trans-unit>
       <trans-unit id="project.create.fail" datatype="html">
         <source>Could not create the project</source><target state="final">Could not create the project</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">226</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">190</context></context-group></trans-unit>
       <trans-unit id="project.update.fail" datatype="html">
         <source>Could not update the project</source><target state="final">Could not update the project</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">291</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">242</context></context-group></trans-unit>
       <trans-unit id="project.delete.fail" datatype="html">
         <source>Could not delete the project</source><target state="final">Could not delete the project</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">341</context></context-group></trans-unit><trans-unit id="project.deleteSampleDate.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">283</context></context-group></trans-unit><trans-unit id="project.deleteSampleDate.fail" datatype="html">
         <source>Could not delete sample data</source><target state="final">Could not delete sample data</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">365</context></context-group></trans-unit><trans-unit id="project.downloadRawContent.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">307</context></context-group></trans-unit><trans-unit id="project.downloadRawContent.fail" datatype="html">
         <source>Could not download project data</source><target state="final">Could not download project data</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">410</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">352</context></context-group></trans-unit>
       <trans-unit id="project.permission.change.fail" datatype="html">
         <source>Could not change the project permissions</source><target state="final">Could not change the project permissions</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">456</context></context-group></trans-unit><trans-unit id="project.template.apply.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">398</context></context-group></trans-unit><trans-unit id="project.template.apply.fail" datatype="html">
         <source>Could not add template to project</source><target state="final">Could not add template to project</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">480</context></context-group></trans-unit><trans-unit id="project.copy.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">422</context></context-group></trans-unit><trans-unit id="project.copy.fail" datatype="html">
         <source>Could not copy project</source><target state="final">Could not copy project</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">522</context></context-group></trans-unit><trans-unit id="resourceComments.get.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">464</context></context-group></trans-unit><trans-unit id="resourceComments.get.fail" datatype="html">
         <source>Could not read comments</source><target state="final">Could not read comments</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="resourceComment.create.fail" datatype="html">
@@ -4889,26 +4877,23 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">169</context></context-group></trans-unit><trans-unit id="selection.lists.get.fail" datatype="html">
         <source>Could not read selection lists</source><target state="final">Could not read selection lists</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.create.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="selection.lists.create.fail" datatype="html">
         <source>Could not create selection list</source><target state="final">Could not create selection list</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">140</context></context-group></trans-unit><trans-unit id="selection.lists.update.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">142</context></context-group></trans-unit><trans-unit id="selection.lists.update.fail" datatype="html">
         <source>Could not update selection list</source><target state="final">Could not update selection list</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">170</context></context-group></trans-unit><trans-unit id="selection.lists.delete.dialog.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">172</context></context-group></trans-unit><trans-unit id="selection.lists.delete.dialog.title" datatype="html">
         <source>Remove selection list</source><target state="final">Remove selection list</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">180</context></context-group></trans-unit><trans-unit id="selection.lists.delete.dialog.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">182</context></context-group></trans-unit><trans-unit id="selection.lists.delete.dialog.message" datatype="html">
         <source>Do you really want to remove this selection list? Attributes that use this selection list will retain its copy.</source><target state="final">Do you really want to remove this selection list? Attributes that use this selection list will retain its copy.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">181</context></context-group></trans-unit><trans-unit id="selection.lists.delete.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">183</context></context-group></trans-unit><trans-unit id="selection.lists.delete.fail" datatype="html">
         <source>Could not delete selection list</source><target state="final">Could not delete selection list</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">213</context></context-group></trans-unit><trans-unit id="sequences.get.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">215</context></context-group></trans-unit><trans-unit id="sequences.get.fail" datatype="html">
         <source>Could not read sequences</source><target state="final">Could not read sequences</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/sequences/sequences.effects.ts</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="sequences.update.fail" datatype="html">
@@ -4930,84 +4915,84 @@
       <trans-unit id="users.get.fail" datatype="html">
         <source>Could not get users</source><target state="final">Could not get users</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">79</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">82</context></context-group></trans-unit>
       <trans-unit id="currentUser.get.fail" datatype="html">
         <source>Could not get user details</source><target state="final">Could not get user details</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="currentUser.resendVerificationEmail.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="currentUser.resendVerificationEmail.fail" datatype="html">
         <source>Could not request another verification email</source><target state="final">Could not request another verification email</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">117</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">120</context></context-group></trans-unit>
       <trans-unit id="currentUser.patch.fail" datatype="html">
         <source>Could not update user details</source><target state="final">Could not update user details</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">137</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.basic" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">140</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.basic" datatype="html">
         <source>You are allowed to invite only <x id="limit" equiv-text="limits.users"/> users to your organization. Do you want to upgrade your plan now?</source><target state="final">You are allowed to invite only <x id="limit" equiv-text="limits.users"/> users to your organization. Do you want to upgrade your plan now?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">206</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.business.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">209</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.business.title" datatype="html">
         <source>Limits exceeded</source><target state="final">Limits exceeded</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">207</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">210</context></context-group></trans-unit>
       <trans-unit id="user.create.serviceLimits" datatype="html">
         <source>You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?</source><target state="final">You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">209</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">212</context></context-group></trans-unit>
       <trans-unit id="user.create.fail" datatype="html">
         <source>Could not add the user</source><target state="final">Could not add the user</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">190</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">193</context></context-group></trans-unit>
       <trans-unit id="user.update.fail" datatype="html">
         <source>Could not update the user</source><target state="final">Could not update the user</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">298</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">428</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">301</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">431</context></context-group></trans-unit>
       <trans-unit id="user.delete.fail" datatype="html">
         <source>Could not delete the user</source><target state="final">Could not delete the user</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">324</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">327</context></context-group></trans-unit>
       <trans-unit id="user.defaultWorkspace.save.fail" datatype="html">
         <source>Could not save the default workspace</source><target state="final">Could not save the default workspace</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">355</context></context-group></trans-unit><trans-unit id="user.teams.set.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">358</context></context-group></trans-unit><trans-unit id="user.teams.set.fail" datatype="html">
         <source>Could not set user teams</source><target state="final">Could not set user teams</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">380</context></context-group></trans-unit><trans-unit id="user.referrals.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">383</context></context-group></trans-unit><trans-unit id="user.referrals.fail" datatype="html">
         <source>Could not get your referrals at the moment</source><target state="final">Could not get your referrals at the moment</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">403</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">406</context></context-group></trans-unit>
       <trans-unit id="views.get.fail" datatype="html">
         <source>Could not get views</source><target state="final">Could not get views</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">116</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
 
       <trans-unit id="view.create.fail" datatype="html">
         <source>Could not create the view</source><target state="final">Could not create the view</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">197</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">203</context></context-group></trans-unit>
 
       <trans-unit id="view.update.fail" datatype="html">
         <source>Could not update the view</source><target state="final">Could not update the view</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">257</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">263</context></context-group></trans-unit>
       <trans-unit id="view.delete.fail" datatype="html">
         <source>Could not delete the view</source><target state="final">Could not delete the view</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">361</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">367</context></context-group></trans-unit>
       <trans-unit id="view.change.permission.fail" datatype="html">
         <source>Could not change the view permissions</source><target state="final">Could not change the view permissions</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">461</context></context-group></trans-unit><trans-unit id="view.set.folders.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">467</context></context-group></trans-unit><trans-unit id="view.set.folders.fail" datatype="html">
         <source>Could not update view folders</source><target state="final">Could not update view folders</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">497</context></context-group></trans-unit><trans-unit id="view.add.favorite.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">503</context></context-group></trans-unit><trans-unit id="view.add.favorite.fail" datatype="html">
         <source>Could not add the view to favorites</source><target state="final">Could not add the view to favorites</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">527</context></context-group></trans-unit><trans-unit id="view.remove.favorite.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">533</context></context-group></trans-unit><trans-unit id="view.remove.favorite.fail" datatype="html">
         <source>Could not remove the view from favorites</source><target state="final">Could not remove the view from favorites</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">557</context></context-group></trans-unit><trans-unit id="view.dashboard.set.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">563</context></context-group></trans-unit><trans-unit id="view.dashboard.set.fail" datatype="html">
         <source>Could not save dashboard settings</source><target state="final">Could not save dashboard settings</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">663</context></context-group></trans-unit><trans-unit id="linkType.not.exist" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">671</context></context-group></trans-unit><trans-unit id="linkType.not.exist" datatype="html">
         <source>Link type does not exist</source><target state="final">Link type does not exist</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context>
@@ -5535,7 +5520,7 @@
       <trans-unit id="inputBox.placeholder.default" datatype="html">
         <source>Write text here...</source><target state="final">Write text here...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/input-box/input-box.component.ts</context><context context-type="linenumber">212</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/input-box/input-box.component.ts</context><context context-type="linenumber">215</context></context-group></trans-unit>
       <trans-unit id="constraint.type.icon.title" datatype="html">
         <source>{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} View {View}}</source><target state="final">{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} View {View}}</target>
 
@@ -5559,15 +5544,15 @@
         <source>Set code</source><target state="final">Set code</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">178</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">188</context></context-group></trans-unit>
       <trans-unit id="resource.postit.name" datatype="html">
         <source>Fill in name</source><target state="final">Fill in name</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">182</context></context-group></trans-unit><trans-unit id="resource.settings.deleteResource.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">192</context></context-group></trans-unit><trans-unit id="resource.settings.deleteResource.title" datatype="html">
         <source>Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}</source><target state="final">Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">200</context></context-group></trans-unit><trans-unit id="resource.variables.placeholder.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">210</context></context-group></trans-unit><trans-unit id="resource.variables.placeholder.name" datatype="html">
         <source>Variable Name</source><target state="final">Variable Name</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
@@ -5881,11 +5866,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context><context context-type="linenumber">347</context></context-group></trans-unit><trans-unit id="query.stem.choose" datatype="html">
         <source>The New Record Belongs to...</source><target state="final">The New Record Belongs to...</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context>
-          <context context-type="linenumber">396</context>
-        </context-group>
-      </trans-unit><trans-unit id="lumeer.advice.percentage" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context><context context-type="linenumber">432</context></context-group></trans-unit><trans-unit id="lumeer.advice.percentage" datatype="html">
         <source>I suggest to set the column type of <x id="attributeName" equiv-text="attribute.name"/> to percentage. Do you agree?</source><target state="final">I suggest to set the column type of <x id="attributeName" equiv-text="attribute.name"/> to percentage. Do you agree?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">52</context></context-group></trans-unit>
@@ -5929,19 +5911,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/calendar-events.component.ts</context><context context-type="linenumber">383</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
         <source>Calendar</source><target state="final">Calendar</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">145</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.list" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">135</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.list" datatype="html">
         <source>List</source><target state="final">List</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">146</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.more" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">136</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.more" datatype="html">
         <source>more</source><target state="final">more</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">147</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.allDay" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">137</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.allDay" datatype="html">
         <source>All day</source><target state="final">All day</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">148</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">138</context></context-group></trans-unit><trans-unit id="perspective.calendar.display.empty" datatype="html">
         <source>There are no events in current selected range</source><target state="final">There are no events in current selected range</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">149</context></context-group></trans-unit><trans-unit id="calendar.property.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">139</context></context-group></trans-unit><trans-unit id="calendar.property.placeholder" datatype="html">
         <source>{barProperty, select, name {Name} start {Start} end {End} color {Color} group {Group} }</source><target state="final">{barProperty, select, name {Name} start {Start} end {End} color {Color} group {Group} }</target>
 
 
@@ -5982,10 +5964,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="perspective.gantt.create.task.failure" datatype="html">
         <source>Could not create task</source><target state="final">Could not create task</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">354</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">351</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source><target state="final">Could not move task</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">379</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder2" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">376</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder2" datatype="html">
         <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source><target state="final">Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
@@ -6133,11 +6115,11 @@
       <trans-unit id="table.delete.column.dialog.title" datatype="html">
         <source>Delete this column?</source><target state="final">Delete this column?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1372</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1353</context></context-group></trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
         <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source><target state="final">Do you really want to delete the column? This will permanently remove the attribute and all its data.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1373</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1354</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
         <source>Attribute settings...</source><target state="final">Attribute settings...</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">344</context></context-group></trans-unit><trans-unit id="table.header.menu.add.linkColumn" datatype="html">
@@ -6210,32 +6192,32 @@
       <trans-unit id="organization.delete.dialog.message" datatype="html">
         <source>Do you really want to permanently delete this organization?</source><target state="final">Do you really want to permanently delete this organization?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit>
       <trans-unit id="organization.delete.dialog.title" datatype="html">
         <source>Delete organization?</source><target state="final">Delete organization?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">80</context></context-group></trans-unit>
       <trans-unit id="organization.permission.missing" datatype="html">
         <source>You do not have permission to access this organization</source><target state="final">You do not have permission to access this organization</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="project.settings.collections.deleteSampleData" datatype="html">
         <source>Delete sample data from the project</source><target state="final">Delete sample data from the project</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit>
       <trans-unit id="project.delete.dialog.message" datatype="html">
         <source>Do you really want to permanently delete this project?</source><target state="final">Do you really want to permanently delete this project?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">99</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
       <trans-unit id="project.delete.dialog.title" datatype="html">
         <source>Delete project?</source><target state="final">Delete project?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="project.settings.upload.success" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="project.settings.upload.success" datatype="html">
         <source>The new project content was successfully added.</source><target state="final">The new project content was successfully added.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">288</context></context-group></trans-unit><trans-unit id="project.settings.upload.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">283</context></context-group></trans-unit><trans-unit id="project.settings.upload.error" datatype="html">
         <source>I was not possible to upload and process this project file.</source><target state="final">I was not possible to upload and process this project file.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">297</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">292</context></context-group></trans-unit>
       <trans-unit id="project.permission.missing" datatype="html">
         <source>You do not have permission to access this project</source><target state="final">You do not have permission to access this project</target>
 
