@@ -126,7 +126,7 @@
                   "maximumWarning": "6kb"
                 }
               ],
-              "buildOptimizer": true,
+              "buildOptimizer": false,
               "extractLicenses": true,
               "fileReplacements": [
                 {
@@ -135,7 +135,7 @@
                 }
               ],
               "namedChunks": true,
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "all",
               "sourceMap": true,
               "vendorChunk": false
