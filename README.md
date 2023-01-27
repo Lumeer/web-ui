@@ -6,8 +6,8 @@ This repository contains Lumeer front-end source code.
 
 The following tools are needed to work with this repository:
 
-- [Node.js](https://nodejs.org/en/) 10 (LTS)
-- [NPM](https://www.npmjs.com/) 6 (latest)
+- [Node.js](https://nodejs.org/en/) 18 (LTS)
+- [NPM](https://www.npmjs.com/) 8 (latest)
 
 Read how to install and set up both these tools [here](https://docs.npmjs.com/getting-started/installing-node#install-npm--manage-npm-versions).
 
