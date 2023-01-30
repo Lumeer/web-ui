@@ -122,6 +122,8 @@ import {DisplayAttributeBlocklyComponent} from './blocks/display-attribute-block
 import {GetSelectionListValuesBlocklyComponent} from './blocks/get-selection-list-values-blockly-component';
 import {GetSelectionListDisplayValuesBlocklyComponent} from './blocks/get-selection-list-display-values-blockly-component';
 import {ToNumberBlocklyComponent} from './blocks/to-number-blockly-component';
+import {SequenceCurrentBlocklyComponent} from './blocks/sequence-current-blockly-component';
+import {SequenceChangeBlocklyComponent} from './blocks/sequence-change-blockly-component';
 
 declare var Blockly: any;
 
@@ -230,6 +232,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new CurrentLocaleBlocklyComponent(this.blocklyUtils),
       new MsToUnitBlocklyComponent(this.blocklyUtils),
       new SequenceBlocklyComponent(this.blocklyUtils),
+      new SequenceCurrentBlocklyComponent(this.blocklyUtils),
+      new SequenceChangeBlocklyComponent(this.blocklyUtils),
       new ShowMessageBlocklyComponent(this.blocklyUtils),
       new IsEmptyBlocklyComponent(this.blocklyUtils),
       new IsNotEmptyBlocklyComponent(this.blocklyUtils),

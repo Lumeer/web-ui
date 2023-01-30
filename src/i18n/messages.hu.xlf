@@ -807,7 +807,19 @@
                     <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/sequence-blockly-component.ts</context>
                     <context context-type="linenumber">32</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="blockly.tooltip.sequenceChangeBlock" datatype="html">
+        <source>Changes the given sequence by some amount and returns the new value.</source><target state="new">Changes the given sequence by some amount and returns the new value.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/sequence-change-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.sequenceCurrentBlock" datatype="html">
+        <source>Gets the current numeric value of the given sequence.</source><target state="new">Gets the current numeric value of the given sequence.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/sequence-current-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="blockly.tooltip.setAttributeBlock">
                 <source>Sets the value of an attribute in the given record.</source>
                 <target>Beállítja egy tulajdonság értékét az adott rekordban.</target>

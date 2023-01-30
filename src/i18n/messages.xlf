@@ -3586,6 +3586,20 @@
           <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="blockly.tooltip.sequenceChangeBlock" datatype="html">
+        <source>Changes the given sequence by some amount and returns the new value.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/sequence-change-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.sequenceCurrentBlock" datatype="html">
+        <source>Gets the current numeric value of the given sequence.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/sequence-current-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="blockly.tooltip.setAttributeBlock" datatype="html">
         <source>Sets the value of an attribute in the given record.</source>
         <context-group purpose="location">
