@@ -69,6 +69,8 @@ export class BlocklyUtils {
   public static readonly VALUE_CONTAINER = 'value_container';
   public static readonly LINK_CONTAINER = 'link_container';
   public static readonly SEQUENCE_BLOCK = 'sequence_block';
+  public static readonly SEQUENCE_CURRENT_BLOCK = 'sequence_current_block';
+  public static readonly SEQUENCE_CHANGE_BLOCK = 'sequence_change_block';
   public static readonly SHOW_MESSAGE = 'show_message';
   public static readonly DATE_CHANGE = 'date_change';
   public static readonly MS_TO_DATE = 'ms_to_date';
