@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -36,15 +36,13 @@ import {selectViewById} from '../../../core/store/views/views.state';
 import {View} from '../../../core/store/views/view';
 import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 import {ViewSettings} from '../../../core/store/view-settings/view-settings';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   templateUrl: './choose-link-documents-modal.component.html',
   styleUrls: ['./choose-link-documents-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LoadDataServiceProvider],
 })
-export class ChooseLinkDocumentsModalComponent implements OnInit, OnDestroy {
+export class ChooseLinkDocumentsModalComponent implements OnInit {
   @Input()
   public stems: QueryStem[];
 
@@ -70,11 +68,7 @@ export class ChooseLinkDocumentsModalComponent implements OnInit, OnDestroy {
   private currentStage = 0;
   private selectedDocuments: DocumentModel[] = [];
 
-  constructor(
-    private bsModalRef: BsModalRef,
-    private store$: Store<AppState>,
-    private loadDataService: LoadDataService
-  ) {}
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.view$ = this.store$.pipe(select(selectViewById(this.viewId)));
@@ -89,7 +83,6 @@ export class ChooseLinkDocumentsModalComponent implements OnInit, OnDestroy {
 
     const stem = this.stems[index];
     const query = {stems: [stem]};
-    this.loadDataService.setDocumentsQueries([query]);
     this.documents$ = this.view$.pipe(
       switchMap(view => this.store$.pipe(select(selectDocumentsByCollectionAndQuery(stem.collectionId, query, view)))),
       tap(documents => {
@@ -131,9 +124,5 @@ export class ChooseLinkDocumentsModalComponent implements OnInit, OnDestroy {
 
   private hideDialog() {
     this.bsModalRef.hide();
-  }
-
-  public ngOnDestroy() {
-    this.loadDataService.destroy();
   }
 }

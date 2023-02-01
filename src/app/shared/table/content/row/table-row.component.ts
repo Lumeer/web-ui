@@ -144,6 +144,7 @@ export class TableRowComponent implements OnInit, OnChanges {
   public editedValue: DataValue;
   public suggestedColumn: TableColumn;
   public canSuggestDocuments: boolean;
+  public linkedDocumentId: string;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
   public mouseHoverColumnId$ = new BehaviorSubject(null);
@@ -158,7 +159,8 @@ export class TableRowComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.row) {
       this.canSuggestDocuments =
-        this.row?.suggestDetail || ((this.row?.linkInstanceId || this.row?.linkedDocumentId) && this.row?.suggestLinks);
+        this.row?.suggestDetail || ((this.row?.linkInstanceId || this.row?.linkedChain) && this.row?.suggestLinks);
+      this.linkedDocumentId = this.row.linkedChain?.documents?.[this.row.linkedChain?.index]?.id;
       this.hierarchyPath = createTableHierarchyPath(
         this.row,
         this.hierarchyHeight,

@@ -51,7 +51,7 @@ import {findAttributeConstraint} from '../store/collections/collection.util';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
 import {selectViewById} from '../store/views/views.state';
-import {switchMap} from 'rxjs';
+import {forkJoin, switchMap} from 'rxjs';
 import {selectDocumentsByCollectionAndQuery} from '../store/common/permissions.selectors';
 import {take} from 'rxjs/operators';
 
@@ -121,11 +121,18 @@ export class CreateDataResourceService {
     if (chainRange.length > 1) {
       const choosePathStems = this.createChoosePathStemsByData(createData, chainRange);
       this.chooseDocumentsPath(
-        createData.stem,
         choosePathStems,
         this.workspace?.viewId,
         documents => {
-          const chain = this.createDataResourcesChain(createData, chainRange, documents, []);
+          const chain = this.createDataResourcesChain(
+            createData.stem,
+            createData.queryResource,
+            createData.data,
+            createData.dataResourcesChains,
+            chainRange,
+            documents,
+            createData.failureMessage
+          );
           const dataResource =
             chain.type === AttributesResourceType.Collection
               ? chain.documents[chain.index]
@@ -144,7 +151,8 @@ export class CreateDataResourceService {
       );
     } else {
       const {dataResource, resource} = this.prepareDataResource(
-        createData,
+        createData.stem,
+        createData.data,
         createData.queryResource.resourceType,
         createData.queryResource.resourceIndex
       );
@@ -189,7 +197,16 @@ export class CreateDataResourceService {
           } else if (resourceType === AttributesResourceType.LinkType) {
             selectedLinkInstances.push(updateData.dataResource as LinkInstance);
           }
-          const chain = this.createDataResourcesChain(updateData, chainRange, selectedDocuments, selectedLinkInstances);
+          const chain = this.createDataResourcesChain(
+            updateData.stem,
+            updateData.queryResource,
+            updateData.data,
+            updateData.dataResourcesChains,
+            chainRange,
+            selectedDocuments,
+            updateData.failureMessage,
+            selectedLinkInstances
+          );
           this.store$.dispatch(new DocumentsAction.CreateChain({...chain, workspace: this.workspace}));
         },
         updateData.onCancel
@@ -265,7 +282,7 @@ export class CreateDataResourceService {
         const grouping = this.getGroupingByResourceIndex(groupingAttributes, resourceIndex);
         const collectionId = this.getResourceInStem(stem, resourceIndex).id;
         const collectionsFilters = getQueryFiltersForCollection(this.query, collectionId);
-        if (grouping) {
+        if (grouping?.attribute?.attributeId) {
           collectionsFilters.push({
             attributeId: grouping.attribute.attributeId,
             collectionId: grouping.attribute.resourceId,
@@ -302,10 +319,14 @@ export class CreateDataResourceService {
   }
 
   private createDataResourcesChain(
-    createData: CreateDataResourceData,
+    stem: QueryStem,
+    queryResource: QueryResource,
+    dataMap: Record<string, Record<string, any>>,
+    dataResourcesChains: DataResourceChain[][],
     chainRange: number[],
     selectedDocuments: DocumentModel[],
-    selectedLinkInstances: LinkInstance[]
+    failureMessage = '',
+    selectedLinkInstances: LinkInstance[] = []
   ): DataResourcesChain {
     const chainDocuments: DocumentModel[] = [];
     const chainLinkInstances: LinkInstance[] = [];
@@ -313,11 +334,12 @@ export class CreateDataResourceService {
 
     for (let i = 0; i < chainRange.length; i++) {
       const resourceIndex = chainRange[i];
-      const isMainResource = resourceIndex === createData.queryResource.resourceIndex;
+      const isMainResource = resourceIndex === queryResource.resourceIndex;
 
       if (isCollectionIndex(resourceIndex)) {
         const {dataResource, resource} = this.prepareDataResource(
-          createData,
+          stem,
+          dataMap,
           AttributesResourceType.Collection,
           resourceIndex
         );
@@ -331,32 +353,35 @@ export class CreateDataResourceService {
 
     for (let i = 0; i < chainRange.length; i++) {
       const resourceIndex = chainRange[i];
-      const isMainResource = resourceIndex === createData.queryResource.resourceIndex;
+      const isMainResource = resourceIndex === queryResource.resourceIndex;
 
       if (isLinkIndex(resourceIndex)) {
         const linkIndex = chainLinkInstances.length;
         const previousDocument = chainDocuments[linkIndex];
         const nextDocument = chainDocuments[linkIndex + 1];
         const {dataResource, resource} = this.prepareDataResource(
-          createData,
+          stem,
+          dataMap,
           AttributesResourceType.LinkType,
           resourceIndex
         );
-        const selectedLinkInstance = selectedLinkInstances.find(link => link?.linkTypeId === resource.id);
+        const linkInstance = dataResource as LinkInstance;
+        linkInstance.documentIds = [previousDocument?.id, nextDocument?.id];
 
         if (isMainResource) {
           mainIndex = chainLinkInstances.length;
         }
 
+        const selectedLinkInstance = selectedLinkInstances.find(link => link?.linkTypeId === resource.id);
         if (selectedLinkInstance) {
-          chainLinkInstances.push({...selectedLinkInstance, documentIds: [previousDocument?.id, nextDocument?.id]});
+          chainLinkInstances.push({...selectedLinkInstance, documentIds: linkInstance.documentIds});
         } else {
           if (isMainResource) {
-            chainLinkInstances.push(dataResource as LinkInstance);
+            chainLinkInstances.push(linkInstance);
           } else {
             chainLinkInstances.push(
-              this.findLinkInstanceByExistingChains(createData, i, previousDocument, nextDocument) ||
-                (dataResource as LinkInstance)
+              this.findLinkInstanceByExistingChains(dataResourcesChains, i, previousDocument, nextDocument) ||
+                linkInstance
             );
           }
         }
@@ -365,37 +390,38 @@ export class CreateDataResourceService {
 
     return {
       index: mainIndex,
-      type: createData.queryResource.resourceType,
+      type: queryResource.resourceType,
       documents: chainDocuments,
       linkInstances: chainLinkInstances,
-      failureMessage: createData.failureMessage,
+      failureMessage,
     };
   }
 
   private prepareDataResource(
-    createData: CreateDataResourceData,
+    stem: QueryStem,
+    dataMap: Record<string, Record<string, any>>,
     resourceType: AttributesResourceType,
     resourceIndex: number
   ): {dataResource: DataResource; resource: AttributesResource} {
     if (resourceType === AttributesResourceType.Collection) {
-      const collection = this.getResourceInStem(createData.stem, resourceIndex);
+      const collection = this.getResourceInStem(stem, resourceIndex);
       const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
       const queryData = generateDocumentData(collection, collectionsFilters, this.constraintData, false);
-      const documentData = {...queryData, ...createData.data[collection.id]};
+      const documentData = {...queryData, ...dataMap[collection.id]};
       const document: DocumentModel = {collectionId: collection.id, data: documentData};
       return {dataResource: document, resource: collection};
     } else {
-      const linkType = this.getResourceInStem(createData.stem, resourceIndex);
+      const linkType = this.getResourceInStem(stem, resourceIndex);
       const linkTypeFilters = getQueryFiltersForLinkType(this.query, linkType.id);
       const queryData = generateDocumentData(linkType, linkTypeFilters, this.constraintData, false);
-      const linkData = {...queryData, ...createData.data[linkType.id]};
+      const linkData = {...queryData, ...dataMap[linkType.id]};
       const linkInstance: LinkInstance = {linkTypeId: linkType.id, data: linkData, documentIds: [null, null]};
       return {dataResource: linkInstance, resource: linkType};
     }
   }
 
   private findLinkInstanceByExistingChains(
-    createData: CreateDataResourceData,
+    dataResourcesChains: DataResourceChain[][],
     index: number,
     previousDocument: DocumentModel,
     nextDocument: DocumentModel
@@ -403,7 +429,7 @@ export class CreateDataResourceService {
     if (!previousDocument?.id || !nextDocument?.id) {
       return null;
     }
-    for (const chain of createData.dataResourcesChains) {
+    for (const chain of dataResourcesChains) {
       if (chain[index - 1]?.documentId === previousDocument.id && chain[index + 1]?.documentId === nextDocument.id) {
         const linkInstanceId = chain[index]?.linkInstanceId;
         return this.data.uniqueLinkInstances.find(linkInstance => linkInstance.id === linkInstanceId);
@@ -443,8 +469,39 @@ export class CreateDataResourceService {
     }
   }
 
-  public chooseDocumentsPath(
-    mainStem: QueryStem,
+  public chooseDataResourcesChain(
+    stem: QueryStem,
+    queryResource: QueryResource,
+    groupingAttributes: QueryAttributeGrouping[],
+    dataResourcesChains: DataResourceChain[][],
+    viewId: string,
+    callback: (chain: DataResourcesChain) => void,
+    cancel?: () => void
+  ) {
+    const chainRange = createChainRange(
+      queryResource,
+      groupingAttributes.map(g => g.attribute)
+    );
+    const pathStems = this.createChoosePathStems(stem, queryResource, groupingAttributes, [], chainRange);
+    this.chooseDocumentsPath(
+      pathStems,
+      viewId,
+      documents => {
+        const dataResourcesChain = this.createDataResourcesChain(
+          stem,
+          queryResource,
+          {},
+          dataResourcesChains,
+          chainRange,
+          documents
+        );
+        callback(dataResourcesChain);
+      },
+      cancel
+    );
+  }
+
+  private chooseDocumentsPath(
     pathStems: QueryStem[],
     viewId: string,
     callback: (documents: DocumentModel[]) => void,
@@ -454,40 +511,59 @@ export class CreateDataResourceService {
       callback([]);
       return;
     }
-    // we can not guarantee that documents in second (or any next) collection is fully loaded by query stem, because some documents are not linked
-    const mainStemInPath = pathStems.find(stem => stem.collectionId === mainStem.collectionId);
-    if (mainStemInPath) {
-      const query = {stems: [mainStemInPath]};
-      this.store$
-        .pipe(
-          select(selectViewById(viewId)),
-          switchMap(view =>
-            this.store$.pipe(select(selectDocumentsByCollectionAndQuery(mainStem.collectionId, query, view)))
-          ),
-          take(1)
-        )
-        .subscribe(mainStemDocuments => {
-          // we are sure that documents are fully loaded for main collection in stem
-          if (mainStemDocuments.length === 1) {
-            const pathStemsWithoutMain = pathStems.filter(stem => stem.collectionId !== mainStem.collectionId);
-            if (pathStemsWithoutMain.length > 0) {
-              this.modalService.showChooseDocumentsPath(
-                pathStemsWithoutMain,
-                this.workspace?.viewId,
-                chosenDocuments => callback([mainStemDocuments[0], ...chosenDocuments]),
-                cancel
-              );
-            } else {
-              callback(mainStemDocuments);
-            }
+
+    const filterDocumentsObservables = pathStems.map(stem =>
+      this.store$.pipe(
+        select(selectViewById(viewId)),
+        switchMap(view =>
+          this.store$.pipe(select(selectDocumentsByCollectionAndQuery(stem.collectionId, {stems: [stem]}, view)))
+        ),
+        take(1)
+      )
+    );
+
+    forkJoin(filterDocumentsObservables)
+      .pipe(take(1))
+      .subscribe(pathsDocuments => {
+        const dialogStems = [];
+        const dialogStemsOriginalIndexes = [];
+        const resultDocuments = [];
+        for (let i = 0; i < pathStems.length; i++) {
+          const pathDocuments = pathsDocuments[i];
+          if (pathDocuments.length === 1) {
+            resultDocuments[i] = pathDocuments[0];
           } else {
-            this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback, cancel);
+            dialogStems.push(pathStems[i]);
+            dialogStemsOriginalIndexes.push(i);
           }
-        });
-    } else {
-      this.modalService.showChooseDocumentsPath(pathStems, this.workspace?.viewId, callback, cancel);
-    }
+        }
+
+        if (dialogStems.length > 0) {
+          this.modalService.showChooseDocumentsPath(
+            dialogStems,
+            this.workspace?.viewId,
+            chosenDocuments =>
+              callback(
+                mapPartlyChosenDocumentsFromDialog(chosenDocuments, resultDocuments, dialogStemsOriginalIndexes)
+              ),
+            cancel
+          );
+        } else {
+          callback(resultDocuments);
+        }
+      });
   }
+}
+
+function mapPartlyChosenDocumentsFromDialog(
+  dialogDocuments: DocumentModel[],
+  resultDocuments: DocumentModel[],
+  dialogStemsOriginalIndexes: number[]
+): DocumentModel[] {
+  return dialogStemsOriginalIndexes.reduce((result, originalIndex, index) => {
+    result[originalIndex] = dialogDocuments[index];
+    return result;
+  }, resultDocuments);
 }
 
 function createChainRange(resource: QueryResource, attributes: QueryAttribute[]): number[] {
