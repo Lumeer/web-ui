@@ -20,7 +20,7 @@
 import {DataQuery} from '../../model/data-query';
 import {Workspace} from '../navigation/workspace';
 import {areDataQueriesEqual} from '../navigation/query/query.helper';
-import {Query, QueryStem} from '../navigation/query/query';
+import {Query} from '../navigation/query/query';
 import {isQuerySubset} from '../navigation/query/query.util';
 import {ResourcesPermissions} from '../../model/allowed-permissions';
 
@@ -58,44 +58,12 @@ export function checkLoadedDataQueryPayload(
 ): DataQueryPayload {
   return {
     ...payload,
-    query: checkLoadedDataQuery(payload.query, permissions, publicView, payload.silent),
+    query: checkLoadedDataQuery(payload.query, permissions, publicView),
   };
 }
 
-function checkLoadedDataQuery(
-  query: DataQuery,
-  permissions?: ResourcesPermissions,
-  publicView?: boolean,
-  silent?: boolean
-): Query {
-  if (publicView) {
-    return {};
-  }
-  return silent ? undefined : removeUnneededFilters(query, permissions);
-}
-
-function removeUnneededFilters(query: Query, permissions?: ResourcesPermissions): Query {
-  const shouldSkipFulltexts =
-    query?.stems?.length > 0 &&
-    query?.stems.some(
-      stem =>
-        !permissions?.collections?.[stem.collectionId]?.roles?.Read ||
-        (stem.linkTypeIds || []).some(linkTypeId => !permissions?.linkTypes?.[linkTypeId]?.roles?.Read)
-    );
-
-  return {
-    ...query,
-    stems: query?.stems?.map(stem => removeUnneededFiltersFromStem(stem, permissions)),
-    fulltexts: shouldSkipFulltexts ? [] : query?.fulltexts,
-  };
-}
-
-function removeUnneededFiltersFromStem(stem: QueryStem, permissions?: ResourcesPermissions): QueryStem {
-  return {
-    ...stem,
-    filters: stem.filters?.filter(filter => !permissions?.collections?.[filter.collectionId]?.roles?.Read),
-    linkFilters: stem.linkFilters?.filter(filter => !permissions?.linkTypes?.[filter.linkTypeId]?.roles?.Read),
-  };
+function checkLoadedDataQuery(query: DataQuery, permissions?: ResourcesPermissions, publicView?: boolean): Query {
+  return publicView ? {} : query;
 }
 
 export function isDataQueryLoaded(

@@ -808,3 +808,15 @@ function convertToDataResource(dataResourceWithLinks: DataResourceWithLinks): Da
   delete copy.to;
   return copy;
 }
+
+export function mergeDataResourcesChains(
+  dc1: DataResourceChain[][],
+  dc2: DataResourceChain[][]
+): DataResourceChain[][] {
+  return (dc1 || []).reduce<DataResourceChain[][]>((all, d1) => {
+    for (const d2 of dc2) {
+      all.push([...d1, ...d2]);
+    }
+    return all;
+  }, []);
+}

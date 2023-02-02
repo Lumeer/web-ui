@@ -329,12 +329,18 @@ export class DocumentsEffects {
       mergeMap(action => {
         const {documents, linkInstances, failureMessage, onSuccess, onFailure, afterSuccess} = action.payload;
         const documentsDtos = documents.map(document => convertDocumentModelToDto(document));
+        const documentsCorrelationIds = documentsDtos.filter(dto => !dto.id).map(dto => dto.correlationId);
         const linkInstancesDtos = linkInstances.map(link => convertLinkInstanceModelToDto(link));
+        const linkInstancesCorrelationIds = linkInstancesDtos.filter(dto => !dto.id).map(dto => dto.correlationId);
 
         return this.documentService.createChain(documentsDtos, linkInstancesDtos, action.payload.workspace).pipe(
           mergeMap(({documents: documentDtos, linkInstances: linkDtos}) => {
-            const newDocuments = documentDtos.map(dto => convertDocumentDtoToModel(dto));
-            const newLinks = linkDtos.map(dto => convertLinkInstanceDtoToModel(dto));
+            const newDocuments = documentDtos.map((dto, index) =>
+              convertDocumentDtoToModel(dto, documentsCorrelationIds[index])
+            );
+            const newLinks = linkDtos.map((dto, index) =>
+              convertLinkInstanceDtoToModel(dto, linkInstancesCorrelationIds[index])
+            );
             return [
               ...createCallbackActions(onSuccess, {documents: newDocuments, linkInstances: newLinks}),
               new DocumentsAction.CreateChainSuccess({documents: newDocuments}),

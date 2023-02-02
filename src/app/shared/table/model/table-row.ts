@@ -20,6 +20,7 @@
 import {MenuItem} from '../../menu/model/menu-item';
 import {AttributeLockFiltersStats} from '@lumeer/data-filters';
 import {TableRowHierarchy} from './table-hierarchy';
+import {DataResourcesChain} from '../../modal/data-resource-detail/model/data-resources-chain';
 
 export interface TableRow {
   id: string;
@@ -32,7 +33,7 @@ export interface TableRow {
   documentId?: string;
   cellsMap?: TableRowCellsMap; // columnId -> string
   linkInstanceId?: string;
-  linkedDocumentId?: string; // used for newly created row
+  linkedChain?: DataResourcesChain; // used for newly created row
   correlationId?: string;
   commentsCount?: number;
   documentEditable: boolean;

@@ -21,6 +21,7 @@ import {TableModel} from '../../../../shared/table/model/table-model';
 import {DataResource} from '../../../../core/model/resource';
 import {QueryStem} from '../../../../core/store/navigation/query/query';
 import {Constraint, DataValue} from '@lumeer/data-filters';
+import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 
 export interface WorkflowTable extends TableModel {
   title?: WorkflowTableTitle;
@@ -29,6 +30,7 @@ export interface WorkflowTable extends TableModel {
   minHeight: number;
   width: number;
   linkingCollectionId?: string;
+  dataResourcesChains?: DataResourceChain[][];
 }
 
 export interface WorkflowTableTitle {

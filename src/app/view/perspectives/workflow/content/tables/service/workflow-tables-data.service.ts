@@ -63,6 +63,7 @@ import {
   AggregatedDataItem,
   DataAggregator,
   DataAggregatorAttribute,
+  mergeDataResourcesChains,
 } from '../../../../../../shared/utils/data/data-aggregator';
 import {
   findAttributeByQueryAttribute,
@@ -144,6 +145,7 @@ import {
   ResourceAttributeSettings,
   ViewSettings,
 } from '../../../../../../core/store/view-settings/view-settings';
+import {DataResourcesChain} from '../../../../../../shared/modal/data-resource-detail/model/data-resources-chain';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -394,7 +396,7 @@ export class WorkflowTablesDataService {
             const titleDataResources = aggregatedDataItem.dataResources;
             const children = (aggregatedDataItem.children || []).length
               ? aggregatedDataItem.children
-              : [{dataResources: []}];
+              : [{dataResources: [], dataResourcesChains: []}];
             for (const childItem of children) {
               const currentTable = currentTables.find(table => table.id === tableId) || tableByCollection;
               const tableSettings = stemTableSettings?.find(tab => tab.value === title);
@@ -428,6 +430,10 @@ export class WorkflowTablesDataService {
                 ...(isGroupedByLink ? createTableRowCellsMapForAttribute(attribute, title, linkColumns) : {}),
               };
 
+              const dataResourcesChains = mergeDataResourcesChains(
+                aggregatedDataItem.dataResourcesChains,
+                childItem.dataResourcesChains
+              );
               const minHeight = computeTableHeight(rows, newRow, 1);
               const maxHeight = computeTableHeight(rows, newRow);
               const height = tableSettings?.height || computeTableHeight(rows, newRow, 5);
@@ -454,6 +460,7 @@ export class WorkflowTablesDataService {
                 newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated, actionTitle} : undefined,
                 linkingCollectionId,
                 footer: createWorkflowTableFooter(rows, columns, stemConfig, config.footers, constraintData),
+                dataResourcesChains,
               };
               tables.push(workflowTable);
             }
@@ -494,7 +501,6 @@ export class WorkflowTablesDataService {
             width: columnsWidth + 1, // + 1 for border
             newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap, actionTitle} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
-            linkingCollectionId,
             footer: createWorkflowTableFooter(rows, columns, stemConfig, config.footers, constraintData),
           };
           tables.push(workflowTable);
@@ -1423,20 +1429,27 @@ export class WorkflowTablesDataService {
       metaData: {parentId: parentRow?.documentId},
     };
 
-    if (row.linkedDocumentId) {
+    if (row.linkedChain) {
+      const documentIndex = row.linkedChain.index;
+      const linkIndex = documentIndex - 1;
       const linkInstance: LinkInstance = {
+        ...row.linkedChain.linkInstances[linkIndex],
         data: linkData,
         correlationId: row.correlationId,
-        linkTypeId: table.linkTypeId,
-        documentIds: [row.linkedDocumentId, ''],
       };
+      row.linkedChain.documents[documentIndex] = document;
+      row.linkedChain.linkInstances[linkIndex] = linkInstance;
       this.store$.dispatch(
-        new DocumentsAction.CreateWithLink({
-          document,
-          linkInstance,
+        new DocumentsAction.CreateChain({
+          ...row.linkedChain,
           workspace: this.currentWorkspace(),
-          otherDocumentId: row.linkedDocumentId,
-          afterSuccess: ({documentId, linkInstanceId}) => this.onRowCreated(row, data, documentId, linkInstanceId),
+          afterSuccess: ({documents, linkInstances}) =>
+            this.onRowCreated(
+              row,
+              data,
+              documents[documents.length - 1].id,
+              linkInstances[linkInstances.length - 1].id
+            ),
           onFailure: () => this.stateService.endRowCreating(row),
         })
       );
@@ -1480,15 +1493,20 @@ export class WorkflowTablesDataService {
       );
       const newRowCellsMap: TableRowCellsMap = {...row.cellsMap, ...documentCellsMap};
       this.stateService.startRowCreating(row, newRowCellsMap, document.id);
+
+      const documentIndex = row.linkedChain.index;
+      const linkIndex = documentIndex - 1;
       const linkInstance: LinkInstance = {
+        ...row.linkedChain.linkInstances[linkIndex],
         data: linkData,
         correlationId: row.correlationId,
-        linkTypeId: table.linkTypeId,
-        documentIds: [document.id, row.linkedDocumentId],
+        documentIds: [document.id, row.linkedChain.documents[documentIndex - 1].id],
       };
+      row.linkedChain.documents[documentIndex] = document;
+      row.linkedChain.linkInstances[linkIndex] = linkInstance;
       this.store$.dispatch(
-        new LinkInstancesAction.Create({
-          linkInstance,
+        new DocumentsAction.CreateChain({
+          ...row.linkedChain,
           workspace: this.currentWorkspace(),
           onFailure: () => this.stateService.endRowCreating(row),
         })
@@ -1595,31 +1613,41 @@ export class WorkflowTablesDataService {
       const config = this.findStemConfigByTable(table);
       const groupingAttributes = config.attribute
         ? [{attribute: config.attribute, value: table.title?.dataValue?.serialize()}]
-        : [];
-      const pathStems = this.createDataResourceService.prepareCreatePathStems(
+        : [
+            {
+              attribute: {
+                resourceIndex: 0,
+                resourceId: table.stem.collectionId,
+                resourceType: AttributesResourceType.Collection,
+                attributeId: undefined,
+              },
+              value: undefined,
+            },
+          ];
+      this.createDataResourceService.chooseDataResourcesChain(
         table.stem,
         config.collection,
-        groupingAttributes
-      );
-      this.createDataResourceService.chooseDocumentsPath(table.stem, pathStems, this.currentView?.id, documents =>
-        this.addRow(tableId, parentRowId, documents[0].id)
+        groupingAttributes,
+        table.dataResourcesChains,
+        this.currentView?.id,
+        chain => this.addRow(tableId, parentRowId, chain)
       );
     } else {
       this.addRow(tableId, parentRowId);
     }
   }
 
-  private addRow(tableId: string, parentRowId: string, linkedDocumentId?: string) {
+  private addRow(tableId: string, parentRowId: string, linkedChain?: DataResourcesChain) {
     const table = this.stateService.findTable(tableId);
     const id = generateId();
     const newRow: TableRow = {
       ...table.newRow,
-      linkedDocumentId,
+      linkedChain,
       id,
       correlationId: id,
       parentRowId,
-      suggestLinks: !!linkedDocumentId,
-      suggestDetail: !linkedDocumentId,
+      suggestLinks: !!linkedChain,
+      suggestDetail: !linkedChain,
     };
     this.stateService.addRow(tableId, newRow);
     this.addLockedRow(tableId, id);
