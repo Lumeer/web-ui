@@ -49,6 +49,7 @@ export class PostItCollectionAddButtonComponent {
       new ProjectsAction.CreateSampleData({
         type: SampleDataType.Tasks,
         errorMessage,
+        onSuccess: () => this.creatingData$.next(false),
         onFailure: () => this.creatingData$.next(false),
       })
     );
