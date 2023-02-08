@@ -21,7 +21,7 @@ import {Perspective, perspectivesMap} from '../../../view/perspectives/perspecti
 import {ViewDto} from '../../dto';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query/query.converter';
 import {DefaultViewConfig, View, ViewConfig} from './view';
-import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
+import {convertPermissionsDtoToModel, convertPermissionsModelToDto} from '../permissions/permissions.converter';
 import {convertPivotConfigDtoToModel} from '../pivots/pivot-config.converter';
 import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart-config-converter';
 import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-converter';
@@ -30,6 +30,8 @@ import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
 import {convertMapDtoConfigToModel} from '../maps/map-config-converter';
 import {convertChartDtoConfigToModel} from '../charts/chart-config-converter';
 import {RoleType, roleTypesMap} from '../../model/role-type';
+import {ViewSettings} from '../view-settings/view-settings';
+import {ViewSettingsDto} from '../../dto/view.dto';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {
@@ -44,7 +46,7 @@ export function convertViewDtoToModel(dto: ViewDto): View {
     additionalQueries: (dto.additionalQueries || []).map(dto => convertQueryDtoToModel(dto)),
     perspective: perspectivesMap[dto.perspective],
     config: convertViewConfigDtoToModel(perspectivesMap[dto.perspective], dto.config),
-    settings: dto.settings,
+    settings: convertViewSettingsDtoToModel(dto.settings),
     permissions: convertPermissionsDtoToModel(dto.permissions),
     authorCollectionsRoles: convertViewAuthorRights(dto.authorCollectionsRights),
     authorLinkTypesRoles: convertViewAuthorRights(dto.authorLinkTypesRights),
@@ -65,6 +67,22 @@ function convertViewAuthorRights(authorRights: Record<string, string[]>): Record
   );
 }
 
+function convertViewSettingsDtoToModel(dto: ViewSettingsDto): ViewSettings {
+  return {
+    ...dto,
+    permissions: {
+      collections: Object.keys(dto.permissions?.collections).reduce(
+        (perms, key) => ({...perms, [key]: convertPermissionsDtoToModel(dto.permissions.collections[key])}),
+        {}
+      ),
+      linkTypes: Object.keys(dto.permissions?.linkTypes).reduce(
+        (perms, key) => ({...perms, [key]: convertPermissionsDtoToModel(dto.permissions.linkTypes[key])}),
+        {}
+      ),
+    },
+  };
+}
+
 export function convertViewModelToDto(model: View): ViewDto {
   return {
     id: model.id,
@@ -76,7 +94,7 @@ export function convertViewModelToDto(model: View): ViewDto {
     priority: model.priority,
     query: convertQueryModelToDto(model.query),
     additionalQueries: (model.additionalQueries || []).map(query => convertQueryModelToDto(query)),
-    settings: model.settings,
+    settings: convertViewSettingsModelToDto(model.settings),
     perspective: model.perspective,
     config: model.config,
     folders: model.folders,
@@ -112,4 +130,20 @@ export function convertDefaultViewConfigDtoToModel(dto: DefaultViewConfigDto): D
 
 export function convertDefaultViewConfigModelToDto(model: DefaultViewConfig): DefaultViewConfigDto {
   return {...model, updatedAt: (model.updatedAt || new Date()).getTime()};
+}
+
+function convertViewSettingsModelToDto(model: ViewSettings): ViewSettingsDto {
+  return {
+    ...model,
+    permissions: {
+      collections: Object.keys(model.permissions?.collections).reduce(
+        (perms, key) => ({...perms, [key]: convertPermissionsModelToDto(model.permissions.collections[key])}),
+        {}
+      ),
+      linkTypes: Object.keys(model.permissions?.linkTypes).reduce(
+        (perms, key) => ({...perms, [key]: convertPermissionsModelToDto(model.permissions.linkTypes[key])}),
+        {}
+      ),
+    },
+  };
 }

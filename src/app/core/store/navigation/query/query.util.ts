@@ -347,7 +347,11 @@ function conditionValuesAreSame(cv1: ConditionValue, cv2: ConditionValue): boole
 }
 
 export function getAllLinkTypeIdsFromView(view: View): string[] {
-  return uniqueValues([...getAdditionalLinkTypeIdsFromView(view), ...getAllLinkTypeIdsFromQuery(view?.query)]);
+  return uniqueValues([
+    ...getAdditionalLinkTypeIdsFromView(view),
+    ...getAllLinkTypeIdsFromQuery(view?.query),
+    ...getLinkTypeIdsFromViewResourcesPermissions(view),
+  ]);
 }
 
 export function getAdditionalLinkTypeIdsFromView(view: View): string[] {
@@ -368,10 +372,15 @@ export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
   }, []);
 }
 
+export function getLinkTypeIdsFromViewResourcesPermissions(view: View): string[] {
+  return Object.keys(view?.settings?.permissions?.linkTypes || {});
+}
+
 export function getAllCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
   return uniqueValues([
     ...getAdditionalCollectionIdsFromView(view, linkTypes),
     ...getAllCollectionIdsFromQuery(view?.query, linkTypes),
+    ...getCollectionIdsFromViewResourcesPermissions(view),
   ]);
 }
 
@@ -395,6 +404,10 @@ export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]
     return ids;
   }, []);
   return uniqueValues<string>([...basicCollectionIds, ...collectionIdsFromLinks]);
+}
+
+export function getCollectionIdsFromViewResourcesPermissions(view: View): string[] {
+  return Object.keys(view?.settings?.permissions?.collections || {});
 }
 
 export function getBaseCollectionIdsFromQuery(query: Query): string[] {

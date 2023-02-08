@@ -19,11 +19,13 @@
 
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ModalData} from '../../model/modal-data';
+import {Permissions} from '../permissions/permissions';
 
 export interface ViewSettings {
   attributes?: AttributesSettings;
   data?: DataSettings;
   modals?: ModalsSettings;
+  permissions?: ResourcesPermissions;
 }
 
 export interface DataSettings {
@@ -44,6 +46,11 @@ export interface AttributesSettings {
   collections?: Record<string, ResourceAttributeSettings[]>;
   linkTypes?: Record<string, ResourceAttributeSettings[]>;
   linkTypesCollections?: Record<string, ResourceAttributeSettings[]>; // key is constructed as `${linkTypeId}:${collectionId}`
+}
+
+export interface ResourcesPermissions {
+  collections?: Record<string, Permissions>;
+  linkTypes?: Record<string, Permissions>;
 }
 
 export interface ResourceAttributeSettings {

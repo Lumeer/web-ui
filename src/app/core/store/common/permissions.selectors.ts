@@ -853,9 +853,9 @@ export const selectSearchPerspectiveTabs = createSelector(
     if (currentView) {
       const search = searchesMap[currentView.code];
       if (search?.config) {
-        return createSearchPerspectiveTabs(search?.config);
+        return createSearchPerspectiveTabs(search?.config, defaultTabs);
       }
-      return createSearchPerspectiveTabsByView(currentView);
+      return createSearchPerspectiveTabsByView(currentView, defaultTabs);
     }
 
     if (isViewValidForDashboard(dashboardView)) {

@@ -170,8 +170,13 @@ function userCollectionRoleTypesInView(
       viewRoleTypes.push(RoleType.DataRead);
     }
   }
-
-  return uniqueValues(viewRoleTypes);
+  const viewResourcePermissionsRoleTypes = userRoleTypesInPermissions(
+    organization,
+    project,
+    view?.settings?.permissions?.collections?.[collection.id],
+    user
+  );
+  return uniqueValues([...viewRoleTypes, ...viewResourcePermissionsRoleTypes]);
 }
 
 export function userPermissionsInLinkType(
@@ -188,9 +193,9 @@ export function userPermissionsInLinkType(
   }
   const roleTypes = userRoleTypesInLinkType(organization, project, linkType, collections, user);
   if (currentView != null) {
-    const viewRoleTypes = userLinkTypeRoleTypesInView(organization, project, currentView, linkType, user);
     const linkTypeIds = getAllLinkTypeIdsFromView(currentView);
     if (linkTypeIds.includes(linkType.id)) {
+      const viewRoleTypes = userLinkTypeRoleTypesInView(organization, project, currentView, linkType, user);
       const authorRoleTypes = currentView.authorLinkTypesRoles?.[linkType.id];
       const roleTypesWithView = arrayIntersection(viewRoleTypes, authorRoleTypes);
       return {
@@ -241,7 +246,13 @@ function userLinkTypeRoleTypesInView(
     }
   }
 
-  return uniqueValues(viewRoleTypes);
+  const viewResourcePermissionsRoleTypes = userRoleTypesInPermissions(
+    organization,
+    project,
+    view?.settings?.permissions?.linkTypes?.[linkType.id],
+    user
+  );
+  return uniqueValues([...viewRoleTypes, ...viewResourcePermissionsRoleTypes]);
 }
 
 export function userPermissionsInView(

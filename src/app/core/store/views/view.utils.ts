@@ -54,8 +54,10 @@ import {SearchConfig} from '../searches/search';
 import {AllowedPermissions} from '../../model/allowed-permissions';
 import {formViewConfigLinkQueries} from '../../../view/perspectives/form/form-utils';
 import {FormConfig} from '../form/form-model';
-import {DataSettings, ModalsSettings, ViewSettings} from '../view-settings/view-settings';
-import {areArraysSame} from '../../../shared/utils/array.utils';
+import {DataSettings, ModalsSettings, ResourcesPermissions, ViewSettings} from '../view-settings/view-settings';
+import {areArraysSame, uniqueValues} from '../../../shared/utils/array.utils';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
+import {Permissions} from '../permissions/permissions';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -204,7 +206,8 @@ export function viewSettingsChanged(
       collectionsMap,
       linkTypesMap
     ) ||
-    viewModalSettingsChanged(previousSettings?.modals, currentSettings?.modals)
+    viewModalSettingsChanged(previousSettings?.modals, currentSettings?.modals) ||
+    viewResourcesPermissionsChanged(previousSettings?.permissions, currentSettings?.permissions)
   );
 }
 
@@ -218,6 +221,24 @@ export function viewDataSettingsChanged(previousSettings: DataSettings, currentS
 
 export function viewModalSettingsChanged(previousSettings: ModalsSettings, currentSettings: ModalsSettings): boolean {
   return !areArraysSame(previousSettings?.settings, currentSettings?.settings);
+}
+
+export function viewResourcesPermissionsChanged(
+  previousSettings: ResourcesPermissions,
+  currentSettings: ResourcesPermissions
+): boolean {
+  return (
+    resourcePermissionsChanged(previousSettings?.collections, currentSettings?.collections) ||
+    resourcePermissionsChanged(previousSettings?.linkTypes, currentSettings?.linkTypes)
+  );
+}
+
+export function resourcePermissionsChanged(
+  previousSettings: Record<string, Permissions>,
+  currentSettings: Record<string, Permissions>
+): boolean {
+  const keys = uniqueValues([...Object.keys(currentSettings || {}), ...Object.keys(previousSettings || {})]);
+  return keys.some(key => permissionsChanged(previousSettings?.[key], currentSettings?.[key]));
 }
 
 export function createSaveViewSettings(

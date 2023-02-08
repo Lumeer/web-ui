@@ -19,16 +19,24 @@
 
 import {QueryDto} from './query.dto';
 import {ResourceDto} from './resource.dto';
+import {PermissionsDto} from './permissions.dto';
 
 export interface ViewDto extends ResourceDto {
   perspective: string;
   query: QueryDto;
   additionalQueries: QueryDto[];
   config: any;
-  settings: any;
+  settings: ViewSettingsDto;
   authorCollectionsRights?: Record<string, string[]>;
   authorLinkTypesRights?: Record<string, string[]>;
   favorite?: boolean;
   lastTimeUsed?: number;
   folders?: string[];
+}
+
+export interface ViewSettingsDto {
+  attributes?: any;
+  data?: any;
+  modals?: any;
+  permissions: {collections: Record<string, PermissionsDto>; linkTypes: Record<string, PermissionsDto>};
 }
