@@ -22,7 +22,6 @@ import {Injectable} from '@angular/core';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {Angulartics2} from 'angulartics2';
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionDto, PermissionDto} from '../../dto';
@@ -33,7 +32,6 @@ import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
@@ -54,11 +52,11 @@ import {
 } from './collections.state';
 import mixpanel from 'mixpanel-browser';
 import {CollectionService} from '../../data-service';
-import {OrganizationsAction} from '../organizations/organizations.action';
 import {convertRuleToDto, createCallbackActions} from '../utils/store.utils';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as AuditLogActions from '../audit-logs/audit-logs.actions';
 import {LimitsService} from '../../service/limits.service';
+import {Ga4Service} from '../../service/ga4.service';
 
 @Injectable()
 export class CollectionsEffects {
@@ -114,14 +112,9 @@ export class CollectionsEffects {
           withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
           mergeMap(([newCollection, collections]) => {
             if (this.configurationService.getConfiguration().analytics) {
-              this.angulartics2.eventTrack.next({
-                action: 'Collection create',
-                properties: {
-                  category: 'Application Resources',
-                  label: 'count',
-                  value: Object.keys(collections).length + 1,
-                },
-              });
+              if (this.configurationService.getConfiguration().ga4Id) {
+                this.ga4.event('collection_create', {count: Object.keys(collections).length + 1});
+              }
 
               if (this.configurationService.getConfiguration().mixpanelKey) {
                 mixpanel.track('Collection Create', {
@@ -655,7 +648,7 @@ export class CollectionsEffects {
     private collectionService: CollectionService,
     private importService: ImportService,
     private limitsService: LimitsService,
-    private angulartics2: Angulartics2,
+    private ga4: Ga4Service,
     private configurationService: ConfigurationService
   ) {}
 }

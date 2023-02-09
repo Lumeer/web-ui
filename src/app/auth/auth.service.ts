@@ -24,7 +24,6 @@ import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {WebAuth} from 'auth0-js';
 import {BehaviorSubject, interval, Observable, of, share, Subject} from 'rxjs';
 import {catchError, distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
-import {Angulartics2} from 'angulartics2';
 import {User} from '../core/store/users/user';
 import mixpanel from 'mixpanel-browser';
 import {hashUserId} from '../shared/utils/system.utils';
@@ -39,6 +38,7 @@ import {createLanguageUrl, languageCodeMap} from '../core/model/language';
 import {UsersAction} from '../core/store/users/users.action';
 import {SessionType} from './common/session-type';
 import {AuthStorage} from './auth.storage';
+import {Ga4Service} from '../core/service/ga4.service';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
@@ -70,7 +70,7 @@ export class AuthService {
     private userService: UserService,
     private activityService: UserActivityService,
     private store$: Store<AppState>,
-    private angulartics2: Angulartics2,
+    private ga4: Ga4Service,
     private ngZone: NgZone,
     private configurationService: ConfigurationService,
     private httpClient: HttpClient
@@ -131,10 +131,9 @@ export class AuthService {
       return;
     }
 
-    this.angulartics2.eventTrack.next({
-      action: 'User login',
-      properties: {category: 'User Actions'},
-    });
+    if (this.configurationService.getConfiguration().ga4Id) {
+      this.ga4.event('user_login');
+    }
 
     if (this.configurationService.getConfiguration().mixpanelKey) {
       mixpanel.track('User Login');
@@ -203,10 +202,10 @@ export class AuthService {
       )
       .subscribe((user: User) => {
         const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
-        this.angulartics2.eventTrack.next({
-          action: 'User returned',
-          properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
-        });
+
+        if (this.configurationService.getConfiguration().ga4Id) {
+          this.ga4.event('user_return', {hoursSinceLastLogin});
+        }
 
         if (this.configurationService.getConfiguration().mixpanelKey) {
           mixpanel.identify(hashUserId(user.id));

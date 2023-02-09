@@ -21,7 +21,6 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Angulartics2} from 'angulartics2';
 import {of} from 'rxjs';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../app.state';
@@ -33,6 +32,7 @@ import {Payment} from './payment';
 import {OrganizationService} from '../../../data-service';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {createCallbackActions} from '../../utils/store.utils';
+import {Ga4Service} from '../../../service/ga4.service';
 
 @Injectable()
 export class PaymentsEffects {
@@ -66,27 +66,16 @@ export class PaymentsEffects {
         ofType<PaymentsAction.GetPaymentSuccess>(PaymentsActionType.GET_PAYMENT_SUCCESS),
         tap((action: PaymentsAction.GetPaymentSuccess) => {
           if (this.configurationService.getConfiguration().analytics && action.payload.payment.state === 'PAID') {
-            this.angulartics2.eventTrack.next({
-              action: 'Payment paid',
-              properties: {
-                category: 'Payments',
-                label: action.payload.payment.currency,
-                value: action.payload.payment.state,
-              },
-            });
-
             const price = this.getPrice(action.payload.payment);
-            const ga = (window as any).ga;
-            if (ga) {
-              ga('ecommerce:addTransaction', {
-                id: action.payload.payment.paymentId,
-                affiliation: 'plans',
-                revenue: price,
-                shipping: '0',
-                tax: price * 0.15,
-              });
-              ga('ecommerce:send');
-            }
+
+            this.ga4.event('purchase', {
+              currency: action.payload.payment.currency,
+              value: price,
+              transaction_id: action.payload.payment.paymentId,
+              affiliation: 'plans',
+              shipping: '0',
+              tax: price * 0.15,
+            });
 
             if (this.configurationService.getConfiguration().mixpanelKey) {
               mixpanel.track('Payment Paid', {
@@ -166,14 +155,12 @@ export class PaymentsEffects {
         ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
         tap((action: PaymentsAction.CreatePaymentSuccess) => {
           if (this.configurationService.getConfiguration().analytics) {
-            this.angulartics2.eventTrack.next({
-              action: 'Payment create',
-              properties: {
-                category: 'Payments',
-                label: action.payload.payment.currency,
+            if (this.configurationService.getConfiguration().ga4Id) {
+              this.ga4.event('begin_checkout', {
                 value: action.payload.payment.amount,
-              },
-            });
+                currency: action.payload.payment.currency,
+              });
+            }
 
             if (this.configurationService.getConfiguration().mixpanelKey) {
               const price = this.getPrice(action.payload.payment);
@@ -204,7 +191,7 @@ export class PaymentsEffects {
     private router: Router,
     private actions$: Actions,
     private organizationService: OrganizationService,
-    private angulartics2: Angulartics2,
+    private ga4: Ga4Service,
     private configurationService: ConfigurationService
   ) {}
 }

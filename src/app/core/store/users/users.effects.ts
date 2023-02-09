@@ -39,7 +39,6 @@ import {
 } from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
-import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
@@ -49,6 +48,7 @@ import {ServiceLevelType} from '../../dto/service-level-type';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {TeamsAction} from '../teams/teams.action';
 import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
+import {Ga4Service} from '../../service/ga4.service';
 
 @Injectable()
 export class UsersEffects {
@@ -166,12 +166,9 @@ export class UsersEffects {
         ofType<UsersAction.CreateSuccess>(UsersActionType.CREATE_SUCCESS),
         tap((action: UsersAction.CreateSuccess) => {
           if (this.configurationService.getConfiguration().analytics) {
-            this.angulartics2.eventTrack.next({
-              action: 'User add',
-              properties: {
-                category: 'Collaboration',
-              },
-            });
+            if (this.configurationService.getConfiguration().ga4Id) {
+              this.ga4.event('user_add');
+            }
 
             if (this.configurationService.getConfiguration().mixpanelKey) {
               mixpanel.track('User Create', {user: action.payload.user.email});
@@ -252,12 +249,9 @@ export class UsersEffects {
         ofType<UsersAction.InviteSuccess>(UsersActionType.INVITE_SUCCESS),
         tap((action: UsersAction.InviteSuccess) => {
           if (this.configurationService.getConfiguration().analytics) {
-            this.angulartics2.eventTrack.next({
-              action: 'User add',
-              properties: {
-                category: 'Collaboration',
-              },
-            });
+            if (this.configurationService.getConfiguration().ga4Id) {
+              this.ga4.event('user_add');
+            }
 
             if (this.configurationService.getConfiguration().mixpanelKey) {
               action.payload.users.forEach(user => mixpanel.track('User Create', {user: user.email}));
@@ -456,12 +450,9 @@ export class UsersEffects {
       ofType<UsersAction.BookProductDemoSuccess>(UsersActionType.BOOK_PRODUCT_DEMO_SUCCESS),
       tap(() => {
         if (this.configurationService.getConfiguration().analytics) {
-          this.angulartics2.eventTrack.next({
-            action: 'Demo scheduled',
-            properties: {
-              category: 'ProductDemo',
-            },
-          });
+          if (this.configurationService.getConfiguration().ga4Id) {
+            this.ga4.event('demo_scheduled');
+          }
 
           if (this.configurationService.getConfiguration().mixpanelKey) {
             mixpanel.track('Demo scheduled');
@@ -505,12 +496,9 @@ export class UsersEffects {
       ofType<UsersAction.GetInTouchSuccess>(UsersActionType.GET_IN_TOUCH_SUCCESS),
       tap(() => {
         if (this.configurationService.getConfiguration().analytics) {
-          this.angulartics2.eventTrack.next({
-            action: 'Feedback send',
-            properties: {
-              category: 'Feedback',
-            },
-          });
+          if (this.configurationService.getConfiguration().ga4Id) {
+            this.ga4.event('feedback_send');
+          }
 
           if (this.configurationService.getConfiguration().mixpanelKey) {
             mixpanel.track('Feedback Send');
@@ -578,7 +566,7 @@ export class UsersEffects {
     private actions$: Actions,
     private store$: Store<AppState>,
     private userService: UserService,
-    private angulartics2: Angulartics2,
+    private ga4: Ga4Service,
     private configurationService: ConfigurationService
   ) {}
 }

@@ -38,7 +38,6 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
-import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
@@ -47,6 +46,7 @@ import {Team} from '../../core/store/teams/team';
 import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {Ga4Service} from '../../core/service/ga4.service';
 
 @Component({
   selector: 'users',
@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   constructor(
     private store$: Store<AppState>,
-    private angulartics2: Angulartics2,
+    private ga4: Ga4Service,
     private configurationService: ConfigurationService
   ) {}
 
@@ -89,12 +89,9 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new UsersAction.Create({organizationId: this.getOrganizationId(), user}));
 
     if (this.configurationService.getConfiguration().analytics && this.resourceType === ResourceType.Organization) {
-      this.angulartics2.eventTrack.next({
-        action: 'User invite',
-        properties: {
-          category: 'Collaboration',
-        },
-      });
+      if (this.configurationService.getConfiguration().ga4Id) {
+        this.ga4.event('user_invite');
+      }
 
       if (this.configurationService.getConfiguration().mixpanelKey) {
         mixpanel.track('User Invite', {user: email});

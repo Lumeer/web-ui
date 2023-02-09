@@ -49,7 +49,6 @@ import {
   selectViewsState,
 } from './views.state';
 import {areQueriesEqual} from '../navigation/query/query.helper';
-import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
 import {User} from '../users/user';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
@@ -82,6 +81,7 @@ import {ViewSettingsAction} from '../view-settings/view-settings.action';
 import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
 import {InvitationType} from '../../model/invitation-type';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
+import {Ga4Service} from '../../service/ga4.service';
 
 @Injectable()
 export class ViewsEffects {
@@ -174,10 +174,9 @@ export class ViewsEffects {
           paths.push(mapPositionPathParams(navigation.mapPosition));
         }
         if (this.configurationService.getConfiguration().analytics) {
-          this.angulartics2.eventTrack.next({
-            action: 'View create',
-            properties: {category: 'Application Resources', label: 'count', value: Object.keys(views).length + 1},
-          });
+          if (this.configurationService.getConfiguration().ga4Id) {
+            this.ga4.event('view_create', {count: Object.keys(views).length + 1});
+          }
 
           if (this.configurationService.getConfiguration().mixpanelKey) {
             mixpanel.track('View Create', {
@@ -681,7 +680,7 @@ export class ViewsEffects {
     private viewService: ViewService,
     private userService: UserService,
     private teamService: TeamService,
-    private angulartics2: Angulartics2,
+    private ga4: Ga4Service,
     private configurationService: ConfigurationService
   ) {}
 }

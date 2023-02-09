@@ -46,4 +46,5 @@ export interface ConfigurationVariables {
   mixpanelKey: string;
   contactUrl: string;
   adminUserEmails: string[];
+  ga4Id: string;
 }

@@ -20,17 +20,17 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot} from '@angular/router';
 import {AuthService} from './auth.service';
-import {Angulartics2} from 'angulartics2';
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {ConfigurationService} from '../configuration/configuration.service';
+import {Ga4Service} from '../core/service/ga4.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
   public constructor(
-    private angulartics2: Angulartics2,
+    private ga4: Ga4Service,
     private authService: AuthService,
     private configurationService: ConfigurationService
   ) {}

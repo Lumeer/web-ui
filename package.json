@@ -69,7 +69,6 @@
     "@sentry/browser": "^7.16.0",
     "@vimeo/player": "^2.18.0",
     "angular-resizable-element": "^6.0.0",
-    "angulartics2": "^12.1.0",
     "auth0-js": "^9.19.1",
     "big.js": "^6.2.1",
     "bootstrap": "5.1.3",
