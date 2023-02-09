@@ -131,9 +131,7 @@ export class AuthService {
       return;
     }
 
-    if (this.configurationService.getConfiguration().ga4Id) {
-      this.ga4.event('user_login');
-    }
+    this.ga4.event('user_login');
 
     if (this.configurationService.getConfiguration().mixpanelKey) {
       mixpanel.track('User Login');
@@ -203,9 +201,7 @@ export class AuthService {
       .subscribe((user: User) => {
         const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
 
-        if (this.configurationService.getConfiguration().ga4Id) {
-          this.ga4.event('user_return', {hoursSinceLastLogin});
-        }
+        this.ga4.event('user_return', {hoursSinceLastLogin});
 
         if (this.configurationService.getConfiguration().mixpanelKey) {
           mixpanel.identify(hashUserId(user.id));

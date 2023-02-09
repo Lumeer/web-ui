@@ -112,9 +112,7 @@ export class CollectionsEffects {
           withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
           mergeMap(([newCollection, collections]) => {
             if (this.configurationService.getConfiguration().analytics) {
-              if (this.configurationService.getConfiguration().ga4Id) {
-                this.ga4.event('collection_create', {count: Object.keys(collections).length + 1});
-              }
+              this.ga4.event('collection_create', {count: Object.keys(collections).length + 1});
 
               if (this.configurationService.getConfiguration().mixpanelKey) {
                 mixpanel.track('Collection Create', {

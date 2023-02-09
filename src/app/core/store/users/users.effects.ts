@@ -166,9 +166,7 @@ export class UsersEffects {
         ofType<UsersAction.CreateSuccess>(UsersActionType.CREATE_SUCCESS),
         tap((action: UsersAction.CreateSuccess) => {
           if (this.configurationService.getConfiguration().analytics) {
-            if (this.configurationService.getConfiguration().ga4Id) {
-              this.ga4.event('user_add');
-            }
+            this.ga4.event('user_add');
 
             if (this.configurationService.getConfiguration().mixpanelKey) {
               mixpanel.track('User Create', {user: action.payload.user.email});
@@ -249,9 +247,7 @@ export class UsersEffects {
         ofType<UsersAction.InviteSuccess>(UsersActionType.INVITE_SUCCESS),
         tap((action: UsersAction.InviteSuccess) => {
           if (this.configurationService.getConfiguration().analytics) {
-            if (this.configurationService.getConfiguration().ga4Id) {
-              this.ga4.event('user_add');
-            }
+            this.ga4.event('user_add');
 
             if (this.configurationService.getConfiguration().mixpanelKey) {
               action.payload.users.forEach(user => mixpanel.track('User Create', {user: user.email}));
@@ -450,9 +446,7 @@ export class UsersEffects {
       ofType<UsersAction.BookProductDemoSuccess>(UsersActionType.BOOK_PRODUCT_DEMO_SUCCESS),
       tap(() => {
         if (this.configurationService.getConfiguration().analytics) {
-          if (this.configurationService.getConfiguration().ga4Id) {
-            this.ga4.event('demo_scheduled');
-          }
+          this.ga4.event('demo_scheduled');
 
           if (this.configurationService.getConfiguration().mixpanelKey) {
             mixpanel.track('Demo scheduled');
@@ -496,9 +490,7 @@ export class UsersEffects {
       ofType<UsersAction.GetInTouchSuccess>(UsersActionType.GET_IN_TOUCH_SUCCESS),
       tap(() => {
         if (this.configurationService.getConfiguration().analytics) {
-          if (this.configurationService.getConfiguration().ga4Id) {
-            this.ga4.event('feedback_send');
-          }
+          this.ga4.event('feedback_send');
 
           if (this.configurationService.getConfiguration().mixpanelKey) {
             mixpanel.track('Feedback Send');

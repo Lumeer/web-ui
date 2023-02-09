@@ -155,12 +155,10 @@ export class PaymentsEffects {
         ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
         tap((action: PaymentsAction.CreatePaymentSuccess) => {
           if (this.configurationService.getConfiguration().analytics) {
-            if (this.configurationService.getConfiguration().ga4Id) {
-              this.ga4.event('begin_checkout', {
-                value: action.payload.payment.amount,
-                currency: action.payload.payment.currency,
-              });
-            }
+            this.ga4.event('begin_checkout', {
+              value: action.payload.payment.amount,
+              currency: action.payload.payment.currency,
+            });
 
             if (this.configurationService.getConfiguration().mixpanelKey) {
               const price = this.getPrice(action.payload.payment);

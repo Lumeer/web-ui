@@ -104,9 +104,7 @@ export class ShareViewModalComponent implements OnInit {
     );
 
     if (this.configurationService.getConfiguration().analytics) {
-      if (this.configurationService.getConfiguration().ga4Id) {
-        this.ga4.event('view_share', {view: this.view.id});
-      }
+      this.ga4.event('view_share', {view: this.view.id});
 
       if (this.configurationService.getConfiguration().mixpanelKey) {
         mixpanel.track('View Shared', {view: this.view.id});

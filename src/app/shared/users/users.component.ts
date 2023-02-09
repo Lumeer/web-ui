@@ -89,9 +89,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new UsersAction.Create({organizationId: this.getOrganizationId(), user}));
 
     if (this.configurationService.getConfiguration().analytics && this.resourceType === ResourceType.Organization) {
-      if (this.configurationService.getConfiguration().ga4Id) {
-        this.ga4.event('user_invite');
-      }
+      this.ga4.event('user_invite');
 
       if (this.configurationService.getConfiguration().mixpanelKey) {
         mixpanel.track('User Invite', {user: email});

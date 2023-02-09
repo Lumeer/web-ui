@@ -29,6 +29,7 @@ declare const gtag: Function;
 })
 export class Ga4Service {
   private ga4Id: string;
+  private initialized = false;
 
   public init(ga4Id: string, router: Router) {
     this.ga4Id = ga4Id;
@@ -36,25 +37,41 @@ export class Ga4Service {
     const customGtagScriptEle: HTMLScriptElement = document.createElement('script');
     customGtagScriptEle.async = true;
     customGtagScriptEle.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4Id;
-    document.head.prepend(customGtagScriptEle);
-    gtag('config', ga4Id, {send_page_view: false});
+    customGtagScriptEle.onload = () => {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).gtag = function (...args) {
+        (window as any).dataLayer.push(args);
+      };
+      gtag('js', new Date());
+      gtag('config', ga4Id, {send_page_view: false});
 
-    router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-      gtag('event', 'page_view', {
-        page_path: event.urlAfterRedirects,
+      router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+        gtag('event', 'page_view', {
+          page_path: event.urlAfterRedirects,
+        });
       });
-    });
+
+      this.initialized = true;
+    };
+
+    document.head.prepend(customGtagScriptEle);
   }
 
   public setUserId(userId: string) {
-    gtag('config', this.ga4Id, {user_id: userId});
+    if (this.initialized) {
+      gtag('config', this.ga4Id, {user_id: userId});
+    }
   }
 
   public event(eventName: string, params = {}) {
-    gtag('event', eventName, params);
+    if (this.initialized) {
+      gtag('event', eventName, params);
+    }
   }
 
   public serviceLevel(serviceLevel: string) {
-    gtag('set', 'user_properties', {serviceLevel});
+    if (this.initialized) {
+      gtag('set', 'user_properties', {serviceLevel});
+    }
   }
 }

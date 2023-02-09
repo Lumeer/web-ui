@@ -174,9 +174,7 @@ export class ViewsEffects {
           paths.push(mapPositionPathParams(navigation.mapPosition));
         }
         if (this.configurationService.getConfiguration().analytics) {
-          if (this.configurationService.getConfiguration().ga4Id) {
-            this.ga4.event('view_create', {count: Object.keys(views).length + 1});
-          }
+          this.ga4.event('view_create', {count: Object.keys(views).length + 1});
 
           if (this.configurationService.getConfiguration().mixpanelKey) {
             mixpanel.track('View Create', {
