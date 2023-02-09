@@ -20,7 +20,6 @@
 import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CollectionModule} from './collection/collection.module';
@@ -34,21 +33,9 @@ import {PermissionsCheckService} from './core/service/permissions-check.service'
 import {AppIdService} from './core/service/app-id.service';
 import {PrintModule} from './print/print.module';
 import {ConfigurationService} from './configuration/configuration.service';
-import {configuration} from '../environments/configuration';
 import {LinkTypeModule} from './link-type/link-type.module';
 import {UserModule} from './user/user.module';
 import {CurrentUserCheckService} from './core/service/current-user-check.service';
-
-export const angularticsSettings: Partial<Angulartics2Settings> = {
-  developerMode: !configuration.analytics,
-  pageTracking: {
-    clearIds: true,
-    idsRegExp: new RegExp('^[0-9a-z]{24}$'),
-  },
-  ga: {
-    anonymizeIp: true,
-  },
-};
 
 const disableAnimations =
   !('animate' in document.documentElement) || (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent));
@@ -67,7 +54,6 @@ const disableAnimations =
     WorkspaceModule,
     UserModule,
     AppRoutingModule, // needs to be declared after all other routing modules
-    Angulartics2Module.forRoot(angularticsSettings),
   ],
   providers: [
     {

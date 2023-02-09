@@ -31,19 +31,15 @@ import {View} from '../../../../core/store/views/view';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import mixpanel from 'mixpanel-browser';
-import {Angulartics2} from 'angulartics2';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
-import {
-  selectCurrentUser,
-  selectCurrentUserForWorkspace,
-  selectUsersForWorkspace,
-} from '../../../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../../../core/store/users/users.state';
 import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {selectViewById} from '../../../../core/store/views/views.state';
 import {Team} from '../../../../core/store/teams/team';
 import {selectTeamsForWorkspace} from '../../../../core/store/teams/teams.state';
+import {Ga4Service} from '../../../../core/service/ga4.service';
 
 @Component({
   templateUrl: './share-view-modal.component.html',
@@ -72,7 +68,7 @@ export class ShareViewModalComponent implements OnInit {
     private bsModalRef: BsModalRef,
     private store$: Store<AppState>,
     private configurationService: ConfigurationService,
-    private angulartics2: Angulartics2
+    private ga4: Ga4Service
   ) {}
 
   public ngOnInit() {
@@ -108,14 +104,7 @@ export class ShareViewModalComponent implements OnInit {
     );
 
     if (this.configurationService.getConfiguration().analytics) {
-      this.angulartics2.eventTrack.next({
-        action: 'View share',
-        properties: {
-          category: 'Collaboration',
-          label: 'view',
-          value: this.view.id,
-        },
-      });
+      this.ga4.event('view_share', {view: this.view.id});
 
       if (this.configurationService.getConfiguration().mixpanelKey) {
         mixpanel.track('View Shared', {view: this.view.id});

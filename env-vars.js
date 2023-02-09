@@ -29,6 +29,7 @@ config.SENTRY_DSN = env.SENTRY_DSN;
 config.SESSION_TIMEOUT = env.SESSION_TIMEOUT;
 config.SMARTLOOK_KEY = env.SMARTLOOK_KEY;
 config.ADMIN_USER_EMAILS = env.ADMIN_USER_EMAILS;
+config.GA4_ID = env.GA4_ID;
 
 const dir = './src/assets/config';
 
