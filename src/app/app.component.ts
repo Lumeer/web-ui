@@ -22,7 +22,6 @@ import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import * as Sentry from '@sentry/browser';
-import {Angulartics2GoogleAnalytics} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
 import {combineLatest, Observable, of, switchMap} from 'rxjs';
@@ -52,6 +51,7 @@ import {selectWorkspace} from './core/store/navigation/navigation.state';
 import {ApplicationTourService} from './core/service/application-tour.service';
 import {ViewSettingsService} from './core/service/view-settings.service';
 import {SleepDetectionService} from './core/service/sleep-detection.service';
+import {Ga4Service} from './core/service/ga4.service';
 
 @Component({
   selector: APP_NAME_SELECTOR,
@@ -61,7 +61,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   public showPublicProjectWarning$: Observable<boolean>;
 
   constructor(
-    private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
     private authService: AuthService,
     private router: Router,
     private store$: Store<AppState>,
@@ -76,6 +75,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private viewSettingsService: ViewSettingsService,
     private configurationService: ConfigurationService,
     private applicationTourService: ApplicationTourService,
+    private ga4: Ga4Service,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle($localize`:@@page.title:Lumeer | Visual, easy project and team management`);
@@ -167,7 +167,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.angulartics2GoogleAnalytics.startTracking();
+    if (this.configurationService.getConfiguration().ga4Id) {
+      this.ga4.init(this.configurationService.getConfiguration().ga4Id, this.router);
+    }
 
     if (this.configurationService.getConfiguration().mixpanelKey) {
       mixpanel.init(this.configurationService.getConfiguration().mixpanelKey, {cross_site_cookie: true});
@@ -187,7 +189,10 @@ export class AppComponent implements OnInit, AfterViewInit {
         const signUpDate = dateToMonthYear(user.agreementDate);
         const serviceLevel: string = limits ? limits.serviceLevel : ServiceLevelType.FREE;
 
-        this.setAnalyticsUsername(userIdHash);
+        this.ga4.setUserId(userIdHash);
+        this.ga4.serviceLevel(serviceLevel);
+        this.ga4.event('user_login', {date: new Date()});
+
         this.setAnalyticsDimensions(serviceLevel, signUpDate);
 
         this.configureSentryUserScope(userIdHash);
@@ -196,14 +201,6 @@ export class AppComponent implements OnInit, AfterViewInit {
           mixpanel.track('Application Started');
         }
       });
-  }
-
-  private setAnalyticsUsername(userIdHash: string) {
-    if (!this.configurationService.getConfiguration().analytics) {
-      return;
-    }
-
-    this.angulartics2GoogleAnalytics.setUsername(userIdHash);
   }
 
   private setAnalyticsDimensions(serviceLevel: string, monthYear?: string) {
@@ -215,8 +212,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (monthYear) {
       dimensions.dimension1 = monthYear;
     }
-
-    this.angulartics2GoogleAnalytics.setUserProperties(dimensions);
 
     if (this.configurationService.getConfiguration().mixpanelKey) {
       mixpanel.register({'Registered on': monthYear, 'Service Level': serviceLevel});
