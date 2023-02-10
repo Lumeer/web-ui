@@ -18,24 +18,29 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ResourceType} from '../model/resource-type';
 import {RoleGroup, TranslatedRole} from '../model/role-group';
 import {parseSelectTranslation} from '../../shared/utils/translation.utils';
 import {RoleType} from '../model/role-type';
+import {ResourcePermissionType} from '../model/resource-permission-type';
 
 @Injectable()
 export class RoleGroupService {
-  public createResourceGroups(type: ResourceType): RoleGroup[] {
+  public createResourceGroups(type: ResourcePermissionType): RoleGroup[] {
     switch (type) {
-      case ResourceType.Organization:
+      case ResourcePermissionType.Organization:
         return this.createOrganizationGroups();
-      case ResourceType.Project:
+      case ResourcePermissionType.Project:
         return this.createProjectGroups();
-      case ResourceType.Collection:
-      case ResourceType.LinkType:
+      case ResourcePermissionType.Collection:
         return this.createCollectionGroups();
-      case ResourceType.View:
+      case ResourcePermissionType.LinkType:
+        return this.createLinkTypeGroups();
+      case ResourcePermissionType.View:
         return this.createViewGroups();
+      case ResourcePermissionType.ViewCollection:
+        return this.createViewCollectionGroups();
+      case ResourcePermissionType.ViewLinkType:
+        return this.createViewLinkTypeGroups();
       default:
         return [];
     }
@@ -182,6 +187,32 @@ export class RoleGroupService {
     ];
   }
 
+  private createLinkTypeGroups(): RoleGroup[] {
+    return [
+      {
+        order: 1,
+        roles: [
+          this.createLinkTypeRole(RoleType.Read),
+          this.createLinkTypeRole(RoleType.Manage),
+          this.createLinkTypeRole(RoleType.UserConfig),
+          this.createLinkTypeRole(RoleType.TechConfig),
+          this.createLinkTypeRole(RoleType.AttributeEdit),
+        ],
+      },
+      {
+        title: this.translateGroupType(RoleGroupType.Data),
+        order: 2,
+        roles: [
+          this.createLinkTypeRole(RoleType.DataRead),
+          this.createLinkTypeRole(RoleType.DataWrite),
+          this.createLinkTypeRole(RoleType.DataContribute),
+          this.createLinkTypeRole(RoleType.DataDelete),
+          this.createLinkTypeRole(RoleType.CommentContribute),
+        ],
+      },
+    ];
+  }
+
   private createViewGroups(): RoleGroup[] {
     return [
       {
@@ -208,10 +239,50 @@ export class RoleGroupService {
     ];
   }
 
+  private createViewCollectionGroups(): RoleGroup[] {
+    return [
+      {
+        order: 1,
+        roles: [this.createCollectionRole(RoleType.Read)],
+      },
+      {
+        title: this.translateGroupType(RoleGroupType.Data),
+        order: 2,
+        roles: [
+          this.createCollectionRole(RoleType.DataRead),
+          this.createCollectionRole(RoleType.DataWrite),
+          this.createCollectionRole(RoleType.DataContribute),
+          this.createCollectionRole(RoleType.DataDelete),
+          this.createCollectionRole(RoleType.CommentContribute),
+        ],
+      },
+    ];
+  }
+
+  private createViewLinkTypeGroups(): RoleGroup[] {
+    return [
+      {
+        order: 1,
+        roles: [this.createLinkTypeRole(RoleType.Read)],
+      },
+      {
+        title: this.translateGroupType(RoleGroupType.Data),
+        order: 2,
+        roles: [
+          this.createLinkTypeRole(RoleType.DataRead),
+          this.createLinkTypeRole(RoleType.DataWrite),
+          this.createLinkTypeRole(RoleType.DataContribute),
+          this.createLinkTypeRole(RoleType.DataDelete),
+          this.createLinkTypeRole(RoleType.CommentContribute),
+        ],
+      },
+    ];
+  }
+
   private createOrganizationRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
       title: transitive
-        ? this.workspaceTransitiveRoleTitle(type, ResourceType.Organization)
+        ? this.workspaceTransitiveRoleTitle(type, ResourcePermissionType.Organization)
         : this.organizationRoleTitle(type),
       tooltip: this.organizationRoleTooltip(type, transitive),
       type,
@@ -221,7 +292,9 @@ export class RoleGroupService {
 
   private createProjectRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
-      title: transitive ? this.workspaceTransitiveRoleTitle(type, ResourceType.Project) : this.projectRoleTitle(type),
+      title: transitive
+        ? this.workspaceTransitiveRoleTitle(type, ResourcePermissionType.Project)
+        : this.projectRoleTitle(type),
       tooltip: this.projectRoleTooltip(type, transitive),
       type,
       transitive,
@@ -288,15 +361,15 @@ export class RoleGroupService {
     );
   }
 
-  private workspaceTransitiveRoleTitle(type: RoleType, resourceType: ResourceType): string {
+  private workspaceTransitiveRoleTitle(type: RoleType, resourceType: ResourcePermissionType): string {
     switch (resourceType) {
-      case ResourceType.Organization:
+      case ResourcePermissionType.Organization:
       default:
         return parseSelectTranslation(
           $localize`:@@organization.permission.transitive.role.organization.title:{type, select, Read {Join Everything} Manage {Manage Everything} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
           {type}
         );
-      case ResourceType.Project:
+      case ResourcePermissionType.Project:
         return parseSelectTranslation(
           $localize`:@@organization.permission.transitive.role.project.title:{type, select, Read {Join Everything} Manage {Manage Everytning} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types} ViewContribute {Create Views} CollectionContribute {Create Tables} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
           {type}
@@ -360,6 +433,15 @@ export class RoleGroupService {
     };
   }
 
+  private createLinkTypeRole(type: RoleType, transitive?: boolean): TranslatedRole {
+    return {
+      title: this.collectionRoleTitle(type),
+      tooltip: this.linkTypeRoleTooltip(type),
+      type,
+      transitive,
+    };
+  }
+
   private collectionRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
       $localize`:@@collection.permission.role.title:{type, select, Read {Join} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}`,
@@ -389,6 +471,31 @@ export class RoleGroupService {
         return $localize`:@@collection.permission.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in this table.`;
       case RoleType.TechConfig:
         return $localize`:@@collection.permission.role.tooltip.TechConfig:A user can add, modify, and delete automations in this table.`;
+    }
+  }
+
+  private linkTypeRoleTooltip(type: RoleType): string {
+    switch (type) {
+      case RoleType.Read:
+        return $localize`:@@linkType.permission.role.tooltip.Read:A user joins this link type and can see it. Users need other rights to be able to see and work with the link type content.`;
+      case RoleType.Manage:
+        return $localize`:@@linkType.permission.role.tooltip.Manage:A user can change the link type name, color, icon, description and can delete it.`;
+      case RoleType.UserConfig:
+        return $localize`:@@linkType.permission.role.tooltip.UserConfig:A user can manage user rights in this link type.`;
+      case RoleType.DataRead:
+        return $localize`:@@linkType.permission.role.tooltip.DataRead:A user can read all data in this link type.`;
+      case RoleType.DataWrite:
+        return $localize`:@@linkType.permission.role.tooltip.DataWrite:A user can modify all data in this link type.`;
+      case RoleType.DataDelete:
+        return $localize`:@@linkType.permission.role.tooltip.DataDelete:A user can delete all records (rows) in this link type.`;
+      case RoleType.DataContribute:
+        return $localize`:@@linkType.permission.role.tooltip.DataContribute:A user can create, see, modify and delete only their own records (rows) in this link type.`;
+      case RoleType.CommentContribute:
+        return $localize`:@@linkType.permission.role.tooltip.CommentContribute:A user can comment all records in this link type.`;
+      case RoleType.AttributeEdit:
+        return $localize`:@@linkType.permission.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in this link type.`;
+      case RoleType.TechConfig:
+        return $localize`:@@linkType.permission.role.tooltip.TechConfig:A user can add, modify, and delete automations in this link type.`;
     }
   }
 

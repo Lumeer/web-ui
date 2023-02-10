@@ -35,7 +35,7 @@
            aria-hidden="true">
         </i>
 
-        <i class="fas fa-fw fa-share-alt text-success cursor-pointer"
+        <i class="fal fa-fw fa-users-cog text-success cursor-pointer"
            [class.me-2]="permissions?.roles?.Manage"
            *ngIf="permissions?.roles?.UserConfig"
            (click)="$event.preventDefault(); $event.stopPropagation(); onShareClick()"

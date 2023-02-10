@@ -21,9 +21,10 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {User} from '../../../../core/store/users/user';
 import {Team} from '../../../../core/store/teams/team';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'team-table',
@@ -42,7 +43,7 @@ export class TeamTableComponent {
   public permissions: Permissions;
 
   @Input()
-  public resourceType: ResourceType;
+  public resourceType: ResourcePermissionType;
 
   @Input()
   public deletableTeamIds: string[];
@@ -70,6 +71,9 @@ export class TeamTableComponent {
 
   @Input()
   public project: Project;
+
+  @Input()
+  public view: View;
 
   @Output()
   public teamUpdated = new EventEmitter<Team>();

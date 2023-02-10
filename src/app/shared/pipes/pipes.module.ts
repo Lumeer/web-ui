@@ -116,6 +116,8 @@ import {AggregationDropdownOptionsPipe} from './aggregation-dropdown-options.pip
 import {AggregationTypeIconPipe} from './aggregation-type-icon.pipe';
 import {AggregationTypeNamePipe} from './aggregation-type-name.pipe';
 import {ViewWorkspacePipe} from './view-workspace.pipe';
+import {ResourcePermissionTypePipe} from './resource-permission-type.pipe';
+import {CanReadLinkDirectlyPipe} from './can-read-link-directly.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -205,6 +207,7 @@ import {ViewWorkspacePipe} from './view-workspace.pipe';
     ModifyAttributeForQueryFilterPipe,
     StateListDataValuePipe,
     CanCreateLinksPipe,
+    CanReadLinkDirectlyPipe,
     ViewIconPipe,
     ViewColorPipe,
     ViewLinkPipe,
@@ -214,6 +217,7 @@ import {ViewWorkspacePipe} from './view-workspace.pipe';
     AggregationDropdownOptionsPipe,
     AggregationTypeIconPipe,
     AggregationTypeNamePipe,
+    ResourcePermissionTypePipe,
   ],
   exports: [
     DataPipesModule,
@@ -304,6 +308,7 @@ import {ViewWorkspacePipe} from './view-workspace.pipe';
     ModifyAttributeForQueryFilterPipe,
     StateListDataValuePipe,
     CanCreateLinksPipe,
+    CanReadLinkDirectlyPipe,
     ViewIconPipe,
     ViewColorPipe,
     ViewLinkPipe,
@@ -313,6 +318,7 @@ import {ViewWorkspacePipe} from './view-workspace.pipe';
     AggregationDropdownOptionsPipe,
     AggregationTypeIconPipe,
     AggregationTypeNamePipe,
+    ResourcePermissionTypePipe,
   ],
 })
 export class PipesModule {}

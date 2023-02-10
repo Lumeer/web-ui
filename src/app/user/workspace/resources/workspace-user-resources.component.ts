@@ -25,7 +25,6 @@ import {debounceTime, map} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {ResourceType} from '../../../core/model/resource-type';
 import {selectCurrentUser, selectUserByWorkspace} from '../../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
@@ -40,6 +39,7 @@ import {
 } from '../../settings/tab/resources/list/resource-roles-data';
 import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 import {RoleType} from '../../../core/model/role-type';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Component({
   templateUrl: './workspace-user-resources.component.html',
@@ -67,7 +67,7 @@ export class WorkspaceUserResourcesComponent implements OnInit, OnDestroy {
           .map(project => this.computeData(project, organization, user))
           .filter(datum => datum.roles.length || datum.transitiveRoles.length);
 
-        const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.Project, user?.id === currentUser?.id);
+        const emptyTitle = resourceRolesDataEmptyTitle(ResourcePermissionType.Project, user?.id === currentUser?.id);
         return {objects, emptyTitle};
       })
     );
@@ -95,7 +95,13 @@ export class WorkspaceUserResourcesComponent implements OnInit, OnDestroy {
     let transitiveRoles = [];
     let roles = [];
     if (organizationRoles.some(role => role.type === RoleType.Read)) {
-      transitiveRoles = userTransitiveRoles(organization, project, user, ResourceType.Project, project.permissions);
+      transitiveRoles = userTransitiveRoles(
+        organization,
+        project,
+        user,
+        ResourcePermissionType.Project,
+        project.permissions
+      );
       roles = project.permissions?.users?.find(role => role.id === user.id)?.roles || [];
     }
 

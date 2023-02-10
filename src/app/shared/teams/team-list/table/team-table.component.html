@@ -30,7 +30,7 @@
                     [changeRoles]="changeRoles"
                     [editable]="editable"
                     [emitAllChanges]="emitAllChanges"
-                    [transitiveRoles]="organization | teamTransitiveRoles:project:team:resourceType"
+                    [transitiveRoles]="organization | teamTransitiveRoles:project:team:resourceType:view"
                     [deletable]="deletableTeamIds | includes:team.id"
                     [removable]="removableTeamIds | includes:team.id"
                     [resourceType]="resourceType"

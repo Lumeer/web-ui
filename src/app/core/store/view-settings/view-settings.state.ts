@@ -64,6 +64,12 @@ export const selectViewSettingsChanged = createSelector(
     view && viewSettingsChanged(view.settings, settings, collectionsMap, linkTypesMap)
 );
 
+export const selectViewSettingsCollectionPermissions = (collectionId: string) =>
+  createSelector(selectViewSettings, settings => settings.permissions?.collections?.[collectionId]);
+
+export const selectViewSettingsLinkTypePermissions = (linkTypeId: string) =>
+  createSelector(selectViewSettings, settings => settings.permissions?.linkTypes?.[linkTypeId]);
+
 export const selectDataSettingsIncludeSubItems = createSelector(
   selectViewSettings,
   settings => settings?.data?.includeSubItems

@@ -28,11 +28,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import {Role} from '../../core/store/permissions/permissions';
-import {ResourceType} from '../../core/model/resource-type';
 import {RoleGroupService} from '../../core/service/role-group.service';
 import {RoleGroup, TranslatedRole} from '../../core/model/role-group';
 import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
 import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
+import {ResourcePermissionType} from '../../core/model/resource-permission-type';
 
 @Component({
   selector: 'roles',
@@ -43,7 +43,7 @@ import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
 })
 export class RolesComponent implements OnChanges {
   @Input()
-  public resourceType: ResourceType;
+  public resourceType: ResourcePermissionType;
 
   @Input()
   public roles: Role[];

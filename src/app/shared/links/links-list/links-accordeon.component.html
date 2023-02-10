@@ -17,6 +17,11 @@
         </icons-presenter>
         <div class="fw-bold text-truncate me-2" [title]="linkType.name">{{linkType.name}}</div>
         <div class="d-flex align-items-center">
+          <i *ngIf="linkType | canReadLinkDirectly:permissions?.linkTypes"
+             class="fal fa-fw fa-users-cog me-2"
+             title="Set Link Type permissions"
+             i18n-title="@@table.body.row.links.permissions"
+             (click)="onPermissions($event, linkType)"></i>
           <i *ngIf="linkType | canCreateLinks:permissions?.linkTypes"
              class="fas fa-plus-circle me-2"
              title="Add/Remove links"

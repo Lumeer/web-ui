@@ -18,17 +18,15 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../core/model/resource-type';
-import {ResourcePermissionType} from '../../core/model/resource-permission-type';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 
 @Pipe({
-  name: 'isOrganizationType',
+  name: 'canReadLinkDirectly',
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class IsOrganizationTypePipe implements PipeTransform {
-  public transform(type: ResourceType | ResourcePermissionType): boolean {
-    return type === ResourceType.Organization;
+@Injectable({providedIn: 'root'})
+export class CanReadLinkDirectlyPipe implements PipeTransform {
+  public transform(linkType: LinkType, linkTypesPermissions: AllowedPermissionsMap): boolean {
+    return linkTypesPermissions?.[linkType.id]?.roles?.Read;
   }
 }

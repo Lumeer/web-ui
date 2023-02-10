@@ -17,18 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../core/model/resource-type';
-import {ResourcePermissionType} from '../../core/model/resource-permission-type';
+import {ResourceType} from './resource-type';
 
-@Pipe({
-  name: 'isOrganizationType',
-})
-@Injectable({
-  providedIn: 'root',
-})
-export class IsOrganizationTypePipe implements PipeTransform {
-  public transform(type: ResourceType | ResourcePermissionType): boolean {
-    return type === ResourceType.Organization;
-  }
+export enum ResourcePermissionType {
+  Organization = 'organization',
+  Project = 'project',
+  Collection = 'collection',
+  View = 'view',
+  LinkType = 'link_type',
+  ViewCollection = 'view_collection',
+
+  ViewLinkType = 'view_link_type',
 }
+
+export const resourcePermissionTypeMap: Partial<Record<ResourceType, ResourcePermissionType>> = {
+  [ResourceType.Organization]: ResourcePermissionType.Organization,
+  [ResourceType.Project]: ResourcePermissionType.Project,
+  [ResourceType.Collection]: ResourcePermissionType.Collection,
+  [ResourceType.View]: ResourcePermissionType.View,
+  [ResourceType.LinkType]: ResourcePermissionType.LinkType,
+};

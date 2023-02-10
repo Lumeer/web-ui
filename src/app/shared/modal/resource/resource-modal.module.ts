@@ -17,18 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../core/model/resource-type';
-import {ResourcePermissionType} from '../../core/model/resource-permission-type';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-@Pipe({
-  name: 'isOrganizationType',
+import {ResourceModalHeaderComponent} from './header/resource-modal-header.component';
+import {PresenterModule} from '../../presenter/presenter.module';
+import {PipesModule} from '../../pipes/pipes.module';
+
+@NgModule({
+  declarations: [ResourceModalHeaderComponent],
+  exports: [ResourceModalHeaderComponent],
+  imports: [CommonModule, PresenterModule, PipesModule],
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class IsOrganizationTypePipe implements PipeTransform {
-  public transform(type: ResourceType | ResourcePermissionType): boolean {
-    return type === ResourceType.Organization;
-  }
-}
+export class ResourceModalModule {}

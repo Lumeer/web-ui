@@ -18,43 +18,25 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../../core/model/resource-type';
 import {Role} from '../../../core/store/permissions/permissions';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
-import {teamRolesInOrganization, teamRolesInProject} from '../../utils/permission.utils';
+import {teamTransitiveRoles} from '../../utils/permission.utils';
 import {Team} from '../../../core/store/teams/team';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
+import {View} from '../../../core/store/views/view';
 
 @Pipe({
   name: 'teamTransitiveRoles',
 })
 export class TeamTransitiveRolesPipe implements PipeTransform {
-  public transform(organization: Organization, project: Project, team: Team, resourceType: ResourceType): Role[] {
-    switch (resourceType) {
-      case ResourceType.Project: {
-        return [
-          ...teamRolesInOrganization(organization, team).filter(role => role.transitive),
-          ...teamRolesInOrganization(organization, team)
-            .filter(role => role.transitive)
-            .map(role => ({
-              ...role,
-              transitive: false,
-            })),
-        ];
-      }
-      case ResourceType.View:
-      case ResourceType.Collection: {
-        return [
-          ...teamRolesInProject(organization, project, team)
-            .filter(role => role.transitive)
-            .map(role => ({
-              ...role,
-              transitive: false,
-            })),
-        ];
-      }
-      default:
-        return [];
-    }
+  public transform(
+    organization: Organization,
+    project: Project,
+    team: Team,
+    resourceType: ResourcePermissionType,
+    view?: View
+  ): Role[] {
+    return teamTransitiveRoles(organization, project, team, resourceType, view);
   }
 }

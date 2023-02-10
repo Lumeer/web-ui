@@ -20,11 +20,11 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {User} from '../../../../core/store/users/user';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Team} from '../../../../core/store/teams/team';
 import {InputBoxComponent} from '../../../input/input-box/input-box.component';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'team-component',
@@ -34,7 +34,7 @@ import {Permissions, Role} from '../../../../core/store/permissions/permissions'
 })
 export class TeamComponent {
   @Input()
-  public resourceType: ResourceType;
+  public resourceType: ResourcePermissionType;
 
   @Input()
   public permissions: Permissions;

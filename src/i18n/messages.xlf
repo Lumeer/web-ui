@@ -3884,7 +3884,7 @@
           <context context-type="linenumber">25,29</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/view-resource-permissions-modal.component.html</context>
           <context context-type="linenumber">27,31</context>
         </context-group>
         <context-group purpose="location">
@@ -4052,7 +4052,7 @@
           <context context-type="linenumber">26,31</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/view-resource-permissions-modal.component.html</context>
           <context context-type="linenumber">28,33</context>
         </context-group>
         <context-group purpose="location">
@@ -6149,7 +6149,7 @@
           <context context-type="linenumber">32,35</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/view-resource-permissions-modal.component.html</context>
           <context context-type="linenumber">34,37</context>
         </context-group>
       </trans-unit>
@@ -7112,42 +7112,42 @@
       <trans-unit id="view.share.dialog.input.placeholder" datatype="html">
         <source>Enter user email and press Enter</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/input/share-view-input.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/input/view-resource-permissions-input.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.share.dialog.input.button" datatype="html">
         <source>Add</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/input/share-view-input.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/input/view-resource-permissions-input.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.share.instructions" datatype="html">
         <source>Add Users or Teams (if not already present) to the list. Then set rights of individual Users and Teams for this View.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/view-resource-permissions-body.component.html</context>
           <context context-type="linenumber">13,17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.share.tabs.users" datatype="html">
         <source>Users</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/view-resource-permissions-body.component.html</context>
           <context context-type="linenumber">22,26</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.share.tabs.teams" datatype="html">
         <source>Teams</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/view-resource-permissions-body.component.html</context>
           <context context-type="linenumber">28,33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.share.dialog.title" datatype="html">
         <source>Share View</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context>
+          <context context-type="sourcefile">src/app/shared/modal/view-modal/share/view-resource-permissions-modal.component.html</context>
           <context context-type="linenumber">11,15</context>
         </context-group>
       </trans-unit>

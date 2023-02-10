@@ -24,7 +24,7 @@
                 [resourceType]="resourceType"
                 [user]="user"
                 [workspace]="workspace"
-                [transitiveRoles]="organization | userTransitiveRoles:project:user:resourceType:permissions"
+                [transitiveRoles]="organization | userTransitiveRoles:project:user:resourceType:permissions:view"
                 [permissions]="permissions"
                 [deletable]="deletableUserIds | includes:user.id"
                 [removable]="removableUserIds | includes:user.id"

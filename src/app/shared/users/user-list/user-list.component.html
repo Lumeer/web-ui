@@ -7,7 +7,7 @@
 </div>
 <user-table class="d-block mt-4"
             [users]="users"
-            [resourceType]="resourceType"
+            [resourceType]="resourceType | resourcePermissionType"
             [teams]="teams$ | async"
             [organization]="organization"
             [project]="project"

@@ -1,0 +1,7 @@
+<h5 class="modal-title break-all">
+  <icons-presenter *ngIf="resource | resourceIconsColors as iconColors"
+                   [colors]="iconColors.colors"
+                   [icons]="iconColors.icons">
+  </icons-presenter>
+  <span [style.color]="textColor" class="ms-1">{{resource?.name}}</span>
+</h5>

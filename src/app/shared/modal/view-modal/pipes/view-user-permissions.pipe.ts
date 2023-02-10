@@ -18,19 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {User} from '../../../../../core/store/users/user';
-import {Organization} from '../../../../../core/store/organizations/organization';
-import {Project} from '../../../../../core/store/projects/project';
-import {userCanReadAllInWorkspace} from '../../../../utils/permission.utils';
-import {View} from '../../../../../core/store/views/view';
-import {Permissions, Role} from '../../../../../core/store/permissions/permissions';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 
 @Pipe({
   name: 'viewUserPermissions',
 })
 export class ViewUserPermissionsPipe implements PipeTransform {
-  public transform(view: View, roles: Record<string, Role[]>): Permissions {
-    const userPermissions = [...(view.permissions?.users || [])];
+  public transform(permissions: Permissions, roles: Record<string, Role[]>): Permissions {
+    const userPermissions = [...(permissions?.users || [])];
     Object.keys(roles).forEach(id => {
       const roleIndex = userPermissions.findIndex(role => role.id === id);
       if (roleIndex >= 0) {
@@ -39,6 +34,6 @@ export class ViewUserPermissionsPipe implements PipeTransform {
         userPermissions.push({id, roles: roles[id]});
       }
     });
-    return {...view.permissions, users: userPermissions};
+    return {...permissions, users: userPermissions};
   }
 }

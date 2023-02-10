@@ -28,24 +28,27 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {User} from '../../../../../../core/store/users/user';
-import {DropdownOption} from '../../../../../dropdown/options/dropdown-option';
-import {OptionsDropdownComponent} from '../../../../../dropdown/options/options-dropdown.component';
-import {isEmailValid} from '../../../../../utils/email.utils';
-import {keyboardEventCode, KeyCode} from '../../../../../key-code';
+import {User} from '../../../../core/store/users/user';
+import {DropdownOption} from '../../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../../dropdown/options/options-dropdown.component';
+import {isEmailValid} from '../../../utils/email.utils';
+import {keyboardEventCode, KeyCode} from '../../../key-code';
 
 @Component({
-  selector: 'share-view-input',
-  templateUrl: './share-view-input.component.html',
-  styleUrls: ['./share-view-input.component.scss'],
+  selector: 'view-users-input',
+  templateUrl: './view-users-input.component.html',
+  styleUrls: ['./view-users-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShareViewInputComponent implements OnChanges {
+export class ViewUsersInputComponent implements OnChanges {
   @Input()
   public readableUsers: User[];
 
   @Input()
   public currentUsers: User[];
+
+  @Input()
+  public addNewUsers: boolean;
 
   @Output()
   public selectUser = new EventEmitter<User>();
@@ -87,7 +90,7 @@ export class ShareViewInputComponent implements OnChanges {
     if (selectedUser) {
       this.selectUser.emit(selectedUser);
       this.text = '';
-    } else if (isEmailValid(trimmed)) {
+    } else if (this.addNewUsers && isEmailValid(trimmed)) {
       this.addUser.emit(trimmed);
       this.text = '';
     }
@@ -116,7 +119,7 @@ export class ShareViewInputComponent implements OnChanges {
       const activeOption = this.dropdown?.getActiveOption();
       if (activeOption) {
         this.onSelectOption(activeOption);
-      } else if (canAddUser) {
+      } else if (this.addNewUsers && canAddUser) {
         this.onEnter();
       }
       return;

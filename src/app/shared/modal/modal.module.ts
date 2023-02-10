@@ -44,6 +44,7 @@ import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-lin
 import {ChooseResourceModalModule} from './choose-resource/choose-resource-modal.module';
 import {ChooseStemModalModule} from './choose-stem/choose-stem-modal.module';
 import {CollectionUploadModalModule} from './collection-upload/collection-upload-modal.module';
+import {ResourceModalModule} from './resource/resource-modal.module';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import {CollectionUploadModalModule} from './collection-upload/collection-upload
     ChooseResourceModalModule,
     ChooseStemModalModule,
     CollectionUploadModalModule,
+    ResourceModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -100,6 +102,7 @@ import {CollectionUploadModalModule} from './collection-upload/collection-upload
     ChooseResourceModalModule,
     ChooseStemModalModule,
     CollectionUploadModalModule,
+    ResourceModalModule,
   ],
 })
 export class ModalModule {}

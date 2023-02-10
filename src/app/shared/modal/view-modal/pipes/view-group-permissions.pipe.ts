@@ -18,15 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {View} from '../../../../../core/store/views/view';
-import {Permissions, Role} from '../../../../../core/store/permissions/permissions';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 
 @Pipe({
   name: 'viewGroupPermissions',
 })
 export class ViewGroupPermissionsPipe implements PipeTransform {
-  public transform(view: View, roles: Record<string, Role[]>): Permissions {
-    const teamPermissions = [...(view.permissions?.groups || [])];
+  public transform(permissions: Permissions, roles: Record<string, Role[]>): Permissions {
+    const teamPermissions = [...(permissions?.groups || [])];
     Object.keys(roles).forEach(id => {
       const roleIndex = teamPermissions.findIndex(role => role.id === id);
       if (roleIndex >= 0) {
@@ -35,6 +34,6 @@ export class ViewGroupPermissionsPipe implements PipeTransform {
         teamPermissions.push({id, roles: roles[id]});
       }
     });
-    return {...view.permissions, groups: teamPermissions};
+    return {...permissions, groups: teamPermissions};
   }
 }

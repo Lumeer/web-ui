@@ -18,26 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Permissions, Role} from '../../../core/store/permissions/permissions';
-import {User} from '../../../core/store/users/user';
-import {Project} from '../../../core/store/projects/project';
-import {Organization} from '../../../core/store/organizations/organization';
-import {userTransitiveRoles} from '../../utils/permission.utils';
-import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
-import {View} from '../../../core/store/views/view';
+import {ResourceType} from '../../core/model/resource-type';
+import {ResourcePermissionType, resourcePermissionTypeMap} from '../../core/model/resource-permission-type';
 
 @Pipe({
-  name: 'userTransitiveRoles',
+  name: 'resourcePermissionType',
 })
-export class UserTransitiveRolesPipe implements PipeTransform {
-  public transform(
-    organization: Organization,
-    project: Project,
-    user: User,
-    resourceType: ResourcePermissionType,
-    permissions: Permissions,
-    view?: View
-  ): Role[] {
-    return userTransitiveRoles(organization, project, user, resourceType, permissions, view);
+export class ResourcePermissionTypePipe implements PipeTransform {
+  public transform(type: ResourceType): ResourcePermissionType {
+    return resourcePermissionTypeMap[type];
   }
 }

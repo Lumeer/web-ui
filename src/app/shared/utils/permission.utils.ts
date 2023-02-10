@@ -46,7 +46,7 @@ import {
   userCanReadDataResource,
 } from '@lumeer/data-filters';
 import {Perspective} from '../../view/perspectives/perspective';
-import {ResourceType} from '../../core/model/resource-type';
+import {ResourcePermissionType} from '../../core/model/resource-permission-type';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -407,8 +407,9 @@ export function userTransitiveRoles(
   organization: Organization,
   project: Project,
   user: User,
-  resourceType: ResourceType,
-  permissions: Permissions
+  resourceType: ResourcePermissionType,
+  permissions: Permissions,
+  view?: View
 ): Role[] {
   if (!user) {
     return [];
@@ -422,10 +423,10 @@ export function userTransitiveRoles(
   }, []);
 
   switch (resourceType) {
-    case ResourceType.Organization: {
+    case ResourcePermissionType.Organization: {
       return userTeamsRoles;
     }
-    case ResourceType.Project: {
+    case ResourcePermissionType.Project: {
       return [
         ...userRolesInOrganization(organization, user).filter(role => role.transitive),
         ...userRolesInOrganization(organization, user)
@@ -437,9 +438,9 @@ export function userTransitiveRoles(
         ...userTeamsRoles,
       ];
     }
-    case ResourceType.View:
-    case ResourceType.Collection:
-    case ResourceType.LinkType: {
+    case ResourcePermissionType.View:
+    case ResourcePermissionType.Collection:
+    case ResourcePermissionType.LinkType: {
       return [
         ...userRolesInProject(organization, project, user)
           .filter(role => role.transitive)
@@ -448,6 +449,66 @@ export function userTransitiveRoles(
             transitive: false,
           })),
         ...userTeamsRoles,
+      ];
+    }
+    case ResourcePermissionType.ViewCollection:
+    case ResourcePermissionType.ViewLinkType: {
+      return [
+        ...userRolesInProject(organization, project, user)
+          .filter(role => role.transitive)
+          .map(role => ({
+            ...role,
+            transitive: false,
+          })),
+        ...userRolesInResource(view, user, userTeamIds),
+        ...userTeamsRoles,
+      ];
+    }
+    default:
+      return [];
+  }
+}
+
+export function teamTransitiveRoles(
+  organization: Organization,
+  project: Project,
+  team: Team,
+  resourceType: ResourcePermissionType,
+  view?: View
+): Role[] {
+  switch (resourceType) {
+    case ResourcePermissionType.Project: {
+      return [
+        ...teamRolesInOrganization(organization, team).filter(role => role.transitive),
+        ...teamRolesInOrganization(organization, team)
+          .filter(role => role.transitive)
+          .map(role => ({
+            ...role,
+            transitive: false,
+          })),
+      ];
+    }
+    case ResourcePermissionType.View:
+    case ResourcePermissionType.Collection: {
+      return [
+        ...teamRolesInProject(organization, project, team)
+          .filter(role => role.transitive)
+          .map(role => ({
+            ...role,
+            transitive: false,
+          })),
+      ];
+    }
+    case ResourcePermissionType.ViewCollection:
+    case ResourcePermissionType.ViewLinkType: {
+      return [
+        ...teamRolesInProject(organization, project, team)
+          .filter(role => role.transitive)
+          .map(role => ({
+            ...role,
+            transitive: false,
+          })),
+        ...teamRolesInResource(view, team),
       ];
     }
     default:

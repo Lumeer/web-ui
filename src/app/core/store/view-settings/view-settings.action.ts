@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {ModalSettings, ResourceAttributeSettings, ViewSettings} from './view-settings';
+import {Permissions} from '../permissions/permissions';
 
 export enum ViewSettingsActionType {
   SET_SETTINGS = '[View Settings] Set Settings',
@@ -32,6 +33,8 @@ export enum ViewSettingsActionType {
   ADD_ATTRIBUTE = '[View Settings] Add Attribute',
   SET_ATTRIBUTE = '[View Settings] Set Attribute',
   SET_MODAL = '[View Settings] Set Modal',
+  SET_COLLECTION_PERMISSIONS = '[View Settings] Set Collection Permissions',
+  SET_LINK_TYPE_PERMISSIONS = '[View Settings] Set Link Type Permissions',
 
   CLEAR = '[View Settings] Clear',
 }
@@ -124,6 +127,30 @@ export namespace ViewSettingsAction {
     ) {}
   }
 
+  export class SetCollectionPermissions implements Action {
+    public readonly type = ViewSettingsActionType.SET_COLLECTION_PERMISSIONS;
+
+    public constructor(
+      public payload: {
+        settingsId: string;
+        collectionId: string;
+        permissions: Permissions;
+      }
+    ) {}
+  }
+
+  export class SetLinkTypePermissions implements Action {
+    public readonly type = ViewSettingsActionType.SET_LINK_TYPE_PERMISSIONS;
+
+    public constructor(
+      public payload: {
+        settingsId: string;
+        linkTypeId: string;
+        permissions: Permissions;
+      }
+    ) {}
+  }
+
   export class Clear implements Action {
     public readonly type = ViewSettingsActionType.CLEAR;
   }
@@ -137,5 +164,7 @@ export namespace ViewSettingsAction {
     | AddAttribute
     | SetAttribute
     | SetModal
+    | SetCollectionPermissions
+    | SetLinkTypePermissions
     | Clear;
 }

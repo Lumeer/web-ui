@@ -30,13 +30,13 @@
       </ul>
 
       <ng-container *ngIf="selectedTab === viewTab.Users">
-        <share-view-input
-          class="d-block mb-2 mt-4"
-          [readableUsers]="usersWithReadPermission"
-          [currentUsers]="[data.staticUsers, data.changeableUsers, data.newUsers] | concat"
-          (selectUser)="onUserSelected($event)"
-          (addUser)="addNewUser($event)">
-        </share-view-input>
+        <view-users-input class="d-block mb-2 mt-4"
+                          [readableUsers]="usersWithReadPermission"
+                          [currentUsers]="[data.staticUsers, data.changeableUsers, data.newUsers] | concat"
+                          [addNewUsers]="true"
+                          (selectUser)="onUserSelected($event)"
+                          (addUser)="addNewUser($event)">
+        </view-users-input>
 
         <view-users [view]="view"
                     [organization]="organization"
@@ -44,7 +44,7 @@
                     [currentUser]="currentUser"
                     [staticUsers]="data.staticUsers"
                     [teams]="teams"
-                    [permissions]="view | viewUserPermissions:data.userRoles"
+                    [permissions]="view?.permissions | viewUserPermissions:data.userRoles"
                     [otherUsers]="[data.changeableUsers, data.newUsers] | concat"
                     (userRemoved)="deleteUser($event)"
                     (userRolesChange)="onNewRoles($event.user, $event.roles)">
@@ -57,7 +57,7 @@
                   [organization]="organization"
                   [project]="project"
                   [view]="view"
-                  [permissions]="view | viewGroupPermissions:data.teamRoles"
+                  [permissions]="view?.permissions | viewGroupPermissions:data.teamRoles"
                   [users]="users"
                   [teams]="teamsWithReadPermission"
                   [currentUser]="currentUser"

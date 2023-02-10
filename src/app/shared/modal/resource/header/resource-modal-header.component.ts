@@ -17,18 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../core/model/resource-type';
-import {ResourcePermissionType} from '../../core/model/resource-permission-type';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {AttributesResource} from '../../../../core/model/resource';
 
-@Pipe({
-  name: 'isOrganizationType',
+@Component({
+  selector: 'resource-modal-header',
+  templateUrl: './resource-modal-header.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'p-3'},
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class IsOrganizationTypePipe implements PipeTransform {
-  public transform(type: ResourceType | ResourcePermissionType): boolean {
-    return type === ResourceType.Organization;
-  }
+export class ResourceModalHeaderComponent {
+  @Input()
+  public resource: AttributesResource;
+
+  @Input()
+  public textColor: string;
 }

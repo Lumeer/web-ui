@@ -19,21 +19,25 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {TranslatedRole} from '../../../core/model/role-group';
-import {ResourceType} from '../../../core/model/resource-type';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Pipe({
   name: 'roleTooltip',
 })
 export class RoleTooltipPipe implements PipeTransform {
-  public transform(role: TranslatedRole, resourceType: ResourceType): string {
+  public transform(role: TranslatedRole, resourceType: ResourcePermissionType): string {
     if (role.fromParentOrTeams) {
       let inheritedMessage: string;
       switch (resourceType) {
-        case ResourceType.Organization:
+        case ResourcePermissionType.Organization:
           inheritedMessage = $localize`:@@organization.permission.role.inherited:This right is obtained from teams.`;
           break;
-        case ResourceType.Project:
+        case ResourcePermissionType.Project:
           inheritedMessage = $localize`:@@project.permission.role.inherited:This right is obtained from teams, or organization.`;
+          break;
+        case ResourcePermissionType.ViewCollection:
+        case ResourcePermissionType.ViewLinkType:
+          inheritedMessage = $localize`:@@view.resource.permission.role.inherited:This right is obtained from teams, organization, project or view.`;
           break;
         default:
           inheritedMessage = $localize`:@@collection.permission.role.inherited:This right is obtained from teams, organization, or project.`;
