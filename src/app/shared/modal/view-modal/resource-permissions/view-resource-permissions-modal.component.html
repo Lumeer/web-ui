@@ -17,6 +17,7 @@
                                     [teams]="teams$ | async"
                                     [users]="users$ | async"
                                     [resourceType]="resourceType"
+                                    [permissions]="permissions$ | async"
                                     (submitPermissions)="onSubmitPermissions($event)">
     </view-resource-permissions-body>
   </div>
