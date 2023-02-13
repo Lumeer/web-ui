@@ -34,14 +34,16 @@ export class Ga4Service {
   public init(ga4Id: string, router: Router) {
     this.ga4Id = ga4Id;
 
+    window['dataLayer'] = window['dataLayer'] || [];
+    window['gtag'] = function () {
+      // eslint-disable-next-line prefer-rest-params
+      window['dataLayer'].push(arguments);
+    };
+
     const customGtagScriptEle: HTMLScriptElement = document.createElement('script');
     customGtagScriptEle.async = true;
     customGtagScriptEle.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4Id;
     customGtagScriptEle.onload = () => {
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).gtag = function (...args) {
-        (window as any).dataLayer.push(args);
-      };
       gtag('js', new Date());
       gtag('config', ga4Id, {send_page_view: false});
 
