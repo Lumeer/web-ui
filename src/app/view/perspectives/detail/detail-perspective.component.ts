@@ -322,7 +322,6 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
 
   public selectDocument(document: DocumentModel) {
     this.emit(this.collection, document);
-    this.loadLinkInstances(document, this.currentView?.id);
   }
 
   public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
@@ -349,15 +348,6 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
       this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query, cursor}));
     } else {
       this.store$.dispatch(new NavigationAction.SetViewCursor({cursor}));
-    }
-  }
-
-  private loadLinkInstances(document: DocumentModel, viewId: string) {
-    if (document) {
-      const query = {stems: [{...createCollectionQueryStem(document.collectionId), documentIds: [document.id]}]};
-      this.loadDataService.setLinkInstancesQueries([query], {viewId});
-    } else {
-      this.loadDataService.clearLinkInstancesQueries();
     }
   }
 

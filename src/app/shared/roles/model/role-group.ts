@@ -17,7 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Role} from '../store/permissions/permissions';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
+import {Role} from '../../../core/store/permissions/permissions';
+import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
 
 export interface RoleGroup {
   title?: string;
@@ -29,4 +31,19 @@ export interface TranslatedRole extends Role {
   title: string;
   tooltip?: string;
   fromParentOrTeams?: boolean;
+  permissionType: ResourcePermissionType;
+}
+
+export function translatedRolesAreSame(t1: TranslatedRole, t2: TranslatedRole): boolean {
+  return rolesAreSame(t1, t2) && t1.permissionType === t2.permissionType;
+}
+
+export function translatedRolesToMap(roles: TranslatedRole[]): Record<ResourcePermissionType, TranslatedRole[]> {
+  return roles.reduce((map, role) => {
+    if (!map[role.permissionType]) {
+      map[role.permissionType] = [];
+    }
+    map[role.permissionType].push(role);
+    return map;
+  }, {} as Record<ResourcePermissionType, TranslatedRole[]>);
 }

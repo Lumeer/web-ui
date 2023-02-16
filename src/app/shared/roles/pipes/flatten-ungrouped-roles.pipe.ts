@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {RoleGroup, TranslatedRole} from '../../../core/model/role-group';
+import {RoleGroup, TranslatedRole} from '../model/role-group';
 
 @Pipe({
   name: 'flattenUngroupedRoles',

@@ -41,13 +41,13 @@ export class UserTableComponent {
   public teams: Team[];
 
   @Input()
-  public permissions: Permissions;
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
 
   @Input()
   public color: string;
 
   @Input()
-  public resourceType: ResourcePermissionType;
+  public resourcePermissionType: ResourcePermissionType;
 
   @Input()
   public organization: Organization;
@@ -56,7 +56,7 @@ export class UserTableComponent {
   public project: Project;
 
   @Input()
-  public view: View;
+  public viewsMap: Record<ResourcePermissionType, View>;
 
   @Input()
   public deletableUserIds: string[];
@@ -89,7 +89,7 @@ export class UserTableComponent {
   public userDeleted = new EventEmitter<User>();
 
   @Output()
-  public userRolesChange = new EventEmitter<{user: User; roles: Role[]}>();
+  public userRolesChange = new EventEmitter<{user: User; roles: Record<ResourcePermissionType, Role[]>}>();
 
   @Output()
   public userTeamsChange = new EventEmitter<{user: User; teams: string[]}>();

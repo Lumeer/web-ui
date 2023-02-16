@@ -28,12 +28,10 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {Role} from '../../../core/store/permissions/permissions';
-import {RoleGroup} from '../../../core/model/role-group';
+import {RoleGroup, TranslatedRole, translatedRolesAreSame} from '../model/role-group';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {allDropdownPositions} from '../../dropdown/dropdown-position';
 import {BehaviorSubject} from 'rxjs';
-import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
 import {deepArrayEquals} from '../../utils/array.utils';
 import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
@@ -51,7 +49,7 @@ export class RolesDropdownComponent implements OnChanges {
   public resourceType: ResourcePermissionType;
 
   @Input()
-  public selectedRoles: Role[];
+  public selectedRoles: TranslatedRole[];
 
   @Input()
   public groups: RoleGroup[];
@@ -60,14 +58,14 @@ export class RolesDropdownComponent implements OnChanges {
   public emitAllChanges: boolean;
 
   @Output()
-  public change = new EventEmitter<Role[]>();
+  public change = new EventEmitter<TranslatedRole[]>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public readonly dropdownPositions = allDropdownPositions;
 
-  public selectedRoles$ = new BehaviorSubject<Role[]>([]);
+  public selectedRoles$ = new BehaviorSubject<TranslatedRole[]>([]);
 
   public expandedGroups$ = new BehaviorSubject<number[]>([]);
 
@@ -106,12 +104,12 @@ export class RolesDropdownComponent implements OnChanges {
     return group.title;
   }
 
-  public trackByRole(index: number, role: Role): string {
-    return `${role.type}:${role.transitive}`;
+  public trackByRole(index: number, role: TranslatedRole): string {
+    return `${role.permissionType}:${role.type}:${role.transitive}`;
   }
 
   public toggleAllInGroup(group: RoleGroup, checked: boolean) {
-    let newRoles: Role[] = this.selectedRoles$.value;
+    let newRoles: TranslatedRole[] = this.selectedRoles$.value;
     group.roles.forEach(role => {
       if (checked) {
         newRoles = this.addRoleToArray(role, newRoles);
@@ -132,17 +130,17 @@ export class RolesDropdownComponent implements OnChanges {
     }
   }
 
-  private addRoleToArray(role: Role, roles: Role[]): Role[] {
+  private addRoleToArray(role: TranslatedRole, roles: TranslatedRole[]): TranslatedRole[] {
     const cleanedRoles = this.removeRoleFromArray(role, roles);
     return [...cleanedRoles, role];
   }
 
-  private removeRoleFromArray(role: Role, roles: Role[]): Role[] {
-    return [...roles].filter(r => !rolesAreSame(r, role));
+  private removeRoleFromArray(role: TranslatedRole, roles: TranslatedRole[]): TranslatedRole[] {
+    return [...roles].filter(r => !translatedRolesAreSame(r, role));
   }
 
-  public onCheckedChange(role: Role, checked: boolean) {
-    let newRoles: Role[];
+  public onCheckedChange(role: TranslatedRole, checked: boolean) {
+    let newRoles: TranslatedRole[];
     if (checked) {
       newRoles = this.addRoleToArray(role, this.selectedRoles$.value);
     } else {
@@ -151,7 +149,7 @@ export class RolesDropdownComponent implements OnChanges {
     this.setRoles(newRoles);
   }
 
-  private setRoles(roles: Role[]) {
+  private setRoles(roles: TranslatedRole[]) {
     this.selectedRoles$.next(roles);
     if (this.emitAllChanges) {
       this.change.emit(roles);

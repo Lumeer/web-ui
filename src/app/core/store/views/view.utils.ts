@@ -38,6 +38,7 @@ import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../
 import {CalendarConfig} from '../calendars/calendar';
 import {
   createSaveAttributesSettings,
+  createSavePermissionsSettings,
   viewAttributeSettingsChanged,
   viewAttributeSettingsSortChanged,
 } from '../../../shared/settings/settings.util';
@@ -251,6 +252,7 @@ export function createSaveViewSettings(
     settings && {
       ...settings,
       attributes: createSaveAttributesSettings(settings.attributes, query, collectionsMap, linkTypesMap),
+      permissions: createSavePermissionsSettings(settings.permissions),
     }
   );
 }

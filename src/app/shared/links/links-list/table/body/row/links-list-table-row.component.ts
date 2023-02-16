@@ -191,9 +191,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   private checkIsEditable() {
     this.linkEditable = this.creatingNewLink ? this.linkPermissions?.create : this.linkPermissions?.edit;
-    this.documentEditable = this.creatingNewLink
-      ? this.linkPermissions?.create
-      : this.documentPermissions?.edit || this.linkPermissions?.edit;
+    this.documentEditable = this.creatingNewLink ? this.linkPermissions?.create : this.documentPermissions?.edit;
   }
 
   public endColumnEditing(column: number) {
@@ -307,10 +305,12 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   private createNewLink(index: number, dataValue: DataValue) {
-    const value = dataValue.serialize();
-    if (isNotNullOrUndefined(value) && String(value).trim() !== '') {
-      const column = this.columns[index];
-      this.newLink.emit({column, value, correlationId: this.row.correlationId});
+    if (this.documentPermissions?.create) {
+      const value = dataValue.serialize();
+      if (isNotNullOrUndefined(value) && String(value).trim() !== '') {
+        const column = this.columns[index];
+        this.newLink.emit({column, value, correlationId: this.row.correlationId});
+      }
     }
   }
 

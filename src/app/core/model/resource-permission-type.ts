@@ -26,8 +26,14 @@ export enum ResourcePermissionType {
   View = 'view',
   LinkType = 'link_type',
   ViewCollection = 'view_collection',
-
   ViewLinkType = 'view_link_type',
+}
+
+export function resourcePermissionTypeLinkedTypes(type: ResourcePermissionType): ResourcePermissionType[] {
+  if (type === ResourcePermissionType.ViewLinkType) {
+    return [ResourcePermissionType.ViewLinkType, ResourcePermissionType.ViewCollection];
+  }
+  return [type];
 }
 
 export const resourcePermissionTypeMap: Partial<Record<ResourceType, ResourcePermissionType>> = {

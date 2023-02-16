@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {RoleGroup} from '../../../core/model/role-group';
+import {RoleGroup} from '../model/role-group';
 
 @Pipe({
   name: 'filterGroupedRolesWithHeader',

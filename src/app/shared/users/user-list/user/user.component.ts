@@ -35,7 +35,13 @@ import {ResourcePermissionType} from '../../../../core/model/resource-permission
 })
 export class UserComponent implements OnChanges {
   @Input()
-  public resourceType: ResourcePermissionType;
+  public resourcePermissionType: ResourcePermissionType;
+
+  @Input()
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
+
+  @Input()
+  public transitiveRoles: Record<ResourcePermissionType, Role[]>;
 
   @Input()
   public deletable: boolean;
@@ -59,12 +65,6 @@ export class UserComponent implements OnChanges {
   public teams: Team[];
 
   @Input()
-  public permissions: Permissions;
-
-  @Input()
-  public transitiveRoles: Role[];
-
-  @Input()
   public workspace: Workspace;
 
   @Input()
@@ -80,7 +80,7 @@ export class UserComponent implements OnChanges {
   public userRemoved = new EventEmitter<User>();
 
   @Output()
-  public rolesUpdate = new EventEmitter<Role[]>();
+  public rolesUpdate = new EventEmitter<Record<ResourcePermissionType, Role[]>>();
 
   @Output()
   public teamsUpdate = new EventEmitter<string[]>();
@@ -112,7 +112,7 @@ export class UserComponent implements OnChanges {
   }
 
   private buildSettingsParams(): any {
-    if (this.resourceType === ResourcePermissionType.Organization) {
+    if (this.resourcePermissionType === ResourcePermissionType.Organization) {
       return {};
     }
     return {projectCode: this.workspace?.projectCode};

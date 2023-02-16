@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {TranslatedRole} from '../../../../core/model/role-group';
+import {TranslatedRole} from '../../model/role-group';
 
 @Component({
   selector: 'role',

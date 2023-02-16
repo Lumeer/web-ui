@@ -12,8 +12,8 @@
 </hint-box>
 <team-table class="d-block mt-4"
             [editableTeams]="groupsAreEditable"
-            [resourceType]="resourceType"
-            [permissions]="permissions$ | async"
+            [resourcePermissionType]="resourcePermissionType"
+            [permissionsMap]="resourcePermissionType | resourceTypePermissionsMap:(permissions$ | async)"
             [teams]="teams$ | async"
             [users]="users$ | async"
             [color]="resource.color"

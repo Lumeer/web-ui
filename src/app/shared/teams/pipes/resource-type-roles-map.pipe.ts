@@ -18,14 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Team} from '../../../core/store/teams/team';
 import {Permissions, Role} from '../../../core/store/permissions/permissions';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Pipe({
-  name: 'teamRoles',
+  name: 'resourceTypeRolesMap',
 })
-export class TeamRolesPipe implements PipeTransform {
-  public transform(permissions: Permissions, team: Team): Role[] {
-    return permissions?.groups?.find(group => group.id === team.id)?.roles || [];
+export class ResourceTypeRolesMapPipe implements PipeTransform {
+  public transform(resourceType: ResourcePermissionType, roles: Role[]): Record<ResourcePermissionType, Role[]> {
+    return {[resourceType]: roles} as any;
   }
 }

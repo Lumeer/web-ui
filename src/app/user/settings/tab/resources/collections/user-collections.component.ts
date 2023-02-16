@@ -51,7 +51,7 @@ export class UserCollectionsComponent implements OnChanges {
   @Input()
   public isCurrentUser: boolean;
 
-  public readonly resourceType = ResourcePermissionType.Collection;
+  public readonly resourcePermissionType = ResourcePermissionType.Collection;
 
   public data: ResourceRolesData;
 

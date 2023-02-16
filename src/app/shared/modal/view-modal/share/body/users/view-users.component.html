@@ -3,11 +3,11 @@
             [teams]="teams"
             [organization]="organization"
             [project]="project"
-            [permissions]="permissions"
-            [resourceType]="resourceType | resourcePermissionType"
+            [permissionsMap]="resourcePermissionType | resourceTypePermissionsMap:permissions"
+            [resourcePermissionType]="resourcePermissionType"
             [removableUserIds]="removableUserIds"
             [editableUserIds]="editableUserIds"
             [emitAllChanges]="true"
             (userRemoved)="userRemoved.emit($event)"
-            (userRolesChange)="userRolesChange.emit($event)">
+            (userRolesChange)="onUserRolesChange($event)">
 </user-table>

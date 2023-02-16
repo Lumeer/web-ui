@@ -55,7 +55,7 @@ export class UserLinkTypesComponent implements OnChanges {
   @Input()
   public isCurrentUser: boolean;
 
-  public readonly resourceType = ResourcePermissionType.LinkType;
+  public readonly resourcePermissionType = ResourcePermissionType.LinkType;
 
   public data: ResourceRolesData;
 

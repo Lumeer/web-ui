@@ -19,22 +19,28 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
+import {ViewUserPermissionsPipe} from './view-user-permissions.pipe';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 
 @Pipe({
-  name: 'viewUserPermissions',
+  name: 'viewUserPermissionsMap',
 })
-@Injectable({providedIn: 'root'})
-export class ViewUserPermissionsPipe implements PipeTransform {
-  public transform(permissions: Permissions, roles: Record<string, Role[]>): Permissions {
-    const userPermissions = [...(permissions?.users || [])];
-    Object.keys(roles).forEach(id => {
-      const roleIndex = userPermissions.findIndex(role => role.id === id);
-      if (roleIndex >= 0) {
-        userPermissions[roleIndex] = {id, roles: roles[id]};
-      } else {
-        userPermissions.push({id, roles: roles[id]});
-      }
-    });
-    return {...permissions, users: userPermissions};
+@Injectable()
+export class ViewUserPermissionsMapPipe implements PipeTransform {
+  constructor(private userPermissionsPipe: ViewUserPermissionsPipe) {}
+
+  public transform(
+    collectionPermissions: Permissions,
+    linkTypePermissions: Permissions,
+    collectionRoles: Record<string, Role[]>,
+    linkTypeRoles: Record<string, Role[]>
+  ): Record<ResourcePermissionType, Permissions> {
+    return {
+      [ResourcePermissionType.ViewCollection]: this.userPermissionsPipe.transform(
+        collectionPermissions,
+        collectionRoles
+      ),
+      [ResourcePermissionType.ViewLinkType]: this.userPermissionsPipe.transform(linkTypePermissions, linkTypeRoles),
+    } as Record<ResourcePermissionType, Permissions>;
   }
 }

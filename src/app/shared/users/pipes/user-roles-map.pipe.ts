@@ -20,12 +20,23 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Permissions, Role} from '../../../core/store/permissions/permissions';
 import {User} from '../../../core/store/users/user';
+import {ResourcePermissionType, resourcePermissionTypeLinkedTypes} from '../../../core/model/resource-permission-type';
 
 @Pipe({
-  name: 'userRoles',
+  name: 'userRolesMap',
 })
-export class UserRolesPipe implements PipeTransform {
-  public transform(permissions: Permissions, user: User): Role[] {
-    return permissions?.users?.find(role => role.id === (user.id || user.correlationId))?.roles || [];
+export class UserRolesMapPipe implements PipeTransform {
+  public transform(
+    user: User,
+    permissionsMap: Record<ResourcePermissionType, Permissions>,
+    resourcePermissionType: ResourcePermissionType
+  ): Record<ResourcePermissionType, Role[]> {
+    return resourcePermissionTypeLinkedTypes(resourcePermissionType).reduce(
+      (map, type) => ({
+        ...map,
+        [type]: permissionsMap[type]?.users?.find(role => role.id === (user.id || user.correlationId))?.roles || [],
+      }),
+      {} as Record<ResourcePermissionType, Role[]>
+    );
   }
 }

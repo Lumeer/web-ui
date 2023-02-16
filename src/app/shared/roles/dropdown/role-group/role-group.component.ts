@@ -18,9 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {RoleGroup} from '../../../../core/model/role-group';
-import {Role} from '../../../../core/store/permissions/permissions';
-import {rolesAreSame} from '../../../../core/store/permissions/permissions.helper';
+import {RoleGroup, TranslatedRole, translatedRolesAreSame} from '../../model/role-group';
 
 @Component({
   selector: 'role-group',
@@ -33,7 +31,7 @@ export class RoleGroupComponent implements OnChanges {
   public group: RoleGroup;
 
   @Input()
-  public selectedRoles: Role[];
+  public selectedRoles: TranslatedRole[];
 
   @Input()
   public isOpened: boolean;
@@ -55,7 +53,7 @@ export class RoleGroupComponent implements OnChanges {
 
   private checkNumSelected() {
     this.numSelected = this.group.roles.filter(role =>
-      (this.selectedRoles || []).some(r => rolesAreSame(r, role))
+      (this.selectedRoles || []).some(r => translatedRolesAreSame(r, role))
     ).length;
   }
 }

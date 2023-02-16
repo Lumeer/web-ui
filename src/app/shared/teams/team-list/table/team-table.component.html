@@ -26,14 +26,14 @@
                     [team]="team"
                     [allTeams]="teams"
                     [users]="users"
-                    [permissions]="permissions"
+                    [permissionsMap]="permissionsMap"
                     [changeRoles]="changeRoles"
                     [editable]="editable"
                     [emitAllChanges]="emitAllChanges"
-                    [transitiveRoles]="organization | teamTransitiveRoles:project:team:resourceType:view"
+                    [transitiveRoles]="organization | teamTransitiveRoles:project:team:resourcePermissionType:viewsMap"
                     [deletable]="deletableTeamIds | includes:team.id"
                     [removable]="removableTeamIds | includes:team.id"
-                    [resourceType]="resourceType"
+                    [resourcePermissionType]="resourcePermissionType"
                     (teamUpdated)="teamUpdated.emit($event)"
                     (teamDeleted)="teamDeleted.emit($event)"
                     (teamRolesChange)="teamRolesChange.emit({team: team, roles: $event})">
@@ -53,7 +53,7 @@
 
 <ng-template #legend>
   <div class="text-start">
-    <ng-container *ngIf="!(editableTeams && (resourceType | isOrganizationType))">
+    <ng-container *ngIf="!(editableTeams && (resourcePermissionType | isOrganizationType))">
       <span i18n="@@teams.header.configuration.remark">Teams are created at the organizational level.</span><br/>
     </ng-container>
     <span class="badge badge-lg badge-outline-success mt-1" i18n="@@users.header.teams.roles.tooltip.rights">Rights</span>

@@ -17,24 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {Permissions, Role} from '../../../../core/store/permissions/permissions';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Permissions} from '../../../core/store/permissions/permissions';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Pipe({
-  name: 'viewUserPermissions',
+  name: 'resourceTypePermissionsMap',
 })
-@Injectable({providedIn: 'root'})
-export class ViewUserPermissionsPipe implements PipeTransform {
-  public transform(permissions: Permissions, roles: Record<string, Role[]>): Permissions {
-    const userPermissions = [...(permissions?.users || [])];
-    Object.keys(roles).forEach(id => {
-      const roleIndex = userPermissions.findIndex(role => role.id === id);
-      if (roleIndex >= 0) {
-        userPermissions[roleIndex] = {id, roles: roles[id]};
-      } else {
-        userPermissions.push({id, roles: roles[id]});
-      }
-    });
-    return {...permissions, users: userPermissions};
+export class ResourceTypePermissionsMapPipe implements PipeTransform {
+  public transform(
+    resourceType: ResourcePermissionType,
+    permissions: Permissions
+  ): Record<ResourcePermissionType, Permissions> {
+    return {[resourceType]: permissions} as any;
   }
 }

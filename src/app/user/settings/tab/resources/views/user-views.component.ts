@@ -51,7 +51,7 @@ export class UserViewsComponent implements OnChanges {
   @Input()
   public isCurrentUser: boolean;
 
-  public readonly resourceType = ResourcePermissionType.View;
+  public readonly resourcePermissionType = ResourcePermissionType.View;
 
   public data: ResourceRolesData;
 

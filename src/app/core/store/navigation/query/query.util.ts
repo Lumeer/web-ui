@@ -346,12 +346,22 @@ function conditionValuesAreSame(cv1: ConditionValue, cv2: ConditionValue): boole
   return deepObjectsEquals(cv1.value ?? '', cv2.value ?? '') && (cv1.type ?? '') === (cv2.type ?? '');
 }
 
-export function getAllLinkTypeIdsFromView(view: View): string[] {
-  return uniqueValues([
-    ...getAdditionalLinkTypeIdsFromView(view),
-    ...getAllLinkTypeIdsFromQuery(view?.query),
-    ...getLinkTypeIdsFromViewResourcesPermissions(view),
-  ]);
+export function isResourceInQuery(
+  query: Query,
+  resourceId: string,
+  resourceType: AttributesResourceType,
+  linkTypes?: LinkType[]
+): boolean {
+  if (resourceType === AttributesResourceType.Collection) {
+    return getAllCollectionIdsFromQuery(query, linkTypes).includes(resourceId);
+  } else if (resourceType === AttributesResourceType.LinkType) {
+    return getAllLinkTypeIdsFromQuery(query).includes(resourceId);
+  }
+  return false;
+}
+
+export function getQueriesLinkTypeIdsFromView(view: View): string[] {
+  return uniqueValues([...getAdditionalLinkTypeIdsFromView(view), ...getAllLinkTypeIdsFromQuery(view?.query)]);
 }
 
 export function getAdditionalLinkTypeIdsFromView(view: View): string[] {
@@ -372,15 +382,10 @@ export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
   }, []);
 }
 
-export function getLinkTypeIdsFromViewResourcesPermissions(view: View): string[] {
-  return Object.keys(view?.settings?.permissions?.linkTypes || {});
-}
-
-export function getAllCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
+export function getQueriesCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
   return uniqueValues([
     ...getAdditionalCollectionIdsFromView(view, linkTypes),
     ...getAllCollectionIdsFromQuery(view?.query, linkTypes),
-    ...getCollectionIdsFromViewResourcesPermissions(view),
   ]);
 }
 
@@ -404,10 +409,6 @@ export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]
     return ids;
   }, []);
   return uniqueValues<string>([...basicCollectionIds, ...collectionIdsFromLinks]);
-}
-
-export function getCollectionIdsFromViewResourcesPermissions(view: View): string[] {
-  return Object.keys(view?.settings?.permissions?.collections || {});
 }
 
 export function getBaseCollectionIdsFromQuery(query: Query): string[] {

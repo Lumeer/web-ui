@@ -21,9 +21,9 @@
 <roles *ngIf="selectedDatum"
        class="mt-2"
        [editable]="false"
-       [roles]="selectedDatum.roles"
-       [transitiveRoles]="selectedDatum.transitiveRoles"
-       [resourceType]="resourceType.Project">
+       [roles]="resourcePermissionType | resourceTypeRolesMap:selectedDatum.roles"
+       [transitiveRoles]="resourcePermissionType | resourceTypeRolesMap:selectedDatum.transitiveRoles"
+       [resourcePermissionType]="resourcePermissionType">
 </roles>
 
 <ng-template #empty>

@@ -44,11 +44,14 @@ import {ViewTeamsComponent} from './share/body/teams/view-teams.component';
 import {UsersModule} from '../../users/users.module';
 import {TeamsModule} from '../../teams/teams.module';
 import {BoxModule} from '../../box/box.module';
-import {ViewResourcePermissionsModalComponent} from './resource-permissions/view-resource-permissions-modal.component';
-import {ViewResourcePermissionsBodyComponent} from './resource-permissions/body/view-resource-permissions-body.component';
-import {ViewResourcePermissionsUsersComponent} from './resource-permissions/body/users/view-resource-permissions-users.component';
-import {ViewResourcePermissionsTeamsComponent} from './resource-permissions/body/teams/view-resource-permissions-teams.component';
+import {ViewLinkTypePermissionsModalComponent} from './link-type-permissions/view-link-type-permissions-modal.component';
+import {ViewLinkTypePermissionsBodyComponent} from './link-type-permissions/body/view-link-type-permissions-body.component';
+import {ViewResourcePermissionsUsersComponent} from './link-type-permissions/body/users/view-resource-permissions-users.component';
+import {ViewResourcePermissionsTeamsComponent} from './link-type-permissions/body/teams/view-resource-permissions-teams.component';
 import {ResourceModalModule} from '../resource/resource-modal.module';
+import {CheckResourcesInViewPipe} from './link-type-permissions/pipes/check-resources-in-view.pipe';
+import {ViewGroupPermissionsMapPipe} from './pipes/view-group-permissions-map.pipe';
+import {ViewUserPermissionsMapPipe} from './pipes/view-user-permissions-map.pipe';
 
 @NgModule({
   declarations: [
@@ -57,7 +60,9 @@ import {ResourceModalModule} from '../resource/resource-modal.module';
     ShareViewCopyComponent,
     ShareViewDialogBodyComponent,
     ViewGroupPermissionsPipe,
+    ViewGroupPermissionsMapPipe,
     ViewUserPermissionsPipe,
+    ViewUserPermissionsMapPipe,
     CanAddNewUserPipe,
     ViewHeaderComponent,
     ViewSettingsModalComponent,
@@ -65,10 +70,11 @@ import {ResourceModalModule} from '../resource/resource-modal.module';
     ViewsUniqueFoldersPipe,
     ViewUsersComponent,
     ViewTeamsComponent,
-    ViewResourcePermissionsModalComponent,
-    ViewResourcePermissionsBodyComponent,
+    ViewLinkTypePermissionsModalComponent,
+    ViewLinkTypePermissionsBodyComponent,
     ViewResourcePermissionsUsersComponent,
     ViewResourcePermissionsTeamsComponent,
+    CheckResourcesInViewPipe,
   ],
   imports: [
     CommonModule,
@@ -87,6 +93,6 @@ import {ResourceModalModule} from '../resource/resource-modal.module';
     BoxModule,
     ResourceModalModule,
   ],
-  exports: [ShareViewModalComponent, ViewSettingsModalComponent, ViewResourcePermissionsModalComponent],
+  exports: [ShareViewModalComponent, ViewSettingsModalComponent, ViewLinkTypePermissionsModalComponent],
 })
 export class ViewModalModule {}

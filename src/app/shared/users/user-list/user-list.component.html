@@ -7,11 +7,11 @@
 </div>
 <user-table class="d-block mt-4"
             [users]="users"
-            [resourceType]="resourceType | resourcePermissionType"
+            [resourcePermissionType]="resourcePermissionType"
             [teams]="teams$ | async"
             [organization]="organization"
             [project]="project"
-            [permissions]="resource.permissions"
+            [permissionsMap]="resourcePermissionType | resourceTypePermissionsMap:resource.permissions"
             [color]="resource.color"
             [editableGroups]="(resourceType | isOrganizationType) && serviceLimits?.groups"
             [deletableUserIds]="deletableUserIds"
@@ -19,7 +19,7 @@
             [workspace]="workspace"
             [canManageUserDetail]="canManageUserDetail"
             (userTeamsChange)="onUserTeamsChange($event)"
-            (userRolesChange)="userRolesChange.emit($event)"
+            (userRolesChange)="onUserRolesChanged($event)"
             (userDeleted)="userDeleted.emit($event)"
             (userUpdated)="userUpdated.emit($event)">
 </user-table>

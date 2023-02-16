@@ -27,12 +27,12 @@ import {
   EventEmitter,
   ViewChild,
 } from '@angular/core';
-import {Role} from '../../core/store/permissions/permissions';
-import {RoleGroupService} from '../../core/service/role-group.service';
-import {RoleGroup, TranslatedRole} from '../../core/model/role-group';
+import {RoleGroupService} from './model/role-group.service';
+import {RoleGroup, TranslatedRole, translatedRolesToMap} from './model/role-group';
 import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
-import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
 import {ResourcePermissionType} from '../../core/model/resource-permission-type';
+import {Role} from '../../core/store/permissions/permissions';
+import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
 
 @Component({
   selector: 'roles',
@@ -43,13 +43,13 @@ import {ResourcePermissionType} from '../../core/model/resource-permission-type'
 })
 export class RolesComponent implements OnChanges {
   @Input()
-  public resourceType: ResourcePermissionType;
+  public resourcePermissionType: ResourcePermissionType;
 
   @Input()
-  public roles: Role[];
+  public roles: Record<ResourcePermissionType, Role[]>;
 
   @Input()
-  public transitiveRoles: Role[];
+  public transitiveRoles: Record<ResourcePermissionType, Role[]>;
 
   @Input()
   public editable: boolean;
@@ -58,22 +58,24 @@ export class RolesComponent implements OnChanges {
   public emitAllChanges: boolean;
 
   @Output()
-  public change = new EventEmitter<Role[]>();
+  public change = new EventEmitter<Record<ResourcePermissionType, Role[]>>();
 
   @ViewChild(RolesDropdownComponent)
   public rolesDropdownComponent: RolesDropdownComponent;
 
   public groups: RoleGroup[];
+  public selectedRoles: TranslatedRole[];
   public translatedRoles: TranslatedRole[];
 
   constructor(private service: RoleGroupService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resourceType) {
-      this.groups = this.service.createResourceGroups(this.resourceType);
+    if (changes.resourcePermissionType) {
+      this.groups = this.service.createResourceGroups(this.resourcePermissionType);
     }
-    if (changes.resourceType || changes.roles || changes.transitiveRoles) {
+    if (changes.resourcePermissionType || changes.roles || changes.transitiveRoles) {
       this.translatedRoles = this.createTranslatedRoles();
+      this.selectedRoles = this.translatedRoles.filter(role => !role.fromParentOrTeams);
     }
   }
 
@@ -81,10 +83,10 @@ export class RolesComponent implements OnChanges {
     return this.groups
       .reduce((roles, group) => [...roles, ...group.roles], [])
       .reduce((roles, role) => {
-        if (this.roles?.some(r => rolesAreSame(r, role))) {
+        if (this.translatedRoleIsInMap(role, this.roles)) {
           return [...roles, role];
         }
-        if (this.transitiveRoles?.some(r => rolesAreSame(r, role))) {
+        if (this.translatedRoleIsInMap(role, this.transitiveRoles)) {
           return [...roles, {...role, fromParentOrTeams: true}];
         }
 
@@ -92,12 +94,16 @@ export class RolesComponent implements OnChanges {
       }, []);
   }
 
-  public trackByRole(index: number, role: Role): string {
-    return `${role.type}:${role.transitive}`;
+  private translatedRoleIsInMap(role: TranslatedRole, map: Record<ResourcePermissionType, Role[]>): boolean {
+    return (map[role.permissionType] || []).some(r => rolesAreSame(r, role));
   }
 
-  public onRolesChange(roles: Role[]) {
-    this.change.emit(roles);
+  public trackByRole(index: number, role: TranslatedRole): string {
+    return `${role.permissionType}:${role.type}:${role.transitive}`;
+  }
+
+  public onRolesChange(roles: TranslatedRole[]) {
+    this.change.emit(translatedRolesToMap(roles));
   }
 
   public onClick() {

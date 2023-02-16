@@ -38,7 +38,7 @@ export class UserResourcesListComponent {
   public loaded: boolean;
 
   @Input()
-  public resourceType: ResourcePermissionType;
+  public resourcePermissionType: ResourcePermissionType;
 
   @Input()
   public selectable: boolean;

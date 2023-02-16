@@ -18,29 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Role} from '../../../core/store/permissions/permissions';
-import {Project} from '../../../core/store/projects/project';
-import {Organization} from '../../../core/store/organizations/organization';
-import {teamTransitiveRoles} from '../../utils/permission.utils';
 import {Team} from '../../../core/store/teams/team';
+import {Permissions, Role} from '../../../core/store/permissions/permissions';
 import {ResourcePermissionType, resourcePermissionTypeLinkedTypes} from '../../../core/model/resource-permission-type';
-import {View} from '../../../core/store/views/view';
 
 @Pipe({
-  name: 'teamTransitiveRoles',
+  name: 'teamRolesMap',
 })
-export class TeamTransitiveRolesPipe implements PipeTransform {
+export class TeamRolesMapPipe implements PipeTransform {
   public transform(
-    organization: Organization,
-    project: Project,
     team: Team,
-    resourceType: ResourcePermissionType,
-    viewsMap?: Record<ResourcePermissionType, View>
+    permissionsMap: Record<ResourcePermissionType, Permissions>,
+    resourcePermissionType: ResourcePermissionType
   ): Record<ResourcePermissionType, Role[]> {
-    return resourcePermissionTypeLinkedTypes(resourceType).reduce(
+    return resourcePermissionTypeLinkedTypes(resourcePermissionType).reduce(
       (map, type) => ({
         ...map,
-        [type]: teamTransitiveRoles(organization, project, team, resourceType, viewsMap?.[type]),
+        [type]: permissionsMap[type]?.groups?.find(group => group.id === team.id)?.roles || [],
       }),
       {} as Record<ResourcePermissionType, Role[]>
     );

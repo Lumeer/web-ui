@@ -23,7 +23,7 @@ import {User} from '../../../core/store/users/user';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
 import {userTransitiveRoles} from '../../utils/permission.utils';
-import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
+import {ResourcePermissionType, resourcePermissionTypeLinkedTypes} from '../../../core/model/resource-permission-type';
 import {View} from '../../../core/store/views/view';
 
 @Pipe({
@@ -35,9 +35,15 @@ export class UserTransitiveRolesPipe implements PipeTransform {
     project: Project,
     user: User,
     resourceType: ResourcePermissionType,
-    permissions: Permissions,
-    view?: View
-  ): Role[] {
-    return userTransitiveRoles(organization, project, user, resourceType, permissions, view);
+    permissionsMap: Record<ResourcePermissionType, Permissions>,
+    viewsMap?: Record<ResourcePermissionType, View>
+  ): Record<ResourcePermissionType, Role[]> {
+    return resourcePermissionTypeLinkedTypes(resourceType).reduce(
+      (map, type) => ({
+        ...map,
+        [type]: userTransitiveRoles(organization, project, user, type, permissionsMap[type], viewsMap?.[type]),
+      }),
+      {} as Record<ResourcePermissionType, Role[]>
+    );
   }
 }

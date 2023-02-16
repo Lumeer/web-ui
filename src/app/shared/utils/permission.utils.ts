@@ -23,8 +23,8 @@ import {Project} from '../../core/store/projects/project';
 import {
   getAdditionalCollectionIdsFromView,
   getAdditionalLinkTypeIdsFromView,
-  getAllCollectionIdsFromView,
-  getAllLinkTypeIdsFromView,
+  getQueriesCollectionIdsFromView,
+  getQueriesLinkTypeIdsFromView,
 } from '../../core/store/navigation/query/query.util';
 import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from '../../core/model/allowed-permissions';
 import {View} from '../../core/store/views/view';
@@ -135,22 +135,30 @@ export function userPermissionsInCollection(
   }
   const roleTypes = userRoleTypesInResource(organization, project, collection, user);
   if (currentView != null) {
-    const viewRoleTypes = userCollectionRoleTypesInView(
+    const viewCollectionRoleTypes = userRoleTypesInPermissions(
       organization,
       project,
-      collection,
-      linkTypes,
-      currentView,
+      currentView?.settings?.permissions?.collections?.[collection.id],
       user
     );
-    if (getAllCollectionIdsFromView(currentView, linkTypes).includes(collection.id)) {
-      const authorRoleTypes = currentView.authorCollectionsRoles?.[collection.id];
-      const roleTypesWithView = arrayIntersection(viewRoleTypes, authorRoleTypes);
-      return {
-        roles: roleTypesToMap(roleTypes),
-        rolesWithView: roleTypesToMap(uniqueValues([...roleTypes, ...roleTypesWithView])),
-      };
+    const authorRoleTypes = currentView.authorCollectionsRoles?.[collection.id];
+    const collectionIds = getQueriesCollectionIdsFromView(currentView, linkTypes);
+
+    const viewRoleTypes = [];
+    if (collectionIds.includes(collection.id)) {
+      viewRoleTypes.push(
+        ...userCollectionRoleTypesInView(organization, project, collection, linkTypes, currentView, user)
+      );
     }
+
+    const roleTypesWithView = arrayIntersection(
+      uniqueValues([...viewRoleTypes, ...viewCollectionRoleTypes]),
+      authorRoleTypes
+    );
+    return {
+      roles: roleTypesToMap(roleTypes),
+      rolesWithView: roleTypesToMap(uniqueValues([...roleTypes, ...roleTypesWithView])),
+    };
   }
   return {roles: roleTypesToMap(roleTypes), rolesWithView: roleTypesToMap(roleTypes)};
 }
@@ -170,13 +178,7 @@ function userCollectionRoleTypesInView(
       viewRoleTypes.push(RoleType.DataRead);
     }
   }
-  const viewResourcePermissionsRoleTypes = userRoleTypesInPermissions(
-    organization,
-    project,
-    view?.settings?.permissions?.collections?.[collection.id],
-    user
-  );
-  return uniqueValues([...viewRoleTypes, ...viewResourcePermissionsRoleTypes]);
+  return viewRoleTypes;
 }
 
 export function userPermissionsInLinkType(
@@ -193,16 +195,19 @@ export function userPermissionsInLinkType(
   }
   const roleTypes = userRoleTypesInLinkType(organization, project, linkType, collections, user);
   if (currentView != null) {
-    const linkTypeIds = getAllLinkTypeIdsFromView(currentView);
+    const viewLinkTypeRoleTypes = userRoleTypesInPermissions(
+      organization,
+      project,
+      currentView?.settings?.permissions?.linkTypes?.[linkType.id],
+      user
+    );
+    const authorRoleTypes = currentView.authorLinkTypesRoles?.[linkType.id];
+    const linkTypeIds = getQueriesLinkTypeIdsFromView(currentView);
+
+    const viewRoleTypes = [];
     if (linkTypeIds.includes(linkType.id)) {
-      const viewRoleTypes = userLinkTypeRoleTypesInView(organization, project, currentView, linkType, user);
-      const authorRoleTypes = currentView.authorLinkTypesRoles?.[linkType.id];
-      const roleTypesWithView = arrayIntersection(viewRoleTypes, authorRoleTypes);
-      return {
-        roles: roleTypesToMap(roleTypes),
-        rolesWithView: roleTypesToMap(uniqueValues([...roleTypes, ...roleTypesWithView])),
-      };
-    } else {
+      viewRoleTypes.push(...userLinkTypeRoleTypesInView(organization, project, currentView, linkType, user));
+    } else if (linkType.permissionsType === PermissionsType.Merge) {
       const linkTypeCollections = (collections || []).filter(collection =>
         linkType.collectionIds?.includes(collection.id)
       );
@@ -222,11 +227,17 @@ export function userPermissionsInLinkType(
           return arrayIntersection(permissions, collectionRoleTypes);
         }
       }, []);
-      return {
-        roles: roleTypesToMap(roleTypes),
-        rolesWithView: roleTypesToMap(uniqueValues([...roleTypes, ...roleTypesWithCollections])),
-      };
+      viewRoleTypes.push(...roleTypesWithCollections);
     }
+
+    const roleTypesWithView = arrayIntersection(
+      uniqueValues([...viewRoleTypes, ...viewLinkTypeRoleTypes]),
+      authorRoleTypes
+    );
+    return {
+      roles: roleTypesToMap(roleTypes),
+      rolesWithView: roleTypesToMap(uniqueValues([...roleTypes, ...roleTypesWithView])),
+    };
   }
   return {roles: roleTypesToMap(roleTypes), rolesWithView: roleTypesToMap(roleTypes)};
 }
@@ -246,13 +257,7 @@ function userLinkTypeRoleTypesInView(
     }
   }
 
-  const viewResourcePermissionsRoleTypes = userRoleTypesInPermissions(
-    organization,
-    project,
-    view?.settings?.permissions?.linkTypes?.[linkType.id],
-    user
-  );
-  return uniqueValues([...viewRoleTypes, ...viewResourcePermissionsRoleTypes]);
+  return viewRoleTypes;
 }
 
 export function userPermissionsInView(
@@ -378,9 +383,21 @@ export function linkTypePermissions(linkType: LinkType): Permissions {
   return {users, groups};
 }
 
+export function permissionsAreEmpty(permissions: Permissions): boolean {
+  const userPermissions = permissions?.users || [];
+  if (userPermissions.length > 0 && userPermissions.some(perm => perm.roles?.length > 0)) {
+    return false;
+  }
+  const groupPermissions = permissions?.groups || [];
+  if (groupPermissions.length > 0 && groupPermissions.some(perm => perm.roles?.length > 0)) {
+    return false;
+  }
+  return true;
+}
+
 function mergePermissions(p1: Permission[], p2: Permission[]): Permission[] {
   const p1Map = objectsByIdMap(p1);
-  const p2Map = objectsByIdMap(p1);
+  const p2Map = objectsByIdMap(p2);
   const finalArray: Permission[] = [];
   Object.keys(p1Map).forEach(id => {
     const p1Roles = p1Map[id].roles;

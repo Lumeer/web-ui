@@ -1,5 +1,4 @@
-<ng-container
-  *ngIf="{changeableUsers: changeableUsers$| async, userRoles: userRoles$ | async, staticUsers: staticUsers$ | async, teamRoles: teamRoles$ | async} as data">
+<ng-container *ngIf="{changeableUsers: changeableUsers$| async, staticUsers: staticUsers$ | async, collectionsMap: collectionsMap$ | async} as data">
 
   <div class="p-3">
 
@@ -28,13 +27,14 @@
 
         <view-resource-permissions-users [organization]="organization"
                                          [project]="project"
-                                         [view]="view"
+                                         [viewsMap]="view | checkResourcesInView:collection.id:linkType.id:linkTypes"
+                                         [color]="view | viewColor:data.collectionsMap"
                                          [currentUser]="currentUser"
                                          [staticUsers]="data.staticUsers"
                                          [teams]="teams"
-                                         [permissions]="permissions | viewUserPermissions:data.userRoles"
+                                         [permissionsMap]="collectionPermissions | viewUserPermissionsMap:linkTypePermissions:(userCollectionRoles$ | async):(userLinkTypeRoles$ | async)"
                                          [otherUsers]="data.changeableUsers"
-                                         [resourceType]="resourcePermissionType"
+                                         [resourcePermissionType]="resourcePermissionType"
                                          (userRemoved)="deleteUser($event)"
                                          (userRolesChange)="onNewRoles($event.user, $event.roles)">
         </view-resource-permissions-users>
@@ -45,8 +45,9 @@
                                        class="d-block mt-4"
                                        [organization]="organization"
                                        [project]="project"
-                                       [view]="view"
-                                       [permissions]="permissions | viewGroupPermissions:data.teamRoles"
+                                       [viewsMap]="view | checkResourcesInView:collection.id:linkType.id:linkTypes"
+                                       [color]="view | viewColor:data.collectionsMap"
+                                       [permissionsMap]="collectionPermissions | viewGroupPermissionsMap:linkTypePermissions:(teamCollectionRoles$ | async):(teamLinkTypeRoles$ | async)"
                                        [users]="users"
                                        [teams]="teamsWithReadPermission"
                                        [currentUser]="currentUser"

@@ -18,14 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Role} from '../../../core/store/permissions/permissions';
-import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
+import {TranslatedRole, translatedRolesAreSame} from '../model/role-group';
 
 @Pipe({
   name: 'isRoleSelected',
 })
 export class IsRoleSelectedPipe implements PipeTransform {
-  public transform(role: Role, roles: Role[]): boolean {
-    return (roles || []).some(r => rolesAreSame(r, role));
+  public transform(role: TranslatedRole, roles: TranslatedRole[]): boolean {
+    return (roles || []).some(r => translatedRolesAreSame(r, role));
   }
 }

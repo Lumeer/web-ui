@@ -23,15 +23,12 @@ import {User} from '../../../../../../core/store/users/user';
 import {Organization} from '../../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../../core/store/projects/project';
 import {Team} from '../../../../../../core/store/teams/team';
-import {ResourceType} from '../../../../../../core/model/resource-type';
 import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {ServiceLimits} from '../../../../../../core/store/organizations/service-limits/service.limits';
 import {Observable} from 'rxjs';
 import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organizations/service-limits/service-limits.state';
 import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {selectCollectionsDictionary} from '../../../../../../core/store/collections/collections.state';
 import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
 
 @Component({
@@ -41,10 +38,10 @@ import {ResourcePermissionType} from '../../../../../../core/model/resource-perm
 })
 export class ViewResourcePermissionsTeamsComponent implements OnInit {
   @Input()
-  public view: View;
+  public viewsMap: Record<ResourcePermissionType, View>;
 
   @Input()
-  public permissions: Permissions;
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
 
   @Input()
   public teams: Team[];
@@ -62,18 +59,19 @@ export class ViewResourcePermissionsTeamsComponent implements OnInit {
   public project: Project;
 
   @Input()
+  public color: string;
+
+  @Input()
   public resourceType: ResourcePermissionType;
 
   @Output()
-  public teamRolesChange = new EventEmitter<{team: Team; roles: Role[]}>();
+  public teamRolesChange = new EventEmitter<{team: Team; roles: Record<ResourcePermissionType, Role[]>}>();
 
   public serviceLimits$: Observable<ServiceLimits>;
-  public collectionsMap$: Observable<Record<string, Collection>>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
-    this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
   }
 }

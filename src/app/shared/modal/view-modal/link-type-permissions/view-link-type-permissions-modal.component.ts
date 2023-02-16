@@ -31,11 +31,10 @@ import {View} from '../../../../core/store/views/view';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../../../core/store/users/users.state';
-import {ViewResourcePermissionsBodyComponent} from './body/view-resource-permissions-body.component';
+import {ViewLinkTypePermissionsBodyComponent} from './body/view-link-type-permissions-body.component';
 import {selectCurrentView} from '../../../../core/store/views/views.state';
 import {Team} from '../../../../core/store/teams/team';
 import {selectTeamsForWorkspace} from '../../../../core/store/teams/teams.state';
-import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {Permissions} from '../../../../core/store/permissions/permissions';
 import {
   selectViewSettingsCollectionPermissions,
@@ -45,21 +44,26 @@ import {
 import {ViewSettingsAction} from '../../../../core/store/view-settings/view-settings.action';
 import {take} from 'rxjs/operators';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
-import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {
+  selectAllLinkTypes,
+  selectLinkTypeByIdWithCollections,
+} from '../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../core/store/collections/collection';
 
 @Component({
-  templateUrl: './view-resource-permissions-modal.component.html',
+  templateUrl: './view-link-type-permissions-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewResourcePermissionsModalComponent implements OnInit {
+export class ViewLinkTypePermissionsModalComponent implements OnInit {
   @Input()
-  public resourceType: AttributesResourceType;
+  public otherCollectionId: string;
 
   @Input()
-  public resourceId: string;
+  public linkTypeId: string;
 
-  @ViewChild(ViewResourcePermissionsBodyComponent)
-  public bodyComponent: ViewResourcePermissionsBodyComponent;
+  @ViewChild(ViewLinkTypePermissionsBodyComponent)
+  public bodyComponent: ViewLinkTypePermissionsBodyComponent;
 
   public currentUser$: Observable<User>;
   public organization$: Observable<Organization>;
@@ -67,8 +71,11 @@ export class ViewResourcePermissionsModalComponent implements OnInit {
   public teams$: Observable<Team[]>;
   public users$: Observable<User[]>;
   public view$: Observable<View>;
-  public permissions$: Observable<Permissions>;
-  public resource$: Observable<AttributesResource>;
+  public collectionPermissions$: Observable<Permissions>;
+  public linkTypePermissions$: Observable<Permissions>;
+  public collection$: Observable<Collection>;
+  public linkType$: Observable<LinkType>;
+  public linkTypes$: Observable<LinkType[]>;
 
   public readonly dialogType = DialogType;
 
@@ -83,30 +90,35 @@ export class ViewResourcePermissionsModalComponent implements OnInit {
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace));
     this.view$ = this.store$.pipe(select(selectCurrentView));
     this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
-    if (this.resourceType === AttributesResourceType.Collection) {
-      this.permissions$ = this.store$.pipe(select(selectViewSettingsCollectionPermissions(this.resourceId)));
-      this.resource$ = this.store$.pipe(select(selectCollectionById(this.resourceId)));
-    } else {
-      this.permissions$ = this.store$.pipe(select(selectViewSettingsLinkTypePermissions(this.resourceId)));
-      this.resource$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.resourceId)));
-    }
+    this.linkTypes$ = this.store$.pipe(select(selectAllLinkTypes));
+    this.collectionPermissions$ = this.store$.pipe(
+      select(selectViewSettingsCollectionPermissions(this.otherCollectionId))
+    );
+    this.collection$ = this.store$.pipe(select(selectCollectionById(this.otherCollectionId)));
+    this.linkTypePermissions$ = this.store$.pipe(select(selectViewSettingsLinkTypePermissions(this.linkTypeId)));
+    this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
   }
 
   public onSubmit() {
     this.bodyComponent?.onSubmit();
   }
 
-  public onSubmitPermissions(permissions: Permissions) {
+  public onSubmitPermissions(data: {linkTypePermissions: Permissions; collectionPermissions: Permissions}) {
     this.store$.pipe(select(selectViewSettingsId), take(1)).subscribe(settingsId => {
-      if (this.resourceType === AttributesResourceType.Collection) {
-        this.store$.dispatch(
-          new ViewSettingsAction.SetCollectionPermissions({settingsId, collectionId: this.resourceId, permissions})
-        );
-      } else {
-        this.store$.dispatch(
-          new ViewSettingsAction.SetLinkTypePermissions({settingsId, linkTypeId: this.resourceId, permissions})
-        );
-      }
+      this.store$.dispatch(
+        new ViewSettingsAction.SetCollectionPermissions({
+          settingsId,
+          collectionId: this.otherCollectionId,
+          permissions: data.collectionPermissions,
+        })
+      );
+      this.store$.dispatch(
+        new ViewSettingsAction.SetLinkTypePermissions({
+          settingsId,
+          linkTypeId: this.linkTypeId,
+          permissions: data.linkTypePermissions,
+        })
+      );
     });
 
     this.hideDialog();

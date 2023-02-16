@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 
 @Pipe({
   name: 'viewGroupPermissions',
 })
+@Injectable({providedIn: 'root'})
 export class ViewGroupPermissionsPipe implements PipeTransform {
   public transform(permissions: Permissions, roles: Record<string, Role[]>): Permissions {
     const teamPermissions = [...(permissions?.groups || [])];

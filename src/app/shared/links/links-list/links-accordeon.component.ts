@@ -36,7 +36,6 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {ModalService} from '../../modal/modal.service';
-import {AttributesResourceType} from '../../../core/model/resource';
 
 @Component({
   selector: 'links-accordeon',
@@ -147,7 +146,10 @@ export class LinksAccordeonComponent implements OnInit {
   public onPermissions(event: MouseEvent, linkType: LinkType) {
     preventEvent(event);
 
-    this.modalService.showViewResourcePermissions(AttributesResourceType.LinkType, linkType.id);
+    this.modalService.showViewLinkTypePermissions(
+      linkType.id,
+      getOtherLinkedCollectionId(linkType, this.collection.id)
+    );
   }
 
   public isOpenChanged(opened: boolean, id: string) {

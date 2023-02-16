@@ -19,14 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Role} from '../../../core/store/permissions/permissions';
-import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
-import {RoleGroup} from '../../../core/model/role-group';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Pipe({
-  name: 'isRoleGroupSelected',
+  name: 'resourceTypeRolesMap',
 })
-export class IsRoleGroupSelectedPipe implements PipeTransform {
-  public transform(group: RoleGroup, roles: Role[]): boolean {
-    return group.roles.every(role => (roles || []).some(r => rolesAreSame(r, role)));
+export class ResourceTypeRolesMapPipe implements PipeTransform {
+  public transform(resourceType: ResourcePermissionType, roles: Role[]): Record<ResourcePermissionType, Role[]> {
+    return {[resourceType]: roles} as any;
   }
 }

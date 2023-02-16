@@ -40,10 +40,10 @@ export class TeamTableComponent {
   public teams: Team[];
 
   @Input()
-  public permissions: Permissions;
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
 
   @Input()
-  public resourceType: ResourcePermissionType;
+  public resourcePermissionType: ResourcePermissionType;
 
   @Input()
   public deletableTeamIds: string[];
@@ -73,7 +73,7 @@ export class TeamTableComponent {
   public project: Project;
 
   @Input()
-  public view: View;
+  public viewsMap: Record<ResourcePermissionType, View>;
 
   @Output()
   public teamUpdated = new EventEmitter<Team>();
@@ -85,7 +85,7 @@ export class TeamTableComponent {
   public teamRemoved = new EventEmitter<Team>();
 
   @Output()
-  public teamRolesChange = new EventEmitter<{team: Team; roles: Role[]}>();
+  public teamRolesChange = new EventEmitter<{team: Team; roles: Record<ResourcePermissionType, Role[]>}>();
 
   public searchString: string;
 

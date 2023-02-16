@@ -3,7 +3,7 @@
       [class.cursor-pointer]="editable"
       [class.badge-outline-secondary]="role.fromParentOrTeams"
       [class.badge-outline-success]="!role.fromParentOrTeams"
-      [tooltip]="role | roleTooltip:resourceType">{{role.title}}</span>
+      [tooltip]="role | roleTooltip:resourcePermissionType">{{role.title}}</span>
 
 <ng-container *ngIf="editable">
   <div class="btn btn-sm btn-link mb-1 text-nowrap" #buttonElement
@@ -14,8 +14,8 @@
   </div>
 
   <roles-dropdown [origin]="buttonElement"
-                  [selectedRoles]="roles"
-                  [resourceType]="resourceType"
+                  [selectedRoles]="selectedRoles"
+                  [resourceType]="resourcePermissionType"
                   [groups]="groups"
                   [emitAllChanges]="emitAllChanges"
                   (change)="onRolesChange($event)">

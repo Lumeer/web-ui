@@ -17,26 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {User} from '../../../../../../core/store/users/user';
 import {Organization} from '../../../../../../core/store/organizations/organization';
 import {View} from '../../../../../../core/store/views/view';
 import {Project} from '../../../../../../core/store/projects/project';
-import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {Team} from '../../../../../../core/store/teams/team';
-import {Observable} from 'rxjs';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {selectCollectionsDictionary} from '../../../../../../core/store/collections/collections.state';
 import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
 import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
 
@@ -45,9 +31,9 @@ import {ResourcePermissionType} from '../../../../../../core/model/resource-perm
   templateUrl: './view-resource-permissions-users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewResourcePermissionsUsersComponent implements OnInit, OnChanges {
+export class ViewResourcePermissionsUsersComponent implements OnChanges {
   @Input()
-  public view: View;
+  public viewsMap: Record<ResourcePermissionType, View>;
 
   @Input()
   public staticUsers: User[];
@@ -68,27 +54,22 @@ export class ViewResourcePermissionsUsersComponent implements OnInit, OnChanges 
   public project: Project;
 
   @Input()
-  public permissions: Permissions;
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
 
   @Input()
-  public resourceType: ResourcePermissionType;
+  public resourcePermissionType: ResourcePermissionType;
+
+  @Input()
+  public color: string;
 
   @Output()
   public userRemoved = new EventEmitter<User>();
 
   @Output()
-  public userRolesChange = new EventEmitter<{user: User; roles: Role[]}>();
-
-  public collectionsMap$: Observable<Record<string, Collection>>;
+  public userRolesChange = new EventEmitter<{user: User; roles: Record<ResourcePermissionType, Role[]>}>();
 
   public removableUserIds: string[];
   public editableUserIds: string[];
-
-  constructor(private store$: Store<AppState>) {}
-
-  public ngOnInit() {
-    this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.otherUsers) {

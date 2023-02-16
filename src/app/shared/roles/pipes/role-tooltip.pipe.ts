@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TranslatedRole} from '../../../core/model/role-group';
+import {TranslatedRole} from '../model/role-group';
 import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Pipe({
