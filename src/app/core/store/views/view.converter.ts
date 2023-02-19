@@ -68,19 +68,21 @@ function convertViewAuthorRights(authorRights: Record<string, string[]>): Record
 }
 
 function convertViewSettingsDtoToModel(dto: ViewSettingsDto): ViewSettings {
-  return {
-    ...dto,
-    permissions: {
-      collections: Object.keys(dto.permissions?.collections).reduce(
-        (perms, key) => ({...perms, [key]: convertPermissionsDtoToModel(dto.permissions.collections[key])}),
-        {}
-      ),
-      linkTypes: Object.keys(dto.permissions?.linkTypes).reduce(
-        (perms, key) => ({...perms, [key]: convertPermissionsDtoToModel(dto.permissions.linkTypes[key])}),
-        {}
-      ),
-    },
-  };
+  return (
+    dto && {
+      ...dto,
+      permissions: {
+        collections: Object.keys(dto.permissions?.collections).reduce(
+          (perms, key) => ({...perms, [key]: convertPermissionsDtoToModel(dto.permissions.collections[key])}),
+          {}
+        ),
+        linkTypes: Object.keys(dto.permissions?.linkTypes).reduce(
+          (perms, key) => ({...perms, [key]: convertPermissionsDtoToModel(dto.permissions.linkTypes[key])}),
+          {}
+        ),
+      },
+    }
+  );
 }
 
 export function convertViewModelToDto(model: View): ViewDto {
@@ -133,17 +135,19 @@ export function convertDefaultViewConfigModelToDto(model: DefaultViewConfig): De
 }
 
 function convertViewSettingsModelToDto(model: ViewSettings): ViewSettingsDto {
-  return {
-    ...model,
-    permissions: {
-      collections: Object.keys(model.permissions?.collections).reduce(
-        (perms, key) => ({...perms, [key]: convertPermissionsModelToDto(model.permissions.collections[key])}),
-        {}
-      ),
-      linkTypes: Object.keys(model.permissions?.linkTypes).reduce(
-        (perms, key) => ({...perms, [key]: convertPermissionsModelToDto(model.permissions.linkTypes[key])}),
-        {}
-      ),
-    },
-  };
+  return (
+    model && {
+      ...model,
+      permissions: {
+        collections: Object.keys(model.permissions?.collections).reduce(
+          (perms, key) => ({...perms, [key]: convertPermissionsModelToDto(model.permissions.collections[key])}),
+          {}
+        ),
+        linkTypes: Object.keys(model.permissions?.linkTypes).reduce(
+          (perms, key) => ({...perms, [key]: convertPermissionsModelToDto(model.permissions.linkTypes[key])}),
+          {}
+        ),
+      },
+    }
+  );
 }
