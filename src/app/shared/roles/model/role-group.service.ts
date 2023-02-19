@@ -215,7 +215,6 @@ export class RoleGroupService {
         order: 1,
         roles: [
           this.createViewLinkTypeRole(RoleType.DataRead),
-          this.createViewLinkTypeCollectionRole(RoleType.DataRead),
           this.createViewLinkTypeRole(RoleType.DataContribute),
           this.createViewLinkTypeCollectionRole(RoleType.DataContribute),
           this.createViewLinkTypeRole(RoleType.DataWrite),

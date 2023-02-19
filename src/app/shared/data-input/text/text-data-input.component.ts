@@ -30,7 +30,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {DataSuggestion} from '../data-suggestion';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
@@ -106,6 +106,9 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
     }
     if (changes.value && this.value) {
       this.text = this.value.editValue();
+      if (this.readonly) {
+        checkDataInputElementValue(this.textInput?.nativeElement, this.value);
+      }
     }
 
     this.refreshValid(this.value);

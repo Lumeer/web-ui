@@ -311,6 +311,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
         const column = this.columns[index];
         this.newLink.emit({column, value, correlationId: this.row.correlationId});
       }
+    } else {
+      this.endRowEditing();
     }
   }
 

@@ -31,7 +31,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
@@ -99,12 +99,15 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
     if (changes.readonly && this.readonly) {
       this.preventSaveAndBlur();
     }
+    if (changes.value || changes.readonly) {
+      this.isProgressStyle = this.value?.config?.style === PercentageDisplayStyle.ProgressBar && this.readonly;
+    }
     if (changes.value) {
       this.valid = !this.value || this.value.isValid();
       this.numericValue = this.value?.number?.toNumber() || 0;
-    }
-    if (changes.value || changes.readonly) {
-      this.isProgressStyle = this.value?.config?.style === PercentageDisplayStyle.ProgressBar && this.readonly;
+      if (this.readonly && this.isProgressStyle) {
+        checkDataInputElementValue(this.percentageInput?.nativeElement, this.value);
+      }
     }
   }
 

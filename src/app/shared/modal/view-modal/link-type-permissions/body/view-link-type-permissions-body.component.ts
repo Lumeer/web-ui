@@ -271,26 +271,33 @@ export class ViewLinkTypePermissionsBodyComponent implements OnInit, OnChanges, 
   }
 
   public onSubmit() {
+    const linkTypePermissions = this.createPermissions(this.userLinkTypeRoles$.value, this.teamLinkTypeRoles$.value);
     const collectionPermissions = this.createPermissions(
       this.userCollectionRoles$.value,
-      this.teamCollectionRoles$.value
+      this.teamCollectionRoles$.value,
+      this.userLinkTypeRoles$.value,
+      this.teamLinkTypeRoles$.value
     );
-    const linkTypePermissions = this.createPermissions(this.userLinkTypeRoles$.value, this.teamLinkTypeRoles$.value);
     this.submitPermissions.emit({collectionPermissions, linkTypePermissions});
   }
 
-  private createPermissions(userRoles: Record<string, Role[]>, teamRoles: Record<string, Role[]>): Permissions {
+  private createPermissions(
+    userRoles: Record<string, Role[]>,
+    teamRoles: Record<string, Role[]>,
+    otherUserRoles?: Record<string, Role[]>,
+    otherTeamRoles?: Record<string, Role[]>
+  ): Permissions {
     const allUsersIds = [...this.changeableUsers$.value.map(u => u.id), ...this.staticUsers$.value.map(u => u.id)];
 
     const userPermissions: Permission[] = Object.keys(userRoles)
       .filter(id => allUsersIds.includes(id))
-      .map(id => ({id, roles: addAutomaticRoles(userRoles[id])}));
+      .map(id => ({id, roles: addAutomaticRoles(userRoles[id], otherUserRoles?.[id])}));
 
     const allTeamIds = this.teams.map(team => team.id);
 
     const teamPermissions: Permission[] = Object.keys(teamRoles)
       .filter(id => allTeamIds.includes(id))
-      .map(id => ({id, roles: addAutomaticRoles(teamRoles[id])}));
+      .map(id => ({id, roles: addAutomaticRoles(teamRoles[id], otherTeamRoles?.[id])}));
 
     return {users: userPermissions, groups: teamPermissions};
   }
@@ -300,9 +307,17 @@ export class ViewLinkTypePermissionsBodyComponent implements OnInit, OnChanges, 
   }
 }
 
-function addAutomaticRoles(roles: Role[]): Role[] {
+function addAutomaticRoles(roles: Role[], otherRoles?: Role[]): Role[] {
+  // this is used in situation when Link has right to Read Data, so the Collection must also have the right
+  const resultRoles = [...(roles || [])];
+  const dataReadRole = otherRoles?.find(r => r.type === RoleType.DataRead);
+  if (dataReadRole) {
+    resultRoles.push(dataReadRole);
+  }
+
   const automaticRoleTypes = [RoleType.Read];
-  const rolesWithoutAutomatic = (roles || []).filter(role => !automaticRoleTypes.includes(role.type));
+  const rolesWithoutAutomatic = (resultRoles || []).filter(role => !automaticRoleTypes.includes(role.type));
+
   if (rolesWithoutAutomatic.length > 0) {
     return automaticRoleTypes.reduce((allRoles, type) => {
       if (!allRoles.some(role => role.type === type)) {
@@ -311,5 +326,6 @@ function addAutomaticRoles(roles: Role[]): Role[] {
       return allRoles;
     }, rolesWithoutAutomatic);
   }
-  return [];
+
+  return rolesWithoutAutomatic;
 }

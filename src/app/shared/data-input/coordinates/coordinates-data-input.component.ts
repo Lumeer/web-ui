@@ -30,7 +30,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
@@ -84,6 +84,11 @@ export class CoordinatesDataInputComponent implements AfterViewChecked, OnChange
     }
     if (changes.readonly && this.readonly) {
       this.preventSaveAndBlur();
+    }
+    if (changes.value && this.value) {
+      if (this.readonly) {
+        checkDataInputElementValue(this.coordinatesInput?.nativeElement, this.value);
+      }
     }
   }
 
