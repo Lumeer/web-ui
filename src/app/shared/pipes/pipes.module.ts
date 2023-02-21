@@ -118,6 +118,7 @@ import {AggregationTypeNamePipe} from './aggregation-type-name.pipe';
 import {ViewWorkspacePipe} from './view-workspace.pipe';
 import {ResourcePermissionTypePipe} from './resource-permission-type.pipe';
 import {CanReadLinkDirectlyPipe} from './can-read-link-directly.pipe';
+import {PrintSafeHtmlPipe} from './print-safe-html.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -163,6 +164,7 @@ import {CanReadLinkDirectlyPipe} from './can-read-link-directly.pipe';
     JoinPipe,
     IndicesPipe,
     SafeHtmlPipe,
+    PrintSafeHtmlPipe,
     EmailValidPipe,
     UserByEmailPipe,
     UniqueEntitiesPipe,
@@ -264,6 +266,7 @@ import {CanReadLinkDirectlyPipe} from './can-read-link-directly.pipe';
     JoinPipe,
     IndicesPipe,
     SafeHtmlPipe,
+    PrintSafeHtmlPipe,
     EmailValidPipe,
     UserByEmailPipe,
     UniqueEntitiesPipe,
