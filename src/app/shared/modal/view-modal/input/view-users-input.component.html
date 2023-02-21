@@ -12,7 +12,7 @@
 
   <div class="input-group-append">
     <button type="button" class="btn btn-sm btn-primary text-nowrap"
-            [disabled]="!data.canAddUser"
+            [disabled]="addNewUsers && !data.canAddUser"
             (click)="onEnter()">
       <i class="fas fa-plus me-2"></i>
       <span class="fw-bold" i18n="@@view.share.dialog.input.button">Add</span>

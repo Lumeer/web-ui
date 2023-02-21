@@ -18,8 +18,8 @@
  */
 
 import {Role} from '../../../../../core/store/permissions/permissions';
-import {ResourceType} from '../../../../../core/model/resource-type';
 import {parseSelectTranslation} from '../../../../../shared/utils/translation.utils';
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 
 export interface ResourceRolesData {
   objects: ResourceRolesDatum[];
@@ -35,7 +35,7 @@ export interface ResourceRolesDatum {
   transitiveRoles: Role[];
 }
 
-export function resourceRolesDataEmptyTitle(resourceType: ResourceType, isCurrent: boolean): string {
+export function resourceRolesDataEmptyTitle(resourceType: ResourcePermissionType, isCurrent: boolean): string {
   if (isCurrent) {
     return parseSelectTranslation(
       $localize`:@@user.resources.empty.current:You do not not have right to see nor access any {type, select, project {project} collection {table} view {view} link_type {link type}}`,

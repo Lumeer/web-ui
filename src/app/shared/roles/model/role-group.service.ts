@@ -18,24 +18,25 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ResourceType} from '../model/resource-type';
-import {RoleGroup, TranslatedRole} from '../model/role-group';
-import {parseSelectTranslation} from '../../shared/utils/translation.utils';
-import {RoleType} from '../model/role-type';
+import {RoleGroup, TranslatedRole} from './role-group';
+import {parseSelectTranslation} from '../../utils/translation.utils';
+import {RoleType} from '../../../core/model/role-type';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Injectable()
 export class RoleGroupService {
-  public createResourceGroups(type: ResourceType): RoleGroup[] {
+  public createResourceGroups(type: ResourcePermissionType): RoleGroup[] {
     switch (type) {
-      case ResourceType.Organization:
+      case ResourcePermissionType.Organization:
         return this.createOrganizationGroups();
-      case ResourceType.Project:
+      case ResourcePermissionType.Project:
         return this.createProjectGroups();
-      case ResourceType.Collection:
-      case ResourceType.LinkType:
+      case ResourcePermissionType.Collection:
         return this.createCollectionGroups();
-      case ResourceType.View:
+      case ResourcePermissionType.View:
         return this.createViewGroups();
+      case ResourcePermissionType.ViewLinkType:
+        return this.createViewLinkTypeGroups();
       default:
         return [];
     }
@@ -208,12 +209,29 @@ export class RoleGroupService {
     ];
   }
 
+  private createViewLinkTypeGroups(): RoleGroup[] {
+    return [
+      {
+        order: 1,
+        roles: [
+          this.createViewLinkTypeRole(RoleType.DataRead),
+          this.createViewLinkTypeRole(RoleType.DataContribute),
+          this.createViewLinkTypeCollectionRole(RoleType.DataContribute),
+          this.createViewLinkTypeRole(RoleType.DataWrite),
+          this.createViewLinkTypeCollectionRole(RoleType.DataWrite),
+          this.createViewLinkTypeRole(RoleType.DataDelete),
+        ],
+      },
+    ];
+  }
+
   private createOrganizationRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
       title: transitive
-        ? this.workspaceTransitiveRoleTitle(type, ResourceType.Organization)
+        ? this.workspaceTransitiveRoleTitle(type, ResourcePermissionType.Organization)
         : this.organizationRoleTitle(type),
       tooltip: this.organizationRoleTooltip(type, transitive),
+      permissionType: ResourcePermissionType.Organization,
       type,
       transitive,
     };
@@ -221,8 +239,11 @@ export class RoleGroupService {
 
   private createProjectRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
-      title: transitive ? this.workspaceTransitiveRoleTitle(type, ResourceType.Project) : this.projectRoleTitle(type),
+      title: transitive
+        ? this.workspaceTransitiveRoleTitle(type, ResourcePermissionType.Project)
+        : this.projectRoleTitle(type),
       tooltip: this.projectRoleTooltip(type, transitive),
+      permissionType: ResourcePermissionType.Project,
       type,
       transitive,
     };
@@ -288,15 +309,15 @@ export class RoleGroupService {
     );
   }
 
-  private workspaceTransitiveRoleTitle(type: RoleType, resourceType: ResourceType): string {
+  private workspaceTransitiveRoleTitle(type: RoleType, resourceType: ResourcePermissionType): string {
     switch (resourceType) {
-      case ResourceType.Organization:
+      case ResourcePermissionType.Organization:
       default:
         return parseSelectTranslation(
           $localize`:@@organization.permission.transitive.role.organization.title:{type, select, Read {Join Everything} Manage {Manage Everything} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
           {type}
         );
-      case ResourceType.Project:
+      case ResourcePermissionType.Project:
         return parseSelectTranslation(
           $localize`:@@organization.permission.transitive.role.project.title:{type, select, Read {Join Everything} Manage {Manage Everytning} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types} ViewContribute {Create Views} CollectionContribute {Create Tables} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
           {type}
@@ -351,13 +372,45 @@ export class RoleGroupService {
     }
   }
 
-  private createCollectionRole(type: RoleType, transitive?: boolean): TranslatedRole {
+  private createCollectionRole(type: RoleType): TranslatedRole {
     return {
       title: this.collectionRoleTitle(type),
       tooltip: this.collectionRoleTooltip(type),
+      permissionType: ResourcePermissionType.Collection,
       type,
-      transitive,
     };
+  }
+
+  private createViewLinkTypeCollectionRole(type: RoleType): TranslatedRole {
+    return {
+      title: this.viewLinkTypeCollectionRoleTitle(type),
+      tooltip: this.collectionRoleTooltip(type),
+      permissionType: ResourcePermissionType.ViewCollection,
+      type,
+    };
+  }
+
+  private viewLinkTypeCollectionRoleTitle(type: RoleType): string {
+    return parseSelectTranslation(
+      $localize`:@@view.linkType.collection.permission.role.title:{type, select, DataRead {Read Table Records} DataWrite {Edit Table Data} DataContribute {Create New Records}}`,
+      {type}
+    );
+  }
+
+  private createViewLinkTypeRole(type: RoleType): TranslatedRole {
+    return {
+      title: this.viewLinkTypeRoleTitle(type),
+      tooltip: this.linkTypeRoleTooltip(type),
+      permissionType: ResourcePermissionType.ViewLinkType,
+      type,
+    };
+  }
+
+  private viewLinkTypeRoleTitle(type: RoleType): string {
+    return parseSelectTranslation(
+      $localize`:@@view.linkType.permission.role.title:{type, select, DataRead {Read Linked Records} DataWrite {Edit Linked Data} DataDelete {Unlink Records} DataContribute {Create New Links}}`,
+      {type}
+    );
   }
 
   private collectionRoleTitle(type: RoleType): string {
@@ -392,10 +445,24 @@ export class RoleGroupService {
     }
   }
 
+  private linkTypeRoleTooltip(type: RoleType): string {
+    switch (type) {
+      case RoleType.DataRead:
+        return $localize`:@@linkType.permission.role.tooltip.DataRead:A user can read all data in this link.`;
+      case RoleType.DataWrite:
+        return $localize`:@@linkType.permission.role.tooltip.DataWrite:A user can modify all data in this link.`;
+      case RoleType.DataDelete:
+        return $localize`:@@linkType.permission.role.tooltip.DataDelete:A user can delete all records (rows) in this link.`;
+      case RoleType.DataContribute:
+        return $localize`:@@linkType.permission.role.tooltip.DataContribute:A user can create, see, modify and unlink only their own records (rows) in this link.`;
+    }
+  }
+
   private createViewRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
       title: this.viewRoleTitle(type),
       tooltip: this.viewRoleTooltip(type),
+      permissionType: ResourcePermissionType.View,
       type,
       transitive,
     };
@@ -435,7 +502,7 @@ export class RoleGroupService {
 
   private translateGroupType(type: RoleGroupType): string {
     return parseSelectTranslation(
-      $localize`:@@organization.permission.role.group:{type, select, Data {Manage Data} View {Manage Views} Collaborate {Create Tables, Links and Views} User {User Management} Config {Manage Tables, Links and Views}}`,
+      $localize`:@@organization.permission.role.group2:{type, select, Data {Manage Data} Linked {Manage Linked Data} View {Manage Views} Collaborate {Create Tables, Links and Views} User {User Management} Config {Manage Tables, Links and Views}}`,
       {type}
     );
   }
@@ -443,6 +510,7 @@ export class RoleGroupService {
 
 export const enum RoleGroupType {
   Data = 'Data',
+  Linked = 'Linked',
   View = 'View',
   Collaborate = 'Collaborate',
   User = 'User',

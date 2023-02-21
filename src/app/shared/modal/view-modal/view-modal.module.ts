@@ -20,11 +20,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ShareViewModalComponent} from './share/share-view-modal.component';
-import {ShareViewInputComponent} from './share/body/input/share-view-input.component';
+import {ViewUsersInputComponent} from './input/view-users-input.component';
 import {ShareViewCopyComponent} from './share/body/copy/share-view-copy.component';
 import {ShareViewDialogBodyComponent} from './share/body/share-view-dialog-body.component';
-import {ViewGroupPermissionsPipe} from './share/pipes/view-group-permissions.pipe';
-import {ViewUserPermissionsPipe} from './share/pipes/view-user-permissions.pipe';
+import {ViewGroupPermissionsPipe} from './pipes/view-group-permissions.pipe';
+import {ViewUserPermissionsPipe} from './pipes/view-user-permissions.pipe';
 import {CanAddNewUserPipe} from './share/pipes/can-add-new-user.pipe';
 import {ViewSettingsModalComponent} from './settings/view-settings-modal.component';
 import {PipesModule} from '../../pipes/pipes.module';
@@ -44,15 +44,25 @@ import {ViewTeamsComponent} from './share/body/teams/view-teams.component';
 import {UsersModule} from '../../users/users.module';
 import {TeamsModule} from '../../teams/teams.module';
 import {BoxModule} from '../../box/box.module';
+import {ViewLinkTypePermissionsModalComponent} from './link-type-permissions/view-link-type-permissions-modal.component';
+import {ViewLinkTypePermissionsBodyComponent} from './link-type-permissions/body/view-link-type-permissions-body.component';
+import {ViewResourcePermissionsUsersComponent} from './link-type-permissions/body/users/view-resource-permissions-users.component';
+import {ViewResourcePermissionsTeamsComponent} from './link-type-permissions/body/teams/view-resource-permissions-teams.component';
+import {ResourceModalModule} from '../resource/resource-modal.module';
+import {CheckResourcesInViewPipe} from './link-type-permissions/pipes/check-resources-in-view.pipe';
+import {ViewGroupPermissionsMapPipe} from './pipes/view-group-permissions-map.pipe';
+import {ViewUserPermissionsMapPipe} from './pipes/view-user-permissions-map.pipe';
 
 @NgModule({
   declarations: [
     ShareViewModalComponent,
-    ShareViewInputComponent,
+    ViewUsersInputComponent,
     ShareViewCopyComponent,
     ShareViewDialogBodyComponent,
     ViewGroupPermissionsPipe,
+    ViewGroupPermissionsMapPipe,
     ViewUserPermissionsPipe,
+    ViewUserPermissionsMapPipe,
     CanAddNewUserPipe,
     ViewHeaderComponent,
     ViewSettingsModalComponent,
@@ -60,6 +70,11 @@ import {BoxModule} from '../../box/box.module';
     ViewsUniqueFoldersPipe,
     ViewUsersComponent,
     ViewTeamsComponent,
+    ViewLinkTypePermissionsModalComponent,
+    ViewLinkTypePermissionsBodyComponent,
+    ViewResourcePermissionsUsersComponent,
+    ViewResourcePermissionsTeamsComponent,
+    CheckResourcesInViewPipe,
   ],
   imports: [
     CommonModule,
@@ -76,7 +91,8 @@ import {BoxModule} from '../../box/box.module';
     UsersModule,
     TeamsModule,
     BoxModule,
+    ResourceModalModule,
   ],
-  exports: [ShareViewModalComponent, ViewSettingsModalComponent],
+  exports: [ShareViewModalComponent, ViewSettingsModalComponent, ViewLinkTypePermissionsModalComponent],
 })
 export class ViewModalModule {}

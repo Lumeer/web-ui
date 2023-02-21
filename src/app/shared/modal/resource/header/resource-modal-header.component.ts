@@ -17,16 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Role} from '../store/permissions/permissions';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {AttributesResource} from '../../../../core/model/resource';
 
-export interface RoleGroup {
-  title?: string;
-  order: number;
-  roles: TranslatedRole[];
-}
+@Component({
+  selector: 'resource-modal-header',
+  templateUrl: './resource-modal-header.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'p-3'},
+})
+export class ResourceModalHeaderComponent {
+  @Input()
+  public resource: AttributesResource;
 
-export interface TranslatedRole extends Role {
-  title: string;
-  tooltip?: string;
-  fromParentOrTeams?: boolean;
+  @Input()
+  public textColor: string;
 }

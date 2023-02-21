@@ -23,9 +23,9 @@ import {Project} from '../../../../../core/store/projects/project';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {User} from '../../../../../core/store/users/user';
 import {userRolesInProject, userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
-import {ResourceType} from '../../../../../core/model/resource-type';
 import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
 import {RoleType} from '../../../../../core/model/role-type';
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-collections',
@@ -51,7 +51,7 @@ export class UserCollectionsComponent implements OnChanges {
   @Input()
   public isCurrentUser: boolean;
 
-  public readonly resourceType = ResourceType.Collection;
+  public readonly resourcePermissionType = ResourcePermissionType.Collection;
 
   public data: ResourceRolesData;
 
@@ -64,7 +64,7 @@ export class UserCollectionsComponent implements OnChanges {
       .map(collection => this.computeData(collection))
       .filter(datum => datum.roles.length || datum.transitiveRoles.length);
 
-    const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.Collection, this.isCurrentUser);
+    const emptyTitle = resourceRolesDataEmptyTitle(ResourcePermissionType.Collection, this.isCurrentUser);
 
     this.data = {objects, emptyTitle};
   }
@@ -78,7 +78,7 @@ export class UserCollectionsComponent implements OnChanges {
         this.organization,
         this.project,
         this.user,
-        ResourceType.Collection,
+        ResourcePermissionType.Collection,
         collection.permissions
       );
       roles = collection.permissions?.users?.find(role => role.id === this.user.id)?.roles || [];

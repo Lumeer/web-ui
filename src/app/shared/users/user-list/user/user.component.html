@@ -12,11 +12,11 @@
               (save)="onTeamsSave($event)">
   </user-teams>
   <roles class="mt-3"
-         [resourceType]="resourceType"
+         [resourcePermissionType]="resourcePermissionType"
          [editable]="changeRoles"
          [transitiveRoles]="transitiveRoles"
          [emitAllChanges]="emitAllChanges"
-         [roles]="permissions | userRoles:user"
+         [roles]="user | userRolesMap:permissionsMap:resourcePermissionType"
          (change)="rolesUpdate.emit($event)">
   </roles>
 </div>

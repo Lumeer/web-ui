@@ -17,17 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  EventEmitter,
-  Output,
-  OnChanges,
-  SimpleChanges,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit, OnDestroy} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
@@ -38,15 +28,11 @@ import {WorkflowTablesStateService} from '../tables/service/workflow-tables-stat
 import {combineLatest, Observable} from 'rxjs';
 import {selectViewCursor} from '../../../../../core/store/navigation/navigation.state';
 import {map} from 'rxjs/operators';
-import {
-  createCollectionQueryStem,
-  queryStemWithoutFilters,
-} from '../../../../../core/store/navigation/query/query.util';
+import {queryStemWithoutFilters} from '../../../../../core/store/navigation/query/query.util';
 import {WorkflowsAction} from '../../../../../core/store/workflows/workflows.action';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 import {View} from '../../../../../core/store/views/view';
 import {LoadDataService, LoadDataServiceProvider} from '../../../../../core/service/load-data.service';
-import {objectChanged} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: WORKFLOW_SIDEBAR_SELECTOR,
@@ -55,7 +41,7 @@ import {objectChanged} from '../../../../../shared/utils/common.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
 })
-export class WorkflowSidebarComponent implements OnInit, OnChanges, OnDestroy {
+export class WorkflowSidebarComponent implements OnInit, OnDestroy {
   @Input()
   public collection: Collection;
 
@@ -90,21 +76,6 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.pipe(select(selectViewCursor)),
       this.stateService.tables$.asObservable(),
     ]).pipe(map(([cursor, tables]) => queryStemWithoutFilters(viewCursorToWorkflowTable(cursor, tables)?.stem)));
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.document || objectChanged(changes.currentView)) {
-      this.loadLinkInstances(this.document);
-    }
-  }
-
-  private loadLinkInstances(document: DocumentModel) {
-    if (document) {
-      const query: Query = {stems: [{...createCollectionQueryStem(document.collectionId), documentIds: [document.id]}]};
-      this.loadDataService.setLinkInstancesQueries([query], {viewId: this.currentView?.id});
-    } else {
-      this.loadDataService.clearLinkInstancesQueries();
-    }
   }
 
   public onCloseClick() {

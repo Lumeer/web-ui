@@ -21,9 +21,10 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {User} from '../../../../core/store/users/user';
 import {Team} from '../../../../core/store/teams/team';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'team-table',
@@ -39,10 +40,10 @@ export class TeamTableComponent {
   public teams: Team[];
 
   @Input()
-  public permissions: Permissions;
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
 
   @Input()
-  public resourceType: ResourceType;
+  public resourcePermissionType: ResourcePermissionType;
 
   @Input()
   public deletableTeamIds: string[];
@@ -71,6 +72,9 @@ export class TeamTableComponent {
   @Input()
   public project: Project;
 
+  @Input()
+  public viewsMap: Record<ResourcePermissionType, View>;
+
   @Output()
   public teamUpdated = new EventEmitter<Team>();
 
@@ -81,7 +85,7 @@ export class TeamTableComponent {
   public teamRemoved = new EventEmitter<Team>();
 
   @Output()
-  public teamRolesChange = new EventEmitter<{team: Team; roles: Role[]}>();
+  public teamRolesChange = new EventEmitter<{team: Team; roles: Record<ResourcePermissionType, Role[]>}>();
 
   public searchString: string;
 

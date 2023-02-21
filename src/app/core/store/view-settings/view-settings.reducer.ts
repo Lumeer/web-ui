@@ -26,7 +26,8 @@ import {
   setAttributeToAttributeSettings,
 } from '../../../shared/settings/settings.util';
 import {AttributesResource, AttributesResourceType} from '../../model/resource';
-import {ViewSettings} from './view-settings';
+import {ResourcesPermissions, ViewSettings} from './view-settings';
+import {Permissions} from '../permissions/permissions';
 
 export function viewSettingsReducer(
   state: ViewSettingsState = initialViewSettingsState,
@@ -47,6 +48,22 @@ export function viewSettingsReducer(
       return {...state, [action.payload.settingsId]: action.payload.settings};
     case ViewSettingsActionType.SET_MODAL:
       return setModal(state, action);
+    case ViewSettingsActionType.SET_COLLECTION_PERMISSIONS:
+      return setPermissions(
+        state,
+        action.payload.settingsId,
+        'collections',
+        action.payload.collectionId,
+        action.payload.permissions
+      );
+    case ViewSettingsActionType.SET_LINK_TYPE_PERMISSIONS:
+      return setPermissions(
+        state,
+        action.payload.settingsId,
+        'linkTypes',
+        action.payload.linkTypeId,
+        action.payload.permissions
+      );
     case ViewSettingsActionType.RESET_SETTINGS:
       return {...state, [action.payload.settingsId]: {}};
     case ViewSettingsActionType.CLEAR:
@@ -137,6 +154,24 @@ function setModal(state: ViewSettingsState, action: ViewSettingsAction.SetModal)
   return setViewSettings(state, action.payload.settingsId, {
     ...currentSettings,
     modals: {...currentSettings.modals, settings: modalsSettings},
+  });
+}
+
+function setPermissions(
+  state: ViewSettingsState,
+  settingsId: string,
+  key: keyof ResourcesPermissions,
+  id: string,
+  permissions: Permissions
+): ViewSettingsState {
+  const currentSettings = getViewSettings(state, settingsId) || {};
+  const currentPermissions = currentSettings.permissions || {};
+  const resourcePermissions = {...(currentPermissions[key] || {})};
+  resourcePermissions[id] = permissions;
+
+  return setViewSettings(state, settingsId, {
+    ...currentSettings,
+    permissions: {...currentSettings.permissions, [key]: resourcePermissions},
   });
 }
 

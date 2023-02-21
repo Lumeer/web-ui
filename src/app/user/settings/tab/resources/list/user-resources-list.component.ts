@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ResourceType} from '../../../../../core/model/resource-type';
 import {ResourceRolesData, ResourceRolesDatum} from './resource-roles-data';
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-resources-list',
@@ -38,7 +38,7 @@ export class UserResourcesListComponent {
   public loaded: boolean;
 
   @Input()
-  public resourceType: ResourceType;
+  public resourcePermissionType: ResourcePermissionType;
 
   @Input()
   public selectable: boolean;

@@ -27,8 +27,11 @@ import {objectValues} from '../utils/common.utils';
 import {
   AttributesSettings,
   ResourceAttributeSettings,
+  ResourcesPermissions,
   ViewSettings,
 } from '../../core/store/view-settings/view-settings';
+import {permissionsAreEmpty} from '../utils/permission.utils';
+import {Permissions} from '../../core/store/permissions/permissions';
 
 const composedIdSeparator = ':';
 
@@ -166,6 +169,22 @@ export function createSaveAttributesSettings(
       true
     ),
   };
+}
+
+export function createSavePermissionsSettings(settings: ResourcesPermissions): ResourcesPermissions {
+  return {
+    collections: filterEmptyPermissionsMap(settings?.collections),
+    linkTypes: filterEmptyPermissionsMap(settings?.linkTypes),
+  };
+}
+
+function filterEmptyPermissionsMap(permissionsMap: Record<string, Permissions>): Record<string, Permissions> {
+  return Object.keys(permissionsMap || {}).reduce((map, resourceId) => {
+    if (!permissionsAreEmpty(permissionsMap[resourceId])) {
+      map[resourceId] = permissionsMap[resourceId];
+    }
+    return map;
+  }, {});
 }
 
 function filterResourcesMap(

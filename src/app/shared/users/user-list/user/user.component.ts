@@ -20,12 +20,12 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 import {User} from '../../../../core/store/users/user';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {Team} from '../../../../core/store/teams/team';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {objectChanged} from '../../../utils/common.utils';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-component',
@@ -35,7 +35,13 @@ import {objectChanged} from '../../../utils/common.utils';
 })
 export class UserComponent implements OnChanges {
   @Input()
-  public resourceType: ResourceType;
+  public resourcePermissionType: ResourcePermissionType;
+
+  @Input()
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
+
+  @Input()
+  public transitiveRoles: Record<ResourcePermissionType, Role[]>;
 
   @Input()
   public deletable: boolean;
@@ -59,12 +65,6 @@ export class UserComponent implements OnChanges {
   public teams: Team[];
 
   @Input()
-  public permissions: Permissions;
-
-  @Input()
-  public transitiveRoles: Role[];
-
-  @Input()
   public workspace: Workspace;
 
   @Input()
@@ -80,7 +80,7 @@ export class UserComponent implements OnChanges {
   public userRemoved = new EventEmitter<User>();
 
   @Output()
-  public rolesUpdate = new EventEmitter<Role[]>();
+  public rolesUpdate = new EventEmitter<Record<ResourcePermissionType, Role[]>>();
 
   @Output()
   public teamsUpdate = new EventEmitter<string[]>();
@@ -112,7 +112,7 @@ export class UserComponent implements OnChanges {
   }
 
   private buildSettingsParams(): any {
-    if (this.resourceType === ResourceType.Organization) {
+    if (this.resourcePermissionType === ResourcePermissionType.Organization) {
       return {};
     }
     return {projectCode: this.workspace?.projectCode};

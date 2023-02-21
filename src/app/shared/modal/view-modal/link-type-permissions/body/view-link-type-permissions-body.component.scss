@@ -1,0 +1,13 @@
+@import 'src/styles/bootstrap_var';
+
+table {
+  table-layout: fixed;
+}
+
+.tools {
+  width: 8.75rem;
+
+  @include media-breakpoint-down(sm) {
+    width: auto;
+  }
+}

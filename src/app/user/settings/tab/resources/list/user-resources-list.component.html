@@ -18,10 +18,10 @@
         <span class="ps-2 fw-bold">{{datum.name}}</span>
       </div>
       <roles class="small mt-1"
-             [resourceType]="resourceType"
+             [resourcePermissionType]="resourcePermissionType"
              [editable]="false"
-             [roles]="datum.roles"
-             [transitiveRoles]="datum.transitiveRoles">
+             [roles]="resourcePermissionType | resourceTypeRolesMap:datum.roles"
+             [transitiveRoles]="resourcePermissionType | resourceTypeRolesMap:datum.transitiveRoles">
       </roles>
 
     </div>

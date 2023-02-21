@@ -21,7 +21,6 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
-import {Role} from '../../../core/store/permissions/permissions';
 import {Resource} from '../../../core/model/resource';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
@@ -40,6 +39,8 @@ import {NotificationButton} from '../../../core/notifications/notification-butto
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {deepObjectCopy} from '../../utils/common.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {Role} from '../../../core/store/permissions/permissions';
+import {ResourcePermissionType, resourcePermissionTypeMap} from '../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-list',
@@ -94,6 +95,7 @@ export class UserListComponent implements OnChanges {
   public deletableUserIds: string[];
   public editableUserIds: string[];
   public canManageUserDetail: boolean;
+  public resourcePermissionType: ResourcePermissionType;
 
   constructor(private notificationService: NotificationService) {}
 
@@ -106,6 +108,9 @@ export class UserListComponent implements OnChanges {
     }
     if (changes.organization || changes.project || changes.currentUser) {
       this.checkManageUserDetail();
+    }
+    if (changes.resourceType) {
+      this.resourcePermissionType = resourcePermissionTypeMap[this.resourceType];
     }
   }
 
@@ -126,8 +131,9 @@ export class UserListComponent implements OnChanges {
     this.editableUserIds = (this.users || []).filter(user => user.id !== this.currentUser.id).map(user => user.id);
   }
 
-  public onUserRolesChanged(user: User, roles: Role[]) {
-    this.userRolesChange.emit({user, roles});
+  public onUserRolesChanged(data: {user: User; roles: Record<ResourcePermissionType, Role[]>}) {
+    const roles = data.roles[this.resourcePermissionType];
+    this.userRolesChange.emit({user: data.user, roles});
   }
 
   public onUserTeamsChange(data: {user: User; teams: string[]}) {

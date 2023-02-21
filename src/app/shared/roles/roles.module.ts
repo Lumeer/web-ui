@@ -26,7 +26,6 @@ import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {RoleComponent} from './dropdown/role/role.component';
 import {RoleGroupComponent} from './dropdown/role-group/role-group.component';
 import {IsRoleSelectedPipe} from './pipes/is-role-selected.pipe';
-import {IsRoleGroupSelectedPipe} from './pipes/is-role-group-selected.pipe';
 import {FilterGroupedRolesWithHeaderPipe} from './pipes/filter-grouped-roles-with-header.pipe';
 import {FlattenUngroupedRolesPipe} from './pipes/flatten-ungrouped-roles.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
@@ -41,7 +40,6 @@ import {RolesCountPipe} from './pipes/roles-count.pipe';
     RoleComponent,
     RoleGroupComponent,
     IsRoleSelectedPipe,
-    IsRoleGroupSelectedPipe,
     FilterGroupedRolesWithHeaderPipe,
     FlattenUngroupedRolesPipe,
     RoleTooltipPipe,

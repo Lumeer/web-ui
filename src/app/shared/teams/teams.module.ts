@@ -21,6 +21,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TeamsComponent} from './teams.component';
 import {FormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 import {NewTeamComponent} from './new-team/new-team.component';
 import {TeamListComponent} from './team-list/team-list.component';
 import {PipesModule} from '../pipes/pipes.module';
@@ -31,10 +32,11 @@ import {GravatarModule} from 'ngx-gravatar';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {TeamsPipesModule} from './pipes/teams-pipes.module';
 import {RolesModule} from '../roles/roles.module';
-import {RouterModule} from '@angular/router';
 import {TeamTableComponent} from './team-list/table/team-table.component';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {BoxModule} from '../box/box.module';
+import {ResourceTypePermissionsMapPipe} from './pipes/resource-type-permissions-map.pipe';
+import {ResourceTypeRolesMapPipe} from './pipes/resource-type-roles-map.pipe';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import {BoxModule} from '../box/box.module';
     TeamComponent,
     TeamUsersComponent,
     TeamTableComponent,
+    ResourceTypePermissionsMapPipe,
+    ResourceTypeRolesMapPipe,
   ],
   imports: [
     FormsModule,

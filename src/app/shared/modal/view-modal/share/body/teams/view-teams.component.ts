@@ -23,7 +23,6 @@ import {User} from '../../../../../../core/store/users/user';
 import {Organization} from '../../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../../core/store/projects/project';
 import {Team} from '../../../../../../core/store/teams/team';
-import {ResourceType} from '../../../../../../core/model/resource-type';
 import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {ServiceLimits} from '../../../../../../core/store/organizations/service-limits/service.limits';
@@ -32,6 +31,7 @@ import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organ
 import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../../../core/store/collections/collections.state';
+import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'view-teams',
@@ -63,7 +63,7 @@ export class ViewTeamsComponent implements OnInit {
   @Output()
   public teamRolesChange = new EventEmitter<{team: Team; roles: Role[]}>();
 
-  public readonly resourceType = ResourceType.View;
+  public readonly resourcePermissionType = ResourcePermissionType.View;
 
   public serviceLimits$: Observable<ServiceLimits>;
   public collectionsMap$: Observable<Record<string, Collection>>;
@@ -73,5 +73,10 @@ export class ViewTeamsComponent implements OnInit {
   public ngOnInit() {
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
     this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
+  }
+
+  public onTeamRolesChange(data: {team: Team; roles: Record<ResourcePermissionType, Role[]>}) {
+    const roles = data.roles[this.resourcePermissionType];
+    this.teamRolesChange.emit({team: data.team, roles});
   }
 }

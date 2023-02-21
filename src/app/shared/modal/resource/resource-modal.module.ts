@@ -17,15 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Team} from '../../../core/store/teams/team';
-import {Permissions, Role} from '../../../core/store/permissions/permissions';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-@Pipe({
-  name: 'teamRoles',
+import {ResourceModalHeaderComponent} from './header/resource-modal-header.component';
+import {PresenterModule} from '../../presenter/presenter.module';
+import {PipesModule} from '../../pipes/pipes.module';
+
+@NgModule({
+  declarations: [ResourceModalHeaderComponent],
+  exports: [ResourceModalHeaderComponent],
+  imports: [CommonModule, PresenterModule, PipesModule],
 })
-export class TeamRolesPipe implements PipeTransform {
-  public transform(permissions: Permissions, team: Team): Role[] {
-    return permissions?.groups?.find(group => group.id === team.id)?.roles || [];
-  }
-}
+export class ResourceModalModule {}

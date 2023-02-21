@@ -1,0 +1,14 @@
+<team-table *ngIf="{serviceLimits: serviceLimits$ | async} as data"
+            [users]="users"
+            [teams]="teams"
+            [viewsMap]="viewsMap"
+            [color]="color"
+            [resourcePermissionType]="resourceType"
+            [permissionsMap]="permissionsMap"
+            [editableTeams]="data.serviceLimits?.groups"
+            [organization]="organization"
+            [project]="project"
+            [changeRoles]="data.serviceLimits?.groups"
+            [emitAllChanges]="true"
+            (teamRolesChange)="teamRolesChange.emit($event)">
+</team-table>

@@ -32,7 +32,7 @@ import {PipesModule} from '../pipes/pipes.module';
 import {UserStampComponent} from './user-stamp/user-stamp.component';
 import {GravatarModule} from 'ngx-gravatar';
 import {RolesModule} from '../roles/roles.module';
-import {UserRolesPipe} from './pipes/user-roles.pipe';
+import {UserRolesMapPipe} from './pipes/user-roles-map.pipe';
 import {UserTeamsComponent} from './user-list/user/teams/user-teams.component';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {TeamsIdsPipe} from './pipes/teams-ids.pipe';
@@ -42,6 +42,8 @@ import {UserTableComponent} from './user-list/table/user-table.component';
 import {UserTransitiveRolesPipe} from './pipes/user-transitive-roles.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {RouterModule} from '@angular/router';
+import {ResourceTypePermissionsMapPipe} from './pipes/resource-type-permissions-map.pipe';
+import {ResourceTypeRolesMapPipe} from './pipes/resource-type-roles-map.pipe';
 
 @NgModule({
   imports: [
@@ -63,13 +65,15 @@ import {RouterModule} from '@angular/router';
     NewUserComponent,
     UsersComponent,
     UserStampComponent,
-    UserRolesPipe,
+    UserRolesMapPipe,
     UserTeamsComponent,
     TeamsIdsPipe,
     FilterTeamsPipe,
     FilterUserTeamsPipe,
     UserTableComponent,
     UserTransitiveRolesPipe,
+    ResourceTypePermissionsMapPipe,
+    ResourceTypeRolesMapPipe,
   ],
   exports: [
     UsersComponent,
@@ -78,6 +82,8 @@ import {RouterModule} from '@angular/router';
     UserTableComponent,
     UserTeamsComponent,
     FilterUserTeamsPipe,
+    ResourceTypePermissionsMapPipe,
+    ResourceTypeRolesMapPipe,
   ],
 })
 export class UsersModule {}

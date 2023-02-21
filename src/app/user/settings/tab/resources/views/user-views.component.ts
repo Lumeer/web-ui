@@ -21,15 +21,11 @@ import {Component, ChangeDetectionStrategy, OnChanges, Input, SimpleChanges} fro
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
 import {User} from '../../../../../core/store/users/user';
-import {ResourceType} from '../../../../../core/model/resource-type';
-import {
-  userRolesInOrganization,
-  userRolesInProject,
-  userTransitiveRoles,
-} from '../../../../../shared/utils/permission.utils';
+import {userRolesInProject, userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
 import {View} from '../../../../../core/store/views/view';
 import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
 import {RoleType} from '../../../../../core/model/role-type';
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-views',
@@ -55,7 +51,7 @@ export class UserViewsComponent implements OnChanges {
   @Input()
   public isCurrentUser: boolean;
 
-  public readonly resourceType = ResourceType.View;
+  public readonly resourcePermissionType = ResourcePermissionType.View;
 
   public data: ResourceRolesData;
 
@@ -68,7 +64,7 @@ export class UserViewsComponent implements OnChanges {
       .map(view => this.computeData(view))
       .filter(datum => datum.roles.length || datum.transitiveRoles.length);
 
-    const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.View, this.isCurrentUser);
+    const emptyTitle = resourceRolesDataEmptyTitle(ResourcePermissionType.View, this.isCurrentUser);
 
     this.data = {objects, emptyTitle};
   }
@@ -82,7 +78,7 @@ export class UserViewsComponent implements OnChanges {
         this.organization,
         this.project,
         this.user,
-        ResourceType.View,
+        ResourcePermissionType.View,
         view.permissions
       );
       roles = view.permissions?.users?.find(role => role.id === this.user.id)?.roles || [];

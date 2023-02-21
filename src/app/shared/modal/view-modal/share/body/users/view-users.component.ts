@@ -37,8 +37,8 @@ import {Team} from '../../../../../../core/store/teams/team';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../../../core/store/collections/collections.state';
-import {ResourceType} from '../../../../../../core/model/resource-type';
 import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
+import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'view-users',
@@ -81,7 +81,7 @@ export class ViewUsersComponent implements OnInit, OnChanges {
   public removableUserIds: string[];
   public editableUserIds: string[];
 
-  public readonly resourceType = ResourceType.View;
+  public readonly resourcePermissionType = ResourcePermissionType.View;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -98,5 +98,10 @@ export class ViewUsersComponent implements OnInit, OnChanges {
         .filter(user => user.id !== this.currentUser.id)
         .map(user => user.id);
     }
+  }
+
+  public onUserRolesChange(data: {user: User; roles: Record<ResourcePermissionType, Role[]>}) {
+    const roles = data.roles[this.resourcePermissionType];
+    this.userRolesChange.emit({user: data.user, roles});
   }
 }

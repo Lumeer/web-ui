@@ -346,7 +346,21 @@ function conditionValuesAreSame(cv1: ConditionValue, cv2: ConditionValue): boole
   return deepObjectsEquals(cv1.value ?? '', cv2.value ?? '') && (cv1.type ?? '') === (cv2.type ?? '');
 }
 
-export function getAllLinkTypeIdsFromView(view: View): string[] {
+export function isResourceInQuery(
+  query: Query,
+  resourceId: string,
+  resourceType: AttributesResourceType,
+  linkTypes?: LinkType[]
+): boolean {
+  if (resourceType === AttributesResourceType.Collection) {
+    return getAllCollectionIdsFromQuery(query, linkTypes).includes(resourceId);
+  } else if (resourceType === AttributesResourceType.LinkType) {
+    return getAllLinkTypeIdsFromQuery(query).includes(resourceId);
+  }
+  return false;
+}
+
+export function getQueriesLinkTypeIdsFromView(view: View): string[] {
   return uniqueValues([...getAdditionalLinkTypeIdsFromView(view), ...getAllLinkTypeIdsFromQuery(view?.query)]);
 }
 
@@ -368,7 +382,7 @@ export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
   }, []);
 }
 
-export function getAllCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
+export function getQueriesCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
   return uniqueValues([
     ...getAdditionalCollectionIdsFromView(view, linkTypes),
     ...getAllCollectionIdsFromQuery(view?.query, linkTypes),

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
@@ -36,6 +36,7 @@ import {PrintService} from '../../core/service/print.service';
   templateUrl: './print.component.html',
   styleUrls: ['./print.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class PrintComponent implements OnInit {
   public value$: Observable<any>;

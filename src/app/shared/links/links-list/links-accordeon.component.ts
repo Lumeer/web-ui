@@ -35,6 +35,7 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {ModalService} from '../../modal/modal.service';
 
 @Component({
   selector: 'links-accordeon',
@@ -121,7 +122,7 @@ export class LinksAccordeonComponent implements OnInit {
   public query$: Observable<Query>;
   public constraintData$: Observable<ConstraintData>;
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
@@ -140,6 +141,15 @@ export class LinksAccordeonComponent implements OnInit {
         otherCollectionId: getOtherLinkedCollectionId(linkType, this.collection.id),
       });
     }
+  }
+
+  public onPermissions(event: MouseEvent, linkType: LinkType) {
+    preventEvent(event);
+
+    this.modalService.showViewLinkTypePermissions(
+      linkType.id,
+      getOtherLinkedCollectionId(linkType, this.collection.id)
+    );
   }
 
   public isOpenChanged(opened: boolean, id: string) {

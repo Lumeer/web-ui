@@ -1,0 +1,14 @@
+<user-table [users]="[staticUsers, otherUsers] | concat"
+            [color]="color"
+            [teams]="teams"
+            [viewsMap]="viewsMap"
+            [organization]="organization"
+            [project]="project"
+            [permissionsMap]="permissionsMap"
+            [resourcePermissionType]="resourcePermissionType"
+            [removableUserIds]="removableUserIds"
+            [editableUserIds]="editableUserIds"
+            [emitAllChanges]="true"
+            (userRemoved)="userRemoved.emit($event)"
+            (userRolesChange)="userRolesChange.emit($event)">
+</user-table>

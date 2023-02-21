@@ -853,54 +853,36 @@
                 <source>Share View</source>
                 <target>Sdílet pohled</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context>
-                    <context context-type="linenumber">11</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.input.placeholder" datatype="html">
                 <source>Enter user email and press Enter</source>
                 <target>Zadejte emaily kolegů...</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/input/share-view-input.component.html</context>
-                    <context context-type="linenumber">10</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/input/view-users-input.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.input.button" datatype="html">
                 <source>Add</source>
                 <target>Přidat kolegu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/input/share-view-input.component.html</context>
-                    <context context-type="linenumber">18</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/input/view-users-input.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
             <trans-unit id="view.share.instructions" datatype="html">
                 <source>Add Users or Teams (if not already present) to the list. Then set rights of individual Users and Teams for this View.</source>
                 <target>Přidejte uživatele nebo týmy (pokud ještě nejsou v seznamu). Poté nastavte práva jednotlivých uživatelů a týmu pro tento pohled.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context>
-                    <context context-type="linenumber">13</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
             <trans-unit id="view.share.tabs.users" datatype="html">
                 <source>Users</source>
                 <target>Uživatelé</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context>
-                    <context context-type="linenumber">22</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/link-type-permissions/body/view-link-type-permissions-body.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
             <trans-unit id="view.share.tabs.teams" datatype="html">
                 <source>Teams</source>
                 <target>Týmy</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context>
-                    <context context-type="linenumber">28</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/link-type-permissions/body/view-link-type-permissions-body.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.link.title" datatype="html">
                 <source>Only team members in the list below can open this link</source>
                 <target>Jen uživatelé v seznamu níže mohou otevřít tento odkaz</target>
@@ -1967,13 +1949,13 @@
                 <source>Type a title of this page, save, and share!</source>
                 <target>Pojmenujte tuto obrazovku, uložte a sdílejte!</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit>
             <trans-unit id="view.share.disabled.tooltip" datatype="html">
                 <source>To share a view, first set its name and save it using the controls to the left.</source>
                 <target>K nasdílení pohledu jej nejprve pojmenujte a uložte pomocí políčka a tlačítka vlevo.</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit>
 
 
@@ -2391,15 +2373,15 @@
                     <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.ts</context>
                     <context context-type="linenumber">69</context>
                 </context-group>
-            </trans-unit>
-            <trans-unit id="b48267a331c5cfb5c645992767dbffb6b2a42670" datatype="html">
-                <source>{VAR_SELECT, select, organization {Organization Rights} project {Project Rights} collection {Table Rights} view {View Rights} link_type {Link Type Rights}}</source>
-                <target>{VAR_SELECT, select, organization {Práva v organizaci} project {Práva v projektu} collection {Práva v tabulce} view {Práva v pohledu} link_type {Práva v propojení}}</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/roles/dropdown/roles-dropdown.component.html</context>
-                    <context context-type="linenumber">12</context>
-                </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="889cfb42e12287a7df2518b97548d066ed288764" datatype="html">
+        <source>{VAR_SELECT, select, organization {Organization Rights} project {Project Rights} collection {Table Rights} view_collection {Table Rights} view {View Rights} link_type {Link Type Rights} view_link_type {Link Type Rights}}</source>
+        <target>{VAR_SELECT, select, organization {Práva v organizaci} project {Práva v projektu} collection {Práva v tabulce} view_collection {Práva v tabulce} view {Práva v pohledu} link_type {Práva v propojení} view_link_type {Práva v propojení}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/dropdown/roles-dropdown.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit>
+            
             <trans-unit id="organization.permission.role.inherited" datatype="html">
                 <source>This right is obtained from teams.</source>
                 <target>Toto oprávnění je získáno z týmů.</target>
@@ -2415,15 +2397,19 @@
                     <context context-type="sourcefile">src/app/shared/roles/pipes/role-tooltip.pipe.ts</context>
                     <context context-type="linenumber">36</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="view.resource.permission.role.inherited" datatype="html">
+        <source>This right is obtained from teams, organization, project or view.</source>
+        <target>Toto oprávnění je získáno z týmů, organizace, projektu nebo pohledu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/pipes/role-tooltip.pipe.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="collection.permission.role.inherited" datatype="html">
                 <source>This right is obtained from teams, organization, or project.</source>
                 <target>Toto oprávnění je získáno z týmů, organizace nebo projektu.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/roles/pipes/role-tooltip.pipe.ts</context>
-                    <context context-type="linenumber">39</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/pipes/role-tooltip.pipe.ts</context><context context-type="linenumber">43</context></context-group></trans-unit>
             <trans-unit id="edit" datatype="html">
                 <source>Edit</source>
                 <target>Upravit</target>
@@ -3763,43 +3749,25 @@
                 <target>Potvrzením této akce přijdete o oprávnění spravovat uživatele a týmy a nebudete moci toto nastavení vrátit zpět.</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context>
-                    <context context-type="linenumber">175</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
-                    <context context-type="linenumber">154</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">180</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">160</context></context-group></trans-unit>
             <trans-unit id="teams.list.lost.permissions.title" datatype="html">
                 <source>Be careful, there is risk of losing access.</source>
                 <target>Buďte opatrní, hrozí, že ztratíte přístup.</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context>
-                    <context context-type="linenumber">176</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
-                    <context context-type="linenumber">155</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">181</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">161</context></context-group></trans-unit>
             <trans-unit id="teams.list.lost.permissions.confirm" datatype="html">
                 <source>Save anyway</source>
                 <target>Přesto uložit</target>
 
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context>
-                    <context context-type="linenumber">177</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
-                    <context context-type="linenumber">156</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">182</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">162</context></context-group></trans-unit>
             <trans-unit id="team.description.placeholder" datatype="html">
                 <source>Enter '<x id="INTERPOLATION" equiv-text="{{team.name}}"/>' description</source>
                 <target>Zadejte popis týmu</target>
@@ -3847,24 +3815,24 @@
                 <source>Number of users</source>
                 <target state="final">Počet uživatelů</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit>
             <trans-unit id="organization.settings.projects.count" datatype="html">
                 <source>Number of projects</source>
                 <target state="final">Počet projektů</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.users" datatype="html">
                 <source>Users</source>
                 <target state="final">Uživatelé</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.teams" datatype="html">
                 <source>Teams</source>
                 <target>Týmy</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit>
             <trans-unit id="resource.description" datatype="html">
                 <source>Fill in description</source>
@@ -3934,16 +3902,16 @@
                 <target>Opravdu chcete smazat tuto tabulku?</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">112</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">127</context></context-group></trans-unit>
             <trans-unit id="collection.delete.dialog.title" datatype="html">
                 <source>Delete?</source>
                 <target state="final">Smazat?</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">113</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">126</context></context-group></trans-unit>
             <trans-unit id="page.not.found" datatype="html">
                 <source>Page not found</source>
@@ -3959,25 +3927,25 @@
                 <target>Tabulky nelze načíst</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">99</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">97</context></context-group></trans-unit>
             <trans-unit id="collection.create.fail" datatype="html">
                 <source>Could not create table</source>
                 <target>Tabulku nelze vytvořit</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">156</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">147</context></context-group></trans-unit>
             <trans-unit id="collection.import.fail" datatype="html">
                 <source>Could not import table</source>
                 <target>Tabulku nelze importovat</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">194</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">185</context></context-group></trans-unit>
             <trans-unit id="collection.update.fail" datatype="html">
                 <source>Could not update table</source>
                 <target>Tabulku nelze změnit</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">226</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">217</context></context-group></trans-unit>
             <trans-unit id="resource.rule.update.fail" datatype="html">
                 <source>Could not save automation</source>
                 <target>Nepodařilo se uložit automatizaci</target>
@@ -3985,55 +3953,55 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">258</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">165</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">249</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">165</context></context-group></trans-unit>
             <trans-unit id="collection.update.purpose.fail" datatype="html">
                 <source>Could not update table purpose</source>
                 <target>Napodařilo se změnit účel tabulky</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">283</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">274</context></context-group></trans-unit>
             <trans-unit id="collection.delete.fail" datatype="html">
                 <source>Could not delete table</source>
                 <target>Tabulku nelze smazat</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">336</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">327</context></context-group></trans-unit>
             <trans-unit id="collection.add.favorite.fail" datatype="html">
                 <source>Could not add the table to favorites</source>
                 <target>Tabulku nelze přidat mezi oblíbené</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">361</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">352</context></context-group></trans-unit>
             <trans-unit id="collection.remove.favorite.fail" datatype="html">
                 <source>Could not remove the table from favorites</source>
                 <target>Tabulku nelze odebrat z oblíbených</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">386</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">377</context></context-group></trans-unit>
             <trans-unit id="collection.change.attribute.fail" datatype="html">
                 <source>Could not change the attribute</source>
                 <target state="translated">Atribut nelze změnit</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">535</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">526</context></context-group></trans-unit>
             <trans-unit id="collection.remove.attribute.fail" datatype="html">
                 <source>Could not delete the attribute</source>
                 <target state="translated">Atribut nelze smazat</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">575</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">566</context></context-group></trans-unit>
             <trans-unit id="collection.change.permission.fail" datatype="html">
                 <source>Could not change the table permissions</source>
                 <target>Nelze nastavit přístupová práva k tabulce</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">621</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">612</context></context-group></trans-unit>
             <trans-unit id="collection.runRule.fail" datatype="html">
                 <source>Could not run the selected automation for the whole table</source>
                 <target>Nemohu spustit vybranou automatizaci na všech řádcích v tabulce</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">646</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">637</context></context-group></trans-unit>
             <trans-unit id="dashboard.data.get.fail" datatype="html">
                 <source>Could not read dashboard data</source>
                 <target>Nepodařilo se mi načíst údaje o dashboardu</target>
@@ -4054,7 +4022,7 @@
                 <source>Could not get tasks</source>
                 <target>Nepodařilo se mi načíst úkoly</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/data-resources/data-resources.effects.ts</context><context context-type="linenumber">238</context></context-group></trans-unit>
             <trans-unit id="documents.get.fail" datatype="html">
                 <source>Could not get records</source>
@@ -4098,25 +4066,25 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">483</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">489</context></context-group></trans-unit>
             <trans-unit id="document.delete.dialog.title" datatype="html">
                 <source>Delete record</source>
                 <target state="translated">Smazat záznam</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">669</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">675</context></context-group></trans-unit>
             <trans-unit id="document.delete.dialog.message" datatype="html">
                 <source>Do you really want to delete this record?</source>
                 <target state="translated">Chcete opravdu smazat tento záznam?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">670</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">676</context></context-group></trans-unit>
             <trans-unit id="document.delete.fail" datatype="html">
                 <source>Could not delete the record</source>
                 <target state="translated">Záznam nelze smazat</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">688</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">694</context></context-group></trans-unit>
             <trans-unit id="dataResource.runRule.fail" datatype="html">
                 <source>Could not run the selected automation</source>
                 <target>Nemůžu spustit zvolenou automatizaci</target>
@@ -4124,7 +4092,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">713</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit><trans-unit id="information.records.get" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">719</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit><trans-unit id="information.records.get" datatype="html">
         <source>Could not get required information</source><target>Nemohu získat potřebné informace</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/information-store/information-records.effects.ts</context>
@@ -4135,23 +4103,23 @@
                 <source>Could not get groups</source>
                 <target state="translated">Skupiny nelze načíst</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">54</context></context-group></trans-unit>
             <trans-unit id="group.create.fail" datatype="html">
                 <source>Could not create the group</source>
                 <target state="translated">Skupinu nelze vytvořit</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">80</context></context-group></trans-unit>
             <trans-unit id="team.update.fail" datatype="html">
                 <source>Could not update the team</source>
                 <target>Nepodařilo se mi upravit tým</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">110</context></context-group></trans-unit>
             <trans-unit id="team.delete.fail" datatype="html">
                 <source>Could not delete the team</source>
                 <target>Nepodařilo se mi smazat tým</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/teams/teams.effects.ts</context><context context-type="linenumber">133</context></context-group></trans-unit>
 
 
@@ -4319,61 +4287,61 @@
                 <source>Could not get organizations</source>
                 <target state="translated">Organizace nelze načíst</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">112</context></context-group></trans-unit>
             <trans-unit id="organization.create.fail" datatype="html">
                 <source>Could not create the organization</source>
                 <target state="translated">Organizaci nelze vytvořit</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">156</context></context-group></trans-unit>
             <trans-unit id="organization.update.fail" datatype="html">
                 <source>Could not update the organization</source>
                 <target state="translated">Organizaci nelze změnit</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">210</context></context-group></trans-unit>
             <trans-unit id="organization.delete.fail" datatype="html">
                 <source>Could not delete the organization</source>
                 <target state="translated">Organizaci nelze smazat</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">252</context></context-group></trans-unit>
             <trans-unit id="projects.get.fail" datatype="html">
                 <source>Could not get projects</source>
                 <target state="translated">Projekty nelze načíst</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
             <trans-unit id="project.create.fail" datatype="html">
                 <source>Could not create the project</source>
                 <target state="translated">Projekt nelze vytvořit</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">190</context></context-group></trans-unit>
             <trans-unit id="project.update.fail" datatype="html">
                 <source>Could not update the project</source>
                 <target state="translated">Projekt nelze změnit</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">242</context></context-group></trans-unit>
             <trans-unit id="project.delete.fail" datatype="html">
                 <source>Could not delete the project</source>
                 <target state="translated">Projekt nelze smazat</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">283</context></context-group></trans-unit>
             <trans-unit id="project.deleteSampleDate.fail" datatype="html">
                 <source>Could not delete sample data</source>
                 <target>Nemohu vymazat ukázková data</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">307</context></context-group></trans-unit>
             <trans-unit id="project.downloadRawContent.fail" datatype="html">
                 <source>Could not download project data</source>
                 <target>Nemohu stáhnout obsah projektu</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">352</context></context-group></trans-unit>
 
 
@@ -4388,54 +4356,54 @@
                 <target state="translated">Uživatele nelze vytvořit</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">193</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">188</context></context-group></trans-unit>
             <trans-unit id="user.update.fail" datatype="html">
                 <source>Could not update the user</source>
                 <target state="translated">Uživatele nelze změnit</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">301</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">431</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">291</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">421</context></context-group></trans-unit>
             <trans-unit id="user.delete.fail" datatype="html">
                 <source>Could not delete the user</source>
                 <target state="translated">Uživatele nelze smazat</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">327</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">317</context></context-group></trans-unit>
             <trans-unit id="views.get.fail" datatype="html">
                 <source>Could not get views</source>
                 <target state="translated">Pohledy nelze načíst</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">122</context></context-group></trans-unit>
 
             <trans-unit id="view.create.fail" datatype="html">
                 <source>Could not create the view</source>
                 <target state="translated">Pohled nelze vytvořit</target>
 
-                
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">203</context></context-group></trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">200</context></context-group></trans-unit>
 
             <trans-unit id="view.update.fail" datatype="html">
                 <source>Could not update the view</source>
                 <target state="translated">Pohled nelze změnit</target>
 
-                
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">263</context></context-group></trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">260</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.title" datatype="html">
                 <source>Delete this column?</source>
                 <target state="final">Smazat sloupec?</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1353</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1359</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.message" datatype="html">
                 <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
                 <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v tabulce.</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1354</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1360</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.changeAttribute" datatype="html">
                 <source>Attribute settings...</source>
                 <target>Nastavení attributu...</target>
@@ -4459,13 +4427,13 @@
                 <source>Do you really want to permanently delete this organization?</source>
                 <target state="translated">Chcete tuto organizaci skutečně trvale smazat?</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit>
             <trans-unit id="organization.delete.dialog.title" datatype="html">
                 <source>Delete organization?</source>
                 <target state="final">Smazat organizaci?</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">80</context></context-group></trans-unit>
             <trans-unit id="organization.not.exist" datatype="html">
                 <source>Organization does not exist</source>
@@ -4497,31 +4465,31 @@
                 <source>Delete sample data from the project</source>
                 <target>Vymazat ukázková data z projektu</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit>
             <trans-unit id="project.delete.dialog.message" datatype="html">
                 <source>Do you really want to permanently delete this project?</source>
                 <target state="translated">Chcete skutečně navždy smazat tento projekt?</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
             <trans-unit id="project.delete.dialog.title" datatype="html">
                 <source>Delete project?</source>
                 <target state="final">Smazat projekt?</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">99</context></context-group></trans-unit>
             <trans-unit id="project.settings.upload.success" datatype="html">
                 <source>The new project content was successfully added.</source>
                 <target>Nový obsah projektu byl úspěšně přidán.</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">283</context></context-group></trans-unit>
             <trans-unit id="project.settings.upload.error" datatype="html">
                 <source>I was not possible to upload and process this project file.</source>
                 <target>Nepodařilo se mi nahrát a zpracovat tento soubor s projektem.</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">292</context></context-group></trans-unit>
 
 
@@ -4808,7 +4776,7 @@
                     <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/> je již použité, zkuste něco jiného!
                 </target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit>
             <trans-unit id="ba1f0128edbddbedec519987d91131b95cf7b6c8" datatype="html">
                 <source>{VAR_SELECT, select, organization {code} project {code} collection {name}}</source>
@@ -5340,10 +5308,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="project.settings.tab.selection" datatype="html">
         <source>Selection Lists</source><target>Seznamy hodnot</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="project.settings.tab.variables" datatype="html">
         <source>Variables</source><target>Proměnné</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.description" datatype="html">
         <source>All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</source><target>Všechny ukázkové záznamy budou trvale odstraněny z projektu. Napište TRVALE VYČISTIT pro pokračování.</target>
 
@@ -5769,7 +5737,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">139</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.tags.placeholder" datatype="html">
         <source>Type tag name and press Enter</source><target>Napiště značku a stiskněte Enter</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/tags/input-tags.component.ts</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/tags/input-tags.component.ts</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="table.body.row.links.permissions" datatype="html">
+        <source>Set Link Type permissions</source><target>Nastavit oprávnění propojení</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.title" datatype="html">
         <source>Embeddable Lumeer</source><target>Vložit Lumeera do stránky</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.description" datatype="html">
@@ -6100,7 +6074,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
         <source>Add/Remove links</source><target>Přidat/Odebrat propojení</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit>
             <trans-unit id="file.not.exist" datatype="html">
                 <source>Table does not exist</source>
                 <target>Tabulka neexistuje</target>
@@ -6209,12 +6183,12 @@
                 <source>Could not set the displayed attribute id</source>
                 <target>Nelze nastavit hlavní atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">437</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">428</context></context-group></trans-unit>
             <trans-unit id="collection.create.attributes.fail" datatype="html">
                 <source>Could not create attributes</source>
                 <target>Nelze vytvořit atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">490</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">481</context></context-group></trans-unit>
             <trans-unit id="document.create.serviceLimits" datatype="html">
                 <source>You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?</source>
                 <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje vytvořit jen omezené množství záznamů. Chcete aktivovat program Lumeer Business, který tato omezení nemá?</target>
@@ -6224,12 +6198,12 @@
                 <source>Could not add the record to favorites</source>
                 <target>Záznam nelze přidat do oblíbených</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">440</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">446</context></context-group></trans-unit>
             <trans-unit id="document.remove.favorite.fail" datatype="html">
                 <source>Could not remove the record from favorites</source>
                 <target>Záznam nelze odebrat z oblíbených</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">472</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">478</context></context-group></trans-unit>
             <trans-unit id="link.instance.delete.dialog.title" datatype="html">
                 <source>Remove link</source>
                 <target>Odstranit propojení</target>
@@ -6246,266 +6220,308 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/link-type-permissions/view-link-type-permissions-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v organizaci} ProjectContribute {Vytvářet projekty}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">233</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">254</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
         <source>A user can see this organization, all projects, tables, views and links in all projects in this organization.</source>
         <target>Uživatel může vidět tuto organizaci, všechny projekty a všechny tabulky, pohledy a propojení ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">242</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">263</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this organization and can see it.</source>
         <target>Uživatel je přidaný do této organizace a může ji vidět.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">244</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">265</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Manage" datatype="html">
         <source>A user can change and delete this organization, all projects, tables, views and links in all projects in this organization.</source>
         <target>Uživatel může měnit a mazat tuto organizaci, všechny projekty a všechny tabulky, pohledy a propojení ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">247</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">268</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.</source>
         <target>Uživatel může měnit název, barvu, ikonu a popis organizace. Může provádět platby a upravovat fakturační údaje. Může smazat tuto organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">249</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.ProjectContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">270</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.ProjectContribute" datatype="html">
         <source>A user can create new projects in this organization. They become a manager of the new project.</source>
         <target>Uživatel může vytvářet nové projekty v této organizaci. Stane se správcem projektu, který vytvoří.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">251</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">272</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.UserConfig" datatype="html">
         <source>A user can add, modify, and delete users and their rights everywhere in this organization.</source>
         <target>Uživatel může přidávat, upravovat a odstraňovat uživatele a jejich práva kdekoliv v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">254</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">275</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can add, modify, and delete users in this organization (at the organizational level).</source>
         <target>Uživatel může přidávat, upravovat a odstraňovat uživatele a jejich práva v této organizaci (jen na úrovni organizace).</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">256</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataRead" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">277</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in all tables and views in all projects in this organization.</source>
         <target>Uživatel může číst údaje ve všech tabulkách a pohledech ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataWrite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">279</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in all tables and views in all projects in this organization.</source>
         <target>Uživatel může upravovat údaje ve všech tabulkách a pohledech ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">260</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataDelete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">281</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in all tables and views in all projects in this organization.</source>
         <target>Uživatel může odstraňovat záznamy (řádky) ve všech tabulkách a pohledech ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">262</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">283</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source>
         <target>Uživatel může vytvářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) ve všech tabulkách, propojeních a pohledech ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">264</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CommentContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">285</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in all projects in this organization.</source>
         <target>Uživatel může vkládat komentáře ke všem záznamům (řádkům) ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">266</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">287</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
         <source>A user can create tables in all projects in this organization. They become a manager of the new table.</source>
         <target>Uživatel může vytvářet tabulky ve všech projektech v této organizaci. Stane se správcem tabulky, kterou vytvoří.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">268</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.ViewContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">289</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.ViewContribute" datatype="html">
         <source>A user can create views in all projects in this organization. They become a manager of the new view.</source>
         <target>Uživatel může vytvářet pohledy ve všech projektech v této organizaci. Stane se správcem pohledu, který vytvoří.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">270</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.LinkContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">291</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.LinkContribute" datatype="html">
         <source>A user can create link types in all projects in this organization. They become a manager of the new link type.</source>
         <target>Uživatel může vytvářet propojení mezi tabulkami ve všech projektech v této organizaci. Stane se správcem propojení, které vytvoří.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">272</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">293</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in tables and link types in all projects in this organization.</source>
         <target>Uživatel může přidávat, měnit a odstraňovat sloupce ve všech tabulkách a propojeních ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">274</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.TechConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">295</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations in all tables and link types in all projects in this organization.</source>
         <target>Uživatel může přidávat, měnit a odstraňovat automatizace ve všech tabulkách a propojeních ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">276</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">297</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
         <source>A user can manage visual view configurations of all views in all projects in this organization.</source>
         <target>Uživatel může upravovat vizuální nastavení všech pohledů ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">278</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.QueryConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">299</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in all views in all projects in this organization.</source>
         <target>Uživatel může měnit filtry a dotazy ve všech pohledech ve všech projektech v této organizaci.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">280</context></context-group></trans-unit><trans-unit id="project.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">301</context></context-group></trans-unit><trans-unit id="project.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Settings}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v projektu} TechConfig {Spravovat nastavení}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">286</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.organization.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">307</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.organization.title" datatype="html">
         <source>{type, select, Read {Join Everything} Manage {Manage Everything} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
         <target>{type, select, Read {Přidat se všude} Manage {Spravovat vše} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Kdekoliv vytvářet typy propojení} ViewContribute {Kdekoliv vytvářet pohledy} CollectionContribute {Kdekoliv vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek a propojení} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">296</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.project.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">317</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.project.title" datatype="html">
         <source>{type, select, Read {Join Everything} Manage {Manage Everytning} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types} ViewContribute {Create Views} CollectionContribute {Create Tables} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
         <target>{type, select, Read {Přidat se všude} Manage {Spravovat vše} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Vytvářet typy propojení} ViewContribute {Vytvářet pohledy} CollectionContribute {Vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek a propojení} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">301</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">322</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Read" datatype="html">
         <source>A user can see this project, all tables, views and links in this project. However for their content (data) there is a separate right.</source>
         <target>Uživatel může vidět tento projekt a všechny tabulky, pohledy a propojení v tomto projektu. Pro přístup k jejich obsahu (údajům) je však potřeba další oprávnění.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">311</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">332</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this project and can see it.</source><target>Uživatel je přidaný do tohoto projektu a může jej vidět.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">313</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">334</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Manage" datatype="html">
         <source>A user can change and delete this project, all tables, views and links in this project.</source>
         <target>Uživatel může měnit nebo odstraňovat tento projekt a všechny tabulky, pohledy a propojení v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">316</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">337</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the project name, color, icon, description and can delete it.</source>
         <target>Uživatel může spravovat název, barvu, ikonu a popis projektu. Může také projekt odstranit..</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">318</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">339</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights everywhere in the project.</source>
         <target>Uživatel může spravovat uživatelská práva všude uvnitř projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">321</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">342</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this project (at the project level).</source>
         <target>Uživatel může spravovat uživatelská práva v tomto projektu (pouze na úrovni projektu).</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">323</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataRead" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">344</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in all tables and views in this project.</source>
         <target>Uživatel může číst veškeré údaje ve všech tabulkách a pohledech v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">330</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataWrite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">351</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in all tables and views in this project.</source>
         <target>Uživatel může upravovat veškeré údaje ve všech tabulkách a pohledech v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">332</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataDelete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">353</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in all tables and views in this project.</source>
         <target>Uživatel může odstraňovat libovolné záznamy (řádky) ve všech tabulkách a pohledech v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">334</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">355</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in this project.</source>
         <target>Uživatel může vyvtářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) ve všech taulkách, propojeních a pohledech v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">336</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CommentContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">357</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this project.</source>
         <target>Uživatel může vkládat komentáře ke všem záznamům v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">338</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">359</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
         <source>A user can create tables in this project. They become a manager of the new table.</source>
         <target>Uživatel může vytvářet tabulky v tomto projektu. Stane se správcem tabulky, kterou vytvoří.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">340</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.ViewContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">361</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.ViewContribute" datatype="html">
         <source>A user can create views in this project. They become a manager of the new view.</source>
         <target>Uživatel může vytvářet pohledy v tomto projektu. Stane se správcem pohledu, který vytvoří.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">342</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.LinkContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">363</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.LinkContribute" datatype="html">
         <source>A user can create link types in this project. They become a manager of the new link type.</source>
         <target>Uživatel může vytvářet nové typy propojení v tomto projektu. Stane se správcem typu propojení, které vytvoří.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">344</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">365</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in all tables and link types in this project.</source>
         <target>Uživatel může vytvářet, upravovat a odstraňovat sloupce ve všech tabulkách a typech propojení v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">346</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.TechConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">367</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations on all tables and link types in this project.</source>
         <target>Uživatel může vytvářet, upravovat a odstraňovat automatizace ve všech tabulkách a typech propojení v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">326</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.TechConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">347</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.TechConfig" datatype="html">
         <source>A user can manage sequences, selection lists, variables and can publish this project.</source>
         <target>Uživatel může spravovat sekvence, seznamy s výběrem hodnot, proměnné a může publikovat projekt.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">328</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">349</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
         <source>A user can manage visual view configurations of all views in this project.</source>
         <target>Uživatel může upravovat vizuální nastavení všech pohledů v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">348</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.QueryConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">369</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in all views in this project.</source>
         <target>Uživatel může upravovat filtry a dotazy všech pohledů v tomto projektu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">350</context></context-group></trans-unit><trans-unit id="collection.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">371</context></context-group></trans-unit><trans-unit id="view.linkType.collection.permission.role.title" datatype="html">
+        <source>{type, select, DataRead {Read Table Records} DataWrite {Edit Table Data} DataContribute {Create New Records}}</source>
+        <target>{type, select, DataRead {Číst záznamy v tabulce} DataWrite {Upravovat záznamy v tabulce} DataContribute {Vytvářet záznamy v tabulce}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context>
+          <context context-type="linenumber">395</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.linkType.permission.role.title" datatype="html">
+        <source>{type, select, DataRead {Read Linked Records} DataWrite {Edit Linked Data} DataDelete {Unlink Records} DataContribute {Create New Links}}</source>
+        <target>{type, select, DataRead {Číst propojené záznamy} DataWrite {Upravovat propojené záznamy} DataDelete {Odpojovat záznamy} DataContribute {Vytvářet nová propojení}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context>
+          <context context-type="linenumber">411</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele} DataRead {Číst záznamy} DataWrite {Upravovat záznamy} DataDelete {Odstraňovat záznamy} DataContribute {Přidávat svoje záznamy} CommentContribute {Vkládat komentáře} AttributeEdit {Upravovat sloupce} TechConfig {Spravovat automatizace}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">365</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">418</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this table and can see it. Users need other rights to be able to see and work with the table content.</source>
         <target>Uživatel je přidaný k této tabulce a může ji vidět. Uživatelé potřebují dalsí práva, aby mohli vidět a pracovat s obsahem tabulky.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">373</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">426</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the table name, color, icon, description and can delete it.</source>
         <target>Uživatel může upravovat název, barvu, ikonu a popis tabulky. Může tabulku také odstranit.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">375</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">428</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this table.</source>
         <target>Uživatel může spravovat práva uživatelů v této tabulce.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">377</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataRead" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">430</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in this table.</source>
         <target>Uživatel může číst veškeré údaje v této tabulce.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">379</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataWrite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">432</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in this table.</source>
         <target>Uživatel může upravovat veškeré údaje v této tabulce.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">381</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataDelete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">434</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in this table.</source>
         <target>Uživatel může odstraňovat libovolné záznamy (řádky) z této tabulky.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">383</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">436</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in this table.</source>
         <target>Uživatel může vytvářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) v této tabulce.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">385</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.CommentContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">438</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this table.</source>
         <target>Uživatel může vkládat komentáře ke všem záznamům v této tabulce.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">387</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.AttributeEdit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">440</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in this table.</source>
         <target>Uživtal může přidávat, upravovat a odstraňovat sloupce v této tabulce.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">389</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.TechConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">442</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations in this table.</source>
         <target>Uživatel může přidávat, upravovat a odstraňovat automatizace v této tabulce.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">391</context></context-group></trans-unit><trans-unit id="view.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">444</context></context-group></trans-unit><trans-unit id="linkType.permission.role.tooltip.DataRead" datatype="html">
+        <source>A user can read all data in this link.</source><target>Uživatel může číst veškeré údaje v tomto propojení.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context>
+          <context context-type="linenumber">451</context>
+        </context-group>
+      </trans-unit><trans-unit id="linkType.permission.role.tooltip.DataWrite" datatype="html">
+        <source>A user can modify all data in this link.</source><target>Uživatel může upravovat veškeré údaje v tomto propojení.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context>
+          <context context-type="linenumber">453</context>
+        </context-group>
+      </trans-unit><trans-unit id="linkType.permission.role.tooltip.DataDelete" datatype="html">
+        <source>A user can delete all records (rows) in this link.</source><target>Uživatel může odstraňovat libovolné záznamy (řádky) v tomto propojení.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context>
+          <context context-type="linenumber">455</context>
+        </context-group>
+      </trans-unit><trans-unit id="linkType.permission.role.tooltip.DataContribute" datatype="html">
+        <source>A user can create, see, modify and unlink only their own records (rows) in this link.</source>
+        <target>Uživatel může vytvářet, prohlížet, upravovat a odpojovat jen svoje vlastní záznamy (řádky) v tomto propojení.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context>
+          <context context-type="linenumber">457</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage Settings} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele} DataRead {Číst záznamy} DataWrite {Upravovat záznamy} DataDelete {Odstraňovat záznamy} DataContribute {Přidávat svoje záznamy} CommentContribute {Vkládat komentáře} PerspectiveConfig {Spravovat pohledy} QueryConfig {Spravovat filtry pohledů}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">406</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">473</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this view and can see it. Users need other rights to be able to open the view, see and work with the view content.</source>
         <target>Uživatel je přidaný k tomuto pohledu a může jej vidět. Uživatel potřebuje další práva, aby mohl podhled otevřít a vidět a pracovat s jeho obsahem.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">414</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">481</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the view name, color, icon, folders and can delete it.</source>
         <target>Uživatel může upravovat název, ikonu, barvu a složky tohoto pohledu. Může pohled také odstranits.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">416</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">483</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this view.</source>
         <target>Uživatel může spravovat práva ostatních uživatelů v tomto pohledu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">418</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataRead" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">485</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in this view.</source>
         <target>Uživatel může číst veškeré údaje v tomto pohledu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">420</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataWrite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">487</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in this view.</source>
         <target>Uživatel může upravovat veškeré údaje v tomto pohledu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">422</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataDelete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">489</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in this view.</source>
         <target>Uživatel může odstraňovat libovolné záznamy (řádky) v tomto pohledu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">424</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">491</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in this view.</source>
         <target>Uživatel může vytvářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) v tomto pohledu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">426</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.CommentContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">493</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this view.</source>
         <target>uživatel může vkládat komentáře ke všem záznamům v tomto pohledu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">428</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.PerspectiveConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">495</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.PerspectiveConfig" datatype="html">
         <source>A user can manage the visual configuration of this view.</source>
         <target>Uživatel může upravovat vizuální nastavení tohoto pohledu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">430</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.QueryConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">497</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in this view.</source>
         <target>Uživatel může upravovat nastavení filtrů a dotazů v tomto pohledu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">432</context></context-group></trans-unit><trans-unit id="organization.permission.role.group" datatype="html">
-        <source>{type, select, Data {Manage Data} View {Manage Views} Collaborate {Create Tables, Links and Views} User {User Management} Config {Manage Tables, Links and Views}}</source>
-        <target>{type, select, Data {Spravovat údaje} View {Spravovat pohledy} Collaborate {Vytvářet tabulky, propojení a pohledy} User {Spravovat uživatele} Config {Spravovat tabulky, propojení a pohledy}}</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">438</context></context-group></trans-unit><trans-unit id="record.new.title.tasks" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context><context context-type="linenumber">499</context></context-group></trans-unit><trans-unit id="organization.permission.role.group2" datatype="html">
+        <source>{type, select, Data {Manage Data} Linked {Manage Linked Data} View {Manage Views} Collaborate {Create Tables, Links and Views} User {User Management} Config {Manage Tables, Links and Views}}</source>
+        <target>{type, select, Data {Spravovat údaje} Linked {Spravovat propojené údaje} View {Spravovat pohledy} Collaborate {Vytrvářet tabulky, propojení a pohledy} User {Spravovat uživatele} Config {Spravovat tabulky, propojení a pohledy}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/model/role-group.service.ts</context>
+          <context context-type="linenumber">505</context>
+        </context-group>
+      </trans-unit><trans-unit id="record.new.title.tasks" datatype="html">
         <source>New task</source><target>Nový úkol</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/utils/translation.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="record.new.title.default" datatype="html">
@@ -6586,13 +6602,13 @@
                 <source>Could not read information about your previous service order</source>
                 <target>Nelze načíst údaje o předchozí objednávce služby</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context><context context-type="linenumber">129</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context><context context-type="linenumber">118</context></context-group></trans-unit>
             <trans-unit id="organization.payment.create.fail" datatype="html">
                 <source>Could not create your new service order</source>
                 <target>Nelze vytvořit novou objednávku služby</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
-            
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context><context context-type="linenumber">146</context></context-group></trans-unit>
+
             <trans-unit id="organization.serviceLimits.get.fail" datatype="html">
                 <source>Could not read information about your service level and subscription</source>
                 <target>Nelze načíst údaje o vašem aktivovaném programu a předplatném</target>
@@ -6645,7 +6661,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">169</context></context-group></trans-unit><trans-unit id="selection.lists.get.fail" datatype="html">
         <source>Could not read selection lists</source><target>Nemohl jsem načíst seznamy hodnot</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="selection.lists.create.fail" datatype="html">
         <source>Could not create selection list</source><target>Nemohl jsem vytvořit seznam hodnot</target>
 
@@ -6685,7 +6701,7 @@
                 <source>You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?</source>
                 <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje do vaší organizace pozvat jen tři kolegy. Chcete aktivovat program Lumeer Business, který tato omezení nemá?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">212</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">207</context></context-group></trans-unit>
 
 
 
@@ -7244,13 +7260,13 @@
                 <source>Could not save the default workspace</source>
                 <target>Nelze uložit výchozí organizace a projekt.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">358</context></context-group></trans-unit><trans-unit id="user.teams.set.fail" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">348</context></context-group></trans-unit><trans-unit id="user.teams.set.fail" datatype="html">
         <source>Could not set user teams</source><target>Nepodařilo se mi nastavit týmy uživatele</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">383</context></context-group></trans-unit><trans-unit id="user.referrals.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">373</context></context-group></trans-unit><trans-unit id="user.referrals.fail" datatype="html">
         <source>Could not get your referrals at the moment</source><target>Nyní se mi nedaří získat údaje o vašich doporučených uživatelích</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">406</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">396</context></context-group></trans-unit>
 
             <trans-unit id="file.attachment.download.failure" datatype="html">
         <source>Could not download the file attachment. Please try again later.</source>
@@ -7435,8 +7451,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context><context context-type="linenumber">347</context></context-group></trans-unit><trans-unit id="query.stem.choose" datatype="html">
         <source>The New Record Belongs to...</source><target>Nový záznam patří do...</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context><context context-type="linenumber">432</context></context-group></trans-unit><trans-unit id="lumeer.advice.percentage" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context><context context-type="linenumber">458</context></context-group></trans-unit><trans-unit id="lumeer.advice.percentage" datatype="html">
         <source>I suggest to set the column type of <x id="attributeName" equiv-text="attribute.name"/> to percentage. Do you agree?</source><target>Navrhuji nastavit typ sloupce <x id="attributeName" equiv-text="{{attrName}}"/> na procenta. Souhlasíte?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">52</context></context-group></trans-unit>
@@ -7679,7 +7695,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/rich-text/dropdown/rich-text-dropdown.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/conditional-formatting-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/attribute-function-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-documents/choose-link-documents-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-resource/choose-resource-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-stem/choose-stem-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-modal.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">360</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/rich-text/dropdown/rich-text-dropdown.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/conditional-formatting/conditional-formatting-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/description/attribute-description-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/function/attribute-function-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/lock/attribute-lock-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/attribute-type-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-documents/choose-link-documents-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-resource/choose-resource-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-stem/choose-stem-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/collection-upload/collection-upload-modal.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/getting-started/getting-started.service.ts</context><context context-type="linenumber">360</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/link-type-permissions/view-link-type-permissions-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">183</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">163</context></context-group></trans-unit>
             <trans-unit id="button.create" datatype="html">
                 <source>Create</source>
                 <target>Vytvořit</target>
@@ -7714,10 +7730,10 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/book-product-demo/book-product-demo-modal.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/get-in-touch/get-in-touch-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="dialog.productDemo.success" datatype="html">
         <source>We received your request and will get back to you soon.</source><target>Zaznamenali jsme Vaši žádost o ukázku aplikace a brzy Vás budeme kontaktovat.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">472</context></context-group></trans-unit><trans-unit id="dialog.productDemo.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">457</context></context-group></trans-unit><trans-unit id="dialog.productDemo.error" datatype="html">
         <source>Could not schedule product demo.</source><target>Nepodařilo se mi zamluvit ukázku aplikace.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">483</context></context-group></trans-unit><trans-unit id="dialog.productDemo.form.name.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">468</context></context-group></trans-unit><trans-unit id="dialog.productDemo.form.name.label" datatype="html">
         <source>Your name:</source><target>Vaše jméno:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/book-product-demo/content/book-product-demo-content.component.html</context>
@@ -7784,10 +7800,10 @@
       </trans-unit><trans-unit id="dialog.getInTouch.success" datatype="html">
         <source>Your message has been sent.</source><target>Vaše zpráva byla odeslána.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">521</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">501</context></context-group></trans-unit><trans-unit id="dialog.getInTouch.error" datatype="html">
         <source>Could not send your message.</source><target>Nemohl jsem odeslat Vaši zprávu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">532</context></context-group></trans-unit><trans-unit id="topPanel.userMenu.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">512</context></context-group></trans-unit><trans-unit id="topPanel.userMenu.title" datatype="html">
         <source>User menu</source><target>Uživatelská nabídka</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="topPanel.controlsToggle.tooltip" datatype="html">
@@ -8400,10 +8416,10 @@
         <source>You are allowed to invite only <x id="limit" equiv-text="limits.users"/> users to your organization. Do you want to upgrade your plan now?</source>
         <target>Do Vaší organizace je možné pozvat pouze <x id="limit" equiv-text="{{limit}}"/> uživatelů. Chcete upravit nastavení služby?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">209</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.business.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">204</context></context-group></trans-unit><trans-unit id="user.create.serviceLimits.business.title" datatype="html">
         <source>Limits exceeded</source><target>Překročení limitů</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">210</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">205</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {}}</source><target>{VAR_SELECT, select, organization {Organizace} project {Projekt} other {} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
@@ -8712,22 +8728,22 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">348</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
         <source>Could not delete the view</source><target>Pohled se nepodařilo smazat</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">367</context></context-group></trans-unit><trans-unit id="view.change.permission.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">364</context></context-group></trans-unit><trans-unit id="view.change.permission.fail" datatype="html">
         <source>Could not change the view permissions</source><target>Nepodařilo se mi nastavit přístupová práva k pohledu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">467</context></context-group></trans-unit><trans-unit id="view.set.folders.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">464</context></context-group></trans-unit><trans-unit id="view.set.folders.fail" datatype="html">
         <source>Could not update view folders</source><target>Nemůžu upravit složky tohoto pohledu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">503</context></context-group></trans-unit><trans-unit id="view.add.favorite.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">500</context></context-group></trans-unit><trans-unit id="view.add.favorite.fail" datatype="html">
         <source>Could not add the view to favorites</source><target>Nepodařilo se mi přidat pohled k oblíbeným</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">533</context></context-group></trans-unit><trans-unit id="view.remove.favorite.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">530</context></context-group></trans-unit><trans-unit id="view.remove.favorite.fail" datatype="html">
         <source>Could not remove the view from favorites</source><target>Nepodařilo se mi odstranit pohled z oblíbených</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">563</context></context-group></trans-unit><trans-unit id="view.dashboard.set.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">560</context></context-group></trans-unit><trans-unit id="view.dashboard.set.fail" datatype="html">
         <source>Could not save dashboard settings</source><target>Nepodařilo se uložit nastavení dashboardu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">671</context></context-group></trans-unit><trans-unit id="linkType.not.exist" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">668</context></context-group></trans-unit><trans-unit id="linkType.not.exist" datatype="html">
         <source>Link type does not exist</source><target>Typ vazby neexistuje</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/link-type/link-type-settings.guard.ts</context>
@@ -8761,10 +8777,10 @@
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.getSelectionListDisplayValuesBlock" datatype="html">
         <source>Get display values of a project selection list.</source><target>Vratí zobrazované hodnoty globálního seznamu na úrovni projektu.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-selection-list-display-values-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getSelectionListValuesBlock" datatype="html">
         <source>Get values of a project selection list.</source><target>Vratí hodnoty globálního seznamu na úrovni projektu.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-selection-list-values-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getSiblingsBlock" datatype="html">
         <source>Follows the link from the given record and then all the links back to the original table, returning all siblings.</source>
         <target>Následuje všechna propojení daného typu z uvedeného záznamu a pak všechna propojení zpět do původní tabulky. Tak vrátí veškeré sourozence.</target>
@@ -9373,7 +9389,7 @@
       </trans-unit><trans-unit id="document.detail.links.noLinks" datatype="html">
         <source>There are no links.</source><target>Nemáte žádná propojení.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="home" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="home" datatype="html">
         <source>Home</source><target>Domů</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="query.suggestion.type" datatype="html">

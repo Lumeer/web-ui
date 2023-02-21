@@ -46,7 +46,7 @@ import {PermissionsHelper} from '../../../core/store/permissions/permissions.hel
 import {deepObjectCopy} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {NotificationButton} from '../../../core/notifications/notification-button';
-import {UsersAction} from '../../../core/store/users/users.action';
+import {ResourcePermissionType, resourcePermissionTypeMap} from '../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'team-list',
@@ -89,6 +89,7 @@ export class TeamListComponent implements OnInit, OnChanges {
 
   public teamIds: string[];
   public groupsAreEditable: boolean;
+  public resourcePermissionType: ResourcePermissionType;
 
   public users$: Observable<User[]>;
   public permissions$ = new BehaviorSubject<Permissions>(null);
@@ -112,6 +113,9 @@ export class TeamListComponent implements OnInit, OnChanges {
     }
     if (changes.resource) {
       this.permissions$.next(this.resource?.permissions);
+    }
+    if (changes.resourceType) {
+      this.resourcePermissionType = resourcePermissionTypeMap[this.resourceType];
     }
   }
 
@@ -150,8 +154,9 @@ export class TeamListComponent implements OnInit, OnChanges {
     this.teamDeleted.emit(team);
   }
 
-  public onTeamRolesChange(data: {team: Team; roles: Role[]}) {
-    const newPermission: Permission = {roles: data.roles, id: data.team.id};
+  public onTeamRolesChange(data: {team: Team; roles: Record<ResourcePermissionType, Role[]>}) {
+    const roles = data.roles[this.resourcePermissionType];
+    const newPermission: Permission = {roles, id: data.team.id};
     const newPermissions = PermissionsHelper.changePermission(this.resource.permissions, PermissionType.Groups, [
       newPermission,
     ]);
@@ -159,11 +164,11 @@ export class TeamListComponent implements OnInit, OnChanges {
 
     if (this.currentUserLostUserConfig(this.organization, this.project, newResource, this.teams)) {
       this.askToPerformUpdate(
-        () => this.teamRolesChange.emit(data),
+        () => this.teamRolesChange.emit({...data, roles}),
         () => this.resetPermissions()
       );
     } else {
-      this.teamRolesChange.emit(data);
+      this.teamRolesChange.emit({...data, roles});
     }
   }
 

@@ -21,10 +21,11 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {User} from '../../../../core/store/users/user';
 import {Team} from '../../../../core/store/teams/team';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'user-table',
@@ -40,19 +41,22 @@ export class UserTableComponent {
   public teams: Team[];
 
   @Input()
-  public permissions: Permissions;
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
 
   @Input()
   public color: string;
 
   @Input()
-  public resourceType: ResourceType;
+  public resourcePermissionType: ResourcePermissionType;
 
   @Input()
   public organization: Organization;
 
   @Input()
   public project: Project;
+
+  @Input()
+  public viewsMap: Record<ResourcePermissionType, View>;
 
   @Input()
   public deletableUserIds: string[];
@@ -85,7 +89,7 @@ export class UserTableComponent {
   public userDeleted = new EventEmitter<User>();
 
   @Output()
-  public userRolesChange = new EventEmitter<{user: User; roles: Role[]}>();
+  public userRolesChange = new EventEmitter<{user: User; roles: Record<ResourcePermissionType, Role[]>}>();
 
   @Output()
   public userTeamsChange = new EventEmitter<{user: User; teams: string[]}>();

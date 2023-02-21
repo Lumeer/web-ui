@@ -1,0 +1,60 @@
+<ng-container *ngIf="{changeableUsers: changeableUsers$| async, staticUsers: staticUsers$ | async, collectionsMap: collectionsMap$ | async} as data">
+
+  <div class="p-3">
+
+    <ng-container *ngIf="selectedTab$ | async as selectedTab">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link text-truncate"
+             [class.active]="selectedTab === viewTab.Users"
+             i18n="@@view.share.tabs.users"
+             (click)="selectedTab$.next(viewTab.Users)">Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-truncate"
+             [class.active]="selectedTab === viewTab.Teams"
+             i18n="@@view.share.tabs.teams"
+             (click)="selectedTab$.next(viewTab.Teams)">Teams</a>
+        </li>
+      </ul>
+
+      <ng-container *ngIf="selectedTab === viewTab.Users">
+        <view-users-input class="d-block mb-2 mt-4"
+                          [readableUsers]="usersWithReadPermission"
+                          [currentUsers]="[data.staticUsers, data.changeableUsers] | concat"
+                          (selectUser)="onUserSelected($event)">
+        </view-users-input>
+
+        <view-resource-permissions-users [organization]="organization"
+                                         [project]="project"
+                                         [viewsMap]="view | checkResourcesInView:collection.id:linkType.id:linkTypes"
+                                         [color]="view | viewColor:data.collectionsMap"
+                                         [currentUser]="currentUser"
+                                         [staticUsers]="data.staticUsers"
+                                         [teams]="teams"
+                                         [permissionsMap]="collectionPermissions | viewUserPermissionsMap:linkTypePermissions:(userCollectionRoles$ | async):(userLinkTypeRoles$ | async)"
+                                         [otherUsers]="data.changeableUsers"
+                                         [resourcePermissionType]="resourcePermissionType"
+                                         (userRemoved)="deleteUser($event)"
+                                         (userRolesChange)="onNewRoles($event.user, $event.roles)">
+        </view-resource-permissions-users>
+
+      </ng-container>
+
+      <view-resource-permissions-teams *ngIf="selectedTab === viewTab.Teams"
+                                       class="d-block mt-4"
+                                       [organization]="organization"
+                                       [project]="project"
+                                       [viewsMap]="view | checkResourcesInView:collection.id:linkType.id:linkTypes"
+                                       [color]="view | viewColor:data.collectionsMap"
+                                       [permissionsMap]="collectionPermissions | viewGroupPermissionsMap:linkTypePermissions:(teamCollectionRoles$ | async):(teamLinkTypeRoles$ | async)"
+                                       [users]="users"
+                                       [teams]="teamsWithReadPermission"
+                                       [currentUser]="currentUser"
+                                       [resourceType]="resourcePermissionType"
+                                       (teamRolesChange)="onNewTeamRoles($event.team, $event.roles)">
+      </view-resource-permissions-teams>
+    </ng-container>
+
+  </div>
+</ng-container>

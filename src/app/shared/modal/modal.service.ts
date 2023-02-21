@@ -66,6 +66,7 @@ import {LimitsService} from '../../core/service/limits.service';
 import {ConditionalFormattingModalComponent} from './attribute/conditional-formatting/conditional-formatting-modal.component';
 import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
 import {CollectionUploadModalComponent} from './collection-upload/collection-upload-modal.component';
+import {ViewLinkTypePermissionsModalComponent} from './view-modal/link-type-permissions/view-link-type-permissions-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -243,6 +244,11 @@ export class ModalService {
   public showShareView(view: View): BsModalRef {
     const initialState = {view};
     return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-xxl');
+  }
+
+  public showViewLinkTypePermissions(linkTypeId: string, otherCollectionId: string): BsModalRef {
+    const initialState = {linkTypeId, otherCollectionId};
+    return this.showStaticDialog(initialState, ViewLinkTypePermissionsModalComponent, 'modal-xxl');
   }
 
   public showTabsSettings(perspectiveId: string, initialTab: string): BsModalRef {

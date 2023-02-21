@@ -17,16 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 import {Role} from '../../../core/store/permissions/permissions';
 import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
-import {RoleGroup} from '../../../core/model/role-group';
 
-@Pipe({
-  name: 'isRoleGroupSelected',
-})
-export class IsRoleGroupSelectedPipe implements PipeTransform {
-  public transform(group: RoleGroup, roles: Role[]): boolean {
-    return group.roles.every(role => (roles || []).some(r => rolesAreSame(r, role)));
-  }
+export interface RoleGroup {
+  title?: string;
+  order: number;
+  roles: TranslatedRole[];
+}
+
+export interface TranslatedRole extends Role {
+  title: string;
+  tooltip?: string;
+  fromParentOrTeams?: boolean;
+  permissionType: ResourcePermissionType;
+}
+
+export function translatedRolesAreSame(t1: TranslatedRole, t2: TranslatedRole): boolean {
+  return rolesAreSame(t1, t2) && t1.permissionType === t2.permissionType;
+}
+
+export function translatedRolesToMap(roles: TranslatedRole[]): Record<ResourcePermissionType, TranslatedRole[]> {
+  return roles.reduce((map, role) => {
+    if (!map[role.permissionType]) {
+      map[role.permissionType] = [];
+    }
+    map[role.permissionType].push(role);
+    return map;
+  }, {} as Record<ResourcePermissionType, TranslatedRole[]>);
 }

@@ -1,0 +1,31 @@
+<modal-wrapper class="d-block"
+               [dialogType]="dialogType.Success"
+               [performingAction]="performingAction$ | async"
+               [customHeader]="true"
+               (onSubmit)="onSubmit()"
+               (onClose)="hideDialog()">
+
+  <resource-modal-header class="custom-header p-0 d-block w-100"
+                         [resource]="linkType$ | async">
+  </resource-modal-header>
+
+  <div class="body">
+    <view-link-type-permissions-body [currentUser]="currentUser$ | async"
+                                     [organization]="organization$ | async"
+                                     [project]="project$ | async"
+                                     [view]="view$ | async"
+                                     [teams]="teams$ | async"
+                                     [users]="users$ | async"
+                                     [collection]="collection$ | async"
+                                     [linkType]="linkType$ | async"
+                                     [linkTypes]="linkTypes$ | async"
+                                     [collectionPermissions]="collectionPermissions$ | async"
+                                     [linkTypePermissions]="linkTypePermissions$ | async"
+                                     (submitPermissions)="onSubmitPermissions($event)">
+    </view-link-type-permissions-body>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@button.ok">OK</span>
+
+</modal-wrapper>

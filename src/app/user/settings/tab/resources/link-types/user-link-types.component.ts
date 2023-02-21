@@ -21,7 +21,6 @@ import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges} fro
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
 import {User} from '../../../../../core/store/users/user';
-import {ResourceType} from '../../../../../core/model/resource-type';
 import {
   linkTypePermissions,
   userRolesInProject,
@@ -30,6 +29,7 @@ import {
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
 import {RoleType} from '../../../../../core/model/role-type';
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-link-types',
@@ -55,7 +55,7 @@ export class UserLinkTypesComponent implements OnChanges {
   @Input()
   public isCurrentUser: boolean;
 
-  public readonly resourceType = ResourceType.LinkType;
+  public readonly resourcePermissionType = ResourcePermissionType.LinkType;
 
   public data: ResourceRolesData;
 
@@ -68,7 +68,7 @@ export class UserLinkTypesComponent implements OnChanges {
       .map(linkType => this.computeData(linkType))
       .filter(datum => datum.roles.length || datum.transitiveRoles.length);
 
-    const emptyTitle = resourceRolesDataEmptyTitle(ResourceType.LinkType, this.isCurrentUser);
+    const emptyTitle = resourceRolesDataEmptyTitle(ResourcePermissionType.LinkType, this.isCurrentUser);
 
     this.data = {objects, emptyTitle};
   }
@@ -83,7 +83,7 @@ export class UserLinkTypesComponent implements OnChanges {
         this.organization,
         this.project,
         this.user,
-        ResourceType.LinkType,
+        ResourcePermissionType.LinkType,
         permissions
       );
       roles = permissions?.users?.find(role => role.id === this.user.id)?.roles || [];

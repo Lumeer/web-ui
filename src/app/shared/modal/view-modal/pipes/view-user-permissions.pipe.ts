@@ -17,24 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {View} from '../../../../../core/store/views/view';
-import {Permissions, Role} from '../../../../../core/store/permissions/permissions';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 
 @Pipe({
-  name: 'viewGroupPermissions',
+  name: 'viewUserPermissions',
 })
-export class ViewGroupPermissionsPipe implements PipeTransform {
-  public transform(view: View, roles: Record<string, Role[]>): Permissions {
-    const teamPermissions = [...(view.permissions?.groups || [])];
+@Injectable({providedIn: 'root'})
+export class ViewUserPermissionsPipe implements PipeTransform {
+  public transform(permissions: Permissions, roles: Record<string, Role[]>): Permissions {
+    const userPermissions = [...(permissions?.users || [])];
     Object.keys(roles).forEach(id => {
-      const roleIndex = teamPermissions.findIndex(role => role.id === id);
+      const roleIndex = userPermissions.findIndex(role => role.id === id);
       if (roleIndex >= 0) {
-        teamPermissions[roleIndex] = {id, roles: roles[id]};
+        userPermissions[roleIndex] = {id, roles: roles[id]};
       } else {
-        teamPermissions.push({id, roles: roles[id]});
+        userPermissions.push({id, roles: roles[id]});
       }
     });
-    return {...view.permissions, groups: teamPermissions};
+    return {...permissions, users: userPermissions};
   }
 }

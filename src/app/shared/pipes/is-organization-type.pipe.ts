@@ -19,6 +19,7 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {ResourceType} from '../../core/model/resource-type';
+import {ResourcePermissionType} from '../../core/model/resource-permission-type';
 
 @Pipe({
   name: 'isOrganizationType',
@@ -27,7 +28,7 @@ import {ResourceType} from '../../core/model/resource-type';
   providedIn: 'root',
 })
 export class IsOrganizationTypePipe implements PipeTransform {
-  public transform(type: ResourceType): boolean {
+  public transform(type: ResourceType | ResourcePermissionType): boolean {
     return type === ResourceType.Organization;
   }
 }

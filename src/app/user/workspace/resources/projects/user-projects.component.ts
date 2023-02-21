@@ -19,8 +19,8 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {ResourceRolesData, ResourceRolesDatum} from '../../../settings/tab/resources/list/resource-roles-data';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-projects',
@@ -40,7 +40,7 @@ export class UserProjectsComponent {
   @Output()
   public selected = new EventEmitter<ResourceRolesDatum>();
 
-  public readonly resourceType = ResourceType;
+  public readonly resourcePermissionType = ResourcePermissionType.Project;
 
   public trackByDatum(index: number, datum: ResourceRolesDatum): string {
     return datum.id;

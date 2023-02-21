@@ -20,11 +20,11 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {User} from '../../../../core/store/users/user';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Team} from '../../../../core/store/teams/team';
 import {InputBoxComponent} from '../../../input/input-box/input-box.component';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'team-component',
@@ -34,10 +34,13 @@ import {Permissions, Role} from '../../../../core/store/permissions/permissions'
 })
 export class TeamComponent {
   @Input()
-  public resourceType: ResourceType;
+  public resourcePermissionType: ResourcePermissionType;
 
   @Input()
-  public permissions: Permissions;
+  public permissionsMap: Record<ResourcePermissionType, Permissions>;
+
+  @Input()
+  public transitiveRoles: Record<ResourcePermissionType, Role[]>;
 
   @Input()
   public users: User[];
@@ -63,9 +66,6 @@ export class TeamComponent {
   @Input()
   public allTeams: Team[];
 
-  @Input()
-  public transitiveRoles: Role[];
-
   @Output()
   public teamUpdated = new EventEmitter<Team>();
 
@@ -76,7 +76,7 @@ export class TeamComponent {
   public teamRemoved = new EventEmitter<Team>();
 
   @Output()
-  public teamRolesChange = new EventEmitter<Role[]>();
+  public teamRolesChange = new EventEmitter<Record<ResourcePermissionType, Role[]>>();
 
   private readonly inheritedManagerMsg: string;
   private readonly cannotChangeRoleMsg: string;
@@ -115,10 +115,6 @@ export class TeamComponent {
 
   public onNewDescription(description: string) {
     this.teamUpdated.emit({...this.team, description});
-  }
-
-  public onChangeRoles(roles: Role[]) {
-    this.teamRolesChange.emit(roles);
   }
 
   public onRemove() {
