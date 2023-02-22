@@ -502,6 +502,7 @@ export class WorkflowTablesDataService {
             newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMap, actionTitle} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
             footer: createWorkflowTableFooter(rows, columns, stemConfig, config.footers, constraintData),
+            linkingCollectionId,
           };
           tables.push(workflowTable);
         }
