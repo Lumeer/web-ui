@@ -19,13 +19,14 @@
 
 import {TableModel} from '../../../../shared/table/model/table-model';
 import {DataResource} from '../../../../core/model/resource';
-import {QueryStem} from '../../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Constraint, DataValue} from '@lumeer/data-filters';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 
 export interface WorkflowTable extends TableModel {
   title?: WorkflowTableTitle;
   stem: QueryStem;
+  query: Query;
   height: number;
   minHeight: number;
   width: number;
