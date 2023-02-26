@@ -166,18 +166,6 @@ export class CreateDataResourceService {
     }
   }
 
-  public prepareCreatePathStems(
-    stem: QueryStem,
-    queryResource: QueryResource,
-    groupingAttributes: QueryAttributeGrouping[]
-  ): QueryStem[] {
-    const chainRange = createChainRange(
-      queryResource,
-      groupingAttributes.map(g => g.attribute)
-    );
-    return this.createChoosePathStems(stem, queryResource, groupingAttributes, [], chainRange);
-  }
-
   public update(updateData: UpdateDataResourceData) {
     const groupingAttributes = updateData.grouping.map(g => g.attribute);
     const chainRange = createChainRange(updateData.queryResource, groupingAttributes);
@@ -259,6 +247,7 @@ export class CreateDataResourceService {
   private createChoosePathStemsByData(createData: CreateDataResourceData, chainRange: number[]): QueryStem[] {
     return this.createChoosePathStems(
       createData.stem,
+      this.query,
       createData.queryResource,
       createData.grouping,
       createData.additionalAttributes,
@@ -268,6 +257,7 @@ export class CreateDataResourceService {
 
   private createChoosePathStems(
     stem: QueryStem,
+    query: Query,
     queryResource: QueryResource,
     groupingAttributes: QueryAttributeGrouping[],
     additionalAttributes: QueryAttribute[],
@@ -281,7 +271,7 @@ export class CreateDataResourceService {
       ) {
         const grouping = this.getGroupingByResourceIndex(groupingAttributes, resourceIndex);
         const collectionId = this.getResourceInStem(stem, resourceIndex).id;
-        const collectionsFilters = getQueryFiltersForCollection(this.query, collectionId);
+        const collectionsFilters = getQueryFiltersForCollection(query, collectionId);
         if (grouping?.attribute?.attributeId) {
           collectionsFilters.push({
             attributeId: grouping.attribute.attributeId,
@@ -471,6 +461,7 @@ export class CreateDataResourceService {
 
   public chooseDataResourcesChain(
     stem: QueryStem,
+    query: Query,
     queryResource: QueryResource,
     groupingAttributes: QueryAttributeGrouping[],
     dataResourcesChains: DataResourceChain[][],
@@ -482,7 +473,7 @@ export class CreateDataResourceService {
       queryResource,
       groupingAttributes.map(g => g.attribute)
     );
-    const pathStems = this.createChoosePathStems(stem, queryResource, groupingAttributes, [], chainRange);
+    const pathStems = this.createChoosePathStems(stem, query, queryResource, groupingAttributes, [], chainRange);
     this.chooseDocumentsPath(
       pathStems,
       viewId,

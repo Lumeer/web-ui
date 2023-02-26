@@ -90,10 +90,10 @@
               "node_modules/hammerjs/hammer.min.js",
               "node_modules/pusher-js/dist/web/pusher.min.js",
               "node_modules/quill/dist/quill.min.js",
-              "node_modules/pressure/dist/pressure.min.js",
-              "node_modules/numbro/dist/languages.min.js"
+              "node_modules/pressure/dist/pressure.min.js"
             ],
-            "vendorChunk": false
+            "vendorChunk": false,
+            "preserveSymlinks": true
           },
           "configurations": {
             "production": {

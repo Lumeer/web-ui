@@ -453,6 +453,7 @@ export class WorkflowTablesDataService {
                   dataResources: titleDataResources,
                 },
                 stem: stemConfig.stem,
+                query: queryByStem,
                 minHeight,
                 height,
                 bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
@@ -496,6 +497,7 @@ export class WorkflowTablesDataService {
             linkTypeId: linkType?.id,
             color: shadeColor(collection.color, 0.5),
             stem: stemConfig.stem,
+            query: queryByStem,
             minHeight,
             height,
             width: columnsWidth + 1, // + 1 for border
@@ -1626,6 +1628,7 @@ export class WorkflowTablesDataService {
           ];
       this.createDataResourceService.chooseDataResourcesChain(
         table.stem,
+        table.query,
         config.collection,
         groupingAttributes,
         table.dataResourcesChains,
