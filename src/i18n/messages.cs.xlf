@@ -853,35 +853,35 @@
                 <source>Share View</source>
                 <target>Sdílet pohled</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.input.placeholder" datatype="html">
                 <source>Enter user email and press Enter</source>
                 <target>Zadejte emaily kolegů...</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/input/view-users-input.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.input.button" datatype="html">
                 <source>Add</source>
                 <target>Přidat kolegu</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/input/view-users-input.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
             <trans-unit id="view.share.instructions" datatype="html">
                 <source>Add Users or Teams (if not already present) to the list. Then set rights of individual Users and Teams for this View.</source>
                 <target>Přidejte uživatele nebo týmy (pokud ještě nejsou v seznamu). Poté nastavte práva jednotlivých uživatelů a týmu pro tento pohled.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
             <trans-unit id="view.share.tabs.users" datatype="html">
                 <source>Users</source>
                 <target>Uživatelé</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/link-type-permissions/body/view-link-type-permissions-body.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
             <trans-unit id="view.share.tabs.teams" datatype="html">
                 <source>Teams</source>
                 <target>Týmy</target>
 
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/link-type-permissions/body/view-link-type-permissions-body.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.link.title" datatype="html">
                 <source>Only team members in the list below can open this link</source>
@@ -2381,7 +2381,7 @@
           <context context-type="linenumber">12,14</context>
         </context-group>
       </trans-unit>
-            
+
             <trans-unit id="organization.permission.role.inherited" datatype="html">
                 <source>This right is obtained from teams.</source>
                 <target>Toto oprávnění je získáno z týmů.</target>
@@ -2408,7 +2408,7 @@
             <trans-unit id="collection.permission.role.inherited" datatype="html">
                 <source>This right is obtained from teams, organization, or project.</source>
                 <target>Toto oprávnění je získáno z týmů, organizace nebo projektu.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/pipes/role-tooltip.pipe.ts</context><context context-type="linenumber">43</context></context-group></trans-unit>
             <trans-unit id="edit" datatype="html">
                 <source>Edit</source>
@@ -3749,24 +3749,24 @@
                 <target>Potvrzením této akce přijdete o oprávnění spravovat uživatele a týmy a nebudete moci toto nastavení vrátit zpět.</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">180</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">160</context></context-group></trans-unit>
             <trans-unit id="teams.list.lost.permissions.title" datatype="html">
                 <source>Be careful, there is risk of losing access.</source>
                 <target>Buďte opatrní, hrozí, že ztratíte přístup.</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">181</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">161</context></context-group></trans-unit>
             <trans-unit id="teams.list.lost.permissions.confirm" datatype="html">
                 <source>Save anyway</source>
                 <target>Přesto uložit</target>
 
 
-                
-                
+
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">182</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">162</context></context-group></trans-unit>
             <trans-unit id="team.description.placeholder" datatype="html">
                 <source>Enter '<x id="INTERPOLATION" equiv-text="{{team.name}}"/>' description</source>
@@ -7566,7 +7566,7 @@
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}</source><target>{mode, select, Quarter Day {Čtvrt Dny} Half Day {Půl dny} Day {Dny} Week {Týdny} Month {Měsíce} Year {Roky} }</target>
+        <source>{mode, select, Hour {Hours} Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}</source><target>{mode, select, Hour {Hodiny} Quarter Day {Čtvrt Dny} Half Day {Půl dny} Day {Dny} Week {Týdny} Month {Měsíce} Year {Roky} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="perspective.kanban.create.card.failure" datatype="html">
         <source>Could not create card</source><target>Nemohu vytvořit kartu</target>
