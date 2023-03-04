@@ -76,6 +76,7 @@ export interface GanttChartProgressBarModel extends GanttChartBarModel {
 }
 
 export enum GanttChartMode {
+  Hour = 'Hour',
   QuarterDay = 'Quarter Day',
   HalfDay = 'Half Day',
   Day = 'Day',

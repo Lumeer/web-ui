@@ -27,7 +27,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 export class GanttChartModeTextPipe implements PipeTransform {
   public transform(mode: GanttChartMode): string {
     return parseSelectTranslation(
-      $localize`:@@perspective.gantt.config.mode:{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}`,
+      $localize`:@@perspective.gantt.config.mode:{mode, select, Hour {Hours} Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}`,
       {mode}
     );
   }

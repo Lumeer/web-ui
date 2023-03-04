@@ -2026,7 +2026,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/input/view-users-input.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="view.share.instructions" datatype="html">
         <source>Add Users or Teams (if not already present) to the list. Then set rights of individual Users and Teams for this View.</source><target state="final">Add Users or Teams (if not already present) to the list. Then set rights of individual Users and Teams for this View.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="view.share.tabs.users" datatype="html">
         <source>Users</source><target state="final">Users</target>
 
@@ -5695,7 +5695,7 @@
         </context-group>
       </trans-unit><trans-unit id="collection.permission.role.inherited" datatype="html">
         <source>This right is obtained from teams, organization, or project.</source><target state="final">This right is obtained from teams, organization, or project.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/roles/pipes/role-tooltip.pipe.ts</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="edit" datatype="html">
         <source>Edit</source><target state="final">Edit</target>
 
@@ -6037,7 +6037,7 @@
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}</source><target state="final">{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}</target>
+        <source>{mode, select, Hour {Hours} Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}</source><target state="final">{mode, select, Hour {Hours} Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="perspective.kanban.create.card.failure" datatype="html">
         <source>Could not create card</source><target state="final">Could not create card</target>
