@@ -32,6 +32,7 @@ import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 import {QueryItemType} from '../query-item/model/query-item-type';
 import {Direction} from '../../../direction';
+import {FulltextQueryItem} from '../query-item/model/fulltext.query-item';
 
 @Component({
   selector: 'search-input',
@@ -112,6 +113,12 @@ export class SearchInputComponent {
 
   public onBlur() {
     this.suggesting = false;
+
+    const fulltext = (this.text || '').trim();
+    if (fulltext) {
+      this.addQueryItem.emit(new FulltextQueryItem(fulltext));
+      this.text = '';
+    }
   }
 
   public onFocus() {
