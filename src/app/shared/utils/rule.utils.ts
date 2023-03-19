@@ -120,16 +120,9 @@ function computeCronDailyNextExecution(rule: CronRule, time: Date): Date {
   const config = rule.configuration;
   let dateMoment: moment.Moment;
   if (isDateValid(config.lastRun)) {
-    dateMoment = moment
-      .utc(config.lastRun)
-      .startOf('day')
-      .add(config.interval, 'days')
-      .hour(+config.hour);
+    dateMoment = moment.utc(config.lastRun).startOf('day').add(config.interval, 'days').hour(+config.hour);
   } else {
-    dateMoment = moment
-      .utc()
-      .startOf('day')
-      .hour(+config.hour);
+    dateMoment = moment.utc().startOf('day').hour(+config.hour);
     if (time.getTime() > dateMoment.toDate().getTime()) {
       dateMoment = dateMoment.add(1, 'day');
     }
@@ -138,11 +131,7 @@ function computeCronDailyNextExecution(rule: CronRule, time: Date): Date {
   if (dateMoment.toDate() > config.startsOn) {
     return dateMoment.toDate();
   }
-  return moment
-    .utc(config.startsOn)
-    .startOf('day')
-    .hour(+config.hour)
-    .toDate();
+  return moment.utc(config.startsOn).startOf('day').hour(+config.hour).toDate();
 }
 
 function computeCronWeeklyNextExecution(rule: CronRule, time: Date): Date {
@@ -165,10 +154,7 @@ function createWeeklyExecutionDates(configuration: CronRuleConfiguration, start:
 
   const days = createRange(0, 7).filter(day => bitTest(configuration.daysOfWeek, day));
 
-  let currentMoment = moment
-    .utc(start)
-    .startOf('day')
-    .hour(+configuration.hour);
+  let currentMoment = moment.utc(start).startOf('day').hour(+configuration.hour);
   while (dates.length === 0 || dates[dates.length - 1] < end) {
     for (const day of days) {
       currentMoment = currentMoment.isoWeekday(day + 1); // 1 to 7 -> Monday to Sunday)
@@ -189,21 +175,11 @@ function computeCronMonthlyNextExecution(rule: CronRule, time: Date): Date {
   let dateMoment: moment.Moment;
   if (isDateValid(config.lastRun)) {
     dateMoment = setDayOfMonth(
-      moment
-        .utc(config.lastRun)
-        .startOf('month')
-        .add(config.interval, 'months')
-        .hour(+config.hour),
+      moment.utc(config.lastRun).startOf('month').add(config.interval, 'months').hour(+config.hour),
       config.occurrence
     );
   } else {
-    dateMoment = setDayOfMonth(
-      moment
-        .utc()
-        .startOf('month')
-        .hour(+config.hour),
-      config.occurrence
-    );
+    dateMoment = setDayOfMonth(moment.utc().startOf('month').hour(+config.hour), config.occurrence);
   }
 
   const minDate = config.startsOn > time ? config.startsOn : time;
@@ -212,13 +188,7 @@ function computeCronMonthlyNextExecution(rule: CronRule, time: Date): Date {
     return dateMoment.toDate();
   }
 
-  dateMoment = setDayOfMonth(
-    moment
-      .utc(minDate)
-      .startOf('month')
-      .hour(+config.hour),
-    config.occurrence
-  );
+  dateMoment = setDayOfMonth(moment.utc(minDate).startOf('month').hour(+config.hour), config.occurrence);
 
   if (dateMoment.toDate() > minDate) {
     return dateMoment.toDate();

@@ -176,7 +176,7 @@ export class ResourceActivityComponent implements OnChanges, OnDestroy {
   }
 
   private appendCreatedLogsIfNeeded(logs: AuditLog[], dataResource: DataResource): AuditLog[] {
-    if (logs.some(log => log.type === AuditLogType.Created)) {
+    if (!dataResource || logs.some(log => log.type === AuditLogType.Created)) {
       return logs;
     }
     const auditLogCreated = {

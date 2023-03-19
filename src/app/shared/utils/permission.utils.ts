@@ -275,7 +275,7 @@ export function userRoleTypesInResource(
   resource: Resource,
   user: User
 ): RoleType[] {
-  return userRoleTypesInPermissions(organization, project, resource.permissions, user);
+  return userRoleTypesInPermissions(organization, project, resource?.permissions, user);
 }
 
 export function userRoleTypesInLinkType(
@@ -400,8 +400,8 @@ function mergePermissions(p1: Permission[], p2: Permission[]): Permission[] {
   const p2Map = objectsByIdMap(p2);
   const finalArray: Permission[] = [];
   Object.keys(p1Map).forEach(id => {
-    const p1Roles = p1Map[id].roles;
-    const p2Roles = p2Map[id].roles;
+    const p1Roles = p1Map[id]?.roles || [];
+    const p2Roles = p2Map[id]?.roles || [];
 
     const roles = [...p1Roles, ...p2Roles].reduce<Role[]>((allRoles, role) => {
       const index = allRoles.findIndex(r => r.type === role.type);
