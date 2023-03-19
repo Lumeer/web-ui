@@ -23,13 +23,20 @@ import {Store} from '@ngrx/store';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {UsersAction} from '../store/users/users.action';
 import {AuthService} from '../../auth/auth.service';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SleepDetectionService {
-  constructor(private store$: Store<AppState>, private authService: AuthService) {
-    this.setupWorker();
+  constructor(
+    private store$: Store<AppState>,
+    private authService: AuthService,
+    private configurationService: ConfigurationService
+  ) {
+    if (this.configurationService.getConfiguration().auth) {
+      this.setupWorker();
+    }
   }
 
   private setupWorker() {

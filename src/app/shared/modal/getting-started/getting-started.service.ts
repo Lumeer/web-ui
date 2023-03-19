@@ -469,7 +469,7 @@ export class GettingStartedService {
     );
     let currentInterval = 5;
     this.stageSubscriptions.add(
-      timer(0, 60_000)
+      timer(0, 60000)
         .pipe(switchMap(() => interval(currentInterval++ * 1000)))
         .subscribe(() => this.store$.dispatch(new UsersAction.GetCurrentUser()))
     );
@@ -530,7 +530,8 @@ export class GettingStartedService {
       .pipe(take(1))
       .subscribe(organizations => {
         if (organizations.length === 1) {
-          this.submitCopyProject(organizations[0], copyProject);
+          this.selectedOrganization = organizations[0];
+          this.submitCopyProject(this.selectedOrganization, copyProject);
         } else {
           this.stage = GettingStartedStage.ChooseOrganization;
         }

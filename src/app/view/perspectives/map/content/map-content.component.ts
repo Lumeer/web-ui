@@ -245,7 +245,7 @@ export class MapContentComponent implements OnInit, OnChanges {
     const attributeConfig = this.config?.stemsConfigs?.find(stemConfig => stemConfig?.attributes?.length > 0)
       ?.attributes[0];
     const resource = this.findResourceByProperty(attributeConfig?.resourceType, attributeConfig?.resourceId);
-    const attribute = findAttribute(resource?.attributes, attributeConfig.attributeId);
+    const attribute = findAttribute(resource?.attributes, attributeConfig?.attributeId);
     if (resource && attribute) {
       const value = new CoordinatesConstraint({} as CoordinatesConstraintConfig)
         .createDataValue(coordinates)

@@ -1,4 +1,4 @@
-<ng-container *ngIf="loaded; else loading">
+<ng-container *ngIf="loaded && data; else loading">
   <div class="d-flex align-items-center">
     <span class="h4 m-0 pe-2">{{title}}</span>
     <span class="badge bg-success">{{data.objects.length}}</span>

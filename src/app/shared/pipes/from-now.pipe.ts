@@ -19,12 +19,16 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import * as moment from 'moment';
+import {isDateValid} from '../utils/common.utils';
 
 @Pipe({
   name: 'fromNow',
 })
 export class FromNowPipe implements PipeTransform {
   public transform(date: Date, format?: string, tolerance?: number): string {
+    if (!isDateValid(date)) {
+      return '';
+    }
     const fmt = format || 'lll';
     const diff = tolerance || 1000 * 60 * 60 * 24;
     if (new Date().getTime() - date.getTime() < diff) {

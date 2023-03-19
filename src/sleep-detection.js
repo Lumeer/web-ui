@@ -1,6 +1,6 @@
 let lastTime = new Date().getTime();
 const checkInterval = 3000;
-const sleepThreshold = 60_000;
+const sleepThreshold = 60000;
 
 setInterval(function () {
   const currentTime = new Date().getTime();
