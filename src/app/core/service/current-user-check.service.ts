@@ -26,10 +26,15 @@ import {User} from '../store/users/user';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {languageCodeMap} from '../model/language';
 import {NavigationAction} from '../store/navigation/navigation.action';
+import {AuthService} from '../../auth/auth.service';
 
 @Injectable()
 export class CurrentUserCheckService {
-  constructor(private store$: Store<AppState>, private configurationService: ConfigurationService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService,
+    private authService: AuthService
+  ) {}
 
   public init(): Promise<boolean> {
     this.store$
@@ -44,6 +49,10 @@ export class CurrentUserCheckService {
   }
 
   private checkUserLanguage(user: User) {
+    if (this.authService.isCurrentPathOutsideApp()) {
+      return;
+    }
+
     const language = languageCodeMap[user.language];
     if (language && language !== this.configurationService.getConfiguration().locale) {
       this.store$.dispatch(new NavigationAction.RedirectToLanguage({language}));
