@@ -254,6 +254,10 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   public onCloseByClickOutside() {
     this.saveOnClose.emit(this.getSaveDate());
   }
+
+  public clickedInside(event: MouseEvent): boolean {
+    return this.dropdown && !this.dropdown.clickedOutside(event);
+  }
 }
 
 function offsetTime(date: Date, backwards?: boolean, utc?: boolean): Date {

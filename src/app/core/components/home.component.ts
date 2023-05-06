@@ -38,6 +38,7 @@ import {selectAllTeams} from '../store/teams/teams.state';
 import {userHasRoleInOrganization, userHasRoleInProject} from '../../shared/utils/permission.utils';
 import {RoleType} from '../model/role-type';
 import {sortResourcesByOrder} from '../../shared/utils/resource.utils';
+import {ProjectsAction} from '../store/projects/projects.action';
 
 @Component({
   template: '',
@@ -86,8 +87,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (organizationsWithProjects.length > 0) {
           this.navigateToWorkspaceProject(workspace, organizationsWithProjects);
         } else if (contributeOrganizations.length === 0) {
+          this.store$.dispatch(new ProjectsAction.ClearWorkspaceData({}));
           this.selectService.createNewOrganization({replaceUrl: true});
         } else {
+          this.store$.dispatch(new ProjectsAction.ClearWorkspaceData({}));
           this.selectService.createNewProjectWithTemplate(contributeOrganizations, null, null, {replaceUrl: true});
         }
       });

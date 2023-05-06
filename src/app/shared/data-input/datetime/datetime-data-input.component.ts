@@ -24,6 +24,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   Output,
@@ -38,7 +39,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../../core/model/language';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {checkDataInputElementValue, setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ConstraintType, DateTimeDataValue} from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
@@ -86,6 +87,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   public date: Date;
   public options: DateTimeOptions;
 
+  private preventSave: boolean;
   private pendingUpdate: Date;
   private keyDownListener: (event: KeyboardEvent) => void;
   private setFocus: boolean;
@@ -95,6 +97,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       this.setFocus = true;
+      this.preventSave = false;
     }
     if (this.changedFromEditableToReadonly(changes)) {
       this.removeKeyDownListener();
@@ -103,7 +106,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
       }
     }
     if (changes.readonly && this.readonly) {
-      this.blur();
+      this.preventSaveAndBlur();
     }
     if (changes.focus && !this.focus) {
       this.dateTimePicker?.close();
@@ -145,6 +148,11 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
     this.keyDownListener = null;
   }
 
+  @HostListener('document:mousedown', ['$event'])
+  public onMouseMove(event: MouseEvent) {
+    this.preventSave = this.dateTimePicker.clickedInside(event);
+  }
+
   private changedFromEditableToReadonly(changes: SimpleChanges): boolean {
     return (
       changes.readonly &&
@@ -171,7 +179,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
           return;
         }
 
-        // needs to be executed after parent event handlers
+        this.preventSaveAndBlur();
         this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
@@ -241,19 +249,37 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   }
 
   public onValueChange(date: Date) {
+    this.preventSave = true;
     this.pendingUpdate = date;
     const dataValue = this.value.copy(date);
     this.dateTimeInput.nativeElement.value = dataValue.format();
     this.valueChange.emit(dataValue);
   }
 
-  private blur() {
-    this.dateTimeInput?.nativeElement?.blur();
-    this.onBlur();
-  }
-
   public onBlur() {
     this.removeKeyDownListener();
+
+    if (this.preventSave) {
+      this.preventSave = false;
+    } else {
+      const dataValue = this.value.parseInput(this.dateTimeInput.nativeElement.value);
+      if (this.commonConfiguration?.skipValidation || dataValue.isValid()) {
+        this.emitSaveIfChanged(dataValue, DataInputSaveAction.Blur);
+      } else {
+        this.cancel.emit();
+      }
+    }
+  }
+
+  private emitSaveIfChanged(dataValue: DateTimeDataValue, action: DataInputSaveAction) {}
+
+  private preventSaveAndBlur() {
+    if (isElementActive(this.dateTimeInput?.nativeElement)) {
+      this.preventSave = true;
+      this.dateTimeInput.nativeElement.blur();
+      this.dateTimePicker?.close();
+      this.removeKeyDownListener();
+    }
   }
 
   public onFocus() {

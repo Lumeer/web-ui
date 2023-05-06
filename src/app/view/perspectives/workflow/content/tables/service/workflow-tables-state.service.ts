@@ -489,8 +489,9 @@ export class WorkflowTablesStateService {
       const table = this.tables[tableIndex];
       const newTables = [...this.tables];
       const rows = addRowByParentId(newRow, newTables[tableIndex].rows);
-      const rowIndex = rows.findIndex(row => row.id === newRow.id);
-      newTables[tableIndex] = {...newTables[tableIndex], rows, visibleRows: sortAndFilterTableRowsByHierarchy(rows)};
+      const visibleRows = sortAndFilterTableRowsByHierarchy(rows);
+      const rowIndex = visibleRows.findIndex(row => row.id === newRow.id);
+      newTables[tableIndex] = {...newTables[tableIndex], rows, visibleRows};
 
       this.setTables(newTables);
 
