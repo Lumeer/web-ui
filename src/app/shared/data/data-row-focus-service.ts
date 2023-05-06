@@ -222,12 +222,12 @@ export class DataRowFocusService {
   }
 
   private onEnterKeyDown(event: KeyboardEvent) {
-    preventEvent(event);
-
     if (this.isEditing()) {
+      preventEvent(event);
       const {newRow, newColumn} = this.computeMoveOffset(0, 1, this.edited);
       this.emitFocus(newRow, newColumn);
     } else if (this.isFocusing()) {
+      preventEvent(event);
       const focused = {...this.focused};
       if (this.isDirectlyEditable?.(this.focused.row, this.focused.column)) {
         const {newRow, newColumn} = this.computeMoveOffset(0, 1, this.focused);

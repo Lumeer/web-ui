@@ -163,15 +163,19 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     });
   }
 
-  public checkClickOutside(event: MouseEvent) {
+  public clickedOutside(event: MouseEvent): boolean {
     const originElement = (<ElementRef>this.origin).nativeElement || <HTMLElement>this.origin;
     const clickedOnOrigin = originElement.contains(event.target as any);
-    if (
+    return (
       event.isTrusted &&
       this.overlayRef?.overlayElement &&
       !this.overlayRef.overlayElement.contains(event.target as any) &&
       ((clickedOnOrigin && this.closeOnClickOrigin) || !clickedOnOrigin)
-    ) {
+    );
+  }
+
+  private checkClickOutside(event: MouseEvent) {
+    if (this.clickedOutside(event)) {
       preventEvent(event);
       this.onCloseByClickOutside.emit();
       this.close();

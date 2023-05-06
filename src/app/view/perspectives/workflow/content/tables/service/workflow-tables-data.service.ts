@@ -1653,13 +1653,14 @@ export class WorkflowTablesDataService {
       suggestLinks: !!linkedChain,
       suggestDetail: !linkedChain,
     };
-    this.stateService.addRow(tableId, newRow);
-    this.addLockedRow(tableId, id);
 
     const parentRow = parentRowId && table.rows.find(row => row.id === parentRowId);
     if (parentRow && !parentRow.expanded) {
       this.toggleHierarchy(parentRow);
     }
+
+    this.stateService.addRow(tableId, newRow);
+    this.addLockedRow(tableId, id);
   }
 
   private addLockedRow(tableId: string, rowId: string) {
