@@ -29,18 +29,14 @@ import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../blockly/blockly-editor/blockly-
 import {BlocklyDebugDisplay} from '../../../blockly/blockly-debugger/blockly-debugger.component';
 import {BLOCKLY_FUNCTION_BUTTONS} from '../../../blockly/blockly-editor/blockly-utils';
 import {
-  selectContributeAndWritableCollections,
-  selectContributeAndWritableLinkTypes,
+  selectReadableCollections,
+  selectReadableLinkTypes,
   selectViewsByRead,
 } from '../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../core/store/views/view';
 import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
 import {RuleVariable} from '../../../blockly/rule-variable-type';
-import {
-  selectSelectionListNamesByWorkspaceSorted,
-  selectSelectionListsByWorkspace,
-} from '../../../../core/store/selection-lists/selection-lists.state';
-import {map} from 'rxjs/operators';
+import {selectSelectionListNamesByWorkspaceSorted} from '../../../../core/store/selection-lists/selection-lists.state';
 
 @Component({
   selector: 'blockly-form',
@@ -107,9 +103,9 @@ export class BlocklyFormComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectContributeAndWritableCollections));
+    this.collections$ = this.store$.pipe(select(selectReadableCollections));
     this.views$ = this.store$.pipe(select(selectViewsByRead));
-    this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
+    this.linkTypes$ = this.store$.pipe(select(selectReadableLinkTypes));
     this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
     this.selectionLists$ = this.store$.pipe(select(selectSelectionListNamesByWorkspaceSorted));
 
