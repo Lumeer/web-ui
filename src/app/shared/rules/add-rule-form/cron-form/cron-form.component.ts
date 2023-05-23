@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CronRuleConfiguration, Rule} from '../../../../core/model/rule';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -30,8 +30,8 @@ import {BLOCKLY_FUNCTION_BUTTONS} from '../../../blockly/blockly-editor/blockly-
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {
-  selectContributeAndWritableCollections,
-  selectContributeAndWritableLinkTypes,
+  selectReadableCollections,
+  selectReadableLinkTypes,
   selectViewsByRead,
 } from '../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../core/store/views/view';
@@ -103,9 +103,9 @@ export class CronFormComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectContributeAndWritableCollections));
+    this.collections$ = this.store$.pipe(select(selectReadableCollections));
     this.views$ = this.store$.pipe(select(selectViewsByRead));
-    this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
+    this.linkTypes$ = this.store$.pipe(select(selectReadableLinkTypes));
     this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
     this.selectionLists$ = this.store$.pipe(select(selectSelectionListNamesByWorkspaceSorted));
 
