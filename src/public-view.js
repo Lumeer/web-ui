@@ -95,8 +95,9 @@ if (typeof lumeer_public_view_fce !== 'function') {
     const urls = getElementUrls(language, organization, project);
 
     const viewParam = view ? `&v=${view}` : '';
+    const languageParam = language ? `&l=${language}` : '';
     const queryParams = `o=${organization}&p=${project}&tp=${topPanel}${viewParam}`;
-    const queryParamsLarger = `_o=${organization}&_p=${project}&tp=${topPanel}${viewParam}`;
+    const queryParamsLarger = `_o=${organization}&_p=${project}&tp=${topPanel}${viewParam}${languageParam}`;
     const div = document.createElement('div');
     div.style =
       'color: #2b3e52; display: grid; height: 100%; grid-template-rows: 1fr auto; border: solid 1px #e9ecef; border-radius: 3px; background: white;';
