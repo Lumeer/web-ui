@@ -1,0 +1,15 @@
+name: 'Run ui tests'
+
+on:
+  pull_request:
+
+jobs:
+    run-tests:
+        runs-on: ubuntu-20.04
+        steps:
+        - uses: actions/checkout@v3
+        - name: Run Travis
+          run: |
+            chmod +x ../../travis.sh
+            ../../travis.sh
+          shell: bash
