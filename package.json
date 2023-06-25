@@ -27,7 +27,8 @@
     "test:watch": "ng test --watch",
     "cypress:open": "npx cypress open",
     "cypress:run": "npx cypress run",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "playwright:run": "playwright test"
   },
   "repository": {
     "type": "git",
@@ -79,6 +80,7 @@
     "d3-time-format": "^4.1.0",
     "d3-zoom": "^3.0.0",
     "dompurify": "^2.4.4",
+    "dotenv": "^16.3.1",
     "driver.js": "^0.9.8",
     "file-saver": "^2.0.5",
     "flag-icons": "^6.6.6",
@@ -121,6 +123,7 @@
     "@angular/language-service": "^14.2.12",
     "@compodoc/compodoc": "^1.1.19",
     "@ngrx/schematics": "^14.3.3",
+    "@playwright/test": "^1.35.1",
     "@sentry/cli": "^2.7.0",
     "@types/auth0-js": "^9.14.7",
     "@types/big.js": "^6.1.6",

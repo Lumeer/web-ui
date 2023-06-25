@@ -2,7 +2,7 @@
 # Abort on Error
 set -e
 
-# Set up a repeating loop to send some output to Travis.
+# Set up a repeating loop to send some output to Github Actions environment.
 export PING_SLEEP=300s
 bash -c "while true; do echo \$(date) - building ...; sleep $PING_SLEEP; done" &
 export PING_LOOP_PID=$!
@@ -15,15 +15,15 @@ done
 
 echo "Starting backend..."
 ./travis-start-engine.sh
+RESPONSE=$(curl http://localhost:8080/lumeer-engine/)
 
 PASSED=false
 echo "Running E2E tests..."
 set +e
-export CYPRESS_baseUrl="http://localhost:7000"
-npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203
+npm run playwright:run
 if [[ $? -ne 0 ]]; then
   set -e
-  npm run cypress:run
+  npm run playwright:run
 
   if [[ $? -eq 0 ]]; then
     PASSED=true
@@ -41,6 +41,5 @@ echo "Stopping backend..."
 
 echo "Printing bundle sizes..."
 npm run bundlesize
-
 
 kill $PING_LOOP_PID

@@ -13,6 +13,7 @@ else
   git checkout devel
 fi
 
+echo admin_user_emails=uitest@lumeer.io >> ./lumeer-core/src/resources/default-dev.properties
 echo "Building engine..."
 mvn install -DskipTests -DskipITs -B --quiet
 cd war
