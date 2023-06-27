@@ -29,6 +29,10 @@ import {GanttChartTasksComponent} from './tasks/gantt-chart-tasks.component';
 import {GanttChartHeaderComponent} from './tasks/header/gantt-chart-header.component';
 import {GanttChartInvalidRangeComponent} from './tasks/invalid-range/gantt-chart-invalid-range.component';
 import {GanttChartConfigSettingsComponent} from './config/settings/gantt-chart-config-settings.component';
+import {GanttChartBarModelSelectComponent} from './config/stem/bar-model-select/gantt-chart-bar-model-select.component';
+import {GanttChartMilestonesSelectComponent} from './config/stem/milestones-select/gantt-chart-milestones-select.component';
+import {GanttChartProgressBarModelSelectComponent} from './config/stem/progress-select/gantt-chart-progress-bar-model-select.component';
+import {GanttChartArrayBarModelSelectComponent} from './config/stem/array-select/gantt-chart-array-bar-model-select.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, GanttChartPerspectiveRoutingModule, GanttChartPipesModule],
@@ -41,6 +45,10 @@ import {GanttChartConfigSettingsComponent} from './config/settings/gantt-chart-c
     GanttChartHeaderComponent,
     GanttChartInvalidRangeComponent,
     GanttChartConfigSettingsComponent,
+    GanttChartBarModelSelectComponent,
+    GanttChartMilestonesSelectComponent,
+    GanttChartProgressBarModelSelectComponent,
+    GanttChartArrayBarModelSelectComponent,
   ],
   exports: [GanttChartPerspectiveComponent],
 })

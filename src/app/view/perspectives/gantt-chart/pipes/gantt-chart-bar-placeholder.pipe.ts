@@ -26,7 +26,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 export class GanttChartBarPlaceholderPipe implements PipeTransform {
   public transform(barProperty: string): string {
     return parseSelectTranslation(
-      $localize`:@@ganttChart.bar.placeholder2:{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}`,
+      $localize`:@@ganttChart.bar.placeholder3:{barProperty, select, name {Name} start {Start} milestone {Milestone} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}`,
       {barProperty}
     );
   }

@@ -18,47 +18,38 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {GanttChartStemConfig} from '../../../../../core/store/gantt-charts/gantt-chart';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {QueryStem} from '../../../../../core/store/navigation/query/query';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
+import {GanttChartProgressBarModel, GanttChartStemConfig} from '../../../../../../core/store/gantt-charts/gantt-chart';
+import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 
 @Component({
-  selector: 'gantt-chart-stem-config',
-  templateUrl: './gantt-chart-stem-config.component.html',
+  selector: 'gantt-chart-progress-bar-model-select',
+  templateUrl: './gantt-chart-progress-bar-model-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GanttChartStemConfigComponent {
+export class GanttChartProgressBarModelSelectComponent {
   @Input()
-  public collections: Collection[];
+  public config: GanttChartStemConfig;
 
   @Input()
-  public linkTypes: LinkType[];
+  public property: string;
 
   @Input()
-  public stem: QueryStem;
+  public barInitialConfig: any;
 
   @Input()
   public selectItems: SelectItemModel[];
 
-  @Input()
-  public config: GanttChartStemConfig;
-
   @Output()
   public configChange = new EventEmitter<GanttChartStemConfig>();
 
-  @Output()
-  public categoryRemove = new EventEmitter<number>();
+  public readonly buttonClasses = 'flex-grow-1 text-truncate';
+  public readonly progressAggregations = [DataAggregationType.Avg, DataAggregationType.Sum];
+  public readonly initialBarConfig: Partial<GanttChartProgressBarModel> = {aggregation: DataAggregationType.Avg};
 
-  @Output()
-  public attributeRemove = new EventEmitter<number>();
-
-  public onBarCategoryRemoved(index: number) {
-    this.categoryRemove.emit(index);
-  }
-
-  public onBarAttributeRemoved(index: number) {
-    this.attributeRemove.emit(index);
+  public onProgressAggregationSelect(aggregation: DataAggregationType) {
+    const progress = {...this.config.progress, aggregation};
+    const newConfig = {...this.config, progress};
+    this.configChange.emit(newConfig);
   }
 }

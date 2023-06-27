@@ -20,7 +20,7 @@
 import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
@@ -32,6 +32,7 @@ import {
   GANTT_FONT_SIZE,
   GANTT_PADDING,
   GanttChartBarModel,
+  GanttChartColorBarModel,
   GanttChartConfig,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
@@ -80,6 +81,7 @@ import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/sett
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
 import {queryResourcesAreSame} from '../../../../core/model/query-attribute';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {Milestone} from '@lumeer/lumeer-gantt/dist/model/task';
 
 export interface GanttTaskMetadata {
   dataResource: DataResource;
@@ -99,6 +101,7 @@ enum DataObjectInfoKeyType {
   Start = 'start',
   End = 'end',
   Color = 'color',
+  Milestone = 'milestone',
   Progress = 'progress',
 }
 
@@ -292,6 +295,10 @@ export class GanttChartConverter {
         ...stemConfig.progress,
         key: DataObjectInfoKeyType.Progress,
       },
+      ...(stemConfig.milestones || []).map((milestone, index) => ({
+        ...milestone,
+        key: `${DataObjectInfoKeyType.Milestone}${index}`,
+      })),
     ].filter(attribute => !!attribute);
 
     const dataObjectsInfo = this.dataObjectAggregator.convert({
@@ -323,6 +330,16 @@ export class GanttChartConverter {
     const progressPermission = this.dataObjectAggregator.attributePermissions(stemConfig.progress);
     const progressConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.progress);
 
+    const milestonesResources = (stemConfig.milestones || []).map(milestone =>
+      this.dataObjectAggregator.getResource(milestone)
+    );
+    const milestonesPermissions = (stemConfig.milestones || []).map(milestone =>
+      this.dataObjectAggregator.attributePermissions(milestone)
+    );
+    const milestonesConstraints = (stemConfig.milestones || []).map(milestone =>
+      this.dataObjectAggregator.findAttributeConstraint(milestone)
+    );
+
     const attributesConstraints = (stemConfig.attributes || []).map(model => this.findColumnConstraint(model));
 
     const {editableTaskIds, dataResourcesMap, validTaskIds, intervalsMap, parentChildren} = computeTasksData(
@@ -352,11 +369,14 @@ export class GanttChartConverter {
         const taskStartPermission = interval.swapped ? endPermission : startPermission;
         const taskEndPermission = interval.swapped ? startPermission : endPermission;
 
-        const taskStartConstraint = interval.swapped ? endConstraint : startConstraint;
-        const taskEndConstraint = interval.swapped ? startConstraint : endConstraint;
+        const taskStartConstraint = interval.startConstraint;
+        const taskEndConstraint = interval.endConstraint;
 
         const progressDataResources = item.metaDataResources[DataObjectInfoKeyType.Progress] || [];
         const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
+        const milestonesDataResources = (stemConfig.milestones || []).map(
+          (milestone, index) => (item.metaDataResources[`${DataObjectInfoKeyType.Milestone}${index}`] || [])[0]
+        );
 
         const name = stemConfig.name && nameDataResource?.data?.[stemConfig.name.attributeId];
 
@@ -431,6 +451,16 @@ export class GanttChartConverter {
           progressDataResources[0]
         );
 
+        const milestones = createMilestones(
+          interval,
+          stemConfig.milestones,
+          milestonesDataResources,
+          milestonesConstraints,
+          milestonesPermissions,
+          milestonesResources,
+          this.constraintData
+        );
+
         const names = isArray(name) ? name : [name];
         for (let i = 0; i < names.length; i++) {
           let nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).preview();
@@ -460,7 +490,7 @@ export class GanttChartConverter {
             dependencies: (canEditDependencies && parentChildren[dataResourceId]) || [],
             allowedDependencies: canEditDependencies ? editableTaskIds.filter(id => id !== taskId) : [],
             barColor,
-            progressColor: taskColor || shadeColor(resourceColor, 0.3),
+            milestones,
             startDrag,
             endDrag,
             draggable,
@@ -677,6 +707,45 @@ function computeTasksData(
   );
 }
 
+function createMilestones(
+  interval: GanttInterval,
+  milestonesModels: GanttChartColorBarModel[],
+  dataResources: DataResource[],
+  constraints: Constraint[],
+  permissions: AllowedPermissions[],
+  resources: AttributesResource[],
+  constraintData: ConstraintData
+): Milestone[] {
+  const lastString = interval.startRaw;
+  const lastConstraint = interval.startConstraint;
+  const milestones: Milestone[] = [];
+  (milestonesModels || []).forEach((model, index) => {
+    const currentDataResource = dataResources?.[index];
+    const currentString = currentDataResource?.data?.[model.attributeId];
+    const currentConstraint = constraints?.[index];
+    const currentInterval = createInterval(
+      lastString,
+      lastConstraint,
+      currentString,
+      currentConstraint,
+      constraintData
+    );
+    milestones.push({
+      start: currentInterval.end,
+      draggable: userCanEditDataResource(
+        currentDataResource,
+        resources?.[index],
+        permissions?.[index],
+        constraintData.currentUser,
+        constraintData
+      ),
+      color: model.color,
+    });
+  });
+
+  return milestones;
+}
+
 function createInterval(
   startString: string,
   startConstraint: Constraint,
@@ -713,7 +782,11 @@ function createInterval(
 
   return {
     start: startMoment.format(GANTT_DATE_FORMAT),
+    startRaw: startString,
+    startConstraint,
     end: endMoment.format(GANTT_DATE_FORMAT),
+    endRaw: endString,
+    endConstraint,
     swapped,
   };
 }
@@ -730,7 +803,11 @@ function helperDataId(data: DataObjectInfo<GanttSwimlane>): string {
 
 interface GanttInterval {
   start: string;
+  startRaw: string;
+  startConstraint: Constraint;
   end?: string;
+  endRaw?: string;
+  endConstraint?: Constraint;
   swapped?: boolean;
 }
 

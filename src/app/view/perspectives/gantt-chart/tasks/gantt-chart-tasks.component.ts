@@ -69,7 +69,6 @@ import {
   DocumentsAndLinksData,
   DurationConstraint,
   durationCountsMapToString,
-  DurationDataValue,
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {View} from '../../../../core/store/views/view';

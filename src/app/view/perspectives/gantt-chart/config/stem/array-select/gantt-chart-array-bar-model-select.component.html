@@ -1,0 +1,14 @@
+<select-item-with-constraint class="d-block w-100"
+                             *ngFor="let model of models; let index = index"
+                             [class.mt-2]="index > 0"
+                             [attributesResources]="stem | queryStemAttributesResources:collections:linkTypes"
+                             [selectedId]="model | ganttChartSelectedItemWithConstraint"
+                             [placeholderText]="translationProperty | ganttChartBarPlaceholder"
+                             [selectedConstraint]="model?.constraint"
+                             [emptyValue]="translationProperty | ganttChartBarEmptyValue"
+                             [buttonClasses]="buttonClasses"
+                             [removable]="true"
+                             (select)="onSelect($event, index)"
+                             (selectConstraint)="onConstraintSelect($event, index)"
+                             (remove)="remove.emit(index)">
+</select-item-with-constraint>

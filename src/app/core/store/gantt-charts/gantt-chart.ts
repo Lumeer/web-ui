@@ -43,6 +43,7 @@ export interface GanttChartConfig {
   swimlaneWidths?: number[];
   zoom?: number;
   positionSaved?: boolean;
+  sortMilestones?: boolean;
   position?: GanttChartPosition;
   version?: GanttChartConfigVersion;
 }
@@ -66,6 +67,7 @@ export interface GanttChartStemConfig {
   progress?: GanttChartProgressBarModel;
   color?: GanttChartBarModel;
   categories?: GanttChartBarModel[];
+  milestones?: GanttChartColorBarModel[];
   attributes?: GanttChartBarModel[];
 }
 
@@ -73,6 +75,10 @@ export interface GanttChartBarModel extends QueryAttribute {}
 
 export interface GanttChartProgressBarModel extends GanttChartBarModel {
   aggregation?: DataAggregationType;
+}
+
+export interface GanttChartColorBarModel extends GanttChartBarModel {
+  color?: string;
 }
 
 export enum GanttChartMode {

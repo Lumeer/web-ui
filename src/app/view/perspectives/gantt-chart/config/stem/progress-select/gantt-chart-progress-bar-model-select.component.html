@@ -1,0 +1,19 @@
+<gantt-chart-bar-model-select [selectItems]="selectItems"
+                              [config]="config"
+                              [initialBarConfig]="initialBarConfig"
+                              property="progress"
+                              (configChange)="configChange.emit($event)">
+</gantt-chart-bar-model-select>
+
+<select-item *ngIf="config | shouldAggregateProgress"
+             class="d-block mt-1"
+             [items]="progressAggregations | aggregationSelectItems"
+             [removable]="false"
+             [buttonClasses]="buttonClasses"
+             [selectedId]="config[property].aggregation"
+             placeholderText="Aggregation"
+             i18n-placeholderText="@@aggregation"
+             placeholderTitle="Select progress aggregation"
+             i18n-placeholderTitle="@@perspective.gantt.config.progressAggregation"
+             (selected)="onProgressAggregationSelect($event)">
+</select-item>

@@ -18,47 +18,40 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {GanttChartStemConfig} from '../../../../../core/store/gantt-charts/gantt-chart';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {QueryStem} from '../../../../../core/store/navigation/query/query';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
+import {GanttChartBarModel, GanttChartStemConfig} from '../../../../../../core/store/gantt-charts/gantt-chart';
 
 @Component({
-  selector: 'gantt-chart-stem-config',
-  templateUrl: './gantt-chart-stem-config.component.html',
+  selector: 'gantt-chart-bar-model-select',
+  templateUrl: './gantt-chart-bar-model-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GanttChartStemConfigComponent {
+export class GanttChartBarModelSelectComponent {
   @Input()
-  public collections: Collection[];
+  public config: GanttChartStemConfig;
 
   @Input()
-  public linkTypes: LinkType[];
+  public property: string;
 
   @Input()
-  public stem: QueryStem;
+  public initialBarConfig: any;
 
   @Input()
   public selectItems: SelectItemModel[];
 
-  @Input()
-  public config: GanttChartStemConfig;
-
   @Output()
   public configChange = new EventEmitter<GanttChartStemConfig>();
 
-  @Output()
-  public categoryRemove = new EventEmitter<number>();
+  public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
-  @Output()
-  public attributeRemove = new EventEmitter<number>();
-
-  public onBarCategoryRemoved(index: number) {
-    this.categoryRemove.emit(index);
+  public onBarPropertySelect(bar: GanttChartBarModel) {
+    const newConfig = {...this.config, [this.property]: {...bar, ...this.initialBarConfig}};
+    this.configChange.emit(newConfig);
   }
 
-  public onBarAttributeRemoved(index: number) {
-    this.attributeRemove.emit(index);
+  public onBarPropertyRemoved() {
+    const newConfig = {...this.config};
+    delete newConfig[this.property];
+    this.configChange.emit(newConfig);
   }
 }
