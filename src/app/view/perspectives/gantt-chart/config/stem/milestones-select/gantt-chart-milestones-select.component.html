@@ -1,0 +1,23 @@
+<div *ngFor="let model of models; let index = index" class="wrapper-layout" [class.mt-2]="index > 0">
+  <select-item [items]="selectItems | ganttChartPropertyItems:'milestones':config"
+               [selectedId]="model | cleanQueryAttribute"
+               [placeholderText]="'milestone' | ganttChartBarPlaceholder"
+               [emptyValue]="'milestone' | ganttChartBarEmptyValue"
+               [removable]="true"
+               [buttonClasses]="buttonClasses"
+               (selected)="onSelect($event, index)"
+               (remove)="onRemove(index)">
+  </select-item>
+
+  <div *ngIf="model" class="d-flex align-items-center justify-content-center border border-secondary rounded-3 cursor-pointer color-layout ms-2"
+       #colorElement
+       [style.background-color]="model.color"
+       (click)="colorPicker.toggle()">
+    <i class="fas fa-pen-paintbrush" [style.color]="model.color | contrastColor"></i>
+    <color-picker #colorPicker
+                  [color]="model.color"
+                  [origin]="colorElement"
+                  (save)="onColorSelect($event, index)">
+    </color-picker>
+  </div>
+</div>

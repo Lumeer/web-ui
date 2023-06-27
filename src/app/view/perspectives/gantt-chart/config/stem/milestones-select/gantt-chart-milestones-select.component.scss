@@ -1,0 +1,9 @@
+.wrapper-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min-content;
+  align-items: stretch;
+
+  .color-layout {
+    width: 40px;
+  }
+}

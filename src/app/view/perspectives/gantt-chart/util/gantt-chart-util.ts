@@ -102,6 +102,7 @@ function ganttStemConfigProperties(config: GanttChartStemConfig): GanttChartBarM
     config.name,
     config.color,
     config.progress,
+    ...(config.milestones || []),
     ...(config.categories || []),
     ...(config.attributes || []),
   ];
@@ -161,6 +162,9 @@ function checkOrTransformGanttStemConfig(
     progress: checkOrTransformQueryAttribute(stemConfig.progress, attributesResourcesOrder),
     color: checkOrTransformQueryAttribute(stemConfig.color, attributesResourcesOrder),
     categories: (stemConfig.categories || [])
+      .map(category => checkOrTransformQueryAttribute(category, attributesResourcesOrder))
+      .filter(val => !!val),
+    milestones: (stemConfig.milestones || [])
       .map(category => checkOrTransformQueryAttribute(category, attributesResourcesOrder))
       .filter(val => !!val),
     attributes: (stemConfig.attributes || [])

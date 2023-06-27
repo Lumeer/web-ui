@@ -3,58 +3,65 @@
   <b>{{collection.name}}</b>
 </div>
 
-<ng-container *ngFor="let property of properties">
+<gantt-chart-bar-model-select class="d-block mt-2"
+                              [selectItems]="selectItems"
+                              [config]="config"
+                              property="name"
+                              (configChange)="configChange.emit($event)">
+</gantt-chart-bar-model-select>
 
-  <select-item class="d-block w-100 mt-2"
-               [items]="selectItems | ganttChartPropertyItems:property:config"
-               [selectedId]="config[property] | cleanQueryAttribute"
-               [placeholderText]="property | ganttChartBarPlaceholder"
-               [emptyValue]="property | ganttChartBarEmptyValue"
-               [removable]="true"
-               [buttonClasses]="buttonClasses"
-               (selected)="onBarPropertySelect(property, $event)"
-               (remove)="onBarPropertyRemoved(property)">
-  </select-item>
+<gantt-chart-bar-model-select class="d-block mt-2"
+                              [selectItems]="selectItems"
+                              [config]="config"
+                              property="start"
+                              (configChange)="configChange.emit($event)">
+</gantt-chart-bar-model-select>
 
-  <select-item *ngIf="property === 'progress' && config | shouldAggregateProgress"
-               class="d-block mt-1"
-               [items]="progressAggregations | aggregationSelectItems"
-               [removable]="false"
-               [buttonClasses]="buttonClasses"
-               [selectedId]="config[property].aggregation"
-               placeholderText="Aggregation"
-               i18n-placeholderText="@@aggregation"
-               placeholderTitle="Select progress aggregation"
-               i18n-placeholderTitle="@@perspective.gantt.config.progressAggregation"
-               (selected)="onProgressAggregationSelect($event)">
-  </select-item>
+<gantt-chart-milestones-select class="d-block mt-2"
+                               [selectItems]="selectItems"
+                               [config]="config"
+                               (configChange)="configChange.emit($event)">
+</gantt-chart-milestones-select>
 
-</ng-container>
+<gantt-chart-bar-model-select class="d-block mt-2"
+                              [selectItems]="selectItems"
+                              [config]="config"
+                              property="end"
+                              (configChange)="configChange.emit($event)">
+</gantt-chart-bar-model-select>
 
-<select-item-with-constraint class="d-block w-100 mt-3"
-                             *ngFor="let category of categories; let index = index"
-                             [attributesResources]="stem | queryStemAttributesResources:collections:linkTypes"
-                             [selectedId]="category | ganttChartSelectedItemWithConstraint"
-                             [placeholderText]="'category' | ganttChartBarPlaceholder"
-                             [selectedConstraint]="category?.constraint"
-                             [emptyValue]="'category' | ganttChartBarEmptyValue"
-                             [buttonClasses]="buttonClasses"
-                             [removable]="true"
-                             (select)="onBarCategorySelect($event, index)"
-                             (selectConstraint)="onBarCategoryConstraintSelect($event, index)"
-                             (remove)="onBarCategoryRemoved(index)">
-</select-item-with-constraint>
+<gantt-chart-progress-bar-model-select class="d-block mt-2"
+                                       [selectItems]="selectItems"
+                                       [config]="config"
+                                       property="progress"
+                                       (configChange)="configChange.emit($event)">
+</gantt-chart-progress-bar-model-select>
 
-<select-item-with-constraint class="d-block w-100 mt-3"
-                             *ngFor="let attribute of attributes; let index = index"
-                             [attributesResources]="stem | queryStemAttributesResources:collections:linkTypes"
-                             [selectedId]="attribute | ganttChartSelectedItemWithConstraint"
-                             [placeholderText]="'attribute' | ganttChartBarPlaceholder"
-                             [selectedConstraint]="attribute?.constraint"
-                             [emptyValue]="'attribute' | ganttChartBarEmptyValue"
-                             [buttonClasses]="buttonClasses"
-                             [removable]="true"
-                             (select)="onBarAttributeSelect($event, index)"
-                             (selectConstraint)="onBarAttributeConstraintSelect($event, index)"
-                             (remove)="onBarAttributeRemoved(index)">
-</select-item-with-constraint>
+<gantt-chart-bar-model-select class="d-block mt-2"
+                              [selectItems]="selectItems"
+                              [config]="config"
+                              property="color"
+                              (configChange)="configChange.emit($event)">
+</gantt-chart-bar-model-select>
+
+<gantt-chart-array-bar-model-select class="d-block mt-3"
+                                    [stem]="stem"
+                                    property="categories"
+                                    translationProperty="category"
+                                    [config]="config"
+                                    [linkTypes]="linkTypes"
+                                    [collections]="collections"
+                                    (configChange)="configChange.emit($event)"
+                                    (remove)="onBarCategoryRemoved($event)">
+</gantt-chart-array-bar-model-select>
+
+<gantt-chart-array-bar-model-select class="d-block mt-3"
+                                    [stem]="stem"
+                                    property="attributes"
+                                    translationProperty="attribute"
+                                    [config]="config"
+                                    [linkTypes]="linkTypes"
+                                    [collections]="collections"
+                                    (configChange)="configChange.emit($event)"
+                                    (remove)="onBarAttributeRemoved($event)">
+</gantt-chart-array-bar-model-select>

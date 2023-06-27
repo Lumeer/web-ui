@@ -76,16 +76,16 @@ export class GanttChartConfigComponent {
   public onCategoryRemoved(index: number, stemIndex: number) {
     const config = deepObjectCopy<GanttChartConfig>(this.config);
     config.stemsConfigs[stemIndex].categories.splice(index, 1);
-    this.onSwimlaneItemRemoved(config, index, stemIndex);
+    this.onSwimlaneItemRemoved(config, index);
   }
 
   public onAttributeRemoved(index: number, stemIndex: number) {
     const config = deepObjectCopy<GanttChartConfig>(this.config);
     config.stemsConfigs[stemIndex].attributes.splice(index, 1);
-    this.onSwimlaneItemRemoved(config, index, stemIndex);
+    this.onSwimlaneItemRemoved(config, index);
   }
 
-  public onSwimlaneItemRemoved(config: GanttChartConfig, index: number, stemIndex: number) {
+  public onSwimlaneItemRemoved(config: GanttChartConfig, index: number) {
     const maxCategories = config.stemsConfigs.reduce(
       (max, stemConfig) => Math.max(max, (stemConfig.categories || []).length),
       0
