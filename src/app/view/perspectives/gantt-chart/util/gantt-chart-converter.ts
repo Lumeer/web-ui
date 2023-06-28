@@ -46,6 +46,7 @@ import {
   isNotNullOrUndefined,
   isNullOrUndefined,
   isNumeric,
+  objectsByIdMap,
   toNumber,
 } from '../../../../shared/utils/common.utils';
 import {DataAggregatorAttribute, DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
@@ -79,7 +80,10 @@ import {
 } from '@lumeer/data-filters';
 import {Configuration} from '../../../../../environments/configuration-type';
 import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
-import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
+import {
+  sortDataResourcesObjectsByViewSettings,
+  sortDocumentsAndLinksStemData,
+} from '../../../../shared/utils/data-resource.utils';
 import {queryResourcesAreSame} from '../../../../core/model/query-attribute';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 import {Milestone} from '@lumeer/lumeer-gantt/dist/model/task';
@@ -131,9 +135,17 @@ export class GanttChartConverter {
   ): {options: GanttOptions; tasks: GanttTask[]} {
     this.config = config;
     this.constraintData = constraintData;
+    const collectionsMap = objectsByIdMap(collections);
+    const linkTypesMap = objectsByIdMap(linkTypes);
 
     let tasks = (query?.stems || []).reduce<GanttTask[]>((allTasks, stem, index) => {
-      const stemData = data.dataByStems?.[index];
+      const stemData = sortDocumentsAndLinksStemData(
+        data.dataByStems?.[index],
+        collectionsMap,
+        linkTypesMap,
+        settings,
+        constraintData
+      );
       this.dataObjectAggregator.updateData(
         collections,
         stemData?.documents || [],
