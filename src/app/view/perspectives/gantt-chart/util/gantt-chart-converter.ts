@@ -69,6 +69,7 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DateTimeConstraint,
   DocumentsAndLinksData,
   PercentageConstraintConfig,
   SelectConstraint,
@@ -716,13 +717,14 @@ function createMilestones(
   resources: AttributesResource[],
   constraintData: ConstraintData
 ): Milestone[] {
-  const lastString = interval.startRaw;
-  const lastConstraint = interval.startConstraint;
+  let lastString = interval.startRaw;
+  let lastConstraint = interval.startConstraint;
   const milestones: Milestone[] = [];
-  (milestonesModels || []).forEach((model, index) => {
-    const currentDataResource = dataResources?.[index];
+  for (let i = 0; i < (milestonesModels || []).length; i++) {
+    const model = milestonesModels[i];
+    const currentDataResource = dataResources?.[i];
     const currentString = currentDataResource?.data?.[model.attributeId];
-    const currentConstraint = constraints?.[index];
+    const currentConstraint = constraints?.[i];
     const currentInterval = createInterval(
       lastString,
       lastConstraint,
@@ -730,18 +732,23 @@ function createMilestones(
       currentConstraint,
       constraintData
     );
-    milestones.push({
-      start: currentInterval.end,
-      draggable: userCanEditDataResource(
-        currentDataResource,
-        resources?.[index],
-        permissions?.[index],
-        constraintData.currentUser,
-        constraintData
-      ),
-      color: model.color,
-    });
-  });
+    if (currentInterval.end) {
+      milestones.push({
+        start: currentInterval.end,
+        draggable: userCanEditDataResource(
+          currentDataResource,
+          resources?.[i],
+          permissions?.[i],
+          constraintData.currentUser,
+          constraintData
+        ),
+        color: model.color,
+      });
+    }
+
+    lastString = currentInterval.end;
+    lastConstraint = new DateTimeConstraint({format: GANTT_DATE_FORMAT});
+  }
 
   return milestones;
 }
