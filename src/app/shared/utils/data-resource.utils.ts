@@ -21,7 +21,13 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../co
 import {groupDocumentsByCollection} from '../../core/store/documents/document.utils';
 import {groupLinkInstancesByLinkTypes} from '../../core/store/link-instances/link-instance.utils';
 import {isArray, objectsByIdMap, objectValues} from './common.utils';
-import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {
+  Constraint,
+  ConstraintData,
+  DataValue,
+  DocumentsAndLinksStemData,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {DocumentModel} from '../../core/store/documents/document.model';
@@ -69,6 +75,32 @@ export function sortDataResourcesByViewSettings<T extends DataResource>(
   }
 
   return resultDataResources;
+}
+
+export function sortDocumentsAndLinksStemData(
+  stemData: DocumentsAndLinksStemData,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>,
+  viewSettings: ViewSettings,
+  constraintData: ConstraintData
+): DocumentsAndLinksStemData {
+  return {
+    ...stemData,
+    documents: sortDataResourcesByViewSettings(
+      stemData.documents,
+      collectionsMap,
+      AttributesResourceType.Collection,
+      viewSettings?.attributes,
+      constraintData
+    ),
+    linkInstances: sortDataResourcesByViewSettings(
+      stemData.linkInstances,
+      linkTypesMap,
+      AttributesResourceType.LinkType,
+      viewSettings?.attributes,
+      constraintData
+    ),
+  };
 }
 
 export function sortDataObjectsByViewSettings<T extends {linkInstance?: LinkInstance; document?: DocumentModel}>(
@@ -259,7 +291,7 @@ export function sortDataResourcesObjectsByViewSettings<T>(
       return (
         compareDataResourcesObjectsBySort(a, b, sortSettings, attributesMap, constraintData, dataResourceCallback) ||
         defaultSort?.(a, b) ||
-        compareDataResourcesObjectsByCreation(a, b, false, dataResourceCallback)
+        0
       );
     }
 
