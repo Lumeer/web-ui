@@ -15,10 +15,11 @@
     <public.path>/</public.path>
     <module.name>app</module.name>
     <skip.npm.build>false</skip.npm.build>
+    <war.warName>lumeer-web</war.warName>
   </properties>
 
    <build>
-      <finalName>lumeer-web</finalName>
+      <finalName>${war.warName}</finalName>
       <plugins>
          <plugin>
             <groupId>org.jboss.as.plugins</groupId>
