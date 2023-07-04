@@ -150,7 +150,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
 
   @HostListener('document:mousedown', ['$event'])
   public onMouseMove(event: MouseEvent) {
-    this.preventSave = this.dateTimePicker.clickedInside(event);
+    this.preventSave = this.dateTimePicker?.clickedInside(event);
   }
 
   private changedFromEditableToReadonly(changes: SimpleChanges): boolean {
