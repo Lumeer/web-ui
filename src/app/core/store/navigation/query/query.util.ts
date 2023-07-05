@@ -134,6 +134,10 @@ export function isQueryItemEditable(
     const collectionId = (<CollectionQueryItem>queryItem).collection?.id;
     const sameCollectionIds = getBaseCollectionIdsFromQuery(viewQuery).filter(id => collectionId === id);
     return sameCollectionIds.length <= sameItemsInStem;
+  } else if (queryItem.type === QueryItemType.Fulltext) {
+    const fulltext = (<FulltextQueryItem>queryItem).value;
+    const sameFulltexts = (viewQuery.fulltexts || []).filter(f => f === fulltext);
+    return sameFulltexts.length <= sameItemsInStem;
   }
 
   return false;
@@ -821,7 +825,9 @@ export function appendQueryFiltersByVisibleAttributes(
 
     return {...stem, filters, linkFilters};
   });
-  return {...q1, stems};
+  const newFulltexts = arraySubtract(q2.fulltexts, q1.fulltexts);
+  const fulltexts = [...(q1.fulltexts || []), ...newFulltexts];
+  return {...q1, stems, fulltexts};
 }
 
 function shouldAppendVisibleFilter(

@@ -184,7 +184,7 @@ export class ViewLinkTypePermissionsBodyComponent implements OnInit, OnChanges, 
     });
     this.teamLinkTypeRoles$.next({
       ...this.teamLinkTypeRoles$.value,
-      [team.id]: roles[ResourcePermissionType.ViewCollection],
+      [team.id]: roles[ResourcePermissionType.ViewLinkType],
     });
   }
 
