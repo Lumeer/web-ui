@@ -24,7 +24,7 @@ import {
 } from '../../../../../../core/store/gantt-charts/gantt-chart';
 import {deepObjectCopy} from '../../../../../../shared/utils/common.utils';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
-import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
+import {selectDefaultPalette} from '../../../../../../shared/picker/colors';
 
 @Component({
   selector: 'gantt-chart-milestones-select',
@@ -71,7 +71,8 @@ export class GanttChartMilestonesSelectComponent implements OnChanges {
     if (!newConfig.milestones) {
       newConfig.milestones = [];
     }
-    newConfig.milestones[index] = bar;
+    const initialColor = selectDefaultPalette[index % selectDefaultPalette.length];
+    newConfig.milestones[index] = {...bar, color: bar.color || initialColor};
     this.configChange.emit(newConfig);
   }
 

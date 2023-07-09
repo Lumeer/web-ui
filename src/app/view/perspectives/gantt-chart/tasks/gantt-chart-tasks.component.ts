@@ -73,7 +73,7 @@ import {
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {View} from '../../../../core/store/views/view';
 import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
-import {QueryAttributeGrouping, CreateDataResourceService} from '../../../../core/service/create-data-resource.service';
+import {CreateDataResourceService, QueryAttributeGrouping} from '../../../../core/service/create-data-resource.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 import {QueryAttribute} from '../../../../core/model/query-attribute';
@@ -302,6 +302,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       }
     }
 
+    if (stemConfig.milestones?.length) {
+      this.patchMilestones(task, stemConfig, patchData);
+    }
+
     // edit of computed progress is currently not supported
     if (stemConfig.progress && (metadata.progressDataIds || []).length === 1) {
       const dataResource = this.getDataResource(metadata.progressDataIds[0], stemConfig.progress.resourceType);
@@ -440,10 +444,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const endConstraint = findAttributeConstraint(endResource.attributes, endModel.attributeId);
 
     if (startConstraint?.type === ConstraintType.Duration || endConstraint?.type === ConstraintType.Duration) {
-      const start = moment(task.start, this.options?.dateFormat);
-      const end = moment(task.end, this.options?.dateFormat);
-      const durationCountsMap = subtractDatesToDurationCountsMap(end.toDate(), start.toDate());
-      const durationString = durationCountsMapToString(durationCountsMap);
+      const durationString = this.computeDurationString(task.start, task.end);
 
       if (startConstraint?.type === ConstraintType.Duration) {
         const dataValue = (<DurationConstraint>startConstraint).createDataValue(durationString, this.constraintData);
@@ -460,6 +461,44 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       this.patchDate(task.start, startModel, startData, startDataResource);
       this.patchDate(task.end, endModel, endData, endDataResource, true);
     }
+  }
+
+  private patchMilestones(task: GanttTask, stemConfig: GanttChartStemConfig, patchDataArray: PatchData[]) {
+    const previousTask = this.tasks?.find(t => t.id === task.id);
+    if (!previousTask) {
+      return;
+    }
+
+    const metadata = task.metadata as GanttTaskMetadata;
+    let previousDateString = task.start;
+
+    for (let i = 0; i < task.milestones?.length; i++) {
+      const milestone = task.milestones[i];
+      const previousMilestone = previousTask.milestones[i];
+      if (milestone.start !== previousMilestone.start) {
+        const milestoneModel = stemConfig.milestones[i];
+        const dataResource = this.getDataResource(metadata.milestoneDataIds[i], milestoneModel.resourceType);
+        const patchData = this.getPatchData(patchDataArray, dataResource, milestoneModel);
+        const resource = this.getResourceById(milestoneModel.resourceId, milestoneModel.resourceType);
+        const constraint = findAttributeConstraint(resource.attributes, milestoneModel.attributeId);
+        if (constraint?.type === ConstraintType.Duration) {
+          const durationString = this.computeDurationString(previousDateString, milestone.start);
+          const dataValue = (<DurationConstraint>constraint).createDataValue(durationString, this.constraintData);
+          patchData[milestoneModel.attributeId] = toNumber(dataValue.serialize());
+        } else {
+          this.patchDate(milestone.start, milestoneModel, patchData, dataResource);
+        }
+      }
+
+      previousDateString = milestone.start;
+    }
+  }
+
+  private computeDurationString(s1: string, s2: string): string {
+    const d1 = moment(s1, this.options?.dateFormat);
+    const d2 = moment(s2, this.options?.dateFormat);
+    const durationCountsMap = subtractDatesToDurationCountsMap(d2.toDate(), d1.toDate());
+    return durationCountsMapToString(durationCountsMap);
   }
 
   private patchDate(
