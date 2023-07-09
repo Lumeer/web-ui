@@ -746,9 +746,9 @@ function createMilestones(
       currentConstraint,
       constraintData
     );
-    if (currentInterval.end) {
+    if (currentString && currentInterval.end) {
       milestones.push({
-        start: currentInterval.end,
+        end: currentInterval.end,
         draggable: userCanEditDataResource(
           currentDataResource,
           resources?.[i],
@@ -759,10 +759,9 @@ function createMilestones(
         color: model.color,
       });
       dataIds.push(currentDataResource.id);
+      lastString = currentInterval.end;
+      lastConstraint = new DateTimeConstraint({format: GANTT_DATE_FORMAT});
     }
-
-    lastString = currentInterval.end;
-    lastConstraint = new DateTimeConstraint({format: GANTT_DATE_FORMAT});
   }
 
   return {milestones, dataIds};
@@ -804,10 +803,10 @@ function createInterval(
 
   return {
     start: startMoment.format(GANTT_DATE_FORMAT),
-    startRaw: startString,
+    startRaw: swapped ? endString : startString,
     startConstraint,
     end: endMoment.format(GANTT_DATE_FORMAT),
-    endRaw: endString,
+    endRaw: swapped ? startString : endString,
     endConstraint,
     swapped,
   };

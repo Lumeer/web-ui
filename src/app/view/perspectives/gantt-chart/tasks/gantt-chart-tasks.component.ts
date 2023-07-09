@@ -475,22 +475,22 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     for (let i = 0; i < task.milestones?.length; i++) {
       const milestone = task.milestones[i];
       const previousMilestone = previousTask.milestones[i];
-      if (milestone.start !== previousMilestone.start) {
+      if (milestone.end !== previousMilestone.end) {
         const milestoneModel = stemConfig.milestones[i];
         const dataResource = this.getDataResource(metadata.milestoneDataIds[i], milestoneModel.resourceType);
         const patchData = this.getPatchData(patchDataArray, dataResource, milestoneModel);
         const resource = this.getResourceById(milestoneModel.resourceId, milestoneModel.resourceType);
         const constraint = findAttributeConstraint(resource.attributes, milestoneModel.attributeId);
         if (constraint?.type === ConstraintType.Duration) {
-          const durationString = this.computeDurationString(previousDateString, milestone.start);
+          const durationString = this.computeDurationString(previousDateString, milestone.end);
           const dataValue = (<DurationConstraint>constraint).createDataValue(durationString, this.constraintData);
           patchData[milestoneModel.attributeId] = toNumber(dataValue.serialize());
         } else {
-          this.patchDate(milestone.start, milestoneModel, patchData, dataResource);
+          this.patchDate(milestone.end, milestoneModel, patchData, dataResource);
         }
       }
 
-      previousDateString = milestone.start;
+      previousDateString = milestone.end;
     }
   }
 
