@@ -95,6 +95,7 @@ export interface GanttTaskMetadata {
   startDataId: string;
   endDataId: string;
   progressDataIds: string[];
+  milestoneDataIds: string[];
   dataResourceChain: DataResourceChain[];
   swimlanesDataResourcesIds: string[];
   stemConfig: GanttChartStemConfig;
@@ -206,6 +207,7 @@ export class GanttChartConverter {
       resizeProgress: true,
       resizeTaskLeft: true,
       resizeSwimlanes: true,
+      resizeMilestones: true,
       dragTaskSwimlanes: true,
       createTasks,
       language: this.configuration.locale,
@@ -333,11 +335,9 @@ export class GanttChartConverter {
 
     const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
     const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
-    const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
 
     const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
     const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
-    const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
 
     const progressResource = this.dataObjectAggregator.getResource(stemConfig.progress);
     const progressPermission = this.dataObjectAggregator.attributePermissions(stemConfig.progress);
@@ -404,12 +404,23 @@ export class GanttChartConverter {
         const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(stemConfig.name || stemConfig.start);
         const taskColor = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources);
 
+        const {milestones, dataIds: milestoneDataIds} = createMilestones(
+          interval,
+          stemConfig.milestones,
+          milestonesDataResources,
+          milestonesConstraints,
+          milestonesPermissions,
+          milestonesResources,
+          this.constraintData
+        );
+
         const metadata: GanttTaskMetadata = {
           dataResource: nameDataResource || startDataResource,
           resource: nameResource || taskStartResource,
           nameDataId: nameDataResource?.id,
           startDataId: startDataResource?.id,
           endDataId: endDataResource?.id,
+          milestoneDataIds,
           progressDataIds: (progressDataResources || []).map(dataResource => dataResource.id),
           swimlanesDataResourcesIds: (item.groupingDataResources || []).map(dataResource => dataResource.id),
           dataResourceChain: item.dataResourcesChain,
@@ -462,16 +473,6 @@ export class GanttChartConverter {
         const progressEditable = this.dataObjectAggregator.isAttributeEditable(
           metadata.stemConfig.progress,
           progressDataResources[0]
-        );
-
-        const milestones = createMilestones(
-          interval,
-          stemConfig.milestones,
-          milestonesDataResources,
-          milestonesConstraints,
-          milestonesPermissions,
-          milestonesResources,
-          this.constraintData
         );
 
         const names = isArray(name) ? name : [name];
@@ -728,10 +729,11 @@ function createMilestones(
   permissions: AllowedPermissions[],
   resources: AttributesResource[],
   constraintData: ConstraintData
-): Milestone[] {
+): {milestones: Milestone[]; dataIds: string[]} {
   let lastString = interval.startRaw;
   let lastConstraint = interval.startConstraint;
   const milestones: Milestone[] = [];
+  const dataIds = [];
   for (let i = 0; i < (milestonesModels || []).length; i++) {
     const model = milestonesModels[i];
     const currentDataResource = dataResources?.[i];
@@ -756,13 +758,14 @@ function createMilestones(
         ),
         color: model.color,
       });
+      dataIds.push(currentDataResource.id);
     }
 
     lastString = currentInterval.end;
     lastConstraint = new DateTimeConstraint({format: GANTT_DATE_FORMAT});
   }
 
-  return milestones;
+  return {milestones, dataIds};
 }
 
 function createInterval(
