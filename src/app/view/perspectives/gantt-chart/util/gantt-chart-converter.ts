@@ -758,10 +758,16 @@ function createMilestones(
         ),
         color: model.color,
       });
-      dataIds.push(currentDataResource.id);
       lastString = currentInterval.end;
       lastConstraint = new DateTimeConstraint({format: GANTT_DATE_FORMAT});
+    } else {
+      milestones.push({
+        end: null,
+        draggable: false,
+        color: model.color,
+      });
     }
+    dataIds.push(currentDataResource.id);
   }
 
   return {milestones, dataIds};
