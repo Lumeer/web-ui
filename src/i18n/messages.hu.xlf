@@ -15,26 +15,12 @@
                 <source>Could not create task</source>
                 <target>Nem lehet létrehozni a feladatot</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">351</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">354</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source><target state="new">Could not move task</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">376</context></context-group></trans-unit>
-            <trans-unit id="ganttChart.empty.placeholder2" datatype="html">
-                <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source>
-                <target state="new">Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {Column}}</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
-                    <context context-type="linenumber">29</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="ganttChart.bar.placeholder2" datatype="html">
-                <source>{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}</source>
-                <target state="new">{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
-                    <context context-type="linenumber">29</context>
-                </context-group>
-            </trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">379</context></context-group></trans-unit>
+            
+            
             <trans-unit datatype="html" id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0">
                 <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
                 <target>{VAR_SELECT, select, w {w (hét)} d {d (nap)} h {h (óra)} m {m (perc)} s {s (másodperc)} }</target>
@@ -191,19 +177,10 @@
             <trans-unit datatype="html" id="aggregation">
                 <source>Aggregation</source>
                 <target>Összesítés</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context>
-                    <context context-type="linenumber">25</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.ts</context>
-                    <context context-type="linenumber">45</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context>
-                    <context context-type="linenumber">62</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/progress-select/gantt-chart-progress-bar-model-select.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">62</context></context-group></trans-unit>
             <trans-unit datatype="html" id="agreement.welcome.message">
                 <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source>
                 <target>Üdvözlünk a Lumeer-nél! Ez az első bejelentkezésed. Kérjük fogadd el a feltételeket és iratkozz fel Hírlevelünkre az alkalmazás használata előtt. Köszönjük!</target>
@@ -280,7 +257,7 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context><context context-type="linenumber">347</context></context-group></trans-unit><trans-unit id="query.stem.choose" datatype="html">
         <source>The New Record Belongs to...</source><target state="new">Choose query</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context><context context-type="linenumber">458</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context><context context-type="linenumber">448</context></context-group></trans-unit>
             <trans-unit datatype="html" id="appTour.description.views">
                 <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
                 <target>Miután finomra hangoltad a vizuális szempontot, adj neki nevet, és mentsd el. Később elérheted a tárolt nézetet a kezdőlapon, vagy megoszthatod a nézetet munkatársaiddal.</target>
@@ -3686,7 +3663,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
             <trans-unit id="constraint.select.lists.create" datatype="html">
-                <source> Create or edit custom lists in <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>Project settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
+                <source> Create or edit custom lists in <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot; target=&quot;_blank&quot;>"/>Project settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
                 <target state="new"> Create or edit custom lists in
                     <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>Project settings
                     <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
@@ -7549,11 +7526,20 @@
             <trans-unit datatype="html" id="perspective.gantt.config.progressAggregation">
                 <source>Select progress aggregation</source>
                 <target>Folyamatösszesítés kiválasztása</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context>
-                    <context context-type="linenumber">27</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/progress-select/gantt-chart-progress-bar-model-select.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder3" datatype="html">
+        <source>Select {emptyProperty, select, name {name} start {starting date} milestone {milestone} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source><target state="new">Select {emptyProperty, select, name {name} start {starting date} milestone {milestone} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="ganttChart.bar.placeholder3" datatype="html">
+        <source>{barProperty, select, name {Name} start {Start} milestone {Milestone} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}</source><target state="new">{barProperty, select, name {Name} start {Start} milestone {Milestone} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="perspective.gantt.config.resize.lock">
                 <source>Lock dependent task position</source>
                 <target>Függő tevékenységpozíció zárolása</target>
@@ -9210,11 +9196,11 @@
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1360</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1363</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.title">
 					<source>Delete this column?</source>
 					<target>Törlöd ezt az oszlopot?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1359</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1362</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.add-button">
 					<source>Link table</source>
 					<target>Hivatkozási tábla</target>
@@ -9489,10 +9475,10 @@
 				<trans-unit id="search.input.placeholder" datatype="html">
         <source>Type anything you search for…</source><target>Gépelj be azt, hogy mit keresel…</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="search.input.placeholder.short" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="search.input.placeholder.short" datatype="html">
         <source>Search or filter…</source><target>Keresés vagy szűrés…</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="topPanel.notifications.title">
 					<source>Notifications</source>
 					<target>Értesítések</target>

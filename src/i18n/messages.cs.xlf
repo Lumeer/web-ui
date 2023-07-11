@@ -580,20 +580,14 @@
                 <source>Type anything you search for…</source>
                 <target>Napište cokoliv, co hledáte…</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context>
-                    <context context-type="linenumber">76</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit>
             <trans-unit id="search.input.placeholder.short" datatype="html">
                 <source>Search or filter…</source>
                 <target>Hledat nebo filtrovat…</target>
 
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context>
-                    <context context-type="linenumber">77</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit>
 
             <trans-unit id="search.button" datatype="html">
                 <source>Search</source>
@@ -1274,7 +1268,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute/type/form/constraint-config/select/select-constraint-config-form.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
             <trans-unit id="constraint.select.lists.create" datatype="html">
-                <source> Create or edit custom lists in <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>Project settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
+                <source> Create or edit custom lists in <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot; target=&quot;_blank&quot;>"/>Project settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
                 <target> Vytvořte nebo upravte vlastní seznamy v
                     <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;>"/>nastavení projektu
                     <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
@@ -4396,14 +4390,14 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1359</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">387</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1362</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.message" datatype="html">
                 <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
                 <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v tabulce.</target>
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1360</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">388</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1363</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.changeAttribute" datatype="html">
                 <source>Attribute settings...</source>
                 <target>Nastavení attributu...</target>
@@ -7452,7 +7446,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/application-tour.service.ts</context><context context-type="linenumber">347</context></context-group></trans-unit><trans-unit id="query.stem.choose" datatype="html">
         <source>The New Record Belongs to...</source><target>Nový záznam patří do...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context><context context-type="linenumber">458</context></context-group></trans-unit><trans-unit id="lumeer.advice.percentage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/create-data-resource.service.ts</context><context context-type="linenumber">448</context></context-group></trans-unit><trans-unit id="lumeer.advice.percentage" datatype="html">
         <source>I suggest to set the column type of <x id="attributeName" equiv-text="attribute.name"/> to percentage. Do you agree?</source><target>Navrhuji nastavit typ sloupce <x id="attributeName" equiv-text="{{attrName}}"/> na procenta. Souhlasíte?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">52</context></context-group></trans-unit>
@@ -7548,24 +7542,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="perspective.gantt.create.task.failure" datatype="html">
         <source>Could not create task</source><target>Úkol nelze vytvořit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">351</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">354</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source><target>Nemohl jsem přesunout úkol</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">376</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder2" datatype="html">
-        <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source>
-        <target>Vyberte {emptyProperty, select, name {název} start {začátek} end {konec} progress {průběh} category {kategorie} subCategory {podkategorii} color {barvu} attribute {sloupec}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="ganttChart.bar.placeholder2" datatype="html">
-        <source>{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}</source>
-        <target>{barProperty, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} category {Kategorie} subCategory {Podkategorie} color {Barva} attribute {Sloupec}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">379</context></context-group></trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
         <source>{mode, select, Hour {Hours} Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}</source><target>{mode, select, Hour {Hodiny} Quarter Day {Čtvrt Dny} Half Day {Půl dny} Day {Dny} Week {Týdny} Month {Měsíce} Year {Roky} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="perspective.kanban.create.card.failure" datatype="html">
@@ -7654,10 +7634,22 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.ts</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="aggregation" datatype="html">
         <source>Aggregation</source><target>Agregace</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="perspective.gantt.config.progressAggregation" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/progress-select/gantt-chart-progress-bar-model-select.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="perspective.gantt.config.progressAggregation" datatype="html">
         <source>Select progress aggregation</source><target>Zvolte způsob výpočtu postupu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="perspective.pivot.data.aggregation" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/progress-select/gantt-chart-progress-bar-model-select.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder3" datatype="html">
+        <source>Select {emptyProperty, select, name {name} start {starting date} milestone {milestone} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {column}}</source><target>Select {emptyProperty, select, name {název} start {počáteční datum} milestone {milník} end {koncové datum} progress {postup} category {kategorie} subCategory {podkategorie} color {barva} attribute {sloupec}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="ganttChart.bar.placeholder3" datatype="html">
+        <source>{barProperty, select, name {Name} start {Start} milestone {Milestone} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}</source><target>{barProperty, select, name {Název} start {Začátek} milestone {Milník} end {Konec} progress {Postup} category {Kategorie} subCategory {Podkategorie} color {Barva} attribute {Sloupec}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.data.aggregation" datatype="html">
         <source>{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of}}</source><target>{aggregation, select, sum {Součet} min {Minimum z} max {Maximum z} avg {Průměr z} count {Počet} unique {Unikátních} median {Medián z}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.summary.header" datatype="html">
