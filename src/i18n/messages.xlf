@@ -10680,14 +10680,14 @@
         <source>Could not create task</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
-          <context context-type="linenumber">354,347</context>
+          <context context-type="linenumber">367,360</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
-          <context context-type="linenumber">379</context>
+          <context context-type="linenumber">392</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.header.scroll.today" datatype="html">
@@ -10695,6 +10695,24 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/header/gantt-chart-header.component.html</context>
           <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.gantt.sort.changes" datatype="html">
+        <source>Unsorted records!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/header/gantt-chart-header.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/header/gantt-chart-header.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.gantt.sort.changes.reset" datatype="html">
+        <source>Sort again</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/header/gantt-chart-header.component.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.gantt.invalid.range.title" datatype="html">

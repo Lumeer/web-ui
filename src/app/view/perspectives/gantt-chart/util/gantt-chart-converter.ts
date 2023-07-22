@@ -54,6 +54,7 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {Md5} from '../../../../shared/utils/md5';
 import {canCreateTaskByStemConfig} from './gantt-chart-util';
+import {GanttTasksSort, sortGanttTasks} from './gantt-chart-sorting';
 import {
   constraintContainsHoursInConfig,
   createDatesInterval,
@@ -64,7 +65,7 @@ import {
   DataObjectAttribute,
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
-import {areArraysSame, fillWithNulls, uniqueValues} from '../../../../shared/utils/array.utils';
+import {fillWithNulls, uniqueValues} from '../../../../shared/utils/array.utils';
 import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 import {
   Constraint,
@@ -79,11 +80,7 @@ import {
   UserConstraint,
 } from '@lumeer/data-filters';
 import {Configuration} from '../../../../../environments/configuration-type';
-import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
-import {
-  sortDataResourcesObjectsByViewSettings,
-  sortDocumentsAndLinksStemData,
-} from '../../../../shared/utils/data-resource.utils';
+import {sortDocumentsAndLinksStemData} from '../../../../shared/utils/data-resource.utils';
 import {queryResourcesAreSame} from '../../../../core/model/query-attribute';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 import {Milestone} from '@lumeer/lumeer-gantt/dist/model/task';
@@ -115,7 +112,8 @@ export class GanttChartConverter {
   private config: GanttChartConfig;
   private constraintData?: ConstraintData;
 
-  private convertCount = 0;
+  private isFirstConversion = true;
+  private tasksSort: GanttTasksSort;
 
   private dataObjectAggregator = new DataObjectAggregator<GanttSwimlane>(
     (value, constraint, data, aggregatorAttribute) =>
@@ -129,17 +127,18 @@ export class GanttChartConverter {
     collections: Collection[],
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
+    dataLoaded: boolean,
     permissions: ResourcesPermissions,
     query: Query,
     settings: ViewSettings,
     constraintData: ConstraintData
-  ): {options: GanttOptions; tasks: GanttTask[]} {
+  ): {options: GanttOptions; tasks: GanttTask[]; sortChanged: boolean} {
     this.config = config;
     this.constraintData = constraintData;
     const collectionsMap = objectsByIdMap(collections);
     const linkTypesMap = objectsByIdMap(linkTypes);
 
-    let tasks = (query?.stems || []).reduce<GanttTask[]>((allTasks, stem, index) => {
+    const unsortedTasks = (query?.stems || []).reduce<GanttTask[]>((allTasks, stem, index) => {
       const stemData = sortDocumentsAndLinksStemData(
         data.dataByStems?.[index],
         collectionsMap,
@@ -160,40 +159,24 @@ export class GanttChartConverter {
       return allTasks;
     }, []);
 
-    if (viewAttributeSettingsSortDefined(settings)) {
-      tasks = sortDataResourcesObjectsByViewSettings(
-        tasks,
-        settings,
-        collections,
-        linkTypes,
-        constraintData,
-        task => task.metadata.dataResource,
-        task => task.metadata.resource,
-        (a, b) => this.compareTasks(a, b)
-      );
-    } else {
-      tasks = tasks.sort((t1, t2) => this.compareTasksByStartDate(t1, t2));
-    }
-
     const options = this.createGanttOptions(config, permissions);
-    this.convertCount++;
-    return {options, tasks};
+    const {tasks, sort, sortChanged} = sortGanttTasks(
+      unsortedTasks,
+      this.tasksSort,
+      dataLoaded,
+      query,
+      settings,
+      collections,
+      linkTypes,
+      constraintData
+    );
+    this.tasksSort = sort;
+    this.isFirstConversion = false;
+    return {tasks, sortChanged, options};
   }
 
-  private compareTasks(t1: GanttTask, t2: GanttTask): number {
-    const t1Swimlanes = t1.swimlanes?.map(s => s?.value) || [];
-    const t2Swimlanes = t2.swimlanes?.map(s => s?.value) || [];
-
-    if (areArraysSame(t1Swimlanes, t2Swimlanes)) {
-      return this.compareTasksByStartDate(t1, t2);
-    }
-    return 0;
-  }
-
-  private compareTasksByStartDate(t1: GanttTask, t2: GanttTask): number {
-    const t1Start = moment(t1.start, GANTT_DATE_FORMAT);
-    const t2Start = moment(t2.start, GANTT_DATE_FORMAT);
-    return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
+  public resetSort() {
+    this.tasksSort = undefined;
   }
 
   private createGanttOptions(config: GanttChartConfig, permissions: ResourcesPermissions): GanttOptions {
@@ -213,7 +196,7 @@ export class GanttChartConverter {
       language: this.configuration.locale,
       lockResize: config.lockResize || false,
       dateFormat: GANTT_DATE_FORMAT,
-      initialScroll: config.positionSaved && config.position && this.convertCount === 0 ? config.position.value : null,
+      initialScroll: config.positionSaved && config.position && this.isFirstConversion ? config.position.value : null,
       viewMode: config.mode as any,
       padding: sizeMultiplier * GANTT_PADDING,
       columnWidth: sizeMultiplier * GANTT_COLUMN_WIDTH,

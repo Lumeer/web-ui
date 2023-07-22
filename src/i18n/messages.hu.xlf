@@ -15,10 +15,10 @@
                 <source>Could not create task</source>
                 <target>Nem lehet létrehozni a feladatot</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">354</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">367</context></context-group></trans-unit><trans-unit id="perspective.gantt.move.task.failure" datatype="html">
         <source>Could not move task</source><target state="new">Could not move task</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">379</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">392</context></context-group></trans-unit>
             
             
             <trans-unit datatype="html" id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0">
@@ -7555,7 +7555,23 @@
                     <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/header/gantt-chart-header.component.html</context>
                     <context context-type="linenumber">4</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="perspective.gantt.sort.changes" datatype="html">
+        <source>Unsorted records!</source><target state="new">Unsorted records!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/header/gantt-chart-header.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/header/gantt-chart-header.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.gantt.sort.changes.reset" datatype="html">
+        <source>Sort again</source><target state="new">Sort again</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/header/gantt-chart-header.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
             <trans-unit datatype="html" id="perspective.gantt.invalid.range.subtitle">
                 <source> Tasks have timespan longer than 25 years. I cannot efficiently display such a situation. Try to filter your tasks using the search box at the top of the page. </source>
                 <target>A feladatok élettartama hosszabb, mint 25 év. Nem tudok hatékonyan megjeleníteni egy ilyen helyzetet. Próbálja meg szűrni a feladatokat a lap tetején lévő keresőmezővel.</target>

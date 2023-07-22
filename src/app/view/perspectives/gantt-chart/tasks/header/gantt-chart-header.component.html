@@ -12,3 +12,8 @@
   </div>
 
 </div>
+<div *ngIf="sortChanged" class="small text-end text-warning mt-1">
+  <i class="far fa-exclamation-triangle me-1 text-warning" title="Unsorted records!" i18n-title="@@perspective.gantt.sort.changes"></i>
+  <span class="text-warning" i18n="@@perspective.gantt.sort.changes">Unsorted records!</span>
+  <span class="btn-link text-success ms-1 cursor-pointer text-underline" (click)="resetSort.emit()" i18n="@@perspective.gantt.sort.changes.reset">Sort again</span>
+</div>

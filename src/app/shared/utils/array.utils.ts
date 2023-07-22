@@ -44,6 +44,20 @@ export function isArraySubset(superset: any[], subset: any[]): boolean {
   return subset.every(item => superset.includes(item));
 }
 
+export function isArraySortedSubset(superset: any[], subset: any[]): boolean {
+  if (subset.length === 0 && superset.length !== 0) {
+    return false;
+  }
+  let subsetIndex = 0;
+  for (let i = 0; i < superset.length; i++) {
+    if (superset[i] === subset[subsetIndex]) {
+      subsetIndex++;
+    }
+  }
+
+  return subsetIndex === subset.length;
+}
+
 export function areArraysSame(array1: any[], array2: any[]): boolean {
   const a1 = array1 || [];
   const a2 = array2 || [];

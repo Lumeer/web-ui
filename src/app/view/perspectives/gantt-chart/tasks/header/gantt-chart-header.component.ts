@@ -33,11 +33,17 @@ export class GanttChartHeaderComponent {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public sortChanged: boolean;
+
   @Output()
   public modeChange = new EventEmitter<GanttChartMode>();
 
   @Output()
   public scrollToToday = new EventEmitter();
+
+  @Output()
+  public resetSort = new EventEmitter();
 
   public readonly ganttChartModes = objectValues(GanttChartMode);
 
