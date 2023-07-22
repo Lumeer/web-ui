@@ -83,6 +83,7 @@ import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 interface Data {
   collections: Collection[];
   data: DocumentsAndLinksData;
+  dataLoaded: boolean;
   linkTypes: LinkType[];
   config: GanttChartConfig;
   permissions: ResourcesPermissions;
@@ -95,6 +96,12 @@ interface PatchData {
   dataResource: DataResource;
   resourceType: AttributesResourceType;
   data: Record<string, any>;
+}
+
+interface GanttConvertData {
+  options: GanttOptions;
+  tasks: GanttTask[];
+  sortChanged: boolean;
 }
 
 type PatchDataMap = Record<string, Record<string, any>>;
@@ -168,7 +175,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   private options: GanttOptions;
   private tasks: GanttTask[];
 
-  public data$: Observable<{options: GanttOptions; tasks: GanttTask[]}>;
+  public data$: Observable<GanttConvertData>;
 
   private dataSubject = new BehaviorSubject<Data>(null);
 
@@ -188,7 +195,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     this.data$ = this.subscribeTasks$();
   }
 
-  private subscribeTasks$(): Observable<{options: GanttOptions; tasks: GanttTask[]}> {
+  private subscribeTasks$(): Observable<GanttConvertData> {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
@@ -200,7 +207,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     );
   }
 
-  private handleData(data: Data): {options: GanttOptions; tasks: GanttTask[]} {
+  private handleData(data: Data): GanttConvertData {
     const config = checkOrTransformGanttConfig(data.config, data.query, data.collections, data.linkTypes);
     if (!deepObjectsEquals(config, data.config)) {
       this.configChange.emit(config);
@@ -211,6 +218,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       data.collections,
       data.linkTypes,
       data.data,
+      data.dataLoaded,
       data.permissions,
       data.query,
       data.settings,
@@ -220,16 +228,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldConvertData(changes)) {
-      this.dataSubject.next({
-        collections: this.collections,
-        linkTypes: this.linkTypes,
-        data: this.data,
-        permissions: this.permissions,
-        config: this.config,
-        settings: this.settings,
-        query: this.query,
-        constraintData: this.constraintData,
-      });
+      this.emitDataSubject();
     }
     this.createService.setData(
       this.data,
@@ -239,6 +238,20 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       this.constraintData,
       this.workspace
     );
+  }
+
+  private emitDataSubject() {
+    this.dataSubject.next({
+      collections: this.collections,
+      linkTypes: this.linkTypes,
+      data: this.data,
+      dataLoaded: this.dataLoaded,
+      permissions: this.permissions,
+      config: this.config,
+      settings: this.settings,
+      query: this.query,
+      constraintData: this.constraintData,
+    });
   }
 
   private shouldConvertData(changes: SimpleChanges): boolean {
@@ -681,6 +694,11 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public onPositionChanged(value: number) {
     const newConfig = {...this.config, position: {value}};
     this.configChange.emit(newConfig);
+  }
+
+  public resetSort() {
+    this.converter.resetSort();
+    this.emitDataSubject();
   }
 }
 

@@ -274,7 +274,7 @@ export function sortDataResourcesObjectsByViewSettings<T>(
     return map;
   }, {});
 
-  return objects.sort((a, b) => {
+  return [...objects].sort((a, b) => {
     const aResource = resourceCallback(a);
     const bResource = resourceCallback(b);
 
