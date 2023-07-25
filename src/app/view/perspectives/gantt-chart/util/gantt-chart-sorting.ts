@@ -123,7 +123,7 @@ function compareTasks(t1: GanttTask, t2: GanttTask): number {
   const t2Swimlanes = t2.swimlanes?.map(s => s?.value) || [];
 
   if (areArraysSame(t1Swimlanes, t2Swimlanes)) {
-    return this.compareTasksByStartDate(t1, t2);
+    return compareTasksByStartDate(t1, t2);
   }
   return 0;
 }
