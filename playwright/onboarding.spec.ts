@@ -39,6 +39,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const authFile = 'playwright/.auth/user.json';
+
 const userEmail = process.env.USER_EMAIL ?? '';
 const userPassword = process.env.USER_PASSWORD ?? '';
 
@@ -46,12 +48,18 @@ test('On boarding path', async ({page, request}) => {
   await page.goto('http://localhost:7000/ui');
 
   await expect(page.locator('form[class=auth0-lock-widget]')).toBeVisible();
+  await page.click('a:text("Sign up")');
 
   await page.locator('input[placeholder="your@work.email"]').fill(userEmail);
   await page.locator('input[type=password]').fill(userPassword);
   await page.click('button[type=submit]');
 
+  await expect(page.locator('span:text("Authorize App")')).toBeVisible();
+  await page.click('button[id="allow"]');
+
   await page.waitForLoadState('networkidle');
+
+  await page.context().storageState({path: authFile});
 
   await expect(page.locator('div[class=card-body]')).toBeVisible();
   await page.click('button:has(span:text("Yes"))');
