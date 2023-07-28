@@ -11,7 +11,7 @@ import {defineConfig, devices} from '@playwright/test';
  */
 export default defineConfig({
   testDir: './playwright',
-  timeout: 30000,
+  timeout: 60000,
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
@@ -26,7 +26,7 @@ export default defineConfig({
     baseURL: 'http://localhost:7000/ui',
   },
   expect: {
-    timeout: 30000,
+    timeout: 10000,
   },
 
   /* Configure projects for major browsers */
@@ -36,27 +36,14 @@ export default defineConfig({
       testMatch: /global.setup\.ts/,
     },
     {
-      name: 'chromium',
+      name: 'onBoarding chromium',
       use: {...devices['Desktop Chrome']},
       dependencies: ['setup'],
+      teardown: 'teardown',
     },
-
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    //   dependencies: ['setup'],
-    // },
-
-    // /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    //   dependencies: ['setup'],
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    //   dependencies: ['setup'],
-    // },
+    {
+      name: 'teardown',
+      testMatch: /global.teardown\.ts/,
+    },
   ],
 });
