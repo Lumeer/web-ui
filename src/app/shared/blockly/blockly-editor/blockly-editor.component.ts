@@ -124,6 +124,7 @@ import {GetSelectionListDisplayValuesBlocklyComponent} from './blocks/get-select
 import {ToNumberBlocklyComponent} from './blocks/to-number-blockly-component';
 import {SequenceCurrentBlocklyComponent} from './blocks/sequence-current-blockly-component';
 import {SequenceChangeBlocklyComponent} from './blocks/sequence-change-blockly-component';
+import {DeleteLinkBlocklyComponent} from './blocks/delete-link-blockly-component';
 
 declare var Blockly: any;
 
@@ -244,6 +245,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new PrintTextBlocklyComponent(this.blocklyUtils),
       new StringReplaceBlocklyComponent(this.blocklyUtils),
       new DeleteDocumentBlocklyComponent(this.blocklyUtils),
+      new DeleteLinkBlocklyComponent(this.blocklyUtils),
       new LinkDocumentsNoReturnBlocklyComponent(this.blocklyUtils, this.linkTypes),
       new LinkDocumentsReturnBlocklyComponent(this.blocklyUtils, this.linkTypes),
       new ReadDocumentsBlocklyComponent(this.blocklyUtils, this.views),
