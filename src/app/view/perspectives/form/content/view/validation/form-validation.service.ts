@@ -104,7 +104,7 @@ export class FormValidationService {
   }
 
   private validate(): FormValidation {
-    const errors = (this.config.sections || []).reduce((errors, section) => {
+    const errors = (this.config?.sections || []).reduce((errors, section) => {
       for (const row of section.rows || []) {
         for (const cell of row.cells || []) {
           const cellErrors = this.formCellValidationErrors(cell);
