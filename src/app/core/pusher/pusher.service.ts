@@ -865,8 +865,8 @@ export class PusherService implements OnDestroy {
     });
 
     this.channel.bind('Group:reload', data => {
-      if (this.isCurrentOrganization(data)) {
-        this.store$.dispatch(new TeamsAction.Get({organizationId: data.organizationId}));
+      if (this.isCurrentOrganization(data) && !this.isCurrentAppTab(data)) {
+        this.store$.dispatch(new TeamsAction.Get({organizationId: data.organizationId, force: true}));
       }
     });
   }

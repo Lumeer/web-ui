@@ -358,7 +358,7 @@ export class UsersEffects {
         return this.userService
           .setTeams(action.payload.organizationId, action.payload.user.id, action.payload.teams)
           .pipe(
-            map(() => new TeamsAction.Get({organizationId: action.payload.organizationId})),
+            map(() => new TeamsAction.Get({organizationId: action.payload.organizationId, force: true})),
             catchError(error => of(new UsersAction.SetTeamsFailure({error})))
           );
       })

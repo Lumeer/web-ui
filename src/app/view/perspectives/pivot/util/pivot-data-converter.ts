@@ -35,7 +35,6 @@ import {
   aggregateDataResources,
   dataAggregationConstraint,
   DataAggregationType,
-  isValueAggregation,
 } from '../../../../shared/utils/data/data-aggregation';
 import {
   AggregatedDataMap,
@@ -52,11 +51,10 @@ import {
   ConstraintType,
   DataValue,
   DocumentsAndLinksData,
-  NumberConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {attributesResourcesAttributesMap} from '../../../../shared/utils/resource.utils';
-import {flattenValues, uniqueValues} from '../../../../shared/utils/array.utils';
+import {flattenMatrix, flattenValues, uniqueValues} from '../../../../shared/utils/array.utils';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -767,11 +765,11 @@ export class PivotDataConverter {
     valueAttribute: PivotValueAttribute,
     aggregatedDataValues: AggregatedDataValues[]
   ): {value?: any; dataResources?: DataResource[]} {
-    const aggregatedDataValue = (aggregatedDataValues || []).find(
+    const resourceAggregatedDataValues = (aggregatedDataValues || []).filter(
       agg => agg.resourceId === valueAttribute.resourceId && agg.type === valueAttribute.resourceType
     );
-    if (aggregatedDataValue) {
-      const dataResources = aggregatedDataValue.objects;
+    if (resourceAggregatedDataValues.length) {
+      const dataResources = flattenMatrix(resourceAggregatedDataValues.map(val => val.objects));
       const attribute = this.pivotAttributeAttribute(valueAttribute);
       if (valueAttribute.aggregation === DataAggregationType.Join) {
         // values will be joined in pivot-table-converter
