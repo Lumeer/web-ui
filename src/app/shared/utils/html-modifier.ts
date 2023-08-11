@@ -19,6 +19,7 @@
 
 import {DataValue} from '@lumeer/data-filters';
 import * as pressure from 'pressure';
+import {unescapeHtml} from './common.utils';
 
 export class HtmlModifier {
   public static removeHtmlComments(html: HTMLElement): string {
@@ -44,7 +45,7 @@ export function setCursorAtDataInputEnd(element: HTMLInputElement, dataValue: Da
 
 export function checkDataInputElementValue(element: HTMLInputElement, dataValue: DataValue) {
   if (element && dataValue) {
-    const value = dataValue.format();
+    const value = unescapeHtml(dataValue.format());
     if (element.value !== value) {
       element.value = value;
     }
