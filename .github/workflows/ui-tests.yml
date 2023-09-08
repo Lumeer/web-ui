@@ -4,7 +4,7 @@ on:
   pull_request:
 
 env:
-  USER_EMAIL: ${{ secrets.USER_EMAIL }}
+  USER_EMAIL: "uitest-${{ github.run_id }}@lumeer.io"
   USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
 
 jobs:

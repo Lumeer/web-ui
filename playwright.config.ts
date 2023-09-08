@@ -32,13 +32,8 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'setup',
-      testMatch: /global.setup\.ts/,
-    },
-    {
       name: 'onBoarding chromium',
       use: {...devices['Desktop Chrome']},
-      dependencies: ['setup'],
       teardown: 'teardown',
     },
     {

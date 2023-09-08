@@ -80,13 +80,37 @@ test('On boarding path', async ({page, request}) => {
 
   await expect(page.locator('modal-wrapper')).toBeVisible();
 
-  await request.post('http://localhost:8080/lumeer-engine/rest/users/current/emailVerified', {
+  const loginFormData = new URLSearchParams();
+  loginFormData.append('userName', userEmail);
+  loginFormData.append('password', userPassword);
+
+  // eslint-disable-next-line no-console
+  console.log(userEmail);
+
+  const loginReponse = await request.post('http://localhost:8080/lumeer-engine/rest/users/login', {
     headers: {
-      Authorization: `Bearer ${process.env.TEST_AUTH_TOKEN}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    data: loginFormData.toString(),
+  });
+
+  const parsed_body = JSON.parse(await loginReponse.text());
+
+  const x = await request.post('http://localhost:8080/lumeer-engine/rest/users/current/emailVerified', {
+    headers: {
+      Authorization: `Bearer ${parsed_body['access_token']}`,
     },
   });
 
-  await page.waitForLoadState('networkidle');
+  // eslint-disable-next-line no-console
+  console.log(x.status);
+  // eslint-disable-next-line no-console
+  console.log(await x.text());
+  await page.waitForTimeout(10000);
+
+  if (await page.locator('button[type=button]:has-text("Reload")').isVisible()) {
+    await page.locator('button[type=button]:has-text("Reload")').click();
+  }
 
   await expect(page.locator('iframe[title="Lumeer: Quick Application Overview"]')).toBeVisible();
 });

@@ -17,21 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {test, expect} from '@playwright/test';
+import {test} from '@playwright/test';
 import dotenv from 'dotenv';
 
 dotenv.config();
+const userEmail = process.env.USER_EMAIL ?? '';
+const userPassword = process.env.USER_PASSWORD ?? '';
 
 test('Remove user from Auth0', async ({page, request}) => {
-  const token = process.env.TEST_AUTH_TOKEN;
+  const loginFormData = new URLSearchParams();
+  loginFormData.append('userName', userEmail);
+  loginFormData.append('password', userPassword);
+
+  const loginReponse = await request.post('http://localhost:8080/lumeer-engine/rest/users/login', {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    data: loginFormData.toString(),
+  });
+
+  const parsed_body = JSON.parse(await loginReponse.text());
 
   const deleteUserRequest = await request.delete('http://localhost:8080/lumeer-engine/rest/users/current', {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${parsed_body['access_token']}`,
     },
   });
-
-  // eslint-disable-next-line no-console
-  console.log(await deleteUserRequest.text());
 });
