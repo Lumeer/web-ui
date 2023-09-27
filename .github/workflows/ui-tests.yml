@@ -22,14 +22,14 @@ jobs:
             node-version: 16
         - name: Build (mvn clean install)
           run: |
-            chmod +x ./travis.sh
-            ./travis-build.sh
+            chmod +x ./playwright-scripts/build.sh
+            ./playwright-scripts/build.sh
         - name: Install Playwright Browsers
           run: npx playwright install --with-deps
         - name: Run tests
           run: |
-            chmod +x ./playwright-tests.sh
-            ./playwright-tests.sh
+            chmod +x ./playwright-scripts/playwright-tests.sh
+            ./playwright-scripts/playwright-tests.sh
           shell: bash
         - name: "Upload artifact"
           uses: actions/upload-artifact@v3
