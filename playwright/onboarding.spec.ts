@@ -105,5 +105,11 @@ test('On boarding path', async ({page, request}) => {
 
   await expect(page.locator('iframe[title="Lumeer: Quick Application Overview"]')).toBeVisible();
 
+  await page.getByRole('button', {name: 'Get started'}).click();
+  await page.waitForTimeout(1000);
+
+  await page.getByRole('button', {name: 'Dismiss'}).click();
+  await page.waitForTimeout(1000);
+
   await page.context().storageState({path: authFile});
 });
