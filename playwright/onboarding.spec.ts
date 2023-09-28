@@ -59,8 +59,6 @@ test('On boarding path', async ({page, request}) => {
 
   await page.waitForLoadState('networkidle');
 
-  await page.context().storageState({path: authFile});
-
   await expect(page.locator('div[class=card-body]')).toBeVisible();
   await page.click('button:has(span:text("Yes"))');
 
@@ -84,9 +82,6 @@ test('On boarding path', async ({page, request}) => {
   loginFormData.append('userName', userEmail);
   loginFormData.append('password', userPassword);
 
-  // eslint-disable-next-line no-console
-  console.log(userEmail);
-
   const loginReponse = await request.post('http://localhost:8080/lumeer-engine/rest/users/login', {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -96,16 +91,12 @@ test('On boarding path', async ({page, request}) => {
 
   const parsed_body = JSON.parse(await loginReponse.text());
 
-  const x = await request.post('http://localhost:8080/lumeer-engine/rest/users/current/emailVerified', {
+  await request.post('http://localhost:8080/lumeer-engine/rest/users/current/emailVerified', {
     headers: {
       Authorization: `Bearer ${parsed_body['access_token']}`,
     },
   });
 
-  // eslint-disable-next-line no-console
-  console.log(x.status);
-  // eslint-disable-next-line no-console
-  console.log(await x.text());
   await page.waitForTimeout(10000);
 
   if (await page.locator('button[type=button]:has-text("Reload")').isVisible()) {
@@ -113,4 +104,6 @@ test('On boarding path', async ({page, request}) => {
   }
 
   await expect(page.locator('iframe[title="Lumeer: Quick Application Overview"]')).toBeVisible();
+
+  await page.context().storageState({path: authFile});
 });

@@ -32,9 +32,20 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'onBoarding chromium',
+      name: 'onboarding',
       use: {...devices['Desktop Chrome']},
+      testMatch: /onboarding.spec\.ts/,
       teardown: 'teardown',
+    },
+    {
+      name: 'tests',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      testMatch: '*playwright/*.spec.ts',
+      testIgnore: /onboarding.spec\.ts/,
+      dependencies: ['onboarding'],
     },
     {
       name: 'teardown',
