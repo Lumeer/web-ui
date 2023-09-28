@@ -1,0 +1,6 @@
+Title,Description,Created,Information
+"Prepare environment", "Prepare playwright config file", 2023-07-01,"Discuss with contributors"
+"Analyze UI tests scenarios", "Find the the most usefull paths inside the application", 2023-07-15, "Use some kind of source to analyze tests scenarios"
+"Write UI tests", "Write the first set of tests", 2023-07-31, "Try to keep the good code practices"
+"Set up CI/CD", "Analyze and set up CI/CD using Github Action", 2023-08-01, "The knowledge of Bash and YAML might come usefull"
+"Give a report", "Give a report to the manager about the completion of the UI tests", 2023-08-31, "",
