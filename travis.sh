@@ -9,7 +9,7 @@ export PING_LOOP_PID=$!
 
 echo "Starting frontend..."
 npm run http-server &
-while ! curl --output /dev/null --silent -r 0-0 --fail "http://127.0.0.1:7000"; do
+while ! curl --output /dev/null --silent -r 0-0 --fail "http://localhost:7000"; do
   sleep 3
 done
 
@@ -42,5 +42,9 @@ echo "Stopping backend..."
 echo "Printing bundle sizes..."
 npm run bundlesize
 
+if [ "x$PASSED" = "xtrue" ]; then
+  echo Tests passed, triggering docker image creation...
+  ./docker-trigger.sh
+fi
 
 kill $PING_LOOP_PID
