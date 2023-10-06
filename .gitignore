@@ -24,4 +24,3 @@ src/assets/config/config.json
 /playwright-report/
 /playwright/.cache/
 /playwright/.auth/
-.env
