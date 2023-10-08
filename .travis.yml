@@ -1,5 +1,5 @@
 language: java
-dist: bionic
+dist: focal
 cache:
   directories:
     - ~/.cache
@@ -20,8 +20,8 @@ before_install:
   - sdk install java 11.0.12-open
   - sdk use java 11.0.12-open
   - 'sudo apt-get install -y libgconf-2-4'
-  - 'nvm install v14.17.4'
-  - 'nvm use v14.17.4'
+  - 'nvm install v18.18.0'
+  - 'nvm use v18.18.0'
   - 'npm i -g npm@latest'
 install:
   - './travis-build.sh'
