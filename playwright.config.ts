@@ -24,6 +24,7 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     baseURL: 'http://localhost:7000/ui',
+    screenshot: 'only-on-failure',
   },
   expect: {
     timeout: 10000,
