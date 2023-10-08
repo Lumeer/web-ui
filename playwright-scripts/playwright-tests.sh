@@ -22,17 +22,6 @@ cd ../
 echo "Running E2E tests..."
 set +e
 npm run playwright:run
-if [[ $? -ne 0 ]]; then
-  set -e
-  npm run playwright:run
-
-  if [[ $? -eq 0 ]]; then
-    PASSED=true
-  fi
-else
-  set -e
-  PASSED=true
-fi
 
 echo "Stopping frontend..."
 pkill npm
