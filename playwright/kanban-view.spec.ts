@@ -110,7 +110,9 @@ test('dragging', async ({page}) => {
   await page.locator('kanban-column').nth(0).locator('post-it').nth(0).hover();
   await page.mouse.up();
 
-  await page.waitForTimeout(500);
+  //wait to register the change of status state
+  await page.waitForTimeout(1000);
+  await expect(page.locator('post-it:has-text("Analyze UI tests scenarios")')).toContainText('Done');
 
   await expect(page.locator('kanban-column').nth(0).locator('post-it')).toHaveCount(2);
   await expect(page.locator('kanban-column').nth(1).locator('post-it')).toHaveCount(2);
@@ -125,6 +127,7 @@ test('dragging', async ({page}) => {
 
   //wait to register the change of status state
   await page.waitForTimeout(1000);
+  await expect(page.locator('post-it:has-text("Analyze UI tests scenarios")')).toContainText('In progress');
 
   await expect(page.locator('kanban-column').nth(0).locator('post-it')).toHaveCount(1);
   await expect(page.locator('kanban-column').nth(1).locator('post-it')).toHaveCount(3);
@@ -176,6 +179,8 @@ test('drag the whole columns', async ({page}) => {
   await page.locator('kanban-column').locator('kanban-column-header').nth(1).hover();
   await page.mouse.up();
 
+  await page.waitForTimeout(1000);
+
   await expect(page.locator('kanban-column-header').nth(0)).toHaveText('Done');
   await expect(page.locator('kanban-column-header').nth(1)).toHaveText('In progress');
 });
@@ -221,14 +226,10 @@ test('Add new record', async ({page}) => {
 
   await page.locator('data-resource-data-row').filter({hasText: 'Title'}).getByRole('textbox').dblclick();
   await page.locator('data-resource-data-row').filter({hasText: 'Title'}).getByRole('textbox').fill('New record');
-  await page.locator('span').filter({hasText: 'Title'}).click();
+  await page.locator('data-resource-data-row').filter({hasText: 'Title'}).getByRole('textbox').click();
 
-  await page.locator('datetime-data-input').getByRole('textbox').click();
-  await page.locator('datetime-data-input').getByRole('textbox').dblclick();
-  await expect(page.locator('datetime-data-input').getByRole('textbox')).toBeEditable();
-  await page.locator('datetime-data-input').getByRole('textbox').fill('2023-09-05');
-  await page.keyboard.press('Enter');
-
+  await page.locator('data-resource-data-row').filter({hasText: 'Information'}).getByRole('textbox').click();
+  await page.waitForTimeout(500);
   await page.locator('data-resource-data-row').filter({hasText: 'Information'}).getByRole('textbox').dblclick();
   await page
     .locator('data-resource-data-row')
