@@ -3,6 +3,8 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2.1
+orbs:
+  browser-tools: circleci/browser-tools@1.4.6
 jobs:
   build:
     docker:
@@ -17,6 +19,8 @@ jobs:
     working_directory: ~/repo
 
     steps:
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - checkout
 
       - run:
