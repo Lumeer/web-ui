@@ -36,10 +36,13 @@
  */
 import {test, expect} from '@playwright/test';
 import dotenv from 'dotenv';
+import {loginApiCall} from './utils/apiCalls';
 
 dotenv.config();
 
 const authFile = 'playwright/.auth/user.json';
+
+test.describe.configure({mode: 'serial'});
 
 const userEmail = process.env.USER_EMAIL ?? '';
 const userPassword = process.env.USER_PASSWORD ?? '';
@@ -112,4 +115,15 @@ test('On boarding path', async ({page, request}) => {
   await page.waitForTimeout(1000);
 
   await page.context().storageState({path: authFile});
+});
+
+test('prepare auth token', async ({request}) => {
+  const loginParsedBody = await loginApiCall(request, userEmail, userPassword);
+  const authToken = loginParsedBody['access_token'];
+
+  if (!authToken) {
+    throw new Error('could not login');
+  }
+
+  process.env.TEST_AUTH_TOKEN = authToken;
 });

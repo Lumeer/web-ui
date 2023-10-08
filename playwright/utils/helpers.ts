@@ -18,18 +18,13 @@
  */
 import {APIRequestContext} from '@playwright/test';
 import dotenv from 'dotenv';
-import {
-  loginApiCall,
-  getUserApiCall,
-  createCollectionApiCall,
-  addCollectionAttributesApiCall,
-  addDocumentApiCall,
-} from './apiCalls';
+import {getUserApiCall, createCollectionApiCall, addCollectionAttributesApiCall, addDocumentApiCall} from './apiCalls';
 
 dotenv.config();
 
 const userEmail = process.env.USER_EMAIL ?? '';
 const userPassword = process.env.USER_PASSWORD ?? '';
+const authToken = process.env.TEST_AUTH_TOKEN ?? '';
 
 const tableAttributes = [
   {
@@ -134,9 +129,6 @@ const tableData = [
 ];
 
 export const prepareTableViaApi = async (request: APIRequestContext, tableName: string) => {
-  const loginParsedBody = await loginApiCall(request, userEmail, userPassword);
-  const authToken = loginParsedBody['access_token'];
-
   const userParsedBody = await getUserApiCall(request, authToken);
   const defaultWorkspace = userParsedBody.defaultWorkspace;
 

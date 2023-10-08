@@ -92,8 +92,8 @@ export const addDocumentApiCall = async (
   collectionId: string,
   authToken: string,
   data: object
-) =>
-  request.post(
+) => {
+  const response = await request.post(
     `http://localhost:8080/lumeer-engine/rest/organizations/${organizationId}/projects/${projectId}/collections/${collectionId}/documents`,
     {
       headers: {
@@ -102,3 +102,8 @@ export const addDocumentApiCall = async (
       data: {organizationId, data},
     }
   );
+
+  if (!response.ok()) {
+    throw new Error(`Could not import data into document ${await response.text()}`);
+  }
+};
