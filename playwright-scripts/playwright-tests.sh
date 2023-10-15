@@ -20,7 +20,6 @@ RESPONSE=$(curl http://localhost:8080/lumeer-engine/)
 PASSED=false
 cd ../
 echo "Running E2E tests..."
-set +e
 npm run playwright:run
 
 echo "Stopping frontend..."
