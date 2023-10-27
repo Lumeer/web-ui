@@ -5,7 +5,7 @@ on:
 
 env:
   USER_EMAIL: "uitest-${{ github.run_id }}@lumeer.io"
-  USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+  USER_PASSWORD: "yoX:$e'B{377-${{ github.run_id }}"
 
 jobs:
     run-tests:
