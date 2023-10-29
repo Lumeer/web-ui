@@ -22,8 +22,6 @@ import {getUserApiCall, createCollectionApiCall, addCollectionAttributesApiCall,
 
 dotenv.config();
 
-const userEmail = process.env.USER_EMAIL ?? '';
-const userPassword = process.env.USER_PASSWORD ?? '';
 const authToken = process.env.TEST_AUTH_TOKEN ?? '';
 
 const tableAttributes = [

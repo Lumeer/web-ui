@@ -44,8 +44,8 @@ const authFile = 'playwright/.auth/user.json';
 
 test.describe.configure({mode: 'serial'});
 
-const userEmail = process.env.USER_EMAIL ?? '';
-const userPassword = process.env.USER_PASSWORD ?? '';
+const userEmail = process.env.TEST_USER_EMAIL ?? '';
+const userPassword = process.env.TEST_USER_PASSWORD ?? '';
 
 test('On boarding path', async ({page, request}) => {
   await page.goto('http://localhost:7000/ui');
