@@ -18,7 +18,7 @@
  */
 
 import {AttributesResource, AttributesResourceType} from './resource';
-import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from './allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from './allowed-permissions';
 import {LinkType} from '../store/link-types/link.type';
 import {Attribute, Collection} from '../store/collections/collection';
 import {findAttribute} from '../store/collections/collection.util';
