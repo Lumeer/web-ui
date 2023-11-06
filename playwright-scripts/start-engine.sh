@@ -13,11 +13,9 @@ else
   git checkout devel
 fi
 
-echo ls
 chmod +w ./lumeer-core/src/main/resources/defaults-dev.properties
 echo $'\n' >> ./lumeer-core/src/main/resources/defaults-dev.properties
-echo $"admin_user_emails=$USER_EMAIL" >> ./lumeer-core/src/main/resources/defaults-dev.properties
-cat ./lumeer-core/src/main/resources/defaults-dev.properties 
+echo $"admin_user_emails=$TEST_USER_EMAIL" >> ./lumeer-core/src/main/resources/defaults-dev.properties
 echo "Building engine..."
 mvn install -DskipTests -DskipITs -B --quiet
 cd war

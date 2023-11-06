@@ -21,8 +21,8 @@ import {test} from '@playwright/test';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const userEmail = process.env.USER_EMAIL ?? '';
-const userPassword = process.env.USER_PASSWORD ?? '';
+const userEmail = process.env.TEST_USER_EMAIL ?? '';
+const userPassword = process.env.TEST_USER_PASSWORD ?? '';
 
 test('Remove user from Auth0', async ({page, request}) => {
   const loginFormData = new URLSearchParams();

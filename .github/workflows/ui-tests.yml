@@ -4,8 +4,7 @@ on:
   pull_request:
 
 env:
-  USER_EMAIL: "uitest-${{ github.run_id }}@lumeer.io"
-  USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+  TEST_USER_EMAIL: "uitest-${{ github.run_id }}@lumeer.io"
 
 jobs:
     run-tests:
@@ -20,6 +19,8 @@ jobs:
         - uses: actions/setup-node@v3
           with:
             node-version: 16
+        - name: Generate password to env variables
+          run: echo "TEST_USER_PASSWORD=$(uuidgen)" >> "$GITHUB_ENV"
         - name: Build (mvn clean install)
           run: |
             chmod +x ./playwright-scripts/build.sh
