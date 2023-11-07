@@ -93,6 +93,7 @@ import {
   initializeExistingTableColumns,
   mergeHiddenColumns,
   resizeLastColumnChild,
+  shouldAddEmptyColumn,
   splitColumnPath,
   splitRowPath,
 } from './table.utils';
@@ -622,13 +623,11 @@ export class TablesEffects {
                 const permissions = part.collectionId
                   ? resourcesPermissions?.collections?.[part.collectionId]
                   : resourcesPermissions?.linkTypes?.[part.linkTypeId];
-                const lastColumn = columns[columns.length - 1];
                 const lastPartIndex = table.config.parts.length - 1;
                 if (
                   permissions?.rolesWithView?.AttributeEdit &&
                   !action.payload.view &&
-                  cursor.partIndex === lastPartIndex &&
-                  (!lastColumn || lastColumn.attributeIds.length)
+                  shouldAddEmptyColumn(columns, cursor.partIndex === lastPartIndex)
                 ) {
                   columns.push(createEmptyColumn(entity.attributes, columns));
                 }
