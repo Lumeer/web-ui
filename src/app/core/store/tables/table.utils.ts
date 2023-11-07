@@ -41,7 +41,6 @@ import {
 } from './table.model';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../model/allowed-permissions';
-import {TableColumn} from '../../../shared/table/model/table-column';
 
 export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
   if (!path || path.length === 0) {
