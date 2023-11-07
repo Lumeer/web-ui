@@ -337,8 +337,7 @@ export function createCollectionPart(
 
   const columns = createTableColumnsFromAttributes(collection?.attributes, null, columnsConfig);
 
-  const lastColumn = columns[columns.length - 1];
-  if (permissions?.rolesWithView?.AttributeEdit && last && (!lastColumn || lastColumn.attributeIds.length > 0)) {
+  if (permissions?.rolesWithView?.AttributeEdit && shouldAddEmptyColumn(columns, last)) {
     columns.push(createEmptyColumn(collection.attributes, columns));
   }
 
@@ -346,6 +345,11 @@ export function createCollectionPart(
     collectionId: collection.id,
     columns,
   };
+}
+
+export function shouldAddEmptyColumn(columns: TableConfigColumn[], isLastPart: boolean): boolean {
+  const hasUninitializedRow = columns.some(column => !column.attributeIds?.length);
+  return isLastPart && !hasUninitializedRow;
 }
 
 export function createEmptyColumn(

@@ -329,8 +329,8 @@ function createPatchData(
   ]);
 
   return attributeIds.reduce((data, attributeId) => {
-    const attachments = changedAttachmentsData.created[attributeId] || [];
-    const deletedAttachments = changedAttachmentsData.deleted[attributeId] || [];
+    const attachments = changedAttachmentsData?.created?.[attributeId] || [];
+    const deletedAttachments = changedAttachmentsData?.deleted?.[attributeId] || [];
 
     const attributeAttachments = documentFileAttachments.filter(
       attachment => attachment.attributeId === attributeId && !deletedAttachments.includes(attachment.id)
