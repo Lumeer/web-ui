@@ -32,7 +32,6 @@ import {
 import {Action, select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
-import {NotificationService} from '../../../core/notifications/notification.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../../core/store/navigation/workspace';
@@ -163,7 +162,6 @@ export class DataResourceDetailComponent
 
   constructor(
     protected store$: Store<AppState>,
-    private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
     private modalService: ModalService,
     private configurationService: ConfigurationService,

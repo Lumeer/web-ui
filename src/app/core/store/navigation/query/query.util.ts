@@ -524,7 +524,7 @@ export function queryWithoutLinks(query: Query): Query {
     return query;
   }
 
-  const stems = query.stems && query.stems.map(stem => ({...stem, linkTypeIds: []}));
+  const stems = query.stems?.map(stem => ({...stem, linkTypeIds: []}));
   return {...query, stems};
 }
 
