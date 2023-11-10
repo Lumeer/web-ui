@@ -35,6 +35,8 @@ export enum FileAttachmentsActionType {
   GET = '[File Attachments] Get',
   GET_SUCCESS = '[File Attachments] Get :: Success',
 
+  SET_LOADING = '[File Attachments] Set Loading',
+
   GET_BY_QUERY = '[File Attachments] Get By Query',
   GET_BY_VIEW = '[File Attachments] Get By View',
 
@@ -78,16 +80,19 @@ export namespace FileAttachmentsAction {
     constructor(public payload: {fileIds: string[]}) {}
   }
 
+  interface GetPayload {
+    collectionId?: string;
+    documentId?: string;
+    linkTypeId?: string;
+    linkInstanceId?: string;
+    attributeId?: string;
+  }
+
   export class Get implements Action {
     public readonly type = FileAttachmentsActionType.GET;
 
     constructor(
-      public payload: {
-        collectionId?: string;
-        documentId?: string;
-        linkTypeId?: string;
-        linkInstanceId?: string;
-        attributeId?: string;
+      public payload: GetPayload & {
         onSuccess?: (files: FileAttachment[]) => void;
         onFailure?: (error: any) => void;
       }
@@ -98,6 +103,16 @@ export namespace FileAttachmentsAction {
     public readonly type = FileAttachmentsActionType.GET_SUCCESS;
 
     constructor(public payload: {fileAttachments: FileAttachment[]; path: FileApiPath}) {}
+  }
+
+  export class SetLoading implements Action {
+    public readonly type = FileAttachmentsActionType.SET_LOADING;
+
+    constructor(
+      public payload: GetPayload & {
+        loading: boolean;
+      }
+    ) {}
   }
 
   export class GetByQuery implements Action {
@@ -131,6 +146,7 @@ export namespace FileAttachmentsAction {
     | SetUploading
     | Get
     | GetSuccess
+    | SetLoading
     | GetByQuery
     | Clear;
 }

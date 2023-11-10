@@ -87,3 +87,11 @@ export function fileAttachmentHasApiPath(attachment: FileAttachment, path: FileA
     (attachment.linkInstanceId || '') === (path.linkInstanceId || '')
   );
 }
+
+export function isOnlyCollectionApiPath(path: FileApiPath): boolean {
+  return path.collectionId && !path.documentId && !path.attributeId;
+}
+
+export function isOnlyLinkTypeApiPath(path: FileApiPath): boolean {
+  return path.linkTypeId && !path.linkInstanceId && !path.attributeId;
+}
