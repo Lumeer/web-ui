@@ -77,6 +77,7 @@ import {composeViewSettingsLinkTypeCollectionId} from '../../settings/settings.u
 import {createCollectionQueryStem} from '../../../core/store/navigation/query/query.util';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
 
 @Component({
   selector: 'data-resource-detail',
@@ -300,11 +301,13 @@ export class DataResourceDetailComponent
       if (!loadingCollections.has(otherCollectionId)) {
         loadingCollections.add(otherCollectionId);
         documentsQueries.push({stems: [{collectionId: otherCollectionId}]});
+        this.store$.dispatch(new FileAttachmentsAction.Get({collectionId: otherCollectionId}));
       }
 
       if (!loadingLinkTypes.has(linkType.id)) {
         loadingLinkTypes.add(linkType.id);
         linkQueries.push({stems: [{collectionId: this.resource.id, linkTypeIds: [linkType.id]}]});
+        this.store$.dispatch(new FileAttachmentsAction.Get({linkTypeId: linkType.id}));
       }
     });
 
