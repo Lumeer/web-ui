@@ -32,7 +32,6 @@ import {
 import {Action, select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
-import {NotificationService} from '../../../core/notifications/notification.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../../core/store/navigation/workspace';
@@ -78,6 +77,7 @@ import {composeViewSettingsLinkTypeCollectionId} from '../../settings/settings.u
 import {createCollectionQueryStem} from '../../../core/store/navigation/query/query.util';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
 
 @Component({
   selector: 'data-resource-detail',
@@ -163,7 +163,6 @@ export class DataResourceDetailComponent
 
   constructor(
     protected store$: Store<AppState>,
-    private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
     private modalService: ModalService,
     private configurationService: ConfigurationService,
@@ -302,11 +301,13 @@ export class DataResourceDetailComponent
       if (!loadingCollections.has(otherCollectionId)) {
         loadingCollections.add(otherCollectionId);
         documentsQueries.push({stems: [{collectionId: otherCollectionId}]});
+        this.store$.dispatch(new FileAttachmentsAction.Get({collectionId: otherCollectionId}));
       }
 
       if (!loadingLinkTypes.has(linkType.id)) {
         loadingLinkTypes.add(linkType.id);
         linkQueries.push({stems: [{collectionId: this.resource.id, linkTypeIds: [linkType.id]}]});
+        this.store$.dispatch(new FileAttachmentsAction.Get({linkTypeId: linkType.id}));
       }
     });
 

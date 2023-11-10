@@ -72,9 +72,8 @@ describe('Table perspective :: Columns', () => {
     cy.wait('@createAttribute').its('response.statusCode').should('eq', 200).wait(1000);
 
     // verify column count and names
-    cy.get('[data-test="table-column-input"]').should('have.length', 6);
-    cy.get('[data-test="table-column-input"]').eq(4).should('have.text', 'C');
-    cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column');
+    cy.get('[data-test="table-column-input"]').should('have.length', 5);
+    cy.get('[data-test="table-column-input"]').last().should('have.text', 'C');
   });
 
   it('adds new columns in linked tables', () => {

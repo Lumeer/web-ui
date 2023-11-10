@@ -271,6 +271,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
       tap(() => this.loadDataService.setDocumentsQueries([collectionQuery], {viewId: view?.id})),
       filter(loaded => loaded),
       mergeMap(() => this.store$.pipe(select(selectDocumentsByViewAndCustomQuery(view, collectionQuery)))),
+      map(documents => documents.filter(doc => doc.collectionId === collection.id)),
       switchMap(documents => {
         if (cursor?.documentId) {
           if (this.newDocument?.correlationId === cursor.documentId) {

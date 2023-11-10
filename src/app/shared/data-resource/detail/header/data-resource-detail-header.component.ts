@@ -113,11 +113,11 @@ export class DataResourceDetailHeaderComponent implements OnInit, OnChanges, OnD
   public defaultAttribute: Attribute;
   public defaultValue: any;
 
-  public readonly createdOnMsg;
-  public readonly createdByMsg;
-  public readonly updatedOnMsg;
-  public readonly updatedByMsg;
-  public readonly copyUrlMsg;
+  public readonly createdOnMsg: string;
+  public readonly createdByMsg: string;
+  public readonly updatedOnMsg: string;
+  public readonly updatedByMsg: string;
+  public readonly copyUrlMsg: string;
 
   private copyUrlTimer: number;
 
