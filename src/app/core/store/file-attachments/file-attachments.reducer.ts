@@ -21,7 +21,8 @@ import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachmen
 import {fileAttachmentsAdapter, FileAttachmentsState, initialFileAttachmentsState} from './file-attachments.state';
 import {FileApiPath} from '../../data-service/attachments/attachments.service';
 import {FileAttachment} from './file-attachment.model';
-import {fileAttachmentHasApiPath} from './file-attachment.utils';
+import {fileAttachmentHasApiPath, isOnlyCollectionApiPath, isOnlyLinkTypeApiPath} from './file-attachment.utils';
+import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
 
 export function fileAttachmentsReducer(
   state: FileAttachmentsState = initialFileAttachmentsState,
@@ -30,6 +31,8 @@ export function fileAttachmentsReducer(
   switch (action.type) {
     case FileAttachmentsActionType.GET_SUCCESS:
       return getSuccessAttachments(state, action.payload.path, action.payload.fileAttachments);
+    case FileAttachmentsActionType.SET_LOADING:
+      return setLoadingResources(state, action.payload, action.payload.loading);
     case FileAttachmentsActionType.SET_UPLOADING:
       return fileAttachmentsAdapter.updateOne(
         {
@@ -63,11 +66,40 @@ function getSuccessAttachments(
 }
 
 function addLoadedResources(state: FileAttachmentsState, path: FileApiPath): FileAttachmentsState {
-  if (path.collectionId && !path.documentId && !path.attributeId) {
-    return {...state, loadedCollections: [...(state.loadedCollections || []), path.collectionId]};
+  if (isOnlyCollectionApiPath(path)) {
+    return {
+      ...state,
+      loadedCollections: appendToArray(state.loadedCollections, path.collectionId),
+      loadingCollections: removeFromArray(state.loadedCollections, path.collectionId),
+    };
   }
-  if (path.linkTypeId && !path.linkInstanceId && !path.attributeId) {
-    return {...state, loadedLinkTypes: [...(state.loadedLinkTypes || []), path.linkTypeId]};
+  if (isOnlyLinkTypeApiPath(path)) {
+    return {
+      ...state,
+      loadedLinkTypes: appendToArray(state.loadingLinkTypes, path.linkTypeId),
+      loadingLinkTypes: removeFromArray(state.loadingLinkTypes, path.linkTypeId),
+    };
+  }
+
+  return state;
+}
+
+function setLoadingResources(state: FileAttachmentsState, path: FileApiPath, loading: boolean): FileAttachmentsState {
+  if (isOnlyCollectionApiPath(path)) {
+    return {
+      ...state,
+      loadingCollections: loading
+        ? appendToArray(state.loadingCollections, path.collectionId)
+        : removeFromArray(state.loadedCollections, path.collectionId),
+    };
+  }
+  if (isOnlyLinkTypeApiPath(path)) {
+    return {
+      ...state,
+      loadingLinkTypes: loading
+        ? appendToArray(state.loadingLinkTypes, path.linkTypeId)
+        : removeFromArray(state.loadingLinkTypes, path.linkTypeId),
+    };
   }
 
   return state;

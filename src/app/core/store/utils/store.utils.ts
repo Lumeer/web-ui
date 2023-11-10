@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {from} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {CommonAction} from '../common/common.action';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 import {
@@ -37,12 +37,16 @@ export function createCallbackActions<T>(callback: (result: T) => void, result?:
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];
 }
 
-export function emitErrorActions(error: any, onFailure?: (error: any) => void) {
+export function emitErrorActions(
+  error: any,
+  onFailure?: (error: any) => void,
+  additionalActions?: Action[]
+): Observable<Action> {
   const actions: Action[] = [new CommonAction.HandleError({error})];
   if (onFailure) {
     actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
   }
-  return from(actions);
+  return of(...actions, ...(additionalActions || []));
 }
 
 export function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {

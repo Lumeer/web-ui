@@ -19,9 +19,9 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {EMPTY, Observable, of} from 'rxjs';
-import {catchError, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {selectCollectionsByCustomViewAndQuery, selectReadableCollectionsByView} from '../common/permissions.selectors';
@@ -36,6 +36,7 @@ import {AppState} from '../app.state';
 import {selectCurrentView, selectViewById} from '../views/views.state';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {CollectionPurposeType} from '../collections/collection';
+import {isOnlyCollectionApiPath, isOnlyLinkTypeApiPath} from './file-attachment.utils';
 
 @Injectable()
 export class FileAttachmentsEffects {
@@ -79,7 +80,15 @@ export class FileAttachmentsEffects {
   public get$ = createEffect(() =>
     this.actions$.pipe(
       ofType<FileAttachmentsAction.Get>(FileAttachmentsActionType.GET),
-      withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
+      withLatestFrom(
+        this.store$.pipe(select(selectWorkspaceWithIds)),
+        this.store$.pipe(select(selectLoadedFileAttachmentsCollections)),
+        this.store$.pipe(select(selectLoadedFileAttachmentsLinkTypes))
+      ),
+      filter(([action, , loadedCollections, loadedLinks]) =>
+        this.shouldReadPath(action.payload, loadedCollections, loadedLinks)
+      ),
+      tap(([action]) => this.store$.dispatch(new FileAttachmentsAction.SetLoading({...action.payload, loading: true}))),
       mergeMap(([action, workspace]) => {
         const path = createFileApiPath(workspace, action.payload);
 
@@ -89,7 +98,11 @@ export class FileAttachmentsEffects {
             new FileAttachmentsAction.GetSuccess({fileAttachments, path}),
             ...createCallbackActions(action.payload.onSuccess, fileAttachments),
           ]),
-          catchError(error => emitErrorActions(error, action.payload.onFailure))
+          catchError(error =>
+            emitErrorActions(error, action.payload.onFailure, [
+              new FileAttachmentsAction.SetLoading({...action.payload, loading: false}),
+            ])
+          )
         );
       })
     )
@@ -139,22 +152,14 @@ export class FileAttachmentsEffects {
             this.store$.pipe(
               select(selectCollectionsByCustomViewAndQuery(view, query)),
               take(1),
-              withLatestFrom(
-                this.store$.pipe(select(selectLoadedFileAttachmentsCollections)),
-                this.store$.pipe(select(selectLoadedFileAttachmentsLinkTypes))
-              ),
-              mergeMap(([collections, loadedCollections, loadedLinkTypes]) => {
+              mergeMap(collections => {
                 const collectionIds = collections.map(collection => collection.id);
                 const linkTypesIds = getAllLinkTypeIdsFromQuery(query);
 
-                const actions: Action[] = [];
-                collectionIds
-                  .filter(collectionId => !loadedCollections.includes(collectionId))
-                  .forEach(collectionId => actions.push(new FileAttachmentsAction.Get({collectionId})));
-                linkTypesIds
-                  .filter(linkTypeId => !loadedLinkTypes.includes(linkTypeId))
-                  .forEach(linkTypeId => actions.push(new FileAttachmentsAction.Get({linkTypeId})));
-                return actions;
+                return [
+                  ...collectionIds.map(collectionId => new FileAttachmentsAction.Get({collectionId})),
+                  ...linkTypesIds.map(linkTypeId => new FileAttachmentsAction.Get({linkTypeId})),
+                ];
               })
             )
           )
@@ -162,6 +167,20 @@ export class FileAttachmentsEffects {
       })
     )
   );
+
+  private shouldReadPath(
+    path: FileApiPath,
+    collections: {loaded: string[]; loading: string[]},
+    linkTypes: {loaded: string[]; loading: string[]}
+  ): boolean {
+    if (isOnlyCollectionApiPath(path)) {
+      return !collections.loaded.includes(path.collectionId) && !collections.loading.includes(path.collectionId);
+    }
+    if (isOnlyLinkTypeApiPath(path)) {
+      return !linkTypes.loaded.includes(path.linkTypeId) && !linkTypes.loading.includes(path.linkTypeId);
+    }
+    return true;
+  }
 
   private getDocumentFiles(path: FileApiPath): Observable<FileAttachmentDto[]> {
     if (path.collectionId && path.documentId && path.attributeId) {
