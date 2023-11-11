@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
@@ -32,7 +32,7 @@ import {convertUserDtoToModel} from '../../core/store/users/user.converter';
 import {UserService} from '../../core/data-service';
 
 @Injectable()
-export class WorkspaceUserSettingsGuard implements CanActivate {
+export class WorkspaceUserSettingsGuard {
   public constructor(
     private router: Router,
     private workspaceService: WorkspaceService,

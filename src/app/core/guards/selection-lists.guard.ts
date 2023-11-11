@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, RouterStateSnapshot, Resolve} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {AppState} from '../store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -33,7 +33,7 @@ import {
 } from '../store/selection-lists/selection-lists.state';
 
 @Injectable()
-export class SelectionListsGuard implements Resolve<SelectionList[]> {
+export class SelectionListsGuard {
   constructor(private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<SelectionList[]> {

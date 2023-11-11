@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
 import {Observable, of} from 'rxjs';
 import {map, mergeMap, switchMap, take} from 'rxjs/operators';
@@ -35,7 +35,7 @@ import {userRoleTypesInResource} from '../shared/utils/permission.utils';
 import {RoleType} from '../core/model/role-type';
 
 @Injectable()
-export class CollectionTabGuard implements CanActivateChild {
+export class CollectionTabGuard {
   constructor(
     private router: Router,
     private store$: Store<AppState>,

@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -35,7 +35,7 @@ import {
 import {ResourceType} from '../../model/resource-type';
 
 @Injectable()
-export class ResourceVariablesGuard implements Resolve<any> {
+export class ResourceVariablesGuard {
   constructor(
     private workspaceService: WorkspaceService,
     private store$: Store<AppState>

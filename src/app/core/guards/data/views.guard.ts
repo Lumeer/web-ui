@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {first, mergeMap, switchMap} from 'rxjs/operators';
@@ -33,7 +33,7 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
 
 @Injectable()
-export class ViewsGuard implements Resolve<View[]> {
+export class ViewsGuard {
   constructor(
     private notificationService: NotificationService,
     private workspaceService: WorkspaceService,

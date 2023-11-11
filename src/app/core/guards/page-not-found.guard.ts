@@ -18,12 +18,12 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import {NotificationService} from '../notifications/notification.service';
 import {Perspective} from '../../view/perspectives/perspective';
 
 @Injectable()
-export class PageNotFoundGuard implements CanActivate {
+export class PageNotFoundGuard {
   constructor(
     private notificationService: NotificationService,
     private router: Router

@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -31,7 +31,7 @@ import {Organization} from '../../store/organizations/organization';
 import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
-export class ViewDefaultConfigsGuard implements Resolve<any> {
+export class ViewDefaultConfigsGuard {
   constructor(
     private workspaceService: WorkspaceService,
     private store$: Store<AppState>

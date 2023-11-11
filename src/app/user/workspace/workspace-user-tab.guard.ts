@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
 import {Observable, of} from 'rxjs';
 import {map, switchMap, take} from 'rxjs/operators';
@@ -32,7 +32,7 @@ import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {WorkspaceService} from '../../workspace/workspace.service';
 
 @Injectable()
-export class WorkspaceUserTabGuard implements CanActivateChild {
+export class WorkspaceUserTabGuard {
   constructor(
     private router: Router,
     private store$: Store<AppState>,

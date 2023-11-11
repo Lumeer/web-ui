@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -29,7 +29,7 @@ import {WorkspaceService} from '../../../workspace/workspace.service';
 import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
 
 @Injectable()
-export class CollectionsGuard implements Resolve<Collection[]> {
+export class CollectionsGuard {
   constructor(
     private store$: Store<AppState>,
     private workspaceService: WorkspaceService,

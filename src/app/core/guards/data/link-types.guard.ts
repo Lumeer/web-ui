@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -30,7 +30,7 @@ import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../store/link-types/
 import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
-export class LinkTypesGuard implements Resolve<LinkType[]> {
+export class LinkTypesGuard {
   constructor(
     private store$: Store<AppState>,
     private workspaceService: WorkspaceService

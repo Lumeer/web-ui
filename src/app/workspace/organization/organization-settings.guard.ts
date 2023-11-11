@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
@@ -32,7 +32,7 @@ import {userCanManageOrganizationDetail} from '../../shared/utils/permission.uti
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 
 @Injectable()
-export class OrganizationSettingsGuard implements CanActivate {
+export class OrganizationSettingsGuard {
   public constructor(
     private router: Router,
     private workspaceService: WorkspaceService,
