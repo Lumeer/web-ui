@@ -34,7 +34,7 @@ export class DataInputModalService {
     private bsModalService: BsModalService
   ) {}
 
-  public show(content: string | TemplateRef<any>, config?: Options): BsModalRef {
+  public show<T>(content: string | TemplateRef<any> | {new (...args: any[]): T}, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
   }
 
