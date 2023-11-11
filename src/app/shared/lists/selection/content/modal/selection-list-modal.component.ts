@@ -75,7 +75,11 @@ export class SelectionListModalComponent implements OnInit, OnDestroy {
   public form: UntypedFormGroup;
   private subscriptions = new Subscription();
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: UntypedFormBuilder) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private fb: UntypedFormBuilder
+  ) {}
 
   public ngOnInit() {
     this.createForm();

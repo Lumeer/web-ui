@@ -195,7 +195,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   private tableScrollService: TableScrollService;
   private scrollCheckSubject = new Subject();
 
-  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef<HTMLElement>) {
+  constructor(
+    private scrollDispatcher: ScrollDispatcher,
+    private element: ElementRef<HTMLElement>
+  ) {
     this.tableScrollService = new TableScrollService(() => this.viewPort);
   }
 
@@ -227,9 +230,8 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.tableModel || changes.detailPanel) {
       this.detailColumnId =
         this.detailPanel && this.tableModel?.columns?.find(column => this.columnCanShowDetailIndicator(column))?.id;
-      this.hierarchyColumnId = this.tableModel?.columns?.find(column =>
-        this.columnCanShowHierarchyIndicator(column)
-      )?.id;
+      this.hierarchyColumnId = this.tableModel?.columns?.find(column => this.columnCanShowHierarchyIndicator(column))
+        ?.id;
     }
   }
 

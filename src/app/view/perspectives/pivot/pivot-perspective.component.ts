@@ -45,7 +45,10 @@ export class PivotPerspectiveComponent extends DataPerspectiveDirective<PivotCon
   @Input()
   public perspectiveConfiguration: PivotPerspectiveConfiguration = defaultPivotPerspectiveConfiguration;
 
-  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+  constructor(
+    protected store$: Store<AppState>,
+    protected loadService: LoadDataService
+  ) {
     super(store$, loadService);
   }
 

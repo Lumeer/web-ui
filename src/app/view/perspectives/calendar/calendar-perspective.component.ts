@@ -52,7 +52,10 @@ export class CalendarPerspectiveComponent
   @Input()
   public perspectiveConfiguration: CalendarPerspectiveConfiguration = defaultCalendarPerspectiveConfiguration;
 
-  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+  constructor(
+    protected store$: Store<AppState>,
+    protected loadService: LoadDataService
+  ) {
     super(store$, loadService);
   }
 

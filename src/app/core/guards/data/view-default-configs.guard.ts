@@ -32,7 +32,10 @@ import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
 export class ViewDefaultConfigsGuard implements Resolve<any> {
-  constructor(private workspaceService: WorkspaceService, private store$: Store<AppState>) {}
+  constructor(
+    private workspaceService: WorkspaceService,
+    private store$: Store<AppState>
+  ) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     const organizationCode = route.paramMap.get('organizationCode');

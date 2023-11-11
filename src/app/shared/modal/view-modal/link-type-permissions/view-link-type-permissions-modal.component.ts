@@ -81,7 +81,10 @@ export class ViewLinkTypePermissionsModalComponent implements OnInit {
 
   public performingAction$ = new BehaviorSubject(false);
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));

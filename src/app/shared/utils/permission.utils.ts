@@ -113,11 +113,11 @@ export function organizationReadableUsersAndTeams(resource: Organization): {
   readableUsers: number;
   readableTeams: number;
 } {
-  const readableUsers = (resource?.permissions?.users || []).filter(permission =>
-    permission.roles?.some(role => role.type === RoleType.Read)
+  const readableUsers = (resource?.permissions?.users || []).filter(
+    permission => permission.roles?.some(role => role.type === RoleType.Read)
   ).length;
-  const readableTeams = (resource?.permissions?.groups || []).filter(permission =>
-    permission.roles?.some(role => role.type === RoleType.Read)
+  const readableTeams = (resource?.permissions?.groups || []).filter(
+    permission => permission.roles?.some(role => role.type === RoleType.Read)
   ).length;
   return {readableUsers, readableTeams};
 }
@@ -208,8 +208,8 @@ export function userPermissionsInLinkType(
     if (linkTypeIds.includes(linkType.id)) {
       viewRoleTypes.push(...userLinkTypeRoleTypesInView(organization, project, currentView, linkType, user));
     } else if (linkType.permissionsType === PermissionsType.Merge) {
-      const linkTypeCollections = (collections || []).filter(collection =>
-        linkType.collectionIds?.includes(collection.id)
+      const linkTypeCollections = (collections || []).filter(
+        collection => linkType.collectionIds?.includes(collection.id)
       );
       const roleTypesWithCollections = linkTypeCollections.reduce((permissions, collection, index) => {
         const collectionRoleTypes = userCollectionRoleTypesInView(

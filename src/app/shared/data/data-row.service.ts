@@ -64,7 +64,10 @@ export class DataRowService {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private notificationService: NotificationService
+  ) {}
 
   public get isCollectionResource(): boolean {
     return this.resourceType === AttributesResourceType.Collection;

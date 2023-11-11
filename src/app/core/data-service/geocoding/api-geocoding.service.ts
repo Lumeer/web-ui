@@ -30,7 +30,10 @@ import {ConfigurationService} from '../../../configuration/configuration.service
 export class ApiGeocodingService implements GeocodingService {
   private readonly geocodingUrl: string;
 
-  constructor(private http: HttpClient, private configurationService: ConfigurationService) {
+  constructor(
+    private http: HttpClient,
+    private configurationService: ConfigurationService
+  ) {
     this.geocodingUrl = `${this.configurationService.getConfiguration().apiUrl}/rest/geocoding`;
   }
 

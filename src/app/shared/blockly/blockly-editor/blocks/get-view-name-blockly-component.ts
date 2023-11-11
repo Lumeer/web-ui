@@ -27,7 +27,10 @@ declare var Blockly: any;
 export class GetViewNameBlocklyComponent extends BlocklyComponent {
   protected tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, protected views: View[]) {
+  public constructor(
+    public blocklyUtils: BlocklyUtils,
+    protected views: View[]
+  ) {
     super(blocklyUtils);
 
     this.tooltip = $localize`:@@blockly.tooltip.getViewNameBlock:Gets the name of the view specified by ID (as read from an attribute of type View).`;

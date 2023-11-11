@@ -122,7 +122,10 @@ export class LinksAccordeonComponent implements OnInit {
   public query$: Observable<Query>;
   public constraintData$: Observable<ConstraintData>;
 
-  public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  public constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));

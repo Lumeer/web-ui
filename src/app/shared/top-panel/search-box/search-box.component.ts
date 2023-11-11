@@ -97,7 +97,11 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private queryData: QueryData;
   private searchBoxService: SearchBoxService;
 
-  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: UntypedFormBuilder) {
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>,
+    private formBuilder: UntypedFormBuilder
+  ) {
     const queryItemsObservable$ = this.queryItems$.pipe(skip(1));
     this.searchBoxService = new SearchBoxService(store$, queryItemsObservable$);
   }

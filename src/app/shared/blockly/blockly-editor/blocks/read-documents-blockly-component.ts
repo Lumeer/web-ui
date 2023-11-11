@@ -29,7 +29,10 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
   protected tooltip: string;
   protected viewOptions = [];
 
-  public constructor(public blocklyUtils: BlocklyUtils, protected views: View[]) {
+  public constructor(
+    public blocklyUtils: BlocklyUtils,
+    protected views: View[]
+  ) {
     super(blocklyUtils);
 
     views.forEach(view => this.viewOptions.push([view.name.replace(/ /g, '\u00A0'), view.id]));

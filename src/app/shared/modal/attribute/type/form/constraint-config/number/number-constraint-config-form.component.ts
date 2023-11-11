@@ -56,7 +56,10 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
 
   public exampleValue$: Observable<NumberDataValue>;
 
-  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
+  constructor(
+    private store$: Store<AppState>,
+    private translationService: TranslationService
+  ) {
     this.currencySelectItems = this.createCurrencySelectItems();
   }
 

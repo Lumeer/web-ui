@@ -26,7 +26,10 @@ import {WorkflowTablesDataService} from './workflow-tables-data.service';
 
 @Injectable()
 export class WorkflowTablesKeyboardService {
-  constructor(private stateService: WorkflowTablesStateService, private dataService: WorkflowTablesDataService) {}
+  constructor(
+    private stateService: WorkflowTablesStateService,
+    private dataService: WorkflowTablesDataService
+  ) {}
 
   private get tables(): TableModel[] {
     return this.stateService.tables;

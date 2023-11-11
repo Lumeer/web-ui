@@ -92,5 +92,8 @@ export class WorkflowsEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store$: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private store$: Store<AppState>
+  ) {}
 }

@@ -115,7 +115,10 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   private scrolledIndex: number;
   private subscriptions = new Subscription();
 
-  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef) {}
+  constructor(
+    private scrollDispatcher: ScrollDispatcher,
+    private element: ElementRef
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeHorizontalScrolling());
@@ -281,10 +284,10 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
     if (!this.hasFocus) {
       return;
     }
-    if (event.code === KeyCode.ArrowUp) {
+    if (event.code === KeyCode.ArrowUp.toString()) {
       const index = (this.dataResources || []).findIndex(dataResource => dataResource.id === this.selectedId);
       this.activeByIndex(index - 1);
-    } else if (event.code === KeyCode.ArrowDown) {
+    } else if (event.code === KeyCode.ArrowDown.toString()) {
       const index = (this.dataResources || []).findIndex(dataResource => dataResource.id === this.selectedId);
       this.activeByIndex(index + 1);
     }

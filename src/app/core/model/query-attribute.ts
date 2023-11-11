@@ -83,7 +83,7 @@ export function findResourceByQueryResource(
     if (linkType && linkType.collections?.length !== 2) {
       const linkTypeCollections = collections.filter(coll => linkType.collectionIds.includes(coll.id)) as [
         Collection,
-        Collection
+        Collection,
       ];
       return {...linkType, collections: linkTypeCollections};
     }

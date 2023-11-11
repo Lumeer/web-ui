@@ -24,7 +24,10 @@ import {QueryItemType} from './query-item-type';
 export class CollectionQueryItem implements QueryItem {
   public type = QueryItemType.Collection;
 
-  public constructor(public stemId: string, public collection: Collection) {}
+  public constructor(
+    public stemId: string,
+    public collection: Collection
+  ) {}
 
   public get text(): string {
     return this.collection.name;

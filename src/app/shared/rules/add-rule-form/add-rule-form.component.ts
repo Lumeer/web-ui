@@ -99,7 +99,10 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly ruleType = RuleType;
 
-  constructor(private fb: UntypedFormBuilder, private configuration: ConfigurationService) {}
+  constructor(
+    private fb: UntypedFormBuilder,
+    private configuration: ConfigurationService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.ruleNames) {

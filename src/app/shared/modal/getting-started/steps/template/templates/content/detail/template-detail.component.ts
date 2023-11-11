@@ -37,7 +37,10 @@ export class TemplateDetailComponent implements OnChanges {
 
   public publicViewUrl: SafeUrl;
 
-  constructor(private domSanitizer: DomSanitizer, private configurationService: ConfigurationService) {}
+  constructor(
+    private domSanitizer: DomSanitizer,
+    private configurationService: ConfigurationService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.template && this.template) {
@@ -46,9 +49,8 @@ export class TemplateDetailComponent implements OnChanges {
   }
 
   private createPublicViewUrl(): SafeUrl {
-    const url = `${this.configurationService.getConfiguration().publicViewCdn}?o=${
-      this.template.templateMetadata?.organizationId
-    }&p=${this.template.id}`;
+    const url = `${this.configurationService.getConfiguration().publicViewCdn}?o=${this.template.templateMetadata
+      ?.organizationId}&p=${this.template.id}`;
     return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

@@ -136,5 +136,9 @@ export class TeamsEffects {
     )
   );
 
-  constructor(private actions$: Actions, private teamService: TeamService, private store$: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private teamService: TeamService,
+    private store$: Store<AppState>
+  ) {}
 }

@@ -33,7 +33,10 @@ export class SearchViewsPreviewComponent extends SearchViewsDirective implements
   @Input()
   public maxViews: number;
 
-  constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {
+  constructor(
+    protected notificationService: NotificationService,
+    protected store$: Store<AppState>
+  ) {
     super(notificationService, store$);
   }
 }

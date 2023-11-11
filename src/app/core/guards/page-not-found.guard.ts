@@ -24,7 +24,10 @@ import {Perspective} from '../../view/perspectives/perspective';
 
 @Injectable()
 export class PageNotFoundGuard implements CanActivate {
-  constructor(private notificationService: NotificationService, private router: Router) {}
+  constructor(
+    private notificationService: NotificationService,
+    private router: Router
+  ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const [, w, organizationCode, projectCode] = state.url.split('/');

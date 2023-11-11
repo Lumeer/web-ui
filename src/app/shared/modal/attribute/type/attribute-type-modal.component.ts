@@ -74,7 +74,10 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   public constraintForm: AttributeTypeFormComponent;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     if (this.collectionId) {

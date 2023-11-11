@@ -54,7 +54,11 @@ export class CollectionUploadModalComponent implements OnInit {
     mergeAttributeId: null,
   });
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: FormBuilder) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private fb: FormBuilder
+  ) {}
 
   public ngOnInit() {
     this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));

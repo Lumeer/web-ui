@@ -475,12 +475,15 @@ export function createWorkflowTableFooter(
       ];
       const types = dataAggregationsByConstraint(constraint);
       const values = rows.map(row => row.cellsMap?.[column.id]?.data);
-      const typesFormattedValues = types.reduce((map, type) => {
-        const data = aggregateDataValues(type, values, constraint, false, constraintData);
-        const typeConstraint = dataAggregationConstraint(type) || constraint;
-        map[type] = typeConstraint.createDataValue(data, constraintData).format();
-        return map;
-      }, {} as Record<DataAggregationType, any>);
+      const typesFormattedValues = types.reduce(
+        (map, type) => {
+          const data = aggregateDataValues(type, values, constraint, false, constraintData);
+          const typeConstraint = dataAggregationConstraint(type) || constraint;
+          map[type] = typeConstraint.createDataValue(data, constraintData).format();
+          return map;
+        },
+        {} as Record<DataAggregationType, any>
+      );
       const selectedType = types.includes(footerConfig?.aggregation) ? footerConfig.aggregation : null;
       if (selectedType) {
         const data = aggregateDataValues(selectedType, values, constraint, false, constraintData);

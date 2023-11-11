@@ -48,7 +48,10 @@ export class LoadingLineComponent implements OnInit, AfterViewInit {
 
   public currentWidth: number;
 
-  constructor(private store$: Store<AppState>, private moduleLazyLoadingService: ModuleLazyLoadingService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private moduleLazyLoadingService: ModuleLazyLoadingService
+  ) {}
 
   public ngOnInit() {
     this.moduleLazyLoadingService.init();

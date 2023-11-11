@@ -89,7 +89,10 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy
     y: convertRemToPixels(initialMargin),
   });
 
-  constructor(private overlay: Overlay, private renderer: Renderer2) {}
+  constructor(
+    private overlay: Overlay,
+    private renderer: Renderer2
+  ) {}
 
   public ngOnInit() {
     this.currentWidth = this.currentWidth || this.initialWidth();

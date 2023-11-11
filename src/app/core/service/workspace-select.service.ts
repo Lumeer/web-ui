@@ -43,7 +43,11 @@ import {userHasRoleInOrganization} from '../../shared/utils/permission.utils';
 export class WorkspaceSelectService {
   private currentUser: User;
 
-  constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {
+  constructor(
+    private store$: Store<AppState>,
+    private router: Router,
+    private modalService: ModalService
+  ) {
     this.store$.pipe(select(selectCurrentUserForWorkspace)).subscribe(user => (this.currentUser = user));
   }
 

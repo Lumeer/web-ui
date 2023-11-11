@@ -33,7 +33,10 @@ import {UserInvitationDto} from '../../dto/user-invitation.dto';
 
 @Injectable()
 export class ApiUserService implements UserService {
-  constructor(private httpClient: HttpClient, private configurationService: ConfigurationService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private configurationService: ConfigurationService
+  ) {}
 
   public createUser(organizationId: string, user: UserDto): Observable<UserDto> {
     return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);

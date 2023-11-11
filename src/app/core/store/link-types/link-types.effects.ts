@@ -298,7 +298,11 @@ export class LinkTypesEffects {
     )
   );
 
-  constructor(private actions$: Actions, private linkTypeService: LinkTypeService, private store$: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private linkTypeService: LinkTypeService,
+    private store$: Store<AppState>
+  ) {}
 }
 
 function updateCreateAttributesNextAction(action: LinkInstancesAction.All, attributes: Attribute[]): Action {

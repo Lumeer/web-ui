@@ -43,7 +43,10 @@ export class InviteUserComponent implements OnInit {
   public isWorkspaceDefined$: Observable<boolean>;
   public projectUsers$: Observable<number>;
 
-  constructor(private modalService: ModalService, private store$: Store<AppState>) {}
+  constructor(
+    private modalService: ModalService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));

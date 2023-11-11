@@ -47,7 +47,10 @@ export class BookProductDemoModalComponent implements OnInit {
   public formInvalid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);
 
-  public constructor(private bsRef: BsModalRef, private store$: Store<AppState>) {}
+  public constructor(
+    private bsRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.formInvalid$ = this.form.valueChanges.pipe(

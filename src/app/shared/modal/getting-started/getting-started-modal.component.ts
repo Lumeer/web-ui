@@ -65,7 +65,10 @@ export class GettingStartedModalComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private bsModalRef: BsModalRef, public service: GettingStartedService) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    public service: GettingStartedService
+  ) {}
 
   public ngOnInit() {
     this.service.setNavigationExtras(this.navigationExtras);

@@ -41,7 +41,10 @@ export class SearchBoxService {
 
   private lastCheckedViewId: string;
 
-  constructor(private store$: Store<AppState>, private readonly queryItems$: Observable<QueryItem[]>) {
+  constructor(
+    private store$: Store<AppState>,
+    private readonly queryItems$: Observable<QueryItem[]>
+  ) {
     this.subscribeData();
   }
 

@@ -130,7 +130,10 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   private setupInitialDate = true;
 
-  constructor(private configurationService: ConfigurationService, private element: ElementRef) {
+  constructor(
+    private configurationService: ConfigurationService,
+    private element: ElementRef
+  ) {
     this.locale = configurationService.getConfiguration().locale;
     this.calendarText = $localize`:@@perspective.calendar.display.calendar:Calendar`;
     this.listText = $localize`:@@perspective.calendar.display.list:List`;

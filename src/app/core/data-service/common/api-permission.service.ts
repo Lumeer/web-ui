@@ -28,7 +28,10 @@ import {PermissionDto, PermissionsDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class ApiPermissionService extends BaseService implements PermissionService {
-  protected constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+  protected constructor(
+    protected httpClient: HttpClient,
+    protected store$: Store<AppState>
+  ) {
     super(store$);
   }
 

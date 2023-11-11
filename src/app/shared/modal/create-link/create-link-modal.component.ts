@@ -59,7 +59,11 @@ export class CreateLinkModalComponent implements OnInit {
 
   private collections: Collection[];
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: UntypedFormBuilder) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private fb: UntypedFormBuilder
+  ) {}
 
   public get linkNameControl(): AbstractControl {
     return this.linkTypeFormGroup.get('linkName');

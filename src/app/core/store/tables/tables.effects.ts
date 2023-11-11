@@ -1097,8 +1097,8 @@ export class TablesEffects {
                         (constraint &&
                           documents
                             .filter(document => document.collectionId === tablePart.collectionId)
-                            .map(document =>
-                              constraint?.createDataValue(document.data?.[attributeId], constraintData)
+                            .map(
+                              document => constraint?.createDataValue(document.data?.[attributeId], constraintData)
                             )) ||
                         [];
                     } else if (tablePart.linkTypeId) {
@@ -1107,8 +1107,9 @@ export class TablesEffects {
                         (constraint &&
                           linkInstances
                             .filter(link => link.linkTypeId === tablePart.linkTypeId)
-                            .map(linkInstance =>
-                              constraint?.createDataValue(linkInstance.data?.[attributeId], constraintData)
+                            .map(
+                              linkInstance =>
+                                constraint?.createDataValue(linkInstance.data?.[attributeId], constraintData)
                             )) ||
                         [];
                     }

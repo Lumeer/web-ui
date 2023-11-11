@@ -92,7 +92,10 @@ export class CreateDataResourceService {
   private constraintData: ConstraintData;
   private workspace: Workspace;
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   public setData(
     data: DocumentsAndLinksData,

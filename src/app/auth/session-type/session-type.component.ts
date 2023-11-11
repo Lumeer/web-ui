@@ -31,7 +31,10 @@ import {BehaviorSubject} from 'rxjs';
 export class SessionTypeComponent {
   public performingRequest$ = new BehaviorSubject(false);
 
-  public constructor(private authService: AuthService, private route: ActivatedRoute) {}
+  public constructor(
+    private authService: AuthService,
+    private route: ActivatedRoute
+  ) {}
 
   public onYesClick() {
     this.setSessionType(SessionType.StayLoggedIn);

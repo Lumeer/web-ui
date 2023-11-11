@@ -52,7 +52,10 @@ export class ImageInputComponent implements OnChanges, OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private fb: UntypedFormBuilder, private configurationService: ConfigurationService) {
+  constructor(
+    private fb: UntypedFormBuilder,
+    private configurationService: ConfigurationService
+  ) {
     this.form = this.fb.group({[this.formControlName]: null}, {updateOn: 'blur'});
   }
 

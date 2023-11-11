@@ -90,7 +90,10 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   private keyDownListener: (event: KeyboardEvent) => void;
   private setFocus: boolean;
 
-  constructor(private store$: Store<AppState>, private element: ElementRef) {}
+  constructor(
+    private store$: Store<AppState>,
+    private element: ElementRef
+  ) {}
 
   public ngOnInit() {
     this.addressOptions$ = this.bindAddressOptions();

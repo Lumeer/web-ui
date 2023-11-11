@@ -102,7 +102,11 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   private positionSubscription: Subscription;
   private originSubscription: Subscription;
 
-  constructor(private overlay: Overlay, private viewContainer: ViewContainerRef, private renderer: Renderer2) {}
+  constructor(
+    private overlay: Overlay,
+    private viewContainer: ViewContainerRef,
+    private renderer: Renderer2
+  ) {}
 
   public get dropdownPosition(): DropdownPosition {
     return this.currentPosition;

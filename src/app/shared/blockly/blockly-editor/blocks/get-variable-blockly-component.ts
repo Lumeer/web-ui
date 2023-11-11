@@ -27,7 +27,10 @@ export class GetVariableBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
   private variableOptions = [];
 
-  public constructor(public blocklyUtils: BlocklyUtils, private variables: string[]) {
+  public constructor(
+    public blocklyUtils: BlocklyUtils,
+    private variables: string[]
+  ) {
     super(blocklyUtils);
 
     variables.forEach(variable => this.variableOptions.push([variable.replace(/ /g, '\u00A0'), variable]));

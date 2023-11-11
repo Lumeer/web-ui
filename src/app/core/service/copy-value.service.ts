@@ -42,7 +42,10 @@ import {
 
 @Injectable({providedIn: 'root'})
 export class CopyValueService {
-  constructor(private store$: Store<AppState>, private clipboardService: ClipboardService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private clipboardService: ClipboardService
+  ) {}
 
   public copyDocumentValue(documentId: string, collectionId: string, attributeId: string) {
     combineLatest([

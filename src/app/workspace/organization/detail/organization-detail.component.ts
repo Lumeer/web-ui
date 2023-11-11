@@ -47,7 +47,10 @@ export class OrganizationDetailComponent implements OnInit {
 
   private organization: Organization;
 
-  constructor(private router: Router, private store$: Store<AppState>) {}
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.subscribeToStore();

@@ -53,7 +53,10 @@ export class SelectionListsContentComponent implements OnChanges {
 
   private lists: SelectionList[];
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resourceType || objectChanged(changes.organization) || objectChanged(changes.project)) {

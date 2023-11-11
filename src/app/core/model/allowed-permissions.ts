@@ -37,8 +37,11 @@ export const completeAllowedPermissions: AllowedPermissions = {
 };
 
 function transformRoleTypesMap(): Record<RoleType, boolean> {
-  return Object.keys(roleTypesMap).reduce((map, key) => {
-    map[key] = true;
-    return map;
-  }, {} as Record<RoleType, boolean>);
+  return Object.keys(roleTypesMap).reduce(
+    (map, key) => {
+      map[key] = true;
+      return map;
+    },
+    {} as Record<RoleType, boolean>
+  );
 }

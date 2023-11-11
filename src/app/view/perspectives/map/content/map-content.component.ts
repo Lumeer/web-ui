@@ -122,7 +122,10 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   private readonly converter = new MapDataConverter();
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   public ngOnInit() {
     this.data$ = this.subscribeToData$();

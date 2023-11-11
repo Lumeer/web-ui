@@ -191,9 +191,7 @@ test('use due dates in kanban board', async ({page}) => {
   await page.getByRole('button', {name: 'Select due date'}).click();
   await page.locator('a').filter({hasText: 'Created'}).click();
   await Promise.all(
-    (
-      await page.locator('post-it-header').all()
-    ).map(async p => {
+    (await page.locator('post-it-header').all()).map(async p => {
       await expect(p).toContainText('Past due');
     })
   );

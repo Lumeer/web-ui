@@ -36,7 +36,10 @@ import {selectViewDataQuery} from '../store/view-settings/view-settings.state';
   providedIn: 'root',
 })
 export class PerspectiveService {
-  constructor(private store$: Store<AppState>, private router: Router) {}
+  constructor(
+    private store$: Store<AppState>,
+    private router: Router
+  ) {}
 
   public selectQuery$(perspective: Perspective): Observable<Query> {
     switch (perspective) {

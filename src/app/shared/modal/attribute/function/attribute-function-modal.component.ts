@@ -97,7 +97,10 @@ export class AttributeFunctionModalComponent implements OnInit {
   });
   public resource: AttributesResource;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.collections$ = this.store$.pipe(select(selectReadableCollections));

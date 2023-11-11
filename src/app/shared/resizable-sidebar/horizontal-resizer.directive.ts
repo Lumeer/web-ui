@@ -31,7 +31,10 @@ export class HorizontalResizerDirective implements OnInit {
   private oldX = 0;
   private resizingElement: HTMLElement;
 
-  constructor(private element: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private element: ElementRef,
+    private renderer: Renderer2
+  ) {}
 
   public ngOnInit() {
     document.addEventListener('click', event => this.onClick(event), true);

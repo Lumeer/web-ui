@@ -92,7 +92,10 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   private keyDownListener: (event: KeyboardEvent) => void;
   private setFocus: boolean;
 
-  constructor(public element: ElementRef, private configurationService: ConfigurationService) {}
+  constructor(
+    public element: ElementRef,
+    private configurationService: ConfigurationService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {

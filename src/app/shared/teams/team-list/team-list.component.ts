@@ -97,7 +97,10 @@ export class TeamListComponent implements OnInit, OnChanges {
 
   public readonly userHintsKeys = UserHintsKeys;
 
-  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private notificationService: NotificationService
+  ) {}
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace));

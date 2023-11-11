@@ -29,7 +29,11 @@ import {Store} from '@ngrx/store';
   template: '',
 })
 export class LogoutComponent implements OnInit {
-  public constructor(private authService: AuthService, private router: Router, private store$: Store<AppState>) {}
+  public constructor(
+    private authService: AuthService,
+    private router: Router,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.store$.dispatch(new ModalsAction.Hide());

@@ -133,7 +133,7 @@ export function sortDataObjectsByViewSettings<T extends {linkInstance?: LinkInst
 }
 
 export function sortDataObjectsByResourceAttributesSettings<
-  T extends {linkInstance?: LinkInstance; document?: DocumentModel}
+  T extends {linkInstance?: LinkInstance; document?: DocumentModel},
 >(
   dataObjects: T[],
   collection: Collection,
@@ -179,7 +179,7 @@ export function sortDataObjectsByResourceAttributesSettings<
 }
 
 function sortDataObjectsByResourceAttributesSettingsAndParent<
-  T extends {linkInstance?: LinkInstance; document?: DocumentModel}
+  T extends {linkInstance?: LinkInstance; document?: DocumentModel},
 >(
   parentId: string,
   dataObjectsMap: Record<string, T[]>,

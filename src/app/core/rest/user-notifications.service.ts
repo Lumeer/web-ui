@@ -26,7 +26,10 @@ import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class UserNotificationsService {
-  constructor(private httpClient: HttpClient, private configurationService: ConfigurationService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private configurationService: ConfigurationService
+  ) {}
 
   public getNotifications(): Observable<UserNotificationDto[]> {
     return this.httpClient.get<UserNotificationDto[]>(this.notificationsApiPrefix());

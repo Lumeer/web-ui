@@ -43,7 +43,10 @@ export class ResizerDirective {
   private oldY = 0;
   private resizingElement: HTMLElement;
 
-  constructor(private element: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private element: ElementRef,
+    private renderer: Renderer2
+  ) {}
 
   @HostListener('document:mousemove', ['$event'])
   public onMouseMove(event: MouseEvent) {

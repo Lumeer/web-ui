@@ -50,7 +50,11 @@ export class WorkspaceUserComponent implements OnInit, OnDestroy {
   private workspace: Workspace;
   private subscriptions = new Subscription();
 
-  constructor(private router: Router, private store$: Store<AppState>, private route: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>,
+    private route: ActivatedRoute
+  ) {}
 
   public ngOnInit() {
     this.subscribeToStore();

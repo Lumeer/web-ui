@@ -68,7 +68,10 @@ export class ChooseLinkDocumentsModalComponent implements OnInit {
   private currentStage = 0;
   private selectedDocuments: DocumentModel[] = [];
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.view$ = this.store$.pipe(select(selectViewById(this.viewId)));

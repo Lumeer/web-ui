@@ -109,7 +109,11 @@ export class ModalWrapperComponent implements OnChanges {
 
   public elementWidth$ = new BehaviorSubject(0);
 
-  constructor(private location: PlatformLocation, private ref: BsModalRef, public element: ElementRef) {
+  constructor(
+    private location: PlatformLocation,
+    private ref: BsModalRef,
+    public element: ElementRef
+  ) {
     location.onPopState(() => {
       this.ref.hide();
     });

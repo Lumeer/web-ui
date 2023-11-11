@@ -82,7 +82,10 @@ export class PivotTableConverter {
   private valueTypeInfo: ValueTypeInfo[];
   private nonStickyRowIndex: number;
 
-  constructor(private headerSummaryString: string, private summaryString: string) {}
+  constructor(
+    private headerSummaryString: string,
+    private summaryString: string
+  ) {}
 
   public transform(pivotData: PivotData): PivotTable[] {
     if (!pivotData) {

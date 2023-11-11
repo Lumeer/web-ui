@@ -39,11 +39,14 @@ export function translatedRolesAreSame(t1: TranslatedRole, t2: TranslatedRole): 
 }
 
 export function translatedRolesToMap(roles: TranslatedRole[]): Record<ResourcePermissionType, TranslatedRole[]> {
-  return roles.reduce((map, role) => {
-    if (!map[role.permissionType]) {
-      map[role.permissionType] = [];
-    }
-    map[role.permissionType].push(role);
-    return map;
-  }, {} as Record<ResourcePermissionType, TranslatedRole[]>);
+  return roles.reduce(
+    (map, role) => {
+      if (!map[role.permissionType]) {
+        map[role.permissionType] = [];
+      }
+      map[role.permissionType].push(role);
+      return map;
+    },
+    {} as Record<ResourcePermissionType, TranslatedRole[]>
+  );
 }

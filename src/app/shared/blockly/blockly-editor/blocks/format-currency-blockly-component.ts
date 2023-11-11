@@ -29,7 +29,10 @@ export class FormatCurrencyBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
   private options = [];
 
-  public constructor(public blocklyUtils: BlocklyUtils, private translationService: TranslationService) {
+  public constructor(
+    public blocklyUtils: BlocklyUtils,
+    private translationService: TranslationService
+  ) {
     super(blocklyUtils);
 
     this.tooltip = $localize`:@@blockly.tooltip.formatCurrencyBlock:Formats number as a currency using defined locale.`;
@@ -37,7 +40,7 @@ export class FormatCurrencyBlocklyComponent extends BlocklyComponent {
     Object.values(LanguageTag)
       .filter(k => isNaN(Number(k)))
       .forEach(tag => {
-        if (tag !== 'en-CA') {
+        if (tag !== LanguageTag.Canada) {
           // the same as fr-CA
           this.options.push([this.translationService.translateLanguageTag(tag as LanguageTag), tag]);
         }

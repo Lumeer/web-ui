@@ -45,9 +45,9 @@ export class CopyProjectComponent implements OnInit {
   }
 
   private createPublicViewUrl(project: Project): SafeUrl {
-    const url = `${this.configurationService.getConfiguration().publicViewCdn}?o=${project?.organizationId}&p=${
-      project?.id
-    }`;
+    const url = `${
+      this.configurationService.getConfiguration().publicViewCdn
+    }?o=${project?.organizationId}&p=${project?.id}`;
     return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

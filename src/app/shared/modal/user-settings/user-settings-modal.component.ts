@@ -41,7 +41,10 @@ export class UserSettingsModalComponent implements OnInit {
   private updateUser: Partial<User>;
   private user: User;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.user$ = this.store$.pipe(

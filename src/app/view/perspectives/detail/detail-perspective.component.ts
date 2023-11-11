@@ -106,7 +106,10 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   private newDocument: DocumentModel;
   private subscriptions = new Subscription();
 
-  public constructor(private store$: Store<AppState>, private loadDataService: LoadDataService) {}
+  public constructor(
+    private store$: Store<AppState>,
+    private loadDataService: LoadDataService
+  ) {}
 
   public ngOnInit() {
     this.initSubscriptions();

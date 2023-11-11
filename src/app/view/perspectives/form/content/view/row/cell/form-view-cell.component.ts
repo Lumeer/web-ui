@@ -149,7 +149,10 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public linkDocuments$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private store$: Store<AppState>, public element: ElementRef) {}
+  constructor(
+    private store$: Store<AppState>,
+    public element: ElementRef
+  ) {}
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));

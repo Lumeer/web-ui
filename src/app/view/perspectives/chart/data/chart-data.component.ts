@@ -124,7 +124,10 @@ export class ChartDataComponent implements OnInit, OnChanges {
   public chartData$: Observable<ChartData>;
   public chartSettings$ = new BehaviorSubject<ChartSettings>(null);
 
-  constructor(private chartDataConverter: ChartDataConverter, private modalService: ModalService) {}
+  constructor(
+    private chartDataConverter: ChartDataConverter,
+    private modalService: ModalService
+  ) {}
 
   public ngOnInit() {
     const closingNotifier = this.dataSubject.pipe(debounceTime(100));

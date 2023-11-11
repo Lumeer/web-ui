@@ -120,7 +120,10 @@ export class GanttChartConverter {
       this.formatDataAggregatorValue(value, constraint, data, aggregatorAttribute)
   );
 
-  constructor(private formatter: SelectItemWithConstraintFormatter, private configuration: Configuration) {}
+  constructor(
+    private formatter: SelectItemWithConstraintFormatter,
+    private configuration: Configuration
+  ) {}
 
   public convert(
     config: GanttChartConfig,
