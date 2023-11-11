@@ -40,6 +40,7 @@ import {selectWorkspace} from '../../../../core/store/navigation/navigation.stat
 import {mapLinkTypeCollections} from '../../../../shared/utils/link-type.utils';
 
 @Component({
+  selector: 'collection-link-types',
   templateUrl: './collection-link-types.component.html',
   styleUrls: ['./collection-link-types.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -38,6 +38,7 @@ import {selectViewSettingsByView} from '../../../core/store/view-settings/view-s
 import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
+  selector: 'choose-link-documents-modal',
   templateUrl: './choose-link-documents-modal.component.html',
   styleUrls: ['./choose-link-documents-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

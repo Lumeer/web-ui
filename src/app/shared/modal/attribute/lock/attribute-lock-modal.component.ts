@@ -36,6 +36,7 @@ import {AttributeLock} from '@lumeer/data-filters';
 import {keyboardEventCode, KeyCode} from '../../../key-code';
 
 @Component({
+  selector: 'attribute-lock-modal',
   templateUrl: './attribute-lock-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

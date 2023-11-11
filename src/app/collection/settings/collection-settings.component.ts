@@ -51,6 +51,7 @@ import {getLastUrlPart} from '../../shared/utils/common.utils';
 import {createCollectionQueryStem} from '../../core/store/navigation/query/query.util';
 
 @Component({
+  selector: 'collection-settings',
   templateUrl: './collection-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

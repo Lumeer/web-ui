@@ -33,6 +33,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {take} from 'rxjs/operators';
 
 @Component({
+  selector: 'data-resource-detail-loading-modal',
   templateUrl: './data-resource-detail-loading-modal.component.html',
   styleUrls: ['./data-resource-detail-loading-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

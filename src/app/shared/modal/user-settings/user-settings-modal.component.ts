@@ -31,6 +31,7 @@ import {tap} from 'rxjs/operators';
 import {deepObjectCopy, deepObjectsEquals} from '../../utils/common.utils';
 
 @Component({
+  selector: 'user-settings-modal',
   templateUrl: './user-settings-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

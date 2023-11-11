@@ -52,6 +52,7 @@ import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 
 @Component({
+  selector: 'project-settings',
   templateUrl: './project-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

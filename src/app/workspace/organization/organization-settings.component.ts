@@ -44,6 +44,7 @@ import {selectOrganizationPermissions} from '../../core/store/user-permissions/u
 import {getLastUrlPart} from '../../shared/utils/common.utils';
 
 @Component({
+  selector: 'organization-settings',
   templateUrl: './organization-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -28,6 +28,7 @@ import {selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-
 import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Component({
+  selector: 'link-type-activity',
   templateUrl: './link-type-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

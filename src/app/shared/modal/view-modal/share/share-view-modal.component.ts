@@ -42,6 +42,7 @@ import {selectTeamsForWorkspace} from '../../../../core/store/teams/teams.state'
 import {Ga4Service} from '../../../../core/service/ga4.service';
 
 @Component({
+  selector: 'share-view-modal',
   templateUrl: './share-view-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

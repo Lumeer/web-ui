@@ -33,6 +33,7 @@ import {QueryItemsConverter} from '../../top-panel/search-box/query-item/query-i
 import {QueryItem} from '../../top-panel/search-box/query-item/model/query-item';
 
 @Component({
+  selector: 'choose-stem-modal',
   templateUrl: './choose-stem-modal.component.html',
   styleUrls: ['./choose-stem-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

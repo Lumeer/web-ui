@@ -21,6 +21,7 @@ import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
+  selector: 'collection-teams',
   templateUrl: './collection-teams.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

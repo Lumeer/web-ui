@@ -41,6 +41,7 @@ import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.
 import {parseSelectTranslation} from '../shared/utils/translation.utils';
 
 @Component({
+  selector: 'view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

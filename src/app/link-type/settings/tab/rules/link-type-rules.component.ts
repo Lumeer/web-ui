@@ -34,6 +34,7 @@ import {selectOrganizationByWorkspace} from '../../../../core/store/organization
 import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
 
 @Component({
+  selector: 'link-type-rules',
   templateUrl: './link-type-rules.component.html',
   styleUrls: ['./link-type-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

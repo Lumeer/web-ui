@@ -47,6 +47,7 @@ import {OrganizationValidators} from '../../../core/validators/organization.vali
 import {minLengthValidator} from '../../../core/validators/custom-validators';
 
 @Component({
+  selector: 'create-resource-modal',
   templateUrl: './create-resource-modal.component.html',
   styleUrls: ['./create-resource-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

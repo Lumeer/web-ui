@@ -51,6 +51,7 @@ import {ResourceAttributeSettings} from '../../../core/store/view-settings/view-
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
+  selector: 'modify-document-links-modal',
   templateUrl: './modify-document-links-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],

@@ -30,6 +30,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
+  selector: 'collection-upload-modal',
   templateUrl: './collection-upload-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

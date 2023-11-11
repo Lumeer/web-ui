@@ -1,3 +1,13 @@
 @import '../../node_modules/bootstrap/scss/functions';
 @import '../../node_modules/bootstrap/scss/variables';
 @import '../../node_modules/bootstrap/scss/mixins';
+
+$table-bg: transparent;
+$table-accent-bg: transparent;
+
+:root {
+  --bs-dropdown-item-padding-x: 1rem;
+  --bs-dropdown-item-padding-y: 0.25rem;
+
+  --bs-dropdown-link-active-bg: #{$primary};
+}

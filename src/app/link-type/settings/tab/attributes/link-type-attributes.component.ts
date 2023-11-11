@@ -26,6 +26,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-types.state';
 
 @Component({
+  selector: 'link-type-attributes',
   templateUrl: './link-type-attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

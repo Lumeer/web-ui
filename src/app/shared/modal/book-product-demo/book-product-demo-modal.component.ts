@@ -31,6 +31,7 @@ import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {UsersAction} from '../../../core/store/users/users.action';
 
 @Component({
+  selector: 'book-product-demo-modal',
   templateUrl: './book-product-demo-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
