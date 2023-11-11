@@ -80,7 +80,7 @@ export class ModalService {
     private limitsService: LimitsService
   ) {}
 
-  public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
+  public show<T>(content: string | TemplateRef<any> | {new (...args: any[]): T}, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
   }
 
@@ -304,9 +304,9 @@ export class ModalService {
     return this.showStaticDialog(initialState, ConditionalFormattingModalComponent, 'modal-lg');
   }
 
-  public showStaticDialog(
+  public showStaticDialog<T>(
     initialState: any,
-    content: string | TemplateRef<any> | any,
+    content: string | TemplateRef<any> | {new (...args: any[]): T},
     classString: string = ''
   ): BsModalRef {
     const config = {initialState, keyboard: false, class: classString};

@@ -284,10 +284,10 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
     if (!this.hasFocus) {
       return;
     }
-    if (event.code === KeyCode.ArrowUp.toString()) {
+    if (event.code === KeyCode.ArrowUp) {
       const index = (this.dataResources || []).findIndex(dataResource => dataResource.id === this.selectedId);
       this.activeByIndex(index - 1);
-    } else if (event.code === KeyCode.ArrowDown.toString()) {
+    } else if (event.code === KeyCode.ArrowDown) {
       const index = (this.dataResources || []).findIndex(dataResource => dataResource.id === this.selectedId);
       this.activeByIndex(index + 1);
     }
