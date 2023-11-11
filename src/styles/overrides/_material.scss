@@ -1,11 +1,12 @@
+@use '@angular/material' as mat;
 @import '@angular/material/theming';
 @import '../variables';
 
-$typography: mat-typography-config(
+@include mat.core();
+
+$typography: mat.define-typography-config(
   $font-family: 'LatoWeb, sans-serif',
 );
-
-@include mat-core($typography);
 
 $primary-palette: (
   50: #e5e7e9,
@@ -73,10 +74,8 @@ $success-palette: (
   ),
 );
 
-$primary-mat-palette: mat-palette($primary-palette);
-$success-mat-palette: mat-palette($success-palette);
-
-$app-theme: mat-light-theme($primary-mat-palette, $success-mat-palette);
+$primary-mat-palette: mat.define-palette($primary-palette);
+$success-mat-palette: mat.define-palette($success-palette);
 
 @function theme-foreground($color) {
   @return (
@@ -97,16 +96,19 @@ $app-theme: mat-light-theme($primary-mat-palette, $success-mat-palette);
   );
 }
 
-$foreground-color: theme-foreground(mat-color($primary-mat-palette, 500));
+$foreground-color: theme-foreground(mat.get-color-from-palette($primary-mat-palette, 500));
 
-@include angular-material-theme(
-  map-merge(
-    $app-theme,
-    (
-      foreground: $foreground-color,
-    )
+$app-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary-mat-palette,
+      accent: $success-mat-palette,
+    ),
+    typography: $typography,
   )
 );
+
+@include mat.all-component-themes($app-theme);
 
 .menu-edges-content .mat-menu-content {
   padding: 0 !important;
@@ -116,47 +118,59 @@ button.mat-menu-item {
   outline: none;
 }
 
-.mat-menu-item {
-  height: 30px !important;
-  line-height: 1.2rem !important;
-  font-size: 15px !important;
+.mat-mdc-menu-item {
+  min-height: 30px !important;
+
+  .mdc-list-item__primary-text {
+    line-height: 1.2rem !important;
+    font-size: 15px !important;
+  }
 
   &:hover:not([disabled]) {
-    color: $primary;
+    .mdc-list-item__primary-text {
+      color: $primary;
+    }
     background: rgba(0, 0, 0, 0.1);
   }
 
   &.active:not(.prevent-click),
   &:active:not(.prevent-click) {
-    color: white !important;
     background: $primary !important;
 
-    .mat-menu-submenu-icon {
+    .mdc-list-item__primary-text {
+      color: white !important;
+    }
+
+    .mat-mdc-menu-submenu-icon {
       color: white !important;
     }
   }
 
   &.active:hover {
-    color: $success !important;
+    .mdc-list-item__primary-text {
+      color: $success !important;
+    }
     background: $primary;
   }
 
   &.prevent-click {
-    color: $primary;
+    .mdc-list-item__primary-text {
+      color: $primary;
+    }
     background: white !important;
   }
 }
 
-.mat-menu-item-submenu-trigger.active:after:not(.prevent-click),
-.mat-menu-item-submenu-trigger:active:after:not(.prevent-click) {
+.mat-mdc-menu-item-submenu-trigger.active:after:not(.prevent-click),
+.mat-mdc-menu-item-submenu-trigger:active:after:not(.prevent-click) {
   color: white;
 }
 
-.mat-menu-ripple.mat-ripple {
+.mat-mdc-menu-ripple.mat-ripple {
   visibility: hidden;
 }
 
-.mat-menu-panel {
+.mat-mdc-menu-panel {
   min-width: 50px !important;
   min-height: 30px !important;
 }

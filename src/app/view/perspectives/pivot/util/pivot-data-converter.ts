@@ -744,9 +744,7 @@ export class PivotDataConverter {
           currentMap[columnHeader.title] || {}
         );
       } else if (isNotNullOrUndefined(columnHeader.targetIndex)) {
-        const aggregatedDataValues = isArray(currentMap)
-          ? currentMap
-          : (currentMap[columnHeader.title] as AggregatedDataValues[]);
+        const aggregatedDataValues = isArray(currentMap) ? currentMap : currentMap[columnHeader.title];
 
         if (valueAttributes.length) {
           const valueIndex = columnHeader.targetIndex % valueAttributes.length;
