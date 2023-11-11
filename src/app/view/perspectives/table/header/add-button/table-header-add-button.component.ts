@@ -85,7 +85,11 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   public collection$: Observable<Collection>;
   public linkTypes$: Observable<LinkType[]>;
 
-  constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<AppState>) {}
+  constructor(
+    private modalService: ModalService,
+    private element: ElementRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.cursor || changes.view || changes.query) && this.cursor) {

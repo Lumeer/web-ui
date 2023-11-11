@@ -84,7 +84,10 @@ export class FilesDropdownComponent implements OnInit, OnDestroy, AfterViewInit 
   private fileSizeMb = DEFAULT_FILE_SIZE_MB;
   private subscriptions = new Subscription();
 
-  constructor(private downloadService: FileDownloadService, private store$: Store<AppState>) {}
+  constructor(
+    private downloadService: FileDownloadService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(

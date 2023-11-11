@@ -73,7 +73,10 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
 
   public linkInfoWidth = 0;
 
-  public constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  public constructor(
+    private element: ElementRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {

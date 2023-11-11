@@ -63,7 +63,10 @@ export class WorkflowPerspectiveComponent
   public panelWidth$: Observable<number>;
   public workflowId$: Observable<string>;
 
-  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+  constructor(
+    protected store$: Store<AppState>,
+    protected loadService: LoadDataService
+  ) {
     super(store$, loadService);
   }
 

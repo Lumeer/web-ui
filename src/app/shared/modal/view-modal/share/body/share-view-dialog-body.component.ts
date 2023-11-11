@@ -115,7 +115,10 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
 
   private subscriptions = new Subscription();
 
-  constructor(private clipboardService: ClipboardService, private store$: Store<AppState>) {}
+  constructor(
+    private clipboardService: ClipboardService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.parseViewShareUrl();

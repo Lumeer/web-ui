@@ -208,13 +208,16 @@ function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto 
 
   switch (model.type) {
     case ConstraintType.Number:
-      return {type: model.type, config: convertNumberConstraintConfigModelToDto(model.config)};
+      return {
+        type: model.type,
+        config: convertNumberConstraintConfigModelToDto(model.config as Partial<NumberConstraintConfig>),
+      };
     default:
       return convertAnyConstraintModelToDto(model);
   }
 }
 
-function convertNumberConstraintConfigModelToDto(config: Partial<NumberConstraintConfig> | any): any {
+function convertNumberConstraintConfigModelToDto(config: Partial<NumberConstraintConfig>): any {
   return {
     ...config,
     minValue: config.minValue?.toFixed(),

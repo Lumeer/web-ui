@@ -141,7 +141,10 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   private lastMouseTargetId: string;
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectAllUsers));

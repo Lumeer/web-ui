@@ -31,7 +31,10 @@ export const viewIdHeader = 'X-Lumeer-View-Id';
 
 @Injectable()
 export class ViewHttpInterceptor implements HttpInterceptor {
-  public constructor(private store: Store<AppState>, private configurationService: ConfigurationService) {}
+  public constructor(
+    private store: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!isBackendUrl(request.url, this.configurationService.getConfiguration())) {

@@ -28,7 +28,10 @@ export class AutoSizeInputDirective implements AfterViewInit, AfterViewChecked {
 
   private context: CanvasRenderingContext2D;
 
-  constructor(private element: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private element: ElementRef,
+    private renderer: Renderer2
+  ) {}
 
   private get borderWidth(): number {
     return 2 * this.getPropertyWidth('border');

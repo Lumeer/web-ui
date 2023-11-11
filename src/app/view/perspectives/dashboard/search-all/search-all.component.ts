@@ -65,7 +65,10 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
   private overrideView$ = new BehaviorSubject<View>(null);
 
-  constructor(private store$: Store<AppState>, private loadService: LoadDataService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private loadService: LoadDataService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.view) {

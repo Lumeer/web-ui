@@ -36,7 +36,11 @@ import {LinkType} from '../core/store/link-types/link.type';
 
 @Injectable()
 export class LinkTypeTabGuard implements CanActivateChild {
-  constructor(private router: Router, private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>,
+    private workspaceService: WorkspaceService
+  ) {}
 
   public canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     if (!next.data.role) {

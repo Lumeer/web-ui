@@ -60,7 +60,10 @@ export class ConditionalFormattingModalComponent implements OnInit {
 
   public performingAction$ = new BehaviorSubject(false);
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     if (this.collectionId) {

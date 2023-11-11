@@ -31,7 +31,10 @@ import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
 export class LinkTypesGuard implements Resolve<LinkType[]> {
-  constructor(private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private workspaceService: WorkspaceService
+  ) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LinkType[]> {
     const organizationCode = route.paramMap.get('organizationCode');

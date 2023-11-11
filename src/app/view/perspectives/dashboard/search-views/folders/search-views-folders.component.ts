@@ -36,7 +36,10 @@ import {ViewsAction} from '../../../../../core/store/views/views.action';
 export class SearchViewsFoldersComponent extends SearchViewsDirective implements OnInit, OnDestroy {
   public foldersPath$: Observable<string[]>;
 
-  constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {
+  constructor(
+    protected notificationService: NotificationService,
+    protected store$: Store<AppState>
+  ) {
     super(notificationService, store$);
   }
 

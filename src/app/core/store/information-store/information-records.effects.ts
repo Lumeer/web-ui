@@ -61,5 +61,9 @@ export class InformationRecordsEffects {
     )
   );
 
-  constructor(private store$: Store<AppState>, private actions$: Actions, private service: InformationStoreService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private actions$: Actions,
+    private service: InformationStoreService
+  ) {}
 }

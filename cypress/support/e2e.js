@@ -40,8 +40,6 @@ beforeEach(() => {
       Cypress.env('projectRestUrl', projectRestUrl);
       const collectionRestUrl = `${projectRestUrl}/collections/**`;
 
-      cy.server();
-
       cy.intercept('POST', `${projectRestUrl}/collections`).as('createCollection');
       cy.intercept('POST', `${collectionRestUrl}/attributes`).as('createAttribute');
       cy.intercept('PUT', `${collectionRestUrl}/attributes/**`).as('updateAttribute');

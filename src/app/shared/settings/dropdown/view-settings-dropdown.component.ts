@@ -74,7 +74,10 @@ export class ViewSettingsDropdownComponent implements OnInit {
 
   public attributesResourcesData$: Observable<AttributesResourceData[]>;
 
-  constructor(private store$: Store<AppState>, private perspectiveService: PerspectiveService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private perspectiveService: PerspectiveService
+  ) {}
 
   public ngOnInit() {
     const query$ = this.selectQuery$();

@@ -76,7 +76,10 @@ export class TableHeaderComponent implements OnInit, OnChanges {
 
   public cursor: TableHeaderCursor;
 
-  public constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
+  public constructor(
+    private element: ElementRef<HTMLElement>,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.bindCollectionHasToLink();

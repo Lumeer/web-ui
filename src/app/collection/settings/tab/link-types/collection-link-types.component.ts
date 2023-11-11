@@ -51,7 +51,10 @@ export class CollectionLinkTypesComponent implements OnInit {
   public workspace$: Observable<Workspace>;
   public searchString$ = new BehaviorSubject<string>('');
 
-  constructor(private notificationService: NotificationService, private store$: Store<AppState>) {}
+  constructor(
+    private notificationService: NotificationService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.subscribeData();

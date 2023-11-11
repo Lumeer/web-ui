@@ -44,7 +44,10 @@ export class PerspectivePreviewComponent implements OnChanges {
   public readonly perspective = Perspective;
   public readonly searchTab = SearchTab;
 
-  constructor(private store$: Store<AppState>, private viewSettingsService: ViewSettingsService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private viewSettingsService: ViewSettingsService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (objectChanged(changes.view) && this.view) {

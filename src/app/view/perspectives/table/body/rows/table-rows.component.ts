@@ -79,7 +79,10 @@ export class TableRowsComponent implements OnChanges {
 
   public readonly tableRowHeight = TABLE_ROW_MIN_HEIGHT;
 
-  public constructor(public element: ElementRef, private store$: Store<AppState>) {}
+  public constructor(
+    public element: ElementRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor || changes.query || changes.view) {

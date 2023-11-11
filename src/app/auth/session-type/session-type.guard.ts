@@ -26,7 +26,10 @@ import {AuthService} from '../auth.service';
   providedIn: 'root',
 })
 export class SessionTypeGuard implements CanActivate, CanActivateChild {
-  public constructor(private authService: AuthService, private router: Router) {}
+  public constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.isAuthenticated(state);

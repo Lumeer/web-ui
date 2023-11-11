@@ -57,7 +57,10 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
     return this.formGroup.controls.defaultView;
   }
 
-  constructor(private clipboardService: ClipboardService, private configurationService: ConfigurationService) {}
+  constructor(
+    private clipboardService: ClipboardService,
+    private configurationService: ConfigurationService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.workspace) {

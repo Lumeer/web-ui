@@ -259,7 +259,7 @@ export function getAttributeIdFromColumn(column: TableConfigColumn) {
     case TableColumnType.COMPOUND:
       return column.attributeIds[0];
     default:
-      throw Error(`Cannot get attributeId from column: ${column}`);
+      throw Error(`Cannot get attributeId from column: ${JSON.stringify(column)}`);
   }
 }
 

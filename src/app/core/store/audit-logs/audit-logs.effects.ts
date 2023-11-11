@@ -195,5 +195,8 @@ export class AuditLogsEffects {
     )
   );
 
-  constructor(private actions$: Actions, private service: AuditLogService) {}
+  constructor(
+    private actions$: Actions,
+    private service: AuditLogService
+  ) {}
 }

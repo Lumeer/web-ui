@@ -82,7 +82,10 @@ export class ResourceFilterComponent implements OnInit, OnChanges {
   public constraintData$: Observable<ConstraintData>;
   public attribute$: Observable<Attribute>;
 
-  constructor(public element: ElementRef, private constraintDataService: ConstraintDataService) {}
+  constructor(
+    public element: ElementRef,
+    private constraintDataService: ConstraintDataService
+  ) {}
 
   public ngOnInit() {
     this.filter$.next(this.filter);

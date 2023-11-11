@@ -25,7 +25,10 @@ export class DeletedQueryItem implements QueryItem {
   public type = QueryItemType.Deleted;
   public forType: QueryItemType;
 
-  public constructor(public stemId: string, forType: QueryItemType) {
+  public constructor(
+    public stemId: string,
+    forType: QueryItemType
+  ) {
     this.forType = forType;
   }
 

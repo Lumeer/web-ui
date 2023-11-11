@@ -36,7 +36,10 @@ import {ResourceType} from '../../model/resource-type';
 
 @Injectable()
 export class ResourceVariablesGuard implements Resolve<any> {
-  constructor(private workspaceService: WorkspaceService, private store$: Store<AppState>) {}
+  constructor(
+    private workspaceService: WorkspaceService,
+    private store$: Store<AppState>
+  ) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     const organizationCode = route.paramMap.get('organizationCode');

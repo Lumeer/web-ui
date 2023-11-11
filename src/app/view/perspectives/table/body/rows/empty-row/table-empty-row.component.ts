@@ -48,7 +48,10 @@ export class TableEmptyRowComponent implements OnChanges {
   public dataColumnsWidth$: Observable<number>;
   public linkInfoCells$: Observable<any[]>;
 
-  constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
+  constructor(
+    private element: ElementRef<HTMLElement>,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.canManageConfig || changes.cursor) && this.cursor) {

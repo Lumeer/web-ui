@@ -36,7 +36,10 @@ import {ProjectService} from '../project/project.service';
 
 @Injectable()
 export class PublicOrganizationService extends PublicPermissionService implements OrganizationService {
-  constructor(protected store$: Store<AppState>, private publicProjectService: ProjectService) {
+  constructor(
+    protected store$: Store<AppState>,
+    private publicProjectService: ProjectService
+  ) {
     super(store$);
   }
 

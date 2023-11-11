@@ -84,7 +84,10 @@ export class TablePrimaryRowComponent implements OnChanges {
   public part$: Observable<TableConfigPart>;
   public hasCollectionToLink$: Observable<boolean>;
 
-  constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  constructor(
+    private element: ElementRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {

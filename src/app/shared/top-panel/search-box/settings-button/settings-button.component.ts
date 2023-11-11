@@ -40,7 +40,10 @@ export class SettingsButtonComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private settingsId: string;
 
-  constructor(public element: ElementRef, private store$: Store<AppState>) {}
+  constructor(
+    public element: ElementRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.viewSettings$ = this.store$.pipe(

@@ -127,7 +127,10 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
 
   public selectedIndex$ = new BehaviorSubject(-1);
 
-  public constructor(private modalService: ModalService, private store$: Store<AppState>) {}
+  public constructor(
+    private modalService: ModalService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.allAttributes$ = this.bindAllAttributes();

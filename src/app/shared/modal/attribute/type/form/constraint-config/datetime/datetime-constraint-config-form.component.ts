@@ -71,7 +71,10 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges,
 
   private formatSubscription = new Subscription();
 
-  constructor(private configurationService: ConfigurationService, private store$: Store<AppState>) {
+  constructor(
+    private configurationService: ConfigurationService,
+    private store$: Store<AppState>
+  ) {
     this.formatItems = this.createFormatItems();
   }
 

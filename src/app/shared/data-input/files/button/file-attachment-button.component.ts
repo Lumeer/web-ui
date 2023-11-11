@@ -43,7 +43,10 @@ export class FileAttachmentButtonComponent implements OnInit, OnChanges {
 
   private createdBy$ = new BehaviorSubject(null);
 
-  constructor(private downloadService: FileDownloadService, private store$: Store<AppState>) {}
+  constructor(
+    private downloadService: FileDownloadService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.createdByUser$ = this.createdBy$.pipe(

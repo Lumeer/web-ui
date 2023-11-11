@@ -85,7 +85,10 @@ export class AuditLogsComponent implements OnInit {
 
   public filters$ = new BehaviorSubject<AuditLogFilters>({users: [], types: []});
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   public ngOnInit() {
     this.usersMap$ = this.store$.pipe(select(selectUsersDictionary));

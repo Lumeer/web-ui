@@ -52,7 +52,10 @@ export class GanttChartPerspectiveComponent
   @Input()
   public perspectiveConfiguration: GanttPerspectiveConfiguration = defaultGanttPerspectiveConfiguration;
 
-  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+  constructor(
+    protected store$: Store<AppState>,
+    protected loadService: LoadDataService
+  ) {
     super(store$, loadService);
   }
 

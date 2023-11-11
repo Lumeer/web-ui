@@ -66,7 +66,10 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnChanges, OnDe
 
   private subscriptions = new Subscription();
 
-  constructor(private fb: UntypedFormBuilder, private updateProjectService: UpdateProjectService) {}
+  constructor(
+    private fb: UntypedFormBuilder,
+    private updateProjectService: UpdateProjectService
+  ) {}
 
   public get isPublicControl(): AbstractControl {
     return this.formGroup.controls.isPublic;

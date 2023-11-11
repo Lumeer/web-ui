@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter, Input, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Output, EventEmitter, Input, SimpleChanges, OnChanges} from '@angular/core';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {CreateDocumentModalComponent} from '../../../../../../shared/modal/create-document/create-document-modal.component';
@@ -37,7 +37,7 @@ import {
   styleUrls: ['./tasks-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TasksToolbarComponent {
+export class TasksToolbarComponent implements OnChanges {
   @Input()
   public config: SearchTasksConfig;
 

@@ -115,7 +115,10 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   private scrolledIndex: number;
   private subscriptions = new Subscription();
 
-  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef) {}
+  constructor(
+    private scrollDispatcher: ScrollDispatcher,
+    private element: ElementRef
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeHorizontalScrolling());

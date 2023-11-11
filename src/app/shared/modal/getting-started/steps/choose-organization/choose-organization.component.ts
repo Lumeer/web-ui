@@ -36,7 +36,10 @@ export class ChooseOrganizationComponent implements OnInit {
   public contributeOrganizations$: Observable<Organization[]>;
   public manageOrganizations$: Observable<Organization[]>;
 
-  constructor(private store$: Store<AppState>, public service: GettingStartedService) {}
+  constructor(
+    private store$: Store<AppState>,
+    public service: GettingStartedService
+  ) {}
 
   public ngOnInit() {
     this.contributeOrganizations$ = this.service.selectContributeOrganizations$();

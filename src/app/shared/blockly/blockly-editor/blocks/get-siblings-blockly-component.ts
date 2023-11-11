@@ -26,7 +26,10 @@ import {isNotNullOrUndefined} from '../../../utils/common.utils';
 declare var Blockly: any;
 
 export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyComponent {
-  public constructor(public blocklyUtils: BlocklyUtils, protected linkTypes: LinkType[]) {
+  public constructor(
+    public blocklyUtils: BlocklyUtils,
+    protected linkTypes: LinkType[]
+  ) {
     super(blocklyUtils, linkTypes);
 
     this.tooltip = $localize`:@@blockly.tooltip.getSiblingsBlock:Follows the link from the given record and then all the links back to the original table, returning all siblings.`;

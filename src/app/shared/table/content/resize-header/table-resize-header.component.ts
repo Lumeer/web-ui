@@ -43,7 +43,10 @@ export class TableResizeHeaderComponent {
 
   private headerElementsCache: Record<number, HTMLElement> = {};
 
-  constructor(private renderer: Renderer2, private element: ElementRef) {}
+  constructor(
+    private renderer: Renderer2,
+    private element: ElementRef
+  ) {}
 
   public trackByColumn(index: number, column: TableColumnGroup): string {
     return column.id;

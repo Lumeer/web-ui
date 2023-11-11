@@ -29,17 +29,16 @@ type Options = ModalOptions & {initialState: any};
   providedIn: 'root',
 })
 export class DataInputModalService {
-  constructor(private store$: Store<AppState>, private bsModalService: BsModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private bsModalService: BsModalService
+  ) {}
 
-  public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
+  public show<T>(content: string | TemplateRef<any> | {new (...args: any[]): T}, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
   }
 
-  public showStaticDialog(
-    initialState: any,
-    content: string | TemplateRef<any> | any,
-    classString: string = ''
-  ): BsModalRef {
+  public showStaticDialog(initialState: any, content: string | TemplateRef<any>, classString: string = ''): BsModalRef {
     const config = {initialState, keyboard: false, class: classString};
     config['backdrop'] = 'static';
     return this.show(content, config);

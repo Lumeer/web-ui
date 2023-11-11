@@ -138,7 +138,10 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private events: CalendarEvent[];
 
-  constructor(private modalService: ModalService, private createService: CreateDataResourceService) {
+  constructor(
+    private modalService: ModalService,
+    private createService: CreateDataResourceService
+  ) {
     this.converter = new CalendarConverter();
   }
 

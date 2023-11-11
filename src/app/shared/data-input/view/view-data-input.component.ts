@@ -108,7 +108,10 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   private keyDownListener: (event: KeyboardEvent) => void;
   private mouseDownListener: (event: MouseEvent) => void;
 
-  constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  constructor(
+    private element: ElementRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));

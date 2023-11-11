@@ -59,7 +59,7 @@ export function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
           type: ruleTypeMap[dto[id].type],
           timing: ruleTimingMap[dto[id].timing],
           configuration: convertRulesConfigurationFromDto(dto[id]),
-        } as Rule)
+        }) as Rule
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 }

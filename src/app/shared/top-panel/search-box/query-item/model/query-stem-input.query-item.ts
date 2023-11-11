@@ -23,7 +23,11 @@ import {QueryItemType} from './query-item-type';
 export class QueryStemInputQueryItem implements QueryItem {
   public type = QueryItemType.QueryStemInput;
 
-  public constructor(public stemId: string, public text: string, public stemItems: QueryItem[]) {}
+  public constructor(
+    public stemId: string,
+    public text: string,
+    public stemItems: QueryItem[]
+  ) {}
 
   public get value(): string {
     return this.text;

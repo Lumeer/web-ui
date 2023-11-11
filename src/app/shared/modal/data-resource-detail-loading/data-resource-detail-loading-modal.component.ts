@@ -61,7 +61,10 @@ export class DataResourceDetailLoadingModalComponent implements OnInit {
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
 
-  constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
+  constructor(
+    private store$: Store<AppState>,
+    private bsModalRef: BsModalRef
+  ) {}
 
   public ngOnInit() {
     if (this.resourceType === AttributesResourceType.Collection) {

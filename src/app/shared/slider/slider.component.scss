@@ -24,7 +24,9 @@ $track-shadow-blur: 0px !default;
 $track-shadow-color: $dark !default;
 
 @mixin shadow($shadow-size, $shadow-blur, $shadow-color) {
-  box-shadow: $shadow-size $shadow-size $shadow-blur $shadow-color, 0 0 $shadow-size lighten($shadow-color, 5%);
+  box-shadow:
+    $shadow-size $shadow-size $shadow-blur $shadow-color,
+    0 0 $shadow-size lighten($shadow-color, 5%);
 }
 
 @mixin track {

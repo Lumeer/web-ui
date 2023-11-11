@@ -65,7 +65,10 @@ export class TableBodyComponent implements OnChanges {
 
   public cursor: TableBodyCursor;
 
-  public constructor(private element: ElementRef<HTMLElement>, private store: Store<AppState>) {}
+  public constructor(
+    private element: ElementRef<HTMLElement>,
+    private store: Store<AppState>
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.tableId && this.tableId) {

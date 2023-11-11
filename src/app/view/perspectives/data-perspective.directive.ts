@@ -81,7 +81,10 @@ export abstract class DataPerspectiveDirective<T>
   public sidebarOpened$ = new BehaviorSubject(false);
   public overrideView$ = new BehaviorSubject<View>(null);
 
-  protected constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+  protected constructor(
+    protected store$: Store<AppState>,
+    protected loadService: LoadDataService
+  ) {
     super(store$);
   }
 

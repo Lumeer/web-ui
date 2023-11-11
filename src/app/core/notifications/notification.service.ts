@@ -25,7 +25,10 @@ import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class NotificationService {
-  constructor(private notifications: ToastrService, private configurationService: ConfigurationService) {}
+  constructor(
+    private notifications: ToastrService,
+    private configurationService: ConfigurationService
+  ) {}
 
   public success(message: string, config?: Partial<IndividualConfig>) {
     if (!this.configurationService.getConfiguration().notificationsDisabled) {

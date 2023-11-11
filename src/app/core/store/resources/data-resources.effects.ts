@@ -52,5 +52,8 @@ export class ResourcesEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store$: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private store$: Store<AppState>
+  ) {}
 }

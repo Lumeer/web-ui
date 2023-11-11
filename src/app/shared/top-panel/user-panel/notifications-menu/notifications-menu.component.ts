@@ -291,7 +291,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
       Record<string, View>,
       AllowedPermissionsMap,
       Record<string, DocumentModel>,
-      AllowedPermissionsMap
+      AllowedPermissionsMap,
     ]
   > {
     return combineLatest([

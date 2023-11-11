@@ -27,6 +27,7 @@ import {
   HostListener,
   ElementRef,
   SimpleChanges,
+  AfterViewInit,
 } from '@angular/core';
 import {DialogType} from '../dialog-type';
 import {PlatformLocation} from '@angular/common';
@@ -41,7 +42,7 @@ import {map} from 'rxjs/operators';
   styleUrls: ['./modal-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalWrapperComponent implements OnChanges {
+export class ModalWrapperComponent implements OnChanges, AfterViewInit {
   @Input()
   public dialogType: DialogType;
 
@@ -109,7 +110,11 @@ export class ModalWrapperComponent implements OnChanges {
 
   public elementWidth$ = new BehaviorSubject(0);
 
-  constructor(private location: PlatformLocation, private ref: BsModalRef, public element: ElementRef) {
+  constructor(
+    private location: PlatformLocation,
+    private ref: BsModalRef,
+    public element: ElementRef
+  ) {
     location.onPopState(() => {
       this.ref.hide();
     });

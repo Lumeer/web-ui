@@ -83,7 +83,10 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges, OnDes
   public viewsByCollection$: Observable<View[]>;
   public collections$: Observable<Collection[]>;
 
-  constructor(private store$: Store<AppState>, private loadDataService: LoadDataService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private loadDataService: LoadDataService
+  ) {}
 
   public get assigneeControl(): AbstractControl {
     return this.form.get(TaskPurposeFormControl.Assignee);

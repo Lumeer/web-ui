@@ -130,7 +130,10 @@ export class WorkflowTablesComponent implements OnChanges {
   public selectedCell$: Observable<SelectedTableCell>;
   public editedCell$: Observable<EditedTableCell>;
 
-  constructor(private store$: Store<AppState>, private tablesService: WorkflowTablesService) {
+  constructor(
+    private store$: Store<AppState>,
+    private tablesService: WorkflowTablesService
+  ) {
     this.tablesService.setHiddenComponent(() => this.hiddenInputComponent);
     this.tables$ = this.tablesService.tables$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
     this.selectedCell$ = this.tablesService.selectedCell$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));

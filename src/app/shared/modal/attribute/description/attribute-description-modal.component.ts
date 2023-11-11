@@ -60,7 +60,10 @@ export class AttributeDescriptionModalComponent implements OnInit {
   public linkType$: Observable<LinkType>;
   public performingAction$ = new BehaviorSubject(false);
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     if (this.collectionId) {

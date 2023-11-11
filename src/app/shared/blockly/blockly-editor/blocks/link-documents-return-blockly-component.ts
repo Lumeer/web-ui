@@ -26,7 +26,10 @@ import {isNotNullOrUndefined} from '../../../utils/common.utils';
 declare var Blockly: any;
 
 export class LinkDocumentsReturnBlocklyComponent extends LinkDocumentsNoReturnBlocklyComponent {
-  public constructor(public blocklyUtils: BlocklyUtils, protected linkTypes: LinkType[]) {
+  public constructor(
+    public blocklyUtils: BlocklyUtils,
+    protected linkTypes: LinkType[]
+  ) {
     super(blocklyUtils, linkTypes);
   }
 

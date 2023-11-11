@@ -95,7 +95,10 @@ export class ResourceHeaderComponent implements OnInit, OnChanges {
   private shouldEmitFirstLine: boolean;
   private isEditing: boolean;
 
-  constructor(private organizationValidators: OrganizationValidators, private projectValidators: ProjectValidators) {}
+  constructor(
+    private organizationValidators: OrganizationValidators,
+    private projectValidators: ProjectValidators
+  ) {}
 
   public hasVisibleCode(): boolean {
     return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);

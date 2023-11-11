@@ -30,7 +30,10 @@ export class NavigateSearchBlocklyComponent extends BlocklyComponent {
   private windowOptions: string[];
   private sidebarOptions: string[];
 
-  public constructor(public blocklyUtils: BlocklyUtils, private views: View[]) {
+  public constructor(
+    public blocklyUtils: BlocklyUtils,
+    private views: View[]
+  ) {
     super(blocklyUtils);
 
     views.forEach(view => this.viewOptions.push([view.name.replace(/ /g, '\u00A0'), view.id]));

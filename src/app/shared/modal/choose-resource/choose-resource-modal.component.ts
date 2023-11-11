@@ -54,7 +54,10 @@ export class ChooseResourceModalComponent implements OnInit {
 
   public readonly dialogType = DialogType;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     if (this.resourceType === AttributesResourceType.Collection) {

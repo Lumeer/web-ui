@@ -57,7 +57,10 @@ export class ChooseStemModalComponent implements OnInit {
 
   public readonly dialogType = DialogType;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     const queryData$ = combineLatest([

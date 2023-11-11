@@ -28,7 +28,10 @@ import {ConfigurationService} from '../../../configuration/configuration.service
 
 @Injectable()
 export class PublicAttachmentsService implements AttachmentsService {
-  constructor(private http: HttpClient, private configurationService: ConfigurationService) {}
+  constructor(
+    private http: HttpClient,
+    private configurationService: ConfigurationService
+  ) {}
 
   public createFiles(path: FileApiPath, files: FileAttachmentDto[]): Observable<FileAttachmentDto[]> {
     return of(files.map(file => ({...file, id: generateId()})));

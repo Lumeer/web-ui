@@ -69,7 +69,10 @@ export abstract class SearchViewsDirective
   private isEmbedded: boolean;
   private overrideView$ = new BehaviorSubject<View>(null);
 
-  constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {
+  constructor(
+    protected notificationService: NotificationService,
+    protected store$: Store<AppState>
+  ) {
     super(store$);
   }
 

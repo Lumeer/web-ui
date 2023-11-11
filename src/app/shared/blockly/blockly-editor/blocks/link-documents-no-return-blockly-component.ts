@@ -29,7 +29,10 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
   protected tooltip: string;
   protected linkTypeOptions = [];
 
-  public constructor(public blocklyUtils: BlocklyUtils, protected linkTypes: LinkType[]) {
+  public constructor(
+    public blocklyUtils: BlocklyUtils,
+    protected linkTypes: LinkType[]
+  ) {
     super(blocklyUtils);
 
     linkTypes.forEach(linkType => this.linkTypeOptions.push([linkType.name.replace(/ /g, '\u00A0'), linkType.id]));

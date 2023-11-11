@@ -48,7 +48,11 @@ export class ApplicationTourService {
   private driver: Driver;
   private workspace: Workspace;
 
-  constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private router: Router,
+    private modalService: ModalService
+  ) {}
 
   public init() {
     const scrollIntoViewOptions: ScrollIntoViewOptions = {behavior: 'auto', block: 'start'};

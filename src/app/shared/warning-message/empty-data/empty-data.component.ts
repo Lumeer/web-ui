@@ -46,7 +46,10 @@ export class EmptyDataComponent implements OnInit {
   public projectPermissions$: Observable<AllowedPermissions>;
   public hasCollectionsTab$: Observable<boolean>;
 
-  constructor(public router: Router, private store$: Store<AppState>) {}
+  constructor(
+    public router: Router,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));

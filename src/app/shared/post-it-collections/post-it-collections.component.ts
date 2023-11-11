@@ -72,7 +72,11 @@ export class PostItCollectionsComponent implements OnInit, OnChanges, OnDestroy 
   private query: Query;
   private overrideView$ = new BehaviorSubject<View>(null);
 
-  constructor(private router: Router, private store$: Store<AppState>, private loadDataService: LoadDataService) {}
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>,
+    private loadDataService: LoadDataService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.view) {

@@ -68,8 +68,8 @@ export function getDocumentsAndLinksByStemData(
   data: DocumentsAndLinksData,
   query: Query
 ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
-  const stemsData = (data?.dataByStems || []).filter(dataByStem =>
-    query.stems?.some(stem => queryStemsAreSameById(dataByStem.stem, stem))
+  const stemsData = (data?.dataByStems || []).filter(
+    dataByStem => query.stems?.some(stem => queryStemsAreSameById(dataByStem.stem, stem))
   );
   return stemsData.reduce(
     (documentsAndLinks, stemData) => {

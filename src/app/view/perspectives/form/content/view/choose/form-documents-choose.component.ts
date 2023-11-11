@@ -83,7 +83,10 @@ export class FormDocumentsChooseComponent implements OnChanges {
   public documents$: Observable<DocumentModel[]>;
   public currentDocument$ = new BehaviorSubject<DocumentModel>(null);
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (objectChanged(changes.collection) || changes.query || changes.view || changes.createdDocuments) {

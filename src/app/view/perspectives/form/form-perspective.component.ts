@@ -51,7 +51,10 @@ export class FormPerspectiveComponent extends DataPerspectiveDirective<FormConfi
   public basicCollection$: Observable<Collection>;
   public collectionLinkTypes$: Observable<LinkType[]>;
 
-  constructor(protected store$: Store<AppState>, protected loadService: LoadDataService) {
+  constructor(
+    protected store$: Store<AppState>,
+    protected loadService: LoadDataService
+  ) {
     super(store$, loadService);
   }
 

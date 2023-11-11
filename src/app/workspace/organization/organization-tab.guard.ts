@@ -33,7 +33,11 @@ import {selectNavigation} from '../../core/store/navigation/navigation.state';
 
 @Injectable()
 export class OrganizationTabGuard implements CanActivateChild {
-  constructor(private router: Router, private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>,
+    private workspaceService: WorkspaceService
+  ) {}
 
   public canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     if (!next.data.role) {

@@ -50,7 +50,10 @@ export class LinkTypeHeaderComponent {
   @Output()
   public onBack = new EventEmitter();
 
-  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private notificationService: NotificationService
+  ) {}
 
   public onNewName(name: string) {
     const trimmedValue = (name || '').trim();

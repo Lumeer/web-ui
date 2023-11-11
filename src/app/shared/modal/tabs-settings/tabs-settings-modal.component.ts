@@ -73,7 +73,10 @@ export class TabsSettingsModalComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
+  constructor(
+    private store$: Store<AppState>,
+    private bsModalRef: BsModalRef
+  ) {}
 
   public ngOnInit() {
     this.dashboardData$ = this.subscribeDashboardData$();

@@ -40,7 +40,10 @@ export class ProjectUploadComponent implements OnInit, OnDestroy {
   private fileSizeMb = DEFAULT_FILE_SIZE_MB;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private notificationService: NotificationService
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(

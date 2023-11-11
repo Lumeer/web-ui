@@ -31,7 +31,10 @@ export class NgVarDirective {
 
   private context: any = {};
 
-  public constructor(private template: TemplateRef<any>, private viewContainer: ViewContainerRef) {}
+  public constructor(
+    private template: TemplateRef<any>,
+    private viewContainer: ViewContainerRef
+  ) {}
 
   private updateView() {
     this.viewContainer.clear();

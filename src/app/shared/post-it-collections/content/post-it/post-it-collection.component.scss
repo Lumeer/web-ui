@@ -15,7 +15,9 @@
 }
 
 .post-it {
-  transition: box-shadow $animation-duration, transform $animation-duration;
+  transition:
+    box-shadow $animation-duration,
+    transform $animation-duration;
 
   &:not(.uninitialized) {
     border: 1px transparent;
@@ -81,7 +83,9 @@
     top: 20px;
     right: 20px;
 
-    transition: top 0.25s, right 0.25s ease;
+    transition:
+      top 0.25s,
+      right 0.25s ease;
   }
 }
 

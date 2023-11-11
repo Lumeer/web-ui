@@ -31,7 +31,10 @@ export class ViewQueryItem implements QueryItem {
   public icons: string[];
   public colors: string[];
 
-  public constructor(public view: View, public primaryCollection?: Collection) {
+  public constructor(
+    public view: View,
+    public primaryCollection?: Collection
+  ) {
     this.icons = [getViewIcon(view)];
     this.colors = this.parseColors();
   }

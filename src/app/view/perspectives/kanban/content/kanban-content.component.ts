@@ -124,7 +124,10 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
   private currentConfig: KanbanConfig;
 
-  constructor(private store$: Store<AppState>, private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
+  constructor(
+    private store$: Store<AppState>,
+    private constraintItemsFormatter: SelectItemWithConstraintFormatter
+  ) {
     this.converter = new KanbanConverter(constraintItemsFormatter);
   }
 

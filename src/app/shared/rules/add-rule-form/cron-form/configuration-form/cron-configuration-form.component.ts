@@ -74,7 +74,10 @@ export class CronConfigurationFormComponent implements OnInit, OnChanges {
   public viewsByCollection$: Observable<View[]>;
   public collections$: Observable<Collection[]>;
 
-  constructor(private configurationService: ConfigurationService, private store$: Store<AppState>) {
+  constructor(
+    private configurationService: ConfigurationService,
+    private store$: Store<AppState>
+  ) {
     this.unitsItems = [
       {id: ChronoUnit.Days, value: $localize`:@@cron.unit.days.title:Days`},
       {id: ChronoUnit.Weeks, value: $localize`:@@cron.unit.weeks.title:Weeks`},

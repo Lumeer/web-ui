@@ -53,7 +53,10 @@ export class UserSettingsComponent implements OnInit {
 
   public deletedUser$ = new BehaviorSubject<User>(null);
 
-  constructor(private router: Router, private store$: Store<AppState>) {}
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.user$ = combineLatest([this.deletedUser$, this.store$.pipe(select(selectUserByWorkspace))]).pipe(

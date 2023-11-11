@@ -56,7 +56,10 @@ export class InviteUserModalComponent implements OnInit {
 
   public stage = 0;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.existingUsers$ = this.store$.pipe(

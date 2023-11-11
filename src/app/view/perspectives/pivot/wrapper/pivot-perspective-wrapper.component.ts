@@ -106,7 +106,10 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   public pivotData$: Observable<PivotData>;
 
-  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter, private modalService: ModalService) {
+  constructor(
+    private constraintItemsFormatter: SelectItemWithConstraintFormatter,
+    private modalService: ModalService
+  ) {
     this.pivotTransformer = new PivotDataConverter(constraintItemsFormatter, type =>
       this.createValueAggregationTitle(type)
     );

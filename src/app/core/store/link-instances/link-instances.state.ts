@@ -70,10 +70,11 @@ export const selectLinkInstancesByIds = (ids: string[]) =>
 export const selectLinkInstancesByDocumentIds = (documentIds: string[]) =>
   createSelector(selectAllLinkInstances, selectDocumentsDictionary, (linkInstances, documentsMap) =>
     sortLinkInstances(
-      linkInstances.filter(linkInstance =>
-        linkInstance.documentIds?.some(
-          id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
-        )
+      linkInstances.filter(
+        linkInstance =>
+          linkInstance.documentIds?.some(
+            id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
+          )
       )
     )
   );
@@ -91,10 +92,11 @@ export const selectLinkInstancesByTypes = (linkTypeIds: string[]) =>
 export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, documentIds: string[]) =>
   createSelector(selectLinkInstancesByType(linkTypeId), selectDocumentsDictionary, (linkInstances, documentsMap) =>
     sortLinkInstances(
-      linkInstances.filter(linkInstance =>
-        linkInstance.documentIds?.some(
-          id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
-        )
+      linkInstances.filter(
+        linkInstance =>
+          linkInstance.documentIds?.some(
+            id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
+          )
       )
     )
   );
@@ -102,10 +104,11 @@ export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, docume
 export const selectLinkInstancesByTypesAndDocuments = (linkTypeIds: string[], documentIds: string[]) =>
   createSelector(selectLinkInstancesByTypes(linkTypeIds), selectDocumentsDictionary, (linkInstances, documentsMap) =>
     sortLinkInstances(
-      linkInstances.filter(linkInstance =>
-        linkInstance.documentIds?.some(
-          id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
-        )
+      linkInstances.filter(
+        linkInstance =>
+          linkInstance.documentIds?.some(
+            id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
+          )
       )
     )
   );

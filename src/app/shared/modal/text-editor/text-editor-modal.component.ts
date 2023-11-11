@@ -77,7 +77,10 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public readonly defaultOptions = defaultTextEditorOptions;
   public readonly dialogType = DialogType;
 
-  constructor(private bsModalRef: BsModalRef, private element: ElementRef<HTMLElement>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private element: ElementRef<HTMLElement>
+  ) {}
 
   private hideDialog() {
     this.bsModalRef.hide();

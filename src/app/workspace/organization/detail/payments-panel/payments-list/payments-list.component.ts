@@ -45,7 +45,10 @@ export class PaymentsListComponent implements OnInit {
 
   public payments$: Observable<Payment[]>;
 
-  constructor(private router: Router, private store$: Store<AppState>) {}
+  constructor(
+    private router: Router,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.payments$ = this.store$.pipe(select(selectPaymentsByWorkspaceSorted));

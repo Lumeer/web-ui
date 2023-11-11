@@ -32,7 +32,10 @@ import {ProjectsAction} from '../../../core/store/projects/projects.action';
   host: {class: 'd-block'},
 })
 export class PublicProjectMessageComponent implements AfterViewInit, OnDestroy {
-  constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  constructor(
+    private element: ElementRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngAfterViewInit() {
     this.setAuthCallbackOffsetTop();

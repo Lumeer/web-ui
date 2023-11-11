@@ -102,7 +102,10 @@ export class SearchTasksComponent
   private page$ = new BehaviorSubject<number>(0);
   private overrideView$ = new BehaviorSubject<View>(null);
 
-  constructor(protected store$: Store<AppState>, private loadService: LoadDataService) {
+  constructor(
+    protected store$: Store<AppState>,
+    private loadService: LoadDataService
+  ) {
     super(store$);
   }
 

@@ -60,7 +60,10 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   public outdentable$: Observable<boolean>;
   public dataPermissions$: Observable<DataResourcePermissions>;
 
-  constructor(private store$: Store<AppState>, private dataPermissionsService: TableDataPermissionsService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private dataPermissionsService: TableDataPermissionsService
+  ) {}
 
   public open(x: number, y: number) {
     this.contextMenuPosition = {x, y};

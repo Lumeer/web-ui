@@ -69,7 +69,10 @@ export class AttributeLockModalComponent implements OnInit {
   public performingAction$ = new BehaviorSubject(false);
   public overrideLock$ = new BehaviorSubject<AttributeLock>(null);
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
     this.overrideLock$.next(this.overrideLock);

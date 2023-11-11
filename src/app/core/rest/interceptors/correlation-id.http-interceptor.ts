@@ -29,7 +29,10 @@ export const appIdHeader = 'X-Lumeer-App-Id';
 
 @Injectable()
 export class CorrelationIdHttpInterceptor implements HttpInterceptor {
-  constructor(private configurationService: ConfigurationService, private appId: AppIdService) {}
+  constructor(
+    private configurationService: ConfigurationService,
+    private appId: AppIdService
+  ) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!isBackendUrl(request.url, this.configurationService.getConfiguration())) {

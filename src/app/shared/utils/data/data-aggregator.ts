@@ -69,6 +69,7 @@ export interface DataResourceChain {
 }
 
 // any represents AggregatedDataMap
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type AggregatedDataMap = Record<string, any | AggregatedDataValues[]>;
 
 export interface AggregatedDataValues {
