@@ -1,4 +1,4 @@
-name: 'Run Playwright UI tests'
+name: 'Run Playwright E2E tests'
 
 on:
   pull_request:
