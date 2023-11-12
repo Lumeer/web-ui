@@ -2,6 +2,9 @@ name: 'Run Playwright E2E tests'
 
 on:
   pull_request:
+  push:
+    branches:
+      - 'master'
 
 env:
   TEST_USER_EMAIL: "uitest-${{ github.run_id }}@lumeer.io"
