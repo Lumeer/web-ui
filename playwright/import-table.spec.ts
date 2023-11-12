@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ep} from '@fullcalendar/core/internal-common';
 import {test, expect} from '@playwright/test';
-import exp from 'constants';
 
 test.describe.configure({mode: 'serial'});
 
