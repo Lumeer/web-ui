@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Observable, of} from 'rxjs';
 import {catchError, filter, mergeMap, take, tap} from 'rxjs/operators';
@@ -36,7 +36,7 @@ import {selectLinkTypeById, selectLinkTypesLoaded} from '../core/store/link-type
 import {LinkTypesAction} from '../core/store/link-types/link-types.action';
 
 @Injectable()
-export class LinkTypeSettingsGuard implements CanActivate {
+export class LinkTypeSettingsGuard {
   constructor(
     private router: Router,
     private linkTypeService: LinkTypeService,

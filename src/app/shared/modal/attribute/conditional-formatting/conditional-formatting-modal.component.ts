@@ -35,6 +35,7 @@ import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {ConditionalFormattingContentComponent} from './content/conditional-formatting-content.component';
 
 @Component({
+  selector: 'conditional-formatting-modal',
   templateUrl: './conditional-formatting-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -29,6 +29,7 @@ import {selectLinkTypeByWorkspaceWithCollections} from '../../../../core/store/l
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 
 @Component({
+  selector: 'link-type-collections',
   templateUrl: './link-type-collections.component.html',
   styleUrls: ['./link-type-collections.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

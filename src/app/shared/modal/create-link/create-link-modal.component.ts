@@ -35,6 +35,7 @@ import {selectLinkTypesByCollectionIds} from '../../../core/store/common/permiss
 import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
+  selector: 'create-link-modal',
   templateUrl: './create-link-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -36,6 +36,7 @@ import {UserInvitation} from '../../../../../core/model/user-invitation';
 import {selectWorkspaceWithIds} from '../../../../../core/store/common/common.selectors';
 
 @Component({
+  selector: 'invite-user-modal',
   templateUrl: './invite-user-modal.component.html',
   styleUrls: ['./invite-user-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

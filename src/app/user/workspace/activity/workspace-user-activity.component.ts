@@ -31,6 +31,7 @@ import {projectSelectItems} from '../../../shared/select/select-item.utils';
 import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 
 @Component({
+  selector: 'workspace-user',
   templateUrl: './workspace-user-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

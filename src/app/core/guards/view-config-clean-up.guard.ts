@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {ViewComponent} from '../../view/view.component';
@@ -28,7 +28,7 @@ import {ViewsAction} from '../store/views/views.action';
 @Injectable({
   providedIn: 'root',
 })
-export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
+export class ViewConfigCleanUpGuard {
   constructor(private store$: Store<AppState>) {}
 
   public canDeactivate(

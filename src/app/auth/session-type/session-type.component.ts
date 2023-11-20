@@ -25,6 +25,7 @@ import {map, take} from 'rxjs/operators';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
+  selector: 'session-type',
   templateUrl: './session-type.component.html',
   styleUrls: ['../common/auth-styles.scss', './session-type.component.scss'],
 })

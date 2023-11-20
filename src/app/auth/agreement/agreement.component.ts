@@ -47,6 +47,7 @@ const dataProcessingAgreementLinks = {
 };
 
 @Component({
+  selector: 'agreement',
   templateUrl: './agreement.component.html',
   styleUrls: ['./agreement.component.scss'],
 })

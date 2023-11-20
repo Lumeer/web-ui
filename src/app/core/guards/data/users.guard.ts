@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, RouterStateSnapshot, Resolve} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {User} from '../../store/users/user';
 import {AppState} from '../../store/app.state';
@@ -30,7 +30,7 @@ import {selectAllUsers, selectUsersLoadedForOrganization} from '../../store/user
 import {UsersAction} from '../../store/users/users.action';
 
 @Injectable()
-export class UsersGuard implements Resolve<User[]> {
+export class UsersGuard {
   constructor(private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User[]> {

@@ -18,15 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Params,
-  Router,
-  RouterStateSnapshot,
-  UrlSerializer,
-  UrlTree,
-} from '@angular/router';
+import {ActivatedRouteSnapshot, Params, Router, RouterStateSnapshot, UrlSerializer, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -44,7 +36,7 @@ import {ResourcesGuardService} from '../../../workspace/resources-guard.service'
 import {User} from '../../../core/store/users/user';
 
 @Injectable()
-export class SearchPerspectiveRedirectGuard implements CanActivate {
+export class SearchPerspectiveRedirectGuard {
   public constructor(
     private router: Router,
     private store$: Store<AppState>,

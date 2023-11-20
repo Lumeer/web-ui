@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -30,7 +30,7 @@ import {OrganizationsAction} from '../../store/organizations/organizations.actio
 import {PublicDataAction} from '../../store/public-data/public-data.action';
 
 @Injectable()
-export class OrganizationsProjectsGuard implements Resolve<Organization[]> {
+export class OrganizationsProjectsGuard {
   constructor(private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Organization[]> {

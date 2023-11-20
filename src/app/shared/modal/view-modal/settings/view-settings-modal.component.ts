@@ -41,6 +41,7 @@ import {
 import {objectsByIdMap} from '../../../utils/common.utils';
 
 @Component({
+  selector: 'view-settings-modal',
   templateUrl: './view-settings-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

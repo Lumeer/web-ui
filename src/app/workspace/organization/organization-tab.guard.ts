@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
 import {Observable, of} from 'rxjs';
 import {map, switchMap, take} from 'rxjs/operators';
@@ -32,7 +32,7 @@ import {Organization} from '../../core/store/organizations/organization';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 
 @Injectable()
-export class OrganizationTabGuard implements CanActivateChild {
+export class OrganizationTabGuard {
   constructor(
     private router: Router,
     private store$: Store<AppState>,

@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {ResourcesAction} from '../../core/store/resources/data-resources.action';
@@ -28,7 +28,7 @@ import {UserSettingsComponent} from '../settings/user-settings.component';
 @Injectable({
   providedIn: 'root',
 })
-export class WorkspaceUserCleanUpGuard implements CanDeactivate<UserSettingsComponent> {
+export class WorkspaceUserCleanUpGuard {
   constructor(private store$: Store<AppState>) {}
 
   public canDeactivate(

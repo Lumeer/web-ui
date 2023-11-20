@@ -42,6 +42,7 @@ import {RoleType} from '../../../core/model/role-type';
 import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Component({
+  selector: 'workspace-user-resources',
   templateUrl: './workspace-user-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

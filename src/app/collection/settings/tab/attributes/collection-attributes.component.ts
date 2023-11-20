@@ -26,6 +26,7 @@ import {selectCollectionByWorkspace} from '../../../../core/store/collections/co
 import {AttributesResourceType} from '../../../../core/model/resource';
 
 @Component({
+  selector: 'collection-attributes',
   templateUrl: './collection-attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

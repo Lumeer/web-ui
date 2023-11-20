@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
@@ -32,7 +32,7 @@ import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 
 @Injectable()
-export class ProjectSettingsGuard implements CanActivate {
+export class ProjectSettingsGuard {
   public constructor(
     private router: Router,
     private workspaceService: WorkspaceService,

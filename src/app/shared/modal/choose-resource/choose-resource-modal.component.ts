@@ -28,6 +28,7 @@ import {AttributesResource, AttributesResourceType} from '../../../core/model/re
 import {selectLinkTypesByIds} from '../../../core/store/link-types/link-types.state';
 
 @Component({
+  selector: 'choose-resource-modal',
   templateUrl: './choose-resource-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

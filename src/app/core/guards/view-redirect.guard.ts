@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, NavigationExtras, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, NavigationExtras, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {map, mergeMap, take} from 'rxjs/operators';
@@ -39,7 +39,7 @@ import {ResourcesGuardService} from '../../workspace/resources-guard.service';
 import {User} from '../store/users/user';
 
 @Injectable()
-export class ViewRedirectGuard implements CanActivate {
+export class ViewRedirectGuard {
   public constructor(
     private router: Router,
     private store$: Store<AppState>,

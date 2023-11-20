@@ -51,6 +51,7 @@ import {
 } from '../attribute-selection-list';
 
 @Component({
+  selector: 'selection-list-modal',
   templateUrl: './selection-list-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

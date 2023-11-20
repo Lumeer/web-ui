@@ -40,6 +40,7 @@ import {
 import {Workspace} from '../../../../core/store/navigation/workspace';
 
 @Component({
+  selector: 'attribute-type-modal',
   templateUrl: './attribute-type-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -29,6 +29,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 
 @Component({
+  selector: 'get-in-touch-modal',
   templateUrl: './get-in-touch-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

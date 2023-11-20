@@ -123,13 +123,13 @@ button.mat-menu-item {
 .mat-mdc-menu-item {
   min-height: 30px !important;
 
-  .mdc-list-item__primary-text {
+  .mat-mdc-menu-item-text {
     line-height: 1.2rem !important;
     font-size: 15px !important;
   }
 
   &:hover:not([disabled]) {
-    .mdc-list-item__primary-text {
+    .mat-mdc-menu-item-text {
       color: $primary;
     }
     background: rgba(0, 0, 0, 0.1);
@@ -139,7 +139,7 @@ button.mat-menu-item {
   &:active:not(.prevent-click) {
     background: $primary !important;
 
-    .mdc-list-item__primary-text {
+    .mat-mdc-menu-item-text {
       color: white !important;
     }
 
@@ -149,14 +149,14 @@ button.mat-menu-item {
   }
 
   &.active:hover {
-    .mdc-list-item__primary-text {
+    .mat-mdc-menu-item-text {
       color: $success !important;
     }
     background: $primary;
   }
 
   &.prevent-click {
-    .mdc-list-item__primary-text {
+    .mat-mdc-menu-item-text {
       color: $primary;
     }
     background: white !important;

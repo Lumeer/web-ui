@@ -79,12 +79,13 @@
               "dompurify",
               "pusher-js",
               "driver.js",
+              "mixpanel-browser",
               "fast-deep-equal",
               "ts-md5/dist/md5",
               "crc-32",
               "quill",
               "@lumeer/lumeer-gantt",
-              "mapbox-gl/dist/mapbox-gl"
+              "mapbox-gl"
             ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",

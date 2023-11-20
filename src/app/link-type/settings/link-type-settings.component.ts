@@ -44,6 +44,7 @@ import {
 } from '../../core/store/link-types/link-types.state';
 
 @Component({
+  selector: 'link-type-settings',
   templateUrl: './link-type-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

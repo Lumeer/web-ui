@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {catchError, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {WorkspaceService} from '../../workspace/workspace.service';
@@ -30,7 +30,7 @@ import {selectWorkspace} from '../store/navigation/navigation.state';
 @Injectable({
   providedIn: 'root',
 })
-export class WorkspaceGuard implements CanActivate {
+export class WorkspaceGuard {
   public constructor(
     private notificationService: NotificationService,
     private workspaceService: WorkspaceService,

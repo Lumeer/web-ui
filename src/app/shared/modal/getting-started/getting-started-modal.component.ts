@@ -31,6 +31,7 @@ import {GettingStartedStage} from './model/getting-started-stage';
 import {GettingStartedModalType} from './model/getting-started-modal-type';
 
 @Component({
+  selector: 'getting-started-modal',
   templateUrl: './getting-started-modal.component.html',
   styleUrls: ['./getting-started-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

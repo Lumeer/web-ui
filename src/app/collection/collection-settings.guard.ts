@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Observable, of} from 'rxjs';
 import {catchError, mergeMap, take, tap} from 'rxjs/operators';
@@ -37,7 +37,7 @@ import {userCanManageCollectionDetail} from '../shared/utils/permission.utils';
 import {ResourcesGuardService} from '../workspace/resources-guard.service';
 
 @Injectable()
-export class CollectionSettingsGuard implements CanActivate {
+export class CollectionSettingsGuard {
   constructor(
     private router: Router,
     private collectionService: CollectionService,

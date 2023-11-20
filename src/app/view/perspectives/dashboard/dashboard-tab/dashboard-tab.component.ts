@@ -27,6 +27,7 @@ import {selectSearchTab} from '../../../../core/store/navigation/navigation.stat
 import {selectSearchPerspectiveVisibleTabs} from '../../../../core/store/common/permissions.selectors';
 
 @Component({
+  selector: 'dashboard-tab',
   templateUrl: './dashboard-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

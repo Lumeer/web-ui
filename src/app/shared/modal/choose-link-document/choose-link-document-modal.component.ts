@@ -43,6 +43,7 @@ import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
+  selector: 'choose-link-document-modal',
   templateUrl: './choose-link-document-modal.component.html',
   styleUrls: ['./choose-link-document-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -40,7 +40,7 @@ $dark: $gray-700 !default;
 
 $success-light: lighten($success, 50%);
 
-$body-color: $primary !default;
+$body-color: $primary;
 
 $primary-hover: lighten($primary, 15%);
 $secondary-hover: darken($secondary, 15%);
@@ -52,13 +52,13 @@ $danger-light: lighten($danger, 30%);
 $light-hover: darken($light, 15%);
 $dark-hover: darken($dark, 15%);
 
-$table-border-color: $gray-200 !default;
+$table-border-color: $gray-200;
 $table-min-row-height: 34px;
 $table-outline-selected: rgba(37, 55, 70, 0.9); // $primary
 
 // Links
 
-$link-color: $success !default;
+$link-color: $success;
 
 // Fonts
 
@@ -83,48 +83,48 @@ $h3-font-size: 2rem !default;
 
 // Tables
 
-$table-accent-bg: $gray-200 !default;
+$table-accent-bg: $gray-200;
 $table-cell-padding-md: 0.5rem !default;
 
 // Dropdowns
 
-$dropdown-link-color: $primary !default;
-$dropdown-link-hover-color: $primary !default;
-$dropdown-link-hover-bg: $light !default;
-$dropdown-link-active-color: $white !default;
-$dropdown-link-active-bg: $primary !default;
+$dropdown-link-color: $primary;
+$dropdown-link-hover-color: $primary;
+$dropdown-link-hover-bg: $light;
+$dropdown-link-active-color: $white;
+$dropdown-link-active-bg: $primary;
 
 // Navs
 
-$nav-link-padding-y: 0.5rem !default !default;
+$nav-link-padding-y: 0.5rem !default;
 $nav-link-padding-x: 2rem !default;
-$nav-link-disabled-color: $gray-600 !default !default;
+$nav-link-disabled-color: $gray-600;
 
-$nav-tabs-border-color: $gray-200 !default;
+$nav-tabs-border-color: $gray-200;
 
 // Navbar
 
 $navbar-padding-y: 1rem !default;
 
-$navbar-dark-color: $white !default;
-$navbar-dark-hover-color: $secondary !default;
+$navbar-dark-color: $white;
+$navbar-dark-hover-color: $secondary;
 
 // Pagination
 
-$pagination-color: $white !default;
-$pagination-bg: $primary !default;
+$pagination-color: $white;
+$pagination-bg: $primary;
 $pagination-border-width: 0 !default;
 $pagination-border-color: transparent !default;
 
-$pagination-hover-color: $white !default;
-$pagination-hover-bg: $primary-hover !default;
+$pagination-hover-color: $white;
+$pagination-hover-bg: $primary-hover;
 $pagination-hover-border-color: transparent !default;
 
-$pagination-active-bg: $pagination-hover-bg !default;
+$pagination-active-bg: $pagination-hover-bg;
 $pagination-active-border-color: transparent !default;
 
-$pagination-disabled-color: $gray-200 !default;
-$pagination-disabled-bg: $primary !default;
+$pagination-disabled-color: $gray-200;
+$pagination-disabled-bg: $primary;
 $pagination-disabled-border-color: transparent !default;
 
 // Progress bars
@@ -134,13 +134,13 @@ $progress-font-size: 0.625rem !default;
 
 // List group
 
-$list-group-hover-bg: $gray-200 !default;
+$list-group-hover-bg: $gray-200;
 
-$list-group-disabled-bg: $gray-200 !default;
+$list-group-disabled-bg: $gray-200;
 
 // Close
 
-$close-color: $white !default;
+$close-color: $white;
 $close-text-shadow: none !default;
 
 // Application-specific variables

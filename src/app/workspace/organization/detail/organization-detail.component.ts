@@ -36,6 +36,7 @@ import {selectLastCreatedPayment} from '../../../core/store/organizations/paymen
 import {PaymentsAction} from '../../../core/store/organizations/payment/payments.action';
 
 @Component({
+  selector: 'organization-detail',
   templateUrl: './organization-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

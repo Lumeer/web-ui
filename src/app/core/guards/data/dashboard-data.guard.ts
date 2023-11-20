@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -31,7 +31,7 @@ import {WorkspaceService} from '../../../workspace/workspace.service';
 import {selectDashboardDataLoaded, selectDashboardDataObjects} from '../../store/dashboard-data/dashboard-data.state';
 
 @Injectable()
-export class DashboardDataGuard implements Resolve<any> {
+export class DashboardDataGuard {
   constructor(
     private workspaceService: WorkspaceService,
     private store$: Store<AppState>

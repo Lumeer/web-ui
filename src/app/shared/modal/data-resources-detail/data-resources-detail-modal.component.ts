@@ -44,9 +44,10 @@ import {selectViewById} from '../../../core/store/views/views.state';
 import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 
 @Component({
+  selector: 'data-resources-detail-modal',
   templateUrl: './data-resources-detail-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./data-resources-detail-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [enterLeftAnimation, enterRightAnimation, emptyEnterAnimation],
 })
 export class DataResourcesDetailModalComponent implements OnInit {

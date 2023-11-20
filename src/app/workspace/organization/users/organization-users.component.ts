@@ -21,6 +21,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
 
 @Component({
+  selector: 'organization-users',
   templateUrl: './organization-users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

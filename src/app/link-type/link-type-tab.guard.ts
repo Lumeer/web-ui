@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
 import {Observable, of} from 'rxjs';
 import {map, mergeMap, switchMap, take} from 'rxjs/operators';
@@ -35,7 +35,7 @@ import {selectLinkTypeById} from '../core/store/link-types/link-types.state';
 import {LinkType} from '../core/store/link-types/link.type';
 
 @Injectable()
-export class LinkTypeTabGuard implements CanActivateChild {
+export class LinkTypeTabGuard {
   constructor(
     private router: Router,
     private store$: Store<AppState>,

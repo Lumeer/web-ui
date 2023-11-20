@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, first, map, mergeMap, tap} from 'rxjs/operators';
@@ -36,7 +36,7 @@ import {ConfigurationService} from '../../configuration/configuration.service';
 import {User} from '../store/users/user';
 
 @Injectable()
-export class CurrentUserGuard implements CanActivate, CanActivateChild {
+export class CurrentUserGuard {
   constructor(
     private authService: AuthService,
     private router: Router,

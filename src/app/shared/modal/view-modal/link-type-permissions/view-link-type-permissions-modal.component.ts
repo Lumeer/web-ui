@@ -52,6 +52,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../core/store/collections/collection';
 
 @Component({
+  selector: 'view-link-type-permissions-modal',
   templateUrl: './view-link-type-permissions-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

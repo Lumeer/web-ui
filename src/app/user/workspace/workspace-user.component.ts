@@ -39,6 +39,7 @@ import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
 
 @Component({
+  selector: 'workspace-user',
   templateUrl: './workspace-user.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
