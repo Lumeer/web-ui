@@ -8,7 +8,14 @@
   "bracketSpacing": false,
   "arrowParens": "avoid",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "importOrder": ["^@angular/(.*)$", "^@ngrx/(.*)$", "<THIRD_PARTY_MODULES>", "^@lumeer/(.*)$", "^[./]"],
+  "importOrder": [
+    "^zone.js/(.*)$",
+    "^@angular/(.*)$",
+    "^@ngrx/(.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^@lumeer/(.*)$",
+    "^[./]"
+  ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrderParserPlugins": ["typescript", "classProperties", "decorators-legacy"]
