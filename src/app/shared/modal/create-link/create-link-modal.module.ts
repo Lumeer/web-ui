@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CreateLinkModalComponent} from './create-link-modal.component';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+
 import {PickerModule} from '../../picker/picker.module';
 import {PipesModule} from '../../pipes/pipes.module';
-import {LinkNameInputComponent} from './link-name-input/link-name-input.component';
 import {PresenterModule} from '../../presenter/presenter.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {CreateLinkModalComponent} from './create-link-modal.component';
+import {LinkNameInputComponent} from './link-name-input/link-name-input.component';
 
 @NgModule({
   declarations: [CreateLinkModalComponent, LinkNameInputComponent],

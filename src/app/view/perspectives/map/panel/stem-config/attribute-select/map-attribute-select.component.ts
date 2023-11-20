@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
+
 import {MapAttributeModel} from '../../../../../../core/store/maps/map.model';
+import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'map-attribute-select',

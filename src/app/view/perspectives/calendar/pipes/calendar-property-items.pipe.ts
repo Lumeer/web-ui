@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {CalendarStemConfig} from '../../../../core/store/calendars/calendar';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+
 import {queryAttributesAreSame} from '@lumeer/data-filters';
+
+import {CalendarStemConfig} from '../../../../core/store/calendars/calendar';
+import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 
 const sameCollectionProperties = ['start', 'end'];
 

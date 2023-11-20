@@ -16,33 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {GettingStartedModalComponent} from './getting-started-modal.component';
+import {RouterModule} from '@angular/router';
+
 import {PipesModule} from '../../pipes/pipes.module';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {ProgressModule} from '../../progress/progress.module';
+import {SelectModule} from '../../select/select.module';
 import {WarningMessageModule} from '../../warning-message/warning-message.module';
-import {FilterTemplatesPipe} from './pipes/filter-templates.pipe';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {GettingStartedModalComponent} from './getting-started-modal.component';
 import {FilterTemplatesByTagPipe} from './pipes/filter-templates-by-tag.pipe';
+import {FilterTemplatesPipe} from './pipes/filter-templates.pipe';
+import {ChooseOrganizationComponent} from './steps/choose-organization/choose-organization.component';
+import {CopyProjectComponent} from './steps/copy-project/copy-project.component';
+import {EmailVerificationComponent} from './steps/email-verification/email-verification.component';
+import {InviteUsersComponent} from './steps/invite-users/invite-users.component';
 import {SelectProjectTemplateComponent} from './steps/template/select-project-template.component';
+import {TemplateDetailComponent} from './steps/template/templates/content/detail/template-detail.component';
+import {TemplateItemComponent} from './steps/template/templates/content/select/template/template-item.component';
+import {TemplatesSelectComponent} from './steps/template/templates/content/select/templates-select.component';
+import {TemplatesContentComponent} from './steps/template/templates/content/templates-content.component';
+import {TemplatesToolbarComponent} from './steps/template/templates/content/toolbar/templates-toolbar.component';
+import {EmptyTemplatesComponent} from './steps/template/templates/empty/empty-templates.component';
 import {ProjectTemplatesComponent} from './steps/template/templates/project-templates.component';
 import {TemplatesTagsComponent} from './steps/template/templates/tags/templates-tags.component';
-import {TemplatesSelectComponent} from './steps/template/templates/content/select/templates-select.component';
-import {TemplateDetailComponent} from './steps/template/templates/content/detail/template-detail.component';
-import {EmptyTemplatesComponent} from './steps/template/templates/empty/empty-templates.component';
-import {TemplateItemComponent} from './steps/template/templates/content/select/template/template-item.component';
-import {TemplatesToolbarComponent} from './steps/template/templates/content/toolbar/templates-toolbar.component';
-import {TemplatesContentComponent} from './steps/template/templates/content/templates-content.component';
-import {ChooseOrganizationComponent} from './steps/choose-organization/choose-organization.component';
-import {InviteUsersComponent} from './steps/invite-users/invite-users.component';
-import {SelectModule} from '../../select/select.module';
-import {EmailVerificationComponent} from './steps/email-verification/email-verification.component';
 import {GettingStartedVideoComponent} from './steps/video/getting-started-video.component';
-import {ProgressModule} from '../../progress/progress.module';
-import {CopyProjectComponent} from './steps/copy-project/copy-project.component';
-import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [

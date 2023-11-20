@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {calendarsAdapter, CalendarsState, initialCalendarsState} from './calendars.state';
 import {CalendarsAction, CalendarsActionType} from './calendars.action';
+import {CalendarsState, calendarsAdapter, initialCalendarsState} from './calendars.state';
 
 export function calendarsReducer(
   state: CalendarsState = initialCalendarsState,

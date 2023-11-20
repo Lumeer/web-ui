@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {AuthService} from './auth.service';
+
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
+
 import {ConfigurationService} from '../configuration/configuration.service';
+import {AuthService} from './auth.service';
 
 @Injectable({
   providedIn: 'root',

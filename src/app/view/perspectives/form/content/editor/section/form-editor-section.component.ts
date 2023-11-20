@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {FormRow, FormRowLayoutType, FormSection} from '../../../../../../core/store/form/form-model';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {generateCorrelationId} from '../../../../../../shared/utils/resource.utils';
 import {COLOR_GRAY700} from '../../../../../../core/constants';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {FormRow, FormRowLayoutType, FormSection} from '../../../../../../core/store/form/form-model';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {View} from '../../../../../../core/store/views/view';
+import {generateCorrelationId} from '../../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'form-editor-section',

@@ -16,36 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import {NgModule} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
-import {WorkflowPerspectiveComponent} from './workflow-perspective.component';
-import {WorkflowPerspectiveRoutingModule} from './workflow-perspective-routing.module';
+import {RouterModule} from '@angular/router';
+
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
-import {TableModule} from '../../../shared/table/table.module';
-import {WorkflowTablesComponent} from './content/tables/workflow-tables.component';
-import {PipesModule} from '../../../shared/pipes/pipes.module';
-import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
-import {InputModule} from '../../../shared/input/input.module';
-import {WorkflowToolbarComponent} from './content/tables/toolbar/workflow-toolbar.component';
-import {SelectModule} from '../../../shared/select/select.module';
-import {WorkflowSelectedItemPipe} from './pipes/workflow-selected-item.pipe';
-import {FilterStemTablesPipe} from './pipes/filter-stem-tables.pipe';
-import {ResizerDirective} from '../../../shared/directives/resizer.directive';
-import {WorkflowContentComponent} from './content/workflow-content.component';
-import {ResizableSidebarModule} from '../../../shared/resizable-sidebar/resizable-sidebar.module';
-import {WorkflowSidebarComponent} from './content/sidebar/workflow-sidebar.component';
 import {DataResourceModule} from '../../../shared/data-resource/data-resource.module';
-import {SettingsModule} from '../../../shared/settings/settings.module';
-import {LinksListModule} from '../../../shared/links/links-list/links-list.module';
-import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
-import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table-title.component';
-import {PresenterModule} from '../../../shared/presenter/presenter.module';
-import {FilterUniqueStemsConfigsPipe} from './pipes/filter-unique-stems-configs.pipe';
 import {DirectivesModule} from '../../../shared/directives/directives.module';
+import {ResizerDirective} from '../../../shared/directives/resizer.directive';
+import {InputModule} from '../../../shared/input/input.module';
+import {LinksListModule} from '../../../shared/links/links-list/links-list.module';
+import {PipesModule} from '../../../shared/pipes/pipes.module';
+import {PresenterModule} from '../../../shared/presenter/presenter.module';
+import {ResizableSidebarModule} from '../../../shared/resizable-sidebar/resizable-sidebar.module';
+import {SelectModule} from '../../../shared/select/select.module';
+import {SettingsModule} from '../../../shared/settings/settings.module';
+import {TableModule} from '../../../shared/table/table.module';
+import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
+import {WorkflowSidebarComponent} from './content/sidebar/workflow-sidebar.component';
+import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table-title.component';
+import {WorkflowToolbarComponent} from './content/tables/toolbar/workflow-toolbar.component';
+import {WorkflowTablesComponent} from './content/tables/workflow-tables.component';
+import {WorkflowContentComponent} from './content/workflow-content.component';
 import {FilterStemFooterPipe} from './pipes/filter-stem-footer.pipe';
+import {FilterStemTablesPipe} from './pipes/filter-stem-tables.pipe';
+import {FilterUniqueStemsConfigsPipe} from './pipes/filter-unique-stems-configs.pipe';
+import {WorkflowSelectedItemPipe} from './pipes/workflow-selected-item.pipe';
+import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
+import {WorkflowPerspectiveRoutingModule} from './workflow-perspective-routing.module';
+import {WorkflowPerspectiveComponent} from './workflow-perspective.component';
 
 @NgModule({
   declarations: [

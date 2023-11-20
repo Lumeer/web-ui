@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
+
+import {Sequence} from '../../../core/model/sequence';
 import {AppState} from '../../../core/store/app.state';
 import {SequencesAction} from '../../../core/store/sequences/sequences.action';
-import {Observable} from 'rxjs';
-import {Sequence} from '../../../core/model/sequence';
 import {selectAllSequencesSorted} from '../../../core/store/sequences/sequences.state';
 
 @Component({

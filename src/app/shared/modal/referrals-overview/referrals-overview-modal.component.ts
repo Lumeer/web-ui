@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {DialogType} from '../dialog-type';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
-import {filter, take} from 'rxjs/operators';
-import {UsersAction} from '../../../core/store/users/users.action';
 import {Observable} from 'rxjs';
-import {User} from '../../../core/store/users/user';
-import {LanguageCode} from '../../../core/model/language';
+import {filter, take} from 'rxjs/operators';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {LanguageCode} from '../../../core/model/language';
+import {AppState} from '../../../core/store/app.state';
+import {User} from '../../../core/store/users/user';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'referrals-overview',

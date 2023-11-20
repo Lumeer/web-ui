@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+
 import {
   DashboardAction,
   DashboardCell,
@@ -25,10 +25,10 @@ import {
   DashboardCellType,
   DashboardViewCellConfig,
 } from '../../../../../../core/model/dashboard-tab';
+import {View} from '../../../../../../core/store/views/view';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../../utils/common.utils';
 import {parseSelectTranslation} from '../../../../../utils/translation.utils';
-import {View} from '../../../../../../core/store/views/view';
 import {createDefaultAction} from './actions/dashboard-actions-config.component';
 
 @Component({

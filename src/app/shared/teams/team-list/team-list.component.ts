@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,25 +27,28 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import {User, UserHintsKeys} from '../../../core/store/users/user';
-import {ResourceType} from '../../../core/model/resource-type';
-import {Project} from '../../../core/store/projects/project';
-import {Organization} from '../../../core/store/organizations/organization';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Team} from '../../../core/store/teams/team';
-import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
-import {Permission, Permissions, PermissionType, Role} from '../../../core/store/permissions/permissions';
-import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
-import {Resource} from '../../../core/model/resource';
-import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} from '../../utils/permission.utils';
-import {RoleType} from '../../../core/model/role-type';
-import {PermissionsHelper} from '../../../core/store/permissions/permissions.helper';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {NotificationButton} from '../../../core/notifications/notification-button';
-import {ResourcePermissionType, resourcePermissionTypeMap} from '../../../core/model/resource-permission-type';
+
 import {deepObjectCopy} from '@lumeer/utils';
+
+import {Resource} from '../../../core/model/resource';
+import {ResourcePermissionType, resourcePermissionTypeMap} from '../../../core/model/resource-permission-type';
+import {ResourceType} from '../../../core/model/resource-type';
+import {RoleType} from '../../../core/model/role-type';
+import {NotificationButton} from '../../../core/notifications/notification-button';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {AppState} from '../../../core/store/app.state';
+import {Organization} from '../../../core/store/organizations/organization';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
+import {Permission, PermissionType, Permissions, Role} from '../../../core/store/permissions/permissions';
+import {PermissionsHelper} from '../../../core/store/permissions/permissions.helper';
+import {Project} from '../../../core/store/projects/project';
+import {Team} from '../../../core/store/teams/team';
+import {User, UserHintsKeys} from '../../../core/store/users/user';
+import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
+import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} from '../../utils/permission.utils';
 
 @Component({
   selector: 'team-list',

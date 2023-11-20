@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {FlexibleConnectedPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
@@ -37,10 +36,13 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import {connectedPositionsMap, convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-position';
-import {BehaviorSubject, interval, Observable, Subscription} from 'rxjs';
-import {preventEvent} from '../utils/common.utils';
+
+import {BehaviorSubject, Observable, Subscription, interval} from 'rxjs';
+
 import {deepObjectsEquals} from '@lumeer/utils';
+
+import {preventEvent} from '../utils/common.utils';
+import {DropdownPosition, connectedPositionsMap, convertDropdownToConnectedPositions} from './dropdown-position';
 
 @Component({
   selector: 'dropdown',

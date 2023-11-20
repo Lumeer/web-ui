@@ -16,12 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -31,17 +34,16 @@ import {
   selectPreviousWorkspaceUrl,
   selectWorkspace,
 } from '../../core/store/navigation/navigation.state';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {Project} from '../../core/store/projects/project';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
-import {selectAllUsers} from '../../core/store/users/users.state';
-import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
-import {Workspace} from '../../core/store/navigation/workspace';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {selectAllUsers} from '../../core/store/users/users.state';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
+import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 
 @Component({
   selector: 'organization-settings',

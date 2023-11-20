@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges, Output, EventEmitter} from '@angular/core';
-import {FormCell, FormRow} from '../../../../../../core/store/form/form-model';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {filterValidFormCells} from '../../../form-utils';
 import {ConstraintData, DataValue} from '@lumeer/data-filters';
-import {FormError} from '../validation/form-validation';
-import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
-import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
-import {FormCoordinates} from '../model/form-coordinates';
+
+import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {AttributesSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {FormCell, FormRow} from '../../../../../../core/store/form/form-model';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {AttributesSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
+import {filterValidFormCells} from '../../../form-utils';
+import {FormCoordinates} from '../model/form-coordinates';
+import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
+import {FormError} from '../validation/form-validation';
 
 @Component({
   selector: 'form-view-row',

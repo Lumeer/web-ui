@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,23 +27,24 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {ConstraintData} from '@lumeer/data-filters';
-import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {objectsByIdMap} from '@lumeer/utils';
+
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
-import {objectValues} from '../../../utils/common.utils';
-import {isResultRowChecked} from './pipes/is-result-row-checked.pipe';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkInstance, getOtherLinkedDocumentId} from '../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
 import {View} from '../../../../core/store/views/view';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {
   filterVisibleAttributesByResourceSettings,
   filterVisibleAttributesBySettings,
 } from '../../../utils/attribute.utils';
+import {objectValues} from '../../../utils/common.utils';
 import {sortDataObjectsByResourceAttributesSettings} from '../../../utils/data-resource.utils';
-import {ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
-import {objectsByIdMap} from '@lumeer/utils';
+import {isResultRowChecked} from './pipes/is-result-row-checked.pipe';
 
 export type ResultTableRow = {document: DocumentModel; linkInstance?: LinkInstance};
 

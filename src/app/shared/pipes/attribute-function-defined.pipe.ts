@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {Rule} from '../../core/model/rule';
 import {Attribute} from '../../core/store/collections/collection';
 import {attributeHasFunction, attributeHasRuleFunction} from '../utils/attribute.utils';
-import {Rule} from '../../core/model/rule';
 
 @Pipe({
   name: 'attributeFunctionDefined',

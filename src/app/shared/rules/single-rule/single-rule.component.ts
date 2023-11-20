@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Store} from '@ngrx/store';
+
 import {Rule, RuleType} from '../../../core/model/rule';
 import {AppState} from '../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {Attribute} from '../../../core/store/collections/collection';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 
 @Component({
   selector: 'single-rule',

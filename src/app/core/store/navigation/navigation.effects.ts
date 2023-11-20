@@ -16,28 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Action, Store, select} from '@ngrx/store';
+
 import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {Perspective} from '../../../view/perspectives/perspective';
+import {createLanguageUrl} from '../../model/language';
 import {ModuleLazyLoadingService} from '../../service/module-lazy-loading.service';
 import {AppState} from '../app.state';
+import {CommonAction, CommonActionType} from '../common/common.action';
 import {RouterAction} from '../router/router.action';
+import {selectViewQuery} from '../views/views.state';
 import {NavigationAction, NavigationActionType} from './navigation.action';
 import {selectNavigatingUrl, selectNavigation, selectUrl} from './navigation.state';
 import {QueryParam} from './query-param';
 import {Query, QueryStem} from './query/query';
 import {convertQueryModelToString} from './query/query.converter';
-import {convertViewCursorToString} from './view-cursor/view-cursor';
-import {selectViewQuery} from '../views/views.state';
-import {convertPerspectiveSettingsToString} from './settings/perspective-settings';
 import {createCollectionQueryStem} from './query/query.util';
-import {CommonAction, CommonActionType} from '../common/common.action';
-import {createLanguageUrl} from '../../model/language';
-import {ConfigurationService} from '../../../configuration/configuration.service';
+import {convertPerspectiveSettingsToString} from './settings/perspective-settings';
+import {convertViewCursorToString} from './view-cursor/view-cursor';
 
 @Injectable()
 export class NavigationEffects {

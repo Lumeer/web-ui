@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {selectCurrentUser} from '../store/users/users.state';
-import {AppState} from '../store/app.state';
+
+import {Store, select} from '@ngrx/store';
+
 import {filter, throttleTime} from 'rxjs/operators';
-import {User} from '../store/users/user';
+
+import {AuthService} from '../../auth/auth.service';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {languageCodeMap} from '../model/language';
+import {AppState} from '../store/app.state';
 import {NavigationAction} from '../store/navigation/navigation.action';
-import {AuthService} from '../../auth/auth.service';
+import {User} from '../store/users/user';
+import {selectCurrentUser} from '../store/users/users.state';
 
 @Injectable()
 export class CurrentUserCheckService {

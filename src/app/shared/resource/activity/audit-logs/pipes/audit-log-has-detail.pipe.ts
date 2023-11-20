@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
+
 import {ResourceType} from '../../../../../core/model/resource-type';
+import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
 import {findFirstAuditLogWithSameResource} from '../model/audit-log-filters';
 
 @Pipe({

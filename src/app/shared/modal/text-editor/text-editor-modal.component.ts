@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -27,15 +26,18 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {DialogType} from '../dialog-type';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {Subject} from 'rxjs';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {isMacOS} from '../../utils/system.utils';
-import {defaultTextEditorOptions} from './text-editor.utils';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
-import {textContainsOnlyBrTags} from '../../utils/string.utils';
+import {Subject} from 'rxjs';
+
 import {stripTextHtmlTags} from '@lumeer/utils';
+
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {textContainsOnlyBrTags} from '../../utils/string.utils';
+import {isMacOS} from '../../utils/system.utils';
+import {DialogType} from '../dialog-type';
+import {defaultTextEditorOptions} from './text-editor.utils';
 
 export interface TextEditorChanged {
   html: string;

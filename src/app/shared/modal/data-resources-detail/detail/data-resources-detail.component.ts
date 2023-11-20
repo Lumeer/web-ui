@@ -16,29 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {combineLatest, Observable, of} from 'rxjs';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectViewById, selectViewQuery} from '../../../../core/store/views/views.state';
-import {selectAllCollections, selectCollectionById} from '../../../../core/store/collections/collections.state';
-import {selectAllLinkTypes, selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
+
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {AppState} from '../../../../core/store/app.state';
+import {Collection} from '../../../../core/store/collections/collection';
+import {selectAllCollections, selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {
   createFlatCollectionSettingsQueryStem,
   createFlatLinkTypeSettingsQueryStem,
   createFlatResourcesSettingsQuery,
 } from '../../../../core/store/details/detail.utils';
-import {getAttributesResourceType} from '../../../utils/resource.utils';
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {selectDocumentById} from '../../../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
+import {selectAllLinkTypes, selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {View} from '../../../../core/store/views/view';
+import {selectViewById, selectViewQuery} from '../../../../core/store/views/views.state';
+import {getAttributesResourceType} from '../../../utils/resource.utils';
 
 @Component({
   selector: 'data-resources-detail',

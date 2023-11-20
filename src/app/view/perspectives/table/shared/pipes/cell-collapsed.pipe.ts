@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
+
+import {AppState} from '../../../../../core/store/app.state';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {selectTableById} from '../../../../../core/store/tables/tables.selector';
 import {isTableRowCollapsed} from '../../../../../core/store/tables/utils/table-row-collapsing.utils';
-import {AppState} from '../../../../../core/store/app.state';
 
 /**
  * Checks if the linked row from the previous table part has collapsed next linked rows (current cell is collapsed).

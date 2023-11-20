@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ScrollingModule} from '@angular/cdk/scrolling';
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
+
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {GravatarModule} from 'ngx-gravatar';
+
 import {DataInputModule} from '../../../../shared/data-input/data-input.module';
 import {PickerModule} from '../../../../shared/picker/picker.module';
 import {PipesModule} from '../../../../shared/pipes/pipes.module';
@@ -32,8 +33,12 @@ import {TableSharedModule} from '../shared/table-shared.module';
 import {BooleanCollapsedCellComponent} from './rows/cell-group/collapsed-cell/boolean/boolean-collapsed-cell.component';
 import {ColorCollapsedCellComponent} from './rows/cell-group/collapsed-cell/color/color-collapsed-cell.component';
 import {GroupColorsByCountPipe} from './rows/cell-group/collapsed-cell/color/group-colors-by-count.pipe';
+import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/files/files-collapsed-cell.component';
+import {LinkCollapsedCellComponent} from './rows/cell-group/collapsed-cell/link/link-collapsed-cell.component';
 import {TableCollapsedCellMenuComponent} from './rows/cell-group/collapsed-cell/menu/table-collapsed-cell-menu.component';
+import {CreateCombinedSelectValuePipe} from './rows/cell-group/collapsed-cell/select/create-combined-select-value.pipe';
 import {TableCollapsedCellComponent} from './rows/cell-group/collapsed-cell/table-collapsed-cell.component';
+import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user/create-combined-user-value.pipe';
 import {TableDataCellMenuComponent} from './rows/cell-group/data-cell/menu/table-data-cell-menu.component';
 import {TableDataCellComponent} from './rows/cell-group/data-cell/table-data-cell.component';
 import {TableCellGroupComponent} from './rows/cell-group/table-cell-group.component';
@@ -47,11 +52,6 @@ import {TableRowNumbersComponent} from './rows/primary-row/row-numbers/table-row
 import {TablePrimaryRowComponent} from './rows/primary-row/table-primary-row.component';
 import {TableRowsComponent} from './rows/table-rows.component';
 import {TableBodyComponent} from './table-body.component';
-import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/files/files-collapsed-cell.component';
-import {CreateCombinedSelectValuePipe} from './rows/cell-group/collapsed-cell/select/create-combined-select-value.pipe';
-import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user/create-combined-user-value.pipe';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {LinkCollapsedCellComponent} from './rows/cell-group/collapsed-cell/link/link-collapsed-cell.component';
 
 @NgModule({
   imports: [

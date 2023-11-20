@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {select, Store} from '@ngrx/store';
-import {map, take, tap} from 'rxjs/operators';
-import {ModalsAction, ModalsActionType} from './modals.action';
-import {AppState} from '../app.state';
-import {selectModalsIds} from './modals.state';
-import {ToastrService} from 'ngx-toastr';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalService} from 'ngx-bootstrap/modal';
+import {ToastrService} from 'ngx-toastr';
+import {map, take, tap} from 'rxjs/operators';
+
+import {AppState} from '../app.state';
+import {ModalsAction, ModalsActionType} from './modals.action';
+import {selectModalsIds} from './modals.state';
 
 @Injectable()
 export class ModalsEffects {

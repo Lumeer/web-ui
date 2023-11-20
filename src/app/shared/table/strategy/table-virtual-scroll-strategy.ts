@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Injectable} from '@angular/core';
-import {CdkVirtualScrollViewport, VirtualScrollStrategy} from '@angular/cdk/scrolling';
 import {ListRange} from '@angular/cdk/collections';
+import {CdkVirtualScrollViewport, VirtualScrollStrategy} from '@angular/cdk/scrolling';
+import {Injectable} from '@angular/core';
+
 import {BehaviorSubject, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 

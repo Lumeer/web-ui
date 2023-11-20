@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ErrorHandler, Injectable} from '@angular/core';
+
 import * as Sentry from '@sentry/browser';
+
 import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()

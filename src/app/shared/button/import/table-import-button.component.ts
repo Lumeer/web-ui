@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
 import {take} from 'rxjs/operators';
+
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
-import {createEmptyCollection} from '../../../core/store/collections/collection.util';
-import {selectViewQuery} from '../../../core/store/views/views.state';
-import {queryIsNotEmpty} from '../../../core/store/navigation/query/query.util';
-import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Collection} from '../../../core/store/collections/collection';
+import {createEmptyCollection} from '../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
+import {NavigationAction} from '../../../core/store/navigation/navigation.action';
+import {queryIsNotEmpty} from '../../../core/store/navigation/query/query.util';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {selectViewQuery} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'table-import-button',

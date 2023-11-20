@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {DataQuery} from '../../model/data-query';
-import {Workspace} from '../navigation/workspace';
-import {areDataQueriesEqual} from '../navigation/query/query.helper';
-import {Query} from '../navigation/query/query';
-import {isQuerySubset} from '../navigation/query/query.util';
 import {ResourcesPermissions} from '../../model/allowed-permissions';
+import {DataQuery} from '../../model/data-query';
+import {Query} from '../navigation/query/query';
+import {areDataQueriesEqual} from '../navigation/query/query.helper';
+import {isQuerySubset} from '../navigation/query/query.util';
+import {Workspace} from '../navigation/workspace';
 
 export interface DataQueryPayload {
   query: DataQuery;

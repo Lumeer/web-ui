@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {Project} from '../../../../../core/store/projects/project';
-import {ConfigurationService} from '../../../../../configuration/configuration.service';
-import {GettingStartedService} from '../../getting-started.service';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {Project} from '../../../../../core/store/projects/project';
+import {GettingStartedService} from '../../getting-started.service';
 
 @Component({
   selector: 'copy-project',

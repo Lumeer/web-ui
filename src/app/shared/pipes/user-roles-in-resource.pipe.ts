@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
-import {User} from '../../core/store/users/user';
 import {Resource} from '../../core/model/resource';
-import {Organization} from '../../core/store/organizations/organization';
-import {Project} from '../../core/store/projects/project';
 import {ResourceType} from '../../core/model/resource-type';
-import {Permission} from '../../core/store/permissions/permissions';
 import {RoleType} from '../../core/model/role-type';
+import {Organization} from '../../core/store/organizations/organization';
+import {Permission} from '../../core/store/permissions/permissions';
+import {Project} from '../../core/store/projects/project';
+import {User} from '../../core/store/users/user';
 import {userRoleTypesInOrganization, userRoleTypesInProject, userRoleTypesInResource} from '../utils/permission.utils';
 
 @Pipe({

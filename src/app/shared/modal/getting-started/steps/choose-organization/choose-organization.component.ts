@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {Organization} from '../../../../../core/store/organizations/organization';
-import {GettingStartedService} from '../../getting-started.service';
+
 import {AppState} from '../../../../../core/store/app.state';
+import {Organization} from '../../../../../core/store/organizations/organization';
 import {selectManageOrganizations} from '../../../../../core/store/organizations/organizations.state';
+import {GettingStartedService} from '../../getting-started.service';
 
 @Component({
   selector: 'choose-organization',

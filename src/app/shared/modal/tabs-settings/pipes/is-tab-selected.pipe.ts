@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {DashboardTab} from '../../../../core/model/dashboard-tab';
 import {isTabSelected} from '../content/tabs-settings-content.component';
 

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatMenu} from '@angular/material/menu';
-import {MenuItem} from '../model/menu-item';
+
 import {preventEvent} from '../../utils/common.utils';
+import {MenuItem} from '../model/menu-item';
 
 @Component({
   selector: 'lmr-menu',

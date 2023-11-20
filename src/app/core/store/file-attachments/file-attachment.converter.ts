@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
 import {Workspace} from '../navigation/workspace';
 import {FileAttachment, FileAttachmentType, fileAttachmentTypesMap} from './file-attachment.model';

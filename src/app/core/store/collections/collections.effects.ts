@@ -16,17 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Action, Store, select} from '@ngrx/store';
+
+import mixpanel from 'mixpanel-browser';
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {CollectionService} from '../../data-service';
 import {CollectionDto, PermissionDto} from '../../dto';
 import {ImportService} from '../../rest';
+import {Ga4Service} from '../../service/ga4.service';
+import {LimitsService} from '../../service/limits.service';
 import {AppState} from '../app.state';
+import * as AuditLogActions from '../audit-logs/audit-logs.actions';
 import {CommonAction} from '../common/common.action';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
@@ -35,6 +42,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
+import {convertRuleToDto, createCallbackActions} from '../utils/store.utils';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {Attribute, Collection} from './collection';
 import {
@@ -50,13 +58,6 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from './collections.state';
-import mixpanel from 'mixpanel-browser';
-import {CollectionService} from '../../data-service';
-import {convertRuleToDto, createCallbackActions} from '../utils/store.utils';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import * as AuditLogActions from '../audit-logs/audit-logs.actions';
-import {LimitsService} from '../../service/limits.service';
-import {Ga4Service} from '../../service/ga4.service';
 
 @Injectable()
 export class CollectionsEffects {

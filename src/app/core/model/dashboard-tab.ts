@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {RowLayoutType} from '../../shared/layout/row-layout/row-layout';
 import {AllowedPermissions} from './allowed-permissions';
 

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {UntypedFormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+
 import {isNullOrUndefined} from '@lumeer/utils';
 
 export function notEmptyValidator(): ValidatorFn {

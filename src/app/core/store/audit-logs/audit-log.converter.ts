@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {AuditLogDto} from '../../dto/audit-log.dto';
-import {AuditLog, auditLogMap, AuditLogType} from './audit-log.model';
 import {resourceTypesMap} from '../../model/resource-type';
+import {AuditLog, AuditLogType, auditLogMap} from './audit-log.model';
 
 export function convertAuditLogDtoToModel(dto: AuditLogDto): AuditLog {
   return {

@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
-import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
-import {LinkInstance} from './link.instance';
 import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
+import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
+import {LinkInstancesState, initialLinkInstancesState, linkInstancesAdapter} from './link-instances.state';
+import {LinkInstance} from './link.instance';
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,

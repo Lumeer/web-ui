@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {ganttChartsAdapter, GanttChartsState, initialGanttChartsState} from './gantt-charts.state';
 import {GanttChartAction, GanttChartActionType} from './gantt-charts.action';
+import {GanttChartsState, ganttChartsAdapter, initialGanttChartsState} from './gantt-charts.state';
 
 export function ganttChartsReducer(
   state: GanttChartsState = initialGanttChartsState,

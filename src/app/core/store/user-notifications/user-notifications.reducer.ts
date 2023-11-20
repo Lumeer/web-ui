@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {UserNotificationsAction, UserNotificationsActionType} from './user-notifications.action';
 import {
+  UserNotificationsState,
   initialUserNotificationsState,
   userNotificationsAdapter,
-  UserNotificationsState,
 } from './user-notifications.state';
-import {UserNotificationsAction, UserNotificationsActionType} from './user-notifications.action';
 
 export function userNotificationsReducer(
   state: UserNotificationsState = initialUserNotificationsState,

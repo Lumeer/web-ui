@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {availableLanguages, LanguageCode} from '../core/model/language';
-import {Configuration} from '../../environments/configuration-type';
+
 import {configuration} from '../../environments/configuration';
+import {Configuration} from '../../environments/configuration-type';
 import {ConfigurationVariables} from '../../environments/configuration-variables';
+import {LanguageCode, availableLanguages} from '../core/model/language';
 
 let env = {};
 try {

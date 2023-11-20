@@ -16,23 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {Collection} from '../../core/store/collections/collection';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {ResourcesPermissions} from '../../core/model/allowed-permissions';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {LinkInstance} from '../../core/store/link-instances/link.instance';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
-import {Query} from '../../core/store/navigation/query/query';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {ViewsAction} from '../../core/store/views/views.action';
-import {selectCurrentView, selectSidebarOpened, selectViewAdditionalQueries} from '../../core/store/views/views.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {View} from '../../core/store/views/view';
-import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
+
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+
+import {ResourcesPermissions} from '../../core/model/allowed-permissions';
+import {LoadDataService} from '../../core/service/load-data.service';
+import {AppState} from '../../core/store/app.state';
+import {Collection} from '../../core/store/collections/collection';
 import {
   selectCanManageViewConfig,
   selectCollectionsByCustomViewAndQuery,
@@ -41,16 +37,23 @@ import {
   selectLinkTypesInCustomViewAndQuery,
   selectResourcesPermissionsByView,
 } from '../../core/store/common/permissions.selectors';
-import {selectViewDataQuery, selectViewSettingsByView} from '../../core/store/view-settings/view-settings.state';
+import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {selectQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
-import {DEFAULT_PERSPECTIVE_ID} from './perspective';
-import {ViewConfigPerspectiveComponent} from './view-config-perspective.component';
+import {DocumentModel} from '../../core/store/documents/document.model';
+import {LinkInstance} from '../../core/store/link-instances/link.instance';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
+import {Query} from '../../core/store/navigation/query/query';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {User} from '../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {Workspace} from '../../core/store/navigation/workspace';
-import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
 import {ViewSettings} from '../../core/store/view-settings/view-settings';
-import {LoadDataService} from '../../core/service/load-data.service';
+import {selectViewDataQuery, selectViewSettingsByView} from '../../core/store/view-settings/view-settings.state';
+import {View} from '../../core/store/views/view';
+import {ViewsAction} from '../../core/store/views/views.action';
+import {selectCurrentView, selectSidebarOpened, selectViewAdditionalQueries} from '../../core/store/views/views.state';
+import {DEFAULT_PERSPECTIVE_ID} from './perspective';
+import {ViewConfigPerspectiveComponent} from './view-config-perspective.component';
 
 @Directive()
 export abstract class DataPerspectiveDirective<T>

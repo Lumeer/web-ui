@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Team} from './team';
 import {TeamDto} from '../../dto';
+import {Team} from './team';
 
 export function convertTeamDtoToModel(dto: TeamDto, organizationId?: string): Team {
   return {

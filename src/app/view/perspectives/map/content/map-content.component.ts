@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,10 +26,30 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
+
+import {
+  ConstraintData,
+  CoordinatesConstraint,
+  CoordinatesConstraintConfig,
+  DocumentsAndLinksData,
+} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
+import {AppState} from '../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {generateDocumentDataByResourceQuery} from '../../../../core/store/documents/document.utils';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {checkOrTransformMapConfig} from '../../../../core/store/maps/map-config.utils';
 import {
   MapConfig,
   MapCoordinates,
@@ -39,31 +58,15 @@ import {
   MapPosition,
 } from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
-import {ModalService} from '../../../../shared/modal/modal.service';
-import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {MapDataConverter} from './map-data-converter';
-import {checkOrTransformMapConfig} from '../../../../core/store/maps/map-config.utils';
-import {deepArrayEquals} from '../../../../shared/utils/array.utils';
-import {MapGlobeContentComponent} from './globe-content/map-globe-content.component';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
-import {
-  ConstraintData,
-  CoordinatesConstraint,
-  CoordinatesConstraintConfig,
-  DocumentsAndLinksData,
-} from '@lumeer/data-filters';
-import {AppState} from '../../../../core/store/app.state';
-import {User} from '../../../../core/store/users/user';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {User} from '../../../../core/store/users/user';
 import {View} from '../../../../core/store/views/view';
-import {generateDocumentDataByResourceQuery} from '../../../../core/store/documents/document.utils';
+import {ModalService} from '../../../../shared/modal/modal.service';
+import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {deepObjectsEquals} from '@lumeer/utils';
+import {MapGlobeContentComponent} from './globe-content/map-globe-content.component';
+import {MapDataConverter} from './map-data-converter';
 
 interface Data {
   collections: Collection[];

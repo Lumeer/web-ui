@@ -16,26 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {Collection} from '../../core/store/collections/collection';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {Query} from '../../core/store/navigation/query/query';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest, of} from 'rxjs';
 import {filter, map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {DefaultViewConfig, View, ViewConfig} from '../../core/store/views/view';
+
+import {AppState} from '../../core/store/app.state';
+import {Collection} from '../../core/store/collections/collection';
+import {selectCollectionsLoaded} from '../../core/store/collections/collections.state';
 import {
   selectCollectionsByCustomViewAndQuery,
   selectLinkTypesInCustomViewAndQuery,
 } from '../../core/store/common/permissions.selectors';
-import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
-import {DEFAULT_PERSPECTIVE_ID} from './perspective';
-import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
-import {selectCollectionsLoaded} from '../../core/store/collections/collections.state';
 import {selectLinkTypesLoaded} from '../../core/store/link-types/link-types.state';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
+import {Query} from '../../core/store/navigation/query/query';
+import {DefaultViewConfig, View, ViewConfig} from '../../core/store/views/view';
+import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
+import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.state';
+import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 
 @Injectable()
 export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDestroy {

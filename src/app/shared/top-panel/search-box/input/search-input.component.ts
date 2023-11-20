@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,12 +26,13 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
-import {QueryItem} from '../query-item/model/query-item';
-import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
-import {QueryItemType} from '../query-item/model/query-item-type';
+
 import {Direction} from '../../../direction';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
 import {FulltextQueryItem} from '../query-item/model/fulltext.query-item';
+import {QueryItem} from '../query-item/model/query-item';
+import {QueryItemType} from '../query-item/model/query-item-type';
+import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 
 @Component({
   selector: 'search-input',

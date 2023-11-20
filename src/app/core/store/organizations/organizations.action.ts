@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {Organization} from './organization';
+
 import {Permission, PermissionType} from '../permissions/permissions';
+import {Organization} from './organization';
 
 export enum OrganizationsActionType {
   GET_ALL_WORKSPACES = '[Organizations] Get All Workspaces',

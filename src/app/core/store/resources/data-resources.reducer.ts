@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialResourcesState, ResourcesState} from './data-resources.state';
 import {ResourcesAction, ResourcesActionType} from './data-resources.action';
+import {ResourcesState, initialResourcesState} from './data-resources.state';
 
 export function resourcesReducer(
   state: ResourcesState = initialResourcesState,

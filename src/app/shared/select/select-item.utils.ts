@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Collection} from '../../core/store/collections/collection';
-import {SelectItemModel} from './select-item/select-item.model';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
-import {getAttributesResourceType} from '../utils/resource.utils';
 import {ConstraintType} from '@lumeer/data-filters';
+
+import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {Project} from '../../core/store/projects/project';
+import {getAttributesResourceType} from '../utils/resource.utils';
+import {SelectItemModel} from './select-item/select-item.model';
 
 export function projectSelectItems(projects: Project[], id?: (Project) => any): SelectItemModel[] {
   return projects?.map(project => projectSelectItem(project, id)) || [];

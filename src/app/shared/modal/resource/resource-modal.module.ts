@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 
-import {ResourceModalHeaderComponent} from './header/resource-modal-header.component';
-import {PresenterModule} from '../../presenter/presenter.module';
 import {PipesModule} from '../../pipes/pipes.module';
+import {PresenterModule} from '../../presenter/presenter.module';
+import {ResourceModalHeaderComponent} from './header/resource-modal-header.component';
 
 @NgModule({
   declarations: [ResourceModalHeaderComponent],

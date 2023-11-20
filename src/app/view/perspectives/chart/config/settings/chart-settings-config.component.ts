@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {deepObjectCopy} from '@lumeer/utils';
+
 import {ChartConfig} from '../../../../../core/store/charts/chart';
 import {generateId} from '../../../../../shared/utils/resource.utils';
-import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'chart-settings-config',

@@ -1,7 +1,8 @@
 import {WebAuth} from 'auth0-js';
+
+import {SessionType} from '../../src/app/auth/common/session-type';
 import './commands/rest.commands.js';
 import './commands/visit.commands.js';
-import {SessionType} from '../../src/app/auth/common/session-type';
 
 const ACCESS_TOKEN_KEY = 'auth_access_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';

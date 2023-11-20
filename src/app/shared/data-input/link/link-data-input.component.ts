@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,12 +27,14 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {CommonDataInputConfiguration} from '../data-input-configuration';
-import {DataInputSaveAction} from '../data-input-save-action';
-import {preventEvent} from '../../utils/common.utils';
+
+import {LinkDataValue, completeLinkValue, formatLinkValue} from '@lumeer/data-filters';
+
 import {EmbeddedLinkModalComponent} from '../../modal/embedded-link/embedded-link-modal.component';
+import {preventEvent} from '../../utils/common.utils';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputModalService} from '../data-input-modal.service';
-import {formatLinkValue, LinkDataValue, completeLinkValue} from '@lumeer/data-filters';
+import {DataInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'link-data-input',

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Directive, ElementRef, EventEmitter, HostListener, OnInit, Output, Renderer2} from '@angular/core';
 
-import {Directive, HostListener, ElementRef, Renderer2, Output, EventEmitter, OnInit} from '@angular/core';
 import {preventEvent} from '../utils/common.utils';
 
 @Directive({

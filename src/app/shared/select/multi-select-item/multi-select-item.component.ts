@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -29,14 +28,17 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
+
+import {BehaviorSubject} from 'rxjs';
+
+import {uniqueValues} from '@lumeer/utils';
+
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {BehaviorSubject} from 'rxjs';
-import {SelectItemModel} from '../select-item/select-item.model';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
 import {createDropdownOptions} from '../select-item/select-item.component';
-import {uniqueValues} from '@lumeer/utils';
+import {SelectItemModel} from '../select-item/select-item.model';
 
 @Component({
   selector: 'multi-select-item',

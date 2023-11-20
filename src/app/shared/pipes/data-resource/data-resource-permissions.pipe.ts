@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {DataResource} from '../../../core/model/resource';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {DataResourcePermissions} from '../../../core/model/data-resource-permissions';
+import {DataResource} from '../../../core/model/resource';
+import {Collection} from '../../../core/store/collections/collection';
+import {LinkType} from '../../../core/store/link-types/link.type';
 import {User} from '../../../core/store/users/user';
 import {dataResourcePermissions} from '../../utils/permission.utils';
-import {DataResourcePermissions} from '../../../core/model/data-resource-permissions';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {Collection} from '../../../core/store/collections/collection';
-import {ConstraintData} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataResourcePermissions',

@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Input,
-  Output,
+  Component,
   EventEmitter,
+  Input,
   OnChanges,
-  SimpleChanges,
   OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, FormControl, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+
 import {Subscription} from 'rxjs';
 
 @Component({

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,29 +26,33 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, of} from 'rxjs';
 import {distinctUntilChanged, map, tap} from 'rxjs/operators';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
+import {DataQuery} from '../../core/model/data-query';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
-  selectDocumentsByCollectionAndQuery,
   selectCollectionsByCustomQueryWithoutLinks,
+  selectDocumentsByCollectionAndQuery,
   selectReadableCollectionsByView,
 } from '../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {DocumentModel} from '../../core/store/documents/document.model';
+import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {
   filterStemsForCollection,
   queryContainsOnlyFulltexts,
   queryIsEmpty,
 } from '../../core/store/navigation/query/query.util';
-import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
-import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
-import {ConstraintData} from '@lumeer/data-filters';
-import {DataQuery} from '../../core/model/data-query';
+import {AttributesSettings} from '../../core/store/view-settings/view-settings';
 import {View} from '../../core/store/views/view';
 import {objectChanged} from '../utils/common.utils';
-import {AttributesSettings} from '../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'preview-results',

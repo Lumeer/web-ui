@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -29,17 +28,20 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
+
+import {BehaviorSubject} from 'rxjs';
+
+import {ConstraintType, SelectConstraintOption, SelectDataValue} from '@lumeer/data-filters';
+import {uniqueValues} from '@lumeer/utils';
+
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
 import {CommonDataInputConfiguration, SelectDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {BehaviorSubject} from 'rxjs';
-import {ConstraintType, SelectConstraintOption, SelectDataValue} from '@lumeer/data-filters';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {createSelectDataInputDropdownOptions} from './select-data-input-utils';
-import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'select-data-input',

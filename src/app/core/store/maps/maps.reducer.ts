@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {DEFAULT_MAP_CONFIG, MapModel} from './map.model';
 import {MapsAction, MapsActionType} from './maps.action';
-import {initialMapsState, mapsAdapter, MapsState} from './maps.state';
+import {MapsState, initialMapsState, mapsAdapter} from './maps.state';
 
 export function mapsReducer(state: MapsState = initialMapsState, action: MapsAction.All): MapsState {
   switch (action.type) {

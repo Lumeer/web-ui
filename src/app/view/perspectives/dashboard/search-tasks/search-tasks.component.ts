@@ -16,46 +16,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
+import {LinkType} from 'src/app/core/store/link-types/link.type';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {LoadDataService, LoadDataServiceProvider} from '../../../../core/service/load-data.service';
 import {AppState} from '../../../../core/store/app.state';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
+import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {
   selectCollectionsPermissionsByView,
   selectTasksCollectionsByViewAndCustomQuery,
   selectTasksDocumentsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {SearchConfig, SearchTasksConfig} from '../../../../core/store/searches/search';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {selectSearchConfigById, selectSearchId} from '../../../../core/store/searches/searches.state';
-import {SearchesAction} from '../../../../core/store/searches/searches.action';
-import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {SearchConfig, SearchTasksConfig} from '../../../../core/store/searches/search';
+import {SearchesAction} from '../../../../core/store/searches/searches.action';
+import {selectSearchConfigById, selectSearchId} from '../../../../core/store/searches/searches.state';
+import {User} from '../../../../core/store/users/user';
+import {selectCurrentUser} from '../../../../core/store/users/users.state';
+import {DefaultViewConfig, View, ViewConfig} from '../../../../core/store/views/view';
 import {ViewsAction} from '../../../../core/store/views/views.action';
-import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
 import {
   selectAllViews,
   selectCurrentView,
   selectDefaultViewConfig,
   selectViewQuery,
 } from '../../../../core/store/views/views.state';
-import {ConstraintData} from '@lumeer/data-filters';
-import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
-import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
-import {DefaultViewConfig, View, ViewConfig} from '../../../../core/store/views/view';
-import {User} from '../../../../core/store/users/user';
-import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
-import {selectCurrentUser} from '../../../../core/store/users/users.state';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
+import {SearchPerspectiveConfiguration, defaultSearchPerspectiveConfiguration} from '../../perspective-configuration';
 import {ViewConfigPerspectiveComponent} from '../../view-config-perspective.component';
-import {LinkType} from 'src/app/core/store/link-types/link.type';
-import {LoadDataService, LoadDataServiceProvider} from '../../../../core/service/load-data.service';
 
 const PAGE_SIZE = 50;
 

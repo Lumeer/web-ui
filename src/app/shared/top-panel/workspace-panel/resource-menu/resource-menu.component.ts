@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,28 +29,31 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, Subscription} from 'rxjs';
+
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Resource} from '../../../../core/model/resource';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {AppState} from '../../../../core/store/app.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Organization} from '../../../../core/store/organizations/organization';
+import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
+import {selectServiceLimitsByOrganizationId} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
 import {Project} from '../../../../core/store/projects/project';
 import {ProjectsAction} from '../../../../core/store/projects/projects.action';
-import {Resource} from '../../../../core/model/resource';
-import {DropdownPosition} from '../../../dropdown/dropdown-position';
-import {DropdownComponent} from '../../../dropdown/dropdown.component';
-import {User} from '../../../../core/store/users/user';
-import {Observable, Subscription} from 'rxjs';
-import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
-import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
-import {selectServiceLimitsByOrganizationId} from '../../../../core/store/organizations/service-limits/service-limits.state';
-import {objectChanged} from '../../../utils/common.utils';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {
   selectOrganizationPermissions,
   selectProjectPermissions,
 } from '../../../../core/store/user-permissions/user-permissions.state';
-import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
+import {User} from '../../../../core/store/users/user';
+import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
+import {DropdownPosition} from '../../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../../dropdown/dropdown.component';
+import {objectChanged} from '../../../utils/common.utils';
 
 @Component({
   selector: 'resource-menu',

@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+
+import {BehaviorSubject} from 'rxjs';
+
 import {ResourceCommentModel} from '../../../../core/store/resource-comments/resource-comment.model';
 import {User} from '../../../../core/store/users/user';
-import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'comment-item',

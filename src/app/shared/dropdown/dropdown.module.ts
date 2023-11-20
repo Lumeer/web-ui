@@ -16,24 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import {DropdownOptionDirective} from './options/dropdown-option.directive';
-import {DropdownComponent} from './dropdown.component';
-import {OptionsDropdownComponent} from './options/options-dropdown.component';
-import {PresenterModule} from '../presenter/presenter.module';
+
 import {GravatarModule} from 'ngx-gravatar';
-import {FilterDropdownOptionsPipe} from './pipes/filter-dropdown-options.pipe';
+
 import {PipesModule} from '../pipes/pipes.module';
-import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropdown-position.pipe';
-import {GroupDropdownOptionsPipe} from './pipes/group-dropdown-options.pipe';
-import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
-import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-options.pipe';
-import {FullscreenDropdownComponent} from './fullscreen/fullscreen-dropdown.component';
-import {PortalModule} from '@angular/cdk/portal';
+import {PresenterModule} from '../presenter/presenter.module';
+import {DropdownComponent} from './dropdown.component';
 import {FsCdkDragDirective} from './fullscreen/fs-cdk-drag.directive';
+import {FullscreenDropdownComponent} from './fullscreen/fullscreen-dropdown.component';
+import {DropdownOptionDirective} from './options/dropdown-option.directive';
+import {OptionsDropdownComponent} from './options/options-dropdown.component';
+import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
+import {FilterDropdownOptionsPipe} from './pipes/filter-dropdown-options.pipe';
+import {GroupDropdownOptionsPipe} from './pipes/group-dropdown-options.pipe';
+import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropdown-position.pipe';
+import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-options.pipe';
 
 @NgModule({
   imports: [CommonModule, PresenterModule, GravatarModule, PipesModule, DragDropModule, PortalModule],

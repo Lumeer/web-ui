@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading-modal.component';
+import {NgModule} from '@angular/core';
+
+import {WarningMessageModule} from '../../warning-message/warning-message.module';
 import {DataResourceDetailModalModule} from '../data-resource-detail/data-resource-detail-modal.module';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {WarningMessageModule} from '../../warning-message/warning-message.module';
+import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading-modal.component';
 
 @NgModule({
   declarations: [DataResourceDetailLoadingModalComponent],

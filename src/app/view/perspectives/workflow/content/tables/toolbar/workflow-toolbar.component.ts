@@ -16,26 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
+
+import {Store} from '@ngrx/store';
+
+import {Constraint, QueryAttribute, queryAttributesAreSame, queryResourcesAreSame} from '@lumeer/data-filters';
+
+import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
+import {AppState} from '../../../../../../core/store/app.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
-import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
-import {SelectItem2Model} from '../../../../../../shared/select/select-item2/select-item2.model';
-import {View} from '../../../../../../core/store/views/view';
-import {AppState} from '../../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
-import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
-import {Constraint, QueryAttribute, queryAttributesAreSame, queryResourcesAreSame} from '@lumeer/data-filters';
-import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
-import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
+import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
+import {View} from '../../../../../../core/store/views/view';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
+import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
+import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {SelectItem2Model} from '../../../../../../shared/select/select-item2/select-item2.model';
+import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
+import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'workflow-toolbar',

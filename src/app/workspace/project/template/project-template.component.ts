@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {View} from '../../../core/store/views/view';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {selectAllCollections} from '../../../core/store/collections/collections.state';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {selectViewsByReadSorted} from '../../../core/store/common/permissions.selectors';
+import {Workspace} from '../../../core/store/navigation/workspace';
 import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
-import {selectViewsByReadSorted} from '../../../core/store/common/permissions.selectors';
-import {selectAllCollections} from '../../../core/store/collections/collections.state';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {Collection} from '../../../core/store/collections/collection';
+import {View} from '../../../core/store/views/view';
 
 @Component({
   selector: 'project-template',

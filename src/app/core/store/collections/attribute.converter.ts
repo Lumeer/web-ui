@@ -16,8 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {
+  AttributeLock,
+  AttributeLockExceptionGroup,
+  AttributeLockGroupType,
+  Constraint,
+  ConstraintConfig,
+  ConstraintType,
+  DateTimeConstraintConfig,
+  NumberConstraintConfig,
+  SelectConstraintConfig,
+  SelectConstraintOption,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
+import {convertToBig} from '@lumeer/utils';
 
+import {selectDefaultPalette} from '../../../shared/picker/colors';
 import {createConstraint} from '../../../shared/utils/constraint/create-constraint';
+import {
+  convertAttributeFilterEquationToDto,
+  convertAttributeFilterEquationToModel,
+} from '../../dto/attribute-filter-equation.dto';
 import {
   AttributeDto,
   AttributeFormattingDto,
@@ -27,27 +46,8 @@ import {
   AttributeLockExceptionGroupDto,
   ConstraintDto,
 } from '../../dto/attribute.dto';
-import {Attribute, AttributeFormatting, AttributeFormattingGroup, AttributeFunction} from './collection';
-import {
-  Constraint,
-  ConstraintConfig,
-  ConstraintType,
-  DateTimeConstraintConfig,
-  NumberConstraintConfig,
-  SelectConstraintConfig,
-  SelectConstraintOption,
-  UnknownConstraint,
-  AttributeLock,
-  AttributeLockExceptionGroup,
-  AttributeLockGroupType,
-} from '@lumeer/data-filters';
-import {selectDefaultPalette} from '../../../shared/picker/colors';
-import {
-  convertAttributeFilterEquationToDto,
-  convertAttributeFilterEquationToModel,
-} from '../../dto/attribute-filter-equation.dto';
 import {FontStyle} from '../../model/font-style';
-import {convertToBig} from '@lumeer/utils';
+import {Attribute, AttributeFormatting, AttributeFormattingGroup, AttributeFunction} from './collection';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
   return {

@@ -16,37 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {User} from '../../core/store/users/user';
-import {Organization} from '../../core/store/organizations/organization';
-import {Project} from '../../core/store/projects/project';
-import {
-  getAdditionalCollectionIdsFromView,
-  getAdditionalLinkTypeIdsFromView,
-  getQueriesCollectionIdsFromView,
-  getQueriesLinkTypeIdsFromView,
-} from '../../core/store/navigation/query/query.util';
-import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from '../../core/model/allowed-permissions';
-import {View} from '../../core/store/views/view';
-import {Collection} from '../../core/store/collections/collection';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {AttributesResource, DataResource, Resource} from '../../core/model/resource';
-import {RoleType} from '../../core/model/role-type';
-import {Permission, Permissions, Role} from '../../core/store/permissions/permissions';
-import {flattenMatrix} from './array.utils';
-import {PermissionsType} from '../../core/model/permissions-type';
-import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
-import {Team} from '../../core/store/teams/team';
-import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
 import {
   ConstraintData,
   userCanDeleteDataResource,
   userCanEditDataResource,
   userCanReadDataResource,
 } from '@lumeer/data-filters';
-import {Perspective} from '../../view/perspectives/perspective';
-import {ResourcePermissionType} from '../../core/model/resource-permission-type';
 import {arrayIntersection, objectsByIdMap, uniqueValues} from '@lumeer/utils';
+
+import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from '../../core/model/allowed-permissions';
+import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
+import {PermissionsType} from '../../core/model/permissions-type';
+import {AttributesResource, DataResource, Resource} from '../../core/model/resource';
+import {ResourcePermissionType} from '../../core/model/resource-permission-type';
+import {RoleType} from '../../core/model/role-type';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {
+  getAdditionalCollectionIdsFromView,
+  getAdditionalLinkTypeIdsFromView,
+  getQueriesCollectionIdsFromView,
+  getQueriesLinkTypeIdsFromView,
+} from '../../core/store/navigation/query/query.util';
+import {Organization} from '../../core/store/organizations/organization';
+import {Permission, Permissions, Role} from '../../core/store/permissions/permissions';
+import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
+import {Project} from '../../core/store/projects/project';
+import {Team} from '../../core/store/teams/team';
+import {User} from '../../core/store/users/user';
+import {View} from '../../core/store/views/view';
+import {Perspective} from '../../view/perspectives/perspective';
+import {flattenMatrix} from './array.utils';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};

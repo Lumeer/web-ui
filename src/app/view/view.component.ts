@@ -16,16 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
-import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of, Subscription} from 'rxjs';
+
+import {Action, Store, select} from '@ngrx/store';
+
+import {Observable, Subscription, combineLatest, of} from 'rxjs';
 import {filter, first, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
+
 import {NotificationService} from '../core/notifications/notification.service';
 import {FileAttachmentsService} from '../core/service/file-attachments.service';
 import {AppState} from '../core/store/app.state';
 import {selectViewsByRead} from '../core/store/common/permissions.selectors';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
+import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
 import {View} from '../core/store/views/view';
 import {cleanClonedView, createViewSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
@@ -36,9 +39,8 @@ import {
   selectViewByCode,
   selectViewQuery,
 } from '../core/store/views/views.state';
-import {ViewControlsComponent} from './view-controls/view-controls.component';
-import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
 import {parseSelectTranslation} from '../shared/utils/translation.utils';
+import {ViewControlsComponent} from './view-controls/view-controls.component';
 
 @Component({
   selector: 'view',

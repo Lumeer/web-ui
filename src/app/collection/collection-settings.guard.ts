@@ -16,25 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {catchError, mergeMap, take, tap} from 'rxjs/operators';
-import {selectCollectionById, selectCollectionsLoaded} from '../core/store/collections/collections.state';
-import {select, Store} from '@ngrx/store';
+
+import {CollectionService} from '../core/data-service';
 import {AppState} from '../core/store/app.state';
 import {Collection} from '../core/store/collections/collection';
 import {CollectionsAction} from '../core/store/collections/collections.action';
-import {Organization} from '../core/store/organizations/organization';
+import {selectCollectionById, selectCollectionsLoaded} from '../core/store/collections/collections.state';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
-import {WorkspaceService} from '../workspace/workspace.service';
-import {User} from '../core/store/users/user';
+import {Organization} from '../core/store/organizations/organization';
 import {Project} from '../core/store/projects/project';
-import {CollectionService} from '../core/data-service';
+import {User} from '../core/store/users/user';
 import {userCanManageCollectionDetail} from '../shared/utils/permission.utils';
 import {ResourcesGuardService} from '../workspace/resources-guard.service';
+import {WorkspaceService} from '../workspace/workspace.service';
 
 @Injectable()
 export class CollectionSettingsGuard {

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {COLOR_LIGHT, COLOR_PRIMARY} from '../../core/constants';
 import {hex2rgba, shadeColor, stripedBackground} from './html-modifier';
 

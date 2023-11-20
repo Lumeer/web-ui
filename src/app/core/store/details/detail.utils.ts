@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {DetailConfig, DetailStemConfig} from './detail';
 import {arrayContainsSameItems} from '@lumeer/lumeer-gantt/dist/utils/common.utils';
+
 import {viewAttributeSettingsChanged, viewAttributesSettingsIsEmpty} from '../../../shared/settings/settings.util';
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
@@ -28,9 +27,10 @@ import {
   findBestStemConfigIndex,
   queryContainsOnlyFulltexts,
   queryIsEmpty,
-  queryStemsAreSame,
   queryStemWithoutFilters,
+  queryStemsAreSame,
 } from '../navigation/query/query.util';
+import {DetailConfig, DetailStemConfig} from './detail';
 
 export function modifyDetailPerspectiveQuery(query: Query, collections: Collection[]): Query {
   if (queryIsEmpty(query) || queryContainsOnlyFulltexts(query)) {

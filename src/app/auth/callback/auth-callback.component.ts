@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AfterViewChecked, Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+
 import {Store} from '@ngrx/store';
+
 import {map, take} from 'rxjs/operators';
-import {AppState} from '../../core/store/app.state';
-import {AuthService} from '../auth.service';
-import {ModalsAction} from '../../core/store/modals/modals.action';
+
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {AppState} from '../../core/store/app.state';
+import {ModalsAction} from '../../core/store/modals/modals.action';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'auth-callback',

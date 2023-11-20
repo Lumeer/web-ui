@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FilterBuilderComponent} from './filter-builder.component';
-import {DropdownModule} from '../../dropdown/dropdown.module';
+import {NgModule} from '@angular/core';
+
 import {DataInputModule} from '../../data-input/data-input.module';
-import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
+import {DropdownModule} from '../../dropdown/dropdown.module';
 import {InputModule} from '../../input/input.module';
 import {DataPipesModule} from '../../pipes/data/data-pipes.module';
 import {FilterBuilderPipesModule} from '../pipes/filter-builder-pipes.module';
+import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
+import {FilterBuilderComponent} from './filter-builder.component';
 
 @NgModule({
   declarations: [FilterBuilderComponent, FilterBuilderContentComponent],

@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {mergeMap, withLatestFrom} from 'rxjs/operators';
+
 import {AppState} from '../app.state';
-import {ResourcesAction, ResourcesActionType} from './data-resources.action';
-import {selectResourcesOrganizationAndProject} from './data-resources.state';
 import {CollectionsAction} from '../collections/collections.action';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {ViewsAction} from '../views/views.action';
+import {ResourcesAction, ResourcesActionType} from './data-resources.action';
+import {selectResourcesOrganizationAndProject} from './data-resources.state';
 
 @Injectable()
 export class ResourcesEffects {

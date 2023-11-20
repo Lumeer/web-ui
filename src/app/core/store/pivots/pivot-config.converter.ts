@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 import {PivotConfig, PivotConfigVersion} from './pivot';
 import {PivotConfigV0} from './pivot-old';
-import {isNotNullOrUndefined} from '@lumeer/utils';
 
 export function convertPivotConfigDtoToModel(config: any): PivotConfig {
   if (!config) {

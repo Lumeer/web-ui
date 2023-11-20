@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
+import {createSelector} from '@ngrx/store';
 
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {UserNotification, UserNotificationType} from '../../model/user-notification';
 import {AppState} from '../app.state';
-import {createSelector} from '@ngrx/store';
 
 export interface UserNotificationsState extends EntityState<UserNotification> {
   loaded: boolean;

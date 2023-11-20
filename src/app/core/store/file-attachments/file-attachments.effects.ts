@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+
+import {Perspective} from '../../../view/perspectives/perspective';
+import {AttachmentsService} from '../../data-service';
+import {FileApiPath, createFileApiPath} from '../../data-service/attachments/attachments.service';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
+import {AppState} from '../app.state';
+import {CollectionPurposeType} from '../collections/collection';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {selectCollectionsByCustomViewAndQuery, selectReadableCollectionsByView} from '../common/permissions.selectors';
 import {checkTasksCollectionsQuery, getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
 import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
-import {convertFileAttachmentDtoToModel, convertFileAttachmentModelToDto} from './file-attachment.converter';
-import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
-import {AttachmentsService} from '../../data-service';
-import {createFileApiPath, FileApiPath} from '../../data-service/attachments/attachments.service';
-import {selectLoadedFileAttachmentsCollections, selectLoadedFileAttachmentsLinkTypes} from './file-attachments.state';
-import {AppState} from '../app.state';
 import {selectCurrentView, selectViewById} from '../views/views.state';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {CollectionPurposeType} from '../collections/collection';
+import {convertFileAttachmentDtoToModel, convertFileAttachmentModelToDto} from './file-attachment.converter';
 import {isOnlyCollectionApiPath, isOnlyLinkTypeApiPath} from './file-attachment.utils';
+import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
+import {selectLoadedFileAttachmentsCollections, selectLoadedFileAttachmentsLinkTypes} from './file-attachments.state';
 
 @Injectable()
 export class FileAttachmentsEffects {

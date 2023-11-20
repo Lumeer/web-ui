@@ -16,22 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RolesComponent} from './roles.component';
-import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
-import {DropdownModule} from '../dropdown/dropdown.module';
+import {NgModule} from '@angular/core';
+
 import {AccordionModule} from 'ngx-bootstrap/accordion';
-import {RoleComponent} from './dropdown/role/role.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {PipesModule} from '../pipes/pipes.module';
 import {RoleGroupComponent} from './dropdown/role-group/role-group.component';
-import {IsRoleSelectedPipe} from './pipes/is-role-selected.pipe';
+import {RoleComponent} from './dropdown/role/role.component';
+import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
 import {FilterGroupedRolesWithHeaderPipe} from './pipes/filter-grouped-roles-with-header.pipe';
 import {FlattenUngroupedRolesPipe} from './pipes/flatten-ungrouped-roles.pipe';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {IsRoleSelectedPipe} from './pipes/is-role-selected.pipe';
 import {RoleTooltipPipe} from './pipes/role-tooltip.pipe';
-import {PipesModule} from '../pipes/pipes.module';
 import {RolesCountPipe} from './pipes/roles-count.pipe';
+import {RolesComponent} from './roles.component';
 
 @NgModule({
   declarations: [

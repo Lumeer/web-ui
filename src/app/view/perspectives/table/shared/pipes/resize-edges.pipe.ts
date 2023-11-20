@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {Edges} from 'angular-resizable-element';
+
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableModel} from '../../../../../core/store/tables/table.model';
 import {hasLastTableColumnChildHidden, isLastTableColumnChild} from '../../../../../core/store/tables/table.utils';

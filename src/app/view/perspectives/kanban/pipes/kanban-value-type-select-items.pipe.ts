@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+
 import {KanbanValueType} from '../../../../core/store/kanbans/kanban';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 @Pipe({

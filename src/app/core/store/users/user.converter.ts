@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {UserDto} from '../../dto';
-import {DefaultWorkspace, NotificationsSettings, User, UserHints, UserOnboarding} from './user';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {NotificationsSettingsDto, UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
-import {UserNotificationTypeMap} from '../../model/user-notification';
-import {NotificationFrequencyMap} from '../../model/notification-frequency';
 import {NotificationChannelMap} from '../../model/notification-channel';
+import {NotificationFrequencyMap} from '../../model/notification-frequency';
+import {UserNotificationTypeMap} from '../../model/user-notification';
+import {DefaultWorkspace, NotificationsSettings, User, UserHints, UserOnboarding} from './user';
 
 export function convertDefaultWorkspaceDtoToModel(dto: DefaultWorkspaceDto): DefaultWorkspace {
   return {

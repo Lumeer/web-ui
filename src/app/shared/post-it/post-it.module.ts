@@ -16,21 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {PostItComponent} from './post-it.component';
-import {DataInputModule} from '../data-input/data-input.module';
-import {PostItRowComponent} from './row/post-it-row.component';
-import {PipesModule} from '../pipes/pipes.module';
-import {PostItHeaderComponent} from './header/post-it-header.component';
-import {PresenterModule} from '../presenter/presenter.module';
-import {DataResourceFavoritePipe} from './pipes/data-resource-favorite.pipe';
-import {InputModule} from '../input/input.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {PostItLayoutTypeClassPipe} from './pipes/post-it-layout-type-class.pipe';
-import {DirectivesModule} from '../directives/directives.module';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
+import {DataInputModule} from '../data-input/data-input.module';
+import {DirectivesModule} from '../directives/directives.module';
+import {InputModule} from '../input/input.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {PresenterModule} from '../presenter/presenter.module';
+import {PostItHeaderComponent} from './header/post-it-header.component';
+import {DataResourceFavoritePipe} from './pipes/data-resource-favorite.pipe';
+import {PostItLayoutTypeClassPipe} from './pipes/post-it-layout-type-class.pipe';
+import {PostItComponent} from './post-it.component';
+import {PostItRowComponent} from './row/post-it-row.component';
 
 @NgModule({
   declarations: [

@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {EMPTY, of} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {AppState} from '../app.state';
 import {Router} from '@angular/router';
+
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {Store, select} from '@ngrx/store';
+
+import {EMPTY, of} from 'rxjs';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
+import {SelectionListsService} from '../../data-service/selection-lists/selection-lists.service';
+import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {createCallbackActions} from '../utils/store.utils';
+import {convertSelectionListDtoToModel, convertSelectionListModelToDto} from './selection-list.converter';
 import {SelectionListsAction, SelectionListsActionType} from './selection-lists.action';
 import {selectSelectionListsLoadedOrganization} from './selection-lists.state';
-import {SelectionListsService} from '../../data-service/selection-lists/selection-lists.service';
-import {convertSelectionListDtoToModel, convertSelectionListModelToDto} from './selection-list.converter';
-import {createCallbackActions} from '../utils/store.utils';
 
 @Injectable()
 export class SelectionListsEffects {

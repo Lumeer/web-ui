@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
+import {CreateDocumentModalModule} from '../../../shared/modal/create-document/create-document-modal.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {SearchBoxModule} from '../../../shared/top-panel/search-box/search-box.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
+import {DashboardModule} from '../dashboard/dashboard.module';
 import {SearchTasksModule} from '../dashboard/search-tasks/search-tasks.module';
+import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
 import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
-import {CreateDocumentModalModule} from '../../../shared/modal/create-document/create-document-modal.module';
-import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
-import {DashboardModule} from '../dashboard/dashboard.module';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [

@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild, Output, EventEmitter, ElementRef} from '@angular/core';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
-import {defaultTextEditorOptions} from '../../../modal/text-editor/text-editor.utils';
-import {FullscreenDropdownDirective} from '../../../dropdown/fullscreen/fullscreen-dropdown.directive';
+
 import {ModalData} from '../../../../core/model/modal-data';
-import {isMacOS} from '../../../utils/system.utils';
+import {FullscreenDropdownDirective} from '../../../dropdown/fullscreen/fullscreen-dropdown.directive';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
+import {defaultTextEditorOptions} from '../../../modal/text-editor/text-editor.utils';
 import {textContainsOnlyBrTags} from '../../../utils/string.utils';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
+import {isMacOS} from '../../../utils/system.utils';
 
 @Component({
   selector: 'rich-text-dropdown',

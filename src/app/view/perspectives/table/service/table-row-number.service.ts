@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators';
-import {selectTableRows} from '../../../../core/store/tables/tables.selector';
-import {countLinkedRows} from '../../../../core/store/tables/table.utils';
-import {TableConfigRow} from '../../../../core/store/tables/table.model';
+
 import {AppState} from '../../../../core/store/app.state';
+import {TableConfigRow} from '../../../../core/store/tables/table.model';
+import {countLinkedRows} from '../../../../core/store/tables/table.utils';
+import {selectTableRows} from '../../../../core/store/tables/tables.selector';
 
 const COMPUTE_BATCH = 100;
 

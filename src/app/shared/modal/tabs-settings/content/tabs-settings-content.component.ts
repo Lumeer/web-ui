@@ -16,25 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
   Output,
   SimpleChanges,
-  EventEmitter,
 } from '@angular/core';
-import {DashboardTab, TabType} from '../../../../core/model/dashboard-tab';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {generateId} from '../../../utils/resource.utils';
+
+import {DashboardTab, TabType} from '../../../../core/model/dashboard-tab';
 import {View} from '../../../../core/store/views/view';
-import {SelectItemModel} from '../../../select/select-item/select-item.model';
 import {createViewSelectItems} from '../../../../core/store/views/view.utils';
+import {SelectItemModel} from '../../../select/select-item/select-item.model';
 import {moveItemInArray} from '../../../utils/array.utils';
+import {generateId} from '../../../utils/resource.utils';
 
 @Component({
   selector: 'tabs-settings-content',

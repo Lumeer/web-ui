@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {PaymentStats} from '../organizations/payment/payment';
-import {UserNotificationType} from '../../model/user-notification';
 import {NotificationChannel} from '../../model/notification-channel';
 import {NotificationFrequency} from '../../model/notification-frequency';
+import {UserNotificationType} from '../../model/user-notification';
+import {PaymentStats} from '../organizations/payment/payment';
 import {Team} from '../teams/team';
 
 export interface User {

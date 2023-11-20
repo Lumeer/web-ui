@@ -17,9 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Component, HostListener, Input} from '@angular/core';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {keyboardEventCode, KeyCode} from '../../key-code';
 import {Subject} from 'rxjs';
+
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {DialogType} from '../dialog-type';
 
 @Component({

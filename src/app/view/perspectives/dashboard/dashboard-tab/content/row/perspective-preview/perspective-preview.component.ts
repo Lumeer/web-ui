@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Store} from '@ngrx/store';
+
+import {ViewSettingsService} from '../../../../../../../core/service/view-settings.service';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {FileAttachmentsAction} from '../../../../../../../core/store/file-attachments/file-attachments.action';
+import {SearchTab} from '../../../../../../../core/store/navigation/search-tab';
 import {View} from '../../../../../../../core/store/views/view';
+import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {Perspective} from '../../../../../perspective';
 import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
-import {SearchTab} from '../../../../../../../core/store/navigation/search-tab';
-import {objectChanged} from '../../../../../../../shared/utils/common.utils';
-import {AppState} from '../../../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {FileAttachmentsAction} from '../../../../../../../core/store/file-attachments/file-attachments.action';
-import {ViewSettingsService} from '../../../../../../../core/service/view-settings.service';
 
 @Component({
   selector: 'perspective-preview',

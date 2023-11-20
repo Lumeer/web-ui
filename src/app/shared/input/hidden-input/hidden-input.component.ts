@@ -16,12 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
-import {DataRowHiddenComponent} from '../../data/data-row-component';
-import {keyboardEventCode, KeyCode} from '../../key-code';
 import {DeviceDetectorService} from 'ngx-device-detector';
+
 import {escapeHtml} from '@lumeer/utils';
+
+import {DataRowHiddenComponent} from '../../data/data-row-component';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 
 @Component({
   selector: 'hidden-input',

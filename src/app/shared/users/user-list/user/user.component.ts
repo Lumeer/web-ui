@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {User} from '../../../../core/store/users/user';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {Team} from '../../../../core/store/teams/team';
-import {Workspace} from '../../../../core/store/navigation/workspace';
+import {User} from '../../../../core/store/users/user';
 import {objectChanged} from '../../../utils/common.utils';
-import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-component',

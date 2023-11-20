@@ -16,37 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatMenuModule} from '@angular/material/menu';
 
+import {DataDropdownModule} from '../data-dropdown/data-dropdown.module';
+import {DataInputModule} from '../data-input/data-input.module';
+import {DirectivesModule} from '../directives/directives.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
+import {MenuModule} from '../menu/menu.module';
 import {PickerModule} from '../picker/picker.module';
 import {PipesModule} from '../pipes/pipes.module';
+import {PresenterModule} from '../presenter/presenter.module';
+import {MultiSelectItemComponent} from './multi-select-item/multi-select-item.component';
+import {SelectCollectionComponent} from './select-collection/select-collection.component';
+import {SelectItemWithConstraint2Component} from './select-constraint-item2/select-item-with-constraint2.component';
+import {SelectItemsWithConstraint2Pipe} from './select-constraint-item2/select-items-with-constraint2.pipe';
 import {SelectItemWithConstraintComponent} from './select-constraint-item/select-item-with-constraint.component';
 import {SelectItemWithConstraintConfigPipe} from './select-constraint-item/select-items-with-constraint-config.pipe';
 import {SelectItemsWithConstraintPipe} from './select-constraint-item/select-items-with-constraint.pipe';
+import {GetSelectDataItemPipe} from './select-data-item/get-select-data-item.pipe';
+import {SelectDataItemComponent} from './select-data-item/select-data-item.component';
+import {GetSelectedItemsPipe} from './select-item2/get-selected-items.pipe';
+import {SelectItem2Component} from './select-item2/select-item2.component';
 import {AreIdsEqualPipe} from './select-item/pipes/are-ids-equal.pipe';
 import {GetSelectItemPipe} from './select-item/pipes/get-select-item.pipe';
-
-import {SelectItemComponent} from './select-item/select-item.component';
-import {PresenterModule} from '../presenter/presenter.module';
-import {SelectDataItemComponent} from './select-data-item/select-data-item.component';
-import {DataInputModule} from '../data-input/data-input.module';
-import {GetSelectDataItemPipe} from './select-data-item/get-select-data-item.pipe';
-import {DataDropdownModule} from '../data-dropdown/data-dropdown.module';
-import {SelectCollectionComponent} from './select-collection/select-collection.component';
-import {SelectItem2Component} from './select-item2/select-item2.component';
 import {SelectItemRowComponent} from './select-item/row/select-item-row.component';
-import {SelectItemWithConstraint2Component} from './select-constraint-item2/select-item-with-constraint2.component';
-import {SelectItemsWithConstraint2Pipe} from './select-constraint-item2/select-items-with-constraint2.pipe';
-import {GetSelectedItemsPipe} from './select-item2/get-selected-items.pipe';
-import {MenuModule} from '../menu/menu.module';
-import {MultiSelectItemComponent} from './multi-select-item/multi-select-item.component';
-import {DirectivesModule} from '../directives/directives.module';
+import {SelectItemComponent} from './select-item/select-item.component';
 
 @NgModule({
   imports: [

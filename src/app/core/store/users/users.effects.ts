@@ -16,18 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
+
+import mixpanel from 'mixpanel-browser';
 import {EMPTY, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
+import {isNullOrUndefined} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {UserService} from '../../data-service';
+import {ServiceLevelType} from '../../dto/service-level-type';
+import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
+import {Ga4Service} from '../../service/ga4.service';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {OrganizationsAction} from '../organizations/organizations.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
+import {selectAllServiceLimits} from '../organizations/service-limits/service-limits.state';
+import {TeamsAction} from '../teams/teams.action';
+import {createCallbackActions} from '../utils/store.utils';
 import {
   convertDefaultWorkspaceModelToDto,
   convertUserDtoToModel,
@@ -39,16 +51,6 @@ import {
 } from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
-import mixpanel from 'mixpanel-browser';
-import {OrganizationsAction} from '../organizations/organizations.action';
-import {createCallbackActions} from '../utils/store.utils';
-import {selectAllServiceLimits} from '../organizations/service-limits/service-limits.state';
-import {ServiceLevelType} from '../../dto/service-level-type';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import {TeamsAction} from '../teams/teams.action';
-import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
-import {Ga4Service} from '../../service/ga4.service';
-import {isNullOrUndefined} from '@lumeer/utils';
 
 @Injectable()
 export class UsersEffects {

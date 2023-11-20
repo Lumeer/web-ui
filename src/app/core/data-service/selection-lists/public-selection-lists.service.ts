@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
+import {Observable, of} from 'rxjs';
+
+import {SelectionListDto} from '../../dto/selection-list.dto';
 import {BaseService} from '../../rest/base.service';
 import {SelectionListsService} from './selection-lists.service';
-import {SelectionListDto} from '../../dto/selection-list.dto';
-import {Observable, of} from 'rxjs';
 
 @Injectable()
 export class PublicSelectionListsService extends BaseService implements SelectionListsService {

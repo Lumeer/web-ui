@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
+import {DashboardTabComponent} from '../dashboard/dashboard-tab/dashboard-tab.component';
 import {SearchAllComponent} from '../dashboard/search-all/search-all.component';
 import {SearchCollectionsComponent} from '../dashboard/search-collections/search-collections.component';
 import {SearchTasksComponent} from '../dashboard/search-tasks/search-tasks.component';
-import {SearchPerspectiveComponent} from './search-perspective.component';
-import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
 import {SearchViewsFoldersComponent} from '../dashboard/search-views/folders/search-views-folders.component';
-import {DashboardTabComponent} from '../dashboard/dashboard-tab/dashboard-tab.component';
+import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
+import {SearchPerspectiveComponent} from './search-perspective.component';
 
 const searchRoutes: Routes = [
   {

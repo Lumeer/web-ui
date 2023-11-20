@@ -16,21 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {ResourceCodeInputComponent} from './form/code-input/resource-code-input.component';
-import {ResourceNameInputComponent} from './form/name-input/resource-name-input.component';
-import {CreateResourceModalComponent} from './create-resource-modal.component';
+import {DirectivesModule} from '../../directives/directives.module';
 import {PickerModule} from '../../picker/picker.module';
-import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
-import {CreateResourceDialogParentComponent} from './form/parent/create-resource-dialog-parent.component';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {PresenterModule} from '../../presenter/presenter.module';
-import {DirectivesModule} from '../../directives/directives.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {CreateResourceModalComponent} from './create-resource-modal.component';
+import {ResourceCodeInputComponent} from './form/code-input/resource-code-input.component';
+import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
+import {ResourceNameInputComponent} from './form/name-input/resource-name-input.component';
+import {CreateResourceDialogParentComponent} from './form/parent/create-resource-dialog-parent.component';
 
 @NgModule({
   declarations: [

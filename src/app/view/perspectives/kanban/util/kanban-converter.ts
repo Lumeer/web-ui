@@ -16,8 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as moment from 'moment';
 
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DataAggregationType,
+  DataAggregator,
+  DataAggregatorAttribute,
+  DateTimeConstraintConfig,
+  DocumentsAndLinksData,
+  SelectConstraint,
+  UnknownConstraint,
+  aggregateDataValues,
+  findAttributeByQueryAttribute,
+  findConstraintByQueryAttribute,
+  findResourceByQueryResource,
+  queryAttributePermissions,
+} from '@lumeer/data-filters';
+import {convertToBig, deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {
   KanbanAggregation,
   KanbanAttribute,
@@ -28,37 +51,15 @@ import {
   KanbanValueType,
 } from '../../../../core/store/kanbans/kanban';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {generateId} from '../../../../shared/utils/resource.utils';
-import {SizeType} from '../../../../shared/slider/size/size-type';
-import {cleanKanbanAttribute, isKanbanAggregationDefined} from './kanban.util';
-import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from './kanban-data';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {parseDateTimeByConstraint} from '../../../../shared/utils/date.utils';
-import * as moment from 'moment';
-import {createDateTimeOptions} from '../../../../shared/date-time/date-time-options';
-import {
-  Constraint,
-  ConstraintData,
-  ConstraintType,
-  DataAggregationType,
-  DataAggregator,
-  DataAggregatorAttribute,
-  DateTimeConstraintConfig,
-  DocumentsAndLinksData,
-  findAttributeByQueryAttribute,
-  findConstraintByQueryAttribute,
-  findResourceByQueryResource,
-  queryAttributePermissions,
-  SelectConstraint,
-  aggregateDataValues,
-  UnknownConstraint,
-} from '@lumeer/data-filters';
-import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
-import {convertToBig, deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
+import {createDateTimeOptions} from '../../../../shared/date-time/date-time-options';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {SizeType} from '../../../../shared/slider/size/size-type';
+import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
+import {parseDateTimeByConstraint} from '../../../../shared/utils/date.utils';
+import {generateId} from '../../../../shared/utils/resource.utils';
+import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from './kanban-data';
+import {cleanKanbanAttribute, isKanbanAggregationDefined} from './kanban.util';
 
 interface AggregatedColumnData {
   count: number;

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {QueryAttribute} from '@lumeer/data-filters';
 
+import {MimeType} from '../../model/mime-type';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
 import {QueryStem} from '../navigation/query/query';
-import {MimeType} from '../../model/mime-type';
-import {QueryAttribute} from '@lumeer/data-filters';
 
 export interface MapCoordinates {
   lat: number;

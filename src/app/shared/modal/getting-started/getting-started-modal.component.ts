@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {NavigationExtras} from '@angular/router';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+import {Observable, Subscription, combineLatest} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
 import {Organization} from '../../../core/store/organizations/organization';
-import {GettingStartedService} from './getting-started.service';
 import {animateOpacityEnterLeave} from '../../animations';
 import {ModalProgress} from '../wrapper/model/modal-progress';
-import {map} from 'rxjs/operators';
-import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
-import {GettingStartedStage} from './model/getting-started-stage';
+import {GettingStartedService} from './getting-started.service';
 import {GettingStartedModalType} from './model/getting-started-modal-type';
+import {GettingStartedStage} from './model/getting-started-stage';
 
 @Component({
   selector: 'getting-started-modal',

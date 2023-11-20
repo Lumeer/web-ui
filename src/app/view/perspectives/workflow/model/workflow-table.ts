@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Constraint, DataResourceChain, DataValue} from '@lumeer/data-filters';
 
-import {TableModel} from '../../../../shared/table/model/table-model';
 import {DataResource} from '../../../../core/model/resource';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {Constraint, DataResourceChain, DataValue} from '@lumeer/data-filters';
+import {TableModel} from '../../../../shared/table/model/table-model';
 
 export interface WorkflowTable extends TableModel {
   title?: WorkflowTableTitle;

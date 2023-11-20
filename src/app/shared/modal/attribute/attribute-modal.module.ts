@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 
+import {AttributeCommonModalModule} from './common/attribute-common-modal.module';
+import {ConditionalFormattingModalComponent} from './conditional-formatting/conditional-formatting-modal.component';
+import {ConditionalFormattingModalModule} from './conditional-formatting/conditional-formatting-modal.module';
 import {AttributeDescriptionModalModule} from './description/attribute-description-modal.module';
 import {AttributeFunctionModalModule} from './function/attribute-function-modal.module';
 import {AttributeLockModalModule} from './lock/attribute-lock-modal.module';
 import {AttributeTypeModalModule} from './type/attribute-type-modal.module';
-import {AttributeCommonModalModule} from './common/attribute-common-modal.module';
-import {ConditionalFormattingModalComponent} from './conditional-formatting/conditional-formatting-modal.component';
-import {ConditionalFormattingModalModule} from './conditional-formatting/conditional-formatting-modal.module';
 
 @NgModule({
   imports: [

@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-
-import {Query} from '../../../core/store/navigation/query/query';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {take} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {SearchTab} from '../../../core/store/navigation/search-tab';
-import {QueryAction} from '../../../core/model/query-action';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+import {take} from 'rxjs/operators';
+
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectProjectPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {QueryAction} from '../../../core/model/query-action';
+import {AppState} from '../../../core/store/app.state';
 import {selectHasVisibleSearchTab} from '../../../core/store/common/permissions.selectors';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Query} from '../../../core/store/navigation/query/query';
+import {SearchTab} from '../../../core/store/navigation/search-tab';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {selectProjectPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 @Component({
   selector: 'empty-data',

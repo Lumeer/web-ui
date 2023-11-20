@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {AttributesResourceType} from '../../model/resource';
-import {CollectionAttributeFilter} from '../navigation/query/query';
 import {RowLayoutType} from '../../../shared/layout/row-layout/row-layout';
+import {AttributesResourceType} from '../../model/resource';
 import {Attribute} from '../collections/collection';
+import {CollectionAttributeFilter} from '../navigation/query/query';
 
 export interface FormModel {
   id: string;

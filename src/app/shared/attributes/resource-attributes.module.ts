@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {PipesModule} from '../pipes/pipes.module';
+
 import {DirectivesModule} from '../directives/directives.module';
-import {ResourceAttributesComponent} from './resource-attributes.component';
-import {ResourceAttributesTableComponent} from './table/resource-attributes-table.component';
+import {InputModule} from '../input/input.module';
+import {PipesModule} from '../pipes/pipes.module';
 import {AddResourceAttributeComponent} from './add/add-resource-attribute.component';
 import {AttributeFilterPipe} from './pipes/attribute-filter.pipe';
-import {InputModule} from '../input/input.module';
+import {ResourceAttributesComponent} from './resource-attributes.component';
+import {ResourceAttributesTableComponent} from './table/resource-attributes-table.component';
 
 @NgModule({
   declarations: [

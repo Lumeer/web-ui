@@ -16,21 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {GravatarModule} from 'ngx-gravatar';
+
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {GravatarModule} from 'ngx-gravatar';
 import {QuillModule} from 'ngx-quill';
-import {UserAvatarComponent} from './user-avatar/user-avatar.component';
-import {ShortDateComponent} from './comment-item/short-date/short-date.component';
-import {CommentItemComponent} from './comment-item/comment-item.component';
-import {NewCommentComponent} from './new-comment/new-comment.component';
-import {ResourceCommentsComponent} from './resource-comments.component';
-import {ProgressCircleComponent} from './new-comment/progress-circle/progress-circle.component';
-import {CommentsCountComponent} from './comments-count/comments-count.component';
+
 import {PipesModule} from '../../pipes/pipes.module';
+import {CommentItemComponent} from './comment-item/comment-item.component';
+import {ShortDateComponent} from './comment-item/short-date/short-date.component';
+import {CommentsCountComponent} from './comments-count/comments-count.component';
+import {NewCommentComponent} from './new-comment/new-comment.component';
+import {ProgressCircleComponent} from './new-comment/progress-circle/progress-circle.component';
+import {ResourceCommentsComponent} from './resource-comments.component';
+import {UserAvatarComponent} from './user-avatar/user-avatar.component';
 
 @NgModule({
   declarations: [

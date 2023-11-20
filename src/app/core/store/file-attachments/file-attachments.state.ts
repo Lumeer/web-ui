@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import {EntityAdapter, EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
 import {DataCursor} from '../../../shared/data-input/data-cursor';
 import {AppState} from '../app.state';
 import {selectWorkspaceWithIds} from '../common/common.selectors';

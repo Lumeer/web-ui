@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {Workspace} from '../../core/store/navigation/workspace';
-import {Perspective} from '../../view/perspectives/perspective';
 import {User} from '../../core/store/users/user';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Pipe({
   name: 'workspaceDefaultUrl',

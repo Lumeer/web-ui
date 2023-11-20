@@ -16,24 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ResourceHeaderComponent} from './header/resource-header.component';
-import {PickerModule} from '../picker/picker.module';
-import {InputModule} from '../input/input.module';
-import {ResourceVariablesComponent} from './variables/resource-variables.component';
-import {ResourceVariableRowComponent} from './variables/table/row/resource-variable-row.component';
-import {ResourceVariableHeaderComponent} from './variables/header/resource-variable-header.component';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {ResourceVariablesTableComponent} from './variables/table/resource-variables-table.component';
-import {PipesModule} from '../pipes/pipes.module';
-import {FilterResourceVariablesPipe} from './variables/pipes/filter-resource-variables.pipe';
+
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {ResourceVariablesKeysPipe} from './variables/pipes/resource-variables-keys.pipe';
+
+import {InputModule} from '../input/input.module';
+import {PickerModule} from '../picker/picker.module';
+import {PipesModule} from '../pipes/pipes.module';
 import {ResourceActivityModule} from './activity/resource-activity.module';
-import {ResourceVariablesModule} from './variables/resource-variables.module';
 import {ResourceCommentsModule} from './comments/resource-comments.module';
+import {ResourceHeaderComponent} from './header/resource-header.component';
+import {ResourceVariableHeaderComponent} from './variables/header/resource-variable-header.component';
+import {FilterResourceVariablesPipe} from './variables/pipes/filter-resource-variables.pipe';
+import {ResourceVariablesKeysPipe} from './variables/pipes/resource-variables-keys.pipe';
+import {ResourceVariablesComponent} from './variables/resource-variables.component';
+import {ResourceVariablesModule} from './variables/resource-variables.module';
+import {ResourceVariablesTableComponent} from './variables/table/resource-variables-table.component';
+import {ResourceVariableRowComponent} from './variables/table/row/resource-variable-row.component';
 
 @NgModule({
   declarations: [ResourceHeaderComponent],

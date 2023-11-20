@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, Subscription, combineLatest} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators';
-import {Workspace} from '../../../core/store/navigation/workspace';
+
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
-import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
-import {projectSelectItems} from '../../../shared/select/select-item.utils';
 import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
+import {projectSelectItems} from '../../../shared/select/select-item.utils';
+import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'workspace-user',

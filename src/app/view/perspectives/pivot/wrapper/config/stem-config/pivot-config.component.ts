@@ -16,8 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {DataAggregationType, cleanQueryAttribute} from '@lumeer/data-filters';
+import {deepObjectCopy, isNotNullOrUndefined} from '@lumeer/utils';
+
+import {DRAG_DELAY} from '../../../../../../core/constants';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
   PivotAttribute,
   PivotColumnAttribute,
@@ -26,16 +34,9 @@ import {
   PivotStemConfig,
   PivotValueAttribute,
 } from '../../../../../../core/store/pivots/pivot';
-import {PivotStemData} from '../../../util/pivot-data';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {pivotAttributesAreSame} from '../../../util/pivot-util';
-import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {DRAG_DELAY} from '../../../../../../core/constants';
-import {deepObjectCopy, isNotNullOrUndefined} from '@lumeer/utils';
-import {cleanQueryAttribute, DataAggregationType} from '@lumeer/data-filters';
+import {PivotStemData} from '../../../util/pivot-data';
+import {pivotAttributesAreSame} from '../../../util/pivot-util';
 
 @Component({
   selector: 'pivot-config',

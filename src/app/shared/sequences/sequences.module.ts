@@ -16,17 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
-import {PipesModule} from '../pipes/pipes.module';
-import {ModalModule} from '../modal/modal.module';
 import {InputModule} from '../input/input.module';
-import {SequenceListComponent} from './sequence-list/sequence-list.component';
+import {ModalModule} from '../modal/modal.module';
+import {PipesModule} from '../pipes/pipes.module';
 import {SequenceItemComponent} from './sequence-item/sequence-item.component';
+import {SequenceListComponent} from './sequence-list/sequence-list.component';
 
 @NgModule({
   imports: [CommonModule, PipesModule, RouterModule, ModalModule, FormsModule, InputModule],

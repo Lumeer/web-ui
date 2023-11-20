@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {AttributesResource} from '../../../../../core/model/resource';
-import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
-import {Perspective} from '../../../perspective';
-import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {objectValues} from '../../../../../shared/utils/common.utils';
 import {Constraint} from '@lumeer/data-filters';
 import {deepObjectCopy} from '@lumeer/utils';
+
+import {AttributesResource} from '../../../../../core/model/resource';
+import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
+import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {objectValues} from '../../../../../shared/utils/common.utils';
+import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {Perspective} from '../../../perspective';
 
 @Component({
   selector: 'chart-main-config',

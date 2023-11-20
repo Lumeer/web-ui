@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ConditionalFormattingModalComponent} from './conditional-formatting-modal.component';
-import {ModalWrapperModule} from '../../wrapper/modal-wrapper.module';
+
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
+import {PickerModule} from '../../../picker/picker.module';
 import {PipesModule} from '../../../pipes/pipes.module';
-import {AttributeCommonModalModule} from '../common/attribute-common-modal.module';
 import {SelectModule} from '../../../select/select.module';
+import {ModalWrapperModule} from '../../wrapper/modal-wrapper.module';
+import {AttributeCommonModalModule} from '../common/attribute-common-modal.module';
+import {ConditionalFormattingModalComponent} from './conditional-formatting-modal.component';
 import {ConditionalFormattingContentComponent} from './content/conditional-formatting-content.component';
 import {ConditionalFormattingGroupComponent} from './content/group/conditional-formatting-group.component';
-import {PickerModule} from '../../../picker/picker.module';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [

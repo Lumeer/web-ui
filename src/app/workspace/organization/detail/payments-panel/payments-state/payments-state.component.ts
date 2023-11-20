@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
+import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
-import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
 @Component({
   selector: 'payments-state',

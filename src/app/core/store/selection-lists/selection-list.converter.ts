@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {SelectionListDto} from '../../dto/selection-list.dto';
 import {SelectionList} from '../../../shared/lists/selection/selection-list';
+import {SelectionListDto} from '../../dto/selection-list.dto';
 import {convertSelectConstraintOptionsDtosToModels} from '../collections/attribute.converter';
 
 export function convertSelectionListDtoToModel(dto: SelectionListDto): SelectionList {

@@ -16,15 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
+import {EMPTY, Observable, of} from 'rxjs';
+
+import {PercentageConstraint} from '@lumeer/data-filters';
+
 import {AppState} from '../../core/store/app.state';
 import {Attribute, Collection} from '../../core/store/collections/collection';
-import {EMPTY, Observable, of} from 'rxjs';
-import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {PercentageConstraint} from '@lumeer/data-filters';
+import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 
 @Injectable({
   providedIn: 'root',

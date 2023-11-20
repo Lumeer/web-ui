@@ -16,23 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, UntypedFormArray, UntypedFormGroup} from '@angular/forms';
-import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+
 import {
   AttributeLockExceptionGroup,
   AttributeLockGroupType,
   UserConstraintType,
   UserDataValue,
 } from '@lumeer/data-filters';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+
 import {AttributesResource} from '../../../../../../core/model/resource';
-import {deepArrayEquals} from '../../../../../utils/array.utils';
+import {AppState} from '../../../../../../core/store/app.state';
+import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {SelectItem2Model} from '../../../../../select/select-item2/select-item2.model';
+import {deepArrayEquals} from '../../../../../utils/array.utils';
 
 @Component({
   selector: 'attribute-lock-exception-group',

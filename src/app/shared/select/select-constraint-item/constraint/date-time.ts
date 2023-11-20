@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Constraint, DateTimeConstraint, DateTimeConstraintConfig} from '@lumeer/data-filters';
 
 import {createDateTimeOptions} from '../../../date-time/date-time-options';
+import {parseSelectTranslation} from '../../../utils/translation.utils';
 import {SelectItemModel} from '../../select-item/select-item.model';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
-import {Constraint, DateTimeConstraint, DateTimeConstraintConfig} from '@lumeer/data-filters';
-import {parseSelectTranslation} from '../../../utils/translation.utils';
 
 export enum DateReadableFormatType {
   Yearly = 'yearly',

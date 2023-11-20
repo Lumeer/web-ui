@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {userDataValueCreateTeamValue} from '@lumeer/data-filters';
+import {removeAccentFromString} from '@lumeer/utils';
+
+import {COLOR_INFO} from '../../../../core/constants';
+import {Team} from '../../../../core/store/teams/team';
 import {User} from '../../../../core/store/users/user';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../../utils/common.utils';
-import {userDataValueCreateTeamValue} from '@lumeer/data-filters';
-import {Team} from '../../../../core/store/teams/team';
-import {COLOR_INFO} from '../../../../core/constants';
-import {removeAccentFromString} from '@lumeer/utils';
 
 @Pipe({
   name: 'filterUsersAndTeams',

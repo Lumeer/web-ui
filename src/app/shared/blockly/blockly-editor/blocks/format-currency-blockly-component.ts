@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {LanguageTag} from '@lumeer/data-filters';
 
-import {BlocklyComponent} from './blockly-component';
-import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_CYAN} from '../../../../core/constants';
 import {TranslationService} from '../../../../core/service/translation.service';
-import {LanguageTag} from '@lumeer/data-filters';
+import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
+import {BlocklyComponent} from './blockly-component';
 
 declare var Blockly: any;
 

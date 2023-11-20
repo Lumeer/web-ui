@@ -16,12 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
+
 import {CommonAction, CommonActionType} from './common.action';
 
 @Injectable()

@@ -16,15 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {User} from '../../../../core/store/users/user';
-import {NotificationService} from '../../../../core/notifications/notification.service';
-import {Team} from '../../../../core/store/teams/team';
-import {InputBoxComponent} from '../../../input/input-box/input-box.component';
-import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
+import {NotificationService} from '../../../../core/notifications/notification.service';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
+import {Team} from '../../../../core/store/teams/team';
+import {User} from '../../../../core/store/users/user';
+import {InputBoxComponent} from '../../../input/input-box/input-box.component';
 
 @Component({
   selector: 'team-component',

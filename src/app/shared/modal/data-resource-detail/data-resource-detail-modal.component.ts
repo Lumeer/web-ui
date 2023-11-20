@@ -16,36 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, TemplateRef} from '@angular/core';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
-import {getAttributesResourceType} from '../../utils/resource.utils';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {Query, QueryStem} from '../../../core/store/navigation/query/query';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
-import {DialogType} from '../dialog-type';
-import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {selectAllLinkTypes, selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
-import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {BehaviorSubject, Observable, Subscription, combineLatest, of} from 'rxjs';
+import {map, switchMap, tap} from 'rxjs/operators';
+
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
-import {selectDefaultDocumentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
+import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {
   createFlatCollectionSettingsQueryStem,
   createFlatLinkTypeSettingsQueryStem,
   createFlatResourcesSettingsQuery,
 } from '../../../core/store/details/detail.utils';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {selectAllLinkTypes, selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {View} from '../../../core/store/views/view';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {View} from '../../../core/store/views/view';
+import {selectDefaultDocumentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {getAttributesResourceType} from '../../utils/resource.utils';
+import {DialogType} from '../dialog-type';
 import {DataResourcesChain} from './model/data-resources-chain';
 
 @Component({

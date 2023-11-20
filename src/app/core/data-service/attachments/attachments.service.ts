@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Observable} from 'rxjs';
+
+import {DataCursor} from '../../../shared/data-input/data-cursor';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {DataCursor} from '../../../shared/data-input/data-cursor';
 
 export abstract class AttachmentsService {
   public abstract createFiles(path: FileApiPath, files: FileAttachmentDto[]): Observable<FileAttachmentDto[]>;

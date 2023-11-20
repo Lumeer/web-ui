@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ActiveDescendantKeyManager, ListKeyManager} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
@@ -32,13 +31,15 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {DataDropdownOption} from './data-dropdown-option';
-import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {DropdownOptionDirective} from '../../dropdown/options/dropdown-option.directive';
-import {DropdownPosition} from '../../dropdown/dropdown-position';
+
 import {ConstraintData} from '@lumeer/data-filters';
 import {deepObjectsEquals} from '@lumeer/utils';
+
+import {DropdownPosition} from '../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../dropdown/dropdown.component';
+import {DropdownOptionDirective} from '../../dropdown/options/dropdown-option.directive';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {DataDropdownOption} from './data-dropdown-option';
 
 @Component({
   selector: 'data-options-dropdown',

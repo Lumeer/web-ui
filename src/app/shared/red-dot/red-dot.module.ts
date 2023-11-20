@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RedDotComponent} from './red-dot/red-dot.component';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {NgModule} from '@angular/core';
+
 import {PopoverModule} from 'ngx-bootstrap/popover';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
 import {HintComponent} from './hint/hint.component';
+import {RedDotComponent} from './red-dot/red-dot.component';
 
 @NgModule({
   declarations: [RedDotComponent, HintComponent],

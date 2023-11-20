@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Directive, HostListener, ElementRef, Renderer2, Input, Output, EventEmitter} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, HostListener, Input, Output, Renderer2} from '@angular/core';
 
 @Directive({
   selector: '[resizer]',

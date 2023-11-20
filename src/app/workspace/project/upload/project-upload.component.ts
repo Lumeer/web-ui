@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
+
+import {Store, select} from '@ngrx/store';
+
 import {Subscription} from 'rxjs';
-import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
+
 import {DEFAULT_FILE_SIZE_MB} from '../../../core/constants';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {AppState} from '../../../core/store/app.state';
+import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
 
 @Component({
   selector: 'project-upload',

@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {BlocklyUtils} from '../blockly-utils';
 import {COLOR_GREEN} from '../../../../core/constants';
+import {BlocklyUtils} from '../blockly-utils';
 import {GetDocumentPropertyAbstractBlocklyComponent} from './get-document-property-abstract-blockly-component';
 
 declare var Blockly: any;

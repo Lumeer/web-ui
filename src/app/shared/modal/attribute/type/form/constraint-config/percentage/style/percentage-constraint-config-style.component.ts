@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, UntypedFormGroup} from '@angular/forms';
-import {PercentageConstraintFormControl} from '../percentage-constraint-form-control';
-import {PercentageDisplayStyle} from '@lumeer/data-filters';
+
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+
+import {PercentageDisplayStyle} from '@lumeer/data-filters';
+
 import {ColorPickerComponent} from '../../../../../../../picker/color/color-picker.component';
+import {PercentageConstraintFormControl} from '../percentage-constraint-form-control';
 
 interface PercentageStyleItem {
   title: string;

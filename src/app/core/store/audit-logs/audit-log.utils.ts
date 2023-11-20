@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {AuditLog} from './audit-log.model';
 import {ResourceType} from '../../model/resource-type';
+import {AuditLog} from './audit-log.model';
 
 export function isProjectAuditLogByUser(log: AuditLog, projectId: string, userId: string) {
   return log.userId === userId && isProjectAuditLog(log, projectId);

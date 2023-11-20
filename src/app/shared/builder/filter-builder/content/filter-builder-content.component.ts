@@ -16,19 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Attribute} from '../../../../core/store/collections/collection';
-import {ConditionItem, ConstraintConditionValueItem} from '../model/condition-item';
+
 import {BehaviorSubject} from 'rxjs';
-import {createRange} from '../../../utils/array.utils';
-import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
-import {TranslationService} from '../../../../core/service/translation.service';
-import {objectValues} from '../../../utils/common.utils';
+
 import {
   ConditionType,
-  conditionTypeNumberOfInputs,
   ConditionValue,
   Constraint,
   ConstraintData,
@@ -37,8 +30,17 @@ import {
   DateTimeConstraintConditionValue,
   UnknownConstraint,
   UserConstraintConditionValue,
+  conditionTypeNumberOfInputs,
 } from '@lumeer/data-filters';
+
+import {TranslationService} from '../../../../core/service/translation.service';
+import {Attribute} from '../../../../core/store/collections/collection';
 import {modifyAttributeForQueryBuilder} from '../../../../core/store/navigation/query/query.util';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
+import {createRange} from '../../../utils/array.utils';
+import {objectValues} from '../../../utils/common.utils';
+import {ConditionItem, ConstraintConditionValueItem} from '../model/condition-item';
 
 @Component({
   selector: 'filter-builder-content',

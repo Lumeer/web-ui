@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+
+import {Store, select} from '@ngrx/store';
+
+import {BsModalRef} from 'ngx-bootstrap/modal';
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
+import {map, startWith, take, tap} from 'rxjs/operators';
+
+import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
+import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
+import {selectLinkTypesByCollectionIds} from '../../../core/store/common/permissions.selectors';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {map, startWith, take, tap} from 'rxjs/operators';
-import {DialogType} from '../dialog-type';
-import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
-import {minLengthValidator} from '../../../core/validators/custom-validators';
-import {selectLinkTypesByCollectionIds} from '../../../core/store/common/permissions.selectors';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {minLengthValidator} from '../../../core/validators/custom-validators';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'create-link-modal',

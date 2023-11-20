@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener, ViewChild} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {Attribute, AttributeFormatting, Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {AppState} from '../../../../core/store/app.state';
-import {selectCollectionById} from '../../../../core/store/collections/collections.state';
-import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../../core/store/app.state';
+import {Attribute, AttributeFormatting, Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
+import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
 import {ConditionalFormattingContentComponent} from './content/conditional-formatting-content.component';
 
 @Component({

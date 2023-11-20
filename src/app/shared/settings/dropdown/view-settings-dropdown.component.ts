@@ -16,35 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   ElementRef,
-  ViewChild,
-  Output,
   EventEmitter,
+  Input,
   OnInit,
+  Output,
+  ViewChild,
 } from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest} from 'rxjs';
+import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+
+import {AttributesResourceType} from '../../../core/model/resource';
+import {PerspectiveService} from '../../../core/service/perspective.service';
+import {AppState} from '../../../core/store/app.state';
+import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
+import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
+import {selectLinkTypesInQuery} from '../../../core/store/common/permissions.selectors';
+import {selectPerspective} from '../../../core/store/navigation/navigation.state';
+import {Query} from '../../../core/store/navigation/query/query';
+import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
+import {AttributesSettings, DataSettings, ViewSettings} from '../../../core/store/view-settings/view-settings';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {select, Store} from '@ngrx/store';
-import {selectLinkTypesInQuery} from '../../../core/store/common/permissions.selectors';
-import {combineLatest, Observable} from 'rxjs';
-import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
-import {AppState} from '../../../core/store/app.state';
-import {AttributesResourceType} from '../../../core/model/resource';
-import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
-import {AttributesResourceData} from '../attributes/attributes-settings-configuration';
 import {getAttributesResourceType} from '../../utils/resource.utils';
-import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
-import {Query} from '../../../core/store/navigation/query/query';
-import {selectPerspective} from '../../../core/store/navigation/navigation.state';
-import {PerspectiveService} from '../../../core/service/perspective.service';
-import {AttributesSettings, DataSettings, ViewSettings} from '../../../core/store/view-settings/view-settings';
+import {AttributesResourceData} from '../attributes/attributes-settings-configuration';
 
 @Component({
   selector: 'view-settings-dropdown',

@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ConstraintType, UserConstraintType, UserDataValue} from '@lumeer/data-filters';
-import {User} from '../../../core/store/users/user';
+
 import {Team} from '../../../core/store/teams/team';
+import {User} from '../../../core/store/users/user';
 
 export function createUserDataInputUsers(value: UserDataValue): User[] {
   const type = value?.config?.type;

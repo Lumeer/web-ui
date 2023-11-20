@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {DropdownOption} from '../dropdown/options/dropdown-option';
+
 import {DataAggregationType} from '@lumeer/data-filters';
+
+import {DropdownOption} from '../dropdown/options/dropdown-option';
 import {dataAggregationIconMap, dataAggregationName} from '../utils/data-aggregation';
 
 @Pipe({

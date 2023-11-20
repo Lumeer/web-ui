@@ -16,15 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
+
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
+import {
+  selectAllLinkTypes,
+  selectLinkTypeByWorkspaceWithCollections,
+} from '../../core/store/link-types/link-types.state';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {
   selectNavigatingToOtherWorkspace,
@@ -33,15 +40,9 @@ import {
   selectWorkspace,
 } from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
-import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectLinkTypePermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {
-  selectAllLinkTypes,
-  selectLinkTypeByWorkspaceWithCollections,
-} from '../../core/store/link-types/link-types.state';
+import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 
 @Component({
   selector: 'link-type-settings',

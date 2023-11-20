@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
+
 import {selectDocumentsDictionary} from '../documents/documents.state';
-import {areTableCursorsEqual, TableBodyCursor, TableCursor} from './table-cursor';
+import {TableBodyCursor, TableCursor, areTableCursorsEqual} from './table-cursor';
 import {
   calculateRowHierarchyLevel,
   countLinkedRows,

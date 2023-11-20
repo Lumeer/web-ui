@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {ResourceCommentService} from '../../data-service/resource-comment/resource-comment.service';
+
 import {of} from 'rxjs';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
-import {ResourceCommentsAction, ResourceCommentsActionType} from './resource-comments.action';
-import {convertResourceCommentDtoToModel, convertResourceCommentModelToDto} from './resource-comment.converter';
+
+import {ResourceCommentService} from '../../data-service/resource-comment/resource-comment.service';
+import {ResourceType} from '../../model/resource-type';
+import {AppState} from '../app.state';
+import {DocumentsAction} from '../documents/documents.action';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions} from '../utils/store.utils';
-import {DocumentsAction} from '../documents/documents.action';
-import {ResourceType} from '../../model/resource-type';
-import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {convertResourceCommentDtoToModel, convertResourceCommentModelToDto} from './resource-comment.converter';
+import {ResourceCommentsAction, ResourceCommentsActionType} from './resource-comments.action';
 
 @Injectable()
 export class ResourceCommentsEffects {

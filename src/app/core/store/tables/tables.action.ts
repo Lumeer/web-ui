@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
+
 import {Direction} from '../../../shared/direction';
 import {DocumentModel} from '../documents/document.model';
 import {LinkInstance} from '../link-instances/link.instance';
+import {Query} from '../navigation/query/query';
+import {Workspace} from '../navigation/workspace';
+import {View} from '../views/view';
 import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
 import {TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableModel} from './table.model';
 import {EditedAttribute} from './tables.state';
-import {Query} from '../navigation/query/query';
-import {View} from '../views/view';
-import {Workspace} from '../navigation/workspace';
 
 export enum TablesActionType {
   CREATE_TABLE = '[Tables] Create Table',

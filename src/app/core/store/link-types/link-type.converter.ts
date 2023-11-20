@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {LinkTypeDto} from '../../dto';
-import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
-import {LinkType} from './link.type';
-import {convertRulesFromDto, convertRulesToDto} from '../utils/store.utils';
 import {PermissionsType, permissionsTypesMap} from '../../model/permissions-type';
+import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
+import {convertRulesFromDto, convertRulesToDto} from '../utils/store.utils';
+import {LinkType} from './link.type';
 
 export function convertLinkTypeDtoToModel(
   dto: LinkTypeDto,

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,10 +27,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {TableHierarchyCellMenuComponent} from './menu/table-hierarchy-cell-menu.component';
-import {computeElementPositionInParent, preventEvent} from '../../../../../../../shared/utils/common.utils';
 import {View} from '../../../../../../../core/store/views/view';
+import {computeElementPositionInParent, preventEvent} from '../../../../../../../shared/utils/common.utils';
+import {TableHierarchyCellMenuComponent} from './menu/table-hierarchy-cell-menu.component';
 
 @Component({
   selector: 'table-hierarchy-cell',

@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {map, take} from 'rxjs/operators';
-import {DocumentService} from './document.service';
-import {AppState} from '../../store/app.state';
+
+import {generateId} from '../../../shared/utils/resource.utils';
 import {DocumentDto, LinkInstanceDto} from '../../dto';
 import {DocumentMetaDataDto} from '../../dto/document.dto';
-import {Workspace} from '../../store/navigation/workspace';
-import {generateId} from '../../../shared/utils/resource.utils';
-import {selectDocumentById, selectDocumentsByIds} from '../../store/documents/documents.state';
+import {AppState} from '../../store/app.state';
 import {convertDocumentModelToDto} from '../../store/documents/document.converter';
 import {DocumentModel} from '../../store/documents/document.model';
+import {selectDocumentById, selectDocumentsByIds} from '../../store/documents/documents.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {DocumentService} from './document.service';
 
 @Injectable()
 export class PublicDocumentService implements DocumentService {

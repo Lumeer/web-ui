@@ -16,30 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
+import {
+  DurationConstraintConfig,
+  DurationDataValue,
+  DurationType,
+  DurationUnit,
+  durationConstraintUnitMaxValue,
+  getDefaultDurationUnitConversion,
+  getPreviousDurationUnit,
+} from '@lumeer/data-filters';
+
+import {TranslationService} from '../../../../../../../core/service/translation.service';
+import {createDurationMaxUnitItems} from '../../../../../../select/select-constraint-item/constraint/duration';
+import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
+import {objectValues} from '../../../../../../utils/common.utils';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
+import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
 import {
   DurationConstraintConversionFormControl,
   DurationConstraintFormControl,
 } from './duration-constraint-form-control';
-import {TranslationService} from '../../../../../../../core/service/translation.service';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
-import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
-import {objectValues} from '../../../../../../utils/common.utils';
-import {
-  DurationConstraintConfig,
-  durationConstraintUnitMaxValue,
-  DurationDataValue,
-  DurationType,
-  DurationUnit,
-  getDefaultDurationUnitConversion,
-  getPreviousDurationUnit,
-} from '@lumeer/data-filters';
-import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
-import {createDurationMaxUnitItems} from '../../../../../../select/select-constraint-item/constraint/duration';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'duration-constraint-config-form',

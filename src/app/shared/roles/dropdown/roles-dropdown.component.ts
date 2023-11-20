@@ -16,24 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  ViewChild,
+  Component,
   ElementRef,
   EventEmitter,
-  Output,
+  Input,
   OnChanges,
+  Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {RoleGroup, TranslatedRole, translatedRolesAreSame} from '../model/role-group';
-import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {allDropdownPositions} from '../../dropdown/dropdown-position';
+
 import {BehaviorSubject} from 'rxjs';
-import {deepArrayEquals} from '../../utils/array.utils';
+
 import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
+import {allDropdownPositions} from '../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../dropdown/dropdown.component';
+import {deepArrayEquals} from '../../utils/array.utils';
+import {RoleGroup, TranslatedRole, translatedRolesAreSame} from '../model/role-group';
 
 @Component({
   selector: 'roles-dropdown',

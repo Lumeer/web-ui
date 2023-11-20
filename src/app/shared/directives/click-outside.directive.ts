@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {isPlatformBrowser} from '@angular/common';
 import {
   Directive,
   ElementRef,
   EventEmitter,
   Inject,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
   Output,
   PLATFORM_ID,
   SimpleChanges,
-  NgZone,
 } from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
 
 @Directive({selector: '[clickOutside]'})
 export class ClickOutsideDirective implements OnInit, OnChanges, OnDestroy {

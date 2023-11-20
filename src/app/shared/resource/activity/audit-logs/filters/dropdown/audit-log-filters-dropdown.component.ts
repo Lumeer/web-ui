@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, SimpleChanges, OnChanges} from '@angular/core';
-import {AuditLogFilters} from '../../model/audit-log-filters';
-import {SelectDataValue, UserDataValue} from '@lumeer/data-filters';
-import {DropdownDirective} from '../../../../../dropdown/dropdown.directive';
-import {UserDataInputConfiguration} from '../../../../../data-input/data-input-configuration';
 import {BehaviorSubject} from 'rxjs';
-import {objectValues, preventEvent} from '../../../../../utils/common.utils';
+
+import {SelectDataValue, UserDataValue} from '@lumeer/data-filters';
+
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {View} from '../../../../../../core/store/views/view';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
-import {collectionSelectItems, linkTypesSelectItems} from '../../../../../select/select-item.utils';
+import {View} from '../../../../../../core/store/views/view';
 import {createViewSelectItems} from '../../../../../../core/store/views/view.utils';
+import {UserDataInputConfiguration} from '../../../../../data-input/data-input-configuration';
+import {DropdownDirective} from '../../../../../dropdown/dropdown.directive';
+import {collectionSelectItems, linkTypesSelectItems} from '../../../../../select/select-item.utils';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {objectValues, preventEvent} from '../../../../../utils/common.utils';
 import {AuditLogConfiguration} from '../../model/audit-log-configuration';
+import {AuditLogFilters} from '../../model/audit-log-filters';
 
 @Component({
   selector: 'audit-log-filters-dropdown',

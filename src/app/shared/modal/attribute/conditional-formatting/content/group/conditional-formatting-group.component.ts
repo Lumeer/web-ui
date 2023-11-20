@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, UntypedFormArray, UntypedFormGroup} from '@angular/forms';
-import {AttributesResource} from '../../../../../../core/model/resource';
-import {AttributeFormattingGroup} from '../../../../../../core/store/collections/collection';
-import {FontStyle} from '../../../../../../core/model/font-style';
-import {computeAttributeFormattingStyle, AttributeFormattingStyle} from '../../../../../utils/attribute.utils';
+
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+
 import {POPUP_DELAY} from '../../../../../../core/constants';
+import {FontStyle} from '../../../../../../core/model/font-style';
+import {AttributesResource} from '../../../../../../core/model/resource';
+import {AttributeFormattingGroup} from '../../../../../../core/store/collections/collection';
+import {AttributeFormattingStyle, computeAttributeFormattingStyle} from '../../../../../utils/attribute.utils';
 
 @Component({
   selector: 'conditional-formatting-group',

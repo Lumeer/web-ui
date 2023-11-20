@@ -16,8 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
+
 import {
   DashboardCell,
   DashboardCellType,
@@ -26,21 +30,19 @@ import {
   DashboardViewCellConfig,
   defaultDashboardImageScaleType,
 } from '../../../../../../../core/model/dashboard-tab';
-import {View} from '../../../../../../../core/store/views/view';
-import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {
   DashboardData,
   DashboardDataType,
   DashboardNotesCellData,
 } from '../../../../../../../core/store/dashboard-data/dashboard-data';
-import {Observable} from 'rxjs';
 import {selectDashboardDataByType} from '../../../../../../../core/store/dashboard-data/dashboard-data.state';
-import * as DashboardDataActions from './../../../../../../../core/store/dashboard-data/dashboard-data.actions';
-import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {Query} from '../../../../../../../core/store/navigation/query/query';
+import {View} from '../../../../../../../core/store/views/view';
 import {addQueryFiltersToView} from '../../../../../../../core/store/views/view.utils';
+import {objectChanged} from '../../../../../../../shared/utils/common.utils';
+import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
+import * as DashboardDataActions from './../../../../../../../core/store/dashboard-data/dashboard-data.actions';
 
 @Component({
   selector: 'dashboard-tab-cell-content',

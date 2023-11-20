@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {DocumentModel} from '../../../core/store/documents/document.model';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {Collection} from '../../../core/store/collections/collection';
 import {map, take} from 'rxjs/operators';
-import {ViewConfig} from '../../../core/store/views/view';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 import {AppState} from '../../../core/store/app.state';
-import {selectCalendarById} from '../../../core/store/calendars/calendars.state';
 import {CalendarConfig} from '../../../core/store/calendars/calendar';
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
-import {Query} from '../../../core/store/navigation/query/query';
-import {checkOrTransformCalendarConfig} from './util/calendar-util';
+import {selectCalendarById} from '../../../core/store/calendars/calendars.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {Query} from '../../../core/store/navigation/query/query';
+import {ViewConfig} from '../../../core/store/views/view';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {CalendarPerspectiveConfiguration, defaultCalendarPerspectiveConfiguration} from '../perspective-configuration';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {checkOrTransformCalendarConfig} from './util/calendar-util';
 
 @Component({
   selector: 'calendar-perspective',

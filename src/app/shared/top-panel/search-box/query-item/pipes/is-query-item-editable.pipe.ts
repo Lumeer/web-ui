@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryItem} from '../model/query-item';
+
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {isQueryItemEditable} from '../../../../../core/store/navigation/query/query.util';
+import {QueryItem} from '../model/query-item';
 
 @Pipe({
   name: 'isQueryItemEditable',

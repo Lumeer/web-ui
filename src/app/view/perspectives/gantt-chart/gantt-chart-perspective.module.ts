@@ -18,21 +18,22 @@
  */
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
+
 import {SharedModule} from '../../../shared/shared.module';
+import {GanttChartConfigComponent} from './config/gantt-chart-config.component';
+import {GanttChartConfigSettingsComponent} from './config/settings/gantt-chart-config-settings.component';
+import {GanttChartArrayBarModelSelectComponent} from './config/stem/array-select/gantt-chart-array-bar-model-select.component';
+import {GanttChartBarModelSelectComponent} from './config/stem/bar-model-select/gantt-chart-bar-model-select.component';
+import {GanttChartStemConfigComponent} from './config/stem/gantt-chart-stem-config.component';
+import {GanttChartMilestonesSelectComponent} from './config/stem/milestones-select/gantt-chart-milestones-select.component';
+import {GanttChartProgressBarModelSelectComponent} from './config/stem/progress-select/gantt-chart-progress-bar-model-select.component';
 import {GanttChartPerspectiveRoutingModule} from './gantt-chart-perspective-routing.module';
 import {GanttChartPerspectiveComponent} from './gantt-chart-perspective.component';
-import {GanttChartConfigComponent} from './config/gantt-chart-config.component';
-import {GanttChartVisualizationComponent} from './tasks/visualization/gantt-chart-visualization.component';
 import {GanttChartPipesModule} from './pipes/gantt-chart-pipes.module';
-import {GanttChartStemConfigComponent} from './config/stem/gantt-chart-stem-config.component';
 import {GanttChartTasksComponent} from './tasks/gantt-chart-tasks.component';
 import {GanttChartHeaderComponent} from './tasks/header/gantt-chart-header.component';
 import {GanttChartInvalidRangeComponent} from './tasks/invalid-range/gantt-chart-invalid-range.component';
-import {GanttChartConfigSettingsComponent} from './config/settings/gantt-chart-config-settings.component';
-import {GanttChartBarModelSelectComponent} from './config/stem/bar-model-select/gantt-chart-bar-model-select.component';
-import {GanttChartMilestonesSelectComponent} from './config/stem/milestones-select/gantt-chart-milestones-select.component';
-import {GanttChartProgressBarModelSelectComponent} from './config/stem/progress-select/gantt-chart-progress-bar-model-select.component';
-import {GanttChartArrayBarModelSelectComponent} from './config/stem/array-select/gantt-chart-array-bar-model-select.component';
+import {GanttChartVisualizationComponent} from './tasks/visualization/gantt-chart-visualization.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, GanttChartPerspectiveRoutingModule, GanttChartPipesModule],

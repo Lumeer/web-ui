@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import * as moment from 'moment';
 import {d3} from 'plotly.js';
-import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {DraggablePlotMaker} from './draggable-plot-maker';
-import {ChartAxisData} from '../../data/convertor/chart-data';
+
 import {Constraint, ConstraintType, DateTimeConstraint} from '@lumeer/data-filters';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '@lumeer/utils';
+
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {ChartAxisData} from '../../data/convertor/chart-data';
+import {DraggablePlotMaker} from './draggable-plot-maker';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getTraceIndexForPoint(point: any): number;

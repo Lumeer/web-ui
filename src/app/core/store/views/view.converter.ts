@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {ViewDto} from '../../dto';
+import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
+import {ViewSettingsDto} from '../../dto/view.dto';
+import {RoleType, roleTypesMap} from '../../model/role-type';
+import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-converter';
+import {convertChartDtoConfigToModel} from '../charts/chart-config-converter';
+import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart-config-converter';
+import {convertKanbanConfigDtoToModel} from '../kanbans/kanban-config.converter';
+import {convertMapDtoConfigToModel} from '../maps/map-config-converter';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query/query.converter';
-import {DefaultViewConfig, View, ViewConfig} from './view';
 import {convertPermissionsDtoToModel, convertPermissionsModelToDto} from '../permissions/permissions.converter';
 import {convertPivotConfigDtoToModel} from '../pivots/pivot-config.converter';
-import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart-config-converter';
-import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-converter';
-import {convertKanbanConfigDtoToModel} from '../kanbans/kanban-config.converter';
-import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
-import {convertMapDtoConfigToModel} from '../maps/map-config-converter';
-import {convertChartDtoConfigToModel} from '../charts/chart-config-converter';
-import {RoleType, roleTypesMap} from '../../model/role-type';
 import {ViewSettings} from '../view-settings/view-settings';
-import {ViewSettingsDto} from '../../dto/view.dto';
+import {DefaultViewConfig, View, ViewConfig} from './view';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {

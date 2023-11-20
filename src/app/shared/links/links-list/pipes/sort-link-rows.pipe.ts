@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {LinkRow} from '../model/link-row';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {ConstraintData} from '@lumeer/data-filters';
-import {sortDataObjectsByViewSettings} from '../../../utils/data-resource.utils';
 import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
+import {sortDataObjectsByViewSettings} from '../../../utils/data-resource.utils';
+import {LinkRow} from '../model/link-row';
 
 @Pipe({
   name: 'sortLinkRows',

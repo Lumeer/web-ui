@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
+import {ConstraintType} from '@lumeer/data-filters';
+
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
+import {CollectionPurposeType} from '../../../../../../core/store/collections/collection';
+import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {isMacOS} from '../../../../../../shared/utils/system.utils';
-import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
-import {ConstraintType} from '@lumeer/data-filters';
-import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
 import {Translation} from '../../../../../../shared/utils/translation';
-import {CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 
 export enum HeaderMenuId {
   Edit = 'edit',

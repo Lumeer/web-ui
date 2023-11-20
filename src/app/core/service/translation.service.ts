@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {objectValues} from '../../shared/utils/common.utils';
+
 import {
   ConditionType,
   Constraint,
@@ -29,6 +28,8 @@ import {
   LanguageTag,
   UserConstraintConditionValue,
 } from '@lumeer/data-filters';
+
+import {objectValues} from '../../shared/utils/common.utils';
 import {parseSelectTranslation} from '../../shared/utils/translation.utils';
 
 @Injectable({

@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  ElementRef,
-  ViewChild,
-  Output,
-  EventEmitter,
-  OnInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
 } from '@angular/core';
-import {DropdownComponent} from '../../../dropdown/dropdown.component';
-import {DropdownPosition} from '../../../dropdown/dropdown-position';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
-import {preventEvent} from '../../../utils/common.utils';
 import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {isUrlValid} from '../../../utils/url.utils';
+
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+
 import {parseLinkValue} from '@lumeer/data-filters';
+
+import {DropdownPosition} from '../../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../../dropdown/dropdown.component';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
+import {preventEvent} from '../../../utils/common.utils';
+import {isUrlValid} from '../../../utils/url.utils';
 
 @Component({
   selector: 'link-input-dropdown',

@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Directive, ElementRef, HostListener, Inject, Input, Optional, Renderer2} from '@angular/core';
 import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {keyboardEventCode, KeyCode} from '../key-code';
+
 import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {KeyCode, keyboardEventCode} from '../key-code';
 
 const allowedCodes = [
   KeyCode.Digit0,

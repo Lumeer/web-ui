@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {Role} from '../../../core/store/permissions/permissions';
+
 import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
+import {Role} from '../../../core/store/permissions/permissions';
 
 @Pipe({
   name: 'resourceTypeRolesMap',

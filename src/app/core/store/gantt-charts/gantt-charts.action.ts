@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {GanttChartConfig, GanttChart} from './gantt-chart';
+
+import {GanttChart, GanttChartConfig} from './gantt-chart';
 
 export enum GanttChartActionType {
   ADD_GANTT_CHART = '[Gantt Chart] Add gantt chart',

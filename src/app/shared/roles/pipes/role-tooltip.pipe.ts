@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {TranslatedRole} from '../model/role-group';
+
 import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
+import {TranslatedRole} from '../model/role-group';
 
 @Pipe({
   name: 'roleTooltip',

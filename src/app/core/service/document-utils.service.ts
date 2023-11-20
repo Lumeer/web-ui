@@ -16,35 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
-import {DocumentAdditionalDataRequest, DocumentModel} from '../store/documents/document.model';
-import {mergeMap, Observable, of, switchMap, zip} from 'rxjs';
-import {AttachmentsService, DocumentService, LinkInstanceService} from '../data-service';
-import {FileApiService} from './file-api.service';
-import {Workspace} from '../store/navigation/workspace';
+import {Store, select} from '@ngrx/store';
+
+import {Observable, mergeMap, of, switchMap, zip} from 'rxjs';
 import {catchError, map, take, withLatestFrom} from 'rxjs/operators';
-import {convertDocumentDtoToModel} from '../store/documents/document.converter';
-import {DocumentDto} from '../dto';
-import {FileAttachment, FileAttachmentType} from '../store/file-attachments/file-attachment.model';
-import {createFileApiPath} from '../data-service/attachments/attachments.service';
-import {convertFileAttachmentModelToDto} from '../store/file-attachments/file-attachment.converter';
-import {DataResourceData} from '../model/resource';
+
+import {uniqueValues} from '@lumeer/utils';
+
 import {DataCursor} from '../../shared/data-input/data-cursor';
-import {select, Store} from '@ngrx/store';
-import {selectFileAttachmentsByDataCursor} from '../store/file-attachments/file-attachments.state';
-import {AppState} from '../store/app.state';
-import {LinkInstance} from '../store/link-instances/link.instance';
-import {selectLinkInstancesByTypeAndDocuments} from '../store/link-instances/link-instances.state';
-import {isAnyDocumentInLinkInstance} from '../store/link-instances/link-instance.utils';
+import {AttachmentsService, DocumentService, LinkInstanceService} from '../data-service';
+import {createFileApiPath} from '../data-service/attachments/attachments.service';
+import {DocumentDto} from '../dto';
 import {DocumentLinksDto} from '../dto/document-links.dto';
+import {DataResourceData} from '../model/resource';
+import {AppState} from '../store/app.state';
+import {convertDocumentDtoToModel} from '../store/documents/document.converter';
+import {DocumentAdditionalDataRequest, DocumentModel} from '../store/documents/document.model';
+import {convertFileAttachmentModelToDto} from '../store/file-attachments/file-attachment.converter';
+import {FileAttachment, FileAttachmentType} from '../store/file-attachments/file-attachment.model';
+import {createFileAttachmentUniqueName} from '../store/file-attachments/file-attachment.utils';
+import {selectFileAttachmentsByDataCursor} from '../store/file-attachments/file-attachments.state';
 import {
   convertLinkInstanceDtoToModel,
   convertLinkInstanceModelToDto,
 } from '../store/link-instances/link-instance.converter';
-import {createFileAttachmentUniqueName} from '../store/file-attachments/file-attachment.utils';
-import {uniqueValues} from '@lumeer/utils';
+import {isAnyDocumentInLinkInstance} from '../store/link-instances/link-instance.utils';
+import {selectLinkInstancesByTypeAndDocuments} from '../store/link-instances/link-instances.state';
+import {LinkInstance} from '../store/link-instances/link.instance';
+import {Workspace} from '../store/navigation/workspace';
+import {FileApiService} from './file-api.service';
 
 @Injectable({
   providedIn: 'root',

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {removeAccentFromString} from '@lumeer/utils';
 
 import {User} from '../../../core/store/users/user';
-import {removeAccentFromString} from '@lumeer/utils';
 
 @Pipe({
   name: 'userFilter',

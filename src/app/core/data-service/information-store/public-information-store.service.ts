@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {InformationStoreService} from './information-store.service';
 import {Injectable} from '@angular/core';
-import {BaseService} from '../../rest/base.service';
+
 import {Observable, of} from 'rxjs';
+
 import {InformationRecordDto} from '../../dto/information-record.dto';
+import {BaseService} from '../../rest/base.service';
+import {InformationStoreService} from './information-store.service';
 
 @Injectable()
 export class PublicInformationStoreService extends BaseService implements InformationStoreService {

@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createReducer, on} from '@ngrx/store';
-import * as AuditLogActions from './audit-logs.actions';
-import {auditLogsAdapter, initialAuditLogsState} from './audit-logs.state';
+
 import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
 import {
   isCollectionAuditLog,
@@ -28,6 +26,8 @@ import {
   isLinkTypeAuditLog,
   isProjectAuditLogByUser,
 } from './audit-log.utils';
+import * as AuditLogActions from './audit-logs.actions';
+import {auditLogsAdapter, initialAuditLogsState} from './audit-logs.state';
 
 export const auditLogsReducer = createReducer(
   initialAuditLogsState,

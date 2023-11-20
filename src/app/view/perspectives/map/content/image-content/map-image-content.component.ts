@@ -16,8 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
+
+import {ConstraintData, CoordinatesConstraint, CoordinatesConstraintConfig} from '@lumeer/data-filters';
+
+import {AppState} from '../../../../../core/store/app.state';
 import {
   MapConfig,
   MapCoordinates,
@@ -27,17 +34,13 @@ import {
   MapMarkerProperties,
   MapPosition,
 } from '../../../../../core/store/maps/map.model';
-import {AppState} from '../../../../../core/store/app.state';
 import {MapsAction} from '../../../../../core/store/maps/maps.action';
-import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
 import {
   selectMapImageData,
   selectMapImageDataLoaded,
   selectMapImageDataLoading,
 } from '../../../../../core/store/maps/maps.state';
 import {populateCoordinateProperties} from '../map-content.utils';
-import {ConstraintData, CoordinatesConstraint, CoordinatesConstraintConfig} from '@lumeer/data-filters';
 
 @Component({
   selector: 'map-image-content',

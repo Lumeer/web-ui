@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -29,17 +28,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
-import {User} from '../../../core/store/users/user';
-import {DropdownOption} from '../../dropdown/options/dropdown-option';
-import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {USER_AVATAR_SIZE} from '../../../core/constants';
-import {isEmailValid} from '../../utils/email.utils';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {CommonDataInputConfiguration, UserDataInputConfiguration} from '../data-input-configuration';
-import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+
 import {BehaviorSubject} from 'rxjs';
+
 import {
   ConstraintType,
   UserDataValue,
@@ -47,9 +38,20 @@ import {
   userDataValueIsTeamValue,
   userDataValueParseTeamValue,
 } from '@lumeer/data-filters';
-import {Team} from '../../../core/store/teams/team';
-import {createUserDataInputTeams, createUserDataInputUsers} from './user-data-input-utils';
 import {uniqueValues} from '@lumeer/utils';
+
+import {USER_AVATAR_SIZE} from '../../../core/constants';
+import {Team} from '../../../core/store/teams/team';
+import {User} from '../../../core/store/users/user';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {isEmailValid} from '../../utils/email.utils';
+import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
+import {CommonDataInputConfiguration, UserDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {createUserDataInputTeams, createUserDataInputUsers} from './user-data-input-utils';
 
 @Component({
   selector: 'user-data-input',

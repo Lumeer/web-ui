@@ -16,12 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
-import {SelectionList} from '../../selection-list';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../../core/store/app.state';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -29,21 +24,28 @@ import {
   UntypedFormBuilder,
   UntypedFormGroup,
 } from '@angular/forms';
+
+import {Store, select} from '@ngrx/store';
+
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
-import {DialogType} from '../../../../modal/dialog-type';
-import {minLengthValidator} from '../../../../../core/validators/custom-validators';
-import {uniqueValuesValidator} from '../../../../../core/validators/unique-values-validator';
-import {SelectConstraintOptionsFormControl} from '../../../../modal/attribute/type/form/constraint-config/select/select-constraint-form-control';
-import {minimumValuesCountValidator} from '../../../../../core/validators/mininum-values-count-validator';
-import {SelectionListsAction} from '../../../../../core/store/selection-lists/selection-lists.action';
-import {parseSelectOptionsFromForm} from '../../../../modal/attribute/type/form/constraint-config/select/select-constraint.utils';
-import {keyboardEventCode, KeyCode} from '../../../../key-code';
 import {debounceTime, distinctUntilChanged, map, startWith, take} from 'rxjs/operators';
-import {selectSelectionListsByProjectSorted} from '../../../../../core/store/selection-lists/selection-lists.state';
+
+import {AppState} from '../../../../../core/store/app.state';
 import {
   selectReadableCollections,
   selectReadableLinkTypesWithCollections,
 } from '../../../../../core/store/common/permissions.selectors';
+import {SelectionListsAction} from '../../../../../core/store/selection-lists/selection-lists.action';
+import {selectSelectionListsByProjectSorted} from '../../../../../core/store/selection-lists/selection-lists.state';
+import {minLengthValidator} from '../../../../../core/validators/custom-validators';
+import {minimumValuesCountValidator} from '../../../../../core/validators/mininum-values-count-validator';
+import {uniqueValuesValidator} from '../../../../../core/validators/unique-values-validator';
+import {KeyCode, keyboardEventCode} from '../../../../key-code';
+import {SelectConstraintOptionsFormControl} from '../../../../modal/attribute/type/form/constraint-config/select/select-constraint-form-control';
+import {parseSelectOptionsFromForm} from '../../../../modal/attribute/type/form/constraint-config/select/select-constraint.utils';
+import {DialogType} from '../../../../modal/dialog-type';
+import {SelectionList} from '../../selection-list';
 import {
   AttributeSelectionList,
   collectionAttributeCustomSelectionLists,

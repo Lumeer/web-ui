@@ -16,30 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {CollectionService} from './collection.service';
-import {AppState} from '../../store/app.state';
-import {AttributeDto, CollectionDto} from '../../dto';
-import {Workspace} from '../../store/navigation/workspace';
-import {PublicPermissionService} from '../common/public-permission.service';
-import {generateId} from '../../../shared/utils/resource.utils';
-import {HttpClient} from '@angular/common/http';
 import {map, mergeMap, take} from 'rxjs/operators';
-import {DEFAULT_USER} from '../../constants';
-import {setDefaultUserPermissions} from '../common/public-api-util';
-import {RoleType} from '../../model/role-type';
-import {selectCollectionById} from '../../store/collections/collections.state';
-import {convertCollectionModelToDto} from '../../store/collections/collection.converter';
-import {selectPublicProject} from '../../store/projects/projects.state';
-import {CollectionPurposeDto} from '../../dto/collection.dto';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
-import {collectionRoleTypes} from '../../store/collections/collection';
-import {RuleDto} from '../../dto/rule.dto';
+import {generateId} from '../../../shared/utils/resource.utils';
+import {DEFAULT_USER} from '../../constants';
+import {AttributeDto, CollectionDto} from '../../dto';
+import {CollectionPurposeDto} from '../../dto/collection.dto';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
+import {RuleDto} from '../../dto/rule.dto';
+import {RoleType} from '../../model/role-type';
+import {AppState} from '../../store/app.state';
+import {collectionRoleTypes} from '../../store/collections/collection';
+import {convertCollectionModelToDto} from '../../store/collections/collection.converter';
+import {selectCollectionById} from '../../store/collections/collections.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {selectPublicProject} from '../../store/projects/projects.state';
+import {setDefaultUserPermissions} from '../common/public-api-util';
+import {PublicPermissionService} from '../common/public-permission.service';
+import {CollectionService} from './collection.service';
 
 @Injectable()
 export class PublicCollectionService extends PublicPermissionService implements CollectionService {

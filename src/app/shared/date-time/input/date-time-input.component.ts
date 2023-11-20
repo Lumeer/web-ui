@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,13 +27,16 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {parseDateTimeByConstraint} from '../../utils/date.utils';
-import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
-import {DateTimePickerComponent} from '../picker/date-time-picker.component';
-import {KeyCode} from '../../key-code';
-import {DateTimeConstraint} from '@lumeer/data-filters';
+
 import * as moment from 'moment';
+
+import {DateTimeConstraint} from '@lumeer/data-filters';
 import {isDateValid, resetUnusedMomentPart} from '@lumeer/utils';
+
+import {KeyCode} from '../../key-code';
+import {parseDateTimeByConstraint} from '../../utils/date.utils';
+import {DateTimeOptions, createDateTimeOptions} from '../date-time-options';
+import {DateTimePickerComponent} from '../picker/date-time-picker.component';
 
 @Component({
   selector: 'date-time-input',

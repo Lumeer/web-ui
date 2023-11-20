@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ResourceCommentDto} from '../../dto/resource-comment.dto';
-import {ResourceCommentModel} from './resource-comment.model';
 import {resourceTypesMap} from '../../model/resource-type';
+import {ResourceCommentModel} from './resource-comment.model';
 
 export function convertResourceCommentDtoToModel(
   dto: ResourceCommentDto,

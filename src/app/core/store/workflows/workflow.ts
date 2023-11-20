@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DataAggregationType, QueryAttribute, QueryResource} from '@lumeer/data-filters';
 
-import {QueryStem} from '../navigation/query/query';
-import {QueryAttribute, QueryResource, DataAggregationType} from '@lumeer/data-filters';
 import {AttributesResourceType} from '../../model/resource';
+import {QueryStem} from '../navigation/query/query';
 
 export interface Workflow {
   id: string;

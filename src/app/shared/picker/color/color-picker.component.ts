@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   ElementRef,
-  Output,
   EventEmitter,
-  ViewChild,
   HostListener,
+  Input,
+  Output,
+  ViewChild,
 } from '@angular/core';
-import {greyscale, palette, saturated, sepia} from '../colors';
+
+import {BehaviorSubject} from 'rxjs';
+
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {BehaviorSubject} from 'rxjs';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {preventEvent} from '../../utils/common.utils';
+import {greyscale, palette, saturated, sepia} from '../colors';
 
 @Component({
   selector: 'color-picker',

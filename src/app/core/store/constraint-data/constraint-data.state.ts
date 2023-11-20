@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
+
 import {ConstraintData} from '@lumeer/data-filters';
+
 import {AppState} from '../app.state';
+import {selectSelectionListsByWorkspace} from '../selection-lists/selection-lists.state';
+import {selectTeamsForWorkspace} from '../teams/teams.state';
 import {selectAllUsers, selectCurrentUserForWorkspace} from '../users/users.state';
 import {selectAllViews} from '../views/views.state';
-import {selectTeamsForWorkspace} from '../teams/teams.state';
-import {selectSelectionListsByWorkspace} from '../selection-lists/selection-lists.state';
 
 export type ConstraintDataState = Partial<ConstraintData>;
 

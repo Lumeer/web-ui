@@ -16,23 +16,57 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, EMPTY, Observable, of, pipe} from 'rxjs';
+import {Action, Store, select} from '@ngrx/store';
+
+import mixpanel from 'mixpanel-browser';
+import {EMPTY, Observable, combineLatest, of, pipe} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../view/perspectives/perspective';
+import {UserService, ViewService} from '../../data-service';
+import {TeamService} from '../../data-service/team/team.service';
 import {PermissionDto, ViewDto} from '../../dto';
+import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
+import {InvitationType} from '../../model/invitation-type';
+import {Ga4Service} from '../../service/ga4.service';
 import {AppState} from '../app.state';
+import {CalendarsAction} from '../calendars/calendars.action';
+import {ChartAction} from '../charts/charts.action';
 import {CommonAction} from '../common/common.action';
+import {selectWorkspaceWithIds} from '../common/common.selectors';
+import {GanttChartAction} from '../gantt-charts/gantt-charts.action';
+import {KanbansAction} from '../kanbans/kanbans.action';
+import {MapsAction} from '../maps/maps.action';
 import {NavigationAction} from '../navigation/navigation.action';
 import {selectNavigation} from '../navigation/navigation.state';
+import {areQueriesEqual} from '../navigation/query/query.helper';
+import {cleanQueryFromHiddenAttributes, mapPositionPathParams} from '../navigation/query/query.util';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {Permission, Role} from '../permissions/permissions';
 import {convertPermissionModelToDto, convertPermissionsDtoToModel} from '../permissions/permissions.converter';
+import {PivotsAction} from '../pivots/pivots.action';
 import {RouterAction} from '../router/router.action';
+import {SearchesAction} from '../searches/searches.action';
+import {TablesAction} from '../tables/tables.action';
+import {Team} from '../teams/team';
+import {convertTeamModelToDto} from '../teams/teams.converter';
+import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
+import {User} from '../users/user';
+import {UsersAction} from '../users/users.action';
+import {createCallbackActions} from '../utils/store.utils';
+import {ViewSettingsAction} from '../view-settings/view-settings.action';
+import {viewSettingsIdByView} from '../view-settings/view-settings.util';
+import {WorkflowsAction} from '../workflows/workflows.action';
+import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
+import * as DetailActions from './../details/detail.actions';
+import * as FormActions from './../form/form.actions';
 import {DefaultViewConfig, View} from './view';
 import {
   convertDefaultViewConfigDtoToModel,
@@ -40,6 +74,7 @@ import {
   convertViewDtoToModel,
   convertViewModelToDto,
 } from './view.converter';
+import {getPerspectiveSavedPerspectives} from './view.utils';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {
   selectDefaultViewConfig,
@@ -48,40 +83,8 @@ import {
   selectViewsLoaded,
   selectViewsState,
 } from './views.state';
-import {areQueriesEqual} from '../navigation/query/query.helper';
-import mixpanel from 'mixpanel-browser';
-import {User} from '../users/user';
-import {selectWorkspaceWithIds} from '../common/common.selectors';
-import {createCallbackActions} from '../utils/store.utils';
-import {cleanQueryFromHiddenAttributes, mapPositionPathParams} from '../navigation/query/query.util';
-import {SearchesAction} from '../searches/searches.action';
-import {TablesAction} from '../tables/tables.action';
-import {PivotsAction} from '../pivots/pivots.action';
-import {GanttChartAction} from '../gantt-charts/gantt-charts.action';
-import {MapsAction} from '../maps/maps.action';
-import {CalendarsAction} from '../calendars/calendars.action';
-import {KanbansAction} from '../kanbans/kanbans.action';
-import {ChartAction} from '../charts/charts.action';
-import {UserService, ViewService} from '../../data-service';
-import {WorkflowsAction} from '../workflows/workflows.action';
-import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {HttpErrorResponse} from '@angular/common/http';
-import {UsersAction} from '../users/users.action';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import * as DetailActions from './../details/detail.actions';
-import * as FormActions from './../form/form.actions';
-import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
-import {getPerspectiveSavedPerspectives} from './view.utils';
-import {TeamService} from '../../data-service/team/team.service';
-import {Team} from '../teams/team';
-import {convertTeamModelToDto} from '../teams/teams.converter';
-import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
-import {viewSettingsIdByView} from '../view-settings/view-settings.util';
-import {ViewSettingsAction} from '../view-settings/view-settings.action';
-import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
-import {InvitationType} from '../../model/invitation-type';
+
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
-import {Ga4Service} from '../../service/ga4.service';
 
 @Injectable()
 export class ViewsEffects {

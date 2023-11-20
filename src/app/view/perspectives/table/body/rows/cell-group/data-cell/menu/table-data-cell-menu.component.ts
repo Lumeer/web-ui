@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,18 +26,26 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {MatMenuTrigger} from '@angular/material/menu';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {first, map, switchMap, take, tap} from 'rxjs/operators';
-import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
+
 import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
+import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
 import {AppState} from '../../../../../../../../core/store/app.state';
+import {selectCollectionById} from '../../../../../../../../core/store/collections/collections.state';
+import {selectLinkTypesPermissionsByView} from '../../../../../../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
 import {selectDocumentsDictionary} from '../../../../../../../../core/store/documents/documents.state';
-import {LinkInstance} from '../../../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
-import {getTableRowCursor, TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
+import {LinkInstance} from '../../../../../../../../core/store/link-instances/link.instance';
+import {selectLinkTypeById} from '../../../../../../../../core/store/link-types/link-types.state';
+import {Workspace} from '../../../../../../../../core/store/navigation/workspace';
+import {TableBodyCursor, getTableRowCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableConfigRow} from '../../../../../../../../core/store/tables/table.model';
 import {createEmptyTableRow} from '../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
@@ -48,18 +55,13 @@ import {
   selectTableRowIndentable,
   selectTableRowOutdentable,
 } from '../../../../../../../../core/store/tables/tables.selector';
-import {Direction} from '../../../../../../../../shared/direction';
-import {selectCollectionById} from '../../../../../../../../core/store/collections/collections.state';
-import {ModalService} from '../../../../../../../../shared/modal/modal.service';
-import {selectLinkTypeById} from '../../../../../../../../core/store/link-types/link-types.state';
-import {MatMenuTrigger} from '@angular/material/menu';
-import {CanCreateLinksPipe} from '../../../../../../../../shared/pipes/can-create-links.pipe';
-import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
-import {View} from '../../../../../../../../core/store/views/view';
-import {selectLinkTypesPermissionsByView} from '../../../../../../../../core/store/common/permissions.selectors';
-import {Workspace} from '../../../../../../../../core/store/navigation/workspace';
 import {selectViewSettingsById} from '../../../../../../../../core/store/view-settings/view-settings.state';
 import {viewSettingsIdByView} from '../../../../../../../../core/store/view-settings/view-settings.util';
+import {View} from '../../../../../../../../core/store/views/view';
+import {Direction} from '../../../../../../../../shared/direction';
+import {ModalService} from '../../../../../../../../shared/modal/modal.service';
+import {CanCreateLinksPipe} from '../../../../../../../../shared/pipes/can-create-links.pipe';
+import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 
 @Component({
   selector: 'table-data-cell-menu',

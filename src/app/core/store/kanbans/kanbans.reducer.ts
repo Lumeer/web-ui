@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialKanbansState, kanbansAdapter, KanbansState} from './kanban.state';
+import {KanbansState, initialKanbansState, kanbansAdapter} from './kanban.state';
 import {KanbansAction, KanbansActionType} from './kanbans.action';
 
 export function kanbansReducer(state: KanbansState = initialKanbansState, action: KanbansAction.All): KanbansState {

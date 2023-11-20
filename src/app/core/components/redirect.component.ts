@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+
 import {Observable, of} from 'rxjs';
 import {catchError, map, mergeMap, take} from 'rxjs/operators';
-import {Organization} from '../store/organizations/organization';
-import {WorkspaceSelectService} from '../service/workspace-select.service';
-import {TemplateService} from '../rest/template.service';
-import {OrganizationService} from '../data-service';
-import {OrganizationConverter} from '../store/organizations/organization.converter';
+
 import {sortResourcesByOrder} from '../../shared/utils/resource.utils';
+import {OrganizationService} from '../data-service';
+import {TemplateService} from '../rest/template.service';
+import {WorkspaceSelectService} from '../service/workspace-select.service';
+import {Organization} from '../store/organizations/organization';
+import {OrganizationConverter} from '../store/organizations/organization.converter';
 
 @Component({
   template: '',

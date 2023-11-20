@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,14 +27,17 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {BehaviorSubject} from 'rxjs';
-import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
-import {User} from '../../../../../core/store/users/user';
-import {keyboardEventCode, KeyCode} from '../../../../key-code';
-import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
-import {areArraysSame} from '../../../../utils/array.utils';
-import {DropdownPosition} from '../../../../dropdown/dropdown-position';
+
 import {uniqueValues} from '@lumeer/utils';
+
+import {User} from '../../../../../core/store/users/user';
+import {DropdownPosition} from '../../../../dropdown/dropdown-position';
+import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
+import {KeyCode, keyboardEventCode} from '../../../../key-code';
+import {areArraysSame} from '../../../../utils/array.utils';
 
 @Component({
   selector: 'team-users',

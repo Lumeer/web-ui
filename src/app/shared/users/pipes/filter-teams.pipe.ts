@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {removeAccentFromString} from '@lumeer/utils';
+
+import {Team} from '../../../core/store/teams/team';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../utils/common.utils';
-import {Team} from '../../../core/store/teams/team';
 
 @Pipe({
   name: 'filterTeams',

@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {LinkType} from '../../core/store/link-types/link.type';
+
 import {AllowedPermissionsMap} from '../../core/model/allowed-permissions';
+import {LinkType} from '../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'canCreateLinks',

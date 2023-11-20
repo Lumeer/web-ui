@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
+import {map, mergeMap, take} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {DEFAULT_USER} from '../../constants';
+import {ProjectDto} from '../../dto';
+import {RoleType} from '../../model/role-type';
+import {AppState} from '../../store/app.state';
+import {selectPublicProjectId} from '../../store/public-data/public-data.state';
+import {setDefaultUserPermissions} from '../common/public-api-util';
 import {PublicPermissionService} from '../common/public-permission.service';
 import {ProjectService} from './project.service';
-import {ProjectDto} from '../../dto';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../store/app.state';
-import {map, mergeMap, take} from 'rxjs/operators';
-import {setDefaultUserPermissions} from '../common/public-api-util';
-import {DEFAULT_USER} from '../../constants';
-import {RoleType} from '../../model/role-type';
-import {selectPublicProjectId} from '../../store/public-data/public-data.state';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class PublicProjectService extends PublicPermissionService implements ProjectService {

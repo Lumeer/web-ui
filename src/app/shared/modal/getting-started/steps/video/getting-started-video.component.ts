@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, OnInit, ElementRef, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import {GettingStartedService} from '../../getting-started.service';
-import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 import Player, {TimeEvent} from '@vimeo/player';
-import {generateId} from '../../../../utils/resource.utils';
+
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import {LanguageCode} from '../../../../../core/model/language';
+import {generateId} from '../../../../utils/resource.utils';
+import {GettingStartedService} from '../../getting-started.service';
 
 @Component({
   selector: 'getting-started-video',

@@ -16,11 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
+
+import {Constraint, ConstraintData, ConstraintType, UnknownConstraint} from '@lumeer/data-filters';
+
 import {AppState} from '../../../../../../../core/store/app.state';
 import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -30,13 +34,12 @@ import {TableBodyCursor} from '../../../../../../../core/store/tables/table-curs
 import {TableConfigColumn} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.selector';
-import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
 import {
   ActionDataInputConfiguration,
   UserDataInputConfiguration,
 } from '../../../../../../../shared/data-input/data-input-configuration';
 import {computeElementPositionInParent, preventEvent} from '../../../../../../../shared/utils/common.utils';
-import {Constraint, ConstraintData, ConstraintType, UnknownConstraint} from '@lumeer/data-filters';
+import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
 
 @Component({
   selector: 'table-collapsed-cell',

@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
 import {Observable, of} from 'rxjs';
-import {TeamService} from './team.service';
+
 import {TeamDto} from '../../dto';
-import {BaseService} from '../../rest/base.service';
 import {InvitationType} from '../../model/invitation-type';
+import {BaseService} from '../../rest/base.service';
+import {TeamService} from './team.service';
 
 @Injectable()
 export class PublicTeamService extends BaseService implements TeamService {

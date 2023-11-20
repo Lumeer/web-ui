@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanCard} from '../util/kanban-data';
+
 import {AttributesResourceType} from '../../../../core/model/resource';
-import {createAttributesSettingsOrder} from '../../../../shared/settings/settings.util';
 import {ResourceAttributeSettings, ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {createAttributesSettingsOrder} from '../../../../shared/settings/settings.util';
+import {KanbanCard} from '../util/kanban-data';
 
 @Pipe({
   name: 'filterKanbanCardsByPage',

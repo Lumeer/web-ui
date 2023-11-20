@@ -16,10 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, OnChanges, SimpleChanges} from '@angular/core';
-import {Project, TemplateMetadata} from '../../../../core/store/projects/project';
-import {View} from '../../../../core/store/views/view';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -27,14 +24,18 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
-import {Subscription} from 'rxjs';
-import {UpdateProjectService} from '../update-project.service';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
+
 import * as moment from 'moment';
-import {PublicScriptType} from './script/public-script-type';
-import {removeAllFormArrayControls} from '../../../../shared/utils/form.utils';
+import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
+import {Subscription} from 'rxjs';
+
 import {Collection} from '../../../../core/store/collections/collection';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {Project, TemplateMetadata} from '../../../../core/store/projects/project';
+import {View} from '../../../../core/store/views/view';
+import {removeAllFormArrayControls} from '../../../../shared/utils/form.utils';
+import {UpdateProjectService} from '../update-project.service';
+import {PublicScriptType} from './script/public-script-type';
 
 @Component({
   selector: 'project-template-metadata',

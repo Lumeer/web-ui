@@ -16,34 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, ViewChild, OnInit, Input, OnDestroy} from '@angular/core';
-import {DialogType} from '../dialog-type';
-import {BehaviorSubject, Observable, of, combineLatest, Subscription} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
+import {BehaviorSubject, Observable, Subscription, combineLatest, of} from 'rxjs';
+import {distinctUntilChanged, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
+
+import {AllowedPermissions, completeAllowedPermissions} from '../../../core/model/allowed-permissions';
 import {DashboardTab} from '../../../core/model/dashboard-tab';
-import {TabsSettingsContentComponent} from './content/tabs-settings-content.component';
+import {AppState} from '../../../core/store/app.state';
+import {
+  selectSearchPerspectiveTabsByView,
+  selectViewsByReadWithComputedData,
+} from '../../../core/store/common/permissions.selectors';
+import {Dashboard, SearchConfig} from '../../../core/store/searches/search';
+import {SearchesAction} from '../../../core/store/searches/searches.action';
+import {selectSearchConfigById} from '../../../core/store/searches/searches.state';
+import {selectViewPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {View} from '../../../core/store/views/view';
+import {ViewsAction} from '../../../core/store/views/views.action';
 import {
   selectCurrentView,
   selectDefaultSearchPerspectiveDashboardViewId,
   selectViewById,
 } from '../../../core/store/views/views.state';
-import {ViewsAction} from '../../../core/store/views/views.action';
-import {createDashboardTabId, isViewValidForDashboard} from '../../utils/dashboard.utils';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
-import {selectSearchConfigById} from '../../../core/store/searches/searches.state';
-import {distinctUntilChanged, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {Dashboard, SearchConfig} from '../../../core/store/searches/search';
-import {SearchesAction} from '../../../core/store/searches/searches.action';
-import {View} from '../../../core/store/views/view';
-import {
-  selectSearchPerspectiveTabsByView,
-  selectViewsByReadWithComputedData,
-} from '../../../core/store/common/permissions.selectors';
-import {AllowedPermissions, completeAllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectViewPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {createDashboardTabId, isViewValidForDashboard} from '../../utils/dashboard.utils';
+import {DialogType} from '../dialog-type';
+import {TabsSettingsContentComponent} from './content/tabs-settings-content.component';
 
 @Component({
   selector: 'tabs-settings-modal',

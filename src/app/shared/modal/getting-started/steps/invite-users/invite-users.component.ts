@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {SelectItemModel} from '../../../../select/select-item/select-item.model';
+
 import {InvitationType} from '../../../../../core/model/invitation-type';
+import {SelectItemModel} from '../../../../select/select-item/select-item.model';
 import {GettingStartedService} from '../../getting-started.service';
 
 @Component({

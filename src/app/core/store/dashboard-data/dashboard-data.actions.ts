@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createAction, props} from '@ngrx/store';
 
-import {DashboardData, DashboardDataType} from './dashboard-data';
 import {Workspace} from '../navigation/workspace';
 import {Dashboard} from '../searches/search';
+import {DashboardData, DashboardDataType} from './dashboard-data';
 
 export const get = createAction('[DashboardData] Get', props<{workspace?: Workspace; force?: boolean}>());
 

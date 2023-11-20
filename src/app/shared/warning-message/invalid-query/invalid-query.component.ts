@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {Collection} from '../../../core/store/collections/collection';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
 import {
-  selectReadableCollectionsByView,
   selectCollectionsByCustomViewAndQuery,
   selectCollectionsInCustomQuery,
+  selectReadableCollectionsByView,
 } from '../../../core/store/common/permissions.selectors';
-import {map} from 'rxjs/operators';
+import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Query} from '../../../core/store/navigation/query/query';
 import {
   createOpenCollectionQuery,
   queryContainsOnlyFulltexts,
   queryIsEmptyExceptPagination,
 } from '../../../core/store/navigation/query/query.util';
-import {NavigationAction} from '../../../core/store/navigation/navigation.action';
-import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
 import {View} from '../../../core/store/views/view';
+import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
 
 @Component({
   selector: 'invalid-query',

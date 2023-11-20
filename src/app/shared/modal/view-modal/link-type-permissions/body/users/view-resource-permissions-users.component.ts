@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
-import {User} from '../../../../../../core/store/users/user';
+import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
 import {Organization} from '../../../../../../core/store/organizations/organization';
-import {View} from '../../../../../../core/store/views/view';
+import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
 import {Project} from '../../../../../../core/store/projects/project';
 import {Team} from '../../../../../../core/store/teams/team';
-import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
-import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
+import {User} from '../../../../../../core/store/users/user';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'view-resource-permissions-users',

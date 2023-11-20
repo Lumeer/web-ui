@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {serviceLevelMap} from '../../../dto/service-level-type';
 import {ServiceLimitsDto} from '../../../dto/service-limits.dto';
 import {ServiceLimits} from './service.limits';
-import {serviceLevelMap} from '../../../dto/service-level-type';
 
 export function convertServiceLimitsDtoToModel(organizationId: string, dto: ServiceLimitsDto): ServiceLimits {
   return {

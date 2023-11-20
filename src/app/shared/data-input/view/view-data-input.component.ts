@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -30,23 +29,27 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
-import {DropdownOption} from '../../dropdown/options/dropdown-option';
-import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {CommonDataInputConfiguration} from '../data-input-configuration';
-import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
+
 import {ConstraintType, ViewDataValue} from '@lumeer/data-filters';
-import {View} from '../../../core/store/views/view';
+import {deepObjectsEquals, uniqueValues} from '@lumeer/utils';
+
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {deepObjectsEquals, uniqueValues} from '@lumeer/utils';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {View} from '../../../core/store/views/view';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'view-data-input',

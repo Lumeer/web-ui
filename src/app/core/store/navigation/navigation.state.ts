@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
+
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {MapPosition} from '../maps/map.model';
 import {Query} from './query/query';
+import {isNavigatingToOtherWorkspace} from './query/query.util';
+import {PerspectiveSettings} from './settings/perspective-settings';
 import {ViewCursor} from './view-cursor/view-cursor';
 import {Workspace} from './workspace';
-import {PerspectiveSettings} from './settings/perspective-settings';
-import {isNavigatingToOtherWorkspace} from './query/query.util';
 
 export interface NavigationState {
   mapPosition?: MapPosition;

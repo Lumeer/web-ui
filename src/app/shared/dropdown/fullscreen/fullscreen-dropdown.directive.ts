@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {AfterViewInit, Directive, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 
-import {Input, ElementRef, ViewChild, Directive, AfterViewInit, OnDestroy} from '@angular/core';
-import {FullscreenDropdownComponent} from './fullscreen-dropdown.component';
 import {BehaviorSubject, Subscription} from 'rxjs';
+
+import {FullscreenDropdownComponent} from './fullscreen-dropdown.component';
 
 @Directive()
 export abstract class FullscreenDropdownDirective implements AfterViewInit, OnDestroy {

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {UntypedFormArray} from '@angular/forms';
 
 import {SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
-import {UntypedFormArray} from '@angular/forms';
 import {escapeHtml} from '@lumeer/utils';
 
 export function isSelectConstraintOptionValueRemoved(

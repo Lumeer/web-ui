@@ -16,21 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {SharedModule} from '../../../shared/shared.module';
-import {CalendarPerspectiveComponent} from './calendar-perspective.component';
-import {CalendarPerspectiveRoutingModule} from './calendar-perspective-routing.module';
-import {CalendarConfigComponent} from './config/calendar-config.component';
-import {CalendarPipesModule} from './pipes/calendar-pipes.module';
+
+import {FullCalendarModule} from '@fullcalendar/angular';
 import {PopoverModule} from 'ngx-bootstrap/popover';
+
+import {ModalModule} from '../../../shared/modal/modal.module';
+import {SharedModule} from '../../../shared/shared.module';
+import {CalendarPerspectiveRoutingModule} from './calendar-perspective-routing.module';
+import {CalendarPerspectiveComponent} from './calendar-perspective.component';
+import {CalendarConfigComponent} from './config/calendar-config.component';
 import {CalendarStemConfigComponent} from './config/stem-config/calendar-stem-config.component';
 import {CalendarEventsComponent} from './events/calendar-events.component';
-import {ModalModule} from '../../../shared/modal/modal.module';
 import {CalendarVisualizationComponent} from './events/visualization/calendar-visualization.component';
-import {FullCalendarModule} from '@fullcalendar/angular';
+import {CalendarPipesModule} from './pipes/calendar-pipes.module';
 
 @NgModule({
   imports: [

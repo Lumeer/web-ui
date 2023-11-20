@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {BlocklyComponent} from './blockly-component';
-import {COLOR_PRIMARY} from '../../../../core/constants';
-import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {LinkType} from '../../../../core/store/link-types/link.type';
 import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
+
+import {COLOR_PRIMARY} from '../../../../core/constants';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
+import {BlocklyComponent} from './blockly-component';
 
 declare var Blockly: any;
 

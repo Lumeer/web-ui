@@ -16,34 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
-import {InputModule} from '../input/input.module';
-import {PipesModule} from '../pipes/pipes.module';
-import {DataInputModule} from '../data-input/data-input.module';
-import {DataResourceDetailHeaderComponent} from './detail/header/data-resource-detail-header.component';
-import {AttributeTypeModalModule} from '../modal/attribute/type/attribute-type-modal.module';
-import {AttributeFunctionModalModule} from '../modal/attribute/function/attribute-function-modal.module';
-import {ColorPickerModule} from 'ngx-color-picker';
-import {PresenterModule} from '../presenter/presenter.module';
-import {DataResourceDataComponent} from './detail/data/data-resource-data.component';
-import {DataResourceDetailComponent} from './detail/data-resource-detail.component';
-import {DataResourceDataRowIconsComponent} from './detail/data/row/icons/data-resource-data-row-icons.component';
-import {DataResourceDataRowComponent} from './detail/data/row/data-resource-data-row.component';
-import {DirectivesModule} from '../directives/directives.module';
-import {DetailTabsComponent} from './detail/detail-tabs/detail-tabs.component';
-import {LinksModule} from '../links/links.module';
+
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.component';
+import {ColorPickerModule} from 'ngx-color-picker';
+
+import {DataInputModule} from '../data-input/data-input.module';
+import {DirectivesModule} from '../directives/directives.module';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {InputModule} from '../input/input.module';
+import {LinksModule} from '../links/links.module';
+import {AttributeFunctionModalModule} from '../modal/attribute/function/attribute-function-modal.module';
+import {AttributeTypeModalModule} from '../modal/attribute/type/attribute-type-modal.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {PresenterModule} from '../presenter/presenter.module';
+import {ResourceActivityModule} from '../resource/activity/resource-activity.module';
+import {ResourceCommentsModule} from '../resource/comments/resource-comments.module';
+import {AttributesSettingsModule} from '../settings/attributes/attributes-settings.module';
+import {DataResourceDetailComponent} from './detail/data-resource-detail.component';
+import {DataResourceDataComponent} from './detail/data/data-resource-data.component';
+import {DataResourceDataRowComponent} from './detail/data/row/data-resource-data-row.component';
+import {DataResourceDataRowIconsComponent} from './detail/data/row/icons/data-resource-data-row-icons.component';
+import {DetailTabsComponent} from './detail/detail-tabs/detail-tabs.component';
+import {DataResourceDetailHeaderComponent} from './detail/header/data-resource-detail-header.component';
 import {DetailSettingsButtonComponent} from './detail/header/settings-button/detail-settings-button.component';
 import {DetailSettingsDropdownComponent} from './detail/header/settings-button/dropdown/detail-settings-dropdown.component';
-import {DropdownModule} from '../dropdown/dropdown.module';
-import {AttributesSettingsModule} from '../settings/attributes/attributes-settings.module';
+import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.component';
 import {ResourcePermissionsPipe} from './detail/pipes/resource-permissions.pipe';
-import {ResourceCommentsModule} from '../resource/comments/resource-comments.module';
-import {ResourceActivityModule} from '../resource/activity/resource-activity.module';
 
 @NgModule({
   imports: [

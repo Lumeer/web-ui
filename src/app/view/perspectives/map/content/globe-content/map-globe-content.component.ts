@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,6 +26,29 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable} from 'rxjs';
+import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+
+import {
+  AddressConstraint,
+  ConstraintData,
+  CoordinatesConstraint,
+  CoordinatesConstraintConfig,
+} from '@lumeer/data-filters';
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
+import {NotificationService} from '../../../../../core/notifications/notification.service';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {GeoLocation} from '../../../../../core/store/geocoding/geo-location';
+import {GeocodingAction} from '../../../../../core/store/geocoding/geocoding.action';
+import {selectGeocodingQueryCoordinates} from '../../../../../core/store/geocoding/geocoding.state';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {
   MapAttributeType,
   MapConfig,
@@ -35,31 +57,12 @@ import {
   MapMarkerProperties,
   MapPosition,
 } from '../../../../../core/store/maps/map.model';
-import {MarkerMoveEvent} from './render/marker-move.event';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {selectGeocodingQueryCoordinates} from '../../../../../core/store/geocoding/geocoding.state';
-import {areMapMarkerListsEqual, createMarkerPropertyFromData, populateCoordinateProperties} from '../map-content.utils';
-import {GeocodingAction} from '../../../../../core/store/geocoding/geocoding.action';
-import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {GeoLocation} from '../../../../../core/store/geocoding/geo-location';
-import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {NotificationService} from '../../../../../core/notifications/notification.service';
-import {MapGlobeRenderComponent} from './render/map-globe-render.component';
-import {
-  AddressConstraint,
-  ConstraintData,
-  CoordinatesConstraint,
-  CoordinatesConstraintConfig,
-} from '@lumeer/data-filters';
-import {AppState} from '../../../../../core/store/app.state';
-import {ConfigurationService} from '../../../../../configuration/configuration.service';
-import {addressDefaultFields} from '../../../../../shared/modal/attribute/type/form/constraint-config/address/address-constraint.constants';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {View} from '../../../../../core/store/views/view';
-import {isNotNullOrUndefined} from '@lumeer/utils';
+import {addressDefaultFields} from '../../../../../shared/modal/attribute/type/form/constraint-config/address/address-constraint.constants';
+import {areMapMarkerListsEqual, createMarkerPropertyFromData, populateCoordinateProperties} from '../map-content.utils';
+import {MapGlobeRenderComponent} from './render/map-globe-render.component';
+import {MarkerMoveEvent} from './render/marker-move.event';
 
 @Component({
   selector: 'map-globe-content',

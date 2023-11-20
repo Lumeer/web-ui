@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
+
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {Organization} from '../../core/store/organizations/organization';
-import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {WorkspaceService} from '../workspace.service';
-import {userCanManageOrganizationDetail} from '../../shared/utils/permission.utils';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {userCanManageOrganizationDetail} from '../../shared/utils/permission.utils';
+import {WorkspaceService} from '../workspace.service';
 
 @Injectable()
 export class OrganizationSettingsGuard {

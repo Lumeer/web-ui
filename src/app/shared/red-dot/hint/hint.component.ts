@@ -16,12 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../core/store/app.state';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
 
 @Component({
   selector: 'hint',

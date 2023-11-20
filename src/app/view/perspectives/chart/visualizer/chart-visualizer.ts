@@ -16,24 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ElementRef} from '@angular/core';
+
 import PlotlyJS from 'plotly.js';
+import {Config, Layout, PlotData, PlotRelayoutEvent, Plots, d3, newPlot, purge, react} from 'plotly.js';
 import CSLocale from 'plotly.js/lib/locales/cs.js';
 import HULocale from 'plotly.js/lib/locales/hu.js';
-import {Config, d3, Layout, newPlot, PlotData, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
-import {ChartAxisType, ChartType} from '../../../../core/store/charts/chart';
-import {DataChange, PlotlyChartData, PlotMaker} from './plot-maker/plot-maker';
-import {ChartData, ChartSettings} from '../data/convertor/chart-data';
-import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
-import {LinePlotMaker} from './plot-maker/line-plot-maker';
-import {BarPlotMaker} from './plot-maker/bar-plot-maker';
-import {PiePlotMaker} from './plot-maker/pie-plot-maker';
-import {BubblePlotMaker} from './plot-maker/bubble-plot-maker';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {deepArrayEquals} from '../../../../shared/utils/array.utils';
+
 import {COLOR_PRIMARY} from '../../../../core/constants';
 import {LanguageCode} from '../../../../core/model/language';
+import {AttributesResourceType} from '../../../../core/model/resource';
+import {ChartAxisType, ChartType} from '../../../../core/store/charts/chart';
+import {deepArrayEquals} from '../../../../shared/utils/array.utils';
+import {ChartData, ChartSettings} from '../data/convertor/chart-data';
+import {BarPlotMaker} from './plot-maker/bar-plot-maker';
+import {BubblePlotMaker} from './plot-maker/bubble-plot-maker';
+import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
+import {LinePlotMaker} from './plot-maker/line-plot-maker';
+import {PiePlotMaker} from './plot-maker/pie-plot-maker';
+import {DataChange, PlotMaker, PlotlyChartData} from './plot-maker/plot-maker';
 
 export class ChartVisualizer {
   private currentType: ChartType;

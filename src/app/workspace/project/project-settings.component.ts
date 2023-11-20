@@ -16,40 +16,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, first, map, take, takeUntil} from 'rxjs/operators';
+
+import {ProjectService} from '../../core/data-service';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
+import {FileApiService} from '../../core/service/file-api.service';
 import {AppState} from '../../core/store/app.state';
+import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {
   selectNavigatingToOtherWorkspace,
   selectPreviousWorkspaceUrl,
   selectWorkspace,
 } from '../../core/store/navigation/navigation.state';
+import {SearchTab} from '../../core/store/navigation/search-tab';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {Project} from '../../core/store/projects/project';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {selectAllUsers} from '../../core/store/users/users.state';
-import {Perspective} from '../../view/perspectives/perspective';
-import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
-import {SearchTab} from '../../core/store/navigation/search-tab';
-import {ModalService} from '../../shared/modal/modal.service';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {TextInputModalComponent} from '../../shared/modal/text-input/text-input-modal.component';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {selectAllUsers} from '../../core/store/users/users.state';
+import {ModalService} from '../../shared/modal/modal.service';
+import {TextInputModalComponent} from '../../shared/modal/text-input/text-input-modal.component';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
-import {ProjectService} from '../../core/data-service';
-import {FileApiService} from '../../core/service/file-api.service';
-import {HttpEvent, HttpEventType} from '@angular/common/http';
-import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
+import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Component({
   selector: 'project-settings',

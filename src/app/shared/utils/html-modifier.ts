@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as pressure from 'pressure';
 
 import {DataValue} from '@lumeer/data-filters';
-import * as pressure from 'pressure';
 import {unescapeHtml} from '@lumeer/utils';
 
 export class HtmlModifier {

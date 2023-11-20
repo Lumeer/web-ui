@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {combineLatest, Observable} from 'rxjs';
-import {View} from '../../../core/store/views/view';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 import {AppState} from '../../../core/store/app.state';
-import {QueryData} from '../../top-panel/search-box/util/query-data';
+import {Collection} from '../../../core/store/collections/collection';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
-import {map} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {View} from '../../../core/store/views/view';
 import {selectAllViewsSorted} from '../../../core/store/views/views.state';
-import {Collection} from '../../../core/store/collections/collection';
+import {QueryData} from '../../top-panel/search-box/util/query-data';
 
 @Component({
   selector: 'views-bookmarks',

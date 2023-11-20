@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {GanttChartBarModel, GanttChartConfig, GanttChartConfigVersion, GanttChartMode} from './gantt-chart';
 import {QueryStem} from '../navigation/query/query';
+import {GanttChartBarModel, GanttChartConfig, GanttChartConfigVersion, GanttChartMode} from './gantt-chart';
 
 /*
  Version 1

@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {Workflow, WorkflowConfig, WorkflowFooterAttributeConfig} from './workflow';
-import {QueryStem} from '../navigation/query/query';
-import {TableCell} from '../../../shared/table/model/table-model';
+
 import {TableColumn} from '../../../shared/table/model/table-column';
+import {TableCell} from '../../../shared/table/model/table-model';
 import {AttributesResourceType} from '../../model/resource';
+import {QueryStem} from '../navigation/query/query';
+import {Workflow, WorkflowConfig, WorkflowFooterAttributeConfig} from './workflow';
 
 export enum WorkflowsActionType {
   ADD_KANBAN = '[Workflow] Add workflow',

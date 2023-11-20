@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ElementRef} from '@angular/core';
 
 import {Layout, PlotData} from 'plotly.js';
-import {ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
-import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {ValueChange} from '../chart-visualizer';
+
 import {ConstraintType} from '@lumeer/data-filters';
+
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ValueChange} from '../chart-visualizer';
 
 export type PlotlyChartData = Partial<PlotData>;
 

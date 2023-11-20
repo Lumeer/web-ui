@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {AppState} from '../app.state';
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
 import {SelectionList} from '../../../shared/lists/selection/selection-list';
+import {AppState} from '../app.state';
 import {selectWorkspaceModels} from '../common/common.selectors';
 
 export interface SelectionListsState extends EntityState<SelectionList> {

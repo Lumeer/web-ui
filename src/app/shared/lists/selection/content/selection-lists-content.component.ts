@@ -17,20 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
+
+import {ResourceType} from '../../../../core/model/resource-type';
+import {AppState} from '../../../../core/store/app.state';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {ResourceType} from '../../../../core/model/resource-type';
-import {objectChanged} from '../../../utils/common.utils';
-import {SelectionList} from '../selection-list';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {ModalService} from '../../../modal/modal.service';
-import {SelectionListModalComponent} from './modal/selection-list-modal.component';
-import {selectSelectionListsByProjectSorted} from '../../../../core/store/selection-lists/selection-lists.state';
 import {SelectionListsAction} from '../../../../core/store/selection-lists/selection-lists.action';
-import {tap} from 'rxjs/operators';
+import {selectSelectionListsByProjectSorted} from '../../../../core/store/selection-lists/selection-lists.state';
+import {ModalService} from '../../../modal/modal.service';
+import {objectChanged} from '../../../utils/common.utils';
 import {createUniqueNameWithSuffix} from '../../../utils/string.utils';
+import {SelectionList} from '../selection-list';
+import {SelectionListModalComponent} from './modal/selection-list-modal.component';
 
 @Component({
   selector: 'selection-lists-content',

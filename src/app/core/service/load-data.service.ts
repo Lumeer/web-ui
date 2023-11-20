@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Query} from '../store/navigation/query/query';
 import {Injectable} from '@angular/core';
-import {AppState} from '../store/app.state';
+
 import {Store} from '@ngrx/store';
+
+import {AppState} from '../store/app.state';
 import {DataResourcesAction} from '../store/data-resources/data-resources.action';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
-import {Workspace} from '../store/navigation/workspace';
-import {WorkspaceQuery} from '../store/navigation/query/workspace-query';
+import {Query} from '../store/navigation/query/query';
 import {workspaceQueriesAreSame} from '../store/navigation/query/query.util';
+import {WorkspaceQuery} from '../store/navigation/query/workspace-query';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
 export class LoadDataService {

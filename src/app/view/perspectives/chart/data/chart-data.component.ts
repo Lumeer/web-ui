@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,28 +27,31 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {ChartAxisSettings, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+
 import {BehaviorSubject, Observable} from 'rxjs';
-import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
-import {AttributesResourceType, DataResource, Resource} from '../../../../core/model/resource';
-import {checkOrTransformChartConfig} from '../visualizer/chart-util';
-import {ModalService} from '../../../../shared/modal/modal.service';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {ChartData, ChartSettings} from './convertor/chart-data';
-import {ChartDataConverter} from './convertor/chart-data-converter';
-import {AxisSettingsChange, ClickEvent, ValueChange} from '../visualizer/chart-visualizer';
-import {chartAxisChanged, chartSettingsChanged} from '../../../../core/store/charts/chart.util';
+
 import {Constraint, ConstraintData} from '@lumeer/data-filters';
+import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResourceType, DataResource, Resource} from '../../../../core/model/resource';
+import {ChartAxisSettings, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
+import {chartAxisChanged, chartSettingsChanged} from '../../../../core/store/charts/chart.util';
+import {Collection} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {User} from '../../../../core/store/users/user';
 import {View} from '../../../../core/store/views/view';
-import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
+import {ModalService} from '../../../../shared/modal/modal.service';
+import {checkOrTransformChartConfig} from '../visualizer/chart-util';
+import {AxisSettingsChange, ClickEvent, ValueChange} from '../visualizer/chart-visualizer';
+import {ChartData, ChartSettings} from './convertor/chart-data';
+import {ChartDataConverter} from './convertor/chart-data-converter';
+import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 
 interface Data {
   collections: Collection[];

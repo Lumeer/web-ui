@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+
+import {ConstraintType} from '@lumeer/data-filters';
+
 import {constraintIconsMap, isConstraintTypeEnabled} from '../../../../../../core/model/constraint';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../../utils/common.utils';
-import {ConstraintType} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../../utils/translation.utils';
 
 @Component({

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {AuditLog} from './audit-log.model';
+import {EntityAdapter, EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
 import {AppState} from '../app.state';
+import {AuditLog} from './audit-log.model';
 import {
   isCollectionAuditLog,
   isDocumentAuditLog,

@@ -64,7 +64,15 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js'; // Included with Angular CLI.
+
+/***************************************************************************************************
+ * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
+ */
+import '@angular/localize/init';
+
+import 'zone.js';
+
+// Included with Angular CLI.
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
@@ -75,8 +83,3 @@ import 'zone.js'; // Included with Angular CLI.
 (window as any).process = {
   env: {DEBUG: undefined},
 };
-
-/***************************************************************************************************
- * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
- */
-import '@angular/localize/init';

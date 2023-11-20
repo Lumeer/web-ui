@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Layout, LayoutAxis} from 'plotly.js';
-import {PlotMaker} from './plot-maker';
-import {ChartAxisData} from '../../data/convertor/chart-data';
+
 import {truncate} from '../../../../../shared/utils/string.utils';
+import {ChartAxisData} from '../../data/convertor/chart-data';
+import {PlotMaker} from './plot-maker';
 
 export abstract class TwoDAxisPlotMaker extends PlotMaker {
   public abstract getPoints(): any;

@@ -16,21 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {map, take} from 'rxjs/operators';
-import {LinkInstanceService} from './link-instance.service';
-import {AppState} from '../../store/app.state';
-import {LinkInstanceDto} from '../../dto';
-import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
+
 import {generateId} from '../../../shared/utils/resource.utils';
-import {selectLinkInstanceById, selectLinkInstancesByIds} from '../../store/link-instances/link-instances.state';
-import {convertLinkInstanceModelToDto} from '../../store/link-instances/link-instance.converter';
-import {LinkInstance} from '../../store/link-instances/link.instance';
+import {LinkInstanceDto} from '../../dto';
 import {DocumentLinksDto} from '../../dto/document-links.dto';
+import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
+import {AppState} from '../../store/app.state';
+import {convertLinkInstanceModelToDto} from '../../store/link-instances/link-instance.converter';
+import {selectLinkInstanceById, selectLinkInstancesByIds} from '../../store/link-instances/link-instances.state';
+import {LinkInstance} from '../../store/link-instances/link.instance';
+import {LinkInstanceService} from './link-instance.service';
 
 @Injectable()
 export class PublicLinkInstanceService implements LinkInstanceService {

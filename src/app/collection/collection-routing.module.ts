@@ -16,27 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
+import {CollectionsGuard} from '../core/guards/data/collections.guard';
+import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
+import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
+import {UsersGuard} from '../core/guards/data/users.guard';
+import {ViewsGuard} from '../core/guards/data/views.guard';
+import {RoleType} from '../core/model/role-type';
 import {CollectionSettingsGuard} from './collection-settings.guard';
+import {CollectionTabGuard} from './collection-tab.guard';
 import {CollectionSettingsComponent} from './settings/collection-settings.component';
+import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
 import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
 import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
-import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
-import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
-import {CollectionsGuard} from '../core/guards/data/collections.guard';
-import {UsersGuard} from '../core/guards/data/users.guard';
-import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
 import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purpose.component';
-import {ViewsGuard} from '../core/guards/data/views.guard';
+import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
 import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
-import {CollectionTabGuard} from './collection-tab.guard';
-import {RoleType} from '../core/model/role-type';
-import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
-import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
+import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
 
 const collectionRoutes: Routes = [
   {

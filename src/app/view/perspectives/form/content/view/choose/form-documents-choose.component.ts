@@ -16,25 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {ConstraintData} from '@lumeer/data-filters';
-import {View} from '../../../../../../core/store/views/view';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {Query} from '../../../../../../core/store/navigation/query/query';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {filterStemsForCollection} from '../../../../../../core/store/navigation/query/query.util';
-import {selectDocumentsByCollectionAndQuery} from '../../../../../../core/store/common/permissions.selectors';
-import {objectChanged} from '../../../../../../shared/utils/common.utils';
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {FormConfig} from '../../../../../../core/store/form/form-model';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../../../core/store/app.state';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {selectDocumentsByCollectionAndQuery} from '../../../../../../core/store/common/permissions.selectors';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
-import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {FormConfig} from '../../../../../../core/store/form/form-model';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {filterStemsForCollection} from '../../../../../../core/store/navigation/query/query.util';
 import {AttributesSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../../../core/store/views/view';
+import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {objectChanged} from '../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'form-documents-choose',

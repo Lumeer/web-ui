@@ -16,64 +16,67 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Action, Store, select} from '@ngrx/store';
+
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
 import {RouteFinder} from '../../../shared/utils/route-finder';
-import {PermissionDto} from '../../dto';
-import {AppState} from '../app.state';
-import {CollectionsAction} from '../collections/collections.action';
-import {CommonAction} from '../common/common.action';
-import {DocumentsAction} from '../documents/documents.action';
-import {LinkInstancesAction} from '../link-instances/link-instances.action';
-import {LinkTypesAction} from '../link-types/link-types.action';
-import {NotificationsAction} from '../notifications/notifications.action';
-import {selectOrganizationsDictionary} from '../organizations/organizations.state';
-import {convertPermissionModelToDto} from '../permissions/permissions.converter';
-import {Permission, PermissionType} from '../permissions/permissions';
-import {RouterAction} from '../router/router.action';
-import {UsersAction} from '../users/users.action';
-import {selectCurrentUser} from '../users/users.state';
-import {ViewsAction} from '../views/views.action';
-import {ProjectConverter} from './project.converter';
-import {ProjectsAction, ProjectsActionType} from './projects.action';
-import {selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
-import {selectNavigation} from '../navigation/navigation.state';
-import {NotificationService} from '../../notifications/notification.service';
-import ApplyTemplate = ProjectsAction.ApplyTemplate;
-import {createCallbackActions} from '../utils/store.utils';
-import {KanbansAction} from '../kanbans/kanbans.action';
-import {MapsAction} from '../maps/maps.action';
-import {PivotsAction} from '../pivots/pivots.action';
-import {CalendarsAction} from '../calendars/calendars.action';
-import {GanttChartAction} from '../gantt-charts/gantt-charts.action';
-import {SearchesAction} from '../searches/searches.action';
-import {ChartAction} from '../charts/charts.action';
-import {TemplateService} from '../../rest/template.service';
 import {ProjectService} from '../../data-service';
-import {OrganizationsAction} from '../organizations/organizations.action';
-import {WorkflowsAction} from '../workflows/workflows.action';
-import {DataResourcesAction} from '../data-resources/data-resources.action';
-import {selectWorkspaceWithIds} from '../common/common.selectors';
-import * as DetailActions from './../details/detail.actions';
-import * as FormActions from './../form/form.actions';
-import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
-import * as AuditLogsActions from './../audit-logs/audit-logs.actions';
-import {ViewSettingsAction} from '../view-settings/view-settings.action';
-import {SelectionListsAction} from '../selection-lists/selection-lists.action';
-import * as ResourceVariableActions from '../resource-variables/resource-variables.actions';
+import {PermissionDto} from '../../dto';
+import {NotificationService} from '../../notifications/notification.service';
+import {TemplateService} from '../../rest/template.service';
 import {
   getCurrentDataResourcesQueries,
   getCurrentDocumentsQueries,
   getCurrentLinkInstancesQueries,
   getCurrentTasksQueries,
 } from '../../service/load-data.service';
+import {AppState} from '../app.state';
+import {CalendarsAction} from '../calendars/calendars.action';
+import {ChartAction} from '../charts/charts.action';
+import {CollectionsAction} from '../collections/collections.action';
+import {CommonAction} from '../common/common.action';
+import {selectWorkspaceWithIds} from '../common/common.selectors';
+import {DataResourcesAction} from '../data-resources/data-resources.action';
+import {DocumentsAction} from '../documents/documents.action';
+import {GanttChartAction} from '../gantt-charts/gantt-charts.action';
+import {KanbansAction} from '../kanbans/kanbans.action';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {LinkTypesAction} from '../link-types/link-types.action';
+import {MapsAction} from '../maps/maps.action';
+import {selectNavigation} from '../navigation/navigation.state';
+import {NotificationsAction} from '../notifications/notifications.action';
+import {OrganizationsAction} from '../organizations/organizations.action';
+import {selectOrganizationsDictionary} from '../organizations/organizations.state';
+import {Permission, PermissionType} from '../permissions/permissions';
+import {convertPermissionModelToDto} from '../permissions/permissions.converter';
+import {PivotsAction} from '../pivots/pivots.action';
+import * as ResourceVariableActions from '../resource-variables/resource-variables.actions';
+import {RouterAction} from '../router/router.action';
+import {SearchesAction} from '../searches/searches.action';
+import {SelectionListsAction} from '../selection-lists/selection-lists.action';
 import {UserNotificationsAction} from '../user-notifications/user-notifications.action';
+import {UsersAction} from '../users/users.action';
+import {selectCurrentUser} from '../users/users.state';
+import {createCallbackActions} from '../utils/store.utils';
+import {ViewSettingsAction} from '../view-settings/view-settings.action';
+import {ViewsAction} from '../views/views.action';
+import {WorkflowsAction} from '../workflows/workflows.action';
+import * as AuditLogsActions from './../audit-logs/audit-logs.actions';
+import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
+import * as DetailActions from './../details/detail.actions';
+import * as FormActions from './../form/form.actions';
+import {ProjectConverter} from './project.converter';
+import {ProjectsAction, ProjectsActionType} from './projects.action';
+import {selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
+
+import ApplyTemplate = ProjectsAction.ApplyTemplate;
 
 @Injectable()
 export class ProjectsEffects {

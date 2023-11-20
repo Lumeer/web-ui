@@ -16,18 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+
+import {ButtonModule} from '../button/button.module';
 import {PipesModule} from '../pipes/pipes.module';
+import {SelectModule} from '../select/select.module';
+import {EmptyDataComponent} from './empty-data/empty-data.component';
 import {EmptySearchComponent} from './empty-search/empty-search.component';
 import {EmptyStateComponent} from './empty-state/empty-state.component';
 import {InvalidQueryComponent} from './invalid-query/invalid-query.component';
-import {EmptyDataComponent} from './empty-data/empty-data.component';
-import {SelectModule} from '../select/select.module';
 import {PublicProjectMessageComponent} from './public-project-message/public-project-message.component';
-import {ButtonModule} from '../button/button.module';
 
 @NgModule({
   imports: [CommonModule, FormsModule, PipesModule, SelectModule, ButtonModule],

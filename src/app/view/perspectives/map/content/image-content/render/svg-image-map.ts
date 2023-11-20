@@ -16,28 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ElementRef, EventEmitter} from '@angular/core';
 
-import {MapImageData, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
+import * as d3Drag from 'd3-drag';
 import * as d3Select from 'd3-selection';
 import * as d3Zoom from 'd3-zoom';
-import * as d3Drag from 'd3-drag';
+
+import {deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
+
+import {MimeType} from '../../../../../../core/model/mime-type';
+import {MapImageData, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
+import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {
+  Position,
+  Rectangle,
+  SVGContainer,
   addMarkerToSvgContainer,
   computeMarkerCoordinates,
   computeMarkerInitialX,
   computeMarkerInitialY,
   computeMarkerPosition,
   defaultMarkerSize,
-  Position,
-  Rectangle,
   scaleImagePoint,
-  SVGContainer,
 } from './map-image-render-utils';
-import {objectValues} from '../../../../../../shared/utils/common.utils';
-import {MimeType} from '../../../../../../core/model/mime-type';
-import {ElementRef, EventEmitter} from '@angular/core';
-import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
-import {deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
 
 export class SvgImageMap {
   public detail$ = new EventEmitter<MapMarkerProperties>();

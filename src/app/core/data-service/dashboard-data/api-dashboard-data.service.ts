@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
+import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {DashboardDataService} from './dashboard-data.service';
-import {Workspace} from '../../store/navigation/workspace';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {DashboardDataDto} from '../../dto/dashboard-data.dto';
 import {BaseService} from '../../rest/base.service';
-import {Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
-import {ConfigurationService} from '../../../configuration/configuration.service';
+import {Workspace} from '../../store/navigation/workspace';
+import {DashboardDataService} from './dashboard-data.service';
 
 @Injectable()
 export class ApiDashboardDataService extends BaseService implements DashboardDataService {

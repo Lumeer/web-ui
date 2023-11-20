@@ -16,35 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ModalWrapperModule} from './wrapper/modal-wrapper.module';
-import {CreateResourceModalModule} from './create-resource/create-resource-modal.module';
-import {DocumentDetailModalModule} from './document-detail/document-detail-modal.module';
-import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
-import {CreateLinkModalModule} from './create-link/create-link-modal.module';
-import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
-import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
-import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
-import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
-import {GettingStartedModalModule} from './getting-started/getting-started-modal.module';
-import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
-import {UserSettingsModalModule} from './user-settings/user-settings-modal.module';
-import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
-import {ViewModalModule} from './view-modal/view-modal.module';
-import {TextInputModalModule} from './text-input/text-input-modal.module';
-import {DataResourcesDetailModalModule} from './data-resources-detail/data-resources-detail-modal.module';
-import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.module';
+import {NgModule} from '@angular/core';
+
 import {AttributeModalModule} from './attribute/attribute-modal.module';
-import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
 import {BookProductDemoModalModule} from './book-product-demo/book-product-demo-modal.module';
-import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loading/data-resource-detail-loading-modal.module';
+import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
 import {ChooseLinkDocumentsModalModule} from './choose-link-documents/choose-link-documents-modal.module';
 import {ChooseResourceModalModule} from './choose-resource/choose-resource-modal.module';
 import {ChooseStemModalModule} from './choose-stem/choose-stem-modal.module';
 import {CollectionUploadModalModule} from './collection-upload/collection-upload-modal.module';
+import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
+import {CreateLinkModalModule} from './create-link/create-link-modal.module';
+import {CreateResourceModalModule} from './create-resource/create-resource-modal.module';
+import {DataResourceDetailLoadingModalModule} from './data-resource-detail-loading/data-resource-detail-loading-modal.module';
+import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
+import {DataResourcesDetailModalModule} from './data-resources-detail/data-resources-detail-modal.module';
+import {DocumentDetailModalModule} from './document-detail/document-detail-modal.module';
+import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
+import {GetInTouchModalModule} from './get-in-touch/get-in-touch-modal.module';
+import {GettingStartedModalModule} from './getting-started/getting-started-modal.module';
+import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
+import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
 import {ResourceModalModule} from './resource/resource-modal.module';
+import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.module';
+import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
+import {TextInputModalModule} from './text-input/text-input-modal.module';
+import {UserSettingsModalModule} from './user-settings/user-settings-modal.module';
+import {ViewModalModule} from './view-modal/view-modal.module';
+import {ModalWrapperModule} from './wrapper/modal-wrapper.module';
 
 @NgModule({
   imports: [

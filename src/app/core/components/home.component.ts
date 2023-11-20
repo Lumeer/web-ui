@@ -16,29 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, Subscription, combineLatest} from 'rxjs';
 import {filter, map, switchMap, take} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {userHasRoleInOrganization, userHasRoleInProject} from '../../shared/utils/permission.utils';
+import {sortResourcesByOrder} from '../../shared/utils/resource.utils';
+import {Perspective} from '../../view/perspectives/perspective';
+import {RoleType} from '../model/role-type';
+import {NotificationService} from '../notifications/notification.service';
+import {WorkspaceSelectService} from '../service/workspace-select.service';
 import {AppState} from '../store/app.state';
 import {Organization} from '../store/organizations/organization';
 import {selectAllOrganizations} from '../store/organizations/organizations.state';
 import {Project} from '../store/projects/project';
+import {ProjectsAction} from '../store/projects/projects.action';
 import {selectAllProjects} from '../store/projects/projects.state';
+import {selectPublicViewCode} from '../store/public-data/public-data.state';
+import {selectAllTeams} from '../store/teams/teams.state';
 import {DefaultWorkspace} from '../store/users/user';
 import {selectCurrentUser} from '../store/users/users.state';
-import {NotificationService} from '../notifications/notification.service';
-import {WorkspaceSelectService} from '../service/workspace-select.service';
-import {Perspective} from '../../view/perspectives/perspective';
-import {selectPublicViewCode} from '../store/public-data/public-data.state';
-import {ConfigurationService} from '../../configuration/configuration.service';
-import {selectAllTeams} from '../store/teams/teams.state';
-import {userHasRoleInOrganization, userHasRoleInProject} from '../../shared/utils/permission.utils';
-import {RoleType} from '../model/role-type';
-import {sortResourcesByOrder} from '../../shared/utils/resource.utils';
-import {ProjectsAction} from '../store/projects/projects.action';
 
 @Component({
   template: '',

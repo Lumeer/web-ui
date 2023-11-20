@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialSequencesState, sequencesAdapter, SequencesState} from './sequences.state';
 import {SequencesAction, SequencesActionType} from './sequences.action';
+import {SequencesState, initialSequencesState, sequencesAdapter} from './sequences.state';
 
 export function sequencesReducer(
   state: SequencesState = initialSequencesState,

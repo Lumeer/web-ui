@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Attribute} from '../../../core/store/collections/collection';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {MenuItem} from '../../menu/model/menu-item';
 import {AttributeFilter, Constraint, UnknownConstraint} from '@lumeer/data-filters';
+
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {Attribute} from '../../../core/store/collections/collection';
 import {AttributeSortType} from '../../../core/store/view-settings/view-settings';
+import {MenuItem} from '../../menu/model/menu-item';
 
 export interface TableColumnGroup {
   id: string;

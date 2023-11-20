@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -32,13 +33,20 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
-import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {filter, throttleTime} from 'rxjs/operators';
-import {TableRow, TableRowWithData} from './model/table-row';
+
+import {ConditionType, ConditionValue, ConstraintData, ConstraintType, DataAggregationType} from '@lumeer/data-filters';
+
+import {DocumentModel} from '../../core/store/documents/document.model';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {AttributeSortType} from '../../core/store/view-settings/view-settings';
+import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
+import {MenuItem} from '../menu/model/menu-item';
 import {TableRowComponent} from './content/row/table-row.component';
+import {TableColumn} from './model/table-column';
 import {
   EditedTableCell,
   SelectedTableCell,
@@ -47,14 +55,8 @@ import {
   TableCellType,
   TableModel,
 } from './model/table-model';
+import {TableRow, TableRowWithData} from './model/table-row';
 import {TableScrollService} from './service/table-scroll.service';
-import {DataInputSaveAction} from '../data-input/data-input-save-action';
-import {TableColumn} from './model/table-column';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {MenuItem} from '../menu/model/menu-item';
-import {ConditionType, ConditionValue, ConstraintData, ConstraintType, DataAggregationType} from '@lumeer/data-filters';
-import {AttributeSortType} from '../../core/store/view-settings/view-settings';
-import {Workspace} from '../../core/store/navigation/workspace';
 
 @Component({
   selector: 'lmr-table',

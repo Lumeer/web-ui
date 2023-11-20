@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {selectWorkspace} from '../navigation/navigation.state';
+
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
-import {Detail} from './detail';
+import {AppState} from '../app.state';
+import {selectWorkspace} from '../navigation/navigation.state';
 import {QueryStem} from '../navigation/query/query';
 import {queryStemsAreSame} from '../navigation/query/query.util';
+import {Detail} from './detail';
 
 export interface DetailsState extends EntityState<Detail> {}
 

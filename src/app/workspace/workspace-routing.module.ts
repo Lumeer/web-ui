@@ -16,35 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
+import {CollectionsGuard} from '../core/guards/data/collections.guard';
+import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
+import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
+import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
+import {UsersGuard} from '../core/guards/data/users.guard';
+import {ViewsGuard} from '../core/guards/data/views.guard';
+import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
+import {RoleType} from '../core/model/role-type';
 import {OrganizationDetailComponent} from './organization/detail/organization-detail.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
+import {OrganizationTabGuard} from './organization/organization-tab.guard';
+import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
 import {OrganizationUsersComponent} from './organization/users/organization-users.component';
+import {ProjectActivityComponent} from './project/activity/project-activity.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectSettingsGuard} from './project/project-settings.guard';
-import {ProjectUsersComponent} from './project/users/project-users.component';
-import {UsersGuard} from '../core/guards/data/users.guard';
-import {ProjectSequencesComponent} from './project/sequences/project-sequences.component';
-import {ProjectTemplateComponent} from './project/template/project-template.component';
-import {ViewsGuard} from '../core/guards/data/views.guard';
-import {CollectionsGuard} from '../core/guards/data/collections.guard';
-import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
-import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
-import {ProjectTeamsComponent} from './project/teams/project-teams.component';
-import {OrganizationTabGuard} from './organization/organization-tab.guard';
-import {RoleType} from '../core/model/role-type';
 import {ProjectTabGuard} from './project/project-tab.guard';
 import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
-import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
+import {ProjectSequencesComponent} from './project/sequences/project-sequences.component';
+import {ProjectTeamsComponent} from './project/teams/project-teams.component';
+import {ProjectTemplateComponent} from './project/template/project-template.component';
+import {ProjectUsersComponent} from './project/users/project-users.component';
 import {ProjectVariablesComponent} from './project/variables/project-variables.component';
-import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
-import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
-import {ProjectActivityComponent} from './project/activity/project-activity.component';
 
 const workspaceRoutes: Routes = [
   {

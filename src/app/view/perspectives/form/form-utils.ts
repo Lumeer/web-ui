@@ -16,7 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
+import {COLOR_SUCCESS} from '../../../core/constants';
+import {AttributesResourceType} from '../../../core/model/resource';
+import {Collection} from '../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {
   FormAttributeCellConfig,
   FormButtonsConfig,
@@ -27,15 +32,10 @@ import {
   FormRow,
   FormSection,
 } from '../../../core/store/form/form-model';
-import {Query, QueryStem} from '../../../core/store/navigation/query/query';
-import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {COLOR_SUCCESS} from '../../../core/constants';
-import {generateId} from '../../../shared/utils/resource.utils';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query/query.util';
-import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
-import {AttributesResourceType} from '../../../core/model/resource';
-import {isNotNullOrUndefined} from '@lumeer/utils';
+import {generateId} from '../../../shared/utils/resource.utils';
 
 export function checkOrTransformFormConfig(
   config: FormConfig,

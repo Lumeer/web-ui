@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Permissions} from '../store/permissions/permissions';
 import {Collection} from '../store/collections/collection';
 import {LinkType} from '../store/link-types/link.type';
+import {Permissions} from '../store/permissions/permissions';
 
 export interface Resource {
   id?: string;

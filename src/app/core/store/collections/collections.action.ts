@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
+
+import {Rule} from '../../model/rule';
+import {DocumentsAction} from '../documents/documents.action';
+import {Workspace} from '../navigation/workspace';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {Attribute, Collection, CollectionPurpose, ImportedCollection} from './collection';
-import {Workspace} from '../navigation/workspace';
-import {DocumentsAction} from '../documents/documents.action';
-import {Rule} from '../../model/rule';
 
 export enum CollectionsActionType {
   GET = '[Collections] Get',

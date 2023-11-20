@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
+
+import {ConfigurationService} from '../configuration/configuration.service';
 import {AuthService} from './auth.service';
 import {UserActivityService} from './user-activity.service';
-import {ConfigurationService} from '../configuration/configuration.service';
 
 const CHECK_INTERVAL = 3000; // millis
 

@@ -16,26 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, OnChanges, Input, SimpleChanges, Output, EventEmitter} from '@angular/core';
-import {AppState} from '../../../../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {FormLinkCellConfig} from '../../../../../../../../../core/store/form/form-model';
-import {View} from '../../../../../../../../../core/store/views/view';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {selectViewSettingsByView} from '../../../../../../../../../core/store/view-settings/view-settings.state';
 import {map, switchMap, tap} from 'rxjs/operators';
-import {ViewSettingsAction} from '../../../../../../../../../core/store/view-settings/view-settings.action';
-import {LinkType} from '../../../../../../../../../core/store/link-types/link.type';
-import {selectLinkTypeByIdWithCollections} from '../../../../../../../../../core/store/link-types/link-types.state';
-import {Collection} from '../../../../../../../../../core/store/collections/collection';
-import {getOtherLinkedCollectionId} from '../../../../../../../../../shared/utils/link-type.utils';
-import {selectCollectionById} from '../../../../../../../../../core/store/collections/collections.state';
-import {CollectionAttributeFilter} from '../../../../../../../../../core/store/navigation/query/query';
+
 import {AttributesResourceType} from '../../../../../../../../../core/model/resource';
-import {DropdownOption} from '../../../../../../../../../shared/dropdown/options/dropdown-option';
-import {viewSettingsIdByView} from '../../../../../../../../../core/store/view-settings/view-settings.util';
+import {AppState} from '../../../../../../../../../core/store/app.state';
+import {Collection} from '../../../../../../../../../core/store/collections/collection';
+import {selectCollectionById} from '../../../../../../../../../core/store/collections/collections.state';
+import {FormLinkCellConfig} from '../../../../../../../../../core/store/form/form-model';
+import {selectLinkTypeByIdWithCollections} from '../../../../../../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../../../../../../core/store/link-types/link.type';
+import {CollectionAttributeFilter} from '../../../../../../../../../core/store/navigation/query/query';
 import {AttributesSettings, ViewSettings} from '../../../../../../../../../core/store/view-settings/view-settings';
+import {ViewSettingsAction} from '../../../../../../../../../core/store/view-settings/view-settings.action';
+import {selectViewSettingsByView} from '../../../../../../../../../core/store/view-settings/view-settings.state';
+import {viewSettingsIdByView} from '../../../../../../../../../core/store/view-settings/view-settings.util';
+import {View} from '../../../../../../../../../core/store/views/view';
+import {DropdownOption} from '../../../../../../../../../shared/dropdown/options/dropdown-option';
+import {getOtherLinkedCollectionId} from '../../../../../../../../../shared/utils/link-type.utils';
 
 @Component({
   selector: 'form-editor-cell-link-actions',

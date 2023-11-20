@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {cleanQueryAttribute} from '@lumeer/data-filters';
+
 import {
   PivotAttribute,
   PivotRowColumnAttribute,
@@ -25,9 +27,8 @@ import {
   PivotSortList,
   PivotSortValue,
 } from '../../../../../../../../../core/store/pivots/pivot';
-import {PivotStemData} from '../../../../../../util/pivot-data';
 import {SelectItemModel} from '../../../../../../../../../shared/select/select-item/select-item.model';
-import {cleanQueryAttribute} from '@lumeer/data-filters';
+import {PivotStemData} from '../../../../../../util/pivot-data';
 
 @Component({
   selector: 'pivot-attribute-sort',

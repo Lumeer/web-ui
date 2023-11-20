@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {getTableColumnWidth} from '../../../../../core/store/tables/table.utils';
+
 import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
+import {getTableColumnWidth} from '../../../../../core/store/tables/table.utils';
 
 @Pipe({
   name: 'columnWidth',

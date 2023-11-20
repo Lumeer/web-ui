@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
+import {selectCollectionPermissionsByView} from '../../../../../core/store/common/permissions.selectors';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {View} from '../../../../../core/store/views/view';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {selectCollectionPermissionsByView} from '../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'table-header-collection',

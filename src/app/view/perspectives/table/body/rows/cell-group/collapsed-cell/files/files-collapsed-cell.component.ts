@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
+
+import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {FileAttachment} from '../../../../../../../../core/store/file-attachments/file-attachment.model';
 import {selectFileAttachmentsByDataCursor} from '../../../../../../../../core/store/file-attachments/file-attachments.state';
 import {LinkInstance} from '../../../../../../../../core/store/link-instances/link.instance';
+import {View} from '../../../../../../../../core/store/views/view';
 import {
+  DataCursor,
   createDocumentDataCursor,
   createLinkDataCursor,
-  DataCursor,
 } from '../../../../../../../../shared/data-input/data-cursor';
-import {AppState} from '../../../../../../../../core/store/app.state';
-import {View} from '../../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'files-collapsed-cell',

@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {Constraint, ConstraintData, DataAggregationType} from '@lumeer/data-filters';
+
 import {DataResource} from '../../../../core/model/resource';
+import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 
 export interface PivotData {
   data: PivotStemData[];

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+
 import {CalendarBar, CalendarStemConfig} from '../../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {QueryStem} from '../../../../../core/store/navigation/query/query';

@@ -20,14 +20,16 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
+
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
 import {SharedModule} from '../shared/shared.module';
+import {PerspectivesOptionsPipe} from './view-controls/perspectives-options.pipe';
 import {ViewControlsInfoPipe} from './view-controls/view-controls-info.pipe';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
-import {PerspectivesOptionsPipe} from './view-controls/perspectives-options.pipe';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, RouterModule, SharedModule, ViewRoutingModule, TooltipModule],

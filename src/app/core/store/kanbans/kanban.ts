@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DataAggregationType, QueryAttribute, QueryResource} from '@lumeer/data-filters';
 
-import {QueryAttribute, QueryResource, DataAggregationType} from '@lumeer/data-filters';
-import {QueryStem} from '../navigation/query/query';
-import {SizeType} from '../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../shared/post-it/post-it-layout-type';
+import {SizeType} from '../../../shared/slider/size/size-type';
+import {QueryStem} from '../navigation/query/query';
 
 export interface Kanban {
   id: string;

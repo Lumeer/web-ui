@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {FormAttributeCellConfig, FormCell, FormCellType} from '../../../../core/store/form/form-model';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+
+import {AttributeLockFiltersStats, ConstraintData, computeAttributeLockStats} from '@lumeer/data-filters';
+
 import {Collection} from '../../../../core/store/collections/collection';
-import {AttributeLockFiltersStats, computeAttributeLockStats, ConstraintData} from '@lumeer/data-filters';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {FormAttributeCellConfig, FormCell, FormCellType} from '../../../../core/store/form/form-model';
 
 @Pipe({
   name: 'formCellLockStats',

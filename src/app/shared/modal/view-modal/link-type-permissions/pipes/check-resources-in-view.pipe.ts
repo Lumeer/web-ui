@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {View} from '../../../../../core/store/views/view';
+
 import {AttributesResourceType} from '../../../../../core/model/resource';
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {isResourceInQuery} from '../../../../../core/store/navigation/query/query.util';
-import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
+import {View} from '../../../../../core/store/views/view';
 
 @Pipe({
   name: 'checkResourcesInView',

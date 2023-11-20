@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,36 +29,12 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {View} from '../../../../../core/store/views/view';
-import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
-import {Observable} from 'rxjs';
-import {WorkflowTablesService} from './service/workflow-tables.service';
-import {
-  EditedTableCell,
-  SelectedTableCell,
-  TableCell,
-  TableCellType,
-  TableModel,
-} from '../../../../../shared/table/model/table-model';
-import {AppState} from '../../../../../core/store/app.state';
+
 import {Store} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {HiddenInputComponent} from '../../../../../shared/input/hidden-input/hidden-input.component';
-import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
-import {TableRow} from '../../../../../shared/table/model/table-row';
-import {TableColumn} from '../../../../../shared/table/model/table-column';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {WorkflowConfig, WorkflowStemConfig} from '../../../../../core/store/workflows/workflow';
-import {WorkflowTable} from '../../model/workflow-table';
-import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
-import {TableComponent} from '../../../../../shared/table/table.component';
-import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
-import {APP_NAME_SELECTOR} from '../../../../../core/constants';
-import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
-import {MenuItem} from '../../../../../shared/menu/model/menu-item';
+
 import {
   ConditionType,
   ConditionValue,
@@ -67,10 +42,38 @@ import {
   DataAggregationType,
   DocumentsAndLinksData,
 } from '@lumeer/data-filters';
-import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
-import {WorkflowPerspectiveConfiguration} from '../../../perspective-configuration';
-import {AttributeSortType, ViewSettings} from '../../../../../core/store/view-settings/view-settings';
 import {deepObjectsEquals} from '@lumeer/utils';
+
+import {APP_NAME_SELECTOR} from '../../../../../core/constants';
+import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
+import {AttributeSortType, ViewSettings} from '../../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../../core/store/views/view';
+import {WorkflowConfig, WorkflowStemConfig} from '../../../../../core/store/workflows/workflow';
+import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
+import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
+import {HiddenInputComponent} from '../../../../../shared/input/hidden-input/hidden-input.component';
+import {MenuItem} from '../../../../../shared/menu/model/menu-item';
+import {TableColumn} from '../../../../../shared/table/model/table-column';
+import {
+  EditedTableCell,
+  SelectedTableCell,
+  TableCell,
+  TableCellType,
+  TableModel,
+} from '../../../../../shared/table/model/table-model';
+import {TableRow} from '../../../../../shared/table/model/table-row';
+import {TableComponent} from '../../../../../shared/table/table.component';
+import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
+import {WorkflowPerspectiveConfiguration} from '../../../perspective-configuration';
+import {WorkflowTable} from '../../model/workflow-table';
+import {WorkflowTablesService} from './service/workflow-tables.service';
+import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 
 @Component({
   selector: 'workflow-tables',

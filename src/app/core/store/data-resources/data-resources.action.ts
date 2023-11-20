@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
+
 import {DataQuery} from '../../model/data-query';
 import {Query} from '../navigation/query/query';
-import {DataQueryPayload} from '../utils/data-query-payload';
 import {WorkspaceQuery} from '../navigation/query/workspace-query';
+import {DataQueryPayload} from '../utils/data-query-payload';
 
 export enum DataResourcesActionType {
   GET = '[Data Resources] Get',

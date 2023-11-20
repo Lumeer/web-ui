@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialUserPermissionsState, UserPermissionsState} from './user-permissions.state';
 import {UserPermissionsAction, UserPermissionsActionType} from './user-permissions.action';
+import {UserPermissionsState, initialUserPermissionsState} from './user-permissions.state';
 
 export function userPermissionsReducer(
   state: UserPermissionsState = initialUserPermissionsState,

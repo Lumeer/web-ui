@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {getViewColor} from '@lumeer/data-filters';
+import {removeAccentFromString} from '@lumeer/utils';
+
+import {Collection} from '../../../../core/store/collections/collection';
+import {View} from '../../../../core/store/views/view';
+import {getViewIcon} from '../../../../core/store/views/view.utils';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../../utils/common.utils';
-import {removeAccentFromString} from '@lumeer/utils';
-import {View} from '../../../../core/store/views/view';
-import {Collection} from '../../../../core/store/collections/collection';
-import {getViewIcon} from '../../../../core/store/views/view.utils';
-import {getViewColor} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'filterViews',

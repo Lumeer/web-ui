@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NotificationSettings, User} from '../../../core/store/users/user';
-import {UserNotificationGroupType, userNotificationGroupTypes} from '../../../core/model/user-notification';
+
+import {LanguageCode, availableLanguages} from '../../../core/model/language';
 import {NotificationChannel} from '../../../core/model/notification-channel';
 import {NotificationFrequency} from '../../../core/model/notification-frequency';
+import {UserNotificationGroupType, userNotificationGroupTypes} from '../../../core/model/user-notification';
+import {NotificationSettings, User} from '../../../core/store/users/user';
 import {SelectItem2Model} from '../../select/select-item2/select-item2.model';
-import {availableLanguages, LanguageCode} from '../../../core/model/language';
 
 @Component({
   selector: 'notification-settings',

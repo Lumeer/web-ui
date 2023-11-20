@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,12 +28,30 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
+
 import * as moment from 'moment';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
+
+import {
+  ConstraintData,
+  ConstraintType,
+  DataResourceChain,
+  DataValue,
+  DateTimeConstraint,
+  DocumentsAndLinksData,
+  DurationConstraint,
+  QueryAttribute,
+  durationCountsMapToString,
+} from '@lumeer/data-filters';
+import {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
+import {deepObjectsEquals, isNotNullOrUndefined, isNumeric, toNumber} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {CreateDataResourceService, QueryAttributeGrouping} from '../../../../core/service/create-data-resource.service';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {DocumentMetaData, DocumentModel} from '../../../../core/store/documents/document.model';
@@ -47,7 +64,14 @@ import {
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../core/store/views/view';
+import {ModalService} from '../../../../shared/modal/modal.service';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
+import {Translation} from '../../../../shared/utils/translation';
+import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
 import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
 import {
   canCreateTaskByStemConfig,
@@ -56,29 +80,7 @@ import {
   isGanttConfigChanged,
   tasksHasSameSwimlanes,
 } from '../util/gantt-chart-util';
-import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
-import {
-  ConstraintData,
-  ConstraintType,
-  DataResourceChain,
-  DataValue,
-  DateTimeConstraint,
-  DocumentsAndLinksData,
-  DurationConstraint,
-  durationCountsMapToString,
-  QueryAttribute,
-} from '@lumeer/data-filters';
-import {ConfigurationService} from '../../../../configuration/configuration.service';
-import {View} from '../../../../core/store/views/view';
-import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
-import {CreateDataResourceService, QueryAttributeGrouping} from '../../../../core/service/create-data-resource.service';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {Translation} from '../../../../shared/utils/translation';
-import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
-import {deepObjectsEquals, isNotNullOrUndefined, isNumeric, toNumber} from '@lumeer/utils';
 
 interface Data {
   collections: Collection[];

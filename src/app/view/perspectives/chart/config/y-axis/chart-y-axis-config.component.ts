@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Constraint, DataAggregationType} from '@lumeer/data-filters';
+import {deepObjectCopy} from '@lumeer/utils';
+
 import {AttributesResource} from '../../../../../core/model/resource';
 import {ChartAxis, ChartConfig, ChartType} from '../../../../../core/store/charts/chart';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {objectValues} from '../../../../../shared/utils/common.utils';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {ChartYAxisType} from '../../data/convertor/chart-data';
-import {objectValues} from '../../../../../shared/utils/common.utils';
-import {Constraint, DataAggregationType} from '@lumeer/data-filters';
-import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'chart-y-axis-config',

@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn} from '@angular/forms';
-import {map} from 'rxjs/operators';
-import {ProjectService} from '../data-service';
+
 import {Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {ProjectService} from '../data-service';
 
 @Injectable()
 export class ProjectValidators {

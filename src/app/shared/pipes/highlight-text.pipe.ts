@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {escapeStringForRegex} from '../utils/string.utils';
+
 import {escapeHtml, removeAccentFromString, stripTextHtmlTags} from '@lumeer/utils';
+
+import {escapeStringForRegex} from '../utils/string.utils';
 
 @Pipe({
   name: 'highlightText',

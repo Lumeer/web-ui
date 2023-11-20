@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild, OnDestroy, EventEmitter, Output} from '@angular/core';
-import {DropdownPosition} from '../../dropdown/dropdown-position';
-import {IconChooseComponent} from './icon/icon-choose.component';
 import {BehaviorSubject} from 'rxjs';
+
+import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownDirective} from '../../dropdown/dropdown.directive';
+import {IconChooseComponent} from './icon/icon-choose.component';
 
 @Component({
   selector: 'icon-color-picker',

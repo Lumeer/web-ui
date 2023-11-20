@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {ConstraintData, DataAggregationType} from '@lumeer/data-filters';
+
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {TableFooter} from '../../model/table-footer';
 import {SelectedTableCell} from '../../model/table-model';
-import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 
 @Component({
   selector: '[table-footer]',

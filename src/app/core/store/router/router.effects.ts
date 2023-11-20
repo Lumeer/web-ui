@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Location} from '@angular/common';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {map, mergeMap, tap} from 'rxjs/operators';
-import {RouterAction, RouterActionType} from './router.action';
+
 import {from} from 'rxjs';
+import {map, mergeMap, tap} from 'rxjs/operators';
+
+import {RouterAction, RouterActionType} from './router.action';
 
 @Injectable()
 export class RouterEffects {

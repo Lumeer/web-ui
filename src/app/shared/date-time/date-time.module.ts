@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {TimepickerModule} from 'ngx-bootstrap/timepicker';
+
+import {DirectivesModule} from '../directives/directives.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DateTimeInputComponent} from './input/date-time-input.component';
 import {DateTimePickerComponent} from './picker/date-time-picker.component';
 import {HasDateOptionPipe} from './picker/has-date-option.pipe';
 import {HasTimeOptionPipe} from './picker/has-time-option.pipe';
-import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   imports: [

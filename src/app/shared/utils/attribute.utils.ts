@@ -16,15 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Attribute, AttributeFormattingGroup, AttributeFunction} from '../../core/store/collections/collection';
-import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
-import {objectValues} from './common.utils';
 import {
   ActionConstraintConfig,
   AttributeFilter,
-  collectAttributeLockFilters,
-  dataValuesSatisfyEquation,
   ConstraintData,
   ConstraintType,
   DataValue,
@@ -34,12 +28,18 @@ import {
   UserConstraintConfig,
   ViewConstraint,
   ViewConstraintConfig,
+  collectAttributeLockFilters,
+  dataValuesSatisfyEquation,
 } from '@lumeer/data-filters';
-import {createAttributesSettingsOrder} from '../settings/settings.util';
-import {AttributesResource} from '../../core/model/resource';
-import {fontStylesClass} from '../../core/model/font-style';
-import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
 import {objectsByIdMap} from '@lumeer/utils';
+
+import {fontStylesClass} from '../../core/model/font-style';
+import {AttributesResource} from '../../core/model/resource';
+import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
+import {Attribute, AttributeFormattingGroup, AttributeFunction} from '../../core/store/collections/collection';
+import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
+import {createAttributesSettingsOrder} from '../settings/settings.util';
+import {objectValues} from './common.utils';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX = /\./g;

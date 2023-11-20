@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormGroup} from '@angular/forms';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
+
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {View} from '../../../../../core/store/views/view';
-import {ClipboardService} from '../../../../../core/service/clipboard.service';
-import {PublicScriptType} from './public-script-type';
+
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {ClipboardService} from '../../../../../core/service/clipboard.service';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {View} from '../../../../../core/store/views/view';
+import {PublicScriptType} from './public-script-type';
 
 @Component({
   selector: 'project-template-script',

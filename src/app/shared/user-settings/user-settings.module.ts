@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NotificationSettingsComponent} from './notification-settings/notification-settings.component';
-import {SelectModule} from '../select/select.module';
-import {UserSettingsComponent} from './user-settings/user-settings.component';
-import {GravatarModule} from 'ngx-gravatar';
-import {InputModule} from '../input/input.module';
+import {NgModule} from '@angular/core';
+
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {GravatarModule} from 'ngx-gravatar';
+
+import {InputModule} from '../input/input.module';
+import {SelectModule} from '../select/select.module';
+import {NotificationSettingsComponent} from './notification-settings/notification-settings.component';
+import {UserSettingsComponent} from './user-settings/user-settings.component';
 
 @NgModule({
   declarations: [NotificationSettingsComponent, UserSettingsComponent],

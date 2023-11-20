@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
-import {ActionConstraintFormControl} from '../action-constraint-form-control';
+
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+
+import {ActionConstraintFormControl} from '../action-constraint-form-control';
 import {actionConstraintConfirmationPlaceholder} from '../action-constraint.utils';
 
 @Component({

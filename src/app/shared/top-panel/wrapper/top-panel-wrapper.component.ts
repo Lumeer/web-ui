@@ -16,24 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {AppState} from '../../../core/store/app.state';
-import {selectPublicProject} from '../../../core/store/projects/projects.state';
-import {map, mergeMap, switchMap, take} from 'rxjs/operators';
-import {selectPerspective, selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {Perspective} from '../../../view/perspectives/perspective';
 import {Router} from '@angular/router';
-import {selectPublicShowTopPanel} from '../../../core/store/public-data/public-data.state';
-import {ConfigurationService} from '../../../configuration/configuration.service';
+
+import {Store, select} from '@ngrx/store';
+
 import {DeviceDetectorService} from 'ngx-device-detector';
-import {selectIsFullscreen} from '../../../core/store/app-properties/app-properties.state';
-import {AppPropertiesAction} from '../../../core/store/app-properties/app-properties.action';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {map, mergeMap, switchMap, take} from 'rxjs/operators';
+
 import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {AppPropertiesAction} from '../../../core/store/app-properties/app-properties.action';
+import {selectIsFullscreen} from '../../../core/store/app-properties/app-properties.state';
+import {AppState} from '../../../core/store/app.state';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {selectPerspective, selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {selectPublicProject} from '../../../core/store/projects/projects.state';
+import {selectPublicShowTopPanel} from '../../../core/store/public-data/public-data.state';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 @Component({
   selector: 'top-panel-wrapper',

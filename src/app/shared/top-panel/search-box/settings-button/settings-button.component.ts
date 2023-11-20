@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, ElementRef, Input, OnDestroy} from '@angular/core';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {selectViewSettings, selectViewSettingsId} from '../../../../core/store/view-settings/view-settings.state';
-import {ViewSettingsAction} from '../../../../core/store/view-settings/view-settings.action';
+
+import {AppState} from '../../../../core/store/app.state';
 import {AttributesSettings, DataSettings, ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {ViewSettingsAction} from '../../../../core/store/view-settings/view-settings.action';
+import {selectViewSettings, selectViewSettingsId} from '../../../../core/store/view-settings/view-settings.state';
 
 @Component({
   selector: 'settings-button',

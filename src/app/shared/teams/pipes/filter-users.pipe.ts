@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {removeAccentFromString} from '@lumeer/utils';
-import {DropdownOption} from '../../dropdown/options/dropdown-option';
+
 import {User} from '../../../core/store/users/user';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../utils/common.utils';
 
 @Pipe({

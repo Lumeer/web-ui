@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {View} from '../../../../../../core/store/views/view';
-import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
-import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-item/model/query-item';
-import {QueryItemsConverter} from '../../../../../../shared/top-panel/search-box/query-item/query-items.converter';
-import {SizeType} from '../../../../../../shared/slider/size/size-type';
-import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {getViewColor} from '@lumeer/data-filters';
+import {objectsByIdMap} from '@lumeer/utils';
+
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {View} from '../../../../../../core/store/views/view';
 import {getViewIcon} from '../../../../../../core/store/views/view.utils';
+import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {SizeType} from '../../../../../../shared/slider/size/size-type';
+import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-item/model/query-item';
+import {QueryItemsConverter} from '../../../../../../shared/top-panel/search-box/query-item/query-items.converter';
+import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
 import {filterVisibleAttributesInQueryItems} from '../../../../../../shared/top-panel/search-box/util/search-box.util';
-import {objectsByIdMap} from '@lumeer/utils';
-import {getViewColor} from '@lumeer/data-filters';
 
 @Component({
   selector: 'view-detail',

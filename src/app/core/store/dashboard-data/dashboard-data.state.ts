@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {EntityState, EntityAdapter, createEntityAdapter} from '@ngrx/entity';
-import {DashboardData, DashboardDataType} from './dashboard-data';
+import {EntityAdapter, EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
 import {AppState} from '../app.state';
+import {DashboardData, DashboardDataType} from './dashboard-data';
 
 export interface DashboardDataState extends EntityState<DashboardData> {
   loaded?: boolean;

@@ -16,8 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+
+import {COLOR_GRAY700} from '../../../../../../../core/constants';
+import {AttributesResourceType} from '../../../../../../../core/model/resource';
+import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
 import {
   FormAttributeCellConfig,
   FormCell,
@@ -25,16 +28,13 @@ import {
   FormCellType,
   FormLinkCellConfig,
 } from '../../../../../../../core/store/form/form-model';
-import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
-import {
-  SelectedItemDisplayValue,
-  SelectItem2Model,
-} from '../../../../../../../shared/select/select-item2/select-item2.model';
-import {AttributesResourceType} from '../../../../../../../core/model/resource';
-import {COLOR_GRAY700} from '../../../../../../../core/constants';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
-import {getOtherLinkedCollectionId} from '../../../../../../../shared/utils/link-type.utils';
 import {View} from '../../../../../../../core/store/views/view';
+import {
+  SelectItem2Model,
+  SelectedItemDisplayValue,
+} from '../../../../../../../shared/select/select-item2/select-item2.model';
+import {getOtherLinkedCollectionId} from '../../../../../../../shared/utils/link-type.utils';
 
 @Component({
   selector: 'form-editor-cell',

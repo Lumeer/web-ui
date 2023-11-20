@@ -16,12 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, Subscription, combineLatest} from 'rxjs';
+import {map, skip} from 'rxjs/operators';
+
+import {DataResource} from '../../../core/model/resource';
 import {ResourceType} from '../../../core/model/resource-type';
-import {AuditLog, AuditLogType} from '../../../core/store/audit-logs/audit-log.model';
-import {combineLatest, Observable, Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
+import {AuditLog, AuditLogType} from '../../../core/store/audit-logs/audit-log.model';
+import * as AuditLogActions from '../../../core/store/audit-logs/audit-logs.actions';
 import {
   selectAuditLogsByCollection,
   selectAuditLogsByCollectionLoading,
@@ -34,13 +40,9 @@ import {
   selectAuditLogsByProject,
   selectAuditLogsByProjectLoading,
 } from '../../../core/store/audit-logs/audit-logs.state';
-import {select, Store} from '@ngrx/store';
-import * as AuditLogActions from '../../../core/store/audit-logs/audit-logs.actions';
-import {DataResource} from '../../../core/model/resource';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {map, skip} from 'rxjs/operators';
 import {generateId} from '../../utils/resource.utils';
 import {AuditLogConfiguration} from './audit-logs/model/audit-log-configuration';
 

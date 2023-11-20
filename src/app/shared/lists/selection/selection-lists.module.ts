@@ -16,20 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import {SelectionListsComponent} from './selection-lists.component';
-import {SelectionListComponent} from './content/list/selection-list.component';
-import {SelectionListsContentComponent} from './content/selection-lists-content.component';
-import {SelectionListModalComponent} from './content/modal/selection-list-modal.component';
-import {ModalWrapperModule} from '../../modal/wrapper/modal-wrapper.module';
-import {AttributeTypeModalModule} from '../../modal/attribute/type/attribute-type-modal.module';
-import {SelectionListModalContentComponent} from './content/modal/content/selection-list-modal-content.component';
-import {PipesModule} from '../../pipes/pipes.module';
 import {DropdownModule} from '../../dropdown/dropdown.module';
+import {AttributeTypeModalModule} from '../../modal/attribute/type/attribute-type-modal.module';
+import {ModalWrapperModule} from '../../modal/wrapper/modal-wrapper.module';
+import {PipesModule} from '../../pipes/pipes.module';
+import {SelectionListComponent} from './content/list/selection-list.component';
+import {SelectionListModalContentComponent} from './content/modal/content/selection-list-modal-content.component';
+import {SelectionListModalComponent} from './content/modal/selection-list-modal.component';
+import {SelectionListsContentComponent} from './content/selection-lists-content.component';
+import {SelectionListsComponent} from './selection-lists.component';
 
 @NgModule({
   declarations: [

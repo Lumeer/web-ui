@@ -16,30 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
-  Output,
-  OnInit,
-  OnDestroy,
+  Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
-import {checkSizeType, SearchViewsConfig} from '../../../../../../core/store/searches/search';
-import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
-import {View} from '../../../../../../core/store/views/view';
-import {ViewFavoriteToggleService} from '../../../../../../shared/toggle/view-favorite-toggle.service';
+
+import {AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
-import {AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
+import {SearchViewsConfig, checkSizeType} from '../../../../../../core/store/searches/search';
+import {View} from '../../../../../../core/store/views/view';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
-import {createObjectFolder, createObjectFolders, ObjectFolders, parseObjectFolder} from './util/object-folders';
+import {ViewFavoriteToggleService} from '../../../../../../shared/toggle/view-favorite-toggle.service';
+import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
 import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../../../shared/utils/resource.utils';
 import {SearchPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {ObjectFolders, createObjectFolder, createObjectFolders, parseObjectFolder} from './util/object-folders';
 
 @Component({
   selector: 'views-folders-content',

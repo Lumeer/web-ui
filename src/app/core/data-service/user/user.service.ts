@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Observable} from 'rxjs';
+
 import {UserDto} from '../../dto';
-import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
-import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
 import {UserInvitationDto} from '../../dto/user-invitation.dto';
+import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
+import {PaymentStats} from '../../store/organizations/payment/payment';
 
 export abstract class UserService {
   public abstract createUser(organizationId: string, user: UserDto): Observable<UserDto>;

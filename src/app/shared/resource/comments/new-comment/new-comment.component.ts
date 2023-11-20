@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -27,18 +26,19 @@ import {
   Output,
   Renderer2,
 } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+
 import {ContentChange} from 'ngx-quill';
 import * as QuillNamespace from 'quill';
 import QuillMention from 'quill-mention';
+import {BehaviorSubject} from 'rxjs';
 
-import {isMacOS} from '../../../utils/system.utils';
-import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../key-code';
-import {User} from '../../../../core/store/users/user';
 import {ResourceCommentModel} from '../../../../core/store/resource-comments/resource-comment.model';
-import {generateId} from '../../../utils/resource.utils';
-import {objectValues, preventEvent} from '../../../utils/common.utils';
+import {User} from '../../../../core/store/users/user';
+import {KeyCode, isKeyPrintable, keyboardEventCode} from '../../../key-code';
 import {defaultTextEditorBubbleOptions} from '../../../modal/text-editor/text-editor.utils';
+import {objectValues, preventEvent} from '../../../utils/common.utils';
+import {generateId} from '../../../utils/resource.utils';
+import {isMacOS} from '../../../utils/system.utils';
 
 @Component({
   selector: 'new-comment',

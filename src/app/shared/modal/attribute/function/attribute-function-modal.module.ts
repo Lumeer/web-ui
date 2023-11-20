@@ -16,22 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {ModalWrapperModule} from '../../wrapper/modal-wrapper.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
+import {BlocklyModule} from '../../../blockly/blockly.module';
 import {PipesModule} from '../../../pipes/pipes.module';
 import {PresenterModule} from '../../../presenter/presenter.module';
+import {ModalWrapperModule} from '../../wrapper/modal-wrapper.module';
 import {AttributeFunctionModalComponent} from './attribute-function-modal.component';
-import {BlocklyModule} from '../../../blockly/blockly.module';
-import {AttributeFunctionHeaderComponent} from './header/attribute-function-header.component';
 import {AttributeFunctionContentComponent} from './content/attribute-function-content.component';
+import {AttributeFunctionBlocklyComponent} from './content/blockly/attribute-function-blockly.component';
 import {AttributeFunctionEmptyComponent} from './content/empty/attribute-function-empty.component';
 import {AttributeFunctionRestrictedComponent} from './content/restricted/attribute-function-restricted.component';
-import {AttributeFunctionBlocklyComponent} from './content/blockly/attribute-function-blockly.component';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {AttributeFunctionHeaderComponent} from './header/attribute-function-header.component';
 
 @NgModule({
   declarations: [

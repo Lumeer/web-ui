@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
+import {UpdateValueService} from '../../core/service/update-value.service';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {UpdateValueService} from '../../core/service/update-value.service';
 
 @Injectable()
 export class CollectionFavoriteToggleService extends UpdateValueService<boolean, Collection> {

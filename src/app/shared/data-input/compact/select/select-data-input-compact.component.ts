@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,13 +26,16 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {BehaviorSubject} from 'rxjs';
+
 import {SelectConstraintOption, SelectDataValue} from '@lumeer/data-filters';
-import {CommonDataInputConfiguration, SelectDataInputConfiguration} from '../../data-input-configuration';
+import {uniqueValues} from '@lumeer/utils';
+
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../../dropdown/options/options-dropdown.component';
+import {CommonDataInputConfiguration, SelectDataInputConfiguration} from '../../data-input-configuration';
 import {createSelectDataInputDropdownOptions} from '../../select/select-data-input-utils';
-import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'select-data-input-compact',

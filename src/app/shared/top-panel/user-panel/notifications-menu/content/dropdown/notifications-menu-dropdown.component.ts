@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,8 +26,10 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {UserNotification} from '../../../../../../core/model/user-notification';
+
 import {Dictionary} from '@ngrx/entity';
+
+import {UserNotification} from '../../../../../../core/model/user-notification';
 import {Organization} from '../../../../../../core/store/organizations/organization';
 import {DropdownPosition} from '../../../../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../../../../dropdown/dropdown.component';

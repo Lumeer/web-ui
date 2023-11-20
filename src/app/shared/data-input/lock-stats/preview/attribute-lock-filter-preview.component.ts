@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
+
 import {Attribute} from '../../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 

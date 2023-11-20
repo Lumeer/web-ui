@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {AfterContentInit, Directive, forwardRef, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
+import {AfterContentInit, Directive, Input, OnChanges, OnDestroy, SimpleChanges, forwardRef} from '@angular/core';
+
 import {takeWhile, tap} from 'rxjs/operators';
-import {TableVirtualScrollStrategy} from './table-virtual-scroll-strategy';
-import {TABLE_ROW_HEIGHT} from '../model/table-model';
+
 import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {TABLE_ROW_HEIGHT} from '../model/table-model';
+import {TableVirtualScrollStrategy} from './table-virtual-scroll-strategy';
 
 export function _tableVirtualScrollDirectiveStrategyFactory(tableDir: TableItemSizeDirective) {
   return tableDir.scrollStrategy;

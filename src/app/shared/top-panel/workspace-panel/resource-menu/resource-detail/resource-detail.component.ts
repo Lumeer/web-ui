@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Router} from '@angular/router';
+
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {Resource} from '../../../../../core/model/resource';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {Resource} from '../../../../../core/model/resource';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {
   permissionsCanManageOrganizationDetail,
   permissionsCanManageProjectDetail,

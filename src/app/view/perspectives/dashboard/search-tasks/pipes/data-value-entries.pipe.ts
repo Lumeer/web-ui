@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {SizeType} from '../../../../../shared/slider/size/size-type';
-import {SearchTasksConfig} from '../../../../../core/store/searches/search';
-import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
+
 import {Constraint, ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
-import {TaskAttributes} from '../model/task-attributes';
+import {objectsByIdMap} from '@lumeer/utils';
+
+import {Collection} from '../../../../../core/store/collections/collection';
+import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {SearchTasksConfig} from '../../../../../core/store/searches/search';
+import {ResourceAttributeSettings} from '../../../../../core/store/view-settings/view-settings';
 import {View} from '../../../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../../../../shared/settings/settings.util';
-import {ResourceAttributeSettings} from '../../../../../core/store/view-settings/view-settings';
-import {objectsByIdMap} from '@lumeer/utils';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
+import {TaskAttributes} from '../model/task-attributes';
 
 @Pipe({
   name: 'dataValueEntries',

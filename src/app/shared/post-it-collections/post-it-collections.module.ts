@@ -16,24 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
-import {PipesModule} from '../pipes/pipes.module';
-import {PostItCollectionsComponent} from './post-it-collections.component';
-import {PostItCollectionNameComponent} from './content/collection-name/post-it-collection-name.component';
-import {PostItCollectionAddButtonComponent} from './content/add-button/post-it-collection-add-button.component';
-import {PostItCollectionComponent} from './content/post-it/post-it-collection.component';
+import {ButtonModule} from '../button/button.module';
+import {DirectivesModule} from '../directives/directives.module';
 import {PickerModule} from '../picker/picker.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {PresenterModule} from '../presenter/presenter.module';
 import {WarningMessageModule} from '../warning-message/warning-message.module';
+import {PostItCollectionAddButtonComponent} from './content/add-button/post-it-collection-add-button.component';
+import {PostItCollectionNameComponent} from './content/collection-name/post-it-collection-name.component';
 import {EmptyCollectionsComponent} from './content/empty-collections/empty-collections.component';
 import {PostItCollectionsContentComponent} from './content/post-it-collections-content.component';
-import {PresenterModule} from '../presenter/presenter.module';
-import {DirectivesModule} from '../directives/directives.module';
-import {ButtonModule} from '../button/button.module';
+import {PostItCollectionComponent} from './content/post-it/post-it-collection.component';
+import {PostItCollectionsComponent} from './post-it-collections.component';
 
 @NgModule({
   imports: [

@@ -16,26 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {CollectionModule} from './collection/collection.module';
 import {AuthModule} from './auth/auth.module';
+import {CollectionModule} from './collection/collection.module';
+import {ConfigurationService} from './configuration/configuration.service';
 import {CoreModule} from './core/core.module';
+import {AppIdService} from './core/service/app-id.service';
+import {ConstraintDataService} from './core/service/constraint-data.service';
+import {CurrentUserCheckService} from './core/service/current-user-check.service';
+import {PermissionsCheckService} from './core/service/permissions-check.service';
+import {LinkTypeModule} from './link-type/link-type.module';
+import {PrintModule} from './print/print.module';
+import {SharedModule} from './shared/shared.module';
+import {UserModule} from './user/user.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
-import {SharedModule} from './shared/shared.module';
-import {ConstraintDataService} from './core/service/constraint-data.service';
-import {PermissionsCheckService} from './core/service/permissions-check.service';
-import {AppIdService} from './core/service/app-id.service';
-import {PrintModule} from './print/print.module';
-import {ConfigurationService} from './configuration/configuration.service';
-import {LinkTypeModule} from './link-type/link-type.module';
-import {UserModule} from './user/user.module';
-import {CurrentUserCheckService} from './core/service/current-user-check.service';
 
 const disableAnimations =
   !('animate' in document.documentElement) || (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent));

@@ -16,18 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
 
-import {ResourceType} from '../../../../core/model/resource-type';
-import {safeGetRandomIcon} from '../../../picker/icons';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
-import * as Colors from '../../../picker/colors';
 import {Resource} from '../../../../core/model/resource';
+import {ResourceType} from '../../../../core/model/resource-type';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
+import * as Colors from '../../../picker/colors';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
+import {safeGetRandomIcon} from '../../../picker/icons';
 
 @Component({
   selector: 'create-resource-dialog-form',

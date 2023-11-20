@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {BaseService} from '../../rest/base.service';
-import {ResourceVariablesService} from './resource-variables.service';
-import {Observable} from 'rxjs';
-import {Workspace} from '../../store/navigation/workspace';
-import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../store/app.state';
+
+import {Observable} from 'rxjs';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {ResourceVariableDto} from '../../dto/resource-variable.dto';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {ResourceVariablesService} from './resource-variables.service';
 
 @Injectable()
 export class ApiResourceVariablesService extends BaseService implements ResourceVariablesService {

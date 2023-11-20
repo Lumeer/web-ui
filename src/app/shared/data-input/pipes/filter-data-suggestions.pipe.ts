@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {DataSuggestion} from '../data-suggestion';
-import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
+
 import {removeAccentFromString} from '@lumeer/utils';
+
+import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
+import {DataSuggestion} from '../data-suggestion';
 
 @Pipe({
   name: 'filterDataSuggestions',

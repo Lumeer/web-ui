@@ -16,28 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
-import {TableColumn, TableColumnGroup} from '../../model/table-column';
-import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChildren,
+} from '@angular/core';
+
 import {BehaviorSubject} from 'rxjs';
-import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
-import {computeElementPositionInParent} from '../../../utils/common.utils';
-import {MenuItem} from '../../../menu/model/menu-item';
+
 import {ConditionType, ConditionValue} from '@lumeer/data-filters';
+
 import {AttributeSortType} from '../../../../core/store/view-settings/view-settings';
+import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
+import {MenuItem} from '../../../menu/model/menu-item';
+import {computeElementPositionInParent} from '../../../utils/common.utils';
+import {TableColumn, TableColumnGroup} from '../../model/table-column';
+import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 
 @Component({
   selector: '[table-header]',

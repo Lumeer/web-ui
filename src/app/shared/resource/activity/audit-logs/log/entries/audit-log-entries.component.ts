@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Constraint, ConstraintData, DataValue} from '@lumeer/data-filters';
+import {isNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
+
 import {AttributesResource} from '../../../../../../core/model/resource';
 import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
-import {isNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 interface ChangeEntry {
   label?: string;

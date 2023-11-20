@@ -16,29 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
-import {SharedModule} from '../../../shared/shared.module';
-import {MapContentComponent} from './content/map-content.component';
-import {EmptyMapComponent} from './content/globe-content/empty/empty-map.component';
-import {MapPerspectiveRoutingModule} from './map-perspective-routing.module';
-import {MapPerspectiveComponent} from './map-perspective.component';
-import {MapAttributeSelectComponent} from './panel/stem-config/attribute-select/map-attribute-select.component';
-import {MapPanelComponent} from './panel/map-panel.component';
-import {MapGlobeRenderComponent} from './content/globe-content/render/map-globe-render.component';
-import {MapStemConfigComponent} from './panel/stem-config/map-stem-config.component';
-import {MapPositionCheckboxComponent} from './panel/position-checkbox/map-position-checkbox.component';
-import {MapLoadingComponent} from './content/loading/map-loading.component';
+
 import {ModalModule} from '../../../shared/modal/modal.module';
-import {ColorSelectItemsPipe} from './pipes/color-select-items.pipe';
-import {AttributeSelectItemsPipe} from './pipes/attribute-select-items.pipe';
+import {SharedModule} from '../../../shared/shared.module';
+import {EmptyMapComponent} from './content/globe-content/empty/empty-map.component';
 import {MapGlobeContentComponent} from './content/globe-content/map-globe-content.component';
+import {MapGlobeRenderComponent} from './content/globe-content/render/map-globe-render.component';
+import {InvalidImageMapComponent} from './content/image-content/invalid-image/invalid-image-map.component';
 import {MapImageContentComponent} from './content/image-content/map-image-content.component';
 import {MapImageRenderComponent} from './content/image-content/render/map-image-render.component';
+import {MapLoadingComponent} from './content/loading/map-loading.component';
+import {MapContentComponent} from './content/map-content.component';
+import {MapPerspectiveRoutingModule} from './map-perspective-routing.module';
+import {MapPerspectiveComponent} from './map-perspective.component';
 import {ImageInputComponent} from './panel/image-input/image-input.component';
-import {InvalidImageMapComponent} from './content/image-content/invalid-image/invalid-image-map.component';
-import {MapModelFromConfigPipe} from './pipes/map-model-from-config.pipe';
+import {MapPanelComponent} from './panel/map-panel.component';
+import {MapPositionCheckboxComponent} from './panel/position-checkbox/map-position-checkbox.component';
+import {MapAttributeSelectComponent} from './panel/stem-config/attribute-select/map-attribute-select.component';
+import {MapStemConfigComponent} from './panel/stem-config/map-stem-config.component';
+import {AttributeSelectItemsPipe} from './pipes/attribute-select-items.pipe';
 import {CanCreateRecordsInMapPipe} from './pipes/can-create-records-in-map.pipe';
+import {ColorSelectItemsPipe} from './pipes/color-select-items.pipe';
+import {MapModelFromConfigPipe} from './pipes/map-model-from-config.pipe';
 
 @NgModule({
   imports: [SharedModule, ModalModule, MapPerspectiveRoutingModule],

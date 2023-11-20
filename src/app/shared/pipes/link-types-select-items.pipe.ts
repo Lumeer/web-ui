@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {LinkType} from '../../core/store/link-types/link.type';
-import {SelectItemModel} from '../select/select-item/select-item.model';
 import {linkTypesSelectItems} from '../select/select-item.utils';
+import {SelectItemModel} from '../select/select-item/select-item.model';
 
 @Pipe({
   name: 'linkTypesSelectItems',

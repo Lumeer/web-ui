@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -29,15 +28,17 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {ColorPickerComponent} from '../../picker/color/color-picker.component';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {COLOR_SUCCESS} from '../../../core/constants';
-import {ColorDataInputConfiguration, CommonDataInputConfiguration} from '../data-input-configuration';
-import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+
 import {ColorDataValue, ConstraintType} from '@lumeer/data-filters';
 import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {COLOR_SUCCESS} from '../../../core/constants';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {ColorPickerComponent} from '../../picker/color/color-picker.component';
+import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {ColorDataInputConfiguration, CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'color-data-input',

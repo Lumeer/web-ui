@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MenuComponent} from './menu/menu.component';
-import {MenuRowComponent} from './menu/row/menu-row.component';
-import {PresenterModule} from '../presenter/presenter.module';
+import {NgModule} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
+
 import {PipesModule} from '../pipes/pipes.module';
+import {PresenterModule} from '../presenter/presenter.module';
+import {MenuComponent} from './menu/menu.component';
 import {GroupMenuItemsPipe} from './menu/pipes/group-menu-items.pipe';
+import {MenuRowComponent} from './menu/row/menu-row.component';
 import {StaticMenuComponent} from './static-menu/static-menu.component';
 
 @NgModule({

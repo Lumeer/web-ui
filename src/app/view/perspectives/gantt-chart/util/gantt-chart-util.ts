@@ -16,32 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {queryAttributePermissions} from '@lumeer/data-filters';
+import {GanttTask} from '@lumeer/lumeer-gantt';
+import {deepObjectsEquals, isNullOrUndefined} from '@lumeer/utils';
 
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResourceType} from '../../../../core/model/resource';
+import {Collection} from '../../../../core/store/collections/collection';
 import {
   GanttChartBarModel,
   GanttChartConfig,
-  ganttChartConfigLatestVersion,
-  ganttChartDefaultZoom,
   GanttChartMode,
   GanttChartStemConfig,
+  ganttChartConfigLatestVersion,
+  ganttChartDefaultZoom,
 } from '../../../../core/store/gantt-charts/gantt-chart';
-import {GanttTask} from '@lumeer/lumeer-gantt';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {
   checkOrTransformQueryAttribute,
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {GanttTaskMetadata} from './gantt-chart-converter';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import {areArraysSame} from '../../../../shared/utils/array.utils';
-import {deepObjectsEquals, isNullOrUndefined} from '@lumeer/utils';
-import {queryAttributePermissions} from '@lumeer/data-filters';
+import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
+import {GanttTaskMetadata} from './gantt-chart-converter';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {

@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
+
+import {AppState} from '../app.state';
 import {selectCollectionsDictionary} from '../collections/collections.state';
 import {selectLinkTypesDictionary} from '../link-types/link-types.state';
+import {selectWorkspace} from '../navigation/navigation.state';
 import {createSaveViewSettings, viewSettingsChanged} from '../views/view.utils';
 import {selectCurrentView, selectViewQuery} from '../views/views.state';
-import {AppState} from '../app.state';
-import {selectWorkspace} from '../navigation/navigation.state';
-import {viewSettingsIdByView, viewSettingsIdByWorkspace} from './view-settings.util';
 import {ViewSettings} from './view-settings';
+import {viewSettingsIdByView, viewSettingsIdByWorkspace} from './view-settings.util';
 
 export interface ViewSettingsState extends Record<string, ViewSettings> {}
 

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {countLinkedRows} from '../../../../../core/store/tables/table.utils';
-import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
 
 @Pipe({
   name: 'rowPositionTop',

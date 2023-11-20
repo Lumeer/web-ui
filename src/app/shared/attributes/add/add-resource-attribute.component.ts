@@ -16,15 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
   EventEmitter,
-  Output,
   Input,
-  OnInit,
   OnChanges,
+  OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import {
@@ -35,6 +34,7 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
+
 import {Attribute} from '../../../core/store/collections/collection';
 import {notEmptyValidator} from '../../../core/validators/custom-validators';
 import {KeyCode} from '../../key-code';

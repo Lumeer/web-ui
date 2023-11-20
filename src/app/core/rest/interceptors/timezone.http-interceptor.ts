@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {isBackendUrl} from '../../api/api.utils';
+
 import * as moment from 'moment-timezone';
+import {Observable} from 'rxjs';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {isBackendUrl} from '../../api/api.utils';
 
 @Injectable()
 export class TimezoneHttpInterceptor implements HttpInterceptor {

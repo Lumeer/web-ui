@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,13 +28,11 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {
-  FormAttributeCellConfig,
-  FormCell,
-  FormCellType,
-  FormLinkCellConfig,
-} from '../../../../../../../core/store/form/form-model';
-import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, of} from 'rxjs';
+
 import {
   AttributeLockFiltersStats,
   ConstraintData,
@@ -43,21 +40,27 @@ import {
   DataValue,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
-import {Observable, of} from 'rxjs';
-import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
-import {DataCursor} from '../../../../../../../shared/data-input/data-cursor';
-import {FormError} from '../../validation/form-validation';
-import {FormLinkData, FormLinkSelectedData} from '../../model/form-link-data';
+
 import {AppState} from '../../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 import {selectDocumentsByCollectionAndQuery} from '../../../../../../../core/store/common/permissions.selectors';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
-import {mergeAttributeOverride} from '../../../../../../../shared/utils/attribute.utils';
-import {DataInputSaveAction} from '../../../../../../../shared/data-input/data-input-save-action';
-import {AttributesSettings} from '../../../../../../../core/store/view-settings/view-settings';
+import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {
+  FormAttributeCellConfig,
+  FormCell,
+  FormCellType,
+  FormLinkCellConfig,
+} from '../../../../../../../core/store/form/form-model';
 import {Workspace} from '../../../../../../../core/store/navigation/workspace';
+import {AttributesSettings} from '../../../../../../../core/store/view-settings/view-settings';
+import {DataCursor} from '../../../../../../../shared/data-input/data-cursor';
+import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
+import {DataInputSaveAction} from '../../../../../../../shared/data-input/data-input-save-action';
+import {mergeAttributeOverride} from '../../../../../../../shared/utils/attribute.utils';
+import {FormLinkData, FormLinkSelectedData} from '../../model/form-link-data';
+import {FormError} from '../../validation/form-validation';
 
 @Component({
   selector: 'form-view-cell',

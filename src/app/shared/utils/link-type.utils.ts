@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {LinkType} from '../../core/store/link-types/link.type';
 import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
 
 export function getOtherLinkedCollectionId(linkType: LinkType, collectionId: string): string {
   const collectionIds = linkType?.collectionIds || [];

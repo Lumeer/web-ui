@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {PermissionsDto} from './permissions.dto';
 import {QueryDto} from './query.dto';
 import {ResourceDto} from './resource.dto';
-import {PermissionsDto} from './permissions.dto';
 
 export interface ViewDto extends ResourceDto {
   perspective: string;

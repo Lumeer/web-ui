@@ -16,18 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {
-  ChangeDetectorRef,
-  Directive,
-  ElementRef,
-  Inject,
-  NgZone,
-  Optional,
-  Self,
-  SkipSelf,
-  ViewContainerRef,
-} from '@angular/core';
+import {Directionality} from '@angular/cdk/bidi';
 import {
   CDK_DRAG_CONFIG,
   CDK_DRAG_HANDLE,
@@ -40,7 +29,17 @@ import {
   DragDropConfig,
 } from '@angular/cdk/drag-drop';
 import {DOCUMENT} from '@angular/common';
-import {Directionality} from '@angular/cdk/bidi';
+import {
+  ChangeDetectorRef,
+  Directive,
+  ElementRef,
+  Inject,
+  NgZone,
+  Optional,
+  Self,
+  SkipSelf,
+  ViewContainerRef,
+} from '@angular/core';
 
 const DRAG_HOST_CLASS = 'cdk-drag';
 

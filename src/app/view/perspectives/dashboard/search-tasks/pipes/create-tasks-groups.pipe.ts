@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {ConstraintData, DataObjectAggregator, DataObjectAttribute} from '@lumeer/data-filters';
-import {TasksGroup} from '../model/tasks-group';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {TaskConfigAttribute, TasksConfigGroupBy} from '../../../../../core/store/searches/search';
-import {Attribute, Collection} from '../../../../../core/store/collections/collection';
-import {groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
-import {findAttribute} from '../../../../../core/store/collections/collection.util';
+
 import {AttributesResourceType} from '../../../../../core/model/resource';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
 import {QueryStem} from '../../../../../core/store/navigation/query/query';
+import {TaskConfigAttribute, TasksConfigGroupBy} from '../../../../../core/store/searches/search';
 import {objectValues} from '../../../../../shared/utils/common.utils';
+import {TasksGroup} from '../model/tasks-group';
 
 @Pipe({
   name: 'createTasksGroups',

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {Query} from './query/query';
-import {ViewCursor} from './view-cursor/view-cursor';
-import {PerspectiveSettings} from './settings/perspective-settings';
+
 import {LanguageCode} from '../../model/language';
+import {Query} from './query/query';
+import {PerspectiveSettings} from './settings/perspective-settings';
+import {ViewCursor} from './view-cursor/view-cursor';
 
 export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',

@@ -16,32 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
-import {DialogType} from '../dialog-type';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {AppState} from '../../../core/store/app.state';
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
+
 import {ConstraintData} from '@lumeer/data-filters';
+import {uniqueValues} from '@lumeer/utils';
+
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
-import {getDataResourcesDataIds, sortDataResourcesByViewSettings} from '../../utils/data-resource.utils';
-import {selectLinkTypeByIdsWithCollections} from '../../../core/store/link-types/link-types.state';
-import {attributesResourcesAreSame, getAttributesResourceType} from '../../utils/resource.utils';
-import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+import {AppState} from '../../../core/store/app.state';
+import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
-import {selectLinkInstancesByIds} from '../../../core/store/link-instances/link-instances.state';
+import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {groupLinkInstancesByLinkTypes} from '../../../core/store/link-instances/link-instance.utils';
-import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../animations';
+import {selectLinkInstancesByIds} from '../../../core/store/link-instances/link-instances.state';
+import {selectLinkTypeByIdsWithCollections} from '../../../core/store/link-types/link-types.state';
 import {Query} from '../../../core/store/navigation/query/query';
-import {keyboardEventCode, KeyCode} from '../../key-code';
+import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 import {selectViewById} from '../../../core/store/views/views.state';
-import {ViewSettings} from '../../../core/store/view-settings/view-settings';
-import {uniqueValues} from '@lumeer/utils';
+import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../animations';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {getDataResourcesDataIds, sortDataResourcesByViewSettings} from '../../utils/data-resource.utils';
+import {attributesResourcesAreSame, getAttributesResourceType} from '../../utils/resource.utils';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'data-resources-detail-modal',

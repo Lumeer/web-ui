@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
+
 import {AuthHttpInterceptor} from './auth.http-interceptor';
-import {SentryHttpInterceptor} from './sentry.http-interceptor';
-import {ViewHttpInterceptor} from './view.http-interceptor';
-import {ResponseTimeHttpInterceptor} from './response.time.http-interceptor';
 import {CorrelationIdHttpInterceptor} from './correlation-id.http-interceptor';
 import {EnvironmentHttpInterceptor} from './environment.http-interceptor';
+import {ResponseTimeHttpInterceptor} from './response.time.http-interceptor';
+import {SentryHttpInterceptor} from './sentry.http-interceptor';
 import {TimezoneHttpInterceptor} from './timezone.http-interceptor';
+import {ViewHttpInterceptor} from './view.http-interceptor';
 
 export const httpInterceptorProviders = [
   {provide: HTTP_INTERCEPTORS, useClass: ResponseTimeHttpInterceptor, multi: true},

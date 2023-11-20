@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TableConfigRow} from '../../../../../core/store/tables/table.model';
+import {TableConfigRow, TableModel} from '../../../../../core/store/tables/table.model';
 import {findTableRow, splitRowPath} from '../../../../../core/store/tables/table.utils';
 
 @Pipe({

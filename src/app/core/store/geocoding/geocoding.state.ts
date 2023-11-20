@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
+
 import {AppState} from '../app.state';
 import {formatMapCoordinates} from '../maps/map-coordinates';
 import {MapCoordinates} from '../maps/map.model';

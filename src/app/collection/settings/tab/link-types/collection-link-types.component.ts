@@ -16,28 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
+import {filter, map, mergeMap} from 'rxjs/operators';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../core/store/collections/collection';
 import {
   selectCollectionByWorkspace,
   selectCollectionsDictionary,
 } from '../../../../core/store/collections/collections.state';
-import {filter, map, mergeMap} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../../core/store/common/permissions.selectors';
-import {Collection} from '../../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {selectLinkTypesPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
-import {Workspace} from '../../../../core/store/navigation/workspace';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {selectLinkTypesPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {mapLinkTypeCollections} from '../../../../shared/utils/link-type.utils';
-import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'collection-link-types',

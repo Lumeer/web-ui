@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CollectionService} from './collection.service';
-import {AppState} from '../../store/app.state';
-import {AttributeDto, CollectionDto} from '../../dto';
-import {ApiPermissionService} from '../common/api-permission.service';
-import {Workspace} from '../../store/navigation/workspace';
-import {CollectionPurposeDto} from '../../dto/collection.dto';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {AttributeDto, CollectionDto} from '../../dto';
+import {CollectionPurposeDto} from '../../dto/collection.dto';
+import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 import {RuleDto} from '../../dto/rule.dto';
 import {AppIdService} from '../../service/app-id.service';
-import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
+import {AppState} from '../../store/app.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {ApiPermissionService} from '../common/api-permission.service';
+import {CollectionService} from './collection.service';
 
 @Injectable()
 export class ApiCollectionService extends ApiPermissionService implements CollectionService {

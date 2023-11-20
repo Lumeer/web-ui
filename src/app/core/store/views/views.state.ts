@@ -16,34 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
+import {getViewColor} from '@lumeer/data-filters';
+
+import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {selectCalendarConfig} from '../calendars/calendars.state';
 import {selectChartConfig} from '../charts/charts.state';
+import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
 import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
+import {selectDetailConfig} from '../details/detail.state';
 import {selectDocumentsDictionary} from '../documents/documents.state';
+import {selectFormConfig} from '../form/form.state';
 import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
 import {selectKanbanConfig} from '../kanbans/kanban.state';
 import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {selectMapConfig} from '../maps/maps.state';
 import {selectPerspective, selectRawQuery, selectViewCode} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query/query.helper';
+import {appendQueryFiltersByVisibleAttributes} from '../navigation/query/query.util';
 import {selectPivotConfig} from '../pivots/pivots.state';
+import {selectSearchConfig} from '../searches/searches.state';
 import {selectTableConfig} from '../tables/tables.selector';
+import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
+import {selectWorkflowConfig} from '../workflows/workflow.state';
 import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
 import {canChangeViewQuery, getViewIcon, isViewConfigChanged, viewAdditionalQueries} from './view.utils';
-import {selectSearchConfig} from '../searches/searches.state';
-import {selectWorkflowConfig} from '../workflows/workflow.state';
-import {appendQueryFiltersByVisibleAttributes} from '../navigation/query/query.util';
-import {selectDetailConfig} from '../details/detail.state';
-import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
-import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
-import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
-import {selectFormConfig} from '../form/form.state';
-import {getViewColor} from '@lumeer/data-filters';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {Query} from '../navigation/query/query';
-import {FileAttachment} from './file-attachment.model';
+
 import {FileApiPath} from '../../data-service/attachments/attachments.service';
+import {Query} from '../navigation/query/query';
 import {View} from '../views/view';
+import {FileAttachment} from './file-attachment.model';
 
 export enum FileAttachmentsActionType {
   CREATE = '[File Attachments] Create',

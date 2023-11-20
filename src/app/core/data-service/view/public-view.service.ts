@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {ViewService} from './view.service';
-import {PermissionsDto, ViewDto} from '../../dto';
-import {AppState} from '../../store/app.state';
-import {BaseService} from '../../rest/base.service';
-import {Workspace} from '../../store/navigation/workspace';
-import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
-import {generateId} from '../../../shared/utils/resource.utils';
-import {setDefaultUserPermissions} from '../common/public-api-util';
-import {DEFAULT_USER} from '../../constants';
 import {map, mergeMap, take} from 'rxjs/operators';
-import {RoleType} from '../../model/role-type';
-import {selectViewByCode} from '../../store/views/views.state';
-import {convertViewModelToDto} from '../../store/views/view.converter';
-import {selectPublicProject} from '../../store/projects/projects.state';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {generateId} from '../../../shared/utils/resource.utils';
+import {DEFAULT_USER} from '../../constants';
+import {PermissionsDto, ViewDto} from '../../dto';
+import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
+import {RoleType} from '../../model/role-type';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {selectPublicProject} from '../../store/projects/projects.state';
 import {viewRoleTypes} from '../../store/views/view';
+import {convertViewModelToDto} from '../../store/views/view.converter';
+import {selectViewByCode} from '../../store/views/views.state';
+import {setDefaultUserPermissions} from '../common/public-api-util';
+import {ViewService} from './view.service';
 
 @Injectable()
 export class PublicViewService extends BaseService implements ViewService {

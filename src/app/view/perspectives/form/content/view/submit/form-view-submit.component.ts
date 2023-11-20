@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {FormButtonConfig, FormButtonsConfig} from '../../../../../../core/store/form/form-model';
 import {FormValidation} from '../validation/form-validation';

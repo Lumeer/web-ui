@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanCard} from '../util/kanban-data';
-import {User} from '../../../../core/store/users/user';
+
 import {ConstraintData, userCanEditDataResource} from '@lumeer/data-filters';
+
+import {User} from '../../../../core/store/users/user';
+import {KanbanCard} from '../util/kanban-data';
 
 @Pipe({
   name: 'kanbanPostItDraggable',

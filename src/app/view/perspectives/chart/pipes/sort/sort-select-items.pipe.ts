@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartConfig} from '../../../../../core/store/charts/chart';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {collectionAttributeToItem, linkTypeAttributeToItem} from '../axis/pipes.util';
+
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
-import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {ChartConfig} from '../../../../../core/store/charts/chart';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {collectionAttributeToItem, linkTypeAttributeToItem} from '../axis/pipes.util';
 
 @Pipe({
   name: 'sortSelectItems',

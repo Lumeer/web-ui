@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
-import {AuditLogFilters, filterAuditLogs} from '../model/audit-log-filters';
+
 import {ConstraintData} from '@lumeer/data-filters';
-import {View} from '../../../../../core/store/views/view';
+
+import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {View} from '../../../../../core/store/views/view';
+import {AuditLogFilters, filterAuditLogs} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'filterAuditLogs',

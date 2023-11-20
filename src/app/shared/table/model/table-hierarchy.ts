@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {objectsByIdMap} from '@lumeer/utils';
 
 import {TableRow, TableRowWithData} from './table-row';
-import {objectsByIdMap} from '@lumeer/utils';
 
 export interface TableRowHierarchy {
   level: number;

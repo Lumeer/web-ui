@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
-import {LinkQueryItem} from './model/link.query-item';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
+import {collectionIdsChainForStem} from '../../../../core/store/navigation/query/query.util';
 import {QueryData} from '../util/query-data';
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {CollectionQueryItem} from './model/collection.query-item';
+import {DeletedQueryItem} from './model/deleted.query-item';
 import {DocumentQueryItem} from './model/document.query-item';
 import {FulltextQueryItem} from './model/fulltext.query-item';
+import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
+import {LinkQueryItem} from './model/link.query-item';
 import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
-import {DeletedQueryItem} from './model/deleted.query-item';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {collectionIdsChainForStem} from '../../../../core/store/navigation/query/query.util';
-import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {Collection} from '../../../../core/store/collections/collection';
-import {isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 export function convertQueryItemsToString(queryItems: QueryItem[]): string {
   return convertQueryModelToString(convertQueryItemsToQueryModel(queryItems));

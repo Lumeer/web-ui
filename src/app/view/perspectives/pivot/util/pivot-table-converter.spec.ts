@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {PivotTableConverter} from './pivot-table-converter';
-import {PivotData} from './pivot-data';
-import {COLOR_GRAY100, COLOR_GRAY200} from '../../../../core/constants';
 import {PercentageConstraint, PercentageConstraintConfig} from '@lumeer/data-filters';
+
+import {COLOR_GRAY100, COLOR_GRAY200} from '../../../../core/constants';
+import {PivotData} from './pivot-data';
+import {PivotTableConverter} from './pivot-table-converter';
 
 describe('Pivot table converter', () => {
   const headerSummaryString = 'H';

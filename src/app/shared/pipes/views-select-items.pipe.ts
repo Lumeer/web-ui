@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {View} from '../../core/store/views/view';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {getViewIcon} from '../../core/store/views/view.utils';
-import {Collection} from '../../core/store/collections/collection';
-import {objectsByIdMap} from '@lumeer/utils';
+
 import {getViewColor} from '@lumeer/data-filters';
+import {objectsByIdMap} from '@lumeer/utils';
+
+import {Collection} from '../../core/store/collections/collection';
+import {View} from '../../core/store/views/view';
+import {getViewIcon} from '../../core/store/views/view.utils';
+import {SelectItemModel} from '../select/select-item/select-item.model';
 
 @Pipe({
   name: 'viewsSelectItems',

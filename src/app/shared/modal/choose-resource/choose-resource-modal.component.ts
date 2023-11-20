@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
-import {DialogType} from '../dialog-type';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
+
+import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
 import {AppState} from '../../../core/store/app.state';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
-import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
 import {selectLinkTypesByIds} from '../../../core/store/link-types/link-types.state';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'choose-resource-modal',

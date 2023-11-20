@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges, EventEmitter, Output} from '@angular/core';
-import {FormCell, FormRow, FormRowLayoutType} from '../../../../../../core/store/form/form-model';
-import {filterValidFormCells} from '../../../form-utils';
-import {generateCorrelationId} from '../../../../../../shared/utils/resource.utils';
 import {Collection} from '../../../../../../core/store/collections/collection';
+import {FormCell, FormRow, FormRowLayoutType} from '../../../../../../core/store/form/form-model';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {View} from '../../../../../../core/store/views/view';
+import {generateCorrelationId} from '../../../../../../shared/utils/resource.utils';
+import {filterValidFormCells} from '../../../form-utils';
 
 @Component({
   selector: 'form-editor-row',

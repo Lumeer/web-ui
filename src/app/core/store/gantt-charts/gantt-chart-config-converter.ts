@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DataAggregationType} from '@lumeer/data-filters';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
+import {objectValues} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {
   GanttChartBarModel,
   GanttChartConfig,
-  ganttChartConfigLatestVersion,
   GanttChartConfigVersion,
   GanttChartStemConfig,
+  ganttChartConfigLatestVersion,
 } from './gantt-chart';
-import {objectValues} from '../../../shared/utils/common.utils';
 import {
   GanttChartCollectionConfigV0,
   GanttChartConfigV0,
@@ -33,8 +35,6 @@ import {
   GanttChartConfigV2,
   GanttChartStemConfigV1,
 } from './gantt-chart-old';
-import {isNotNullOrUndefined} from '@lumeer/utils';
-import {DataAggregationType} from '@lumeer/data-filters';
 
 export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
   if (!config) {

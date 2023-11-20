@@ -16,9 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormGroup} from '@angular/forms';
+
+import {Attribute, AttributeFunction, Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {View} from '../../../../../../core/store/views/view';
+import {BlocklyDebugDisplay} from '../../../../../blockly/blockly-debugger/blockly-debugger.component';
 import {
   BLOCKLY_FUNCTION_TOOLBOX,
   BLOCKLY_VALUE_TOOLBOX,
@@ -28,12 +32,8 @@ import {
   BLOCKLY_VALUE_BUTTONS,
   MasterBlockType,
 } from '../../../../../blockly/blockly-editor/blockly-utils';
-import {Attribute, AttributeFunction, Collection} from '../../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {BlocklyDebugDisplay} from '../../../../../blockly/blockly-debugger/blockly-debugger.component';
 import {RuleVariable} from '../../../../../blockly/rule-variable-type';
 import {attributeHasEditableFunction} from '../../../../../utils/attribute.utils';
-import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'attribute-function-blockly',

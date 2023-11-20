@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {View} from '../../core/store/views/view';
-import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {LinkType} from '../../core/store/link-types/link.type';
+import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/query.util';
+import {View} from '../../core/store/views/view';
 
 @Pipe({
   name: 'viewControlsInfo',

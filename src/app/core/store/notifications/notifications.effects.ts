@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
+
 import {tap} from 'rxjs/operators';
+
+import {NotificationButton} from '../../notifications/notification-button';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../app.state';
 import {NotificationsAction, NotificationsActionType} from './notifications.action';
-import {Router} from '@angular/router';
-import {NotificationButton} from '../../notifications/notification-button';
 
 @Injectable()
 export class NotificationsEffects {

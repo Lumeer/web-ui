@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {ObjectFolders} from '../util/object-folders';
-import {View} from '../../../../../../../core/store/views/view';
-import {QueryData} from '../../../../../../../shared/top-panel/search-box/util/query-data';
-import {SizeType} from '../../../../../../../shared/slider/size/size-type';
-import {AllowedPermissionsMap} from '../../../../../../../core/model/allowed-permissions';
-import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 import {BehaviorSubject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
+
+import {AllowedPermissionsMap} from '../../../../../../../core/model/allowed-permissions';
+import {Workspace} from '../../../../../../../core/store/navigation/workspace';
+import {View} from '../../../../../../../core/store/views/view';
+import {SizeType} from '../../../../../../../shared/slider/size/size-type';
+import {QueryData} from '../../../../../../../shared/top-panel/search-box/util/query-data';
+import {ObjectFolders} from '../util/object-folders';
 
 @Component({
   selector: 'views-folders',

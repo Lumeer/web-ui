@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -31,9 +30,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {filter, first, map, switchMap, take, tap} from 'rxjs/operators';
+
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
@@ -46,17 +48,17 @@ import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-ty
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {NavigationAction} from '../../../../../../../core/store/navigation/navigation.action';
+import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectTableById, selectTableColumn} from '../../../../../../../core/store/tables/tables.selector';
+import {View} from '../../../../../../../core/store/views/view';
 import {Direction} from '../../../../../../../shared/direction';
 import {DropdownPosition} from '../../../../../../../shared/dropdown/dropdown-position';
 import {DropdownComponent} from '../../../../../../../shared/dropdown/dropdown.component';
-import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
-import {View} from '../../../../../../../core/store/views/view';
-import {Query} from '../../../../../../../core/store/navigation/query/query';
+import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 
 interface LinkedAttribute {
   linkType?: LinkType;

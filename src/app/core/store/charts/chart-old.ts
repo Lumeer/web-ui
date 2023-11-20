@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DataAggregationType} from '@lumeer/data-filters';
 
 import {ChartAxis, ChartAxisType, ChartSort, ChartType} from './chart';
-import {DataAggregationType} from '@lumeer/data-filters';
 
 export interface ChartConfigV0 {
   type: ChartType;

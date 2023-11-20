@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {preventEvent} from '../utils/common.utils';
-import {keyboardEventCode, KeyCode} from '../key-code';
-import {DataRowComponent, DataRowHiddenComponent} from './data-row-component';
 import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
+
+import {KeyCode, keyboardEventCode} from '../key-code';
+import {preventEvent} from '../utils/common.utils';
+import {DataRowComponent, DataRowHiddenComponent} from './data-row-component';
 
 interface DataRowPosition {
   row?: number;

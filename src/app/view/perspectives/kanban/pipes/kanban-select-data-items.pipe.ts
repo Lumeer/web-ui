@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanAttribute} from '../../../../core/store/kanbans/kanban';
-import {SelectDataItemModel} from '../../../../shared/select/select-data-item/select-data-item.model';
+
 import {AttributesResource} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+import {KanbanAttribute} from '../../../../core/store/kanbans/kanban';
+import {SelectDataItemModel} from '../../../../shared/select/select-data-item/select-data-item.model';
 
 @Pipe({
   name: 'kanbanSelectDataItems',

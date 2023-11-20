@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {InviteUserModalComponent} from './modal/invite-user-modal.component';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {ModalService} from '../../../modal/modal.service';
-import {selectUsersForWorkspace} from '../../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
+
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {AppState} from '../../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
+import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {selectUsersForWorkspace} from '../../../../core/store/users/users.state';
+import {ModalService} from '../../../modal/modal.service';
+import {InviteUserModalComponent} from './modal/invite-user-modal.component';
 
 @Component({
   selector: 'invite-user',

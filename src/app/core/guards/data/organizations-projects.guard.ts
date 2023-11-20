@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {filter, first, switchMap, tap} from 'rxjs/operators';
+
 import {AppState} from '../../store/app.state';
 import {Organization} from '../../store/organizations/organization';
-import {selectAllOrganizations, selectOrganizationsLoaded} from '../../store/organizations/organizations.state';
 import {OrganizationsAction} from '../../store/organizations/organizations.action';
+import {selectAllOrganizations, selectOrganizationsLoaded} from '../../store/organizations/organizations.state';
 import {PublicDataAction} from '../../store/public-data/public-data.action';
 
 @Injectable()

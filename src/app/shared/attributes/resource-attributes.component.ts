@@ -16,24 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
-import {objectChanged} from '../utils/common.utils';
-import {
-  selectCollectionPermissions,
-  selectLinkTypePermissions,
-} from '../../core/store/user-permissions/user-permissions.state';
-import {ResourceAttributesTableComponent} from './table/resource-attributes-table.component';
+
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
 import {NotificationService} from '../../core/notifications/notification.service';
-import {ModalService} from '../modal/modal.service';
 import {AppState} from '../../core/store/app.state';
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {
+  selectCollectionPermissions,
+  selectLinkTypePermissions,
+} from '../../core/store/user-permissions/user-permissions.state';
+import {ModalService} from '../modal/modal.service';
+import {objectChanged} from '../utils/common.utils';
+import {ResourceAttributesTableComponent} from './table/resource-attributes-table.component';
 
 @Component({
   selector: 'resource-attributes',

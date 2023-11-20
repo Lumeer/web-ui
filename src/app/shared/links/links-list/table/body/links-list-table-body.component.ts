@@ -16,39 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  ViewChildren,
-  QueryList,
-  ViewChild,
-  HostListener,
-  Output,
+  Component,
   EventEmitter,
+  HostListener,
+  Input,
   OnChanges,
-  SimpleChanges,
   OnInit,
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren,
 } from '@angular/core';
-import {LinkColumn} from '../../model/link-column';
+
+import {Action} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
+
+import {ConstraintData} from '@lumeer/data-filters';
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {LinkRow} from '../../model/link-row';
-import {LinksListTableRowComponent} from './row/links-list-table-row.component';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {User} from '../../../../../core/store/users/user';
 import {DataRowFocusService} from '../../../../data/data-row-focus-service';
 import {HiddenInputComponent} from '../../../../input/hidden-input/hidden-input.component';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {generateCorrelationId} from '../../../../utils/resource.utils';
-import {debounceTime} from 'rxjs/operators';
-import {ConstraintData} from '@lumeer/data-filters';
-import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {Action} from '@ngrx/store';
-import {User} from '../../../../../core/store/users/user';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {isNotNullOrUndefined} from '@lumeer/utils';
+import {LinkColumn} from '../../model/link-column';
+import {LinkRow} from '../../model/link-row';
+import {LinksListTableRowComponent} from './row/links-list-table-row.component';
 
 @Component({
   selector: '[links-list-table-body]',

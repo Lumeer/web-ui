@@ -16,9 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Observable} from 'rxjs';
+import {skip} from 'rxjs/operators';
+
+import {
+  ConditionType,
+  ConditionValue,
+  ConstraintData,
+  DataAggregationType,
+  DocumentsAndLinksData,
+} from '@lumeer/data-filters';
+
+import {ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../../../core/store/views/view';
+import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
+import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
+import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
+import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
+import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {
   EditedTableCell,
   SelectedTableCell,
@@ -26,33 +48,13 @@ import {
   TableCellType,
   TableModel,
 } from '../../../../../../shared/table/model/table-model';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../../core/store/navigation/query/query';
-import {View} from '../../../../../../core/store/views/view';
-import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
-import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
-import {skip} from 'rxjs/operators';
-import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
-import {HeaderMenuId, RowMenuId} from './workflow-tables-menu.service';
-import {WorkflowTablesDataService} from './workflow-tables-data.service';
-import {WorkflowTablesStateService} from './workflow-tables-state.service';
-import {WorkflowTablesKeyboardService} from './workflow-tables-keyboard.service';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
-import {WorkflowTable} from '../../../model/workflow-table';
-import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
-import {
-  ConditionType,
-  ConditionValue,
-  DataAggregationType,
-  ConstraintData,
-  DocumentsAndLinksData,
-} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
-import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {WorkflowTable} from '../../../model/workflow-table';
+import {WorkflowTablesDataService} from './workflow-tables-data.service';
+import {WorkflowTablesKeyboardService} from './workflow-tables-keyboard.service';
+import {HeaderMenuId, RowMenuId} from './workflow-tables-menu.service';
+import {WorkflowTablesStateService} from './workflow-tables-state.service';
 
 @Injectable()
 export class WorkflowTablesService {

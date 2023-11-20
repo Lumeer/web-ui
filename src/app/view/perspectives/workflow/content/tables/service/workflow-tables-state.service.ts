@@ -16,9 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {BehaviorSubject} from 'rxjs';
+
+import {ConstraintData, DocumentsAndLinksData, queryAttributePermissions} from '@lumeer/data-filters';
+import {deepObjectCopy, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
+
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AttributesResourceType} from '../../../../../../core/model/resource';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
+import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
+import {TableColumn} from '../../../../../../shared/table/model/table-column';
+import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
 import {
   EditedTableCell,
   SelectedTableCell,
@@ -27,24 +41,12 @@ import {
   TableCellType,
   TableModel,
 } from '../../../../../../shared/table/model/table-model';
-import {TableColumn} from '../../../../../../shared/table/model/table-column';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../../core/store/navigation/query/query';
-import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {TableRow, TableRowCell, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
 import {moveItemInArray} from '../../../../../../shared/utils/array.utils';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
-import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
-import {WorkflowTable} from '../../../model/workflow-table';
-import {AttributesResourceType} from '../../../../../../core/model/resource';
-import {ConstraintData, DocumentsAndLinksData, queryAttributePermissions} from '@lumeer/data-filters';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {WorkflowTable} from '../../../model/workflow-table';
 import {addRowByParentId} from './workflow-utils';
-import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
-import {ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
-import {deepObjectCopy, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 @Injectable()
 export class WorkflowTablesStateService {

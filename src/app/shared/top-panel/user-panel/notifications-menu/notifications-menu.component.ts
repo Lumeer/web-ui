@@ -16,8 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+
+import {Dictionary} from '@ngrx/entity';
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {
   CollectionSharedUserNotification,
   OrganizationSharedUserNotification,
@@ -27,48 +35,42 @@ import {
   UserNotificationType,
   ViewSharedUserNotification,
 } from '../../../../core/model/user-notification';
-import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {
-  selectAllUserNotifications,
-  selectUnreadUserNotifications,
-} from '../../../../core/store/user-notifications/user-notifications.state';
-import {UserNotificationsAction} from '../../../../core/store/user-notifications/user-notifications.action';
-import {Organization} from '../../../../core/store/organizations/organization';
-import {
-  selectOrganizationById,
-  selectOrganizationsDictionary,
-} from '../../../../core/store/organizations/organizations.state';
-import {Dictionary} from '@ngrx/entity';
-import {selectUrl} from '../../../../core/store/navigation/navigation.state';
-import {map, take} from 'rxjs/operators';
-import {Router} from '@angular/router';
-import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
-import {Project} from '../../../../core/store/projects/project';
-import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
-import {selectWorkspaceModels} from '../../../../core/store/common/common.selectors';
-import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../../view/perspectives/perspective';
 import {WorkspaceSelectService} from '../../../../core/service/workspace-select.service';
-import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {AppState} from '../../../../core/store/app.state';
 import {Collection} from '../../../../core/store/collections/collection';
-import {selectViewsDictionaryByCode} from '../../../../core/store/views/views.state';
-import {selectDocumentsDictionary} from '../../../../core/store/documents/documents.state';
+import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {selectWorkspaceModels} from '../../../../core/store/common/common.selectors';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {View} from '../../../../core/store/views/view';
-import {
-  selectCollectionsPermissions,
-  selectViewsPermissions,
-} from '../../../../core/store/user-permissions/user-permissions.state';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
-import {ModalService} from '../../../modal/modal.service';
-import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {selectDocumentsDictionary} from '../../../../core/store/documents/documents.state';
+import {selectUrl} from '../../../../core/store/navigation/navigation.state';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {createCollectionQueryStem} from '../../../../core/store/navigation/query/query.util';
 import {
   convertStringToViewCursor,
   convertViewCursorToString,
 } from '../../../../core/store/navigation/view-cursor/view-cursor';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {
+  selectOrganizationById,
+  selectOrganizationsDictionary,
+} from '../../../../core/store/organizations/organizations.state';
+import {Project} from '../../../../core/store/projects/project';
+import {UserNotificationsAction} from '../../../../core/store/user-notifications/user-notifications.action';
+import {
+  selectAllUserNotifications,
+  selectUnreadUserNotifications,
+} from '../../../../core/store/user-notifications/user-notifications.state';
+import {
+  selectCollectionsPermissions,
+  selectViewsPermissions,
+} from '../../../../core/store/user-permissions/user-permissions.state';
+import {View} from '../../../../core/store/views/view';
+import {selectViewsDictionaryByCode} from '../../../../core/store/views/views.state';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../../view/perspectives/perspective';
+import {ModalService} from '../../../modal/modal.service';
+import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 
 @Component({
   selector: 'notifications-menu',

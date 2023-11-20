@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {ViewConstraintFormControl} from './view-constraint-form-control';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
+
 import {ViewConstraintConfig} from '@lumeer/data-filters';
+
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
+import {ViewConstraintFormControl} from './view-constraint-form-control';
 
 @Component({
   selector: 'view-constraint-config-form',

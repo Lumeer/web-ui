@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
 
-import {ConstraintType} from '@lumeer/data-filters';
 import {Store} from '@ngrx/store';
 
-import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
+import {ConstraintType} from '@lumeer/data-filters';
+
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {isMacOS} from '../../../../../../../shared/utils/system.utils';
-import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {AppState} from '../../../../../../../core/store/app.state';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {Query} from '../../../../../../../core/store/navigation/query/query';
+import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
+import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {View} from '../../../../../../../core/store/views/view';
+import {isMacOS} from '../../../../../../../shared/utils/system.utils';
 
 @Component({
   selector: 'table-column-context-menu',

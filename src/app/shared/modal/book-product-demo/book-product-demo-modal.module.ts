@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
+
+import {DirectivesModule} from '../../directives/directives.module';
+import {SelectModule} from '../../select/select.module';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {BookProductDemoModalComponent} from './book-product-demo-modal.component';
 import {BookProductDemoContentComponent} from './content/book-product-demo-content.component';
-import {DirectivesModule} from '../../directives/directives.module';
-import {SelectModule} from '../../select/select.module';
 
 @NgModule({
   declarations: [BookProductDemoModalComponent, BookProductDemoContentComponent],

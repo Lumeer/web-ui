@@ -16,22 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subject, combineLatest, of} from 'rxjs';
+import {map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+
+import {uniqueValues} from '@lumeer/utils';
+
+import {AppState} from '../../../core/store/app.state';
 import {Collection, CollectionPurposeType} from '../../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, Observable, of, Subject} from 'rxjs';
+import {mergeCollections} from '../../../core/store/collections/collection.util';
+import {selectCollectionById, selectCollectionsByIds} from '../../../core/store/collections/collections.state';
+import {selectContributeCollectionsByView} from '../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
+import {generateDocumentData} from '../../../core/store/documents/document.utils';
+import {Query} from '../../../core/store/navigation/query/query';
 import {
   checkTasksCollectionsQuery,
   getBaseCollectionIdsFromQuery,
   getQueryFiltersForCollection,
 } from '../../../core/store/navigation/query/query.util';
-import {generateDocumentData} from '../../../core/store/documents/document.utils';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectContributeCollectionsByView} from '../../../core/store/common/permissions.selectors';
-import {map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {View} from '../../../core/store/views/view';
 import {
   selectDefaultDocumentView,
@@ -39,10 +46,6 @@ import {
   selectViewById,
   selectViewQuery,
 } from '../../../core/store/views/views.state';
-import {Query} from '../../../core/store/navigation/query/query';
-import {selectCollectionById, selectCollectionsByIds} from '../../../core/store/collections/collections.state';
-import {mergeCollections} from '../../../core/store/collections/collection.util';
-import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'create-document-modal',

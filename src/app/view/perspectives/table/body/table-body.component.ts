@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,14 +26,16 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
 import {AppState} from '../../../../core/store/app.state';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
-import {TableRowsComponent} from './rows/table-rows.component';
-import {TablePerspectiveConfiguration} from '../../perspective-configuration';
 import {View} from '../../../../core/store/views/view';
+import {TablePerspectiveConfiguration} from '../../perspective-configuration';
+import {TableRowsComponent} from './rows/table-rows.component';
 
 @Component({
   selector: 'table-body',

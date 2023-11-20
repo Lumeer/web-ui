@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {catchError, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+
 import {WorkspaceService} from '../../workspace/workspace.service';
 import {NotificationService} from '../notifications/notification.service';
 import {AppState} from '../store/app.state';
-import {select, Store} from '@ngrx/store';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 
 @Injectable({

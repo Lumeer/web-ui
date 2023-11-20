@@ -16,20 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {CommonModule} from '@angular/common';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+
+import {DirectivesModule} from '../../../shared/directives/directives.module';
+import {ModalModule} from '../../../shared/modal/modal.module';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {TableBodyModule} from './body/table-body.module';
 import {TableHeaderModule} from './header/table-header.module';
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TableSharedModule} from './shared/table-shared.module';
-import {TablePerspectiveComponent} from './table-perspective.component';
-import {ModalModule} from '../../../shared/modal/modal.module';
 import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
-import {DirectivesModule} from '../../../shared/directives/directives.module';
+import {TablePerspectiveComponent} from './table-perspective.component';
 
 @NgModule({
   imports: [

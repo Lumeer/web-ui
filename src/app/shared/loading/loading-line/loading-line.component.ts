@@ -16,20 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {AfterViewInit, ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, AfterViewInit} from '@angular/core';
-import {Observable, of, timer, combineLatest, BehaviorSubject} from 'rxjs';
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of, timer} from 'rxjs';
 import {distinctUntilChanged, map, skipUntil, switchMap, take, tap} from 'rxjs/operators';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
 import {ModuleLazyLoadingService} from '../../../core/service/module-lazy-loading.service';
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectDocumentsLoadingQueries} from '../../../core/store/documents/documents.state';
-import {selectLinkInstancesLoadingQueries} from '../../../core/store/link-instances/link-instances.state';
 import {
   selectDataResourcesLoadingQueries,
   selectTasksLoadingQueries,
 } from '../../../core/store/data-resources/data-resources.state';
-import {isNotNullOrUndefined} from '@lumeer/utils';
+import {selectDocumentsLoadingQueries} from '../../../core/store/documents/documents.state';
+import {selectLinkInstancesLoadingQueries} from '../../../core/store/link-instances/link-instances.state';
 
 const timerInterval = 1000;
 const minimumIncrease = 1;

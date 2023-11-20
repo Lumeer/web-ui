@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
+
 import {BehaviorSubject} from 'rxjs';
-import {ProjectsAction} from '../../../../core/store/projects/projects.action';
+
 import {SampleDataType} from '../../../../core/model/sample-data-type';
+import {AppState} from '../../../../core/store/app.state';
+import {ProjectsAction} from '../../../../core/store/projects/projects.action';
 
 @Component({
   selector: 'post-it-collection-add-button',

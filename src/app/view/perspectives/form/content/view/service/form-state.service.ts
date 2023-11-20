@@ -16,12 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {FormCoordinates, formCoordinatesAreSame} from '../model/form-coordinates';
+
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
+
+import {ConstraintType} from '@lumeer/data-filters';
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../../core/store/collections/collection.util';
 import {
   FormAttributeCellConfig,
   FormCell,
@@ -30,12 +34,10 @@ import {
   FormLinkCellConfig,
   FormRow,
 } from '../../../../../../core/store/form/form-model';
+import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
 import {filterValidFormCells} from '../../../form-utils';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {findAttribute} from '../../../../../../core/store/collections/collection.util';
+import {FormCoordinates, formCoordinatesAreSame} from '../model/form-coordinates';
 import {FormLinkData} from '../model/form-link-data';
-import {ConstraintType} from '@lumeer/data-filters';
-import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Injectable()
 export class FormStateService {

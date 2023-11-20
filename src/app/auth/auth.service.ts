@@ -16,29 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Location} from '@angular/common';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+
+import {Store, select} from '@ngrx/store';
+
 import {WebAuth} from 'auth0-js';
-import {BehaviorSubject, interval, Observable, of, share, Subject} from 'rxjs';
-import {catchError, distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
-import {User} from '../core/store/users/user';
 import mixpanel from 'mixpanel-browser';
-import {hashUserId} from '../shared/utils/system.utils';
-import {AppState} from '../core/store/app.state';
-import {selectCurrentUser} from '../core/store/users/users.state';
-import {select, Store} from '@ngrx/store';
-import {UserActivityService} from './user-activity.service';
-import {UserService} from '../core/data-service';
-import {ConfigurationService} from '../configuration/configuration.service';
-import {createLanguageUrl, languageCodeMap} from '../core/model/language';
-import {UsersAction} from '../core/store/users/users.action';
-import {SessionType} from './common/session-type';
-import {AuthStorage} from './auth.storage';
-import {Ga4Service} from '../core/service/ga4.service';
+import {BehaviorSubject, Observable, Subject, interval, of, share} from 'rxjs';
+import {catchError, distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
+
 import {isNullOrUndefined} from '@lumeer/utils';
+
+import {ConfigurationService} from '../configuration/configuration.service';
+import {UserService} from '../core/data-service';
+import {createLanguageUrl, languageCodeMap} from '../core/model/language';
+import {Ga4Service} from '../core/service/ga4.service';
+import {AppState} from '../core/store/app.state';
+import {User} from '../core/store/users/user';
+import {UsersAction} from '../core/store/users/users.action';
+import {selectCurrentUser} from '../core/store/users/users.state';
+import {hashUserId} from '../shared/utils/system.utils';
+import {AuthStorage} from './auth.storage';
+import {SessionType} from './common/session-type';
+import {UserActivityService} from './user-activity.service';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';

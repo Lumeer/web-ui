@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, OnChanges, Input, SimpleChanges} from '@angular/core';
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
+import {RoleType} from '../../../../../core/model/role-type';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
 import {User} from '../../../../../core/store/users/user';
-import {userRolesInProject, userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
 import {View} from '../../../../../core/store/views/view';
-import {ResourceRolesData, resourceRolesDataEmptyTitle, ResourceRolesDatum} from '../list/resource-roles-data';
-import {RoleType} from '../../../../../core/model/role-type';
-import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
+import {userRolesInProject, userTransitiveRoles} from '../../../../../shared/utils/permission.utils';
+import {ResourceRolesData, ResourceRolesDatum, resourceRolesDataEmptyTitle} from '../list/resource-roles-data';
 
 @Component({
   selector: 'user-views',

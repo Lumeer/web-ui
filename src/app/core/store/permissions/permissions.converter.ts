@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Permission, Permissions, Role} from './permissions';
 import {PermissionDto, PermissionsDto} from '../../dto';
 import {RoleDto} from '../../dto/role.dto';
 import {roleTypesMap} from '../../model/role-type';
+import {Permission, Permissions, Role} from './permissions';
 
 export function convertPermissionsDtoToModel(dto: PermissionsDto): Permissions {
   return (

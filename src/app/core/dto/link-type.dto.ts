@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {AttributeDto} from './attribute.dto';
-import {RuleDto} from './rule.dto';
 import {PermissionsDto} from './permissions.dto';
+import {RuleDto} from './rule.dto';
 
 export interface LinkTypeDto {
   id?: string;

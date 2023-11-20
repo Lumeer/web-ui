@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Injectable} from '@angular/core';
+
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {Store, select} from '@ngrx/store';
 
 import {EMPTY, of} from 'rxjs';
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {NotificationsAction} from '../notifications/notifications.action';
-import {convertTeamDtoToModel, convertTeamModelToDto} from './teams.converter';
-import {TeamsAction, TeamsActionType} from './teams.action';
-import {AppState} from '../app.state';
-import {select, Store} from '@ngrx/store';
-import {selectTeamsDictionary, selectTeamsLoaded} from './teams.state';
+
 import {TeamService} from '../../data-service/team/team.service';
+import {AppState} from '../app.state';
+import {NotificationsAction} from '../notifications/notifications.action';
+import {TeamsAction, TeamsActionType} from './teams.action';
+import {convertTeamDtoToModel, convertTeamModelToDto} from './teams.converter';
+import {selectTeamsDictionary, selectTeamsLoaded} from './teams.state';
 
 @Injectable()
 export class TeamsEffects {

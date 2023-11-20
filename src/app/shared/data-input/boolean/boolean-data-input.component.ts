@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,10 +28,12 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {DataInputSaveAction} from '../data-input-save-action';
-import {preventEvent} from '../../utils/common.utils';
+
 import {ConstraintType, DataValue} from '@lumeer/data-filters';
+
+import {preventEvent} from '../../utils/common.utils';
+import {DataInputSaveAction} from '../data-input-save-action';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'boolean-data-input',

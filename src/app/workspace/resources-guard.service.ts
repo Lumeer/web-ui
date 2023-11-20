@@ -16,30 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
-import {forkJoin, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
+import {Observable, forkJoin} from 'rxjs';
 import {first, map, mergeMap, skipWhile, tap} from 'rxjs/operators';
+
+import {DashboardTab, filterDefaultDashboardTabs} from '../core/model/dashboard-tab';
+import {RoleType} from '../core/model/role-type';
 import {AppState} from '../core/store/app.state';
+import {Collection} from '../core/store/collections/collection';
+import {CollectionsAction} from '../core/store/collections/collections.action';
+import {selectAllCollections, selectCollectionsLoaded} from '../core/store/collections/collections.state';
 import {Organization} from '../core/store/organizations/organization';
 import {Project} from '../core/store/projects/project';
+import {User} from '../core/store/users/user';
 import {DefaultViewConfig, View} from '../core/store/views/view';
+import {ViewsAction} from '../core/store/views/views.action';
 import {
   selectAllViews,
   selectDefaultViewConfig,
   selectDefaultViewConfigsLoaded,
   selectViewsLoaded,
 } from '../core/store/views/views.state';
-import {ViewsAction} from '../core/store/views/views.action';
-import {selectAllCollections, selectCollectionsLoaded} from '../core/store/collections/collections.state';
-import {CollectionsAction} from '../core/store/collections/collections.action';
-import {Collection} from '../core/store/collections/collection';
-import {User} from '../core/store/users/user';
-import {DashboardTab, filterDefaultDashboardTabs} from '../core/model/dashboard-tab';
 import {userHasRoleInResource, userPermissionsInProject} from '../shared/utils/permission.utils';
-import {RoleType} from '../core/model/role-type';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../view/perspectives/perspective';
 
 @Injectable()

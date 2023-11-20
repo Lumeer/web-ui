@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Collection} from '../../../../../../core/store/collections/collection';
+import {DocumentIdsData} from '../../../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {View} from '../../../../../../core/store/views/view';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {DocumentIdsData} from '../../../../../../core/store/documents/document.model';
 
 export interface FormLinkData extends FormLinkSelectedData {
   linkType: LinkType;

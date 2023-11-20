@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Store, select} from '@ngrx/store';
 
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {QueryItem} from '../query-item/model/query-item';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {map, withLatestFrom} from 'rxjs/operators';
+
+import {AppState} from '../../../../core/store/app.state';
 import {selectCurrentView} from '../../../../core/store/views/views.state';
-import {QueryItemType} from '../query-item/model/query-item-type';
 import {CollectionQueryItem} from '../query-item/model/collection.query-item';
+import {QueryItem} from '../query-item/model/query-item';
+import {QueryItemType} from '../query-item/model/query-item-type';
 
 const MIN_ITEMS_TO_COLLAPSE = 6;
 

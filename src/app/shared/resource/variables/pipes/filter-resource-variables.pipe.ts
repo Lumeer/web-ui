@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceVariable} from '../../../../core/store/resource-variables/resource-variable';
+
 import {removeAccentFromString} from '@lumeer/utils';
+
+import {ResourceVariable} from '../../../../core/store/resource-variables/resource-variable';
 
 @Pipe({
   name: 'filterResourceVariables',

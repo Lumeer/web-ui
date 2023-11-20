@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {AttributeDescriptionModalComponent} from './attribute-description-modal.component';
-import {ModalWrapperModule} from '../../wrapper/modal-wrapper.module';
-import {AttributeDescriptionHeaderComponent} from './header/attribute-description-header.component';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+
+import {QuillModule} from 'ngx-quill';
+
+import {InputModule} from '../../../input/input.module';
 import {PipesModule} from '../../../pipes/pipes.module';
 import {PresenterModule} from '../../../presenter/presenter.module';
+import {ModalWrapperModule} from '../../wrapper/modal-wrapper.module';
+import {AttributeDescriptionModalComponent} from './attribute-description-modal.component';
 import {AttributeDescriptionContentComponent} from './content/attribute-description-content.component';
-import {InputModule} from '../../../input/input.module';
-import {QuillModule} from 'ngx-quill';
-import {FormsModule} from '@angular/forms';
+import {AttributeDescriptionHeaderComponent} from './header/attribute-description-header.component';
 
 @NgModule({
   declarations: [

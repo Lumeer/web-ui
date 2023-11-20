@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {View} from '../../core/store/views/view';
+
 import {Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {ViewsAction} from '../../core/store/views/views.action';
+
 import {UpdateValueService} from '../../core/service/update-value.service';
+import {AppState} from '../../core/store/app.state';
+import {View} from '../../core/store/views/view';
+import {ViewsAction} from '../../core/store/views/views.action';
 
 @Injectable()
 export class ViewFavoriteToggleService extends UpdateValueService<boolean, View> {

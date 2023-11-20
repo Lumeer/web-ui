@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../../core/store/pivots/pivot';
-import {PivotStemData} from '../../../../../util/pivot-data';
+import {Constraint} from '@lumeer/data-filters';
+
 import {AttributesResource} from '../../../../../../../../core/model/resource';
+import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {generateCorrelationId, getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
-import {Constraint} from '@lumeer/data-filters';
+import {PivotStemData} from '../../../../../util/pivot-data';
 
 @Component({
   selector: 'pivot-header-attribute-config',

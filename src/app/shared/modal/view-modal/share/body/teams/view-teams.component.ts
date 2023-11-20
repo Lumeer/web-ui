@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnInit, Output, EventEmitter} from '@angular/core';
-import {View} from '../../../../../../core/store/views/view';
-import {User} from '../../../../../../core/store/users/user';
-import {Organization} from '../../../../../../core/store/organizations/organization';
-import {Project} from '../../../../../../core/store/projects/project';
-import {Team} from '../../../../../../core/store/teams/team';
-import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {ServiceLimits} from '../../../../../../core/store/organizations/service-limits/service.limits';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organizations/service-limits/service-limits.state';
-import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
+
+import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
+import {AppState} from '../../../../../../core/store/app.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../../../core/store/collections/collections.state';
-import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
+import {Organization} from '../../../../../../core/store/organizations/organization';
+import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../../../../../core/store/organizations/service-limits/service.limits';
+import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
+import {Project} from '../../../../../../core/store/projects/project';
+import {Team} from '../../../../../../core/store/teams/team';
+import {User} from '../../../../../../core/store/users/user';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'view-teams',

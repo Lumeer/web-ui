@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Highlightable} from '@angular/cdk/a11y';
 import {ChangeDetectorRef, Directive, HostBinding, Input} from '@angular/core';
 

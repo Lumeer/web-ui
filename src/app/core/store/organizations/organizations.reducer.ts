@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
-import {initialOrganizationsState, organizationsAdapter, OrganizationsState} from './organizations.state';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Organization} from './organization';
-import {permissionsChanged} from '../../../shared/utils/permission.utils';
+import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
+import {OrganizationsState, initialOrganizationsState, organizationsAdapter} from './organizations.state';
 
 export function organizationsReducer(
   state: OrganizationsState = initialOrganizationsState,

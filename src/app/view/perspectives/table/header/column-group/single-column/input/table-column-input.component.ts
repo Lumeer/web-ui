@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,14 +27,15 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../../../../../../shared/key-code';
+
+import {POPUP_DELAY} from '../../../../../../../core/constants';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
+import {KeyCode, keyboardEventCode} from '../../../../../../../shared/key-code';
 import {
-  filterOutInvalidAttributeNameCharacters,
   FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS,
+  filterOutInvalidAttributeNameCharacters,
 } from '../../../../../../../shared/utils/attribute.utils';
 import {HtmlModifier} from '../../../../../../../shared/utils/html-modifier';
-import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {POPUP_DELAY} from '../../../../../../../core/constants';
 
 @Component({
   selector: 'table-column-input',

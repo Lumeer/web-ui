@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Annotations, Layout, PlotMarker, PlotType} from 'plotly.js';
-import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {ChartDataSet} from '../../data/convertor/chart-data';
-import {PlotlyChartData, PlotMaker} from './plot-maker';
+
 import {ConstraintType} from '@lumeer/data-filters';
 import {isNotNullOrUndefined, uniqueValues} from '@lumeer/utils';
+
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {ChartDataSet} from '../../data/convertor/chart-data';
+import {PlotMaker, PlotlyChartData} from './plot-maker';
 
 const MAX_COLUMNS = 3;
 const HORIZONTAL_SPACING = 0.04;

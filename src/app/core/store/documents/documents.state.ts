@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {DocumentModel} from './document.model';
-import {DataResourceData} from '../../model/resource';
-import {DataQuery} from '../../model/data-query';
-import {isDataQueryLoaded} from '../utils/data-query-payload';
+
 import {configuration} from '../../../../environments/configuration';
+import {DataQuery} from '../../model/data-query';
+import {DataResourceData} from '../../model/resource';
+import {AppState} from '../app.state';
 import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
+import {isDataQueryLoaded} from '../utils/data-query-payload';
+import {DocumentModel} from './document.model';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   pendingDataUpdates: Record<string, DataResourceData>; // key is correlationId

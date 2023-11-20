@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -29,15 +28,17 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
-import {DataSuggestion} from '../data-suggestion';
+
+import {ConstraintType, DataValue, TextDataValue, UnknownDataValue} from '@lumeer/data-filters';
+
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {ConstraintType, DataValue, TextDataValue, UnknownDataValue} from '@lumeer/data-filters';
+import {DataSuggestion} from '../data-suggestion';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'text-data-input',

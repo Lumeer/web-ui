@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,26 +28,29 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {TableColumn, TableColumnGroup} from '../../model/table-column';
-import {TableRow, TableRowWithData} from '../../model/table-row';
-import {computeElementPositionInParent, preventEvent} from '../../../utils/common.utils';
-import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
+
 import {BehaviorSubject} from 'rxjs';
+
+import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {isNotNullOrUndefined, isNullOrUndefinedOrEmpty} from '@lumeer/utils';
+
+import {COLOR_GRAY300, COLOR_PRIMARY} from '../../../../core/constants';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {animateOpacityEnterLeave} from '../../../animations';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
-import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../key-code';
 import {Direction} from '../../../direction';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {KeyCode, isKeyPrintable, keyboardEventCode} from '../../../key-code';
 import {MenuItem} from '../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.component';
-import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {computeElementPositionInParent, preventEvent} from '../../../utils/common.utils';
 import {initForceTouch} from '../../../utils/html-modifier';
-import {animateOpacityEnterLeave} from '../../../animations';
+import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {createTableHierarchyPath} from '../../model/table-hierarchy';
-import {COLOR_GRAY300, COLOR_PRIMARY} from '../../../../core/constants';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {isNotNullOrUndefined, isNullOrUndefinedOrEmpty} from '@lumeer/utils';
+import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
+import {TableRow, TableRowWithData} from '../../model/table-row';
 
 @Component({
   selector: '[table-row]',

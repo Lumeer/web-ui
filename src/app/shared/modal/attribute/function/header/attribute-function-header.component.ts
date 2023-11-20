@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Attribute} from '../../../../../core/store/collections/collection';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {Rule} from '../../../../../core/model/rule';
+import {Attribute} from '../../../../../core/store/collections/collection';
 import {findAttributeRule} from '../../../../utils/attribute.utils';
 
 @Component({

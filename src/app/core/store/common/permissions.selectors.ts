@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
+
 import {
   ConstraintData,
   DocumentsAndLinksData,
@@ -27,15 +27,36 @@ import {
   userCanReadDocument,
   userCanReadLinkInstance,
 } from '@lumeer/data-filters';
+import {objectsByIdMap, uniqueValues} from '@lumeer/utils';
+
 import {containsSameElements} from '../../../shared/utils/array.utils';
+import {filterVisibleAttributesBySettings} from '../../../shared/utils/attribute.utils';
+import {objectValues} from '../../../shared/utils/common.utils';
+import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../../../shared/utils/dashboard.utils';
+import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
+import {mapLinkTypeCollections, mapLinkTypesCollections} from '../../../shared/utils/link-type.utils';
+import {
+  computeCollectionsPermissions,
+  computeLinkTypesPermissions,
+  computeResourcesPermissions,
+  userPermissionsInCollection,
+  userPermissionsInLinkType,
+} from '../../../shared/utils/permission.utils';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
+import {AllowedPermissionsMap, ResourcesPermissions} from '../../model/allowed-permissions';
+import {filterDefaultDashboardTabs} from '../../model/dashboard-tab';
+import {DataQuery} from '../../model/data-query';
+import {AttributesResourceType} from '../../model/resource';
 import {RoleType} from '../../model/role-type';
+import {Collection, CollectionPurposeType} from '../collections/collection';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {
   selectAllCollections,
   selectCollectionById,
   selectCollectionsDictionary,
 } from '../collections/collections.state';
+import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {DocumentModel} from '../documents/document.model';
 import {
   filterTaskDocuments,
@@ -48,8 +69,11 @@ import {
   selectDocumentsByCollectionId,
   selectDocumentsDictionary,
 } from '../documents/documents.state';
+import {groupLinkInstancesByLinkTypes, sortLinkInstances} from '../link-instances/link-instance.utils';
 import {selectAllLinkInstances, selectLinkInstancesByType} from '../link-instances/link-instances.state';
+import {LinkInstance} from '../link-instances/link.instance';
 import {selectAllLinkTypes, selectLinkTypeById, selectLinkTypesDictionary} from '../link-types/link-types.state';
+import {LinkType} from '../link-types/link.type';
 import {Query} from '../navigation/query/query';
 import {
   checkTasksCollectionsQuery,
@@ -58,26 +82,8 @@ import {
   queryWithoutLinks,
   tasksCollectionsQuery,
 } from '../navigation/query/query.util';
-import {View} from '../views/view';
-import {filterViewsByQuery} from '../views/view.filters';
-import {
-  selectAllViews,
-  selectCurrentView,
-  selectDefaultSearchPerspectiveConfig,
-  selectDefaultSearchPerspectiveDashboardView,
-  selectViewQuery,
-} from '../views/views.state';
-import {LinkInstance} from '../link-instances/link.instance';
-import {selectConstraintData} from '../constraint-data/constraint-data.state';
-import {
-  selectDataSettingsIncludeSubItems,
-  selectViewSettings,
-  selectViewSettingsByView,
-} from '../view-settings/view-settings.state';
-import {objectValues} from '../../../shared/utils/common.utils';
-import {AttributesResourceType} from '../../model/resource';
-import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
-import {groupLinkInstancesByLinkTypes, sortLinkInstances} from '../link-instances/link-instance.utils';
+import {SearchConfig, SearchTasksConfig} from '../searches/search';
+import {selectSearchesDictionary} from '../searches/searches.state';
 import {
   selectCollectionsPermissions,
   selectLinkTypesPermissions,
@@ -85,35 +91,30 @@ import {
   selectResourcesPermissions,
   selectViewsPermissions,
 } from '../user-permissions/user-permissions.state';
-import {Collection, CollectionPurposeType} from '../collections/collection';
+import {User} from '../users/user';
 import {selectCurrentUserForWorkspace} from '../users/users.state';
+import {ViewSettings} from '../view-settings/view-settings';
+import {
+  selectDataSettingsIncludeSubItems,
+  selectViewSettings,
+  selectViewSettingsByView,
+} from '../view-settings/view-settings.state';
+import {View} from '../views/view';
+import {filterViewsByQuery} from '../views/view.filters';
 import {
   canChangeViewQuery,
   createSearchPerspectiveTabs,
   createSearchPerspectiveTabsByView,
   getViewIcon,
 } from '../views/view.utils';
-import {LinkType} from '../link-types/link.type';
-import {AllowedPermissionsMap, ResourcesPermissions} from '../../model/allowed-permissions';
-import {DataQuery} from '../../model/data-query';
-import {selectWorkspaceModels} from './common.selectors';
 import {
-  computeCollectionsPermissions,
-  computeLinkTypesPermissions,
-  computeResourcesPermissions,
-  userPermissionsInCollection,
-  userPermissionsInLinkType,
-} from '../../../shared/utils/permission.utils';
-import {User} from '../users/user';
-import {filterVisibleAttributesBySettings} from '../../../shared/utils/attribute.utils';
-import {mapLinkTypeCollections, mapLinkTypesCollections} from '../../../shared/utils/link-type.utils';
-import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../../../shared/utils/dashboard.utils';
-import {filterDefaultDashboardTabs} from '../../model/dashboard-tab';
-import {selectSearchesDictionary} from '../searches/searches.state';
-import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
-import {SearchConfig, SearchTasksConfig} from '../searches/search';
-import {ViewSettings} from '../view-settings/view-settings';
-import {objectsByIdMap, uniqueValues} from '@lumeer/utils';
+  selectAllViews,
+  selectCurrentView,
+  selectDefaultSearchPerspectiveConfig,
+  selectDefaultSearchPerspectiveDashboardView,
+  selectViewQuery,
+} from '../views/views.state';
+import {selectWorkspaceModels} from './common.selectors';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>

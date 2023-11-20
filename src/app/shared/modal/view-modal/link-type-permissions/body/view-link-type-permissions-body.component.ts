@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,27 +27,31 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {User} from '../../../../../core/store/users/user';
-import {Organization} from '../../../../../core/store/organizations/organization';
-import {Project} from '../../../../../core/store/projects/project';
-import {View} from '../../../../../core/store/views/view';
-import {Permission, Permissions, Role} from '../../../../../core/store/permissions/permissions';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+
+import {deepObjectsEquals} from '@lumeer/utils';
+
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
+import {RoleType} from '../../../../../core/model/role-type';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Organization} from '../../../../../core/store/organizations/organization';
+import {Permission, Permissions, Role} from '../../../../../core/store/permissions/permissions';
+import {Project} from '../../../../../core/store/projects/project';
+import {Team} from '../../../../../core/store/teams/team';
+import {User} from '../../../../../core/store/users/user';
+import {View} from '../../../../../core/store/views/view';
 import {
   teamCanReadWorkspace,
   userCanReadWorkspace,
   userRoleTypesInPermissions,
   userRoleTypesInResource,
 } from '../../../../utils/permission.utils';
-import {Team} from '../../../../../core/store/teams/team';
-import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../../core/store/app.state';
-import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
-import {RoleType} from '../../../../../core/model/role-type';
-import {deepObjectsEquals} from '@lumeer/utils';
 
 export enum ViewTab {
   Users = 'users',

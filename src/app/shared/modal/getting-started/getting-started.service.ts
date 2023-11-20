@@ -16,33 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {NavigationExtras} from '@angular/router';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription, timer} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subject, Subscription, combineLatest, interval, of, timer} from 'rxjs';
 import {catchError, distinctUntilChanged, map, switchMap, take, tap} from 'rxjs/operators';
-import {DialogType} from '../dialog-type';
-import {Project} from '../../../core/store/projects/project';
+
+import {uniqueValues} from '@lumeer/utils';
+
+import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
+import {InvitationType} from '../../../core/model/invitation-type';
+import {UserInvitation} from '../../../core/model/user-invitation';
+import {CreateProjectService} from '../../../core/service/create-project.service';
 import {AppState} from '../../../core/store/app.state';
-import {selectProjectTemplatesCount, selectReadableProjectsCount} from '../../../core/store/projects/projects.state';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Organization} from '../../../core/store/organizations/organization';
 import {selectContributeOrganizationsByIds} from '../../../core/store/organizations/organizations.state';
-import {CreateProjectService} from '../../../core/service/create-project.service';
-import {InvitationType} from '../../../core/model/invitation-type';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
-import {isEmailValid} from '../../utils/email.utils';
-import {UserInvitation} from '../../../core/model/user-invitation';
-import {UsersAction} from '../../../core/store/users/users.action';
+import {Project} from '../../../core/store/projects/project';
 import {ProjectConverter} from '../../../core/store/projects/project.converter';
-import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
-import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {selectProjectTemplatesCount, selectReadableProjectsCount} from '../../../core/store/projects/projects.state';
 import {RouterAction} from '../../../core/store/router/router.action';
 import {User, UserOnboarding} from '../../../core/store/users/user';
-import {GettingStartedStage} from './model/getting-started-stage';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {isEmailValid} from '../../utils/email.utils';
 import {organizationReadableUsersAndTeams} from '../../utils/permission.utils';
+import {DialogType} from '../dialog-type';
 import {ModalService} from '../modal.service';
-import {uniqueValues} from '@lumeer/utils';
+import {GettingStartedStage} from './model/getting-started-stage';
 
 const EMPTY_TEMPLATE_CODE = 'EMPTY';
 

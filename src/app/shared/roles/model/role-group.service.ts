@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {RoleGroup, TranslatedRole} from './role-group';
-import {parseSelectTranslation} from '../../utils/translation.utils';
-import {RoleType} from '../../../core/model/role-type';
+
 import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
+import {RoleType} from '../../../core/model/role-type';
+import {parseSelectTranslation} from '../../utils/translation.utils';
+import {RoleGroup, TranslatedRole} from './role-group';
 
 @Injectable()
 export class RoleGroupService {

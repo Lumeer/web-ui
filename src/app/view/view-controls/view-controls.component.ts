@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,11 +29,20 @@ import {
   ViewChild,
 } from '@angular/core';
 import {NavigationExtras} from '@angular/router';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
 import {debounceTime, distinctUntilChanged, map, take, tap} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
+import {DashboardTab} from '../../core/model/dashboard-tab';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
+import {selectDefaultSearchPerspectiveVisibleTabs} from '../../core/store/common/permissions.selectors';
+import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {
   selectPerspective,
@@ -42,44 +50,38 @@ import {
   selectViewCursor,
   selectWorkspace,
 } from '../../core/store/navigation/navigation.state';
+import {QueryParam} from '../../core/store/navigation/query-param';
+import {Query} from '../../core/store/navigation/query/query';
+import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
+import {
+  PerspectiveSettings,
+  convertPerspectiveSettingsToString,
+} from '../../core/store/navigation/settings/perspective-settings';
+import {ViewCursor, convertViewCursorToString} from '../../core/store/navigation/view-cursor/view-cursor';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {RouterAction} from '../../core/store/router/router.action';
+import {SearchesAction} from '../../core/store/searches/searches.action';
+import {
+  selectCollectionsPermissions,
+  selectProjectPermissions,
+  selectViewsPermissions,
+} from '../../core/store/user-permissions/user-permissions.state';
+import {ViewSettingsAction} from '../../core/store/view-settings/view-settings.action';
+import {selectViewSettingsChanged} from '../../core/store/view-settings/view-settings.state';
 import {View} from '../../core/store/views/view';
+import {createSearchPerspectiveTabsByView} from '../../core/store/views/view.utils';
+import {ViewsAction} from '../../core/store/views/views.action';
 import {
   selectCurrentView,
   selectViewConfigChanged,
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
 } from '../../core/store/views/views.state';
-import {Perspective} from '../perspectives/perspective';
-import {Query} from '../../core/store/navigation/query/query';
 import {OptionsDropdownComponent} from '../../shared/dropdown/options/options-dropdown.component';
+import {KeyCode, keyboardEventCode} from '../../shared/key-code';
 import {ModalService} from '../../shared/modal/modal.service';
-import {keyboardEventCode, KeyCode} from '../../shared/key-code';
-import {SearchesAction} from '../../core/store/searches/searches.action';
-import {QueryParam} from '../../core/store/navigation/query-param';
-import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
-import {ViewsAction} from '../../core/store/views/views.action';
 import {objectValues} from '../../shared/utils/common.utils';
-import {selectViewSettingsChanged} from '../../core/store/view-settings/view-settings.state';
-import {ViewSettingsAction} from '../../core/store/view-settings/view-settings.action';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
-import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
-import {
-  selectCollectionsPermissions,
-  selectProjectPermissions,
-  selectViewsPermissions,
-} from '../../core/store/user-permissions/user-permissions.state';
-import {ConfigurationService} from '../../configuration/configuration.service';
-import {convertViewCursorToString, ViewCursor} from '../../core/store/navigation/view-cursor/view-cursor';
-import {
-  convertPerspectiveSettingsToString,
-  PerspectiveSettings,
-} from '../../core/store/navigation/settings/perspective-settings';
-import {DashboardTab} from '../../core/model/dashboard-tab';
-import {createSearchPerspectiveTabsByView} from '../../core/store/views/view.utils';
-import {selectDefaultSearchPerspectiveVisibleTabs} from '../../core/store/common/permissions.selectors';
+import {Perspective} from '../perspectives/perspective';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DataAggregationType, QueryAttribute} from '@lumeer/data-filters';
 
 import {QueryStem} from '../navigation/query/query';
-import {DataAggregationType, QueryAttribute} from '@lumeer/data-filters';
 
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
 export const GANTT_COLUMN_WIDTH = 40;

@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
+import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
+import {getBaseCollectionIdsFromQuery} from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
-import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
-import {getBaseCollectionIdsFromQuery} from '../navigation/query/query.util';
-import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
-import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
+import {DocumentsState, documentsAdapter, initialDocumentsState} from './documents.state';
 
 export function documentsReducer(
   state: DocumentsState = initialDocumentsState,

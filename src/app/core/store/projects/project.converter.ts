@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ProjectDto} from '../../dto';
 import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 import {Project} from './project';

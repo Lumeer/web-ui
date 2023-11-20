@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {Perspective} from '../../../../view/perspectives/perspective';
+
 import {Query} from '../../../../core/store/navigation/query/query';
+import {Perspective} from '../../../../view/perspectives/perspective';
 
 @Pipe({
   name: 'shouldShowAttributesSettings',

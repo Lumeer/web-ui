@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialModalsState, ModalsState} from './modals.state';
 import {ModalsAction, ModalsActionType} from './modals.action';
+import {ModalsState, initialModalsState} from './modals.state';
 
 export function modalsReducer(state: ModalsState = initialModalsState, action: ModalsAction.All): ModalsState {
   switch (action.type) {

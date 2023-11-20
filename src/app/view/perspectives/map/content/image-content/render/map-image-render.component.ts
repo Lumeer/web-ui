@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,18 +29,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {
-  MapCoordinates,
-  MapImageData,
-  MapMarkerProperties,
-  MapPosition,
-} from '../../../../../../core/store/maps/map.model';
-import {BehaviorSubject, fromEvent, Subscription} from 'rxjs';
-import {Rectangle} from './map-image-render-utils';
-import {ResizeObserver} from '../../../../../../shared/resize-observer';
-import {SvgImageMap} from './svg-image-map';
 
-declare let ResizeObserver: ResizeObserver;
+import {BehaviorSubject, Subscription, fromEvent} from 'rxjs';
+
+import {MapImageData, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
+import {Rectangle} from './map-image-render-utils';
+import {SvgImageMap} from './svg-image-map';
 
 @Component({
   selector: 'map-image-render',

@@ -16,28 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators';
-import {AttributeTypeFormComponent} from './form/attribute-type-form.component';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {selectCollectionById} from '../../../../core/store/collections/collections.state';
-import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
-import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {AppState} from '../../../../core/store/app.state';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
+
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../core/store/app.state';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
+import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../../core/store/user-permissions/user-permissions.state';
-import {Workspace} from '../../../../core/store/navigation/workspace';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
+import {AttributeTypeFormComponent} from './form/attribute-type-form.component';
 
 @Component({
   selector: 'attribute-type-modal',

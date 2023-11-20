@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+
 import {View} from '../../../../core/store/views/view';
-import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
+import {SearchPerspectiveConfiguration, defaultSearchPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Component({
   selector: 'search-collections',

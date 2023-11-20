@@ -16,40 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {animate, style, transition, trigger} from '@angular/animations';
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
-  Output,
-  OnDestroy,
+  Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
-import {Collection} from '../../../core/store/collections/collection';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {CollectionFavoriteToggleService} from '../../toggle/collection-favorite-toggle.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {Query} from '../../../core/store/navigation/query/query';
-import {QueryParam} from '../../../core/store/navigation/query-param';
-import {NotificationService} from '../../../core/notifications/notification.service';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {generateCorrelationId} from '../../utils/resource.utils';
-import {animate, style, transition, trigger} from '@angular/animations';
 import {take} from 'rxjs/operators';
-import {QueryAction} from '../../../core/model/query-action';
-import {SearchTab} from '../../../core/store/navigation/search-tab';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import {createEmptyCollection} from '../../../core/store/collections/collection.util';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectHasVisibleSearchTab} from '../../../core/store/common/permissions.selectors';
+
 import {isNullOrUndefined} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
+import {QueryAction} from '../../../core/model/query-action';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {createEmptyCollection} from '../../../core/store/collections/collection.util';
+import {selectHasVisibleSearchTab} from '../../../core/store/common/permissions.selectors';
+import {QueryParam} from '../../../core/store/navigation/query-param';
+import {Query} from '../../../core/store/navigation/query/query';
+import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
+import {SearchTab} from '../../../core/store/navigation/search-tab';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {CollectionFavoriteToggleService} from '../../toggle/collection-favorite-toggle.service';
+import {generateCorrelationId} from '../../utils/resource.utils';
 
 const UNCREATED_THRESHOLD = 5;
 

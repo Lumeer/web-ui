@@ -16,17 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AttributeLock, AttributeLockFiltersStats, ConstraintData} from '@lumeer/data-filters';
-import {Attribute} from '../../../core/store/collections/collection';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {map} from 'rxjs/operators';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+
+import {AttributeLock, AttributeLockFiltersStats, ConstraintData} from '@lumeer/data-filters';
 import {objectsByIdMap} from '@lumeer/utils';
+
+import {AppState} from '../../../core/store/app.state';
+import {Attribute} from '../../../core/store/collections/collection';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 
 @Component({
   selector: 'attribute-lock-filters-stats',

@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {ConstraintData, ConstraintType} from '@lumeer/data-filters';
+
 import {KanbanConfig} from '../../../../../../../core/store/kanbans/kanban';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {KanbanDataColumn} from '../../../../util/kanban-data';
-import {ConstraintData, ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'kanban-column-header',

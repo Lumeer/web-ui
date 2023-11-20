@@ -16,13 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+
+import {ConstraintType} from '@lumeer/data-filters';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {hasFilesAttributeChanged} from '../../../shared/utils/has-files-attribute-changed';
+import {LinkInstanceService, SearchService} from '../../data-service';
+import {DocumentLinksDto} from '../../dto/document-links.dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
@@ -30,6 +37,8 @@ import {FileAttachmentsAction} from '../file-attachments/file-attachments.action
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
+import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
@@ -39,12 +48,6 @@ import {
   selectLinkInstancesLoadingQueries,
   selectLinkInstancesQueries,
 } from './link-instances.state';
-import {LinkInstanceService, SearchService} from '../../data-service';
-import {ConstraintType} from '@lumeer/data-filters';
-import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
-import {DocumentLinksDto} from '../../dto/document-links.dto';
-import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class LinkInstancesEffects {

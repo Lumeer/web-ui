@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DataAggregationType} from '@lumeer/data-filters';
 
+import {AttributesResource} from '../../../../core/model/resource';
 import {
   ChartAxisConfig,
   ChartAxisType,
@@ -25,15 +27,13 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../core/store/charts/chart';
-import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {AttributesResource} from '../../../../core/model/resource';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {
   checkOrTransformQueryAttribute,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
-import {DataAggregationType} from '@lumeer/data-filters';
 
 export function convertChartDateTickFormat(format: string): string {
   if (!format) {

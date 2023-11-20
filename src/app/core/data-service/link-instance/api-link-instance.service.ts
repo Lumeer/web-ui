@@ -16,21 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {LinkInstanceService} from './link-instance.service';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {LinkInstanceDto} from '../../dto';
+import {DocumentLinksDto} from '../../dto/document-links.dto';
+import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
-import {LinkInstanceDto} from '../../dto';
-import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {DocumentLinksDto} from '../../dto/document-links.dto';
-import {ConfigurationService} from '../../../configuration/configuration.service';
+import {LinkInstanceService} from './link-instance.service';
 
 @Injectable()
 export class ApiLinkInstanceService extends BaseService implements LinkInstanceService {

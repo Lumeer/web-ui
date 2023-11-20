@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {SafeResourceUrl} from '@angular/platform-browser';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
+
 import {DialogType} from '../dialog-type';
 
 @Component({

@@ -16,27 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {KanbanAttribute, KanbanResource, KanbanStemConfig} from '../../../../../../core/store/kanbans/kanban';
-import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
-import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
-import {findAttribute} from '../../../../../../core/store/collections/collection.util';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
+
 import {Constraint, ConstraintData, DataValue, QueryResource} from '@lumeer/data-filters';
+import {isArray} from '@lumeer/utils';
+
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
+import {AppState} from '../../../../../../core/store/app.state';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../../core/store/collections/collection.util';
 import {
   selectDocumentsByCollectionAndReadPermission,
   selectLinksByLinkTypeAndReadPermission,
 } from '../../../../../../core/store/common/permissions.selectors';
-import {isArray} from '@lumeer/utils';
+import {KanbanAttribute, KanbanResource, KanbanStemConfig} from '../../../../../../core/store/kanbans/kanban';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {QueryStem} from '../../../../../../core/store/navigation/query/query';
+import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
+import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
+import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'kanban-stem-config',

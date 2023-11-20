@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Observable, of} from 'rxjs';
-import {PermissionService} from './permission.service';
+
 import {PermissionDto, PermissionsDto} from '../../dto';
-import {Workspace} from '../../store/navigation/workspace';
 import {BaseService} from '../../rest/base.service';
+import {Workspace} from '../../store/navigation/workspace';
+import {PermissionService} from './permission.service';
 
 export abstract class PublicPermissionService extends BaseService implements PermissionService {
   public getPermissions(): Observable<PermissionsDto> {

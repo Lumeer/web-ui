@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,17 +27,20 @@ import {
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
-import {ConstraintType} from '@lumeer/data-filters';
+
 import {Store} from '@ngrx/store';
-import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
+
+import {ConstraintType} from '@lumeer/data-filters';
+
+import {COLOR_LINK_DEFAULT} from '../../../core/constants';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
+import {AppState} from '../../../core/store/app.state';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {InputBoxComponent} from '../../input/input-box/input-box.component';
 import {FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX} from '../../utils/attribute.utils';
-import {AppState} from '../../../core/store/app.state';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {shadeColor} from '../../utils/html-modifier';
-import {COLOR_LINK_DEFAULT} from '../../../core/constants';
 
 @Component({
   selector: 'collection-attributes-table',

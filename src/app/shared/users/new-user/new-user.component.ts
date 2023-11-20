@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {User} from '../../../core/store/users/user';
+
 import {removeAccentFromString} from '@lumeer/utils';
+
+import {User} from '../../../core/store/users/user';
 
 @Component({
   selector: 'new-user',

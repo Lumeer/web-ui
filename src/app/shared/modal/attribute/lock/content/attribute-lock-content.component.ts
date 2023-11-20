@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 
-import {ChangeDetectionStrategy, Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
+import {AttributeLock, AttributeLockExceptionGroup, AttributeLockGroupType} from '@lumeer/data-filters';
+
 import {AttributesResource} from '../../../../../core/model/resource';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {createRange} from '../../../../utils/array.utils';
 import {createActionEquationFromFormArray} from '../../common/conditions/constraint-conditions-form.component';
-import {AttributeLock, AttributeLockExceptionGroup, AttributeLockGroupType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'attribute-lock-content',

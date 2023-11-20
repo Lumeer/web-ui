@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+
+import {InputModule} from '../../input/input.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {PresenterModule} from '../../presenter/presenter.module';
-import {InputModule} from '../../input/input.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {TextInputModalComponent} from './text-input-modal.component';
-import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [TextInputModalComponent],

@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as moment from 'moment';
+
+import {isDateValid, isNullOrUndefined} from '@lumeer/utils';
 
 import {ChronoUnit, CronRule, CronRuleConfiguration, Rule, RuleType} from '../../core/model/rule';
 import {createRange} from './array.utils';
 import {bitSet, bitTest} from './common.utils';
-import * as moment from 'moment';
-import {isDateValid, isNullOrUndefined} from '@lumeer/utils';
 
 export enum RuleOffsetType {
   Up = 'up',

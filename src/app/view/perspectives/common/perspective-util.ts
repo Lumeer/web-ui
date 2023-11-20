@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {QueryStem} from '../../../core/store/navigation/query/query';
-import {Attribute, Collection, CollectionPurposeType} from '../../../core/store/collections/collection';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
-import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
-import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
-import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
 import {ConstraintType, QueryAttribute} from '@lumeer/data-filters';
+
+import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
+import {Attribute, Collection, CollectionPurposeType} from '../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {QueryStem} from '../../../core/store/navigation/query/query';
+import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
+import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 
 export function createDefaultTaskPurposeConfig(
   stem: QueryStem,

@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
+import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up.guard';
 import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {PrintComponent} from './print/print.component';
-import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 
 const printRoutes: Routes = [
   {

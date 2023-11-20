@@ -16,20 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {AppState} from '../store/app.state';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {combineLatest} from 'rxjs';
-import {selectDocumentById} from '../store/documents/documents.state';
-import {selectCollectionById} from '../store/collections/collections.state';
 import {take} from 'rxjs/operators';
-import {selectLinkInstanceById} from '../store/link-instances/link-instances.state';
-import {selectLinkTypeById} from '../store/link-types/link-types.state';
-import {AttributesResource, DataResource} from '../model/resource';
-import {findAttribute, findAttributeConstraint} from '../store/collections/collection.util';
-import {ClipboardService} from './clipboard.service';
-import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
+
 import {
   Constraint,
   ConstraintData,
@@ -39,6 +32,16 @@ import {
   UserDataValue,
 } from '@lumeer/data-filters';
 import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
+
+import {AttributesResource, DataResource} from '../model/resource';
+import {AppState} from '../store/app.state';
+import {findAttribute, findAttributeConstraint} from '../store/collections/collection.util';
+import {selectCollectionById} from '../store/collections/collections.state';
+import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
+import {selectDocumentById} from '../store/documents/documents.state';
+import {selectLinkInstanceById} from '../store/link-instances/link-instances.state';
+import {selectLinkTypeById} from '../store/link-types/link-types.state';
+import {ClipboardService} from './clipboard.service';
 
 @Injectable({providedIn: 'root'})
 export class CopyValueService {

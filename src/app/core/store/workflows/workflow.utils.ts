@@ -16,30 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
 
-import {
-  latestWorkflowVersion,
-  WorkflowColumnsSettings,
-  WorkflowConfig,
-  WorkflowFooterConfig,
-  WorkflowResource,
-  WorkflowStemConfig,
-  WorkflowTableConfig,
-} from './workflow';
-import {Query, QueryStem} from '../navigation/query/query';
 import {AttributesResourceType} from '../../model/resource';
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
+import {Query, QueryStem} from '../navigation/query/query';
 import {
   checkOrTransformQueryAttribute,
   checkOrTransformQueryResource,
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
-  queryStemsAreSame,
   queryStemWithoutFilters,
+  queryStemsAreSame,
 } from '../navigation/query/query.util';
-import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
+import {
+  WorkflowColumnsSettings,
+  WorkflowConfig,
+  WorkflowFooterConfig,
+  WorkflowResource,
+  WorkflowStemConfig,
+  WorkflowTableConfig,
+  latestWorkflowVersion,
+} from './workflow';
 
 export function isWorkflowConfigChanged(previousConfig: WorkflowConfig, currentConfig: WorkflowConfig): boolean {
   const previous = createWorkflowSaveConfig(previousConfig);

@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit, OnDestroy} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
-import {AppState} from '../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {viewCursorToWorkflowTable, WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
-import {WorkflowTablesStateService} from '../tables/service/workflow-tables-state.service';
-import {combineLatest, Observable} from 'rxjs';
-import {selectViewCursor} from '../../../../../core/store/navigation/navigation.state';
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {queryStemWithoutFilters} from '../../../../../core/store/navigation/query/query.util';
-import {WorkflowsAction} from '../../../../../core/store/workflows/workflows.action';
-import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
-import {View} from '../../../../../core/store/views/view';
+
 import {LoadDataService, LoadDataServiceProvider} from '../../../../../core/service/load-data.service';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {selectViewCursor} from '../../../../../core/store/navigation/navigation.state';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
+import {queryStemWithoutFilters} from '../../../../../core/store/navigation/query/query.util';
+import {View} from '../../../../../core/store/views/view';
+import {WorkflowsAction} from '../../../../../core/store/workflows/workflows.action';
+import {WorkflowTablesStateService} from '../tables/service/workflow-tables-state.service';
+import {WORKFLOW_SIDEBAR_SELECTOR, viewCursorToWorkflowTable} from '../tables/service/workflow-utils';
 
 @Component({
   selector: WORKFLOW_SIDEBAR_SELECTOR,

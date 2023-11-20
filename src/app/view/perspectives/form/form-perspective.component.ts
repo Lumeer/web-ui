@@ -16,26 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {DataPerspectiveDirective} from '../data-perspective.directive';
-import {FormConfig} from '../../../core/store/form/form-model';
-import {Query} from '../../../core/store/navigation/query/query';
-import {Collection} from '../../../core/store/collections/collection';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {ViewConfig} from '../../../core/store/views/view';
-import {combineLatest, Observable, switchMap} from 'rxjs';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, switchMap} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {selectFormById} from '../../../core/store/form/form.state';
-import * as FormsActions from '../../../core/store/form/form.actions';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 import {AppState} from '../../../core/store/app.state';
-import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query/query.util';
+import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectLinkTypesByViewAndCollectionIdWithCollections} from '../../../core/store/common/permissions.selectors';
+import {FormConfig} from '../../../core/store/form/form-model';
+import * as FormsActions from '../../../core/store/form/form.actions';
+import {selectFormById} from '../../../core/store/form/form.state';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {Query} from '../../../core/store/navigation/query/query';
+import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query/query.util';
+import {ViewConfig} from '../../../core/store/views/view';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {FormPerspectiveConfiguration, defaultFormPerspectiveConfiguration} from '../perspective-configuration';
 import {checkOrTransformFormConfig} from './form-utils';
-import {defaultFormPerspectiveConfiguration, FormPerspectiveConfiguration} from '../perspective-configuration';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 
 @Component({
   selector: 'form-perspective',

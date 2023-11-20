@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryData} from '../../top-panel/search-box/util/query-data';
-import {QueryItemsConverter} from '../../top-panel/search-box/query-item/query-items.converter';
+
 import {Query} from '../../../core/store/navigation/query/query';
 import {QueryItem} from '../../top-panel/search-box/query-item/model/query-item';
+import {QueryItemsConverter} from '../../top-panel/search-box/query-item/query-items.converter';
+import {QueryData} from '../../top-panel/search-box/util/query-data';
 
 @Pipe({
   name: 'queryItems',

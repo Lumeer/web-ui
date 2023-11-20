@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isDateValid, isNotNullOrUndefined} from '@lumeer/utils';
 
+import {objectValues} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {CalendarBar, CalendarConfig, CalendarConfigVersion, CalendarStemConfig} from './calendar';
 import {CalendarCollectionConfigV0, CalendarConfigV0, CalendarConfigV1, CalendarStemConfigV1} from './calendar-old';
-import {objectValues} from '../../../shared/utils/common.utils';
-import {isDateValid, isNotNullOrUndefined} from '@lumeer/utils';
 
 export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
   if (!config) {

@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ResourceRolesData, ResourceRolesDatum} from './resource-roles-data';
+
 import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
+import {ResourceRolesData, ResourceRolesDatum} from './resource-roles-data';
 
 @Component({
   selector: 'user-resources-list',

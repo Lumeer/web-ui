@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
+
+import {deepObjectCopy} from '@lumeer/utils';
+
 import {
-  CalendarStemConfig,
   CalendarConfig,
-  SlotDuration,
   CalendarMode,
+  CalendarStemConfig,
+  SlotDuration,
   defaultSlotDuration,
 } from '../../../../core/store/calendars/calendar';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {getCalendarDefaultStemConfig} from '../util/calendar-util';
+import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {generateId} from '../../../../shared/utils/resource.utils';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {generateId} from '../../../../shared/utils/resource.utils';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
-import {deepObjectCopy} from '@lumeer/utils';
+import {getCalendarDefaultStemConfig} from '../util/calendar-util';
 
 @Component({
   selector: 'calendar-config',

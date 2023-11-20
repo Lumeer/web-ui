@@ -16,26 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+
 import {Actions, ofType} from '@ngrx/effects';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
+import {DeviceDetectorService} from 'ngx-device-detector';
 import {Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
-import {getTableRowCursor, TableCursor} from '../../../../../core/store/tables/table-cursor';
-import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
-import {selectTableCursor} from '../../../../../core/store/tables/tables.selector';
-import {Direction} from '../../../../../shared/direction';
-import {keyboardEventCode, KeyCode} from '../../../../../shared/key-code';
-import {EDITABLE_EVENT} from '../../table-perspective.component';
+
+import {ConstraintData} from '@lumeer/data-filters';
+import {escapeHtml} from '@lumeer/utils';
+
 import {AppState} from '../../../../../core/store/app.state';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
+import {TableCursor, getTableRowCursor} from '../../../../../core/store/tables/table-cursor';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
-import {ConstraintData} from '@lumeer/data-filters';
-import {TableDataPermissionsService} from '../../service/table-data-permissions.service';
+import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
+import {selectTableCursor} from '../../../../../core/store/tables/tables.selector';
 import {View} from '../../../../../core/store/views/view';
-import {DeviceDetectorService} from 'ngx-device-detector';
-import {escapeHtml} from '@lumeer/utils';
+import {Direction} from '../../../../../shared/direction';
+import {KeyCode, keyboardEventCode} from '../../../../../shared/key-code';
+import {TableDataPermissionsService} from '../../service/table-data-permissions.service';
+import {EDITABLE_EVENT} from '../../table-perspective.component';
 
 @Component({
   selector: 'table-hidden-input',

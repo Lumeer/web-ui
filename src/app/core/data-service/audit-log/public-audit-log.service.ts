@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {AuditLogService} from './audit-log.service';
+
 import {Observable, of} from 'rxjs';
+
 import {AuditLogDto} from '../../dto/audit-log.dto';
+import {AuditLogService} from './audit-log.service';
 
 @Injectable()
 export class PublicAuditLogService implements AuditLogService {

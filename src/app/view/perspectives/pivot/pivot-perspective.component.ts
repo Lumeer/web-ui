@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, OnDestroy, Input} from '@angular/core';
-import {Collection} from '../../../core/store/collections/collection';
-import {Query} from '../../../core/store/navigation/query/query';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {selectPivotById} from '../../../core/store/pivots/pivots.state';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {Query} from '../../../core/store/navigation/query/query';
 import {PivotConfig} from '../../../core/store/pivots/pivot';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {checkOrTransformPivotConfig, createDefaultPivotConfig} from './util/pivot-util';
-import {DataPerspectiveDirective} from '../data-perspective.directive';
-import {Observable} from 'rxjs';
+import {selectPivotById} from '../../../core/store/pivots/pivots.state';
 import {ViewConfig} from '../../../core/store/views/view';
-import {defaultPivotPerspectiveConfiguration, PivotPerspectiveConfiguration} from '../perspective-configuration';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {PivotPerspectiveConfiguration, defaultPivotPerspectiveConfiguration} from '../perspective-configuration';
+import {checkOrTransformPivotConfig, createDefaultPivotConfig} from './util/pivot-util';
 
 @Component({
   selector: 'pivot-perspective',

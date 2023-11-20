@@ -16,88 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {AppState} from '../../../../../../core/store/app.state';
-import {Action, select, Store} from '@ngrx/store';
-import {ModalService} from '../../../../../../shared/modal/modal.service';
-import {ColumnFilter, TableColumn} from '../../../../../../shared/table/model/table-column';
-import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
-import {LinkTypesAction} from '../../../../../../core/store/link-types/link-types.action';
-import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
-import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {DocumentsAction} from '../../../../../../core/store/documents/documents.action';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
-import {distinctUntilChanged, map, mergeMap, skip, take} from 'rxjs/operators';
-import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
-import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {View} from '../../../../../../core/store/views/view';
-import {
-  TABLE_BOTTOM_TOOLBAR_HEIGHT,
-  TABLE_COLUMN_WIDTH,
-  TABLE_ROW_HEIGHT,
-  TableCell,
-  TableCellType,
-  TableModel,
-} from '../../../../../../shared/table/model/table-model';
-import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {findAttribute, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
-import {createAttributesSettingsOrder} from '../../../../../../shared/settings/settings.util';
-import {HeaderMenuId, WorkflowTablesMenuService} from './workflow-tables-menu.service';
-import {WorkflowTablesStateService} from './workflow-tables-state.service';
-import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {viewSettingsChanged, viewSettingsSortChanged} from '../../../../../../core/store/views/view.utils';
-import {
-  WorkflowColumnSettings,
-  WorkflowConfig,
-  WorkflowStemConfig,
-  WorkflowTableConfig,
-} from '../../../../../../core/store/workflows/workflow';
-import {SelectItemWithConstraintFormatter} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {WorkflowTable} from '../../../model/workflow-table';
-import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
-import {
-  areFiltersEqual,
-  filterQueryByStem,
-  queryStemsAreSame,
-} from '../../../../../../core/store/navigation/query/query.util';
-import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
-import {selectWorkflowSelectedDocumentId} from '../../../../../../core/store/workflows/workflow.state';
-import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
-import {
-  generateDocumentDataByResourceQuery,
-  getDocumentsAndLinksByStemData,
-} from '../../../../../../core/store/documents/document.utils';
-import {
-  addRowByParentId,
-  computeTableHeight,
-  createAggregatorAttributes,
-  createEmptyNewRow,
-  createLinkingCollectionId,
-  createLinkTypeData,
-  createPendingColumnValuesByRow,
-  createRowData,
-  createRowObjectsFromAggregated,
-  createTableRowCellsMapForAttribute,
-  createTableRowCellsMapForResource,
-  createWorkflowTableFooter,
-  getColumnMergedFilters,
-  isWorkflowStemConfigGroupedByResourceType,
-  PendingRowUpdate,
-  sortWorkflowTables,
-  viewCursorToWorkflowCell,
-  workflowTableId,
-} from './workflow-utils';
-import {selectLinkInstanceById} from '../../../../../../core/store/link-instances/link-instances.state';
-import {getOtherDocumentIdFromLinkInstance} from '../../../../../../core/store/link-instances/link-instance.utils';
+
+import {Action, Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
-import {CopyValueService} from '../../../../../../core/service/copy-value.service';
-import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
+import {distinctUntilChanged, map, mergeMap, skip, take} from 'rxjs/operators';
+
 import {
   AggregatedArrayData,
   AggregatedDataItem,
@@ -109,33 +34,111 @@ import {
   DataAggregator,
   DataAggregatorAttribute,
   DocumentsAndLinksData,
+  QueryAttribute,
+  UnknownConstraint,
   findAttributeByQueryAttribute,
   mergeDataResourcesChains,
-  QueryAttribute,
   queryAttributePermissions,
-  UnknownConstraint,
 } from '@lumeer/data-filters';
-import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/workflows/workflow.utils';
-import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
-import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
-import {CommonAction} from '../../../../../../core/store/common/common.action';
-import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
-import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
-import {Workspace} from '../../../../../../core/store/navigation/workspace';
-import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
-import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
-import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
+import {deepObjectsEquals, findIthItemIndex, isArray, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
+
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
+import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
-import {Translation} from '../../../../../../shared/utils/translation';
-import {shadeColor} from '../../../../../../shared/utils/html-modifier';
-import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
+import {AppState} from '../../../../../../core/store/app.state';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
+import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
+import {CommonAction} from '../../../../../../core/store/common/common.action';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {
+  generateDocumentDataByResourceQuery,
+  getDocumentsAndLinksByStemData,
+} from '../../../../../../core/store/documents/document.utils';
+import {DocumentsAction} from '../../../../../../core/store/documents/documents.action';
+import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
+import {getOtherDocumentIdFromLinkInstance} from '../../../../../../core/store/link-instances/link-instance.utils';
+import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
+import {selectLinkInstanceById} from '../../../../../../core/store/link-instances/link-instances.state';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {LinkTypesAction} from '../../../../../../core/store/link-types/link-types.action';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
+import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
+import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
+import {
+  areFiltersEqual,
+  filterQueryByStem,
+  queryStemsAreSame,
+} from '../../../../../../core/store/navigation/query/query.util';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
 import {
   AttributeSortType,
   ResourceAttributeSettings,
   ViewSettings,
 } from '../../../../../../core/store/view-settings/view-settings';
+import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
+import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
+import {View} from '../../../../../../core/store/views/view';
+import {viewSettingsChanged, viewSettingsSortChanged} from '../../../../../../core/store/views/view.utils';
+import {
+  WorkflowColumnSettings,
+  WorkflowConfig,
+  WorkflowStemConfig,
+  WorkflowTableConfig,
+} from '../../../../../../core/store/workflows/workflow';
+import {selectWorkflowSelectedDocumentId} from '../../../../../../core/store/workflows/workflow.state';
+import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/workflows/workflow.utils';
+import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
 import {DataResourcesChain} from '../../../../../../shared/modal/data-resource-detail/model/data-resources-chain';
-import {deepObjectsEquals, findIthItemIndex, isArray, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
+import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {SelectItemWithConstraintFormatter} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {createAttributesSettingsOrder} from '../../../../../../shared/settings/settings.util';
+import {ColumnFilter, TableColumn} from '../../../../../../shared/table/model/table-column';
+import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
+import {
+  TABLE_BOTTOM_TOOLBAR_HEIGHT,
+  TABLE_COLUMN_WIDTH,
+  TABLE_ROW_HEIGHT,
+  TableCell,
+  TableCellType,
+  TableModel,
+} from '../../../../../../shared/table/model/table-model';
+import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
+import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
+import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
+import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
+import {shadeColor} from '../../../../../../shared/utils/html-modifier';
+import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
+import {generateId} from '../../../../../../shared/utils/resource.utils';
+import {Translation} from '../../../../../../shared/utils/translation';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
+import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {WorkflowTable} from '../../../model/workflow-table';
+import {HeaderMenuId, WorkflowTablesMenuService} from './workflow-tables-menu.service';
+import {WorkflowTablesStateService} from './workflow-tables-state.service';
+import {
+  PendingRowUpdate,
+  addRowByParentId,
+  computeTableHeight,
+  createAggregatorAttributes,
+  createEmptyNewRow,
+  createLinkTypeData,
+  createLinkingCollectionId,
+  createPendingColumnValuesByRow,
+  createRowData,
+  createRowObjectsFromAggregated,
+  createTableRowCellsMapForAttribute,
+  createTableRowCellsMapForResource,
+  createWorkflowTableFooter,
+  getColumnMergedFilters,
+  isWorkflowStemConfigGroupedByResourceType,
+  sortWorkflowTables,
+  viewCursorToWorkflowCell,
+  workflowTableId,
+} from './workflow-utils';
 
 @Injectable()
 export class WorkflowTablesDataService {

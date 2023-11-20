@@ -16,24 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Params, Router, RouterStateSnapshot, UrlSerializer, UrlTree} from '@angular/router';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {map, mergeMap, take} from 'rxjs/operators';
+
+import {DashboardTab} from '../../../core/model/dashboard-tab';
+import {AppState} from '../../../core/store/app.state';
 import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
-import {DefaultViewConfig, View} from '../../../core/store/views/view';
-import {WorkspaceService} from '../../../workspace/workspace.service';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
-import {DashboardTab} from '../../../core/model/dashboard-tab';
 import {selectSearchConfigById} from '../../../core/store/searches/searches.state';
+import {User} from '../../../core/store/users/user';
+import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {createSearchPerspectiveTabs} from '../../../core/store/views/view.utils';
 import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
-import {User} from '../../../core/store/users/user';
+import {WorkspaceService} from '../../../workspace/workspace.service';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 
 @Injectable()
 export class SearchPerspectiveRedirectGuard {

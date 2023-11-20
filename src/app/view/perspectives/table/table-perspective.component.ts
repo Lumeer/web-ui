@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
@@ -31,49 +30,54 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest, of} from 'rxjs';
 import {debounceTime, filter, map, pairwise, startWith, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+
+import {deepObjectsEquals} from '@lumeer/utils';
+
+import {DataQuery} from '../../../core/model/data-query';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 import {AppState} from '../../../core/store/app.state';
+import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCurrentQueryDataResourcesLoaded,
+  selectQueryDataResourcesLoaded,
+} from '../../../core/store/data-resources/data-resources.state';
+import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query/query.helper';
-import {isFirstTableCell, isLastTableCell, TableCursor} from '../../../core/store/tables/table-cursor';
+import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../core/store/navigation/query/query.util';
+import {TableCursor, isFirstTableCell, isLastTableCell} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableConfigById, selectTableCursor} from '../../../core/store/tables/tables.selector';
+import {selectTableId} from '../../../core/store/tables/tables.state';
+import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save-config.util';
+import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
 import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/view';
+import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
+import {ViewsAction} from '../../../core/store/views/views.action';
 import {
   selectCurrentView,
   selectDefaultViewConfig,
   selectDefaultViewConfigSnapshot,
 } from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
-import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../shared/key-code';
+import {KeyCode, isKeyPrintable, keyboardEventCode} from '../../../shared/key-code';
+import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
+import {clickedInsideElement} from '../../../shared/utils/html-modifier';
+import {generateId} from '../../../shared/utils/resource.utils';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
+import {TablePerspectiveConfiguration, defaultTablePerspectiveConfiguration} from '../perspective-configuration';
 import {TableBodyComponent} from './body/table-body.component';
 import {TableHeaderComponent} from './header/table-header.component';
 import {TableRowNumberService} from './service/table-row-number.service';
-import {selectTableId} from '../../../core/store/tables/tables.state';
-import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../core/store/navigation/query/query.util';
-import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
-import {ViewsAction} from '../../../core/store/views/views.action';
+
 import CreateTable = TablesAction.CreateTable;
-import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save-config.util';
-import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
-import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
-import {
-  selectCurrentQueryDataResourcesLoaded,
-  selectQueryDataResourcesLoaded,
-} from '../../../core/store/data-resources/data-resources.state';
-import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
-import {DataQuery} from '../../../core/model/data-query';
-import {defaultTablePerspectiveConfiguration, TablePerspectiveConfiguration} from '../perspective-configuration';
-import {clickedInsideElement} from '../../../shared/utils/html-modifier';
-import {generateId} from '../../../shared/utils/resource.utils';
-import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
-import {deepObjectsEquals} from '@lumeer/utils';
 
 export const EDITABLE_EVENT = 'editableEvent';
 

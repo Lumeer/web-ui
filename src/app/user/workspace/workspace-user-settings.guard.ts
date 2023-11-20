@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
 import {Store} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {catchError, map, mergeMap, take} from 'rxjs/operators';
+
+import {UserService} from '../../core/data-service';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {userCanManageOrganizationUserDetail} from '../../shared/utils/permission.utils';
-import {WorkspaceService} from '../../workspace/workspace.service';
 import {User} from '../../core/store/users/user';
 import {convertUserDtoToModel} from '../../core/store/users/user.converter';
-import {UserService} from '../../core/data-service';
+import {userCanManageOrganizationUserDetail} from '../../shared/utils/permission.utils';
+import {WorkspaceService} from '../../workspace/workspace.service';
 
 @Injectable()
 export class WorkspaceUserSettingsGuard {

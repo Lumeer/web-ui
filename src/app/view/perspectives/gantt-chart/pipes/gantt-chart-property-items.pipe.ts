@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+
 import {cleanQueryAttribute} from '@lumeer/data-filters';
 import {deepObjectsEquals} from '@lumeer/utils';
+
+import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 
 const sameCollectionProperties = ['start', 'end'];
 

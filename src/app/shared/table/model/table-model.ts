@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {TableColumn} from './table-column';
-import {TableRow} from './table-row';
 import {TableFooter} from './table-footer';
+import {TableRow} from './table-row';
 
 export const TABLE_ROW_HEIGHT = 37;
 export const TABLE_ROW_BORDER = 1;

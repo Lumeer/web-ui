@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {WorkflowTablesStateService} from './workflow-tables-state.service';
-import {keyboardEventCode, KeyCode} from '../../../../../../shared/key-code';
-import {preventEvent} from '../../../../../../shared/utils/common.utils';
+
+import {KeyCode, keyboardEventCode} from '../../../../../../shared/key-code';
 import {TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
+import {preventEvent} from '../../../../../../shared/utils/common.utils';
 import {WorkflowTablesDataService} from './workflow-tables-data.service';
+import {WorkflowTablesStateService} from './workflow-tables-state.service';
 
 @Injectable()
 export class WorkflowTablesKeyboardService {

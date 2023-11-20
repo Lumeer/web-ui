@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
+
 import {Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
-import {removeAllFormControls} from '../../../../../../shared/utils/form.utils';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {removeAllFormControls} from '../../../../../../shared/utils/form.utils';
 
 @Component({
   selector: 'collection-purpose-form',

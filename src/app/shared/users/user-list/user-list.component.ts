@@ -16,17 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {User} from '../../../core/store/users/user';
-import {ResourceType} from '../../../core/model/resource-type';
-import {Resource} from '../../../core/model/resource';
-import {Project} from '../../../core/store/projects/project';
-import {Organization} from '../../../core/store/organizations/organization';
-import {Team} from '../../../core/store/teams/team';
 import {BehaviorSubject} from 'rxjs';
+
+import {deepObjectCopy} from '@lumeer/utils';
+
+import {Resource} from '../../../core/model/resource';
+import {ResourcePermissionType, resourcePermissionTypeMap} from '../../../core/model/resource-permission-type';
+import {ResourceType} from '../../../core/model/resource-type';
+import {RoleType} from '../../../core/model/role-type';
+import {NotificationButton} from '../../../core/notifications/notification-button';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {Organization} from '../../../core/store/organizations/organization';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
+import {Role} from '../../../core/store/permissions/permissions';
+import {Project} from '../../../core/store/projects/project';
+import {Team} from '../../../core/store/teams/team';
+import {User} from '../../../core/store/users/user';
 import {
   userCanManageOrganizationUserDetail,
   userCanManageProjectUserDetail,
@@ -34,13 +42,6 @@ import {
   userHasRoleInProject,
   userHasRoleInResource,
 } from '../../utils/permission.utils';
-import {RoleType} from '../../../core/model/role-type';
-import {NotificationButton} from '../../../core/notifications/notification-button';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {Role} from '../../../core/store/permissions/permissions';
-import {ResourcePermissionType, resourcePermissionTypeMap} from '../../../core/model/resource-permission-type';
-import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'user-list',

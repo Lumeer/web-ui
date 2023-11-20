@@ -17,33 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Input,
-  Output,
+  Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
-  ViewChild,
-  ElementRef,
-  SimpleChanges,
   HostListener,
+  Input,
   OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {QueryItem} from '../model/query-item';
 import {AbstractControl, UntypedFormArray, UntypedFormGroup} from '@angular/forms';
+
 import {
   ConditionType,
-  conditionTypeNumberOfInputs,
   ConditionValue,
   ConstraintData,
   ConstraintType,
+  conditionTypeNumberOfInputs,
 } from '@lumeer/data-filters';
-import {FilterBuilderComponent} from '../../../../builder/filter-builder/filter-builder.component';
+
 import {Attribute} from '../../../../../core/store/collections/collection';
+import {FilterBuilderComponent} from '../../../../builder/filter-builder/filter-builder.component';
 import {modifyAttributeForQueryFilter} from '../../../../utils/attribute.utils';
 import {AttributeQueryItem} from '../model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../model/link-attribute.query-item';
+import {QueryItem} from '../model/query-item';
 import {QueryItemType} from '../model/query-item-type';
 
 @Component({

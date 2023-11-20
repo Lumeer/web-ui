@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../../core/store/app.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'linksCount',

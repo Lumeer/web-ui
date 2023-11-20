@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {View} from '../../../../core/store/views/view';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectViewById} from '../../../../core/store/views/views.state';
 import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../../core/store/app.state';
+import {View} from '../../../../core/store/views/view';
 import {getViewIcon} from '../../../../core/store/views/view.utils';
+import {selectViewById} from '../../../../core/store/views/views.state';
 
 @Component({
   selector: 'view-header',

@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {View} from '../views/view';
-import {Workspace} from '../navigation/workspace';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
+import {Workspace} from '../navigation/workspace';
+import {View} from '../views/view';
 
 export function viewSettingsIdByView(view: View) {
   return view?.code || DEFAULT_PERSPECTIVE_ID;

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import {InputBoxComponent, TRIM_REGEX} from '../../../../input/input-box/input-box.component';
-import {ResourceVariable} from '../../../../../core/store/resource-variables/resource-variable';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
+import {ResourceVariable} from '../../../../../core/store/resource-variables/resource-variable';
+import {InputBoxComponent, TRIM_REGEX} from '../../../../input/input-box/input-box.component';
 
 @Component({
   selector: 'resource-variable-row',

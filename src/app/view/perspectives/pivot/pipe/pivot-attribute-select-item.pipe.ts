@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
-import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+
 import {cleanQueryAttribute} from '@lumeer/data-filters';
+
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
+import {Collection} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 
 @Pipe({
   name: 'pivotAttributeSelectItem',

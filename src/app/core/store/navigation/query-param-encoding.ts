@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import * as CRC32 from 'crc-32';
 import {Base64} from 'js-base64';
+
 import {padStart} from '../../../shared/utils/string.utils';
 
 export function encodeQueryParam(param: string): string {

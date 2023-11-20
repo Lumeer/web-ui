@@ -16,33 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  aggregateDataValues,
   AggregatedDataItem,
   AttributeFilter,
-  computeAttributeLockStatsByDataValues,
   ConstraintData,
+  DataAggregationType,
+  DataAggregatorAttribute,
+  UnknownConstraint,
+  aggregateDataValues,
+  computeAttributeLockStatsByDataValues,
   createDataValuesMap,
   dataAggregationConstraint,
   dataAggregationsByConstraint,
-  DataAggregationType,
-  DataAggregatorAttribute,
   isAttributeLockEnabledByLockStats,
   queryAttributePermissions,
-  UnknownConstraint,
 } from '@lumeer/data-filters';
-import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
-import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
+
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
   getQueryStemFiltersForResource,
   queryStemAttributesResourcesOrder,
   queryStemsAreSame,
   subtractFilters,
 } from '../../../../../../core/store/navigation/query/query.util';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
+import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
+import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
+import {TableColumn} from '../../../../../../shared/table/model/table-column';
+import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
 import {
   TABLE_BOTTOM_TOOLBAR_HEIGHT,
   TABLE_ROW_BORDER,
@@ -51,21 +60,12 @@ import {
   TableCellType,
   TableModel,
 } from '../../../../../../shared/table/model/table-model';
-import {generateId, getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
-import {TableColumn} from '../../../../../../shared/table/model/table-column';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {sortDataObjectsByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
-import {WorkflowTable} from '../../../model/workflow-table';
-import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
-import {objectValues} from '../../../../../../shared/utils/common.utils';
-import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
 import {computeAttributeFormatting} from '../../../../../../shared/utils/attribute.utils';
-import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
-import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
-import {isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
+import {sortDataObjectsByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
+import {generateId, getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
+import {WorkflowTable} from '../../../model/workflow-table';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 

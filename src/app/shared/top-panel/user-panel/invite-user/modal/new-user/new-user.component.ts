@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../../../../key-code';
+
+import {KeyCode, keyboardEventCode} from '../../../../../key-code';
 import {isEmailValid} from '../../../../../utils/email.utils';
 
 @Component({

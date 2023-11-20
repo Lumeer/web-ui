@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges} from '@angular/core';
-import {AuditLog} from '../../../../core/store/audit-logs/audit-log.model';
+import {Store, select} from '@ngrx/store';
+
 import {Observable, switchMap} from 'rxjs';
-import {ResourceType} from '../../../../core/model/resource-type';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {AuditLogConfiguration} from '../../../../shared/resource/activity/audit-logs/model/audit-log-configuration';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectUserByWorkspace} from '../../../../core/store/users/users.state';
-import {selectAuditLogsByUser, selectAuditLogsByUserLoading} from '../../../../core/store/audit-logs/audit-logs.state';
 import {map, take} from 'rxjs/operators';
+
+import {ResourceType} from '../../../../core/model/resource-type';
+import {AppState} from '../../../../core/store/app.state';
+import {AuditLog} from '../../../../core/store/audit-logs/audit-log.model';
 import * as AuditLogsAction from '../../../../core/store/audit-logs/audit-logs.actions';
+import {selectAuditLogsByUser, selectAuditLogsByUserLoading} from '../../../../core/store/audit-logs/audit-logs.state';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {ResourcesAction} from '../../../../core/store/resources/data-resources.action';
+import {selectUserByWorkspace} from '../../../../core/store/users/users.state';
+import {AuditLogConfiguration} from '../../../../shared/resource/activity/audit-logs/model/audit-log-configuration';
 
 @Component({
   selector: 'user-activity',

@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {DropdownOption} from '../options/dropdown-option';
+
 import {SelectItemModel} from '../../select/select-item/select-item.model';
+import {DropdownOption} from '../options/dropdown-option';
 
 @Pipe({
   name: 'selectItemsDropdownOptions',

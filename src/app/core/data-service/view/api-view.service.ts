@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ViewService} from './view.service';
-import {PermissionsDto, ViewDto} from '../../dto';
-import {AppState} from '../../store/app.state';
-import {BaseService} from '../../rest/base.service';
-import {Workspace} from '../../store/navigation/workspace';
-import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {PermissionsDto, ViewDto} from '../../dto';
+import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {ViewService} from './view.service';
 
 @Injectable()
 export class ApiViewService extends BaseService implements ViewService {

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {deepObjectsEquals} from '@lumeer/utils';
 
 import {MenuItem} from './menu-item';
-import {deepObjectsEquals} from '@lumeer/utils';
 
 export function convertMenuItemsPath<T extends {id: any; children?: T[]}>(menuItemsPath: MenuItem[], items: T[]): T[] {
   const path = [];

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,11 +27,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {User} from '../../../../core/store/users/user';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../../dropdown/options/options-dropdown.component';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
 import {isEmailValid} from '../../../utils/email.utils';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
 
 @Component({
   selector: 'view-users-input',

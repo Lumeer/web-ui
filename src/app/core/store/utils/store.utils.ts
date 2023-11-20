@@ -16,22 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {CommonAction} from '../common/common.action';
+
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
+import {CronRuleConfigurationDto, RuleDto} from '../../dto/rule.dto';
+import {languageCodeMap} from '../../model/language';
 import {
-  chronoUnitMap,
   CronRuleConfiguration,
   Rule,
   RuleConfiguration,
-  ruleTimingMap,
   RuleType,
+  chronoUnitMap,
+  ruleTimingMap,
   ruleTypeMap,
 } from '../../model/rule';
-import {CronRuleConfigurationDto, RuleDto} from '../../dto/rule.dto';
-import {languageCodeMap} from '../../model/language';
+import {CommonAction} from '../common/common.action';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];

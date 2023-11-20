@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {deepObjectCopy} from '@lumeer/utils';
+
 import {Collection} from '../../../../core/store/collections/collection';
 import {
-  GanttChartStemConfig,
   GanttChartConfig,
+  GanttChartStemConfig,
   ganttChartDefaultZoom,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {deepObjectCopy} from '@lumeer/utils';
+import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
 
 @Component({
   selector: 'gantt-chart-config',

@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {EMPTY, of} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {AppState} from '../app.state';
 import {Router} from '@angular/router';
-import {UserNotificationsAction, UserNotificationsActionType} from './user-notifications.action';
+
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {Store, select} from '@ngrx/store';
+
+import {EMPTY, of} from 'rxjs';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
 import {UserNotificationsService} from '../../rest/user-notifications.service';
-import {UserNotificationConverter} from './user-notification.converter';
+import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {UserNotificationConverter} from './user-notification.converter';
+import {UserNotificationsAction, UserNotificationsActionType} from './user-notifications.action';
 import {selectUserNotificationsLoaded} from './user-notifications.state';
 
 @Injectable()

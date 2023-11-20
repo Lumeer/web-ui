@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,28 +26,10 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CalendarBar, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
-import {
-  calendarStemConfigIsWritable,
-  calendarWritableUniqueStemsConfigs,
-  checkOrTransformCalendarConfig,
-  createCalendarNewEventData,
-  parseCalendarDate,
-} from '../util/calendar-util';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {ModalService} from '../../../../shared/modal/modal.service';
-import {CalendarEvent, CalendarMetaData} from '../util/calendar-event';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {CalendarConverter} from '../util/calendar-converter';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
+
 import {
   ConstraintData,
   ConstraintType,
@@ -59,11 +40,32 @@ import {
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
-import {View} from '../../../../core/store/views/view';
-import {CreateDataResourceService} from '../../../../core/service/create-data-resource.service';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {Translation} from '../../../../shared/utils/translation';
 import {deepObjectsEquals, toNumber} from '@lumeer/utils';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {CreateDataResourceService} from '../../../../core/service/create-data-resource.service';
+import {CalendarBar, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
+import {Collection} from '../../../../core/store/collections/collection';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {View} from '../../../../core/store/views/view';
+import {ModalService} from '../../../../shared/modal/modal.service';
+import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
+import {Translation} from '../../../../shared/utils/translation';
+import {CalendarConverter} from '../util/calendar-converter';
+import {CalendarEvent, CalendarMetaData} from '../util/calendar-event';
+import {
+  calendarStemConfigIsWritable,
+  calendarWritableUniqueStemsConfigs,
+  checkOrTransformCalendarConfig,
+  createCalendarNewEventData,
+  parseCalendarDate,
+} from '../util/calendar-util';
 
 interface Data {
   collections: Collection[];

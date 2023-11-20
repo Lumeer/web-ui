@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../../../../core/model/resource-type';
+
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import {Resource} from '../../../../../core/model/resource';
+import {ResourceType} from '../../../../../core/model/resource-type';
 import {RoleType} from '../../../../../core/model/role-type';
-import {Project} from '../../../../../core/store/projects/project';
 import {Organization} from '../../../../../core/store/organizations/organization';
+import {Project} from '../../../../../core/store/projects/project';
 import {User} from '../../../../../core/store/users/user';
 import {userHasRoleInOrganization} from '../../../../utils/permission.utils';
-import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Pipe({
   name: 'canCreateResource',

@@ -16,20 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter, Input, SimpleChanges, OnChanges} from '@angular/core';
-import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
-import {CreateDocumentModalComponent} from '../../../../../../shared/modal/create-document/create-document-modal.component';
-import {ModalService} from '../../../../../../shared/modal/modal.service';
-import {View} from '../../../../../../core/store/views/view';
 import {
-  checkSizeType,
   SearchTasksConfig,
   TaskConfigAttribute,
   TasksConfigGroupBy,
   TasksConfigSortBy,
+  checkSizeType,
 } from '../../../../../../core/store/searches/search';
+import {View} from '../../../../../../core/store/views/view';
+import {CreateDocumentModalComponent} from '../../../../../../shared/modal/create-document/create-document-modal.component';
+import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {SizeType} from '../../../../../../shared/slider/size/size-type';
 
 @Component({
   selector: 'tasks-toolbar',

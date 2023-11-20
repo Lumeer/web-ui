@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {DataAggregationType} from '@lumeer/data-filters';
+
 import {SelectItemModel} from '../select/select-item/select-item.model';
 import {dataAggregationName} from '../utils/data-aggregation';
-import {DataAggregationType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'aggregationSelectItems',

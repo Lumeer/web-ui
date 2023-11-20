@@ -16,29 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnInit, OnChanges} from '@angular/core';
+import {Store, select} from '@ngrx/store';
+
 import {Observable, combineLatest} from 'rxjs';
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {View} from '../../../../core/store/views/view';
-import {select, Store} from '@ngrx/store';
+import {map} from 'rxjs/operators';
+
 import {AppState} from '../../../../core/store/app.state';
+import {Collection} from '../../../../core/store/collections/collection';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {
   selectLinkTypesLoaded,
   selectLinkTypesWithCollections,
 } from '../../../../core/store/link-types/link-types.state';
-import {selectViewsLoaded, selectViewsWithComputedData} from '../../../../core/store/views/views.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Organization} from '../../../../core/store/organizations/organization';
-import {Project} from '../../../../core/store/projects/project';
 import {selectOrganizationById} from '../../../../core/store/organizations/organizations.state';
+import {Project} from '../../../../core/store/projects/project';
 import {selectProjectById} from '../../../../core/store/projects/projects.state';
+import {ResourcesAction} from '../../../../core/store/resources/data-resources.action';
+import {selectTeamsByOrganization} from '../../../../core/store/teams/teams.state';
 import {User} from '../../../../core/store/users/user';
 import {mapGroupsOnUser, selectCurrentUser, selectUserByWorkspace} from '../../../../core/store/users/users.state';
-import {selectTeamsByOrganization} from '../../../../core/store/teams/teams.state';
-import {map} from 'rxjs/operators';
-import {ResourcesAction} from '../../../../core/store/resources/data-resources.action';
+import {View} from '../../../../core/store/views/view';
+import {selectViewsLoaded, selectViewsWithComputedData} from '../../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../shared/utils/resource.utils';
 
 @Component({

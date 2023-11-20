@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DataResourceChain} from '@lumeer/data-filters';
 
 import {CalendarStemConfig} from '../../../../core/store/calendars/calendar';
-import {DataResourceChain} from '@lumeer/data-filters';
 
 export interface CalendarEvent {
   id?: string;

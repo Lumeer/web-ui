@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {findLastIndex} from '@lumeer/utils';
+
+import {SearchBoxData} from '../../util/search-box.service';
+import {CollectionQueryItem} from '../model/collection.query-item';
 import {QueryItem} from '../model/query-item';
 import {QueryItemType} from '../model/query-item-type';
-import {QueryStemQueryItem} from '../model/query-stem.query-item';
-import {CollectionQueryItem} from '../model/collection.query-item';
 import {QueryStemInputQueryItem} from '../model/query-stem-input.query-item';
-import {SearchBoxData} from '../../util/search-box.service';
-import {findLastIndex} from '@lumeer/utils';
+import {QueryStemQueryItem} from '../model/query-stem.query-item';
 
 @Pipe({
   name: 'createCompactQueryItems',

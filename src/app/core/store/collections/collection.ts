@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Resource} from '../../model/resource';
-import {Rule} from '../../model/rule';
-import {Constraint, AttributeLock} from '@lumeer/data-filters';
-import {RoleType} from '../../model/role-type';
+import {AttributeLock, Constraint} from '@lumeer/data-filters';
 import {AttributeFilterEquation} from '@lumeer/data-filters/dist/model/attribute-filter';
+
 import {FontStyle} from '../../model/font-style';
+import {Resource} from '../../model/resource';
+import {RoleType} from '../../model/role-type';
+import {Rule} from '../../model/rule';
 
 export interface Attribute {
   id?: string;

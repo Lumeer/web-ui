@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -29,13 +28,15 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
+
+import {ConstraintType, NumberDataValue} from '@lumeer/data-filters';
+
+import {createDateTimeOptions} from '../../date-time/date-time-options';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {ConstraintType, NumberDataValue} from '@lumeer/data-filters';
-import {createDateTimeOptions} from '../../date-time/date-time-options';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'number-data-input',

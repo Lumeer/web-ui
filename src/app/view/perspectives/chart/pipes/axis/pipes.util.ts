@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {AttributesResourceType} from '../../../../../core/model/resource';
 import {ChartAxis} from '../../../../../core/store/charts/chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {AttributesResourceType} from '../../../../../core/model/resource';
 
 export function collectionAttributeToItem(
   collection: Collection,

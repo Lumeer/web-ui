@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ConditionType,
   ConstraintData,
@@ -25,12 +24,13 @@ import {
   UserConstraint,
   UserConstraintType,
 } from '@lumeer/data-filters';
+
+import {ResourceType} from '../../../../../core/model/resource-type';
 import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
-import {parseSelectTranslation} from '../../../../utils/translation.utils';
-import {View} from '../../../../../core/store/views/view';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {ResourceType} from '../../../../../core/model/resource-type';
+import {View} from '../../../../../core/store/views/view';
+import {parseSelectTranslation} from '../../../../utils/translation.utils';
 
 export interface AuditLogFilters {
   users?: string[];

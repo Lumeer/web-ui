@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
+
 import {AuthGuard} from './auth/auth.guard';
-import {CurrentUserGuard} from './core/guards/current-user.guard';
-import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/components/home.component';
 import {RedirectComponent} from './core/components/redirect.component';
-import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
+import {CurrentUserGuard} from './core/guards/current-user.guard';
 import {OrganizationsProjectsGuard} from './core/guards/data/organizations-projects.guard';
+import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
+import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
 
 const appRoutes: Routes = [
   {

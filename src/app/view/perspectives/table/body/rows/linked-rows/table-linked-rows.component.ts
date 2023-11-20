@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, Subject, Subscription} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subject, Subscription, combineLatest} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map, switchMap, tap} from 'rxjs/operators';
+
+import {AppState} from '../../../../../../core/store/app.state';
 import {selectLinkInstancesByDocumentIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../core/store/tables/table.model';
 import {createEmptyTableRow} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
-import {AppState} from '../../../../../../core/store/app.state';
 import {View} from '../../../../../../core/store/views/view';
-import {Query} from '../../../../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'table-linked-rows',

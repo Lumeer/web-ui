@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
-import {fileAttachmentsAdapter, FileAttachmentsState, initialFileAttachmentsState} from './file-attachments.state';
+import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
 import {FileApiPath} from '../../data-service/attachments/attachments.service';
 import {FileAttachment} from './file-attachment.model';
 import {fileAttachmentHasApiPath, isOnlyCollectionApiPath, isOnlyLinkTypeApiPath} from './file-attachment.utils';
-import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
+import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
+import {FileAttachmentsState, fileAttachmentsAdapter, initialFileAttachmentsState} from './file-attachments.state';
 
 export function fileAttachmentsReducer(
   state: FileAttachmentsState = initialFileAttachmentsState,

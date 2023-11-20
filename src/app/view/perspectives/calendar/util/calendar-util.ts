@@ -16,28 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {
-  CalendarBar,
-  CalendarConfig,
-  CalendarConfigVersion,
-  CalendarMode,
-  CalendarStemConfig,
-  defaultSlotDuration,
-} from '../../../../core/store/calendars/calendar';
-import {Collection} from '../../../../core/store/collections/collection';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {
-  checkOrTransformQueryAttribute,
-  collectionIdsChainForStem,
-  findBestStemConfigIndex,
-  queryStemAttributesResourcesOrder,
-} from '../../../../core/store/navigation/query/query.util';
-import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import * as moment from 'moment';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+
 import {
   Constraint,
   ConstraintData,
@@ -47,9 +27,30 @@ import {
   durationCountsMapToString,
   queryAttributePermissions,
 } from '@lumeer/data-filters';
-import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
-import {AttributesResource} from '../../../../core/model/resource';
 import {deepObjectsEquals, isDateValid, toNumber} from '@lumeer/utils';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResource} from '../../../../core/model/resource';
+import {
+  CalendarBar,
+  CalendarConfig,
+  CalendarConfigVersion,
+  CalendarMode,
+  CalendarStemConfig,
+  defaultSlotDuration,
+} from '../../../../core/store/calendars/calendar';
+import {Collection} from '../../../../core/store/collections/collection';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
+import {
+  checkOrTransformQueryAttribute,
+  collectionIdsChainForStem,
+  findBestStemConfigIndex,
+  queryStemAttributesResourcesOrder,
+} from '../../../../core/store/navigation/query/query.util';
+import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
+import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 
 export function isAllDayEvent(start: Date, end: Date): boolean {
   return isAllDayEventSingle(start) && isAllDayEventSingle(end);

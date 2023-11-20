@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialServiceLimitsState, serviceLimitsAdapter, ServiceLimitsState} from './service-limits.state';
 import {ServiceLimitsAction, ServiceLimitsActionType} from './service-limits.action';
+import {ServiceLimitsState, initialServiceLimitsState, serviceLimitsAdapter} from './service-limits.state';
 
 export function serviceLimitsReducer(
   state: ServiceLimitsState = initialServiceLimitsState,

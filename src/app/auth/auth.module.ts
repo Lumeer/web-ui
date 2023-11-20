@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
+
 import {SharedModule} from '../shared/shared.module';
+import {AgreementComponent} from './agreement/agreement.component';
 import {AuthRoutingModule} from './auth-routing.module';
 import {AuthCallbackComponent} from './callback/auth-callback.component';
 import {LogoutComponent} from './logout/logout.component';
-import {AgreementComponent} from './agreement/agreement.component';
 import {SessionExpiredComponent} from './session-expired/session-expired.component';
 import {SessionTypeComponent} from './session-type/session-type.component';
 import {SessionTypeGuard} from './session-type/session-type.guard';

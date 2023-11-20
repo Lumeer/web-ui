@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {UserSettingsModalComponent} from './user-settings-modal.component';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {NgModule} from '@angular/core';
+
 import {UserSettingsModule} from '../../user-settings/user-settings.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {UserSettingsModalComponent} from './user-settings-modal.component';
 
 @NgModule({
   declarations: [UserSettingsModalComponent],

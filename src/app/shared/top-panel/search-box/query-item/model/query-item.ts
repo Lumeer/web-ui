@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 
 import {QueryItemType} from './query-item-type';
-import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 
 export interface QueryItem {
   text: string;

@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SelectModule} from '../../select/select.module';
+import {NgModule} from '@angular/core';
+
 import {PipesModule} from '../../pipes/pipes.module';
-import {ChooseLinkDocumentModalComponent} from './choose-link-document-modal.component';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {PreviewResultsModule} from '../../preview-results/preview-results.module';
+import {SelectModule} from '../../select/select.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {ChooseLinkDocumentModalComponent} from './choose-link-document-modal.component';
 
 @NgModule({
   declarations: [ChooseLinkDocumentModalComponent],

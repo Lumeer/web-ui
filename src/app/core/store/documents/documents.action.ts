@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {Workspace} from '../navigation/workspace';
-import {DocumentAdditionalDataRequest, DocumentMetaData, DocumentModel} from './document.model';
-import {LinkInstance} from '../link-instances/link.instance';
+
 import {DataQuery} from '../../model/data-query';
+import {LinkInstance} from '../link-instances/link.instance';
+import {Workspace} from '../navigation/workspace';
 import {DataQueryPayload} from '../utils/data-query-payload';
+import {DocumentAdditionalDataRequest, DocumentMetaData, DocumentModel} from './document.model';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',

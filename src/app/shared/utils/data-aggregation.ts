@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {DataAggregationType} from '@lumeer/data-filters';
+
 import {parseSelectTranslation} from './translation.utils';
 
 export function dataAggregationName(type: DataAggregationType): string {

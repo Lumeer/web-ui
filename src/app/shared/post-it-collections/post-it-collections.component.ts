@@ -16,33 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+
+import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
+import {LoadDataService, LoadDataServiceProvider} from '../../core/service/load-data.service';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionsLoaded} from '../../core/store/collections/collections.state';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace';
-import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {queryContainsOnlyFulltexts, queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
-import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {
   selectCollectionsByCustomViewAndQuery,
   selectCollectionsPermissionsByView,
 } from '../../core/store/common/permissions.selectors';
+import {NavigationAction} from '../../core/store/navigation/navigation.action';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Query} from '../../core/store/navigation/query/query';
-import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
-import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.state';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
+import {queryContainsOnlyFulltexts, queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {View} from '../../core/store/views/view';
-import {LoadDataService, LoadDataServiceProvider} from '../../core/service/load-data.service';
+import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.state';
+import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 
 @Component({
   selector: 'post-it-collections',

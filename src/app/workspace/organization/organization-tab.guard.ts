@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {map, switchMap, take} from 'rxjs/operators';
-import {select, Store} from '@ngrx/store';
+
+import {RoleType} from '../../core/model/role-type';
+import {AppState} from '../../core/store/app.state';
+import {selectNavigation} from '../../core/store/navigation/navigation.state';
+import {Organization} from '../../core/store/organizations/organization';
+import {User} from '../../core/store/users/user';
 import {userRoleTypesInOrganization} from '../../shared/utils/permission.utils';
 import {WorkspaceService} from '../workspace.service';
-import {AppState} from '../../core/store/app.state';
-import {RoleType} from '../../core/model/role-type';
-import {User} from '../../core/store/users/user';
-import {Organization} from '../../core/store/organizations/organization';
-import {selectNavigation} from '../../core/store/navigation/navigation.state';
 
 @Injectable()
 export class OrganizationTabGuard {

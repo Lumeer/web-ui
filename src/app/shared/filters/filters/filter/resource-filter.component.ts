@@ -16,22 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   ElementRef,
-  Output,
   EventEmitter,
   HostListener,
-  ViewChild,
-  OnInit,
+  Input,
   OnChanges,
+  OnInit,
+  Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {Attribute} from '../../../../core/store/collections/collection';
-import {SelectItem2Model} from '../../../select/select-item2/select-item2.model';
+
+import {BehaviorSubject, Observable, combineLatest, switchMap} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 import {
   AttributeFilter,
   ConditionType,
@@ -40,13 +41,14 @@ import {
   initialConditionType,
   initialConditionValues,
 } from '@lumeer/data-filters';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
-import {BehaviorSubject, combineLatest, Observable, switchMap} from 'rxjs';
+
 import {ConstraintDataService} from '../../../../core/service/constraint-data.service';
-import {modifyAttributeForQueryFilter} from '../../../utils/attribute.utils';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {CollectionAttributeFilter, LinkAttributeFilter} from '../../../../core/store/navigation/query/query';
-import {map} from 'rxjs/operators';
+import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
+import {SelectItem2Model} from '../../../select/select-item2/select-item2.model';
+import {modifyAttributeForQueryFilter} from '../../../utils/attribute.utils';
 
 @Component({
   selector: 'resource-filter',

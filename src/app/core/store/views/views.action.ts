@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
+
+import {Perspective} from '../../../view/perspectives/perspective';
 import {Workspace} from '../navigation/workspace';
 import {Permissions, Role} from '../permissions/permissions';
+import {Dashboard} from '../searches/search';
+import {Team} from '../teams/team';
 import {User} from '../users/user';
 import {DefaultViewConfig, View} from './view';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {Team} from '../teams/team';
-import {Dashboard} from '../searches/search';
 
 export enum ViewsActionType {
   GET = '[Views] Get',

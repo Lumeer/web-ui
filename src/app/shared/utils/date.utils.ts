@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import * as moment from 'moment';
 import {DurationInputArg2} from 'moment';
-import {createDateTimeOptions} from '../date-time/date-time-options';
+
 import {
   Constraint,
   ConstraintData,
@@ -29,7 +28,9 @@ import {
   DurationUnit,
   sortedDurationUnits,
 } from '@lumeer/data-filters';
+
 import {LanguageCode} from '../../core/model/language';
+import {createDateTimeOptions} from '../date-time/date-time-options';
 
 export function defaultDateFormat(locale: LanguageCode): string {
   switch (locale) {

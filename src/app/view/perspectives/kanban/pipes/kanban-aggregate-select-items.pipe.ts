@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanAttribute, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
-import {Collection} from '../../../../core/store/collections/collection';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+
 import {AttributesResourceType} from '../../../../core/model/resource';
+import {Collection} from '../../../../core/store/collections/collection';
+import {KanbanAttribute, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 
 @Pipe({
   name: 'kanbanAggregateSelectItems',

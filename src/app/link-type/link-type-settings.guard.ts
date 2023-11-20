@@ -16,24 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {catchError, filter, mergeMap, take, tap} from 'rxjs/operators';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../core/store/app.state';
-import {Organization} from '../core/store/organizations/organization';
-import {NotificationsAction} from '../core/store/notifications/notifications.action';
-import {WorkspaceService} from '../workspace/workspace.service';
-import {User} from '../core/store/users/user';
-import {Project} from '../core/store/projects/project';
+
 import {LinkTypeService} from '../core/data-service';
-import {userCanManageLinkTypeDetail} from '../shared/utils/permission.utils';
-import {LinkType} from '../core/store/link-types/link.type';
-import {selectLinkTypeById, selectLinkTypesLoaded} from '../core/store/link-types/link-types.state';
+import {AppState} from '../core/store/app.state';
 import {LinkTypesAction} from '../core/store/link-types/link-types.action';
+import {selectLinkTypeById, selectLinkTypesLoaded} from '../core/store/link-types/link-types.state';
+import {LinkType} from '../core/store/link-types/link.type';
+import {NotificationsAction} from '../core/store/notifications/notifications.action';
+import {Organization} from '../core/store/organizations/organization';
+import {Project} from '../core/store/projects/project';
+import {User} from '../core/store/users/user';
+import {userCanManageLinkTypeDetail} from '../shared/utils/permission.utils';
+import {WorkspaceService} from '../workspace/workspace.service';
 
 @Injectable()
 export class LinkTypeSettingsGuard {

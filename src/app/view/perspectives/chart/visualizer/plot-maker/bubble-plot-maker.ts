@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Data, Layout, d3} from 'plotly.js';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ChartDataSet, ChartPoint} from '../../data/convertor/chart-data';
-import {TwoDAxisPlotMaker} from './two-d-axis-plot-maker';
 import {PlotlyChartData} from './plot-maker';
-import {isNotNullOrUndefined} from '@lumeer/utils';
+import {TwoDAxisPlotMaker} from './two-d-axis-plot-maker';
 
 const MIN_POINT_SIZE = 20;
 const MAX_POINT_SIZE = 60;

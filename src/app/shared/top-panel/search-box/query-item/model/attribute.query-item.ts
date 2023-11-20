@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Attribute, Collection} from '../../../../../core/store/collections/collection';
-import {QueryItem} from './query-item';
-import {QueryItemType} from './query-item-type';
-import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query/query';
 import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
+import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query/query';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;

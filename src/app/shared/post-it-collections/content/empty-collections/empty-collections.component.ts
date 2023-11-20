@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {Query} from '../../../../core/store/navigation/query/query';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../core/store/app.state';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({

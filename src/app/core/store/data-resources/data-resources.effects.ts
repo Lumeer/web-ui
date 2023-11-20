@@ -16,33 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {of, combineLatest, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {DocumentsAction} from '../documents/documents.action';
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {convertQueryModelToDto} from '../navigation/query/query.converter';
-import {convertDocumentDtoToModel} from '../documents/document.converter';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {SearchService} from '../../data-service';
 import {AppState} from '../app.state';
-import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
-import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {convertDocumentDtoToModel} from '../documents/document.converter';
+import {DocumentModel} from '../documents/document.model';
+import {DocumentsAction} from '../documents/documents.action';
 import {convertLinkInstanceDtoToModel} from '../link-instances/link-instance.converter';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {LinkInstance} from '../link-instances/link.instance';
+import {convertQueryModelToDto} from '../navigation/query/query.converter';
+import {WorkspaceQuery} from '../navigation/query/workspace-query';
+import {NotificationsAction} from '../notifications/notifications.action';
+import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
+import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
+import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
 import {
   selectDataResourcesLoadingQueries,
   selectDataResourcesQueries,
   selectTasksLoadingQueries,
   selectTasksQueries,
 } from './data-resources.state';
-import {NotificationsAction} from '../notifications/notifications.action';
-import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
-import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import {DocumentModel} from '../documents/document.model';
-import {LinkInstance} from '../link-instances/link.instance';
-import {WorkspaceQuery} from '../navigation/query/workspace-query';
 
 @Injectable()
 export class DataResourcesEffects {

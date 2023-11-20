@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CreateDocumentModalComponent} from './create-document-modal.component';
-import {DocumentDetailModalModule} from '../document-detail/document-detail-modal.module';
-import {SelectModule} from '../../select/select.module';
+import {NgModule} from '@angular/core';
+
 import {PipesModule} from '../../pipes/pipes.module';
+import {SelectModule} from '../../select/select.module';
+import {DocumentDetailModalModule} from '../document-detail/document-detail-modal.module';
+import {CreateDocumentModalComponent} from './create-document-modal.component';
 
 @NgModule({
   declarations: [CreateDocumentModalComponent],

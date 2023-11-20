@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+
+import mixpanel from 'mixpanel-browser';
 import {of} from 'rxjs';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../../configuration/configuration.service';
+import {OrganizationService} from '../../../data-service';
+import {Ga4Service} from '../../../service/ga4.service';
 import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
+import {createCallbackActions} from '../../utils/store.utils';
+import {Payment} from './payment';
 import {PaymentConverter} from './payment.converter';
 import {PaymentsAction, PaymentsActionType} from './payments.action';
-import mixpanel from 'mixpanel-browser';
-import {Payment} from './payment';
-import {OrganizationService} from '../../../data-service';
-import {ConfigurationService} from '../../../../configuration/configuration.service';
-import {createCallbackActions} from '../../utils/store.utils';
-import {Ga4Service} from '../../../service/ga4.service';
 
 @Injectable()
 export class PaymentsEffects {

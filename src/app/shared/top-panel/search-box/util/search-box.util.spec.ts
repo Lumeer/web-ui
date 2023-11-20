@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {CollectionQueryItem} from '../query-item/model/collection.query-item';
-import {LinkQueryItem} from '../query-item/model/link.query-item';
-import {FulltextQueryItem} from '../query-item/model/fulltext.query-item';
 import {AttributeQueryItem} from '../query-item/model/attribute.query-item';
+import {CollectionQueryItem} from '../query-item/model/collection.query-item';
+import {FulltextQueryItem} from '../query-item/model/fulltext.query-item';
 import {LinkAttributeQueryItem} from '../query-item/model/link-attribute.query-item';
-import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './search-box.util';
+import {LinkQueryItem} from '../query-item/model/link.query-item';
 import {QueryItemType} from '../query-item/model/query-item-type';
+import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './search-box.util';
 
 const collections: Collection[] = [
   {
