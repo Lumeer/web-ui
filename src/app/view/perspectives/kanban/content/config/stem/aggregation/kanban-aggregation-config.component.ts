@@ -18,9 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {DataAggregationType} from '../../../../../../../shared/utils/data/data-aggregation';
 import {KanbanAggregation, KanbanValueType} from '../../../../../../../core/store/kanbans/kanban';
 import {objectValues} from '../../../../../../../shared/utils/common.utils';
+import {DataAggregationType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'kanban-aggregation-config',

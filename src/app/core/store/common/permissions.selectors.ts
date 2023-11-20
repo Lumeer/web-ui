@@ -23,10 +23,11 @@ import {
   DocumentsAndLinksData,
   filterDocumentsAndLinksByQuery,
   filterDocumentsAndLinksDataByQuery,
+  getViewColor,
   userCanReadDocument,
   userCanReadLinkInstance,
 } from '@lumeer/data-filters';
-import {containsSameElements, uniqueValues} from '../../../shared/utils/array.utils';
+import {containsSameElements} from '../../../shared/utils/array.utils';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {RoleType} from '../../model/role-type';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
@@ -73,7 +74,7 @@ import {
   selectViewSettings,
   selectViewSettingsByView,
 } from '../view-settings/view-settings.state';
-import {objectsByIdMap, objectValues} from '../../../shared/utils/common.utils';
+import {objectValues} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
 import {groupLinkInstancesByLinkTypes, sortLinkInstances} from '../link-instances/link-instance.utils';
@@ -90,7 +91,6 @@ import {
   canChangeViewQuery,
   createSearchPerspectiveTabs,
   createSearchPerspectiveTabsByView,
-  getViewColor,
   getViewIcon,
 } from '../views/view.utils';
 import {LinkType} from '../link-types/link.type';
@@ -113,6 +113,7 @@ import {selectSearchesDictionary} from '../searches/searches.state';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 import {SearchConfig, SearchTasksConfig} from '../searches/search';
 import {ViewSettings} from '../view-settings/view-settings';
+import {objectsByIdMap, uniqueValues} from '@lumeer/utils';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>

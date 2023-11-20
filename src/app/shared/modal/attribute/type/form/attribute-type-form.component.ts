@@ -42,7 +42,6 @@ import {Attribute, AttributeFunction} from '../../../../../core/store/collection
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {createConstraint} from '../../../../utils/constraint/create-constraint';
 import {constraintTypesMap} from '../../../../../core/model/constraint';
-import {convertToBig} from '../../../../utils/data.utils';
 import {DatetimeConstraintFormControl} from './constraint-config/datetime/datetime-constraint-form-control';
 import {TextConstraintFormControl} from './constraint-config/text/text-constraint-form-control';
 import {NumberConstraintFormControl} from './constraint-config/number/number-constraint-form-control';
@@ -53,6 +52,7 @@ import {AllowedPermissions} from '../../../../../core/model/allowed-permissions'
 import {Constraint, ConstraintConfig, ConstraintType, SelectConstraintConfig} from '@lumeer/data-filters';
 import {ViewConstraintFormControl} from './constraint-config/view/view-constraint-form-control';
 import {canShowAttributeHints, isUsedConstraintAttribute} from '../../../../utils/attribute.utils';
+import {convertToBig} from '@lumeer/utils';
 
 @Component({
   selector: 'attribute-type-form',

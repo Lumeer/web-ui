@@ -49,14 +49,14 @@ import {DocumentHintColumn} from './document-hint-column';
 import {getOtherLinkedDocumentId, LinkInstance} from '../../core/store/link-instances/link.instance';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {escapeHtml, isNotNullOrUndefined, preventEvent} from '../utils/common.utils';
+import {preventEvent} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
-import {stripTextHtmlTags} from '../utils/data.utils';
 import {isTopPositionDropdown} from '../dropdown/util/dropdown-util';
-import {ConstraintData, DataValue, removeAccentFromString, UnknownConstraint} from '@lumeer/data-filters';
+import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {selectDocumentsByViewAndCustomQuery} from '../../core/store/common/permissions.selectors';
 import {selectViewById} from '../../core/store/views/views.state';
 import {ModalService} from '../modal/modal.service';
+import {escapeHtml, isNotNullOrUndefined, removeAccentFromString, stripTextHtmlTags} from '@lumeer/utils';
 
 @Component({
   selector: 'document-hints',

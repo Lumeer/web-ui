@@ -24,7 +24,7 @@ import {LinkType} from '../store/link-types/link.type';
 export interface Resource {
   id?: string;
   code?: string;
-  name: string;
+  name?: string;
   color?: string;
   icon?: string;
   version?: number;

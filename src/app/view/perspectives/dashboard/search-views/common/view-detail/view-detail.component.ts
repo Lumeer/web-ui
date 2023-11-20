@@ -27,9 +27,10 @@ import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
-import {getViewColor, getViewIcon} from '../../../../../../core/store/views/view.utils';
-import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
+import {getViewIcon} from '../../../../../../core/store/views/view.utils';
 import {filterVisibleAttributesInQueryItems} from '../../../../../../shared/top-panel/search-box/util/search-box.util';
+import {objectsByIdMap} from '@lumeer/utils';
+import {getViewColor} from '@lumeer/data-filters';
 
 @Component({
   selector: 'view-detail',

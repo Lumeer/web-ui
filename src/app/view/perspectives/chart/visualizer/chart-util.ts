@@ -28,12 +28,12 @@ import {
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {AttributesResource} from '../../../../core/model/resource';
 import {
   checkOrTransformQueryAttribute,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
+import {DataAggregationType} from '@lumeer/data-filters';
 
 export function convertChartDateTickFormat(format: string): string {
   if (!format) {

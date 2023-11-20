@@ -21,8 +21,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {MapAttributeModel} from '../../../../core/store/maps/map.model';
 import {mapAttributesAreInAllowedRange} from '../../../../core/store/maps/map-config.utils';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals} from '@lumeer/utils';
+import {cleanQueryAttribute} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'attributeSelectItems',

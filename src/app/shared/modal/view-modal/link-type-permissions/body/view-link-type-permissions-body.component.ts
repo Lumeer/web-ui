@@ -41,7 +41,6 @@ import {
   userRoleTypesInResource,
 } from '../../../../utils/permission.utils';
 import {Team} from '../../../../../core/store/teams/team';
-import {deepObjectsEquals} from '../../../../utils/common.utils';
 import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -49,6 +48,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
 import {RoleType} from '../../../../../core/model/role-type';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 export enum ViewTab {
   Users = 'users',

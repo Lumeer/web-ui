@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {DatePipe} from '@angular/common';
 import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
-import {isDateValid} from '../../../../../shared/utils/common.utils';
+import {isDateValid} from '@lumeer/utils';
 
 @Component({
   selector: 'payments-order',

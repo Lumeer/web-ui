@@ -18,8 +18,7 @@
  */
 
 import {QueryStem} from '../navigation/query/query';
-import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
-import {QueryAttribute} from '../../model/query-attribute';
+import {DataAggregationType, QueryAttribute} from '@lumeer/data-filters';
 
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
 export const GANTT_COLUMN_WIDTH = 40;

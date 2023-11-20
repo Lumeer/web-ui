@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FileAttachment} from '../../../../../core/store/file-attachments/file-attachment.model';
 import {User} from '../../../../../core/store/users/user';
-import {isDateValid} from '../../../../utils/common.utils';
+import {isDateValid} from '@lumeer/utils';
 
 @Component({
   selector: 'file-attachment-tooltip',

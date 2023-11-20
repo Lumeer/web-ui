@@ -34,7 +34,6 @@ import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
 import {PerspectiveConfig, View, ViewConfig} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
-import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
 import {
   createSaveAttributesSettings,
@@ -56,9 +55,10 @@ import {AllowedPermissions} from '../../model/allowed-permissions';
 import {formViewConfigLinkQueries} from '../../../view/perspectives/form/form-utils';
 import {FormConfig} from '../form/form-model';
 import {DataSettings, ModalsSettings, ResourcesPermissions, ViewSettings} from '../view-settings/view-settings';
-import {areArraysSame, uniqueValues} from '../../../shared/utils/array.utils';
+import {areArraysSame} from '../../../shared/utils/array.utils';
 import {permissionsChanged} from '../../../shared/utils/permission.utils';
 import {Permissions} from '../permissions/permissions';
+import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined, uniqueValues} from '@lumeer/utils';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -255,15 +255,6 @@ export function createSaveViewSettings(
       permissions: createSavePermissionsSettings(settings.permissions),
     }
   );
-}
-
-export function getViewColor(view: View, collectionsMap: Record<string, Collection>): string {
-  return view?.color || defaultViewColorFromQuery(view, collectionsMap);
-}
-
-export function defaultViewColorFromQuery(view: View, collectionsMap: Record<string, Collection>): string {
-  const firstStemCollectionId = view?.query?.stems?.[0]?.collectionId;
-  return (firstStemCollectionId && collectionsMap?.[firstStemCollectionId]?.color) || '';
 }
 
 export function getViewIcon(view: View): string {

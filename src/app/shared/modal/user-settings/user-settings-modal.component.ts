@@ -28,7 +28,7 @@ import {keyboardEventCode, KeyCode} from '../../key-code';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {LanguageCode} from '../../../core/model/language';
 import {tap} from 'rxjs/operators';
-import {deepObjectCopy, deepObjectsEquals} from '../../utils/common.utils';
+import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
 
 @Component({
   selector: 'user-settings-modal',

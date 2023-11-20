@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {removeAccentFromString} from '@lumeer/utils';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../utils/common.utils';
 import {Team} from '../../../core/store/teams/team';

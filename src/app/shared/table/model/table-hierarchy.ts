@@ -18,7 +18,7 @@
  */
 
 import {TableRow, TableRowWithData} from './table-row';
-import {objectsByIdMap} from '../../utils/common.utils';
+import {objectsByIdMap} from '@lumeer/utils';
 
 export interface TableRowHierarchy {
   level: number;

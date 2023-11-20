@@ -20,7 +20,7 @@
 import {BlocklyComponent} from './blockly-component';
 import {COLOR_GREEN} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {isNullOrUndefined} from '../../../utils/common.utils';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 declare var Blockly: any;
 

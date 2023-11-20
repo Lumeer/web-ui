@@ -27,7 +27,6 @@ import {
 } from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {deepObjectsEquals, isDateValid, toNumber} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
   checkOrTransformQueryAttribute,
@@ -37,7 +36,6 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import * as moment from 'moment';
-import {queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {
@@ -47,9 +45,11 @@ import {
   DateTimeConstraint,
   DurationConstraint,
   durationCountsMapToString,
+  queryAttributePermissions,
 } from '@lumeer/data-filters';
 import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
 import {AttributesResource} from '../../../../core/model/resource';
+import {deepObjectsEquals, isDateValid, toNumber} from '@lumeer/utils';
 
 export function isAllDayEvent(start: Date, end: Date): boolean {
   return isAllDayEventSingle(start) && isAllDayEventSingle(end);

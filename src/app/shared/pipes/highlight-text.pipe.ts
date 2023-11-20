@@ -19,9 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {escapeStringForRegex} from '../utils/string.utils';
-import {stripTextHtmlTags} from '../utils/data.utils';
-import {escapeHtml} from '../utils/common.utils';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {escapeHtml, removeAccentFromString, stripTextHtmlTags} from '@lumeer/utils';
 
 @Pipe({
   name: 'highlightText',

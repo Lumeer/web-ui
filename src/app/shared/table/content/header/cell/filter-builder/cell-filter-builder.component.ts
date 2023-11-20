@@ -46,8 +46,8 @@ import {Attribute} from '../../../../../../core/store/collections/collection';
 import {modifyAttributeForQueryFilter} from '../../../../../utils/attribute.utils';
 import {ColumnFilter} from '../../../../model/table-column';
 import {AttributeSortType} from '../../../../../../core/store/view-settings/view-settings';
-import {findLastIndex} from '../../../../../utils/common.utils';
 import {areFiltersEqual} from '../../../../../../core/store/navigation/query/query.util';
+import {findLastIndex} from '@lumeer/utils';
 
 @Component({
   selector: 'cell-filter-builder',

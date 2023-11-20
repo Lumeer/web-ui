@@ -25,7 +25,7 @@ import {
   GanttChartConfigVersion,
   GanttChartStemConfig,
 } from './gantt-chart';
-import {isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
+import {objectValues} from '../../../shared/utils/common.utils';
 import {
   GanttChartCollectionConfigV0,
   GanttChartConfigV0,
@@ -33,7 +33,8 @@ import {
   GanttChartConfigV2,
   GanttChartStemConfigV1,
 } from './gantt-chart-old';
-import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {isNotNullOrUndefined} from '@lumeer/utils';
+import {DataAggregationType} from '@lumeer/data-filters';
 
 export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
   if (!config) {

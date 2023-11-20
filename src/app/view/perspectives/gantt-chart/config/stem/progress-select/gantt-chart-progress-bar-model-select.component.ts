@@ -18,9 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 import {GanttChartProgressBarModel, GanttChartStemConfig} from '../../../../../../core/store/gantt-charts/gantt-chart';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
+import {DataAggregationType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'gantt-chart-progress-bar-model-select',

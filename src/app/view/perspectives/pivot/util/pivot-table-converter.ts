@@ -19,7 +19,20 @@
 
 import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
 import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
-import {uniqueValues} from '../../../../shared/utils/array.utils';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
+import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
+import {PivotTable, PivotTableCell} from './pivot-table';
+import {
+  aggregateDataValues,
+  Constraint,
+  ConstraintData,
+  DataAggregationType,
+  isValueAggregation,
+  NumberConstraint,
+  PercentageConstraint,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
+import {DataResource} from '../../../../core/model/resource';
 import {
   deepObjectCopy,
   isArray,
@@ -27,23 +40,8 @@ import {
   isNullOrUndefined,
   isNumeric,
   toNumber,
-} from '../../../../shared/utils/common.utils';
-import {
-  aggregateDataValues,
-  DataAggregationType,
-  isValueAggregation,
-} from '../../../../shared/utils/data/data-aggregation';
-import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
-import {PivotTable, PivotTableCell} from './pivot-table';
-import {
-  Constraint,
-  ConstraintData,
-  NumberConstraint,
-  PercentageConstraint,
-  UnknownConstraint,
-} from '@lumeer/data-filters';
-import {DataResource} from '../../../../core/model/resource';
+  uniqueValues,
+} from '@lumeer/utils';
 
 interface HeaderGroupInfo {
   background: string;

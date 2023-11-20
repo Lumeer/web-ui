@@ -19,7 +19,7 @@
 
 import {SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
 import {UntypedFormArray} from '@angular/forms';
-import {escapeHtml} from '../../../../../../utils/common.utils';
+import {escapeHtml} from '@lumeer/utils';
 
 export function isSelectConstraintOptionValueRemoved(
   previousConfig: SelectConstraintConfig,

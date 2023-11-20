@@ -25,9 +25,9 @@ import {
   MapMarkerProperties,
 } from '../../../../core/store/maps/map.model';
 import {DataResource} from '../../../../core/model/resource';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {ConstraintData, parseCoordinates, UnknownConstraint} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 export function populateCoordinateProperties(
   propertiesList: MapMarkerData[],

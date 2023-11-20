@@ -41,9 +41,9 @@ import {
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
 import {SizeType} from '../../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {createDefaultTaskPurposeConfig} from '../../common/perspective-util';
-import {defaultDataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {defaultDataAggregationType} from '../../../../shared/utils/data-aggregation';
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {

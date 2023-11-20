@@ -41,8 +41,8 @@ import {
 } from '../../../core/store/views/views.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectCollectionById, selectCollectionsByIds} from '../../../core/store/collections/collections.state';
-import {uniqueValues} from '../../utils/array.utils';
 import {mergeCollections} from '../../../core/store/collections/collection.util';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'create-document-modal',

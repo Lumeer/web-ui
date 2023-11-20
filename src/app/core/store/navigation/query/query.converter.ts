@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {QueryDto} from '../../../dto';
 import {QueryStemDto} from '../../../dto/query.dto';
 import {CollectionAttributeFilter, Query, QueryStem} from './query';
@@ -32,6 +31,7 @@ import {
 } from '../../../dto/attribute-filter.dto';
 import {Collection} from '../../collections/collection';
 import {findAttributeByName} from '../../../../shared/utils/attribute.utils';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return (

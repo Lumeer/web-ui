@@ -34,11 +34,10 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {AttributesResourceType} from '../../../../../core/model/resource';
-import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {ChartDataConverter} from './chart-data-converter';
 import {ChartDataSet, ChartPoint} from './chart-data';
-import {PercentageConstraint, PercentageConstraintConfig} from '@lumeer/data-filters';
+import {DataAggregationType, PercentageConstraint, PercentageConstraintConfig} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
   {

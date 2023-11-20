@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Query} from '../../core/store/navigation/query/query';
-import {isNullOrUndefined} from '../utils/common.utils';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'perspectiveDisplayable',

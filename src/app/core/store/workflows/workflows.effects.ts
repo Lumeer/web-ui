@@ -29,7 +29,7 @@ import {selectWorkflowSelectedDocumentId} from './workflow.state';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 import {workflowCellToViewCursor} from '../../../view/perspectives/workflow/content/tables/service/workflow-utils';
 import {selectViewCursor} from '../navigation/navigation.state';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Injectable()
 export class WorkflowsEffects {

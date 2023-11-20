@@ -41,7 +41,6 @@ import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
 import {BehaviorSubject} from 'rxjs';
 import {BlocklyUtils, MasterBlockType} from './blockly-utils';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
 import {CreateDocumentBlocklyComponent} from './blocks/create-document-blockly-component';
 import {ForEachDocumentArrayBlocklyComponent} from './blocks/for-each-document-array-blockly-component';
 import {ForEachLinkArrayBlocklyComponent} from './blocks/for-each-link-array-blockly-component';
@@ -125,6 +124,7 @@ import {ToNumberBlocklyComponent} from './blocks/to-number-blockly-component';
 import {SequenceCurrentBlocklyComponent} from './blocks/sequence-current-blockly-component';
 import {SequenceChangeBlocklyComponent} from './blocks/sequence-change-blockly-component';
 import {DeleteLinkBlocklyComponent} from './blocks/delete-link-blockly-component';
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
 declare var Blockly: any;
 

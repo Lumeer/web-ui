@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource} from '../../core/model/resource';
 import {Attribute} from '../../core/store/collections/collection';
-import {objectsByIdMap} from '../utils/common.utils';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Pipe({
   name: 'resourceAttributesMap',

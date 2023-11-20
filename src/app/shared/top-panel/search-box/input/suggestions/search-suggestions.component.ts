@@ -35,9 +35,9 @@ import {catchError, switchMap} from 'rxjs/operators';
 import {QueryItem} from '../../query-item/model/query-item';
 import {QueryItemType} from '../../query-item/model/query-item-type';
 import {SuggestionsService} from '../../../../../core/service/suggestions-service';
-import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DropdownComponent} from '../../../../dropdown/dropdown.component';
 import {Direction} from '../../../../direction';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'search-suggestions',

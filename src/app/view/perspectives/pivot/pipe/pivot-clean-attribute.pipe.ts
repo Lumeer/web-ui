@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotAttribute} from '../../../../core/store/pivots/pivot';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {cleanQueryAttribute} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'pivotCleanAttribute',

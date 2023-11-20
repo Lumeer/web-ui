@@ -22,9 +22,9 @@ import {
   GanttChartColorBarModel,
   GanttChartStemConfig,
 } from '../../../../../../core/store/gantt-charts/gantt-chart';
-import {deepObjectCopy} from '../../../../../../shared/utils/common.utils';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 import {selectDefaultPalette} from '../../../../../../shared/picker/colors';
+import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'gantt-chart-milestones-select',

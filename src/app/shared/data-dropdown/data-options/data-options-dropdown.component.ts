@@ -34,11 +34,11 @@ import {
 } from '@angular/core';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {DataDropdownOption} from './data-dropdown-option';
-import {deepObjectsEquals} from '../../utils/common.utils';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {DropdownOptionDirective} from '../../dropdown/options/dropdown-option.directive';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {ConstraintData} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Component({
   selector: 'data-options-dropdown',

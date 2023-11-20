@@ -18,8 +18,7 @@
  */
 
 import {UntypedFormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {uniqueValues} from '../../shared/utils/array.utils';
-import {isNumeric, toNumber} from '../../shared/utils/common.utils';
+import {isNumeric, toNumber, uniqueValues} from '@lumeer/utils';
 
 export function uniqueValuesValidator(valueControlName: string, skipEmpty?: boolean): ValidatorFn {
   return (formArray: UntypedFormArray): ValidationErrors | null => {

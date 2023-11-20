@@ -22,8 +22,8 @@ import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {LinkAttributeFilter} from '../../../../../core/store/navigation/query/query';
-import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {ConditionType, ConditionValue} from '@lumeer/data-filters';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 export class LinkAttributeQueryItem implements QueryItem {
   public type = QueryItemType.LinkAttribute;

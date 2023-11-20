@@ -22,9 +22,9 @@ import * as DetailActions from './detail.actions';
 import {detailsAdapter, DetailsState, initialDetailsState} from './detail.state';
 import {QueryStem} from '../navigation/query/query';
 import {areQueryStemsEqual} from '../navigation/query/query.helper';
-import {uniqueValues} from '../../../shared/utils/array.utils';
 import {DetailConfig} from './detail';
 import {AttributesSettings} from '../view-settings/view-settings';
+import {uniqueValues} from '@lumeer/utils';
 
 export const detailsReducer = createReducer(
   initialDetailsState,

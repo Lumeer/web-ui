@@ -33,10 +33,9 @@ import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {pivotAttributesAreSame} from '../../../util/pivot-util';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {deepObjectCopy, isNotNullOrUndefined} from '../../../../../../shared/utils/common.utils';
-import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 import {DRAG_DELAY} from '../../../../../../core/constants';
-import {cleanQueryAttribute} from '../../../../../../core/model/query-attribute';
+import {deepObjectCopy, isNotNullOrUndefined} from '@lumeer/utils';
+import {cleanQueryAttribute, DataAggregationType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'pivot-config',

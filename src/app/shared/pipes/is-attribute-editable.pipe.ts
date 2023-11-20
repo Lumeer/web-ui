@@ -20,8 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource, DataResource} from '../../core/model/resource';
 import {Attribute} from '../../core/store/collections/collection';
-import {ConstraintData} from '@lumeer/data-filters';
-import {isAttributeEditable} from '../utils/attribute.utils';
+import {ConstraintData, isAttributeEditable} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'isAttributeEditable',

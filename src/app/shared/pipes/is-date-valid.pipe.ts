@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {isDateValid} from '../utils/common.utils';
+import {isDateValid} from '@lumeer/utils';
 
 @Pipe({
   name: 'isDateValid',

@@ -34,7 +34,7 @@ import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
-import {canChangeViewQuery, getViewColor, getViewIcon, isViewConfigChanged, viewAdditionalQueries} from './view.utils';
+import {canChangeViewQuery, getViewIcon, isViewConfigChanged, viewAdditionalQueries} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
 import {appendQueryFiltersByVisibleAttributes} from '../navigation/query/query.util';
@@ -43,6 +43,7 @@ import {CollectionPurpose, CollectionPurposeType} from '../collections/collectio
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 import {selectFormConfig} from '../form/form.state';
+import {getViewColor} from '@lumeer/data-filters';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;

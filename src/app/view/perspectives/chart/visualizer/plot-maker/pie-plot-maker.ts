@@ -19,11 +19,10 @@
 
 import {Annotations, Layout, PlotMarker, PlotType} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {ChartDataSet} from '../../data/convertor/chart-data';
 import {PlotlyChartData, PlotMaker} from './plot-maker';
-import {uniqueValues} from '../../../../../shared/utils/array.utils';
 import {ConstraintType} from '@lumeer/data-filters';
+import {isNotNullOrUndefined, uniqueValues} from '@lumeer/utils';
 
 const MAX_COLUMNS = 3;
 const HORIZONTAL_SPACING = 0.04;

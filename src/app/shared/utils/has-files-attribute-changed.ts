@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {LinkType} from '../../../core/store/link-types/link.type';
+import {Collection} from '../../core/store/collections/collection';
+import {DocumentModel} from '../../core/store/documents/document.model';
+import {LinkInstance} from '../../core/store/link-instances/link.instance';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {ConstraintType} from '@lumeer/data-filters';
 
 export function hasFilesAttributeChanged(

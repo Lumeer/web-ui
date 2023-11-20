@@ -43,8 +43,8 @@ import {
   slotDurationsMap,
 } from '../../../../../core/store/calendars/calendar';
 import * as moment from 'moment';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'calendar-visualization',

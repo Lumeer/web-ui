@@ -19,8 +19,8 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {uniqueValues} from '../../../utils/array.utils';
 import {COLOR_PRIMARY} from '../../../../core/constants';
+import {uniqueValues} from '@lumeer/utils';
 
 declare var Blockly: any;
 

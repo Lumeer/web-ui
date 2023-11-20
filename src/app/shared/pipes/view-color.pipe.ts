@@ -19,8 +19,8 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {View} from '../../core/store/views/view';
-import {getViewColor} from '../../core/store/views/view.utils';
 import {Collection} from '../../core/store/collections/collection';
+import {getViewColor} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'viewColor',

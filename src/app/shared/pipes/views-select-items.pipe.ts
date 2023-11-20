@@ -20,9 +20,10 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {View} from '../../core/store/views/view';
 import {SelectItemModel} from '../select/select-item/select-item.model';
-import {getViewColor, getViewIcon} from '../../core/store/views/view.utils';
+import {getViewIcon} from '../../core/store/views/view.utils';
 import {Collection} from '../../core/store/collections/collection';
-import {objectsByIdMap} from '../utils/common.utils';
+import {objectsByIdMap} from '@lumeer/utils';
+import {getViewColor} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'viewsSelectItems',

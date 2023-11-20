@@ -24,9 +24,9 @@ import {
   Constraint,
   ConstraintType,
   DataValue,
+  isAttributeLockEnabledByLockStats,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {isAttributeLockEnabledByLockStats} from '../../utils/attribute.utils';
 
 @Pipe({
   name: 'dataInputEditInfo',

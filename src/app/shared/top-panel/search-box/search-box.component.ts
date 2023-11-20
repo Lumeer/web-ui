@@ -48,7 +48,6 @@ import {NavigationAction} from '../../../core/store/navigation/navigation.action
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
-import {isNullOrUndefined} from '../../utils/common.utils';
 import {
   addQueryItemWithRelatedItems,
   findQueryStemIdByIndex,
@@ -65,6 +64,7 @@ import {
 } from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {SearchBoxData, SearchBoxService} from './util/search-box.service';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 const ALLOW_AUTOMATIC_SUBMISSION = true;
 

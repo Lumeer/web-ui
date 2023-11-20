@@ -18,8 +18,7 @@
  */
 
 import {QueryStem} from '../navigation/query/query';
-import {QueryAttribute, QueryResource} from '../../model/query-attribute';
-import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {QueryAttribute, QueryResource, DataAggregationType} from '@lumeer/data-filters';
 import {AttributesResourceType} from '../../model/resource';
 
 export interface Workflow {

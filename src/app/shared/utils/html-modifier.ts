@@ -19,7 +19,7 @@
 
 import {DataValue} from '@lumeer/data-filters';
 import * as pressure from 'pressure';
-import {unescapeHtml} from './common.utils';
+import {unescapeHtml} from '@lumeer/utils';
 
 export class HtmlModifier {
   public static removeHtmlComments(html: HTMLElement): string {

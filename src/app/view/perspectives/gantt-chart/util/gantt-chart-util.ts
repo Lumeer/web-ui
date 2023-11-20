@@ -26,7 +26,6 @@ import {
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {GanttTask} from '@lumeer/lumeer-gantt';
-import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -40,8 +39,9 @@ import {AttributesResourceType} from '../../../../core/model/resource';
 import {GanttTaskMetadata} from './gantt-chart-converter';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
-import {queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {areArraysSame} from '../../../../shared/utils/array.utils';
+import {deepObjectsEquals, isNullOrUndefined} from '@lumeer/utils';
+import {queryAttributePermissions} from '@lumeer/data-filters';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {

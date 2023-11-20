@@ -35,13 +35,13 @@ import {CollectionQueryItem} from '../../shared/top-panel/search-box/query-item/
 import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/link.query-item';
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
-import {arrayIntersection, createRange, flattenMatrix, uniqueValues} from '../../shared/utils/array.utils';
+import {createRange, flattenMatrix} from '../../shared/utils/array.utils';
 import {collectionIdsChainForStem, getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {objectValues} from '../../shared/utils/common.utils';
-import {initialConditionType, initialConditionValues, removeAccentFromString} from '@lumeer/data-filters';
+import {initialConditionType, initialConditionValues} from '@lumeer/data-filters';
 import {convertQueryItemsToQueryModel} from '../../shared/top-panel/search-box/query-item/query-items.converter';
 import {
   selectAllCollectionsWithoutHiddenAttributes,
@@ -49,6 +49,7 @@ import {
   selectCollectionsByIdsWithoutHiddenAttributes,
   selectLinkTypesByIdsWithoutHiddenAttributes,
 } from '../store/common/permissions.selectors';
+import {arrayIntersection, removeAccentFromString, uniqueValues} from '@lumeer/utils';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;

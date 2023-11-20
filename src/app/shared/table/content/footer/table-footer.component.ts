@@ -18,13 +18,12 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DataAggregationType} from '@lumeer/data-filters';
 import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {TableFooter} from '../../model/table-footer';
 import {SelectedTableCell} from '../../model/table-model';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
-import {DataAggregationType} from '../../../utils/data/data-aggregation';
 
 @Component({
   selector: '[table-footer]',

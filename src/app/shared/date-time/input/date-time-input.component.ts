@@ -32,9 +32,9 @@ import {parseDateTimeByConstraint} from '../../utils/date.utils';
 import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
 import {DateTimePickerComponent} from '../picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
-import {DateTimeConstraint, resetUnusedMomentPart} from '@lumeer/data-filters';
+import {DateTimeConstraint} from '@lumeer/data-filters';
 import * as moment from 'moment';
-import {isDateValid} from '../../utils/common.utils';
+import {isDateValid, resetUnusedMomentPart} from '@lumeer/utils';
 
 @Component({
   selector: 'date-time-input',

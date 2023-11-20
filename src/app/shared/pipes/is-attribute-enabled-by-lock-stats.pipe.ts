@@ -19,8 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../core/store/collections/collection';
-import {AttributeLockFiltersStats} from '@lumeer/data-filters';
-import {isAttributeLockEnabledByLockStats} from '../utils/attribute.utils';
+import {AttributeLockFiltersStats, isAttributeLockEnabledByLockStats} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'isAttributeEnabledByLockStats',

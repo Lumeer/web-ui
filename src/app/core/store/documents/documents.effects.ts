@@ -24,7 +24,7 @@ import {Action, select, Store} from '@ngrx/store';
 import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {UserHintService} from '../../../shared/user-hint/user-hint.service';
-import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
+import {hasFilesAttributeChanged} from '../../../shared/utils/has-files-attribute-changed';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
 import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';

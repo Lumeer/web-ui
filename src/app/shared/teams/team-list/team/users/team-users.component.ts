@@ -33,8 +33,9 @@ import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dro
 import {User} from '../../../../../core/store/users/user';
 import {keyboardEventCode, KeyCode} from '../../../../key-code';
 import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
-import {areArraysSame, uniqueValues} from '../../../../utils/array.utils';
+import {areArraysSame} from '../../../../utils/array.utils';
 import {DropdownPosition} from '../../../../dropdown/dropdown-position';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'team-users',

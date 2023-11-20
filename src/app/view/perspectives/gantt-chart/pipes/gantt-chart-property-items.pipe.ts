@@ -20,8 +20,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {cleanQueryAttribute} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 const sameCollectionProperties = ['start', 'end'];
 

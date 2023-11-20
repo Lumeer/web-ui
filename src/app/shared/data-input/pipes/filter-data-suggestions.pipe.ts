@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {DataSuggestion} from '../data-suggestion';
 import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {removeAccentFromString} from '@lumeer/utils';
 
 @Pipe({
   name: 'filterDataSuggestions',

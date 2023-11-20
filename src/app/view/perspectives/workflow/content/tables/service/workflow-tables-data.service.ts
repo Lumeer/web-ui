@@ -58,18 +58,6 @@ import {
   WorkflowTableConfig,
 } from '../../../../../../core/store/workflows/workflow';
 import {SelectItemWithConstraintFormatter} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {
-  AggregatedArrayData,
-  AggregatedDataItem,
-  DataAggregator,
-  DataAggregatorAttribute,
-  mergeDataResourcesChains,
-} from '../../../../../../shared/utils/data/data-aggregator';
-import {
-  findAttributeByQueryAttribute,
-  QueryAttribute,
-  queryAttributePermissions,
-} from '../../../../../../core/model/query-attribute';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {
@@ -77,13 +65,6 @@ import {
   filterQueryByStem,
   queryStemsAreSame,
 } from '../../../../../../core/store/navigation/query/query.util';
-import {
-  deepObjectsEquals,
-  findIthItemIndex,
-  isArray,
-  isNotNullOrUndefined,
-  objectsByIdMap,
-} from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
 import {selectWorkflowSelectedDocumentId} from '../../../../../../core/store/workflows/workflow.state';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
@@ -118,11 +99,20 @@ import {selectDocumentById} from '../../../../../../core/store/documents/documen
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 import {
+  AggregatedArrayData,
+  AggregatedDataItem,
   ConditionType,
   ConditionValue,
   Constraint,
   ConstraintData,
+  DataAggregationType,
+  DataAggregator,
+  DataAggregatorAttribute,
   DocumentsAndLinksData,
+  findAttributeByQueryAttribute,
+  mergeDataResourcesChains,
+  QueryAttribute,
+  queryAttributePermissions,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/workflows/workflow.utils';
@@ -138,7 +128,6 @@ import {generateAttributeName} from '../../../../../../shared/utils/attribute.ut
 import {CreateDataResourceService} from '../../../../../../core/service/create-data-resource.service';
 import {Translation} from '../../../../../../shared/utils/translation';
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
-import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
 import {
   AttributeSortType,
@@ -146,6 +135,7 @@ import {
   ViewSettings,
 } from '../../../../../../core/store/view-settings/view-settings';
 import {DataResourcesChain} from '../../../../../../shared/modal/data-resource-detail/model/data-resources-chain';
+import {deepObjectsEquals, findIthItemIndex, isArray, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 @Injectable()
 export class WorkflowTablesDataService {

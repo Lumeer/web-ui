@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {deepObjectsEquals, isNullOrUndefined} from '../../../utils/common.utils';
+import {deepObjectsEquals, isNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'areIdsEqual',

@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {unescapeHtml} from '../utils/common.utils';
+import {unescapeHtml} from '@lumeer/utils';
 
 @Pipe({
   name: 'unescapeHtml',

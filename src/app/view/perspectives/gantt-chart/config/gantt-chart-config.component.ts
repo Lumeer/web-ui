@@ -26,9 +26,9 @@ import {
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'gantt-chart-config',

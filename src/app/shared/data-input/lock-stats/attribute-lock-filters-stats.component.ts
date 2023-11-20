@@ -24,9 +24,9 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {objectsByIdMap} from '../../utils/common.utils';
 import {map} from 'rxjs/operators';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Component({
   selector: 'attribute-lock-filters-stats',

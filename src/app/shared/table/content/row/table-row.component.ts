@@ -32,12 +32,7 @@ import {
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {TableRow, TableRowWithData} from '../../model/table-row';
-import {
-  computeElementPositionInParent,
-  isNotNullOrUndefined,
-  isNullOrUndefinedOrEmpty,
-  preventEvent,
-} from '../../../utils/common.utils';
+import {computeElementPositionInParent, preventEvent} from '../../../utils/common.utils';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
@@ -53,6 +48,7 @@ import {animateOpacityEnterLeave} from '../../../animations';
 import {createTableHierarchyPath} from '../../model/table-hierarchy';
 import {COLOR_GRAY300, COLOR_PRIMARY} from '../../../../core/constants';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {isNotNullOrUndefined, isNullOrUndefinedOrEmpty} from '@lumeer/utils';
 
 @Component({
   selector: '[table-row]',

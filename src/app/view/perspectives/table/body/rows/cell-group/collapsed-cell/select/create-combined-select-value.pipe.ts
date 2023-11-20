@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {isArray, isNotNullOrUndefined} from '../../../../../../../../shared/utils/common.utils';
 import {SelectConstraint, SelectDataValue} from '@lumeer/data-filters';
+import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'createCombinedSelectValue',

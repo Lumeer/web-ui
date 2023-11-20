@@ -43,9 +43,8 @@ import {
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
+import {preventEvent} from '../../utils/common.utils';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
-import {isAttributeLockEnabledByLockStats} from '../../utils/attribute.utils';
 import {
   ActionConstraintConfig,
   ActionDataValue,
@@ -53,11 +52,13 @@ import {
   AttributeLockFiltersStats,
   computeAttributeLockStats,
   ConstraintData,
+  isAttributeLockEnabledByLockStats,
 } from '@lumeer/data-filters';
 import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute/type/form/constraint-config/action/action-constraint.utils';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {Attribute} from '../../../core/store/collections/collection';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {objectsByIdMap} from '@lumeer/utils';
 
 const loadingTime = 2000;
 

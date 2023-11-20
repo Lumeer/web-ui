@@ -41,7 +41,6 @@ import {
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
@@ -64,6 +63,7 @@ import {View} from '../../../../core/store/views/view';
 import {generateDocumentDataByResourceQuery} from '../../../../core/store/documents/document.utils';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 interface Data {
   collections: Collection[];

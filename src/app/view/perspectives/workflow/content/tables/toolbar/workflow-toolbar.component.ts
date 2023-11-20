@@ -22,11 +22,6 @@ import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/s
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {
-  QueryAttribute,
-  queryAttributesAreSame,
-  queryResourcesAreSame,
-} from '../../../../../../core/model/query-attribute';
 import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
@@ -37,7 +32,7 @@ import {AppState} from '../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
-import {Constraint} from '@lumeer/data-filters';
+import {Constraint, QueryAttribute, queryAttributesAreSame, queryResourcesAreSame} from '@lumeer/data-filters';
 import {viewSettingsIdByView} from '../../../../../../core/store/view-settings/view-settings.util';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';

@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {removeAccentFromString} from '@lumeer/utils';
 import {Team} from '../../../core/store/teams/team';
 
 @Pipe({

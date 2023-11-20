@@ -52,8 +52,7 @@ import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn} from './model/table-column';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
-import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
-import {DataAggregationType} from '../utils/data/data-aggregation';
+import {ConditionType, ConditionValue, ConstraintData, ConstraintType, DataAggregationType} from '@lumeer/data-filters';
 import {AttributeSortType} from '../../core/store/view-settings/view-settings';
 import {Workspace} from '../../core/store/navigation/workspace';
 

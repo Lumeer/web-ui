@@ -37,7 +37,6 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../core/store/link-instances/link-instances.state';
 import {ResultTableRow} from './results-table/results-table.component';
-import {uniqueValues} from '../../utils/array.utils';
 import {getOtherDocumentIdFromLinkInstance} from '../../../core/store/link-instances/link-instance.utils';
 import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {mergeDocuments} from '../../../core/store/documents/document.utils';
@@ -49,6 +48,7 @@ import {selectCurrentView, selectViewById} from '../../../core/store/views/views
 import {AttributesResourceType} from '../../../core/model/resource';
 import {ResourceAttributeSettings} from '../../../core/store/view-settings/view-settings';
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'modify-document-links-modal',

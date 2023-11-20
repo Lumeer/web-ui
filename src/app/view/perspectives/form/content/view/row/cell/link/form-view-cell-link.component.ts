@@ -37,7 +37,7 @@ import {ConstraintData, SelectConstraintOption, UnknownConstraint} from '@lumeer
 import {DropdownOption} from '../../../../../../../../shared/dropdown/options/dropdown-option';
 import {findAttribute, getDefaultAttributeId} from '../../../../../../../../core/store/collections/collection.util';
 import {OptionsDropdownComponent} from '../../../../../../../../shared/dropdown/options/options-dropdown.component';
-import {arraySubtract, uniqueValues} from '../../../../../../../../shared/utils/array.utils';
+import {arraySubtract} from '../../../../../../../../shared/utils/array.utils';
 import {HtmlModifier, isElementActive, shadeColor} from '../../../../../../../../shared/utils/html-modifier';
 import {keyboardEventCode, KeyCode} from '../../../../../../../../shared/key-code';
 import {FormLinkSelectedData} from '../../../model/form-link-data';
@@ -45,6 +45,7 @@ import {
   DataInputSaveAction,
   keyboardEventInputSaveAction,
 } from '../../../../../../../../shared/data-input/data-input-save-action';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'form-view-cell-link',

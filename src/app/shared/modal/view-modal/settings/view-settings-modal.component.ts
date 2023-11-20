@@ -32,13 +32,9 @@ import {integerValidator, notEmptyValidator} from '../../../../core/validators/c
 import {selectAllViewsSorted, selectViewById} from '../../../../core/store/views/views.state';
 import {map, tap} from 'rxjs/operators';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  defaultViewColorFromQuery,
-  defaultViewIcon,
-  getViewColor,
-  getViewIcon,
-} from '../../../../core/store/views/view.utils';
-import {objectsByIdMap} from '../../../utils/common.utils';
+import {defaultViewIcon, getViewIcon} from '../../../../core/store/views/view.utils';
+import {objectsByIdMap} from '@lumeer/utils';
+import {defaultViewColorFromQuery, getViewColor} from '@lumeer/data-filters';
 
 @Component({
   selector: 'view-settings-modal',

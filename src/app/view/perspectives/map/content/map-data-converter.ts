@@ -21,14 +21,16 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
+import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
+import {mapMarkerDataId} from './map-content.utils';
 import {
+  ConstraintData,
   DataObjectAggregator,
   DataObjectAttribute,
   DataObjectInfo,
-} from '../../../../shared/utils/data/data-object-aggregator';
-import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
-import {mapMarkerDataId} from './map-content.utils';
-import {ConstraintData, DocumentsAndLinksData, userCanEditDataResource} from '@lumeer/data-filters';
+  DocumentsAndLinksData,
+  userCanEditDataResource,
+} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
 
 enum DataObjectInfoKeyType {

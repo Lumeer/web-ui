@@ -131,7 +131,7 @@ export class PermissionsCheckService {
 
   private checkViewsPermissions(currentUser: User, organization: Organization, project: Project): Subscription {
     return this.store$.pipe(select(selectAllViews)).subscribe(views => {
-      const permissions = (views || []).reduce(
+      const permissions = (views || []).reduce<AllowedPermissionsMap>(
         (map, view) => ({
           ...map,
           [view.id]: userPermissionsInView(organization, project, view, currentUser),

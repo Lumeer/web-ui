@@ -20,7 +20,6 @@
 import {Component, OnInit, ChangeDetectionStrategy, AfterViewInit} from '@angular/core';
 import {Observable, of, timer, combineLatest, BehaviorSubject} from 'rxjs';
 import {distinctUntilChanged, map, skipUntil, switchMap, take, tap} from 'rxjs/operators';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {ModuleLazyLoadingService} from '../../../core/service/module-lazy-loading.service';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -30,6 +29,7 @@ import {
   selectDataResourcesLoadingQueries,
   selectTasksLoadingQueries,
 } from '../../../core/store/data-resources/data-resources.state';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 const timerInterval = 1000;
 const minimumIncrease = 1;

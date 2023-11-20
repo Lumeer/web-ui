@@ -18,7 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {dataAggregationIconMap, DataAggregationType} from '../utils/data/data-aggregation';
+import {dataAggregationIconMap} from '../utils/data-aggregation';
+import {DataAggregationType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'aggregationTypeIcon',

@@ -28,7 +28,6 @@ import {
 } from './workflow';
 import {Query, QueryStem} from '../navigation/query/query';
 import {AttributesResourceType} from '../../model/resource';
-import {deepObjectCopy, deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {
@@ -40,6 +39,7 @@ import {
   queryStemsAreSame,
   queryStemWithoutFilters,
 } from '../navigation/query/query.util';
+import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
 
 export function isWorkflowConfigChanged(previousConfig: WorkflowConfig, currentConfig: WorkflowConfig): boolean {
   const previous = createWorkflowSaveConfig(previousConfig);

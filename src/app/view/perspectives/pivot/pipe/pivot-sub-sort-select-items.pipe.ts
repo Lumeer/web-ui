@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {PivotDataHeader} from '../util/pivot-data';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'pivotSubSortSelectItems',

@@ -22,10 +22,9 @@ import {AttributesResource} from '../../../../../../../../core/model/resource';
 import {PivotAttribute, PivotValueAttribute, PivotValueType} from '../../../../../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
-import {DataAggregationType} from '../../../../../../../../shared/utils/data/data-aggregation';
 import {getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
 import {objectValues} from '../../../../../../../../shared/utils/common.utils';
-import {Constraint} from '@lumeer/data-filters';
+import {Constraint, DataAggregationType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'pivot-value-attribute-config',

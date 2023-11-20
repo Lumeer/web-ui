@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Constraint} from '@lumeer/data-filters';
 import {SelectItemModel} from '../select/select-item/select-item.model';
-import {deepObjectsEquals} from '../utils/common.utils';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Pipe({
   name: 'findSelectConstraintItemById',

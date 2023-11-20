@@ -29,7 +29,6 @@ import {selectLinkTypeById} from '../store/link-types/link-types.state';
 import {AttributesResource, DataResource} from '../model/resource';
 import {findAttribute, findAttributeConstraint} from '../store/collections/collection.util';
 import {ClipboardService} from './clipboard.service';
-import {isArray, isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
 import {
   Constraint,
@@ -39,6 +38,7 @@ import {
   UnknownConstraint,
   UserDataValue,
 } from '@lumeer/data-filters';
+import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
 
 @Injectable({providedIn: 'root'})
 export class CopyValueService {

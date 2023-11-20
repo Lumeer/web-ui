@@ -22,7 +22,7 @@ import {AttributesResource, DataResource} from '../../core/model/resource';
 import {ConstraintData, createDataValuesMap} from '@lumeer/data-filters';
 import {AttributeFormattingStyle, computeAttributeFormatting} from '../utils/attribute.utils';
 import {findAttribute} from '../../core/store/collections/collection.util';
-import {objectsByIdMap} from '../utils/common.utils';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Pipe({
   name: 'resourceAttributeFormattingStyle',

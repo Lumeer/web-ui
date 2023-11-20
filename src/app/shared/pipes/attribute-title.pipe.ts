@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../core/store/collections/collection';
-import {isNotNullOrUndefined} from '../utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'attributeTitle',

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepObjectsEquals, isArray, isNotNullOrUndefined} from './common.utils';
+import {arrayIntersection, deepObjectsEquals, isArray, isNotNullOrUndefined} from '@lumeer/utils';
 
 export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: number, ...items: T[]): T[] {
   const arrayCopy = [...array];
@@ -82,12 +82,6 @@ export function containsSameElements(array1: any[], array2: any[]): boolean {
   return array1.length === array2.length && arrayIntersection(array1, array2).length === array1.length;
 }
 
-export function arrayIntersection<T>(array1: T[], array2: T[]): T[] {
-  const a = array1 || [];
-  const b = array2 || [];
-  return a.filter(x => b.some(y => deepObjectsEquals(x, y)));
-}
-
 export function shiftArray<T>(array: T[], fromItem: T): T[] {
   const index = array.findIndex(item => item === fromItem);
   return shiftArrayFromIndex<T>(array, index);
@@ -98,10 +92,6 @@ export function shiftArrayFromIndex<T>(array: T[], fromIndex: number): T[] {
     return [...array];
   }
   return [...array.slice(fromIndex), ...array.slice(0, fromIndex)];
-}
-
-export function uniqueValues<T>(array: T[]): T[] {
-  return Array.from(new Set(array));
 }
 
 export function flattenValues<T>(array: any[]): T[] {

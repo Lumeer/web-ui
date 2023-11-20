@@ -33,12 +33,12 @@ import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
 import {DataSuggestion} from './data-suggestion';
 import {DataInputConfiguration} from './data-input-configuration';
-import {isNotNullOrUndefined} from '../utils/common.utils';
 import {KeyCode} from '../key-code';
 import {DataInputSaveAction} from './data-input-save-action';
 import {Constraint, ConstraintType, DataValue} from '@lumeer/data-filters';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'data-input',

@@ -49,7 +49,6 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {ConstraintData} from '@lumeer/data-filters';
 import {ModalService} from '../../../../../shared/modal/modal.service';
-import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 import {
   selectHasVisibleSearchTab,
   selectTasksCollections,
@@ -63,6 +62,7 @@ import {
 } from '../../../perspective-configuration';
 import {selectViewsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 import {TasksGroup} from '../model/tasks-group';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Component({
   selector: 'tasks-content',

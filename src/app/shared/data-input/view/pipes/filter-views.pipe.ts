@@ -20,10 +20,11 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../../utils/common.utils';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {removeAccentFromString} from '@lumeer/utils';
 import {View} from '../../../../core/store/views/view';
 import {Collection} from '../../../../core/store/collections/collection';
-import {getViewColor, getViewIcon} from '../../../../core/store/views/view.utils';
+import {getViewIcon} from '../../../../core/store/views/view.utils';
+import {getViewColor} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'filterViews',

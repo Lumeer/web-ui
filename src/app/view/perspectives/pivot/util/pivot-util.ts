@@ -35,8 +35,8 @@ import {
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
 import {AttributesResource} from '../../../../core/model/resource';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {deepObjectsEquals} from '@lumeer/utils';
+import {cleanQueryAttribute} from '@lumeer/data-filters';
 
 export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
   return deepObjectsEquals(cleanQueryAttribute(a1), cleanQueryAttribute(a2));

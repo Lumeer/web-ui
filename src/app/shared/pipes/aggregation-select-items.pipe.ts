@@ -19,7 +19,8 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {SelectItemModel} from '../select/select-item/select-item.model';
-import {dataAggregationName, DataAggregationType} from '../utils/data/data-aggregation';
+import {dataAggregationName} from '../utils/data-aggregation';
+import {DataAggregationType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'aggregationSelectItems',

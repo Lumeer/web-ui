@@ -41,11 +41,11 @@ import {
 import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
 import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../../utils/form.utils';
 import {ColorPickerComponent} from '../../../../../../../picker/color/color-picker.component';
-import {unescapeHtml} from '../../../../../../../utils/common.utils';
 import {DataValue, SelectConstraintOption} from '@lumeer/data-filters';
 import {selectDefaultPalette} from '../../../../../../../picker/colors';
 import {Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+import {unescapeHtml} from '@lumeer/utils';
 
 @Component({
   selector: 'select-constraint-options-form',

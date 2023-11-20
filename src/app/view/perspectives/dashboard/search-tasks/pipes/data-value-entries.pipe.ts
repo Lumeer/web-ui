@@ -27,8 +27,8 @@ import {Constraint, ConstraintData, ConstraintType, DataValue, UnknownConstraint
 import {TaskAttributes} from '../model/task-attributes';
 import {View} from '../../../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../../../../shared/settings/settings.util';
-import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 import {ResourceAttributeSettings} from '../../../../../core/store/view-settings/view-settings';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Pipe({
   name: 'dataValueEntries',

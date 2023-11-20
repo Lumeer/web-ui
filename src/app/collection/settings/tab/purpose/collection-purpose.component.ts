@@ -21,12 +21,12 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {filter, take} from 'rxjs/operators';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'collection-purpose',

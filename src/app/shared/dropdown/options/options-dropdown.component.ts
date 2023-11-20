@@ -35,10 +35,10 @@ import {DropdownPosition} from '../dropdown-position';
 import {DropdownComponent} from '../dropdown.component';
 import {DropdownOption} from './dropdown-option';
 import {DropdownOptionDirective} from './dropdown-option.directive';
-import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
 import {BehaviorSubject} from 'rxjs';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
 import {isTopPositionDropdown} from '../util/dropdown-util';
+import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'options-dropdown',

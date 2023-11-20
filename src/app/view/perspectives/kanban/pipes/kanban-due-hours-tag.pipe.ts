@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {COLOR_DANGER, COLOR_WARNING} from '../../../../core/constants';
 import {PostItTag} from '../../../../shared/post-it/post-it.component';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'kanbanDueHoursTag',

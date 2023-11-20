@@ -52,12 +52,13 @@ import {Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
 import {SelectItemModel} from '../../select/select-item/select-item.model';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {isDateValid, objectChanged, objectValues} from '../../utils/common.utils';
+import {objectChanged, objectValues} from '../../utils/common.utils';
 import {parseSelectTranslation} from '../../utils/translation.utils';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as moment from 'moment';
 import {minLengthValidator} from '../../../core/validators/custom-validators';
 import {offsetRuleConfig, RuleOffsetType} from '../../utils/rule.utils';
+import {isDateValid} from '@lumeer/utils';
 
 @Component({
   selector: 'add-rule-form',

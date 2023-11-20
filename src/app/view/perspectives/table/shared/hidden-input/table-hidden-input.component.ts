@@ -30,12 +30,12 @@ import {keyboardEventCode, KeyCode} from '../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../table-perspective.component';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
-import {escapeHtml} from '../../../../../shared/utils/common.utils';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {TableDataPermissionsService} from '../../service/table-data-permissions.service';
 import {View} from '../../../../../core/store/views/view';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {escapeHtml} from '@lumeer/utils';
 
 @Component({
   selector: 'table-hidden-input',

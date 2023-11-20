@@ -18,8 +18,9 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {dataAggregationIconMap, dataAggregationName, DataAggregationType} from '../utils/data/data-aggregation';
 import {DropdownOption} from '../dropdown/options/dropdown-option';
+import {DataAggregationType} from '@lumeer/data-filters';
+import {dataAggregationIconMap, dataAggregationName} from '../utils/data-aggregation';
 
 @Pipe({
   name: 'aggregationDropdownOptions',

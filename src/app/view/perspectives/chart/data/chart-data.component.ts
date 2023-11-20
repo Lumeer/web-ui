@@ -36,7 +36,6 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {ChartAxisSettings, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
 import {AttributesResourceType, DataResource, Resource} from '../../../../core/model/resource';
@@ -50,6 +49,7 @@ import {chartAxisChanged, chartSettingsChanged} from '../../../../core/store/cha
 import {Constraint, ConstraintData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
 import {View} from '../../../../core/store/views/view';
+import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
 
 interface Data {
   collections: Collection[];

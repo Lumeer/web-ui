@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'shouldAggregateProgress',

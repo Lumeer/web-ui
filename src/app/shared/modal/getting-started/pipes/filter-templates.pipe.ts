@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Project} from '../../../../core/store/projects/project';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {removeAccentFromString} from '@lumeer/utils';
 
 @Pipe({
   name: 'filterTemplates',

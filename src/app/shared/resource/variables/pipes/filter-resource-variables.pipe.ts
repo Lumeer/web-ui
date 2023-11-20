@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {removeAccentFromString} from '@lumeer/data-filters';
 import {ResourceVariable} from '../../../../core/store/resource-variables/resource-variable';
+import {removeAccentFromString} from '@lumeer/utils';
 
 @Pipe({
   name: 'filterResourceVariables',

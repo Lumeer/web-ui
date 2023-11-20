@@ -22,7 +22,7 @@ import {VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
 import {takeWhile, tap} from 'rxjs/operators';
 import {TableVirtualScrollStrategy} from './table-virtual-scroll-strategy';
 import {TABLE_ROW_HEIGHT} from '../model/table-model';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 export function _tableVirtualScrollDirectiveStrategyFactory(tableDir: TableItemSizeDirective) {
   return tableDir.scrollStrategy;

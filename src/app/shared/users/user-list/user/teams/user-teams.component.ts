@@ -32,9 +32,10 @@ import {BehaviorSubject} from 'rxjs';
 import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
 import {keyboardEventCode, KeyCode} from '../../../../key-code';
 import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
-import {areArraysSame, uniqueValues} from '../../../../utils/array.utils';
+import {areArraysSame} from '../../../../utils/array.utils';
 import {DropdownPosition} from '../../../../dropdown/dropdown-position';
 import {Team} from '../../../../../core/store/teams/team';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'user-teams',

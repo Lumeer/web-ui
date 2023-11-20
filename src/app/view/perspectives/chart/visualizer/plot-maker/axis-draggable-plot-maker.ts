@@ -20,10 +20,10 @@
 import * as moment from 'moment';
 import {d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
 import {Constraint, ConstraintType, DateTimeConstraint} from '@lumeer/data-filters';
+import {isNotNullOrUndefined, isNumeric, toNumber} from '@lumeer/utils';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getTraceIndexForPoint(point: any): number;

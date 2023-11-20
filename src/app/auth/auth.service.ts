@@ -31,7 +31,6 @@ import {AppState} from '../core/store/app.state';
 import {selectCurrentUser} from '../core/store/users/users.state';
 import {select, Store} from '@ngrx/store';
 import {UserActivityService} from './user-activity.service';
-import {isNullOrUndefined} from '../shared/utils/common.utils';
 import {UserService} from '../core/data-service';
 import {ConfigurationService} from '../configuration/configuration.service';
 import {createLanguageUrl, languageCodeMap} from '../core/model/language';
@@ -39,6 +38,7 @@ import {UsersAction} from '../core/store/users/users.action';
 import {SessionType} from './common/session-type';
 import {AuthStorage} from './auth.storage';
 import {Ga4Service} from '../core/service/ga4.service';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';

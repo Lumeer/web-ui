@@ -18,7 +18,7 @@
  */
 
 import {QueryStem} from '../navigation/query/query';
-import {QueryAttribute} from '../../model/query-attribute';
+import {QueryAttribute} from '@lumeer/data-filters';
 
 export interface Calendar {
   id: string;

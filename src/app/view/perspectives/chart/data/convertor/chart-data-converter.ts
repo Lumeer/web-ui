@@ -35,31 +35,22 @@ import {LinkInstance} from '../../../../../core/store/link-instances/link.instan
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {
-  isArray,
-  isNotNullOrUndefined,
-  isNullOrUndefined,
-  isNumeric,
-  objectValues,
-  toNumber,
-} from '../../../../../shared/utils/common.utils';
-import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
-import {DataAggregatorAttribute} from '../../../../../shared/utils/data/data-aggregator';
+import {objectValues} from '../../../../../shared/utils/common.utils';
 import {hex2rgba, shadeColor} from '../../../../../shared/utils/html-modifier';
 import {ChartAxisData, ChartAxisTick, ChartData, ChartDataSet, ChartPoint, ChartYAxisType} from './chart-data';
-import {
-  DataObjectAggregator,
-  DataObjectAttribute,
-  DataObjectInfo,
-} from '../../../../../shared/utils/data/data-object-aggregator';
-import {uniqueValues} from '../../../../../shared/utils/array.utils';
 import {createRange} from '../../visualizer/plot-maker/plot-util';
 import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DataAggregatorAttribute,
+  DataObjectAggregator,
+  DataObjectAttribute,
+  DataObjectInfo,
   DateTimeConstraint,
   DurationConstraint,
+  isValueAggregation,
+  aggregateDataValues,
   NumberConstraint,
   PercentageConstraint,
   SelectConstraint,
@@ -67,6 +58,7 @@ import {
   userCanEditDataResource,
 } from '@lumeer/data-filters';
 import {User} from '../../../../../core/store/users/user';
+import {isArray, isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber, uniqueValues} from '@lumeer/utils';
 
 enum DataObjectInfoKeyType {
   X = 'x',

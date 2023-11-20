@@ -20,7 +20,8 @@
 import {AttributesResourceType} from '../../model/resource';
 import {CalendarBar, CalendarConfig, CalendarConfigVersion, CalendarStemConfig} from './calendar';
 import {CalendarCollectionConfigV0, CalendarConfigV0, CalendarConfigV1, CalendarStemConfigV1} from './calendar-old';
-import {isDateValid, isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
+import {objectValues} from '../../../shared/utils/common.utils';
+import {isDateValid, isNotNullOrUndefined} from '@lumeer/utils';
 
 export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
   if (!config) {

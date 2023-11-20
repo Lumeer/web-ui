@@ -18,7 +18,7 @@
  */
 
 import {CalendarStemConfig} from '../../../../core/store/calendars/calendar';
-import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
+import {DataResourceChain} from '@lumeer/data-filters';
 
 export interface CalendarEvent {
   id?: string;

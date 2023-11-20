@@ -23,8 +23,9 @@ import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '.
 import {Perspective} from '../../../perspective';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {deepObjectCopy, objectValues} from '../../../../../shared/utils/common.utils';
+import {objectValues} from '../../../../../shared/utils/common.utils';
 import {Constraint} from '@lumeer/data-filters';
+import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'chart-main-config',

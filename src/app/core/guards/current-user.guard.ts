@@ -26,7 +26,6 @@ import {AuthService} from '../../auth/auth.service';
 import {AppState} from '../store/app.state';
 import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUser} from '../store/users/users.state';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../shared/utils/common.utils';
 import {hashUserId} from '../../shared/utils/system.utils';
 import mixpanel from 'mixpanel-browser';
 import Cookies from 'js-cookie';
@@ -34,6 +33,7 @@ import {LUMEER_REFERRAL} from '../constants';
 import {idToReference} from '../../shared/utils/string.utils';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {User} from '../store/users/user';
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
 @Injectable()
 export class CurrentUserGuard {

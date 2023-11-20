@@ -124,7 +124,7 @@ import {CopyValueService} from '../../service/copy-value.service';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
-import {objectsByIdMap} from '../../../shared/utils/common.utils';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Injectable()
 export class TablesEffects {

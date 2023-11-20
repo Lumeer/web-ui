@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
+import {objectValues} from '../../../shared/utils/common.utils';
 import {MapAttributeModel, MapConfig, MapConfigVersion, MapStemConfig} from './map.model';
 import {MapConfigV0} from './map.model-old';
 import {AttributesResourceType} from '../../model/resource';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 export function convertMapDtoConfigToModel(config: any): MapConfig {
   if (!config) {

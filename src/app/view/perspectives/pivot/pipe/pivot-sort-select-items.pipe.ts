@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {PivotStemData} from '../util/pivot-data';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {cleanQueryAttribute} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'pivotSortSelectItems',

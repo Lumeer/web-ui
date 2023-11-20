@@ -35,7 +35,6 @@ import {User} from '../../../core/store/users/user';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
-import {uniqueValues} from '../../utils/array.utils';
 import {isEmailValid} from '../../utils/email.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration, UserDataInputConfiguration} from '../data-input-configuration';
@@ -43,7 +42,6 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
 import {BehaviorSubject} from 'rxjs';
 import {
   ConstraintType,
-  UserConstraintType,
   UserDataValue,
   userDataValueCreateTeamValue,
   userDataValueIsTeamValue,
@@ -51,6 +49,7 @@ import {
 } from '@lumeer/data-filters';
 import {Team} from '../../../core/store/teams/team';
 import {createUserDataInputTeams, createUserDataInputUsers} from './user-data-input-utils';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'user-data-input',

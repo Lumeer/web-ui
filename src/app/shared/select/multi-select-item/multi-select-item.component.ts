@@ -33,10 +33,10 @@ import {keyboardEventCode, KeyCode} from '../../key-code';
 import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {uniqueValues} from '../../utils/array.utils';
 import {BehaviorSubject} from 'rxjs';
 import {SelectItemModel} from '../select-item/select-item.model';
 import {createDropdownOptions} from '../select-item/select-item.component';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'multi-select-item',

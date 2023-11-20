@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {removeAccentFromString} from '@lumeer/utils';
 import {Project} from '../../../../../../../../core/store/projects/project';
 
 @Component({

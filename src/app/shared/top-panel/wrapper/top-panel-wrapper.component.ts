@@ -28,12 +28,12 @@ import {map, mergeMap, switchMap, take} from 'rxjs/operators';
 import {selectPerspective, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {Router} from '@angular/router';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {selectPublicShowTopPanel} from '../../../core/store/public-data/public-data.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {selectIsFullscreen} from '../../../core/store/app-properties/app-properties.state';
 import {AppPropertiesAction} from '../../../core/store/app-properties/app-properties.action';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'top-panel-wrapper',

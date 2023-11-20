@@ -19,8 +19,8 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DropdownOption} from '../options/dropdown-option';
-import {sortObjectsByScore, unescapeHtml} from '../../utils/common.utils';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {sortObjectsByScore} from '../../utils/common.utils';
+import {removeAccentFromString, unescapeHtml} from '@lumeer/utils';
 
 @Pipe({
   name: 'filterDropdownOptions',

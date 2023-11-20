@@ -37,12 +37,7 @@ import {DataInputConfiguration} from '../../../../../../../shared/data-input/dat
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {
-  deepObjectsEquals,
-  isArray,
-  isNullOrUndefined,
-  objectChanged,
-} from '../../../../../../../shared/utils/common.utils';
+import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {map, startWith} from 'rxjs/operators';
 import {ConstraintData, ConstraintType, DataValue} from '@lumeer/data-filters';
@@ -54,6 +49,7 @@ import {
 import {getBaseCollectionIdsFromQuery} from '../../../../../../../core/store/navigation/query/query.util';
 import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
 import {LoadDataService, LoadDataServiceProvider} from '../../../../../../../core/service/load-data.service';
+import {deepObjectsEquals, isArray, isNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'collection-purpose-tasks',

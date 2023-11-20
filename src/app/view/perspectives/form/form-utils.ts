@@ -27,7 +27,6 @@ import {
   FormRow,
   FormSection,
 } from '../../../core/store/form/form-model';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -36,6 +35,7 @@ import {generateId} from '../../../shared/utils/resource.utils';
 import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query/query.util';
 import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {AttributesResourceType} from '../../../core/model/resource';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 export function checkOrTransformFormConfig(
   config: FormConfig,

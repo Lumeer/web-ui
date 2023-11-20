@@ -31,7 +31,6 @@ import {FileAttachment, FileAttachmentType} from '../store/file-attachments/file
 import {createFileApiPath} from '../data-service/attachments/attachments.service';
 import {convertFileAttachmentModelToDto} from '../store/file-attachments/file-attachment.converter';
 import {DataResourceData} from '../model/resource';
-import {uniqueValues} from '../../shared/utils/array.utils';
 import {DataCursor} from '../../shared/data-input/data-cursor';
 import {select, Store} from '@ngrx/store';
 import {selectFileAttachmentsByDataCursor} from '../store/file-attachments/file-attachments.state';
@@ -45,6 +44,7 @@ import {
   convertLinkInstanceModelToDto,
 } from '../store/link-instances/link-instance.converter';
 import {createFileAttachmentUniqueName} from '../store/file-attachments/file-attachment.utils';
+import {uniqueValues} from '@lumeer/utils';
 
 @Injectable({
   providedIn: 'root',

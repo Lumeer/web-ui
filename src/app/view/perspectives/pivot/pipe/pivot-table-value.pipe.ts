@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotTableCell} from '../util/pivot-table';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'pivotTableCellHasValue',

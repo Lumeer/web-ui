@@ -48,7 +48,6 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals, isNotNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
 import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
 import {
   canCreateTaskByStemConfig,
@@ -64,21 +63,22 @@ import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from 
 import {
   ConstraintData,
   ConstraintType,
+  DataResourceChain,
   DataValue,
   DateTimeConstraint,
   DocumentsAndLinksData,
   DurationConstraint,
   durationCountsMapToString,
+  QueryAttribute,
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {View} from '../../../../core/store/views/view';
 import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
 import {CreateDataResourceService, QueryAttributeGrouping} from '../../../../core/service/create-data-resource.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
-import {QueryAttribute} from '../../../../core/model/query-attribute';
 import {Translation} from '../../../../shared/utils/translation';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {deepObjectsEquals, isNotNullOrUndefined, isNumeric, toNumber} from '@lumeer/utils';
 
 interface Data {
   collections: Collection[];

@@ -20,8 +20,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {cleanQueryAttribute} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Pipe({
   name: 'pivotSortSelectedId',

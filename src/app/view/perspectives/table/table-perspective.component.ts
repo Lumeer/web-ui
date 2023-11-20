@@ -59,7 +59,6 @@ import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../core/store/n
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import CreateTable = TablesAction.CreateTable;
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save-config.util';
 import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
@@ -74,6 +73,7 @@ import {clickedInsideElement} from '../../../shared/utils/html-modifier';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 export const EDITABLE_EVENT = 'editableEvent';
 

@@ -22,8 +22,8 @@ import {AttributesResource, AttributesResourceType} from '../../../core/model/re
 import {SelectItemModel} from '../select-item/select-item.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {deepObjectsEquals} from '../../utils/common.utils';
 import {getAttributesResourceType} from '../../utils/resource.utils';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Pipe({
   name: 'selectItemsWithConstraint',

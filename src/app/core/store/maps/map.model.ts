@@ -18,9 +18,9 @@
  */
 
 import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
-import {QueryAttribute} from '../../model/query-attribute';
 import {QueryStem} from '../navigation/query/query';
 import {MimeType} from '../../model/mime-type';
+import {QueryAttribute} from '@lumeer/data-filters';
 
 export interface MapCoordinates {
   lat: number;

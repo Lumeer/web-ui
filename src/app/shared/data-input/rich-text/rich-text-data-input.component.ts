@@ -37,7 +37,7 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {isNotNullOrUndefined, preventEvent, unescapeHtml} from '../../utils/common.utils';
+import {preventEvent} from '../../utils/common.utils';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {DataInputModalService} from '../data-input-modal.service';
@@ -57,6 +57,7 @@ import {map} from 'rxjs/operators';
 import {RichTextDropdownComponent} from './dropdown/rich-text-dropdown.component';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {isNotNullOrUndefined, unescapeHtml} from '@lumeer/utils';
 
 const modalKey = 'rich-text';
 

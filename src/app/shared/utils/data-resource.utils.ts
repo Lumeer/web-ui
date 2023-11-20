@@ -20,7 +20,7 @@
 import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
 import {groupDocumentsByCollection} from '../../core/store/documents/document.utils';
 import {groupLinkInstancesByLinkTypes} from '../../core/store/link-instances/link-instance.utils';
-import {isArray, objectsByIdMap, objectValues} from './common.utils';
+import {objectValues} from './common.utils';
 import {
   Constraint,
   ConstraintData,
@@ -40,6 +40,7 @@ import {
   ResourceAttributeSettings,
   ViewSettings,
 } from '../../core/store/view-settings/view-settings';
+import {isArray, objectsByIdMap} from '@lumeer/utils';
 
 export function sortDataResourcesByViewSettings<T extends DataResource>(
   dataResources: T[],

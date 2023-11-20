@@ -22,14 +22,16 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
 import {ModalService} from '../../shared/modal/modal.service';
 import {Query, QueryStem} from '../store/navigation/query/query';
-import {QueryAttribute, QueryResource} from '../model/query-attribute';
 import {Collection} from '../store/collections/collection';
 import {
   ConditionType,
   Constraint,
   ConstraintData,
   ConstraintType,
+  DataResourceChain,
   DocumentsAndLinksData,
+  QueryAttribute,
+  QueryResource,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {LinkType} from '../store/link-types/link.type';
@@ -37,14 +39,12 @@ import {Workspace} from '../store/navigation/workspace';
 import {DocumentModel} from '../store/documents/document.model';
 import {generateDocumentData} from '../store/documents/document.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../model/resource';
-import {DataResourceChain} from '../../shared/utils/data/data-aggregator';
 import {createRangeInclusive} from '../../shared/utils/array.utils';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,
   queryStemAttributesResourcesOrder,
 } from '../store/navigation/query/query.util';
-import {findLastIndex, isArray, isNotNullOrUndefined, objectsByIdMap} from '../../shared/utils/common.utils';
 import {LinkInstance} from '../store/link-instances/link.instance';
 import {DataResourcesChain} from '../../shared/modal/data-resource-detail/model/data-resources-chain';
 import {findAttributeConstraint} from '../store/collections/collection.util';
@@ -54,6 +54,7 @@ import {selectViewById} from '../store/views/views.state';
 import {forkJoin, switchMap} from 'rxjs';
 import {selectDocumentsByCollectionAndQuery} from '../store/common/permissions.selectors';
 import {take} from 'rxjs/operators';
+import {findLastIndex, isArray, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 export interface CreateDataResourceData {
   stem: QueryStem;

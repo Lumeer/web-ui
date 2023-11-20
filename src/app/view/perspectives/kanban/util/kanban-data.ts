@@ -20,8 +20,7 @@
 import {KanbanAttribute, KanbanColumn, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
-import {Constraint} from '@lumeer/data-filters';
+import {Constraint, DataResourceChain} from '@lumeer/data-filters';
 
 export interface KanbanData {
   columns: KanbanDataColumn[];

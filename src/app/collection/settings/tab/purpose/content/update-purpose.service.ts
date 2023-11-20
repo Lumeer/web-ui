@@ -23,7 +23,7 @@ import {Collection, CollectionPurpose} from '../../../../../core/store/collectio
 import {AppState} from '../../../../../core/store/app.state';
 import {UpdateValueService} from '../../../../../core/service/update-value.service';
 import {CollectionsAction} from '../../../../../core/store/collections/collections.action';
-import {deepObjectsEquals} from '../../../../../shared/utils/common.utils';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Injectable()
 export class UpdatePurposeService extends UpdateValueService<CollectionPurpose, Collection> {

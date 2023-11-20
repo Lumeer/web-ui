@@ -43,10 +43,10 @@ import {Resource} from '../../../core/model/resource';
 import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} from '../../utils/permission.utils';
 import {RoleType} from '../../../core/model/role-type';
 import {PermissionsHelper} from '../../../core/store/permissions/permissions.helper';
-import {deepObjectCopy} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {NotificationButton} from '../../../core/notifications/notification-button';
 import {ResourcePermissionType, resourcePermissionTypeMap} from '../../../core/model/resource-permission-type';
+import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'team-list',

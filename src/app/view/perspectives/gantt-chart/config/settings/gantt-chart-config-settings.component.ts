@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {GanttChartConfig} from '../../../../../core/store/gantt-charts/gantt-chart';
 import {generateId} from '../../../../../shared/utils/resource.utils';
-import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
+import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'gantt-chart-config-settings',

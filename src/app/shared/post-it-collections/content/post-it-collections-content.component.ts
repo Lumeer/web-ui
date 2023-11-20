@@ -36,7 +36,6 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
 import {QueryParam} from '../../../core/store/navigation/query-param';
-import {isNullOrUndefined} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {generateCorrelationId} from '../../utils/resource.utils';
@@ -50,6 +49,7 @@ import {createEmptyCollection} from '../../../core/store/collections/collection.
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectHasVisibleSearchTab} from '../../../core/store/common/permissions.selectors';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 const UNCREATED_THRESHOLD = 5;
 

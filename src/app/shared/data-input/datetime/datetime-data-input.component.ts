@@ -34,7 +34,6 @@ import {
 import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../../core/model/language';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
@@ -42,6 +41,7 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
 import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ConstraintType, DateTimeDataValue} from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {isDateValid, isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'datetime-data-input',

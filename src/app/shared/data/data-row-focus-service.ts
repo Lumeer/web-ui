@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNotNullOrUndefined, isNullOrUndefined, preventEvent} from '../utils/common.utils';
+import {preventEvent} from '../utils/common.utils';
 import {keyboardEventCode, KeyCode} from '../key-code';
 import {DataRowComponent, DataRowHiddenComponent} from './data-row-component';
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
 interface DataRowPosition {
   row?: number;

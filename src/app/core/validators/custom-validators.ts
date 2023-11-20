@@ -18,7 +18,7 @@
  */
 
 import {UntypedFormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {isNullOrUndefined} from '../../shared/utils/common.utils';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 export function notEmptyValidator(): ValidatorFn {
   return (control: UntypedFormControl): ValidationErrors | null => {

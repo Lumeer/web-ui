@@ -35,7 +35,6 @@ import {
   selectProjectsLoadedForOrganization,
   selectReadableProjectsForOrganization,
 } from '../core/store/projects/projects.state';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.utils';
 import {User} from '../core/store/users/user';
 import {CommonAction} from '../core/store/common/common.action';
 import {OrganizationService, ProjectService} from '../core/data-service';
@@ -46,6 +45,7 @@ import {Team} from '../core/store/teams/team';
 import {userHasRoleInProject} from '../shared/utils/permission.utils';
 import {RoleType} from '../core/model/role-type';
 import {AuthService} from '../auth/auth.service';
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
 @Injectable()
 export class WorkspaceService {

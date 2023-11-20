@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Role} from '../../../core/store/permissions/permissions';
-import {uniqueValues} from '../../utils/array.utils';
+import {uniqueValues} from '@lumeer/utils';
 
 @Pipe({
   name: 'rolesCount',

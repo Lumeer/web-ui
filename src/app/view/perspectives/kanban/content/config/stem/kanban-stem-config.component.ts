@@ -26,18 +26,17 @@ import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
-import {QueryResource} from '../../../../../../core/model/query-attribute';
 import {findAttribute} from '../../../../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
-import {isArray} from '../../../../../../shared/utils/common.utils';
-import {Constraint, ConstraintData, DataValue} from '@lumeer/data-filters';
+import {Constraint, ConstraintData, DataValue, QueryResource} from '@lumeer/data-filters';
 import {
   selectDocumentsByCollectionAndReadPermission,
   selectLinksByLinkTypeAndReadPermission,
 } from '../../../../../../core/store/common/permissions.selectors';
+import {isArray} from '@lumeer/utils';
 
 @Component({
   selector: 'kanban-stem-config',

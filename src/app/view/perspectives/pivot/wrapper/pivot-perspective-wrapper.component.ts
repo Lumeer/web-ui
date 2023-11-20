@@ -35,16 +35,15 @@ import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {asyncScheduler, BehaviorSubject, Observable} from 'rxjs';
 import {filter, map, throttleTime} from 'rxjs/operators';
 import {PivotData} from '../util/pivot-data';
-import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {checkOrTransformPivotConfig} from '../util/pivot-util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {ConstraintData, DataAggregationType, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 import {PivotPerspectiveConfiguration} from '../../perspective-configuration';
 import {View} from '../../../../core/store/views/view';
 import {PivotTableCell} from '../util/pivot-table';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 interface Data {
   collections: Collection[];

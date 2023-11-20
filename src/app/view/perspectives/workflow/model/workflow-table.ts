@@ -20,8 +20,7 @@
 import {TableModel} from '../../../../shared/table/model/table-model';
 import {DataResource} from '../../../../core/model/resource';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {Constraint, DataValue} from '@lumeer/data-filters';
-import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
+import {Constraint, DataResourceChain, DataValue} from '@lumeer/data-filters';
 
 export interface WorkflowTable extends TableModel {
   title?: WorkflowTableTitle;

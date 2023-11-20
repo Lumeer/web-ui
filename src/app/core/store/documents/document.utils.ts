@@ -27,7 +27,6 @@ import {
 import {DocumentAdditionalDataRequest, DocumentIdsData, DocumentModel} from './document.model';
 import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
 import {createRange} from '../../../shared/utils/array.utils';
-import {isArray, isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {
@@ -45,6 +44,7 @@ import {
 import {LinkInstance} from '../link-instances/link.instance';
 import {defaultTasksSortBy, TaskConfigAttribute, TasksConfigSort, TasksConfigSortBy} from '../searches/search';
 import {AttributeSortType} from '../view-settings/view-settings';
+import {isArray, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 export function createDocumentRequestAdditionalData(
   collection: Collection,
@@ -421,7 +421,7 @@ function dataValueHasValue(dataValue: DataValue, set: Set<any>): boolean {
 }
 
 function getCollectionTaskDataMap(collections: Collection[]): Record<string, CollectionTaskDataMap> {
-  return collections.reduce((map, collection) => {
+  return collections.reduce<Record<string, CollectionTaskDataMap>>((map, collection) => {
     const stateConstraint =
       findAttributeConstraint(collection.attributes, collection.purpose?.metaData?.stateAttributeId) ||
       new UnknownConstraint();

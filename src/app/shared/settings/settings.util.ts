@@ -20,7 +20,7 @@
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
-import {deepArrayEquals, moveItemInArray, uniqueValues} from '../utils/array.utils';
+import {deepArrayEquals, moveItemInArray} from '../utils/array.utils';
 import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {objectValues} from '../utils/common.utils';
@@ -32,6 +32,7 @@ import {
 } from '../../core/store/view-settings/view-settings';
 import {permissionsAreEmpty} from '../utils/permission.utils';
 import {Permissions} from '../../core/store/permissions/permissions';
+import {uniqueValues} from '@lumeer/utils';
 
 const composedIdSeparator = ':';
 

@@ -39,9 +39,9 @@ import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
-import {objectsByIdMap} from '../utils/common.utils';
 import {User} from '../../core/store/users/user';
 import {selectCurrentUser} from '../../core/store/users/users.state';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Component({
   selector: 'teams',

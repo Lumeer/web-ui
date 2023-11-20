@@ -54,12 +54,12 @@ import {
   CoordinatesConstraint,
   CoordinatesConstraintConfig,
 } from '@lumeer/data-filters';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {AppState} from '../../../../../core/store/app.state';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import {addressDefaultFields} from '../../../../../shared/modal/attribute/type/form/constraint-config/address/address-constraint.constants';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {View} from '../../../../../core/store/views/view';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'map-globe-content',

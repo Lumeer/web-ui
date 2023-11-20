@@ -20,8 +20,8 @@
 import {DefaultViewConfig, View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
-import {deepObjectCopy} from '../../../shared/utils/common.utils';
 import {permissionsChanged} from '../../../shared/utils/permission.utils';
+import {deepObjectCopy} from '@lumeer/utils';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {

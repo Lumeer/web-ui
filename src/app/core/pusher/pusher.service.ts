@@ -77,7 +77,6 @@ import {NavigationExtras, Router} from '@angular/router';
 import {LocationStrategy} from '@angular/common';
 import {addFiltersToQuery, convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
-import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {PrintService} from '../service/print.service';
 import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../../shared/utils/permission.utils';
@@ -93,6 +92,7 @@ import {Query} from '../store/navigation/query/query';
 import {ModalsAction} from '../store/modals/modals.action';
 import {convertServiceLimitsDtoToModel} from '../store/organizations/service-limits/service-limits.converter';
 import {InformationRecordsAction} from '../store/information-store/information-records.action';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Injectable({
   providedIn: 'root',

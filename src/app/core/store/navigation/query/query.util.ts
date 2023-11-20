@@ -47,9 +47,7 @@ import {
   containsSameElements,
   createRange,
   isArraySubset,
-  uniqueValues,
 } from '../../../../shared/utils/array.utils';
-import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
 import {AttributesResource, AttributesResourceType} from '../../../model/resource';
@@ -59,7 +57,7 @@ import {Workspace} from '../workspace';
 import {MapPosition} from '../../maps/map.model';
 import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {generateId, getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
+import {QueryAttribute, QueryResource} from '@lumeer/data-filters';
 import {COLOR_PRIMARY} from '../../../constants';
 import {DataQuery} from '../../../model/data-query';
 import {AllowedPermissions, AllowedPermissionsMap} from '../../../model/allowed-permissions';
@@ -71,6 +69,7 @@ import {View} from '../../views/view';
 import {isAttributeVisibleInResourceSettings} from '../../../../shared/utils/attribute.utils';
 import {AttributesSettings, ResourceAttributeSettings} from '../../view-settings/view-settings';
 import {WorkspaceQuery} from './workspace-query';
+import {deepObjectsEquals, isNullOrUndefined, uniqueValues} from '@lumeer/utils';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {

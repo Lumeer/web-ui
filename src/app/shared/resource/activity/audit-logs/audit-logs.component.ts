@@ -42,13 +42,13 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {selectLinkTypesWithCollections} from '../../../../core/store/link-types/link-types.state';
-import {objectsByIdMap} from '../../../utils/common.utils';
 import {AuditLogConfiguration} from './model/audit-log-configuration';
 import {ModalService} from '../../../modal/modal.service';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import * as AuditLogActions from '../../../../core/store/audit-logs/audit-logs.actions';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Component({
   selector: 'audit-logs',

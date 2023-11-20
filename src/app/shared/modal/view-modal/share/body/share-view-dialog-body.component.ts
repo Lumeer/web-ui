@@ -37,7 +37,6 @@ import {Permission, Permissions, Role} from '../../../../../core/store/permissio
 import {BehaviorSubject, combineLatest, Subscription} from 'rxjs';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
 import {generateCorrelationId} from '../../../../utils/resource.utils';
-import {uniqueValues} from '../../../../utils/array.utils';
 import {
   rolesChanged,
   teamCanReadWorkspace,
@@ -50,9 +49,9 @@ import {
 } from '../../../../utils/permission.utils';
 import {Team} from '../../../../../core/store/teams/team';
 import {RoleType} from '../../../../../core/model/role-type';
-import {deepObjectsEquals} from '../../../../utils/common.utils';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
+import {deepObjectsEquals, uniqueValues} from '@lumeer/utils';
 
 export enum ViewTab {
   Users = 'users',

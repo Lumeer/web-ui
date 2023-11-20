@@ -19,7 +19,7 @@
 
 import {Directive, ElementRef, HostListener, Inject, Optional, Renderer2} from '@angular/core';
 import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {isNotNullOrUndefined} from '../utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Directive({
   selector: '[number]',

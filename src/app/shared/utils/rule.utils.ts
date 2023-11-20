@@ -19,8 +19,9 @@
 
 import {ChronoUnit, CronRule, CronRuleConfiguration, Rule, RuleType} from '../../core/model/rule';
 import {createRange} from './array.utils';
-import {bitSet, bitTest, isDateValid, isNullOrUndefined} from './common.utils';
+import {bitSet, bitTest} from './common.utils';
 import * as moment from 'moment';
+import {isDateValid, isNullOrUndefined} from '@lumeer/utils';
 
 export enum RuleOffsetType {
   Up = 'up',

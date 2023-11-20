@@ -28,8 +28,8 @@ import {ServiceLimits} from '../../../../core/store/organizations/service-limits
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'payments-panel',

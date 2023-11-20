@@ -21,7 +21,7 @@ import {COLOR_PRIMARY} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkDocumentsNoReturnBlocklyComponent} from './link-documents-no-return-blockly-component';
-import {isNotNullOrUndefined} from '../../../utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 declare var Blockly: any;
 

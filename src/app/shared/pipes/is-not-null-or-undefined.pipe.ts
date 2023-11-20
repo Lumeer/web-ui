@@ -18,8 +18,7 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-
-import {isNotNullOrUndefined} from '../utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'isNotNullOrUndefined',

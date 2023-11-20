@@ -25,7 +25,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {cleanQueryAttribute} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'pivotAttributeSelectItem',

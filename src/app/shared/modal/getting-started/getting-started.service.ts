@@ -40,9 +40,9 @@ import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {RouterAction} from '../../../core/store/router/router.action';
 import {User, UserOnboarding} from '../../../core/store/users/user';
 import {GettingStartedStage} from './model/getting-started-stage';
-import {uniqueValues} from '../../utils/array.utils';
 import {organizationReadableUsersAndTeams} from '../../utils/permission.utils';
 import {ModalService} from '../modal.service';
+import {uniqueValues} from '@lumeer/utils';
 
 const EMPTY_TEMPLATE_CODE = 'EMPTY';
 

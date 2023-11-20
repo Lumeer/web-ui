@@ -31,25 +31,20 @@ import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
-import {
-  deepObjectCopy,
-  isNotNullOrUndefined,
-  objectsByIdMap,
-  objectValues,
-} from '../../../../../../shared/utils/common.utils';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {TableRow, TableRowCell, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
 import {moveItemInArray} from '../../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
-import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData, queryAttributePermissions} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {addRowByParentId} from './workflow-utils';
 import {sortAndFilterTableRowsByHierarchy} from '../../../../../../shared/table/model/table-hierarchy';
 import {ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {deepObjectCopy, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 @Injectable()
 export class WorkflowTablesStateService {

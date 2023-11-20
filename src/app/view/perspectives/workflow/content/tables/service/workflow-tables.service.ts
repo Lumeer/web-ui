@@ -44,9 +44,14 @@ import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
-import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {
+  ConditionType,
+  ConditionValue,
+  DataAggregationType,
+  ConstraintData,
+  DocumentsAndLinksData,
+} from '@lumeer/data-filters';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
-import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 @Injectable()

@@ -35,7 +35,6 @@ import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {DataRowComponent} from '../../../../data/data-row-component';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 import {
@@ -43,10 +42,12 @@ import {
   ConstraintData,
   ConstraintType,
   DataValue,
+  isAttributeLockEnabledByLockStats,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {AttributeFormattingStyle, isAttributeLockEnabledByLockStats} from '../../../../utils/attribute.utils';
+import {AttributeFormattingStyle} from '../../../../utils/attribute.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'data-resource-data-row',

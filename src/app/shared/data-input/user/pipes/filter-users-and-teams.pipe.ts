@@ -21,9 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../../utils/common.utils';
-import {removeAccentFromString, userDataValueCreateTeamValue} from '@lumeer/data-filters';
+import {userDataValueCreateTeamValue} from '@lumeer/data-filters';
 import {Team} from '../../../../core/store/teams/team';
 import {COLOR_INFO} from '../../../../core/constants';
+import {removeAccentFromString} from '@lumeer/utils';
 
 @Pipe({
   name: 'filterUsersAndTeams',

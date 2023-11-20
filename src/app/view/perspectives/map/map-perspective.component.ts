@@ -48,7 +48,6 @@ import {MapContentComponent} from './content/map-content.component';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {checkOrTransformMapConfig, mapPositionChanged} from '../../../core/store/maps/map-config.utils';
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {AppState} from '../../../core/store/app.state';
@@ -56,6 +55,7 @@ import {selectMap} from '../../../core/store/maps/maps.state';
 import {defaultMapPerspectiveConfiguration, MapPerspectiveConfiguration} from '../perspective-configuration';
 import {selectCollectionsInCustomQuery} from '../../../core/store/common/permissions.selectors';
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Component({
   selector: 'map-perspective',

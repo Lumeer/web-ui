@@ -30,31 +30,27 @@ import {
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {
-  aggregateDataResources,
-  dataAggregationConstraint,
-  DataAggregationType,
-} from '../../../../shared/utils/data/data-aggregation';
-import {
-  AggregatedDataMap,
-  AggregatedDataValues,
-  AggregatedMapData,
-  DataAggregator,
-  DataAggregatorAttribute,
-} from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
 import {
+  aggregateDataResources,
+  AggregatedDataMap,
+  AggregatedDataValues,
+  AggregatedMapData,
   Constraint,
   ConstraintData,
   ConstraintType,
+  dataAggregationConstraint,
+  DataAggregationType,
+  DataAggregator,
+  DataAggregatorAttribute,
   DataValue,
   DocumentsAndLinksData,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {attributesResourcesAttributesMap} from '../../../../shared/utils/resource.utils';
-import {flattenMatrix, flattenValues, uniqueValues} from '../../../../shared/utils/array.utils';
+import {flattenMatrix, flattenValues} from '../../../../shared/utils/array.utils';
+import {deepObjectsEquals, isArray, isNotNullOrUndefined, uniqueValues} from '@lumeer/utils';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];

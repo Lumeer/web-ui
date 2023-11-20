@@ -33,7 +33,6 @@ import {DataRow} from '../../data/data-row.service';
 import {DataCursor} from '../../data-input/data-cursor';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {BehaviorSubject} from 'rxjs';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {PostItLayoutType} from '../post-it-layout-type';
 import {
@@ -46,6 +45,7 @@ import {
 import {animateOpacityEnterLeave} from '../../animations';
 import {AttributeFormattingStyle} from '../../utils/attribute.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'post-it-row',

@@ -43,12 +43,12 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {generateCorrelationId} from '../../../../utils/resource.utils';
 import {debounceTime} from 'rxjs/operators';
-import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {Action} from '@ngrx/store';
 import {User} from '../../../../../core/store/users/user';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: '[links-list-table-body]',

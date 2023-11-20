@@ -33,10 +33,11 @@ import {
   scaleImagePoint,
   SVGContainer,
 } from './map-image-render-utils';
-import {deepObjectsEquals, isNotNullOrUndefined, objectValues} from '../../../../../../shared/utils/common.utils';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {MimeType} from '../../../../../../core/model/mime-type';
 import {ElementRef, EventEmitter} from '@angular/core';
 import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
 
 export class SvgImageMap {
   public detail$ = new EventEmitter<MapMarkerProperties>();

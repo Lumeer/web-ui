@@ -23,8 +23,8 @@ import {QueryItemType} from '../model/query-item-type';
 import {QueryStemQueryItem} from '../model/query-stem.query-item';
 import {CollectionQueryItem} from '../model/collection.query-item';
 import {QueryStemInputQueryItem} from '../model/query-stem-input.query-item';
-import {findLastIndex} from '../../../../utils/common.utils';
 import {SearchBoxData} from '../../util/search-box.service';
+import {findLastIndex} from '@lumeer/utils';
 
 @Pipe({
   name: 'createCompactQueryItems',

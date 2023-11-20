@@ -21,13 +21,13 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_PRIMARY} from '../../../core/constants';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
-import {isArray, isNotNullOrUndefined} from '../../utils/common.utils';
 import {RuleVariable} from '../rule-variable-type';
 import {shadeColor} from '../../utils/html-modifier';
 import {BlocklyComponent} from './blocks/blockly-component';
 import {BlocklyDebugDisplay} from '../blockly-debugger/blockly-debugger.component';
 import {View} from '../../../core/store/views/view';
 import {ConstraintType} from '@lumeer/data-filters';
+import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
 
 declare var Blockly: any;
 

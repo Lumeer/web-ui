@@ -25,7 +25,7 @@ import {
   RouterNavigatedAction,
   RouterNavigationAction,
 } from '@ngrx/router-store';
-import {deepObjectsEquals, objectValues} from '../../../shared/utils/common.utils';
+import {objectValues} from '../../../shared/utils/common.utils';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {parseMapCoordinates} from '../maps/map-coordinates';
@@ -37,6 +37,7 @@ import {convertQueryStringToModel} from './query/query.converter';
 import {parseSearchTabFromUrl} from './search-tab';
 import {convertStringToViewCursor} from './view-cursor/view-cursor';
 import {convertStringToPerspectiveSettings} from './settings/perspective-settings';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
   const {params, queryParams, url} = action.payload.routerState;

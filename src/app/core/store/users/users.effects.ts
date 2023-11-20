@@ -41,7 +41,6 @@ import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
 import mixpanel from 'mixpanel-browser';
 import {OrganizationsAction} from '../organizations/organizations.action';
-import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {createCallbackActions} from '../utils/store.utils';
 import {selectAllServiceLimits} from '../organizations/service-limits/service-limits.state';
 import {ServiceLevelType} from '../../dto/service-level-type';
@@ -49,6 +48,7 @@ import {ConfigurationService} from '../../../configuration/configuration.service
 import {TeamsAction} from '../teams/teams.action';
 import {convertUserInvitationToDto} from '../../dto/user-invitation.dto';
 import {Ga4Service} from '../../service/ga4.service';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 @Injectable()
 export class UsersEffects {

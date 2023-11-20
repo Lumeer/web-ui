@@ -21,7 +21,7 @@ import {COLOR_AMBER} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {BlocklyComponent} from './blockly-component';
 import {View} from '../../../../core/store/views/view';
-import {isNotNullOrUndefined} from '../../../utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 declare var Blockly: any;
 

@@ -22,7 +22,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
 import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
+import {hasFilesAttributeChanged} from '../../../shared/utils/has-files-attribute-changed';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';

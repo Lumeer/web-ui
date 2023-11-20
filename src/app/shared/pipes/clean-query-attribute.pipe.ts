@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {cleanQueryAttribute, QueryAttribute} from '../../core/model/query-attribute';
+import {cleanQueryAttribute, QueryAttribute} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'cleanQueryAttribute',

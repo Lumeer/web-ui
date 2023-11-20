@@ -18,11 +18,18 @@
  */
 
 import {
+  aggregateDataValues,
+  AggregatedDataItem,
   AttributeFilter,
   computeAttributeLockStatsByDataValues,
   ConstraintData,
   createDataValuesMap,
-  objectsByIdMap,
+  dataAggregationConstraint,
+  dataAggregationsByConstraint,
+  DataAggregationType,
+  DataAggregatorAttribute,
+  isAttributeLockEnabledByLockStats,
+  queryAttributePermissions,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
@@ -35,9 +42,7 @@ import {
   queryStemsAreSame,
   subtractFilters,
 } from '../../../../../../core/store/navigation/query/query.util';
-import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
-import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
 import {
   TABLE_BOTTOM_TOOLBAR_HEIGHT,
   TABLE_ROW_BORDER,
@@ -54,21 +59,13 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {sortDataObjectsByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
-import {isNotNullOrUndefined, objectValues} from '../../../../../../shared/utils/common.utils';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
-import {
-  computeAttributeFormatting,
-  isAttributeLockEnabledByLockStats,
-} from '../../../../../../shared/utils/attribute.utils';
+import {computeAttributeFormatting} from '../../../../../../shared/utils/attribute.utils';
 import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
-import {
-  aggregateDataValues,
-  dataAggregationConstraint,
-  dataAggregationsByConstraint,
-  DataAggregationType,
-} from '../../../../../../shared/utils/data/data-aggregation';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 

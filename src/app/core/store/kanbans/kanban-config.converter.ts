@@ -20,10 +20,11 @@
 import {KanbanAttribute, KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from './kanban';
 import {KanbanCollectionConfigV0, KanbanColumnV0, KanbanConfigV0} from './kanban-old';
 import {AttributesResourceType} from '../../model/resource';
-import {deepObjectCopy, isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
+import {objectValues} from '../../../shared/utils/common.utils';
 import {SizeType} from '../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../shared/post-it/post-it-layout-type';
 import {cleanKanbanAttribute} from '../../../view/perspectives/kanban/util/kanban.util';
+import {deepObjectCopy, isNotNullOrUndefined} from '@lumeer/utils';
 
 export function convertKanbanConfigDtoToModel(config: any): KanbanConfig {
   if (!config) {

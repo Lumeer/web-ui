@@ -34,7 +34,6 @@ import {keyboardEventCode, KeyCode} from '../../key-code';
 import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {uniqueValues} from '../../utils/array.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
@@ -47,7 +46,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {deepObjectsEquals} from '../../utils/common.utils';
+import {deepObjectsEquals, uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'view-data-input',

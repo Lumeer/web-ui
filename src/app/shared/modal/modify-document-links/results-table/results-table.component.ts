@@ -34,7 +34,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
-import {objectsByIdMap, objectValues} from '../../../utils/common.utils';
+import {objectValues} from '../../../utils/common.utils';
 import {isResultRowChecked} from './pipes/is-result-row-checked.pipe';
 import {View} from '../../../../core/store/views/view';
 import {
@@ -43,6 +43,7 @@ import {
 } from '../../../utils/attribute.utils';
 import {sortDataObjectsByResourceAttributesSettings} from '../../../utils/data-resource.utils';
 import {ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
+import {objectsByIdMap} from '@lumeer/utils';
 
 export type ResultTableRow = {document: DocumentModel; linkInstance?: LinkInstance};
 

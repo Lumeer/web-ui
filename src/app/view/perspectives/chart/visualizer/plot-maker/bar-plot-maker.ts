@@ -19,10 +19,10 @@
 
 import {Layout, d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import {ChartAxisData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {PlotlyChartData} from './plot-maker';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 export class BarPlotMaker extends AxisDraggablePlotMaker {
   public createData(): PlotlyChartData[] {

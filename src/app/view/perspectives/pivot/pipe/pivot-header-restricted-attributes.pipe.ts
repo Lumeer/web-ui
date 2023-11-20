@@ -19,8 +19,8 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Pipe({
   name: 'pivotHeaderRestrictedAttributes',

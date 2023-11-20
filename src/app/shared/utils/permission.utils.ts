@@ -33,11 +33,10 @@ import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, DataResource, Resource} from '../../core/model/resource';
 import {RoleType} from '../../core/model/role-type';
 import {Permission, Permissions, Role} from '../../core/store/permissions/permissions';
-import {arrayIntersection, flattenMatrix, uniqueValues} from './array.utils';
+import {flattenMatrix} from './array.utils';
 import {PermissionsType} from '../../core/model/permissions-type';
 import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
 import {Team} from '../../core/store/teams/team';
-import {objectsByIdMap} from './common.utils';
 import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
 import {
   ConstraintData,
@@ -47,6 +46,7 @@ import {
 } from '@lumeer/data-filters';
 import {Perspective} from '../../view/perspectives/perspective';
 import {ResourcePermissionType} from '../../core/model/resource-permission-type';
+import {arrayIntersection, objectsByIdMap, uniqueValues} from '@lumeer/utils';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -660,7 +660,7 @@ export function computeResourcesPermissions(
 ): ResourcesPermissions {
   const collectionsPermissions = (collections || [])
     .filter(collection => !!collection)
-    .reduce(
+    .reduce<AllowedPermissionsMap>(
       (map, collection) => ({
         ...map,
         [collection.id]: userPermissionsInCollection(
@@ -677,7 +677,7 @@ export function computeResourcesPermissions(
 
   const linkTypesPermissions = (linkTypes || [])
     .filter(linkType => !!linkType)
-    .reduce(
+    .reduce<AllowedPermissionsMap>(
       (map, linkType) => ({
         ...map,
         [linkType.id]: userPermissionsInLinkType(
@@ -705,7 +705,7 @@ export function computeCollectionsPermissions(
 ): AllowedPermissionsMap {
   return (collections || [])
     .filter(collection => !!collection)
-    .reduce(
+    .reduce<AllowedPermissionsMap>(
       (map, collection) => ({
         ...map,
         [collection.id]: userPermissionsInCollection(

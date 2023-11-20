@@ -66,20 +66,24 @@ import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../../../s
 import {
   generateAttributeNameFromAttributes,
   isAttributeConstraintType,
-  isAttributeEditable,
 } from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 import {
   computeElementPositionInParent,
-  deepObjectsEquals,
-  isNotNullOrUndefined,
   objectChanged,
   preventEvent,
 } from '../../../../../../../shared/utils/common.utils';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
-import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
+import {
+  isAttributeEditable,
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  UnknownConstraint,
+  UnknownDataValue,
+} from '@lumeer/data-filters';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 import {initForceTouch} from '../../../../../../../shared/utils/html-modifier';
 import {View} from '../../../../../../../core/store/views/view';
@@ -87,6 +91,7 @@ import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 import {AttributesResource} from '../../../../../../../core/model/resource';
 import {animateOpacityEnterLeave} from '../../../../../../../shared/animations';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
+import {deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'table-data-cell',

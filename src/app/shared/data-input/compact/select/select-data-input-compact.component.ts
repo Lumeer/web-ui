@@ -33,7 +33,7 @@ import {CommonDataInputConfiguration, SelectDataInputConfiguration} from '../../
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../../dropdown/options/options-dropdown.component';
 import {createSelectDataInputDropdownOptions} from '../../select/select-data-input-utils';
-import {uniqueValues} from '../../../utils/array.utils';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'select-data-input-compact',

@@ -23,8 +23,8 @@ import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/query/query.util';
 import {SelectItemModel} from '../select/select-item/select-item.model';
-import {QueryResource} from '../../core/model/query-attribute';
 import {AttributesResourceType} from '../../core/model/resource';
+import {QueryResource} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'queryStemResourcesSelectItems',

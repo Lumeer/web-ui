@@ -38,7 +38,7 @@ import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject, interval, Observable, Subscription} from 'rxjs';
 import {convertRemToPixels} from '../../utils/html-modifier';
 import {ModalData} from '../../../core/model/modal-data';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 const initialMargin = 3;
 

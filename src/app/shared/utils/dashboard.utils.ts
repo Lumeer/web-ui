@@ -18,11 +18,11 @@
  */
 
 import {DashboardCell, DashboardTab} from '../../core/model/dashboard-tab';
-import {removeAccentFromString} from '@lumeer/data-filters';
 import {View} from '../../core/store/views/view';
 import {Perspective} from '../../view/perspectives/perspective';
 import {searchTabsMap} from '../../core/store/navigation/search-tab';
 import {Dashboard} from '../../core/store/searches/search';
+import {removeAccentFromString} from '@lumeer/utils';
 
 export function getAllDashboardCells(dashboard: Dashboard): DashboardCell[] {
   return (dashboard?.tabs || []).reduce((cells, tab) => {

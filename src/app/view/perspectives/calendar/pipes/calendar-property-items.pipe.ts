@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
-import {queryAttributesAreSame} from '../../../../core/model/query-attribute';
+import {queryAttributesAreSame} from '@lumeer/data-filters';
 
 const sameCollectionProperties = ['start', 'end'];
 

@@ -47,7 +47,6 @@ import {
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {deepObjectsEquals} from '../../../../../shared/utils/common.utils';
 import {HiddenInputComponent} from '../../../../../shared/input/hidden-input/hidden-input.component';
 import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
 import {TableRow} from '../../../../../shared/table/model/table-row';
@@ -61,11 +60,17 @@ import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
 import {APP_NAME_SELECTOR} from '../../../../../core/constants';
 import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 import {MenuItem} from '../../../../../shared/menu/model/menu-item';
-import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {
+  ConditionType,
+  ConditionValue,
+  ConstraintData,
+  DataAggregationType,
+  DocumentsAndLinksData,
+} from '@lumeer/data-filters';
 import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
 import {WorkflowPerspectiveConfiguration} from '../../../perspective-configuration';
-import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {AttributeSortType, ViewSettings} from '../../../../../core/store/view-settings/view-settings';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Component({
   selector: 'workflow-tables',

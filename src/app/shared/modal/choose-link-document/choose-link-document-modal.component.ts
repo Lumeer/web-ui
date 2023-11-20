@@ -28,7 +28,6 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
 import {AppState} from '../../../core/store/app.state';
 import {mergeMap, switchMap, tap} from 'rxjs/operators';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
-import {uniqueValues} from '../../utils/array.utils';
 import {Query} from '../../../core/store/navigation/query/query';
 import {
   selectDocumentsByCollectionAndQuery,
@@ -41,6 +40,7 @@ import {View} from '../../../core/store/views/view';
 import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'choose-link-document-modal',

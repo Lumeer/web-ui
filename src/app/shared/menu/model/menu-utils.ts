@@ -18,7 +18,7 @@
  */
 
 import {MenuItem} from './menu-item';
-import {deepObjectsEquals} from '../../utils/common.utils';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 export function convertMenuItemsPath<T extends {id: any; children?: T[]}>(menuItemsPath: MenuItem[], items: T[]): T[] {
   const path = [];

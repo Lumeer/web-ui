@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {createRange} from '../utils/array.utils';
-import {isNumeric} from '../utils/common.utils';
+import {isNumeric} from '@lumeer/utils';
 
 @Pipe({
   name: 'indices',

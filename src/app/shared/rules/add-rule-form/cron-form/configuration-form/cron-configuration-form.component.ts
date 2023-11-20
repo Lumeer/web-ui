@@ -25,7 +25,7 @@ import {select, Store} from '@ngrx/store';
 import {map} from 'rxjs/operators';
 import {ChronoUnit, Rule, maxIntervalByChronoUnit} from '../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../select/select-item/select-item.model';
-import {bitClear, bitSet, isDateValid, objectChanged} from '../../../../utils/common.utils';
+import {bitClear, bitSet, objectChanged} from '../../../../utils/common.utils';
 import {generateId} from '../../../../utils/resource.utils';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import {LanguageCode} from '../../../../../core/model/language';
@@ -38,6 +38,7 @@ import {selectViewsByReadSorted} from '../../../../../core/store/common/permissi
 import {getBaseCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
 import {createRange} from '../../../../utils/array.utils';
 import {defaultDateFormat} from '../../../../utils/date.utils';
+import {isDateValid} from '@lumeer/utils';
 
 interface DayOfWeek {
   bit: number;

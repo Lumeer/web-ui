@@ -21,8 +21,8 @@ import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
 import {getBaseCollectionIdsFromQuery} from '../navigation/query/query.util';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
 export function documentsReducer(
   state: DocumentsState = initialDocumentsState,

@@ -18,7 +18,6 @@
  */
 
 import {createConstraint} from '../../../shared/utils/constraint/create-constraint';
-import {convertToBig} from '../../../shared/utils/data.utils';
 import {
   AttributeDto,
   AttributeFormattingDto,
@@ -48,6 +47,7 @@ import {
   convertAttributeFilterEquationToModel,
 } from '../../dto/attribute-filter-equation.dto';
 import {FontStyle} from '../../model/font-style';
+import {convertToBig} from '@lumeer/utils';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
   return {

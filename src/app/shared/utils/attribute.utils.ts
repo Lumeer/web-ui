@@ -19,14 +19,11 @@
 
 import {Attribute, AttributeFormattingGroup, AttributeFunction} from '../../core/store/collections/collection';
 import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
-import {objectsByIdMap, objectValues} from './common.utils';
+import {objectValues} from './common.utils';
 import {
   ActionConstraintConfig,
   AttributeFilter,
-  AttributeLock,
-  AttributeLockFiltersStats,
   collectAttributeLockFilters,
-  computeAttributeLockStats,
   dataValuesSatisfyEquation,
   ConstraintData,
   ConstraintType,
@@ -39,9 +36,10 @@ import {
   ViewConstraintConfig,
 } from '@lumeer/data-filters';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
-import {AttributesResource, DataResource} from '../../core/model/resource';
+import {AttributesResource} from '../../core/model/resource';
 import {fontStylesClass} from '../../core/model/font-style';
 import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
+import {objectsByIdMap} from '@lumeer/utils';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX = /\./g;
@@ -336,23 +334,6 @@ export function mergeAttributeOverride(attribute: Attribute, override: Partial<A
 
 export function isUsedConstraintAttribute(attribute: Attribute, type: ConstraintType): boolean {
   return attribute?.usageCount > 0 && attribute.constraint?.type === type;
-}
-
-export function isAttributeEditable(
-  resource: AttributesResource,
-  dataResource: DataResource,
-  attribute: Attribute,
-  constraintData: ConstraintData
-): boolean {
-  const stats = computeAttributeLockStats(dataResource, resource, attribute?.lock, constraintData);
-  return isAttributeLockEnabledByLockStats(attribute?.lock, stats);
-}
-
-export function isAttributeLockEnabledByLockStats(lock: AttributeLock, stats: AttributeLockFiltersStats): boolean {
-  if (lock?.locked) {
-    return !!stats?.satisfy;
-  }
-  return !stats?.satisfy;
 }
 
 const NO_HINTS_CONSTRAINT_TYPES = [

@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {ChartAxis, ChartAxisType, ChartSort, ChartType} from './chart';
+import {DataAggregationType} from '@lumeer/data-filters';
 
 export interface ChartConfigV0 {
   type: ChartType;

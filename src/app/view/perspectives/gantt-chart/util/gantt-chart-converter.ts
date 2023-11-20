@@ -40,18 +40,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {contrastColor} from '../../../../shared/utils/color.utils';
-import {
-  isArray,
-  isDateValid,
-  isNotNullOrUndefined,
-  isNullOrUndefined,
-  isNumeric,
-  objectsByIdMap,
-  toNumber,
-} from '../../../../shared/utils/common.utils';
-import {DataAggregatorAttribute, DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {Md5} from '../../../../shared/utils/md5';
 import {canCreateTaskByStemConfig} from './gantt-chart-util';
 import {GanttTasksSort, sortGanttTasks} from './gantt-chart-sorting';
@@ -60,20 +49,22 @@ import {
   createDatesInterval,
   parseDateTimeByConstraint,
 } from '../../../../shared/utils/date.utils';
-import {
-  DataObjectAggregator,
-  DataObjectAttribute,
-  DataObjectInfo,
-} from '../../../../shared/utils/data/data-object-aggregator';
-import {fillWithNulls, uniqueValues} from '../../../../shared/utils/array.utils';
-import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
+import {fillWithNulls} from '../../../../shared/utils/array.utils';
 import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DataAggregationType,
+  DataAggregatorAttribute,
+  DataObjectAggregator,
+  DataObjectAttribute,
+  DataObjectInfo,
+  DataResourceChain,
   DateTimeConstraint,
   DocumentsAndLinksData,
   PercentageConstraintConfig,
+  queryResourcesAreSame,
+  aggregateDataValues,
   SelectConstraint,
   UnknownConstraint,
   userCanEditDataResource,
@@ -81,9 +72,19 @@ import {
 } from '@lumeer/data-filters';
 import {Configuration} from '../../../../../environments/configuration-type';
 import {sortDocumentsAndLinksStemData} from '../../../../shared/utils/data-resource.utils';
-import {queryResourcesAreSame} from '../../../../core/model/query-attribute';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 import {Milestone} from '@lumeer/lumeer-gantt/dist/model/task';
+import {
+  isArray,
+  isDateValid,
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+  isNumeric,
+  objectsByIdMap,
+  stripTextHtmlTags,
+  toNumber,
+  uniqueValues,
+} from '@lumeer/utils';
 
 export interface GanttTaskMetadata {
   dataResource: DataResource;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNullOrUndefined, toNumber} from '../../../../../shared/utils/common.utils';
+import {isNullOrUndefined, toNumber} from '@lumeer/utils';
 
 export function createRange(values: number[]): [number, number] {
   let min = null;

@@ -18,7 +18,7 @@
  */
 
 import {ChartAxisConfig, ChartAxisType, ChartConfig, ChartSort, ChartType} from './chart';
-import {deepObjectCopy, deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
 
 export function createChartSaveConfig(config: ChartConfig): ChartConfig {
   const configCopy = deepObjectCopy(config);

@@ -18,7 +18,7 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {stripTextHtmlTags} from '../utils/data.utils';
+import {stripTextHtmlTags} from '@lumeer/utils';
 
 @Pipe({
   name: 'stripHtml',

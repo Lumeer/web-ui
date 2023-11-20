@@ -23,12 +23,6 @@ import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {CalendarEvent, CalendarMetaData} from './calendar-event';
-import {isArray, isDateValid, isNotNullOrUndefined, unescapeHtml} from '../../../../shared/utils/common.utils';
-import {
-  DataObjectAggregator,
-  DataObjectAttribute,
-  DataObjectInfo,
-} from '../../../../shared/utils/data/data-object-aggregator';
 import {isAllDayEvent} from './calendar-util';
 import {constraintContainsHoursInConfig, createDatesInterval} from '../../../../shared/utils/date.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
@@ -38,9 +32,13 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DataObjectAggregator,
+  DataObjectAttribute,
+  DataObjectInfo,
   DocumentsAndLinksData,
   userCanEditDataResource,
 } from '@lumeer/data-filters';
+import {isArray, isDateValid, isNotNullOrUndefined, unescapeHtml} from '@lumeer/utils';
 
 enum DataObjectInfoKeyType {
   Name = 'name',

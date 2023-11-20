@@ -17,78 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Big from 'big.js';
-import {isNullOrUndefined} from './common.utils';
 import {Workspace} from '../../core/store/navigation/workspace';
-
-const formattingTags = [
-  'strong',
-  'em',
-  'i',
-  'sup',
-  'sub',
-  'u',
-  'strike',
-  's',
-  'del',
-  'cite',
-  'code',
-  'b',
-  'span',
-  'p',
-  'br',
-];
-
-export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true): string {
-  const htmlWithoutTags = keepFormattingTags
-    ? stripFormattingHtmlTags(text, true)
-    : stripFormattingHtmlTags(text)
-        .replace(/<(?:.|\s)*?>/g, ' ')
-        .trim();
-
-  return htmlWithoutTags.replace(/class=".*?"/g, '');
-}
-
-function stripFormattingHtmlTags(text: string, negative?: boolean): string {
-  const negativePart = negative ? '?!' : '';
-  return (text || '')
-    .replace(new RegExp(`<(${negativePart}\/?(${formattingTags.join('|')})\s*\/?)[^>]*>`, 'g'), negative ? ' ' : '')
-    .trim();
-}
-
-export function formatUnknownDataValue(value: any, skipDecimal = false): string {
-  if (value || value === 0) {
-    if (!skipDecimal && !isNaN(+value)) {
-      return decimalStoreToUser(String(value));
-    }
-
-    return String(value);
-  }
-
-  return '';
-}
-
-const separator = (1.1).toLocaleString(window.navigator.language).substring(1, 2);
-
-export function decimalUserToStore(value: string): string {
-  return separator === '.' ? value : value.replace(separator, '.');
-}
-
-export function decimalStoreToUser(value: string, customSeparator?: string): string {
-  const currentSeparator = customSeparator || separator;
-  return currentSeparator === '.' ? value : value.replace('.', currentSeparator);
-}
-
-export function convertToBig(value: any): Big {
-  if (isNullOrUndefined(value) || value === '') {
-    return null;
-  }
-  try {
-    return new Big(decimalUserToStore(String(value)));
-  } catch (e) {
-    return null;
-  }
-}
 
 export function replaceWorkspacePathInUrl(url: string, workspace: Workspace): string {
   if (!url || !workspace) {

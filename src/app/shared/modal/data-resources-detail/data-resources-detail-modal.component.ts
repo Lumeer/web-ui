@@ -26,7 +26,6 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
 import {AppState} from '../../../core/store/app.state';
 import {map, switchMap} from 'rxjs/operators';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
-import {uniqueValues} from '../../utils/array.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getDataResourcesDataIds, sortDataResourcesByViewSettings} from '../../utils/data-resource.utils';
@@ -42,6 +41,7 @@ import {keyboardEventCode, KeyCode} from '../../key-code';
 import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 import {selectViewById} from '../../../core/store/views/views.state';
 import {ViewSettings} from '../../../core/store/view-settings/view-settings';
+import {uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'data-resources-detail-modal',

@@ -34,8 +34,8 @@ import {keyboardEventCode, KeyCode} from '../../key-code';
 import {isMacOS} from '../../utils/system.utils';
 import {defaultTextEditorOptions} from './text-editor.utils';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
-import {stripTextHtmlTags} from '../../utils/data.utils';
 import {textContainsOnlyBrTags} from '../../utils/string.utils';
+import {stripTextHtmlTags} from '@lumeer/utils';
 
 export interface TextEditorChanged {
   html: string;

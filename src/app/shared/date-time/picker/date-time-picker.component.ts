@@ -39,7 +39,7 @@ import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {DateTimeOptions, detectDatePickerViewMode, hasTimeOption} from '../date-time-options';
-import {isDateValid} from '../../utils/common.utils';
+import {isDateValid} from '@lumeer/utils';
 
 @Component({
   selector: 'date-time-picker',

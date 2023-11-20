@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
-import {QueryAttribute} from '../../model/query-attribute';
+import {QueryAttribute, DataAggregationType} from '@lumeer/data-filters';
 
 export interface Chart {
   id: string;

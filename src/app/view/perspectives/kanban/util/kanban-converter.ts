@@ -29,16 +29,8 @@ import {
 } from '../../../../core/store/kanbans/kanban';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {SizeType} from '../../../../shared/slider/size/size-type';
-import {
-  findAttributeByQueryAttribute,
-  findConstraintByQueryAttribute,
-  findResourceByQueryResource,
-  queryAttributePermissions,
-} from '../../../../core/model/query-attribute';
-import {DataAggregator, DataAggregatorAttribute} from '../../../../shared/utils/data/data-aggregator';
 import {cleanKanbanAttribute, isKanbanAggregationDefined} from './kanban.util';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from './kanban-data';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
@@ -47,19 +39,26 @@ import {findAttributeConstraint} from '../../../../core/store/collections/collec
 import {parseDateTimeByConstraint} from '../../../../shared/utils/date.utils';
 import * as moment from 'moment';
 import {createDateTimeOptions} from '../../../../shared/date-time/date-time-options';
-import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {convertToBig} from '../../../../shared/utils/data.utils';
 import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DataAggregationType,
+  DataAggregator,
+  DataAggregatorAttribute,
   DateTimeConstraintConfig,
   DocumentsAndLinksData,
+  findAttributeByQueryAttribute,
+  findConstraintByQueryAttribute,
+  findResourceByQueryResource,
+  queryAttributePermissions,
   SelectConstraint,
+  aggregateDataValues,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {convertToBig, deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
 
 interface AggregatedColumnData {
   count: number;

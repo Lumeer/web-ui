@@ -41,7 +41,6 @@ import {
   parseCalendarDate,
 } from '../util/calendar-util';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {deepObjectsEquals, toNumber} from '../../../../shared/utils/common.utils';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {CalendarEvent, CalendarMetaData} from '../util/calendar-event';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -53,6 +52,7 @@ import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from 
 import {
   ConstraintData,
   ConstraintType,
+  DataResourceChain,
   DataValue,
   DateTimeConstraint,
   DocumentsAndLinksData,
@@ -62,8 +62,8 @@ import {
 import {View} from '../../../../core/store/views/view';
 import {CreateDataResourceService} from '../../../../core/service/create-data-resource.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 import {Translation} from '../../../../shared/utils/translation';
+import {deepObjectsEquals, toNumber} from '@lumeer/utils';
 
 interface Data {
   collections: Collection[];

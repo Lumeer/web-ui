@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Attribute, Collection} from '../collections/collection';
 import {MapAttributeModel, MapConfig, MapConfigVersion, MapPosition, MapStemConfig} from './map.model';
 import {Query, QueryStem} from '../navigation/query/query';
@@ -31,6 +30,7 @@ import {
 } from '../navigation/query/query.util';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {ConstraintType} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 export function mapAttributesAreInAllowedRange(model: MapAttributeModel, otherModel: MapAttributeModel): boolean {
   if (!model || !otherModel) {

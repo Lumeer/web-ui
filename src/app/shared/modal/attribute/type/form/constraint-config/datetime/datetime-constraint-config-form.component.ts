@@ -32,7 +32,7 @@ import {ConfigurationService} from '../../../../../../../configuration/configura
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {isNullOrUndefined} from '../../../../../../utils/common.utils';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'datetime-constraint-config-form',

@@ -21,8 +21,8 @@ import {Data, Layout, d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ChartDataSet, ChartPoint} from '../../data/convertor/chart-data';
 import {TwoDAxisPlotMaker} from './two-d-axis-plot-maker';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {PlotlyChartData} from './plot-maker';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 const MIN_POINT_SIZE = 20;
 const MAX_POINT_SIZE = 60;

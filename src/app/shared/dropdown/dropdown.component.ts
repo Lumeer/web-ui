@@ -39,7 +39,8 @@ import {
 } from '@angular/core';
 import {connectedPositionsMap, convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-position';
 import {BehaviorSubject, interval, Observable, Subscription} from 'rxjs';
-import {deepObjectsEquals, preventEvent} from '../utils/common.utils';
+import {preventEvent} from '../utils/common.utils';
+import {deepObjectsEquals} from '@lumeer/utils';
 
 @Component({
   selector: 'dropdown',

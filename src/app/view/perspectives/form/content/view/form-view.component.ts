@@ -58,8 +58,7 @@ import {getOtherLinkedDocumentId} from '../../../../../core/store/link-instances
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {User} from '../../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../../core/store/users/users.state';
-import {objectChanged, objectsByIdMap} from '../../../../../shared/utils/common.utils';
-import {uniqueValues} from '../../../../../shared/utils/array.utils';
+import {objectChanged} from '../../../../../shared/utils/common.utils';
 import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
 import {CommonAction} from '../../../../../core/store/common/common.action';
@@ -67,6 +66,7 @@ import {FormStateService} from './service/form-state.service';
 import {FormCoordinates} from './model/form-coordinates';
 import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
 import {AttributesSettings} from '../../../../../core/store/view-settings/view-settings';
+import {objectsByIdMap, uniqueValues} from '@lumeer/utils';
 
 @Component({
   selector: 'form-view',

@@ -18,12 +18,11 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DataObjectAggregator, DataObjectAttribute} from '@lumeer/data-filters';
 import {TasksGroup} from '../model/tasks-group';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {TaskConfigAttribute, TasksConfigGroupBy} from '../../../../../core/store/searches/search';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
-import {DataObjectAggregator, DataObjectAttribute} from '../../../../../shared/utils/data/data-object-aggregator';
 import {groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
 import {findAttribute} from '../../../../../core/store/collections/collection.util';
 import {AttributesResourceType} from '../../../../../core/model/resource';

@@ -19,9 +19,9 @@
 
 import {Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
 import {DataRowHiddenComponent} from '../../data/data-row-component';
-import {escapeHtml} from '../../utils/common.utils';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {escapeHtml} from '@lumeer/utils';
 
 @Component({
   selector: 'hidden-input',

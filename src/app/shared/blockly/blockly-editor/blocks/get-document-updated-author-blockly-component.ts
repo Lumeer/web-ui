@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BlocklyComponent} from './blockly-component';
-import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
+import {BlocklyUtils} from '../blockly-utils';
 import {COLOR_GREEN} from '../../../../core/constants';
-import {isNotNullOrUndefined} from '../../../utils/common.utils';
 import {GetDocumentPropertyAbstractBlocklyComponent} from './get-document-property-abstract-blockly-component';
 
 declare var Blockly: any;

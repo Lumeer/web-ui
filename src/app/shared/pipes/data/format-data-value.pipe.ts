@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DataValue} from '@lumeer/data-filters';
-import {isNullOrUndefined} from '../../utils/common.utils';
+import {isNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'formatDataValue',

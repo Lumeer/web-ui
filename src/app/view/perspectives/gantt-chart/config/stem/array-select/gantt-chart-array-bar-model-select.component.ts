@@ -24,8 +24,8 @@ import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
-import {deepObjectCopy} from '../../../../../../shared/utils/common.utils';
 import {Constraint} from '@lumeer/data-filters';
+import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'gantt-chart-array-bar-model-select',

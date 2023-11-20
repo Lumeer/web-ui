@@ -32,12 +32,12 @@ import {filter, map, mergeMap} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {selectLinkTypesPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {mapLinkTypeCollections} from '../../../../shared/utils/link-type.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'collection-link-types',

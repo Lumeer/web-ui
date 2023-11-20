@@ -37,10 +37,10 @@ import {
 import {RoleType} from '../../../core/model/role-type';
 import {NotificationButton} from '../../../core/notifications/notification-button';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {deepObjectCopy} from '../../utils/common.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {Role} from '../../../core/store/permissions/permissions';
 import {ResourcePermissionType, resourcePermissionTypeMap} from '../../../core/model/resource-permission-type';
+import {deepObjectCopy} from '@lumeer/utils';
 
 @Component({
   selector: 'user-list',

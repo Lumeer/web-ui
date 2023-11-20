@@ -28,7 +28,6 @@ import {selectCollectionById} from '../../core/store/collections/collections.sta
 import {generateCorrelationId, getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {findAttribute, getDefaultAttributeId} from '../../core/store/collections/collection.util';
-import {isNotNullOrUndefined} from '../utils/common.utils';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {deepArrayEquals} from '../utils/array.utils';
 import {findAttributeByName} from '../utils/attribute.utils';
@@ -42,6 +41,7 @@ import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 export interface DataRow {
   id: string;

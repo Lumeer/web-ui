@@ -60,13 +60,14 @@ import {
   createAttributesSettingsOrder,
   setAttributeToAttributeSettings,
 } from '../../../settings/settings.util';
-import {objectChanged, objectsByIdMap} from '../../../utils/common.utils';
+import {objectChanged} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {User} from '../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
 import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {objectsByIdMap} from '@lumeer/utils';
 
 const columnWidth = 100;
 

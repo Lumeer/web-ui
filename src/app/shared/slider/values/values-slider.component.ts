@@ -31,8 +31,8 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import {SliderItem} from './slider-item';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {BehaviorSubject} from 'rxjs';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: 'values-slider',

@@ -36,12 +36,12 @@ import {
   TextConstraint,
 } from '@lumeer/data-filters';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
 import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
 import {arraySubtract} from '../../../../../../shared/utils/array.utils';
 import {debounceTime, map} from 'rxjs/operators';
 import Big from 'big.js';
 import {mergeAttributeOverride} from '../../../../../../shared/utils/attribute.utils';
+import {objectsByIdMap} from '@lumeer/utils';
 
 @Injectable()
 export class FormValidationService {

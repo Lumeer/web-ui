@@ -25,7 +25,7 @@ import {NumberConstraintFormControl} from './number-constraint-form-control';
 import {Observable} from 'rxjs';
 import {map, startWith, withLatestFrom} from 'rxjs/operators';
 import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
-import {isNumeric, objectValues, toNumber} from '../../../../../../utils/common.utils';
+import {objectValues} from '../../../../../../utils/common.utils';
 import {
   ConstraintData,
   LanguageTag,
@@ -38,6 +38,7 @@ import {AppState} from '../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {TranslationService} from '../../../../../../../core/service/translation.service';
+import {isNumeric, toNumber} from '@lumeer/utils';
 
 @Component({
   selector: 'number-constraint-config-form',

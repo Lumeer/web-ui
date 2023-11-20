@@ -35,7 +35,7 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../../../core/store/collections/collection.util';
 import {FormLinkData} from '../model/form-link-data';
 import {ConstraintType} from '@lumeer/data-filters';
-import {isNotNullOrUndefined} from '../../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Injectable()
 export class FormStateService {

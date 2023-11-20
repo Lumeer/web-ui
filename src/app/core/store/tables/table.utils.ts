@@ -39,8 +39,8 @@ import {
   TableConfigRow,
   TableModel,
 } from './table.model';
-import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../model/allowed-permissions';
+import {objectsByIdMap} from '@lumeer/utils';
 
 export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
   if (!path || path.length === 0) {

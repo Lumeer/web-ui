@@ -34,21 +34,20 @@ import {LinkColumn} from '../../../model/link-column';
 import {LinkRow} from '../../../model/link-row';
 import {DataRowComponent} from '../../../../../data/data-row-component';
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {isNotNullOrUndefined} from '../../../../../utils/common.utils';
 import {distinctUntilChanged, filter} from 'rxjs/operators';
 import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
 import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
 import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
-import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {ConstraintData, DataValue, isAttributeEditable, UnknownConstraint} from '@lumeer/data-filters';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {Action} from '@ngrx/store';
 import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {isAttributeEditable} from '../../../../../utils/attribute.utils';
 import {animateOpacityEnterLeave} from '../../../../../animations';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 @Component({
   selector: '[links-list-table-row]',

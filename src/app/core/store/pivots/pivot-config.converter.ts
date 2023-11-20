@@ -19,7 +19,7 @@
 
 import {PivotConfig, PivotConfigVersion} from './pivot';
 import {PivotConfigV0} from './pivot-old';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
 export function convertPivotConfigDtoToModel(config: any): PivotConfig {
   if (!config) {

@@ -28,9 +28,8 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {PivotDataConverter} from './pivot-data-converter';
 import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
-import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {DocumentsAndLinksData, UnknownConstraint} from '@lumeer/data-filters';
+import {DataAggregationType, DocumentsAndLinksData, UnknownConstraint} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
   {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},
