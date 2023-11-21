@@ -2,7 +2,6 @@
 # Abort on Error
 set -e
 
-# Set up a repeating loop to send some output to Travis.
 export PING_SLEEP=300s
 bash -c "while true; do echo \$(date) - building ...; sleep $PING_SLEEP; done" &
 export BUILD_PING_LOOP_PID=$!

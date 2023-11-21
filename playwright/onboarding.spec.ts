@@ -53,11 +53,11 @@ test('On boarding path', async ({page, request}) => {
   await page.goto('http://localhost:7000/ui');
 
   await expect(page.locator('form[class=auth0-lock-widget]')).toBeVisible();
-  await page.click('a:text("Sign up")');
+  await page.getByRole('link', {name: 'Sign Up'}).click();
 
-  await page.locator('input[placeholder="your@work.email"]').fill(userEmail);
-  await page.locator('input[type=password]').fill(userPassword);
-  await page.click('button[type=submit]');
+  await page.getByPlaceholder('your@work.email').fill(userEmail);
+  await page.getByPlaceholder('your password').fill(userPassword);
+  await page.getByRole('button', {name: 'Sign Up', exact: true}).click();
 
   await expect(page.locator('span:text("Authorize App")')).toBeVisible();
   await page.click('button[id="allow"]');
@@ -65,21 +65,20 @@ test('On boarding path', async ({page, request}) => {
   await page.waitForLoadState('networkidle');
 
   await expect(page.locator('div[class=card-body]')).toBeVisible();
-  await page.click('button:has(span:text("Yes"))');
+  await page.getByRole('button', {name: 'Yes'}).click();
 
   await page.waitForLoadState('networkidle');
   await expect(page.locator('form')).toBeVisible();
   await page.check('input[id=agreement]');
-  await page.click('button[type=submit]');
+  await page.getByRole('button', {name: 'Continue'}).click();
 
   await page.waitForLoadState('networkidle');
   await expect(page.locator('input[id=newsletter]')).toBeEnabled();
-  await expect(page.locator('button[type=submit]:has-text("Continue")')).toBeEnabled();
-  await page.click('button[type=submit]:has-text("Continue")');
+  await page.getByRole('button', {name: 'Continue'}).click();
 
   await page.click('div:text("Scrum")');
-  await page.locator('button[type=button]:has-text("Use this template")').click();
-  await page.locator('button[type=button]:has-text("I\'ll do it later")').click();
+  await page.getByRole('button', {name: 'Use this template'}).click();
+  await page.getByRole('button', {name: "I'll do it later"}).click();
 
   await expect(page.locator('modal-wrapper')).toBeVisible();
 
@@ -104,8 +103,9 @@ test('On boarding path', async ({page, request}) => {
 
   await page.waitForTimeout(10000);
 
-  if (await page.locator('button[type=button]:has-text("Reload")').isVisible()) {
-    await page.locator('button[type=button]:has-text("Reload")').click();
+  //in case user is verified
+  if (await page.getByRole('button', {name: 'Reload'}).isVisible()) {
+    await page.getByRole('button', {name: 'Reload'}).click();
   }
 
   await expect(page.locator('iframe[title="Lumeer: Quick Application Overview"]')).toBeVisible();

@@ -26,14 +26,15 @@ const tableCellsInput: Record<string, string[]> = {
   thirdRow: ['Mark', '28'],
 };
 
-let tableUrl = '';
+let tableUrl =
+  'http://localhost:7000/ui/w/TSTLM/SCRUM/view/workflow?q=eyJzIjpbeyJpIjoiMTY5OTgxODQyMjg5NzEwZTZkNTE4YjAwYWEiLCJjIjoiNjU1MTJiOGVkZjlhOTI0MWUxMDhlYWQ1In1dfQ92d774e2';
 const tableName = 'testTable';
 
 test('create table', async ({page}) => {
   await page.goto('/ui');
-  await page.click('a:text("tables")');
+  await page.getByRole('link', {name: 'Tables'}).click();
 
-  await page.click('button:has-text("Create New Table")');
+  await page.getByRole('button', {name: 'Create New Table'}).click();
   const newCardInput = page.locator('div[placeholder="Click to set name"]').first();
 
   await newCardInput.dblclick();
@@ -75,7 +76,7 @@ test('Worklflow table add collumns and rows with data', async ({page}) => {
   await page.waitForTimeout(1000);
   await expect(page.locator('thead').locator('input[placeholder="Add Column"]')).toBeVisible();
 
-  await page.click('button:has-text("Add new row")');
+  await page.getByRole('button', {name: 'Add new row'}).click();
   await page.waitForTimeout(200);
 
   let rows = await page.locator('tbody').locator('tr').all();
@@ -93,7 +94,7 @@ test('Worklflow table add collumns and rows with data', async ({page}) => {
   await addInputToTableCell(firstRow.at(1), tableCellsInput.firstRow[1]);
   await addInputToTableCell(firstRow.at(0), tableCellsInput.firstRow[0]);
 
-  await page.click('button:has-text("Add new row")');
+  await page.getByRole('button', {name: 'Add new row'}).click();
   await page.waitForTimeout(1000);
 
   rows = await page.locator('tbody').locator('tr').all();
@@ -102,7 +103,7 @@ test('Worklflow table add collumns and rows with data', async ({page}) => {
   await addInputToTableCell(secondRow.at(0), tableCellsInput.secondRow[0]);
   await addInputToTableCell(secondRow.at(1), tableCellsInput.secondRow[1]);
 
-  await page.click('button:has-text("Add new row")');
+  await page.getByRole('button', {name: 'Add new row'}).click();
   await page.waitForTimeout(1000);
   rows = await page.locator('tbody').locator('tr').all();
   const thirdRow = await rows.at(2).locator('td').all();
@@ -147,9 +148,9 @@ test('Add collumns with attribute type', async ({page}) => {
 
   await headerCell.click({button: 'right'});
   await page.locator('div[role="menu"]').locator('button:has-text("Attribute settings...")').click();
-  await page.locator('button:has-text("None")').click();
-  await page.locator('a:has-text("Date")').click();
-  await page.locator('button:has-text("Save")').click();
+  await page.getByRole('button', {name: 'None'}).click();
+  await page.locator('a').filter({hasText: 'Date'}).click();
+  await page.getByRole('button', {name: 'Save'}).click();
 
   const addInputToTableCell = async (locator: Locator, text: string) => {
     await locator.dblclick();
@@ -179,9 +180,9 @@ test('Add collumns with attribute type', async ({page}) => {
 test('group by', async ({page}) => {
   await page.goto(tableUrl);
 
-  await page.locator('button:has-text("Group By")').click();
+  await await page.getByRole('button', {name: 'Group By'}).click();
   await page.locator('button:has-text("Due to")').hover();
-  await page.locator('button:has-text("Months and years")').click();
+  await page.getByRole('menuitem', {name: 'Months and years'}).click();
 
   await expect(page.locator('table')).toHaveCount(2);
 
@@ -208,8 +209,8 @@ test('add link to other table', async ({page}) => {
   await expect(page.locator('workflow-sidebar', {hasText: 'testTable'})).toBeVisible();
 
   await page.locator('a:has-text("Links")').click();
-  await page.locator('button:has-text("Create New Link")').click();
-  await page.locator('button:has-text("Tasks")').click();
+  await page.getByRole('button', {name: 'Create New Link'}).click();
+  await page.getByRole('menuitem', {name: 'Tasks'}).click();
   await page.locator('div[class="modal-content"]').locator('button:has-text("Create")').click();
 
   const tableInsideSiedebar = page.locator('workflow-sidebar', {hasText: tableName}).locator('table');
@@ -230,14 +231,14 @@ test('delete link from other table', async ({page}) => {
   await page.click('a:text("tables")');
 
   await page.locator('post-it-collection', {hasText: tableName}).locator('a[title="Configure"]').click();
-  await page.locator('a:has-text("Link Types")').click();
+  await page.getByRole('link', {name: 'Link Types'}).click();
   await page
     .locator('tr')
     .filter({has: page.locator('a:has-text("testTable Tasks")')})
     .getByTitle('delete')
     .click();
 
-  await page.locator('button:has-text("Yes")').click();
+  await page.getByRole('button', {name: 'Yes'}).click();
 
   await expect(page.getByText('There are no link types yet.')).toBeVisible();
 });
@@ -252,7 +253,7 @@ test('delete rows and columns of table', async ({page}) => {
   const deleteColumn = async (th: Locator) => {
     await th.click({button: 'right'});
     await page.locator('button:has-text("Delete Column")').click();
-    await page.locator('button:has-text("Yes")').click();
+    await page.getByRole('button', {name: 'Yes'}).click();
     await page.waitForTimeout(500);
   };
 
@@ -264,7 +265,7 @@ test('delete rows and columns of table', async ({page}) => {
   const deleteRow = async (tr: Locator) => {
     await tr.click({button: 'right'});
     await page.locator('button:has-text("Remove row")').click();
-    await page.locator('button:has-text("Yes")').click();
+    await page.getByRole('button', {name: 'Yes'}).click();
     await page.waitForTimeout(500);
   };
 
@@ -278,11 +279,11 @@ test('delete rows and columns of table', async ({page}) => {
 
 test('delete whole table', async ({page}) => {
   await page.goto('/ui');
-  await page.click('a:text("tables")');
+  await page.getByRole('link', {name: 'Tables'}).click();
 
   await page.locator('post-it-collection', {hasText: tableName}).locator('a[title="Configure"]').click();
   await page.locator('i[title="Permanently remove this table"]').click();
-  await page.locator('button:has-text("Yes")').click();
+  await page.getByRole('button', {name: 'Yes'}).click();
 
   await page.waitForURL('**/view/search/tables');
   await expect(page.locator('post-it-collection', {hasText: 'testTable'})).not.toBeVisible();
