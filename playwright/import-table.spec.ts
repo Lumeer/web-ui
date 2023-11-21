@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {test, expect} from '@playwright/test';
+import {expect, test} from '@playwright/test';
 
 test.describe.configure({mode: 'serial'});
 
