@@ -32,7 +32,14 @@ import {
   aggregateDataResources,
   dataAggregationConstraint,
 } from '@lumeer/data-filters';
-import {deepObjectsEquals, isArray, isNotNullOrUndefined, uniqueValues} from '@lumeer/utils';
+import {
+  deepObjectsEquals,
+  flattenMatrix,
+  flattenValues,
+  isArray,
+  isNotNullOrUndefined,
+  uniqueValues,
+} from '@lumeer/utils';
 
 import {AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
@@ -47,7 +54,6 @@ import {
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {flattenMatrix, flattenValues} from '../../../../shared/utils/array.utils';
 import {attributesResourcesAttributesMap} from '../../../../shared/utils/resource.utils';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';

@@ -22,7 +22,7 @@ import {
   userCanEditDataResource,
   userCanReadDataResource,
 } from '@lumeer/data-filters';
-import {arrayIntersection, objectsByIdMap, uniqueValues} from '@lumeer/utils';
+import {arrayIntersection, flattenMatrix, objectsByIdMap, uniqueValues} from '@lumeer/utils';
 
 import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from '../../core/model/allowed-permissions';
 import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
@@ -46,7 +46,6 @@ import {Team} from '../../core/store/teams/team';
 import {User} from '../../core/store/users/user';
 import {View} from '../../core/store/views/view';
 import {Perspective} from '../../view/perspectives/perspective';
-import {flattenMatrix} from './array.utils';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};

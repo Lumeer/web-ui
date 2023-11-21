@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {arrayIntersection, deepObjectsEquals, isArray, isNotNullOrUndefined} from '@lumeer/utils';
+import {arrayIntersection, deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
 
 export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: number, ...items: T[]): T[] {
   const arrayCopy = [...array];
@@ -91,36 +91,6 @@ export function shiftArrayFromIndex<T>(array: T[], fromIndex: number): T[] {
     return [...array];
   }
   return [...array.slice(fromIndex), ...array.slice(0, fromIndex)];
-}
-
-export function flattenValues<T>(array: any[]): T[] {
-  return (array || []).reduce((flatArray, val) => {
-    if (isArray(val)) {
-      flatArray.push(...val);
-    } else {
-      flatArray.push(val);
-    }
-    return flatArray;
-  }, []);
-}
-
-export function uniqueArrays<T>(arrays: T[][]): T[][] {
-  const uniqueArrays: T[][] = [];
-  for (const array of arrays) {
-    if (
-      !uniqueArrays.some(ua => ua.length === array.length && ua.every((element, index) => element === array[index]))
-    ) {
-      uniqueArrays.push(array);
-    }
-  }
-  return uniqueArrays;
-}
-
-export function flattenMatrix<T>(array: T[][]): T[] {
-  return (array || []).reduce((arr, item) => {
-    arr.push(...item);
-    return arr;
-  }, []);
 }
 
 export function createRangeInclusive(from: number, to: number): number[] {

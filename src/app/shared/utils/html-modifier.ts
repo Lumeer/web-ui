@@ -99,10 +99,6 @@ export function getCaretCharacterOffsetWithin(element) {
   return caretOffset;
 }
 
-export function stripedBackground(color: string, stripeColor: string): string {
-  return `linear-gradient(-45deg, ${color} 25%, ${stripeColor} 25%, ${stripeColor} 50%, ${color} 50%, ${color} 75%, ${stripeColor} 75%, ${stripeColor})`;
-}
-
 export function hex2rgba(hex: string, opacity: number): string {
   hex = (hex || '').replace('#', '');
   const r = parseInt(hex.substring(0, hex.length / 3), 16);

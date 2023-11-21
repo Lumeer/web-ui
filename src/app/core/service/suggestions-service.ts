@@ -24,7 +24,7 @@ import {Observable, combineLatest, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {initialConditionType, initialConditionValues} from '@lumeer/data-filters';
-import {arrayIntersection, removeAccentFromString, uniqueValues} from '@lumeer/utils';
+import {arrayIntersection, flattenMatrix, removeAccentFromString, uniqueValues} from '@lumeer/utils';
 
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {CollectionQueryItem} from '../../shared/top-panel/search-box/query-item/model/collection.query-item';
@@ -35,7 +35,7 @@ import {QueryItem} from '../../shared/top-panel/search-box/query-item/model/quer
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {ViewQueryItem} from '../../shared/top-panel/search-box/query-item/model/view.query-item';
 import {convertQueryItemsToQueryModel} from '../../shared/top-panel/search-box/query-item/query-items.converter';
-import {createRange, flattenMatrix} from '../../shared/utils/array.utils';
+import {createRange} from '../../shared/utils/array.utils';
 import {objectValues} from '../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {generateId, sortResourcesLastUsed} from '../../shared/utils/resource.utils';
