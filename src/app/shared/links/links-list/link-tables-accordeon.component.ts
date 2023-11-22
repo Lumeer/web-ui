@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,26 +26,30 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
+
+import {Action, Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
-import {Query} from '../../../core/store/navigation/query/query';
-import {Action, select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {selectViewQuery} from '../../../core/store/views/views.state';
-import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {objectChanged} from '../../utils/common.utils';
-import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
-import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
 import {map, switchMap} from 'rxjs/operators';
-import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+
 import {ConstraintData} from '@lumeer/data-filters';
+
+import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
+import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {Query} from '../../../core/store/navigation/query/query';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
+import {selectViewQuery} from '../../../core/store/views/views.state';
+import {objectChanged} from '../../utils/common.utils';
 
 @Component({
   selector: 'link-tables-accordeon',

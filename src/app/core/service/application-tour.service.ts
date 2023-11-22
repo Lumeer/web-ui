@@ -16,29 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import * as Driver from 'driver.js';
-import {combineLatest, filter, Observable, switchMap} from 'rxjs';
-import {Workspace} from '../store/navigation/workspace';
-import {AppState} from '../store/app.state';
-import {ModalService} from '../../shared/modal/modal.service';
-import {selectUrl, selectWorkspace} from '../store/navigation/navigation.state';
+import {Observable, combineLatest, filter, switchMap} from 'rxjs';
 import {map, take} from 'rxjs/operators';
-import {User} from '../store/users/user';
-import {selectCurrentUser} from '../store/users/users.state';
-import {selectAllCollectionsCount} from '../store/collections/collections.state';
-import {selectAllViewsCount} from '../store/views/views.state';
-import {selectProjectPermissions} from '../store/user-permissions/user-permissions.state';
+
+import {ModalService} from '../../shared/modal/modal.service';
+import {scrollToTopInSearchPerspective} from '../../shared/utils/app.utils';
 import {Perspective} from '../../view/perspectives/perspective';
-import {SearchTab} from '../store/navigation/search-tab';
-import {NotificationsAction} from '../store/notifications/notifications.action';
-import {UsersAction} from '../store/users/users.action';
 import {AllowedPermissions} from '../model/allowed-permissions';
 import {AppPropertiesAction} from '../store/app-properties/app-properties.action';
-import {scrollToTopInSearchPerspective} from '../../shared/utils/app.utils';
+import {AppState} from '../store/app.state';
+import {selectAllCollectionsCount} from '../store/collections/collections.state';
+import {selectUrl, selectWorkspace} from '../store/navigation/navigation.state';
+import {SearchTab} from '../store/navigation/search-tab';
+import {Workspace} from '../store/navigation/workspace';
+import {NotificationsAction} from '../store/notifications/notifications.action';
+import {selectProjectPermissions} from '../store/user-permissions/user-permissions.state';
+import {User} from '../store/users/user';
+import {UsersAction} from '../store/users/users.action';
+import {selectCurrentUser} from '../store/users/users.state';
+import {selectAllViewsCount} from '../store/views/views.state';
 
 @Injectable({providedIn: 'root'})
 export class ApplicationTourService {

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {AttributeFilter, ConditionType, ConditionValue, ConstraintConditionValue} from '@lumeer/data-filters';
 
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
-import {AttributeFilter, ConditionType, ConditionValue, ConstraintConditionValue} from '@lumeer/data-filters';
 
 export interface ShortenedQuery {
   s: ShortenedQueryStem[]; // stems

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,45 +27,49 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {FormConfig, FormSection} from '../../../../../core/store/form/form-model';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
-import {AppState} from '../../../../../core/store/app.state';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription, switchMap} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {DocumentModel, DocumentAdditionalDataRequest} from '../../../../../core/store/documents/document.model';
-import {DataResourceData} from '../../../../../core/model/resource';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest, of, switchMap} from 'rxjs';
+import {filter} from 'rxjs';
 import {distinctUntilChanged, map, take, tap} from 'rxjs/operators';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {View} from '../../../../../core/store/views/view';
-import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
+
+import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {objectsByIdMap, uniqueValues} from '@lumeer/utils';
+
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
+import {DataResourceData} from '../../../../../core/model/resource';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {selectCollectionsByIds} from '../../../../../core/store/collections/collections.state';
+import {CommonAction} from '../../../../../core/store/common/common.action';
+import {DocumentAdditionalDataRequest, DocumentModel} from '../../../../../core/store/documents/document.model';
 import {
   createDocumentRequestAdditionalData,
   generateDocumentDataByQuery,
 } from '../../../../../core/store/documents/document.utils';
-import {FormValidationService} from './validation/form-validation.service';
-import {FormValidation} from './validation/form-validation';
-import {FormLinkData, FormLinkSelectedData} from './model/form-link-data';
-import {collectLinkConfigsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
-import {filter} from 'rxjs';
-import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
-import {selectCollectionsByIds} from '../../../../../core/store/collections/collections.state';
+import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
+import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
+import {FormConfig, FormSection} from '../../../../../core/store/form/form-model';
 import {selectLinkInstancesByTypesAndDocuments} from '../../../../../core/store/link-instances/link-instances.state';
 import {getOtherLinkedDocumentId} from '../../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
 import {User} from '../../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../../core/store/users/users.state';
-import {objectChanged, objectsByIdMap} from '../../../../../shared/utils/common.utils';
-import {uniqueValues} from '../../../../../shared/utils/array.utils';
-import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
-import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {CommonAction} from '../../../../../core/store/common/common.action';
-import {FormStateService} from './service/form-state.service';
-import {FormCoordinates} from './model/form-coordinates';
-import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
 import {AttributesSettings} from '../../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../../core/store/views/view';
+import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
+import {objectChanged} from '../../../../../shared/utils/common.utils';
+import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
+import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
+import {collectLinkConfigsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
+import {FormCoordinates} from './model/form-coordinates';
+import {FormLinkData, FormLinkSelectedData} from './model/form-link-data';
+import {FormStateService} from './service/form-state.service';
+import {FormValidation} from './validation/form-validation';
+import {FormValidationService} from './validation/form-validation.service';
 
 @Component({
   selector: 'form-view',

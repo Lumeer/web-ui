@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, Renderer2, ElementRef} from '@angular/core';
-import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, Renderer2} from '@angular/core';
+
+import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {TABLE_COLUMN_MIN_WIDTH, TABLE_ROW_HEIGHT} from '../../model/table-model';
 
 @Component({

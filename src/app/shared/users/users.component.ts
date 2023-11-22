@@ -16,37 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
-import {MemoizedSelector, select, Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
-import {User} from '../../core/store/users/user';
-import {filter, map, tap} from 'rxjs/operators';
-import {UsersAction} from '../../core/store/users/users.action';
-import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../core/store/users/users.state';
-import {ResourceType} from '../../core/model/resource-type';
-import {Resource} from '../../core/model/resource';
-import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
-import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {Permission, PermissionType, Role} from '../../core/store/permissions/permissions';
-import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {Organization} from '../../core/store/organizations/organization';
-import {Project} from '../../core/store/projects/project';
-import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
+import {MemoizedSelector, Store, select} from '@ngrx/store';
+
 import mixpanel from 'mixpanel-browser';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {filter, map, tap} from 'rxjs/operators';
+
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {Resource} from '../../core/model/resource';
+import {ResourceType} from '../../core/model/resource-type';
+import {Ga4Service} from '../../core/service/ga4.service';
+import {AppState} from '../../core/store/app.state';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
+import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {Organization} from '../../core/store/organizations/organization';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
+import {Permission, PermissionType, Role} from '../../core/store/permissions/permissions';
+import {Project} from '../../core/store/projects/project';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {Team} from '../../core/store/teams/team';
 import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
-import {Workspace} from '../../core/store/navigation/workspace';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {Ga4Service} from '../../core/service/ga4.service';
+import {User} from '../../core/store/users/user';
+import {UsersAction} from '../../core/store/users/users.action';
+import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../core/store/users/users.state';
 
 @Component({
   selector: 'users',

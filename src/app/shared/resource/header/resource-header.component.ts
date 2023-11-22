@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,17 +28,18 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import {ResourceType} from '../../../core/model/resource-type';
-import {Resource} from '../../../core/model/resource';
-import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picker.component';
-import {parseSelectTranslation} from '../../utils/translation.utils';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {TRIM_REGEX} from '../../input/input-box/input-box.component';
-import {merge, Observable, of, Subject, switchMap} from 'rxjs';
+import {Observable, Subject, merge, of, switchMap} from 'rxjs';
 import {debounceTime, map, tap} from 'rxjs/operators';
+
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {Resource} from '../../../core/model/resource';
+import {ResourceType} from '../../../core/model/resource-type';
+import {Project} from '../../../core/store/projects/project';
 import {OrganizationValidators} from '../../../core/validators/organization.validators';
 import {ProjectValidators} from '../../../core/validators/project.validators';
-import {Project} from '../../../core/store/projects/project';
+import {TRIM_REGEX} from '../../input/input-box/input-box.component';
+import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picker.component';
+import {parseSelectTranslation} from '../../utils/translation.utils';
 
 @Component({
   selector: 'resource-header',

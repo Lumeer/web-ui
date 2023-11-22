@@ -16,29 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Renderer2,
-  ViewChild,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  Output,
-  EventEmitter,
-  OnDestroy,
-  ElementRef,
-  HostListener,
-} from '@angular/core';
+import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {CdkDrag, CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
-import {BehaviorSubject, interval, Observable, Subscription} from 'rxjs';
-import {convertRemToPixels} from '../../utils/html-modifier';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+
+import {BehaviorSubject, Observable, Subscription, interval} from 'rxjs';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
 import {ModalData} from '../../../core/model/modal-data';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
+import {convertRemToPixels} from '../../utils/html-modifier';
 
 const initialMargin = 3;
 

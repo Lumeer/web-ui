@@ -16,37 +16,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Input,
-  OnDestroy,
-  HostListener,
-  TemplateRef,
-  OnChanges,
-  SimpleChanges,
+  Component,
   EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
+  SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
-import {Query} from '../../../core/store/navigation/query/query';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
+import {BehaviorSubject, Observable, Subject, Subscription, combineLatest, of} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
+
+import {AttributesResourceType} from '../../../core/model/resource';
 import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
-import {DialogType} from '../dialog-type';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {AttributesResourceType} from '../../../core/model/resource';
-import {selectCurrentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {Query} from '../../../core/store/navigation/query/query';
 import {View} from '../../../core/store/views/view';
-import {switchMap} from 'rxjs/operators';
+import {selectCurrentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {objectChanged} from '../../utils/common.utils';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'document-detail-modal',

@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
+import {sortResourcesByOrder} from '../../../shared/utils/resource.utils';
+import {LoadingState} from '../../model/loading-state';
 import {AppState} from '../app.state';
 import {selectWorkspace} from '../navigation/navigation.state';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {Project} from './project';
-import {LoadingState} from '../../model/loading-state';
 import {selectPublicProjectId} from '../public-data/public-data.state';
-import {sortResourcesByOrder} from '../../../shared/utils/resource.utils';
 import {selectProjectsPermissions} from '../user-permissions/user-permissions.state';
+import {Project} from './project';
 
 export interface ProjectsState extends EntityState<Project> {
   loaded: {[organizationId: string]: boolean};

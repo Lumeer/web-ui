@@ -16,18 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ConstraintType} from '@lumeer/data-filters';
+import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
 
-import {LinkType} from '../../../core/store/link-types/link.type';
 import {COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_PRIMARY} from '../../../core/constants';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
-import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
-import {isArray, isNotNullOrUndefined} from '../../utils/common.utils';
-import {RuleVariable} from '../rule-variable-type';
-import {shadeColor} from '../../utils/html-modifier';
-import {BlocklyComponent} from './blocks/blockly-component';
-import {BlocklyDebugDisplay} from '../blockly-debugger/blockly-debugger.component';
+import {LinkType} from '../../../core/store/link-types/link.type';
 import {View} from '../../../core/store/views/view';
-import {ConstraintType} from '@lumeer/data-filters';
+import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
+import {shadeColor} from '../../utils/html-modifier';
+import {BlocklyDebugDisplay} from '../blockly-debugger/blockly-debugger.component';
+import {RuleVariable} from '../rule-variable-type';
+import {BlocklyComponent} from './blocks/blockly-component';
 
 declare var Blockly: any;
 

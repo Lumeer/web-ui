@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {TestBed} from '@angular/core/testing';
 import {LOCALE_ID} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {DocumentsAndLinksData} from '@lumeer/data-filters';
+
+import {AttributesResourceType} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from './kanban-converter';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {DocumentsAndLinksData} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
   {

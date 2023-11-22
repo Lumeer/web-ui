@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType} from './table-model';
-import {columnConstraint, TableColumn, TableColumnGroup} from './table-column';
-import {TableRow} from './table-row';
 import {TableColumnType, TableConfigPart} from '../../../core/store/tables/table.model';
+import {TableColumn, TableColumnGroup, columnConstraint} from './table-column';
+import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType} from './table-model';
+import {TableRow} from './table-row';
 
 export function groupTableColumns(columns: TableColumn[]): TableColumnGroup[] {
   return (columns || []).reduce<TableColumnGroup[]>((array, column) => {

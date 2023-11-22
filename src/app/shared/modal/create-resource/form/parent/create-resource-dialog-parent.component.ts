@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {Resource} from '../../../../../core/model/resource';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {AppState} from '../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {Resource} from '../../../../../core/model/resource';
-import {Observable} from 'rxjs';
 import {selectOrganizationById} from '../../../../../core/store/organizations/organizations.state';
 import {selectProjectsByOrganizationId} from '../../../../../core/store/projects/projects.state';
-import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'create-resource-dialog-parent',

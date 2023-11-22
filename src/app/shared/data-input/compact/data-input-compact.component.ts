@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+
+import {Constraint, ConstraintType, DataValue} from '@lumeer/data-filters';
+
 import {DataCursor} from '../data-cursor';
 import {DataInputConfiguration} from '../data-input-configuration';
-import {Constraint, ConstraintType, DataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'data-input-compact',

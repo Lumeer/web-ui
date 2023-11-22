@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {Project} from '../../../../../core/store/projects/project';
+
 import {LoadingState} from '../../../../../core/model/loading-state';
 import {AppState} from '../../../../../core/store/app.state';
+import {Project} from '../../../../../core/store/projects/project';
 import {
   selectProjectTemplates,
   selectProjectTemplatesLoadingState,

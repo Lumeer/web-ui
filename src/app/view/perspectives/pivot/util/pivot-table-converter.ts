@@ -16,10 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
-import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
-import {uniqueValues} from '../../../../shared/utils/array.utils';
+import {
+  Constraint,
+  ConstraintData,
+  DataAggregationType,
+  NumberConstraint,
+  PercentageConstraint,
+  UnknownConstraint,
+  aggregateDataValues,
+  isValueAggregation,
+} from '@lumeer/data-filters';
 import {
   deepObjectCopy,
   isArray,
@@ -27,23 +33,15 @@ import {
   isNullOrUndefined,
   isNumeric,
   toNumber,
-} from '../../../../shared/utils/common.utils';
-import {
-  aggregateDataValues,
-  DataAggregationType,
-  isValueAggregation,
-} from '../../../../shared/utils/data/data-aggregation';
+  uniqueValues,
+} from '@lumeer/utils';
+
+import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
+import {DataResource} from '../../../../core/model/resource';
+import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
-import {
-  Constraint,
-  ConstraintData,
-  NumberConstraint,
-  PercentageConstraint,
-  UnknownConstraint,
-} from '@lumeer/data-filters';
-import {DataResource} from '../../../../core/model/resource';
 
 interface HeaderGroupInfo {
   background: string;

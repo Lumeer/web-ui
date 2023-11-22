@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,13 +26,14 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Collection} from '../../../../../../../core/store/collections/collection';
+
 import {AttributesResourceType} from '../../../../../../../core/model/resource';
+import {Collection} from '../../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {DropdownOption} from '../../../../../../../shared/dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../../../../../../shared/dropdown/options/options-dropdown.component';
-import {KanbanCreateResource} from '../../../../util/kanban-data';
 import {attributesResourcesAreSame, getAttributesResourceType} from '../../../../../../../shared/utils/resource.utils';
-import {LinkType} from '../../../../../../../core/store/link-types/link.type';
+import {KanbanCreateResource} from '../../../../util/kanban-data';
 
 @Component({
   selector: 'kanban-column-footer',

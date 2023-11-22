@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 /*
  * Lumeer: Modern Data Definition and Processing Platform
  *
@@ -34,8 +35,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {test, expect} from '@playwright/test';
+import {expect, test} from '@playwright/test';
 import dotenv from 'dotenv';
+
 import {loginApiCall} from './utils/apiCalls';
 
 dotenv.config();

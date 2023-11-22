@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, OnInit} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map, startWith, take} from 'rxjs/operators';
-import {DialogType} from '../dialog-type';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {notEmptyValidator} from '../../../core/validators/custom-validators';
+
 import {AppState} from '../../../core/store/app.state';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {UsersAction} from '../../../core/store/users/users.action';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {notEmptyValidator} from '../../../core/validators/custom-validators';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'book-product-demo-modal',

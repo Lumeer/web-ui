@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,15 +29,18 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {keyboardEventCode, KeyCode} from '../../key-code';
+
+import {BehaviorSubject} from 'rxjs';
+
+import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
+
+import {USER_AVATAR_SIZE} from '../../../core/constants';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {DropdownPosition} from '../dropdown-position';
 import {DropdownComponent} from '../dropdown.component';
+import {isTopPositionDropdown} from '../util/dropdown-util';
 import {DropdownOption} from './dropdown-option';
 import {DropdownOptionDirective} from './dropdown-option.directive';
-import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
-import {BehaviorSubject} from 'rxjs';
-import {USER_AVATAR_SIZE} from '../../../core/constants';
-import {isTopPositionDropdown} from '../util/dropdown-util';
 
 @Component({
   selector: 'options-dropdown',

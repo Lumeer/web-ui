@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {AttributesResource} from '../../../core/model/resource';
-import {SelectItemWithConstraintId} from './select-item-with-constraint.component';
 import {findAttribute} from '../../../core/store/collections/collection.util';
-import {SelectItemWithConstraintFormatter} from './select-item-with-constraint-formatter.service';
 import {SelectItemModel} from '../select-item/select-item.model';
+import {SelectItemWithConstraintFormatter} from './select-item-with-constraint-formatter.service';
+import {SelectItemWithConstraintId} from './select-item-with-constraint.component';
 
 @Pipe({
   name: 'selectItemWithConstraintConfig',

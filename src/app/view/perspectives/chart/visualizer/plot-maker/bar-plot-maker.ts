@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Layout, d3} from 'plotly.js';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import {ChartAxisData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import {PlotlyChartData} from './plot-maker';
 
 export class BarPlotMaker extends AxisDraggablePlotMaker {

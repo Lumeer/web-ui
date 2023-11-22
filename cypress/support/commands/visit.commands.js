@@ -1,5 +1,6 @@
 import * as CRC32 from 'crc-32';
 import {Base64} from 'js-base64';
+
 import {padStart} from '../../../src/app/shared/utils/string.utils';
 
 Cypress.Commands.add('visitAndWait', url => {

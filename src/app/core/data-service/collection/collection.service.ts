@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Observable} from 'rxjs';
+
 import {AttributeDto, CollectionDto} from '../../dto';
+import {CollectionPurposeDto} from '../../dto/collection.dto';
+import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
+import {RuleDto} from '../../dto/rule.dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {PermissionService} from '../common/permission.service';
-import {CollectionPurposeDto} from '../../dto/collection.dto';
-import {RuleDto} from '../../dto/rule.dto';
-import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 
 export abstract class CollectionService extends PermissionService {
   public abstract createCollection(collection: CollectionDto): Observable<CollectionDto>;

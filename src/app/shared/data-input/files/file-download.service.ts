@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Injectable} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 
-import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
+
+import {saveAs} from 'file-saver';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
-import {FileAttachment} from '../../../core/store/file-attachments/file-attachment.model';
 import {catchError, map} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {FileApiService} from '../../../core/service/file-api.service';
-import {ConfigurationService} from '../../../configuration/configuration.service';
+import {AppState} from '../../../core/store/app.state';
+import {FileAttachment} from '../../../core/store/file-attachments/file-attachment.model';
 import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
-import {saveAs} from 'file-saver';
 
 @Injectable()
 export class FileDownloadService {

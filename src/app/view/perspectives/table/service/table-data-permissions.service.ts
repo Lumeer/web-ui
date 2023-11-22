@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, of} from 'rxjs';
 import {map, switchMap, take} from 'rxjs/operators';
-import {selectTablePart, selectTableRow} from '../../../../core/store/tables/tables.selector';
-import {AppState} from '../../../../core/store/app.state';
-import {TableCursor} from '../../../../core/store/tables/table-cursor';
+
 import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
-import {selectDocumentById} from '../../../../core/store/documents/documents.state';
+import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
-import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
-import {dataResourcePermissions} from '../../../../shared/utils/permission.utils';
-import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
-import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
-import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
-import {View} from '../../../../core/store/views/view';
 import {
   selectCollectionPermissionsByView,
   selectLinkTypePermissionsByView,
 } from '../../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {selectDocumentById} from '../../../../core/store/documents/documents.state';
+import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
+import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
+import {TableCursor} from '../../../../core/store/tables/table-cursor';
+import {selectTablePart, selectTableRow} from '../../../../core/store/tables/tables.selector';
+import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
+import {View} from '../../../../core/store/views/view';
+import {dataResourcePermissions} from '../../../../shared/utils/permission.utils';
 
 @Injectable()
 export class TableDataPermissionsService {

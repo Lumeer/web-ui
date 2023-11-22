@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../core/store/workflows/workflow';
+
 import {queryStemsAreSame} from '../../../../core/store/navigation/query/query.util';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../core/store/workflows/workflow';
 
 @Pipe({
   name: 'filterStemFooter',

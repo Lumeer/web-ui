@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
+
 import {DropdownOption} from '../../shared/dropdown/options/dropdown-option';
+import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
 
 @Pipe({
   name: 'perspectivesOptions',

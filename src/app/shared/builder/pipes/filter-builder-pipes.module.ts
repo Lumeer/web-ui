@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+
 import {ConditionNumValuesPipe} from './condition-num-values.pipe';
-import {TranslateConditionPipe} from './translate-condition.pipe';
-import {TranslateConditionValuePipe} from './translate-condition-value.pipe';
 import {ConditionShouldBeItalicPipe} from './condition-should-be-italic.pipe';
+import {TranslateConditionValuePipe} from './translate-condition-value.pipe';
+import {TranslateConditionPipe} from './translate-condition.pipe';
 
 @NgModule({
   declarations: [

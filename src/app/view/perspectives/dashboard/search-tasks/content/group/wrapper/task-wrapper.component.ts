@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {ResourceType} from '../../../../../../../core/model/resource-type';
 
+import {ConstraintData} from '@lumeer/data-filters';
+
+import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {ResourceType} from '../../../../../../../core/model/resource-type';
+import {RoleType} from '../../../../../../../core/model/role-type';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
-import {SizeType} from '../../../../../../../shared/slider/size/size-type';
-import {RoleType} from '../../../../../../../core/model/role-type';
-import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {ConstraintData} from '@lumeer/data-filters';
-import {TaskAttributes} from '../../../model/task-attributes';
 import {User} from '../../../../../../../core/store/users/user';
 import {View} from '../../../../../../../core/store/views/view';
+import {SizeType} from '../../../../../../../shared/slider/size/size-type';
+import {TaskAttributes} from '../../../model/task-attributes';
 
 @Component({
   selector: 'task-wrapper',

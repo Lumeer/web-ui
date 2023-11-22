@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Dashboard} from '../searches/search';
-import {DashboardDataType} from './dashboard-data';
+import {arraySubtract} from '../../../shared/utils/array.utils';
 import {getAllDashboardCells} from '../../../shared/utils/dashboard.utils';
 import {DashboardCellType} from '../../model/dashboard-tab';
-import {arraySubtract} from '../../../shared/utils/array.utils';
+import {Dashboard} from '../searches/search';
+import {DashboardDataType} from './dashboard-data';
 
 export function checkDeletedDashboardData(
   old: Dashboard,

@@ -16,20 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CollectionDto} from '../../dto';
+import {CollectionPurposeDto} from '../../dto/collection.dto';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
 import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
+import {convertRulesFromDto, convertRulesToDto} from '../utils/store.utils';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {
   Collection,
   CollectionPurpose,
-  collectionPurposesMap,
   CollectionPurposeType,
   ImportedCollection,
+  collectionPurposesMap,
 } from './collection';
-import {convertRulesFromDto, convertRulesToDto} from '../utils/store.utils';
-import {CollectionPurposeDto} from '../../dto/collection.dto';
 
 export function convertCollectionDtoToModel(
   dto: CollectionDto,

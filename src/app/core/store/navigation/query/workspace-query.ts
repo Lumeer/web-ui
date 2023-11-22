@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Workspace} from '../workspace';
 import {DataQuery} from '../../../model/data-query';
+import {Workspace} from '../workspace';
 
 export type WorkspaceQuery = DataQuery & {workspace: Workspace};

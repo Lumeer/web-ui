@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {ResourceCommentDto} from '../../dto/resource-comment.dto';
+import {ResourceType} from '../../model/resource-type';
 import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {Workspace} from '../../store/navigation/workspace';
 import {ResourceCommentService} from './resource-comment.service';
-import {ResourceCommentDto} from '../../dto/resource-comment.dto';
-import {ResourceType} from '../../model/resource-type';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiResourceCommentService extends BaseService implements ResourceCommentService {

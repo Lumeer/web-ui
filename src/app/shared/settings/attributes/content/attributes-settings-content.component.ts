@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
+import {AttributesResourceType} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {AttributesResourceData} from '../attributes-settings-configuration';
-import {composeViewSettingsLinkTypeCollectionId} from '../../settings.util';
 import {AttributesSettings, ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
+import {composeViewSettingsLinkTypeCollectionId} from '../../settings.util';
+import {AttributesResourceData} from '../attributes-settings-configuration';
 
 @Component({
   selector: 'attributes-settings-content',

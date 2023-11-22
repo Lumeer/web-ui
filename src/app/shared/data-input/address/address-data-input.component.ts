@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -30,20 +29,24 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {debounceTime, map, mergeMap} from 'rxjs/operators';
+
+import {AddressDataValue, ConstraintType} from '@lumeer/data-filters';
+
+import {AppState} from '../../../core/store/app.state';
 import {GeocodingAction} from '../../../core/store/geocoding/geocoding.action';
 import {selectLocationsByQuery} from '../../../core/store/geocoding/geocoding.state';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {keyboardEventCode, KeyCode} from '../../key-code';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {AddressDataValue, ConstraintType} from '@lumeer/data-filters';
-import {AppState} from '../../../core/store/app.state';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'address-data-input',

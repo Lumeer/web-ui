@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -26,19 +25,22 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {selectLinkTypeByIdWithCollections} from '../../../../../core/store/link-types/link-types.state';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
-import {TablesAction} from '../../../../../core/store/tables/tables.action';
+
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {View} from '../../../../../core/store/views/view';
 import {selectLinkTypePermissionsByView} from '../../../../../core/store/common/permissions.selectors';
+import {selectLinkTypeByIdWithCollections} from '../../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
+import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
 import {getTableElementFromInnerElement} from '../../../../../core/store/tables/table.utils';
+import {TablesAction} from '../../../../../core/store/tables/tables.action';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-header-link',

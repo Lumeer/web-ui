@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {UsersIdsPipe} from './users-ids.pipe';
-import {TeamFilterPipe} from './team-filter.pipe';
-import {UsersNamesPipe} from './users-names.pipe';
+import {NgModule} from '@angular/core';
+
 import {FilterUsersPipe} from './filter-users.pipe';
+import {TeamFilterPipe} from './team-filter.pipe';
 import {TeamRolesMapPipe} from './team-roles-map.pipe';
 import {TeamTransitiveRolesPipe} from './team-transitive-roles.pipe';
+import {UsersIdsPipe} from './users-ids.pipe';
+import {UsersNamesPipe} from './users-names.pipe';
 
 @NgModule({
   declarations: [

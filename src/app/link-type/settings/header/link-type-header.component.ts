@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild, Output, EventEmitter} from '@angular/core';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {InputBoxComponent} from '../../../shared/input/input-box/input-box.component';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
-import {containsSameElements} from '../../../shared/utils/array.utils';
-import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
+
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {AppState} from '../../../core/store/app.state';
+import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {InputBoxComponent} from '../../../shared/input/input-box/input-box.component';
+import {containsSameElements} from '../../../shared/utils/array.utils';
 
 @Component({
   selector: 'link-type-header',

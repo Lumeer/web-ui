@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {AttributesResource, DataResource} from '../../core/model/resource';
+
 import {ConstraintData, createDataValuesMap} from '@lumeer/data-filters';
-import {AttributeFormattingStyle, computeAttributeFormatting} from '../utils/attribute.utils';
+import {objectsByIdMap} from '@lumeer/utils';
+
+import {AttributesResource, DataResource} from '../../core/model/resource';
 import {findAttribute} from '../../core/store/collections/collection.util';
-import {objectsByIdMap} from '../utils/common.utils';
+import {AttributeFormattingStyle, computeAttributeFormatting} from '../utils/attribute.utils';
 
 @Pipe({
   name: 'resourceAttributeFormattingStyle',

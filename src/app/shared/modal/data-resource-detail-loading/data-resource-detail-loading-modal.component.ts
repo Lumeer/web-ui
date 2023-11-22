@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef} from '@angular/core';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {DialogType} from '../dialog-type';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {take} from 'rxjs/operators';
+
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {AppState} from '../../../core/store/app.state';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'data-resource-detail-loading-modal',

@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {first, mergeMap, switchMap} from 'rxjs/operators';
-import {NotificationService} from '../../notifications/notification.service';
-import {AppState} from '../../store/app.state';
-import {View} from '../../store/views/view';
-import {selectViewsByRead} from '../../store/common/permissions.selectors';
-import {Project} from '../../store/projects/project';
-import {Organization} from '../../store/organizations/organization';
-import {WorkspaceService} from '../../../workspace/workspace.service';
+
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
+import {WorkspaceService} from '../../../workspace/workspace.service';
+import {NotificationService} from '../../notifications/notification.service';
+import {AppState} from '../../store/app.state';
+import {selectViewsByRead} from '../../store/common/permissions.selectors';
+import {Organization} from '../../store/organizations/organization';
+import {Project} from '../../store/projects/project';
+import {View} from '../../store/views/view';
 
 @Injectable()
 export class ViewsGuard {

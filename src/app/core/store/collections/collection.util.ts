@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Constraint, ConstraintType} from '@lumeer/data-filters';
 
+import * as Colors from '../../../shared/picker/colors';
+import {safeGetRandomIcon} from '../../../shared/picker/icons';
 import {LinkType} from '../link-types/link.type';
 import {Attribute, Collection} from './collection';
-import {Constraint, ConstraintType} from '@lumeer/data-filters';
-import {safeGetRandomIcon} from '../../../shared/picker/icons';
-import * as Colors from '../../../shared/picker/colors';
 
 export function createEmptyCollection(): Collection {
   const colors = Colors.palette;

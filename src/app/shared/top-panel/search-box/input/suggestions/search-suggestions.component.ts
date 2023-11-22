@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,14 +29,17 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
+
+import {BehaviorSubject, Observable, Subscription, of} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {SuggestionsService} from '../../../../../core/service/suggestions-service';
+import {Direction} from '../../../../direction';
+import {DropdownComponent} from '../../../../dropdown/dropdown.component';
 import {QueryItem} from '../../query-item/model/query-item';
 import {QueryItemType} from '../../query-item/model/query-item-type';
-import {SuggestionsService} from '../../../../../core/service/suggestions-service';
-import {isNotNullOrUndefined} from '../../../../utils/common.utils';
-import {DropdownComponent} from '../../../../dropdown/dropdown.component';
-import {Direction} from '../../../../direction';
 
 @Component({
   selector: 'search-suggestions',

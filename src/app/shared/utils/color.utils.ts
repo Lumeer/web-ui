@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {hex2rgba, shadeColor, stripedBackground} from '@lumeer/utils';
 
 import {COLOR_LIGHT, COLOR_PRIMARY} from '../../core/constants';
-import {hex2rgba, shadeColor, stripedBackground} from './html-modifier';
 
 export const DEFAULT_COLOR = '#ffffff';
 export const DEFAULT_STRIPED_COLOR = '#eeeeee';

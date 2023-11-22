@@ -16,50 +16,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule, DatePipe} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {WorkspaceRoutingModule} from './workspace-routing.module';
-import {ProjectUsersComponent} from './project/users/project-users.component';
-import {OrganizationSettingsComponent} from './organization/organization-settings.component';
-import {ProjectSettingsComponent} from './project/project-settings.component';
-import {WorkspaceService} from './workspace.service';
-import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
-import {OrganizationDetailComponent} from './organization/detail/organization-detail.component';
-import {ContactFormComponent} from './organization/detail/contact-form/contact-form.component';
-import {PaymentsPanelComponent} from './organization/detail/payments-panel/payments-panel.component';
-import {PaymentsOrderComponent} from './organization/detail/payments-panel/payments-order/payments-order.component';
-import {PaymentsListComponent} from './organization/detail/payments-panel/payments-list/payments-list.component';
-import {PaymentsStateComponent} from './organization/detail/payments-panel/payments-state/payments-state.component';
-import {OrganizationUsersComponent} from './organization/users/organization-users.component';
-import {UsersModule} from '../shared/users/users.module';
-import {ProjectSettingsGuard} from './project/project-settings.guard';
-import {ProjectSequencesComponent} from './project/sequences/project-sequences.component';
-import {ProjectTemplateComponent} from './project/template/project-template.component';
-import {ProjectTemplateMetadataComponent} from './project/template/metadata/project-template-metadata.component';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
-import {ProjectTemplateScriptComponent} from './project/template/metadata/script/project-template-script.component';
+
 import {DirectivesModule} from '../shared/directives/directives.module';
-import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
-import {TeamsModule} from '../shared/teams/teams.module';
-import {ProjectTeamsComponent} from './project/teams/project-teams.component';
-import {OrganizationTabGuard} from './organization/organization-tab.guard';
-import {ProjectTabGuard} from './project/project-tab.guard';
-import {ProjectUploadComponent} from './project/upload/project-upload.component';
-import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
+import {InputModule} from '../shared/input/input.module';
 import {SelectionListsModule} from '../shared/lists/selection/selection-lists.module';
-import {ProjectVariablesComponent} from './project/variables/project-variables.component';
+import {PipesModule} from '../shared/pipes/pipes.module';
 import {ResourceModule} from '../shared/resource/resource.module';
 import {SelectModule} from '../shared/select/select.module';
-import {PipesModule} from '../shared/pipes/pipes.module';
-import {TopPanelModule} from '../shared/top-panel/top-panel.module';
 import {SequencesModule} from '../shared/sequences/sequences.module';
 import {SliderModule} from '../shared/slider/slider.module';
-import {InputModule} from '../shared/input/input.module';
+import {TeamsModule} from '../shared/teams/teams.module';
+import {TopPanelModule} from '../shared/top-panel/top-panel.module';
+import {UsersModule} from '../shared/users/users.module';
+import {ContactFormComponent} from './organization/detail/contact-form/contact-form.component';
+import {OrganizationDetailComponent} from './organization/detail/organization-detail.component';
+import {PaymentsListComponent} from './organization/detail/payments-panel/payments-list/payments-list.component';
+import {PaymentsOrderComponent} from './organization/detail/payments-panel/payments-order/payments-order.component';
+import {PaymentsPanelComponent} from './organization/detail/payments-panel/payments-panel.component';
+import {PaymentsStateComponent} from './organization/detail/payments-panel/payments-state/payments-state.component';
+import {OrganizationSettingsComponent} from './organization/organization-settings.component';
+import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
+import {OrganizationTabGuard} from './organization/organization-tab.guard';
+import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
+import {OrganizationUsersComponent} from './organization/users/organization-users.component';
 import {ProjectActivityComponent} from './project/activity/project-activity.component';
+import {ProjectSettingsComponent} from './project/project-settings.component';
+import {ProjectSettingsGuard} from './project/project-settings.guard';
+import {ProjectTabGuard} from './project/project-tab.guard';
+import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
+import {ProjectSequencesComponent} from './project/sequences/project-sequences.component';
+import {ProjectTeamsComponent} from './project/teams/project-teams.component';
+import {ProjectTemplateMetadataComponent} from './project/template/metadata/project-template-metadata.component';
+import {ProjectTemplateScriptComponent} from './project/template/metadata/script/project-template-script.component';
+import {ProjectTemplateComponent} from './project/template/project-template.component';
+import {ProjectUploadComponent} from './project/upload/project-upload.component';
+import {ProjectUsersComponent} from './project/users/project-users.component';
+import {ProjectVariablesComponent} from './project/variables/project-variables.component';
 import {ResourcesGuardService} from './resources-guard.service';
+import {WorkspaceRoutingModule} from './workspace-routing.module';
+import {WorkspaceService} from './workspace.service';
 
 @NgModule({
   imports: [

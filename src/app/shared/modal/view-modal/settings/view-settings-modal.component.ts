@@ -16,29 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {DialogType} from '../../dialog-type';
-import {View} from '../../../../core/store/views/view';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
-import {ViewsAction} from '../../../../core/store/views/views.action';
-import {NotificationService} from '../../../../core/notifications/notification.service';
-import {integerValidator, notEmptyValidator} from '../../../../core/validators/custom-validators';
-import {selectAllViewsSorted, selectViewById} from '../../../../core/store/views/views.state';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
+
+import {defaultViewColorFromQuery, getViewColor} from '@lumeer/data-filters';
+import {objectsByIdMap} from '@lumeer/utils';
+
+import {NotificationService} from '../../../../core/notifications/notification.service';
+import {AppState} from '../../../../core/store/app.state';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  defaultViewColorFromQuery,
-  defaultViewIcon,
-  getViewColor,
-  getViewIcon,
-} from '../../../../core/store/views/view.utils';
-import {objectsByIdMap} from '../../../utils/common.utils';
+import {View} from '../../../../core/store/views/view';
+import {defaultViewIcon, getViewIcon} from '../../../../core/store/views/view.utils';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectAllViewsSorted, selectViewById} from '../../../../core/store/views/views.state';
+import {integerValidator, notEmptyValidator} from '../../../../core/validators/custom-validators';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
+import {DialogType} from '../../dialog-type';
 
 @Component({
   selector: 'view-settings-modal',

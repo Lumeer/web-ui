@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {Attribute} from '../collections/collection';
-import {LinkType} from './link.type';
-import {Workspace} from '../navigation/workspace';
-import {LinkInstancesAction} from '../link-instances/link-instances.action';
+
 import {Rule} from '../../model/rule';
+import {Attribute} from '../collections/collection';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {Workspace} from '../navigation/workspace';
+import {LinkType} from './link.type';
 
 export enum LinkTypesActionType {
   GET = '[Link Types] Get',

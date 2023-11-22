@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
-import {BlocklyRuleConfiguration} from '../../../../core/model/rule';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {Collection} from '../../../../core/store/collections/collection';
-import {select, Store} from '@ngrx/store';
+
+import {BlocklyRuleConfiguration} from '../../../../core/model/rule';
 import {AppState} from '../../../../core/store/app.state';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../blockly/blockly-editor/blockly-editor-toolbox';
-import {BlocklyDebugDisplay} from '../../../blockly/blockly-debugger/blockly-debugger.component';
-import {BLOCKLY_FUNCTION_BUTTONS} from '../../../blockly/blockly-editor/blockly-utils';
+import {Collection} from '../../../../core/store/collections/collection';
 import {
   selectReadableCollections,
   selectReadableLinkTypes,
   selectViewsByRead,
 } from '../../../../core/store/common/permissions.selectors';
-import {View} from '../../../../core/store/views/view';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
-import {RuleVariable} from '../../../blockly/rule-variable-type';
 import {selectSelectionListNamesByWorkspaceSorted} from '../../../../core/store/selection-lists/selection-lists.state';
+import {View} from '../../../../core/store/views/view';
+import {BlocklyDebugDisplay} from '../../../blockly/blockly-debugger/blockly-debugger.component';
+import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../blockly/blockly-editor/blockly-editor-toolbox';
+import {BLOCKLY_FUNCTION_BUTTONS} from '../../../blockly/blockly-editor/blockly-utils';
+import {RuleVariable} from '../../../blockly/rule-variable-type';
 
 @Component({
   selector: 'blockly-form',

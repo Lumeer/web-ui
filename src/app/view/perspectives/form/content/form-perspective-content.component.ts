@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,20 +26,24 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {FormConfig} from '../../../../core/store/form/form-model';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../core/store/app.state';
 import {Collection} from '../../../../core/store/collections/collection';
+import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {FormConfig} from '../../../../core/store/form/form-model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
+import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 import {View} from '../../../../core/store/views/view';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {objectChanged} from '../../../../shared/utils/common.utils';
 import {FormPerspectiveConfiguration} from '../../perspective-configuration';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
-import {Observable} from 'rxjs';
-import {ConstraintData} from '@lumeer/data-filters';
-import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'form-perspective-content',

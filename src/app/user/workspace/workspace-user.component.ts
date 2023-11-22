@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, OnInit, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Subscription} from 'rxjs';
 import {filter, take, takeUntil} from 'rxjs/operators';
+
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {ResourceType} from '../../core/model/resource-type';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
-import {Project} from '../../core/store/projects/project';
-import {Workspace} from '../../core/store/navigation/workspace';
-import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
-import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {
   selectNavigatingToOtherWorkspace,
   selectPreviousUrl,
   selectWorkspace,
 } from '../../core/store/navigation/navigation.state';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {Project} from '../../core/store/projects/project';
+import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
+import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
+import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 
 @Component({
   selector: 'workspace-user',

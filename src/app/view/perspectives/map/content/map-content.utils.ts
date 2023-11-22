@@ -16,18 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ConstraintData, UnknownConstraint, parseCoordinates} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
 
+import {DataResource} from '../../../../core/model/resource';
 import {Attribute} from '../../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {
   MapAttributeType,
   MapCoordinates,
   MapMarkerData,
   MapMarkerProperties,
 } from '../../../../core/store/maps/map.model';
-import {DataResource} from '../../../../core/model/resource';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
-import {ConstraintData, parseCoordinates, UnknownConstraint} from '@lumeer/data-filters';
 
 export function populateCoordinateProperties(
   propertiesList: MapMarkerData[],

@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Observable} from 'rxjs';
-import {isBackendUrl} from '../../api/api.utils';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {isBackendUrl} from '../../api/api.utils';
 import {AppIdService} from '../../service/app-id.service';
 
 export const correlationIdHeader = 'X-Lumeer-Correlation-Id';

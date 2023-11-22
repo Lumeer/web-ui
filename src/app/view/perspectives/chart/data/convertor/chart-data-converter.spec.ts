@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {TestBed} from '@angular/core/testing';
 import {LOCALE_ID} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {Query} from '../../../../../core/store/navigation/query/query';
+import {DataAggregationType, PercentageConstraint, PercentageConstraintConfig} from '@lumeer/data-filters';
+
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
+import {AttributesResourceType} from '../../../../../core/model/resource';
 import {
   ChartAxisType,
   ChartConfig,
@@ -30,15 +30,14 @@ import {
   ChartSortType,
   ChartType,
 } from '../../../../../core/store/charts/chart';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
-import {AttributesResourceType} from '../../../../../core/model/resource';
-import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {ChartDataConverter} from './chart-data-converter';
 import {ChartDataSet, ChartPoint} from './chart-data';
-import {PercentageConstraint, PercentageConstraintConfig} from '@lumeer/data-filters';
+import {ChartDataConverter} from './chart-data-converter';
 
 const documents: DocumentModel[] = [
   {

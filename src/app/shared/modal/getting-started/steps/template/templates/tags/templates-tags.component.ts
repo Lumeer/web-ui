@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
+import {uniqueValues} from '@lumeer/utils';
+
 import {Project} from '../../../../../../../core/store/projects/project';
-import {uniqueValues} from '../../../../../../utils/array.utils';
 
 @Component({
   selector: 'templates-tags',

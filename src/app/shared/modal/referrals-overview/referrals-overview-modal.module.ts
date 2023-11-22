@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {PresenterModule} from '../../presenter/presenter.module';
-import {PipesModule} from '../../pipes/pipes.module';
-import {ReferralsOverviewModalComponent} from './referrals-overview-modal.component';
 import {InputModule} from '../../input/input.module';
+import {PipesModule} from '../../pipes/pipes.module';
+import {PresenterModule} from '../../presenter/presenter.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {ReferralsOverviewModalComponent} from './referrals-overview-modal.component';
 
 @NgModule({
   declarations: [ReferralsOverviewModalComponent],

@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {UsersAction, UsersActionType} from './users.action';
-import {initialUsersState, usersAdapter, UsersState} from './users.state';
+import {UsersState, initialUsersState, usersAdapter} from './users.state';
 
 export function usersReducer(state: UsersState = initialUsersState, action: UsersAction.All): UsersState {
   switch (action.type) {

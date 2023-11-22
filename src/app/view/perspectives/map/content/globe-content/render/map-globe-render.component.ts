@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
@@ -33,13 +32,14 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+
 import {Point} from 'geojson';
 import {
   GeoJSONSource,
   GeolocateControl,
   Map,
-  MapboxEvent,
   MapLayerMouseEvent,
+  MapboxEvent,
   Marker,
   NavigationControl,
   ScaleControl,
@@ -48,9 +48,13 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {DeviceDetectorService, OS} from 'ngx-device-detector';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../../../../configuration/configuration.service';
 import {MapCoordinates, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
+import {generateId} from '../../../../../../shared/utils/resource.utils';
+import {areMapMarkerListsEqual, createMapMarkersMap} from '../../map-content.utils';
 import {
-  createMapboxMap,
   createMapClusterCountsLayer,
   createMapClusterMarkersSource,
   createMapClustersLayer,
@@ -58,12 +62,9 @@ import {
   createMapMarkersBounds,
   createMapMarkersGeoJson,
   createMapPopupMarker,
+  createMapboxMap,
 } from './map-globe-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
-import {areMapMarkerListsEqual, createMapMarkersMap} from '../../map-content.utils';
-import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {objectValues} from '../../../../../../shared/utils/common.utils';
-import {ConfigurationService} from '../../../../../../configuration/configuration.service';
 
 const MAP_SOURCE_ID = 'records';
 

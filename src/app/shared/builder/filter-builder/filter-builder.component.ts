@@ -16,26 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  ElementRef,
-  ViewChild,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
   AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
+
+import {Observable} from 'rxjs';
+
+import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
+
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {Observable} from 'rxjs';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
-import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
 @Component({
   selector: 'filter-builder',

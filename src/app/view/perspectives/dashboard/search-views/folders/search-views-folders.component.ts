@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
+
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../core/store/app.state';
-import {SearchViewsDirective} from '../search-views.directive';
-import {Observable} from 'rxjs';
-import {selectViewFolderPath} from '../../../../../core/store/navigation/navigation.state';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
+import {selectViewFolderPath} from '../../../../../core/store/navigation/navigation.state';
 import {PerspectiveSettings} from '../../../../../core/store/navigation/settings/perspective-settings';
 import {ViewsAction} from '../../../../../core/store/views/views.action';
+import {SearchViewsDirective} from '../search-views.directive';
 
 @Component({
   selector: 'search-views-folders',

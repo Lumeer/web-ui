@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {CalendarBar, CalendarConfigVersion, CalendarMode} from './calendar';
 import {QueryStem} from '../navigation/query/query';
+import {CalendarBar, CalendarConfigVersion, CalendarMode} from './calendar';
 
 export interface CalendarConfigV1 {
   date: Date;

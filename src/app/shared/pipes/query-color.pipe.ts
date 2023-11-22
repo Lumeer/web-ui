@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryItem} from '../top-panel/search-box/query-item/model/query-item';
+
 import {queryItemsColor} from '../../core/store/navigation/query/query.util';
+import {QueryItem} from '../top-panel/search-box/query-item/model/query-item';
 
 @Pipe({
   name: 'queryColor',

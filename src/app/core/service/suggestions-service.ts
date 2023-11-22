@@ -16,39 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {AppState} from '../store/app.state';
-import {select, Store} from '@ngrx/store';
-import {View} from '../store/views/view';
-import {Attribute, Collection} from '../store/collections/collection';
-import {combineLatest, Observable, of} from 'rxjs';
-import {selectAllViews} from '../store/views/views.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, of} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {generateId, sortResourcesLastUsed} from '../../shared/utils/resource.utils';
-import {selectAllCollections, selectCollectionsDictionary} from '../store/collections/collections.state';
-import {LinkType} from '../store/link-types/link.type';
-import {selectAllLinkTypes} from '../store/link-types/link-types.state';
-import {QueryItem} from '../../shared/top-panel/search-box/query-item/model/query-item';
-import {ViewQueryItem} from '../../shared/top-panel/search-box/query-item/model/view.query-item';
-import {CollectionQueryItem} from '../../shared/top-panel/search-box/query-item/model/collection.query-item';
-import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/link.query-item';
+
+import {initialConditionType, initialConditionValues} from '@lumeer/data-filters';
+import {arrayIntersection, flattenMatrix, removeAccentFromString, uniqueValues} from '@lumeer/utils';
+
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
-import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
-import {arrayIntersection, createRange, flattenMatrix, uniqueValues} from '../../shared/utils/array.utils';
-import {collectionIdsChainForStem, getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
-import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
+import {CollectionQueryItem} from '../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
-import {objectValues} from '../../shared/utils/common.utils';
-import {initialConditionType, initialConditionValues, removeAccentFromString} from '@lumeer/data-filters';
+import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
+import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/link.query-item';
+import {QueryItem} from '../../shared/top-panel/search-box/query-item/model/query-item';
+import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
+import {ViewQueryItem} from '../../shared/top-panel/search-box/query-item/model/view.query-item';
 import {convertQueryItemsToQueryModel} from '../../shared/top-panel/search-box/query-item/query-items.converter';
+import {createRange} from '../../shared/utils/array.utils';
+import {objectValues} from '../../shared/utils/common.utils';
+import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
+import {generateId, sortResourcesLastUsed} from '../../shared/utils/resource.utils';
+import {AppState} from '../store/app.state';
+import {Attribute, Collection} from '../store/collections/collection';
+import {selectAllCollections, selectCollectionsDictionary} from '../store/collections/collections.state';
 import {
   selectAllCollectionsWithoutHiddenAttributes,
   selectAllLinkTypesWithoutHiddenAttributes,
   selectCollectionsByIdsWithoutHiddenAttributes,
   selectLinkTypesByIdsWithoutHiddenAttributes,
 } from '../store/common/permissions.selectors';
+import {selectAllLinkTypes} from '../store/link-types/link-types.state';
+import {LinkType} from '../store/link-types/link.type';
+import {collectionIdsChainForStem, getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
+import {View} from '../store/views/view';
+import {selectAllViews} from '../store/views/views.state';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;

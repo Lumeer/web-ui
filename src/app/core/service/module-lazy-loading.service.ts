@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, OnDestroy} from '@angular/core';
 import {NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
+
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 
 @Injectable({

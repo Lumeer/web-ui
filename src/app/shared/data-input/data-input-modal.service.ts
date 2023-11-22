@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, TemplateRef} from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
 import {BsModalRef, BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
+
 import {AppState} from '../../core/store/app.state';
 import {ModalsAction} from '../../core/store/modals/modals.action';
 

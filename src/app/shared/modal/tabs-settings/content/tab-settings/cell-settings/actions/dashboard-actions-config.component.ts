@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+
+import {COLOR_SUCCESS} from '../../../../../../../core/constants';
 import {DashboardAction, DashboardActionType} from '../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../core/store/views/view';
-import {COLOR_SUCCESS} from '../../../../../../../core/constants';
 
 @Component({
   selector: 'dashboard-actions-config',

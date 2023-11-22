@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,31 +27,33 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+
+import {Constraint, ConstraintConfig, ConstraintType, SelectConstraintConfig} from '@lumeer/data-filters';
+import {convertToBig} from '@lumeer/utils';
+
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {constraintTypesMap} from '../../../../../core/model/constraint';
+import {AttributesResource} from '../../../../../core/model/resource';
+import {NotificationService} from '../../../../../core/notifications/notification.service';
+import {Attribute, AttributeFunction} from '../../../../../core/store/collections/collection';
+import {canShowAttributeHints, isUsedConstraintAttribute} from '../../../../utils/attribute.utils';
+import {createConstraint} from '../../../../utils/constraint/create-constraint';
+import {ActionConstraintFormControl} from './constraint-config/action/action-constraint-form-control';
 import {AddressConstraintFormControl} from './constraint-config/address/address-constraint-form-control';
 import {CoordinatesConstraintFormControl} from './constraint-config/coordinates/coordinates-constraint-form-control';
+import {DatetimeConstraintFormControl} from './constraint-config/datetime/datetime-constraint-form-control';
+import {DurationConstraintFormControl} from './constraint-config/duration/duration-constraint-form-control';
+import {LinkConstraintFormControl} from './constraint-config/link/link-constraint-form-control';
+import {NumberConstraintFormControl} from './constraint-config/number/number-constraint-form-control';
 import {PercentageConstraintFormControl} from './constraint-config/percentage/percentage-constraint-form-control';
 import {SelectConstraintFormControl} from './constraint-config/select/select-constraint-form-control';
 import {
   isSelectConstraintOptionValueRemoved,
   parseSelectOptionsFromForm,
 } from './constraint-config/select/select-constraint.utils';
-import {UserConstraintFormControl} from './constraint-config/user/user-constraint-form-control';
-import {DurationConstraintFormControl} from './constraint-config/duration/duration-constraint-form-control';
-import {Attribute, AttributeFunction} from '../../../../../core/store/collections/collection';
-import {NotificationService} from '../../../../../core/notifications/notification.service';
-import {createConstraint} from '../../../../utils/constraint/create-constraint';
-import {constraintTypesMap} from '../../../../../core/model/constraint';
-import {convertToBig} from '../../../../utils/data.utils';
-import {DatetimeConstraintFormControl} from './constraint-config/datetime/datetime-constraint-form-control';
 import {TextConstraintFormControl} from './constraint-config/text/text-constraint-form-control';
-import {NumberConstraintFormControl} from './constraint-config/number/number-constraint-form-control';
-import {LinkConstraintFormControl} from './constraint-config/link/link-constraint-form-control';
-import {ActionConstraintFormControl} from './constraint-config/action/action-constraint-form-control';
-import {AttributesResource} from '../../../../../core/model/resource';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Constraint, ConstraintConfig, ConstraintType, SelectConstraintConfig} from '@lumeer/data-filters';
+import {UserConstraintFormControl} from './constraint-config/user/user-constraint-form-control';
 import {ViewConstraintFormControl} from './constraint-config/view/view-constraint-form-control';
-import {canShowAttributeHints, isUsedConstraintAttribute} from '../../../../utils/attribute.utils';
 
 @Component({
   selector: 'attribute-type-form',

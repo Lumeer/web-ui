@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Permission, Permissions, PermissionType, Role} from './permissions';
+import {Permission, PermissionType, Permissions, Role} from './permissions';
 
 export class PermissionsHelper {
   public static changePermission(

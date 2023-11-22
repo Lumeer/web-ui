@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {ResourcePermissionType, resourcePermissionTypeLinkedTypes} from '../../../core/model/resource-permission-type';
+import {Organization} from '../../../core/store/organizations/organization';
 import {Role} from '../../../core/store/permissions/permissions';
 import {Project} from '../../../core/store/projects/project';
-import {Organization} from '../../../core/store/organizations/organization';
-import {teamTransitiveRoles} from '../../utils/permission.utils';
 import {Team} from '../../../core/store/teams/team';
-import {ResourcePermissionType, resourcePermissionTypeLinkedTypes} from '../../../core/model/resource-permission-type';
 import {View} from '../../../core/store/views/view';
+import {teamTransitiveRoles} from '../../utils/permission.utils';
 
 @Pipe({
   name: 'teamTransitiveRoles',

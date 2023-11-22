@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {isArray, isNotNullOrUndefined} from '../../../../../../../../shared/utils/common.utils';
+
 import {ConstraintData, UserConstraint, UserDataValue} from '@lumeer/data-filters';
+import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'createCombinedUserValue',

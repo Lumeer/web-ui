@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+
 import {Observable} from 'rxjs';
-import {UserNotificationDto} from '../dto/user-notification.dto';
 import {map} from 'rxjs/operators';
+
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {UserNotificationDto} from '../dto/user-notification.dto';
 
 @Injectable()
 export class UserNotificationsService {

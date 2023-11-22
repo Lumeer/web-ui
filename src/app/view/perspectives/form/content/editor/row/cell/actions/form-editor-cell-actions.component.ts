@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {FormCellConfig, FormCellType} from '../../../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../../../core/store/collections/collection';
+import {FormCellConfig, FormCellType} from '../../../../../../../../core/store/form/form-model';
 import {View} from '../../../../../../../../core/store/views/view';
 
 @Component({

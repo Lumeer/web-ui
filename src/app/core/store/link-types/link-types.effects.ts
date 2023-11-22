@@ -16,26 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Action, Store, select} from '@ngrx/store';
+
 import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+
+import {LinkTypeService} from '../../data-service';
 import {LinkTypeDto} from '../../dto';
 import {AppState} from '../app.state';
+import * as AuditLogActions from '../audit-logs/audit-logs.actions';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
+import {Attribute} from '../collections/collection';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
+import {LinkInstance} from '../link-instances/link.instance';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {convertRuleToDto, createCallbackActions, emitErrorActions} from '../utils/store.utils';
+import {selectViewQuery} from '../views/views.state';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypeAttributeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from './link-types.state';
-import {Attribute} from '../collections/collection';
-import {LinkInstance} from '../link-instances/link.instance';
-import {LinkTypeService} from '../../data-service';
-import {selectViewQuery} from '../views/views.state';
-import * as AuditLogActions from '../audit-logs/audit-logs.actions';
 
 @Injectable()
 export class LinkTypesEffects {

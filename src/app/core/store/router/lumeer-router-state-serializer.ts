@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Data, Params, RouterStateSnapshot} from '@angular/router';
-import {RouterStateSerializer} from '@ngrx/router-store';
 import {Injectable} from '@angular/core';
+import {Data, Params, RouterStateSnapshot} from '@angular/router';
+
+import {RouterStateSerializer} from '@ngrx/router-store';
 
 export interface RouterStateUrl {
   url: string;

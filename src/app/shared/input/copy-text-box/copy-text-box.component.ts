@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+
 import {BehaviorSubject} from 'rxjs';
+
 import {ClipboardService} from '../../../core/service/clipboard.service';
 
 @Component({

@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {isDateValid} from '@lumeer/utils';
+
 import {FileAttachment} from '../../../../../core/store/file-attachments/file-attachment.model';
 import {User} from '../../../../../core/store/users/user';
-import {isDateValid} from '../../../../utils/common.utils';
 
 @Component({
   selector: 'file-attachment-tooltip',

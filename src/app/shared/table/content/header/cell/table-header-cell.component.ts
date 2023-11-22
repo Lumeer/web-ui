@@ -16,26 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  OnInit,
+  Component,
   ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
 } from '@angular/core';
-import {TableColumn} from '../../../model/table-column';
-import {computeElementPositionInParent, preventEvent} from '../../../../utils/common.utils';
-import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
+
+import {ConditionType, ConditionValue} from '@lumeer/data-filters';
+
+import {AttributeSortType} from '../../../../../core/store/view-settings/view-settings';
 import {MenuItem} from '../../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../../menu/static-menu/static-menu.component';
-import {CellFilterBuilderComponent} from './filter-builder/cell-filter-builder.component';
-import {ConditionType, ConditionValue} from '@lumeer/data-filters';
+import {computeElementPositionInParent, preventEvent} from '../../../../utils/common.utils';
 import {initForceTouch} from '../../../../utils/html-modifier';
-import {AttributeSortType} from '../../../../../core/store/view-settings/view-settings';
+import {TableColumn} from '../../../model/table-column';
+import {CellFilterBuilderComponent} from './filter-builder/cell-filter-builder.component';
+import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
 
 @Component({
   selector: 'table-header-cell',

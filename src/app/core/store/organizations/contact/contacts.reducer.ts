@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {ContactsAction, ContactsActionType} from './contacts.action';
-import {contactsAdapter, ContactsState, initialContactsState} from './contacts.state';
 import {Contact} from './contact';
+import {ContactsAction, ContactsActionType} from './contacts.action';
+import {ContactsState, contactsAdapter, initialContactsState} from './contacts.state';
 
 export function contactsReducer(
   state: ContactsState = initialContactsState,

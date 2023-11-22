@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,30 +30,34 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, Subscription, fromEvent} from 'rxjs';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
-import {DataRow, DataRowService} from '../data/data-row.service';
-import {filterUnusedAttributes} from '../utils/attribute.utils';
-import {Attribute} from '../../core/store/collections/collection';
-import {DataRowFocusService} from '../data/data-row-focus-service';
-import {PostItRowComponent} from './row/post-it-row.component';
-import {Query} from '../../core/store/navigation/query/query';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {AppState} from '../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {getAttributesResourceType} from '../utils/resource.utils';
+import {Attribute} from '../../core/store/collections/collection';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
-import {ModalService} from '../modal/modal.service';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
-import {PostItLayoutType} from './post-it-layout-type';
-import {fromEvent, Observable, Subscription} from 'rxjs';
-import {objectChanged} from '../utils/common.utils';
-import {ConstraintData} from '@lumeer/data-filters';
+import {Query} from '../../core/store/navigation/query/query';
+import {Workspace} from '../../core/store/navigation/workspace';
 import {User} from '../../core/store/users/user';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
-import {Workspace} from '../../core/store/navigation/workspace';
+import {DataRowFocusService} from '../data/data-row-focus-service';
+import {DataRow, DataRowService} from '../data/data-row.service';
+import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
+import {ModalService} from '../modal/modal.service';
+import {filterUnusedAttributes} from '../utils/attribute.utils';
+import {objectChanged} from '../utils/common.utils';
+import {getAttributesResourceType} from '../utils/resource.utils';
+import {PostItLayoutType} from './post-it-layout-type';
+import {PostItRowComponent} from './row/post-it-row.component';
 
 export interface PostItTag {
   title: string;

@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
   Input,
   OnChanges,
-  SimpleChanges,
   Output,
-  EventEmitter,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {RoleGroupService} from './model/role-group.service';
-import {RoleGroup, TranslatedRole, translatedRolesToMap} from './model/role-group';
-import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
+
 import {ResourcePermissionType} from '../../core/model/resource-permission-type';
 import {Role} from '../../core/store/permissions/permissions';
 import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
+import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
+import {RoleGroup, TranslatedRole, translatedRolesToMap} from './model/role-group';
+import {RoleGroupService} from './model/role-group.service';
 
 @Component({
   selector: 'roles',

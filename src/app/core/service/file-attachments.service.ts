@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, OnDestroy} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {of, Subscription} from 'rxjs';
-import {AppState} from '../store/app.state';
-import {FileAttachmentsAction} from '../store/file-attachments/file-attachments.action';
-import {selectViewQuery} from '../store/views/views.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {Subscription, of} from 'rxjs';
 import {debounceTime, filter, switchMap} from 'rxjs/operators';
-import {isNavigatingToOtherWorkspace, queryIsNotEmpty} from '../store/navigation/query/query.util';
-import {selectNavigation} from '../store/navigation/navigation.state';
+
 import {Perspective} from '../../view/perspectives/perspective';
+import {AppState} from '../store/app.state';
 import {selectTasksQuery} from '../store/common/permissions.selectors';
+import {FileAttachmentsAction} from '../store/file-attachments/file-attachments.action';
+import {selectNavigation} from '../store/navigation/navigation.state';
+import {isNavigatingToOtherWorkspace, queryIsNotEmpty} from '../store/navigation/query/query.util';
+import {selectViewQuery} from '../store/views/views.state';
 
 @Injectable()
 export class FileAttachmentsService implements OnDestroy {

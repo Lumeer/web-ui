@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {generateDocumentDataByQuery} from '../../../../../core/store/documents/document.utils';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/table.model';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {Collection} from '../../../../../core/store/collections/collection';
+
 import {ConstraintData} from '@lumeer/data-filters';
+
+import {Collection} from '../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {generateDocumentDataByQuery} from '../../../../../core/store/documents/document.utils';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'dataCellDocument',

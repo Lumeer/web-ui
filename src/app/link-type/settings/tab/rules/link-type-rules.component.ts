@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+
+import {Action, Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Action, select, Store} from '@ngrx/store';
 import {filter, first, map, tap} from 'rxjs/operators';
-import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
-import {AppState} from '../../../../core/store/app.state';
-import {selectLinkTypeById, selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-types.state';
+
 import {Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
-import {generateId} from '../../../../shared/utils/resource.utils';
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {AppState} from '../../../../core/store/app.state';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {containsAttributeWithRule} from '../../../../shared/utils/attribute.utils';
+import {selectLinkTypeById, selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
-import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {containsAttributeWithRule} from '../../../../shared/utils/attribute.utils';
+import {generateId} from '../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'link-type-rules',

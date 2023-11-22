@@ -16,21 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {PipesModule} from '../../../pipes/pipes.module';
-import {NotificationsMenuComponent} from './notifications-menu.component';
-import {NotificationsMenuContentComponent} from './content/notifications-menu-content.component';
-import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
-import {NotificationsMenuDropdownComponent} from './content/dropdown/notifications-menu-dropdown.component';
-import {DropdownModule} from '../../../dropdown/dropdown.module';
+
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {NotificationItemComponent} from './content/dropdown/notification-item/notification-item.component';
-import {NotificationTextComponent} from './content/dropdown/notification-text/notification-text.component';
+
+import {DropdownModule} from '../../../dropdown/dropdown.module';
+import {PipesModule} from '../../../pipes/pipes.module';
 import {NotificationIconComponent} from './content/dropdown/notification-icon/notification-icon.component';
+import {NotificationItemComponent} from './content/dropdown/notification-item/notification-item.component';
 import {NotificationPathComponent} from './content/dropdown/notification-path/notification-path.component';
+import {NotificationTextComponent} from './content/dropdown/notification-text/notification-text.component';
+import {NotificationsMenuDropdownComponent} from './content/dropdown/notifications-menu-dropdown.component';
+import {NotificationsMenuContentComponent} from './content/notifications-menu-content.component';
+import {NotificationsMenuComponent} from './notifications-menu.component';
+import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 
 @NgModule({
   imports: [CommonModule, PipesModule, RouterModule, DropdownModule, TooltipModule.forRoot()],

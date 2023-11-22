@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
+
+import {WorkspaceService} from '../../../workspace/workspace.service';
 import {AppState} from '../../store/app.state';
+import {Organization} from '../../store/organizations/organization';
+import {Project} from '../../store/projects/project';
 import {ViewsAction} from '../../store/views/views.action';
 import {selectDefaultViewConfigsLoaded, selectPerspectiveDefaultViewConfig} from '../../store/views/views.state';
-import {Project} from '../../store/projects/project';
-import {Organization} from '../../store/organizations/organization';
-import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
 export class ViewDefaultConfigsGuard {

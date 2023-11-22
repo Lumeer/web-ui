@@ -16,22 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-
-import {InputBoxComponent} from './input-box/input-box.component';
-import {InvitationTypeSelectComponent} from './invitation-type-select/invitation-type-select.component';
-import {HiddenInputComponent} from './hidden-input/hidden-input.component';
-import {CopyTextBoxComponent} from './copy-text-box/copy-text-box.component';
-import {CustomCheckboxComponent} from './custom-checkbox/custom-checkbox.component';
-import {InputTagsComponent} from './tags/input-tags.component';
 import {ReactiveFormsModule} from '@angular/forms';
+
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
 import {DirectivesModule} from '../directives/directives.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
+import {CopyTextBoxComponent} from './copy-text-box/copy-text-box.component';
+import {CustomCheckboxComponent} from './custom-checkbox/custom-checkbox.component';
+import {HiddenInputComponent} from './hidden-input/hidden-input.component';
+import {InputBoxComponent} from './input-box/input-box.component';
+import {InvitationTypeSelectComponent} from './invitation-type-select/invitation-type-select.component';
 import {FilterUsedSuggestionsPipe} from './tags/filter-used-suggestions.pipe';
+import {InputTagsComponent} from './tags/input-tags.component';
 import {ToggleCheckboxComponent} from './toggle-checkbox/toggle-checkbox.component';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DirectivesModule, DropdownModule, TooltipModule],

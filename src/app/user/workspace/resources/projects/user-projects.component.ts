@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {ResourceRolesData, ResourceRolesDatum} from '../../../settings/tab/resources/list/resource-roles-data';
-import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'user-projects',

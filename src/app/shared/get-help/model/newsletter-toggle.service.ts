@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {UpdateValueService} from '../../../core/service/update-value.service';
-import {User} from '../../../core/store/users/user';
+
 import {Store} from '@ngrx/store';
+
+import {UpdateValueService} from '../../../core/service/update-value.service';
 import {AppState} from '../../../core/store/app.state';
+import {User} from '../../../core/store/users/user';
 import {UsersAction} from '../../../core/store/users/users.action';
 
 @Injectable()

@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormGroup} from '@angular/forms';
-import {SelectionList} from '../../../selection-list';
+
 import {DropdownOption} from '../../../../../dropdown/options/dropdown-option';
+import {SelectionList} from '../../../selection-list';
 import {AttributeSelectionList} from '../../attribute-selection-list';
 
 @Component({

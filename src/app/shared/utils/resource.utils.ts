@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
 
 import {AttributesResource, AttributesResourceType, Resource} from '../../core/model/resource';
-import {LinkType} from '../../core/store/link-types/link.type';
 import {Attribute} from '../../core/store/collections/collection';
-import {isNotNullOrUndefined, objectsByIdMap} from './common.utils';
+import {LinkType} from '../../core/store/link-types/link.type';
 
 export function generateCorrelationId(): string {
   return Date.now() + ':' + Math.random();
@@ -46,7 +46,7 @@ export function attributesResourcesAreSame(a1: AttributesResource, a2: Attribute
 export function attributesResourcesAttributesMap(
   resources: AttributesResource[]
 ): Record<string, Record<string, Attribute>> {
-  return (resources || []).reduce(
+  return (resources || []).reduce<Record<string, Record<string, Attribute>>>(
     (map, resource) => ({...map, [resource.id]: objectsByIdMap(resource.attributes)}),
     {}
   );

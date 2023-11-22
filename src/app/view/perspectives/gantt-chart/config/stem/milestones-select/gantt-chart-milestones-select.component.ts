@@ -17,14 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+
+import {deepObjectCopy} from '@lumeer/utils';
+
 import {
   GanttChartBarModel,
   GanttChartColorBarModel,
   GanttChartStemConfig,
 } from '../../../../../../core/store/gantt-charts/gantt-chart';
-import {deepObjectCopy} from '../../../../../../shared/utils/common.utils';
-import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 import {selectDefaultPalette} from '../../../../../../shared/picker/colors';
+import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'gantt-chart-milestones-select',

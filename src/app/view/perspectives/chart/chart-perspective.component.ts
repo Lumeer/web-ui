@@ -16,28 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {DocumentModel} from '../../../core/store/documents/document.model';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {map, take} from 'rxjs/operators';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {AppState} from '../../../core/store/app.state';
 import {ChartConfig} from '../../../core/store/charts/chart';
-import {selectChartById} from '../../../core/store/charts/charts.state';
-import {ViewConfig} from '../../../core/store/views/view';
 import {ChartAction} from '../../../core/store/charts/charts.action';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {ChartDataComponent} from './data/chart-data.component';
-import {checkOrTransformChartConfig} from './visualizer/chart-util';
-import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {selectChartById} from '../../../core/store/charts/charts.state';
 import {Collection} from '../../../core/store/collections/collection';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Query} from '../../../core/store/navigation/query/query';
+import {ViewConfig} from '../../../core/store/views/view';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {ChartPerspectiveConfiguration, defaultChartPerspectiveConfiguration} from '../perspective-configuration';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {ChartDataComponent} from './data/chart-data.component';
+import {checkOrTransformChartConfig} from './visualizer/chart-util';
 
 @Component({
   selector: 'chart-perspective',

@@ -16,28 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
+  AggregatedDataItem,
   AttributeFilter,
-  computeAttributeLockStatsByDataValues,
   ConstraintData,
-  createDataValuesMap,
-  objectsByIdMap,
+  DataAggregationType,
+  DataAggregatorAttribute,
   UnknownConstraint,
+  aggregateDataValues,
+  computeAttributeLockStatsByDataValues,
+  createDataValuesMap,
+  dataAggregationConstraint,
+  dataAggregationsByConstraint,
+  isAttributeLockEnabledByLockStats,
+  queryAttributePermissions,
 } from '@lumeer/data-filters';
-import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
-import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
+
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
   getQueryStemFiltersForResource,
   queryStemAttributesResourcesOrder,
   queryStemsAreSame,
   subtractFilters,
 } from '../../../../../../core/store/navigation/query/query.util';
-import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
-import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
+import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
+import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
+import {TableColumn} from '../../../../../../shared/table/model/table-column';
+import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
 import {
   TABLE_BOTTOM_TOOLBAR_HEIGHT,
   TABLE_ROW_BORDER,
@@ -46,29 +60,12 @@ import {
   TableCellType,
   TableModel,
 } from '../../../../../../shared/table/model/table-model';
-import {generateId, getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
-import {TableColumn} from '../../../../../../shared/table/model/table-column';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {computeAttributeFormatting} from '../../../../../../shared/utils/attribute.utils';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {sortDataObjectsByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
+import {generateId, getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
-import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
-import {isNotNullOrUndefined, objectValues} from '../../../../../../shared/utils/common.utils';
-import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
-import {
-  computeAttributeFormatting,
-  isAttributeLockEnabledByLockStats,
-} from '../../../../../../shared/utils/attribute.utils';
-import {TableFooter, TableFooterCellsMap} from '../../../../../../shared/table/model/table-footer';
-import {
-  aggregateDataValues,
-  dataAggregationConstraint,
-  dataAggregationsByConstraint,
-  DataAggregationType,
-} from '../../../../../../shared/utils/data/data-aggregation';
-import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 

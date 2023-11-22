@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit} from '@angular/core';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {AppState} from '../../../core/store/app.state';
+import {Workspace} from '../../../core/store/navigation/workspace';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   selector: 'user-panel',

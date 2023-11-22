@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableColumnGroup} from '../model/table-column';
+
 import {DocumentHintColumn} from '../../document-hints/document-hint-column';
+import {TableColumnGroup} from '../model/table-column';
 
 @Pipe({
   name: 'documentHintsColumns',

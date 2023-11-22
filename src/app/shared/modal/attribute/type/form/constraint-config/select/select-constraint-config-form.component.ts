@@ -16,32 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
-import {uniqueValuesValidator} from '../../../../../../../core/validators/unique-values-validator';
-import {minimumValuesCountValidator} from '../../../../../../../core/validators/mininum-values-count-validator';
-import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
-import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {getAttributesResourceType} from '../../../../../../utils/resource.utils';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../../../../core/store/app.state';
-import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
-import {createSuggestionDataValues} from '../../../../../../utils/data-resource.utils';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
+
 import {DataValue, SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
+
+import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {
   selectDocumentsByCollectionAndReadPermission,
   selectLinksByLinkTypeAndReadPermission,
 } from '../../../../../../../core/store/common/permissions.selectors';
-import {selectSelectionListsByWorkspace} from '../../../../../../../core/store/selection-lists/selection-lists.state';
-import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
-import {SelectionList} from '../../../../../../lists/selection/selection-list';
-import {selectProjectPermissions} from '../../../../../../../core/store/user-permissions/user-permissions.state';
+import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {selectWorkspace} from '../../../../../../../core/store/navigation/navigation.state';
+import {selectSelectionListsByWorkspace} from '../../../../../../../core/store/selection-lists/selection-lists.state';
+import {selectProjectPermissions} from '../../../../../../../core/store/user-permissions/user-permissions.state';
+import {minimumValuesCountValidator} from '../../../../../../../core/validators/mininum-values-count-validator';
+import {uniqueValuesValidator} from '../../../../../../../core/validators/unique-values-validator';
+import {SelectionList} from '../../../../../../lists/selection/selection-list';
+import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
+import {createSuggestionDataValues} from '../../../../../../utils/data-resource.utils';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
+import {getAttributesResourceType} from '../../../../../../utils/resource.utils';
+import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
 
 @Component({
   selector: 'select-constraint-config-form',

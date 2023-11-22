@@ -16,24 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild, HostListener} from '@angular/core';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {BehaviorSubject, Observable, Subject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
-import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
+
 import {AttributeLock} from '@lumeer/data-filters';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
+
+import {AppState} from '../../../../core/store/app.state';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
+import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
+import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
 
 @Component({
   selector: 'attribute-lock-modal',

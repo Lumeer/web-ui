@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {SizeType} from './size-type';
+
 import {SliderItem} from '../values/slider-item';
+import {SizeType} from './size-type';
 
 @Component({
   selector: 'size-slider',

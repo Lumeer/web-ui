@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -29,10 +28,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {Actions, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Action, Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, switchMap, take} from 'rxjs/operators';
+
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
@@ -40,27 +42,27 @@ import {findAttribute} from '../../../../../../core/store/collections/collection
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
-import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
+import {TableHeaderCursor, areTableHeaderCursorsEqual} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableModel} from '../../../../../../core/store/tables/table.model';
 import {findTableColumn, getTablePart, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.selector';
+import {View} from '../../../../../../core/store/views/view';
 import {Direction} from '../../../../../../shared/direction';
-import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../../shared/key-code';
+import {KeyCode, isKeyPrintable, keyboardEventCode} from '../../../../../../shared/key-code';
+import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {
   extractAttributeLastName,
   filterAttributesByDepth,
   filterOutInvalidAttributeNameCharacters,
 } from '../../../../../../shared/utils/attribute.utils';
+import {computeElementPositionInParent, preventEvent} from '../../../../../../shared/utils/common.utils';
+import {initForceTouch} from '../../../../../../shared/utils/html-modifier';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
-import {ModalService} from '../../../../../../shared/modal/modal.service';
-import {computeElementPositionInParent, preventEvent} from '../../../../../../shared/utils/common.utils';
-import {Query} from '../../../../../../core/store/navigation/query/query';
-import {View} from '../../../../../../core/store/views/view';
-import {initForceTouch} from '../../../../../../shared/utils/html-modifier';
 
 @Component({
   selector: 'table-single-column',

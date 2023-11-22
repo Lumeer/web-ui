@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {Workflow} from './workflow';
-import {selectViewCursor, selectWorkspace} from '../navigation/navigation.state';
+
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
+import {AppState} from '../app.state';
+import {selectViewCursor, selectWorkspace} from '../navigation/navigation.state';
+import {Workflow} from './workflow';
 
 export interface WorkflowsState extends EntityState<Workflow> {}
 

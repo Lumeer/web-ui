@@ -16,32 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {selectCurrentUser, selectCurrentUserForWorkspace} from '../store/users/users.state';
-import {combineLatest, Subscription} from 'rxjs';
-import {selectWorkspaceModels} from '../store/common/common.selectors';
-import {User} from '../store/users/user';
-import {Organization} from '../store/organizations/organization';
-import {Project} from '../store/projects/project';
-import {UserPermissionsAction} from '../store/user-permissions/user-permissions.action';
-import {selectAllViews, selectCurrentView} from '../store/views/views.state';
-import {selectAllCollections} from '../store/collections/collections.state';
-import {selectAllLinkTypes} from '../store/link-types/link-types.state';
-import {AppState} from '../store/app.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {Subscription, combineLatest} from 'rxjs';
+import {filter} from 'rxjs/operators';
+
 import {
   computeResourcesPermissions,
   userPermissionsInOrganization,
   userPermissionsInProject,
   userPermissionsInView,
 } from '../../shared/utils/permission.utils';
-import {filter} from 'rxjs/operators';
-import {selectAllOrganizations} from '../store/organizations/organizations.state';
-import {selectAllProjects} from '../store/projects/projects.state';
-import {selectAllTeams} from '../store/teams/teams.state';
-import {Team} from '../store/teams/team';
 import {AllowedPermissionsMap} from '../model/allowed-permissions';
+import {AppState} from '../store/app.state';
+import {selectAllCollections} from '../store/collections/collections.state';
+import {selectWorkspaceModels} from '../store/common/common.selectors';
+import {selectAllLinkTypes} from '../store/link-types/link-types.state';
+import {Organization} from '../store/organizations/organization';
+import {selectAllOrganizations} from '../store/organizations/organizations.state';
+import {Project} from '../store/projects/project';
+import {selectAllProjects} from '../store/projects/projects.state';
+import {Team} from '../store/teams/team';
+import {selectAllTeams} from '../store/teams/teams.state';
+import {UserPermissionsAction} from '../store/user-permissions/user-permissions.action';
+import {User} from '../store/users/user';
+import {selectCurrentUser, selectCurrentUserForWorkspace} from '../store/users/users.state';
+import {selectAllViews, selectCurrentView} from '../store/views/views.state';
 
 @Injectable()
 export class PermissionsCheckService {
@@ -131,7 +133,7 @@ export class PermissionsCheckService {
 
   private checkViewsPermissions(currentUser: User, organization: Organization, project: Project): Subscription {
     return this.store$.pipe(select(selectAllViews)).subscribe(views => {
-      const permissions = (views || []).reduce(
+      const permissions = (views || []).reduce<AllowedPermissionsMap>(
         (map, view) => ({
           ...map,
           [view.id]: userPermissionsInView(organization, project, view, currentUser),

@@ -16,48 +16,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  HostBinding,
-  OnChanges,
-  SimpleChanges,
-  Output,
+  Component,
   EventEmitter,
+  HostBinding,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
-import {DataCursor} from '../data-cursor';
-import {ActionDataInputConfiguration} from '../data-input-configuration';
-import {combineLatest, concat, Observable, of} from 'rxjs';
-import {AppState} from '../../../core/store/app.state';
-import {Action, select, Store} from '@ngrx/store';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {selectDocumentActionExecutedTime, selectDocumentById} from '../../../core/store/documents/documents.state';
+
+import {Action, Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, concat, of} from 'rxjs';
 import {delay, map, switchMap, tap} from 'rxjs/operators';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
-import {
-  selectLinkInstanceActionExecutedTime,
-  selectLinkInstanceById,
-} from '../../../core/store/link-instances/link-instances.state';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
-import {AttributesResource, DataResource} from '../../../core/model/resource';
-import {isAttributeLockEnabledByLockStats} from '../../utils/attribute.utils';
+
 import {
   ActionConstraintConfig,
   ActionDataValue,
   AttributeLock,
   AttributeLockFiltersStats,
-  computeAttributeLockStats,
   ConstraintData,
+  computeAttributeLockStats,
+  isAttributeLockEnabledByLockStats,
 } from '@lumeer/data-filters';
-import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute/type/form/constraint-config/action/action-constraint.utils';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {objectsByIdMap} from '@lumeer/utils';
+
+import {AttributesResource, DataResource} from '../../../core/model/resource';
+import {AppState} from '../../../core/store/app.state';
 import {Attribute} from '../../../core/store/collections/collection';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectDocumentActionExecutedTime, selectDocumentById} from '../../../core/store/documents/documents.state';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {
+  selectLinkInstanceActionExecutedTime,
+  selectLinkInstanceById,
+} from '../../../core/store/link-instances/link-instances.state';
+import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute/type/form/constraint-config/action/action-constraint.utils';
+import {preventEvent} from '../../utils/common.utils';
+import {DataCursor} from '../data-cursor';
+import {ActionDataInputConfiguration} from '../data-input-configuration';
 
 const loadingTime = 2000;
 

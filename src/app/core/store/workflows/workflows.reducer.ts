@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialWorkflowsState, workflowsAdapter, WorkflowsState} from './workflow.state';
-import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
-import {WorkflowColumnSettings, WorkflowFooterAttributeConfig, WorkflowTableConfig} from './workflow';
-import {queryStemsAreSame, queryStemWithoutFilters} from '../navigation/query/query.util';
-import {QueryStem} from '../navigation/query/query';
 import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
 import {AttributesResourceType} from '../../model/resource';
+import {QueryStem} from '../navigation/query/query';
+import {queryStemWithoutFilters, queryStemsAreSame} from '../navigation/query/query.util';
+import {WorkflowColumnSettings, WorkflowFooterAttributeConfig, WorkflowTableConfig} from './workflow';
+import {WorkflowsState, initialWorkflowsState, workflowsAdapter} from './workflow.state';
+import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
 
 export function workflowsReducer(
   state: WorkflowsState = initialWorkflowsState,

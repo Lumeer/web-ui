@@ -16,25 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
-import {User} from '../../core/store/users/user';
 import {AppState} from '../../core/store/app.state';
-import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
-import {selectCurrentUser, selectUserByWorkspace} from '../../core/store/users/users.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {UsersAction} from '../../core/store/users/users.action';
 import {Organization} from '../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
-import {map, take} from 'rxjs/operators';
-import {Team} from '../../core/store/teams/team';
-import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
+import {Team} from '../../core/store/teams/team';
+import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
+import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {User} from '../../core/store/users/user';
+import {UsersAction} from '../../core/store/users/users.action';
+import {selectCurrentUser, selectUserByWorkspace} from '../../core/store/users/users.state';
 
 @Component({
   selector: 'user-settings',

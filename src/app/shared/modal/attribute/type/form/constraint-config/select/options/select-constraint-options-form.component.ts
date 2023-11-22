@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
@@ -38,14 +37,17 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
-import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../../utils/form.utils';
-import {ColorPickerComponent} from '../../../../../../../picker/color/color-picker.component';
-import {unescapeHtml} from '../../../../../../../utils/common.utils';
-import {DataValue, SelectConstraintOption} from '@lumeer/data-filters';
-import {selectDefaultPalette} from '../../../../../../../picker/colors';
+
 import {Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+
+import {DataValue, SelectConstraintOption} from '@lumeer/data-filters';
+import {unescapeHtml} from '@lumeer/utils';
+
+import {ColorPickerComponent} from '../../../../../../../picker/color/color-picker.component';
+import {selectDefaultPalette} from '../../../../../../../picker/colors';
+import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../../utils/form.utils';
+import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
 
 @Component({
   selector: 'select-constraint-options-form',

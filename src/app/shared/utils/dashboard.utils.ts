@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {removeAccentFromString} from '@lumeer/utils';
 
 import {DashboardCell, DashboardTab} from '../../core/model/dashboard-tab';
-import {removeAccentFromString} from '@lumeer/data-filters';
-import {View} from '../../core/store/views/view';
-import {Perspective} from '../../view/perspectives/perspective';
 import {searchTabsMap} from '../../core/store/navigation/search-tab';
 import {Dashboard} from '../../core/store/searches/search';
+import {View} from '../../core/store/views/view';
+import {Perspective} from '../../view/perspectives/perspective';
 
 export function getAllDashboardCells(dashboard: Dashboard): DashboardCell[] {
   return (dashboard?.tabs || []).reduce((cells, tab) => {

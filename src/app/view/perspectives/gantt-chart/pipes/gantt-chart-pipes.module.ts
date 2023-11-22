@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+
+import {GanttChartBarEmptyValuePipe} from './gantt-chart-bar-empty-value.pipe';
+import {GanttChartBarPlaceholderPipe} from './gantt-chart-bar-placeholder.pipe';
 import {GanttChartModeTextPipe} from './gantt-chart-mode-text.pipe';
 import {GanttChartPropertyItemsPipe} from './gantt-chart-property-items.pipe';
-import {GanttChartBarPlaceholderPipe} from './gantt-chart-bar-placeholder.pipe';
-import {GanttChartBarEmptyValuePipe} from './gantt-chart-bar-empty-value.pipe';
-import {TasksInvalidRangeInfoPipe} from './tasks-invalid-range-info.pipe';
 import {GanttChartSelectedItemWithConstraintPipe} from './gantt-chart-selected-item-with-constraint.pipe';
 import {ShouldAggregateProgressPipe} from './should-aggregate-progress.pipe';
+import {TasksInvalidRangeInfoPipe} from './tasks-invalid-range-info.pipe';
 
 @NgModule({
   imports: [CommonModule],

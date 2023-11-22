@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, ElementRef, Output, EventEmitter, ViewChild} from '@angular/core';
-import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
-import {defaultRowLayouts, RowLayoutType} from './row-layout';
+import {DropdownComponent} from '../../dropdown/dropdown.component';
+import {RowLayoutType, defaultRowLayouts} from './row-layout';
 
 @Component({
   selector: 'row-layout-dropdown',

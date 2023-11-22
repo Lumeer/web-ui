@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {SequenceDto} from '../dto/sequence.dto';
 import {AppState} from '../store/app.state';
 import {Workspace} from '../store/navigation/workspace';
-import {SequenceDto} from '../dto/sequence.dto';
 import {BaseService} from './base.service';
-import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class SequenceService extends BaseService {

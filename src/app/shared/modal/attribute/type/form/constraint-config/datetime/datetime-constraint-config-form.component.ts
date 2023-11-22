@@ -16,23 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, Subscription} from 'rxjs';
 import {map, startWith, withLatestFrom} from 'rxjs/operators';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
-import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
-import {minMaxValidator} from '../../../../../../../core/validators/min-max-validator';
-import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
-import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../../../date-time/date-time-options';
-import {LanguageCode} from '../../../../../../../core/model/language';
+
 import {DateTimeConstraintConfig, DateTimeDataValue} from '@lumeer/data-filters';
+import {isNullOrUndefined} from '@lumeer/utils';
+
 import {ConfigurationService} from '../../../../../../../configuration/configuration.service';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
+import {LanguageCode} from '../../../../../../../core/model/language';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {isNullOrUndefined} from '../../../../../../utils/common.utils';
+import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
+import {minMaxValidator} from '../../../../../../../core/validators/min-max-validator';
+import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../../../date-time/date-time-options';
+import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
+import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
 
 @Component({
   selector: 'datetime-constraint-config-form',

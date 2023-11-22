@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
-import {Collection, CollectionPurpose} from '../../../../../core/store/collections/collection';
-import {AppState} from '../../../../../core/store/app.state';
+
+import {deepObjectsEquals} from '@lumeer/utils';
+
 import {UpdateValueService} from '../../../../../core/service/update-value.service';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection, CollectionPurpose} from '../../../../../core/store/collections/collection';
 import {CollectionsAction} from '../../../../../core/store/collections/collections.action';
-import {deepObjectsEquals} from '../../../../../shared/utils/common.utils';
 
 @Injectable()
 export class UpdatePurposeService extends UpdateValueService<CollectionPurpose, Collection> {

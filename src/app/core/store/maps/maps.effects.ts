@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {ContentService} from '../../rest/content.service';
-import {EMPTY, Observable, of} from 'rxjs';
-import {Action, select, Store} from '@ngrx/store';
-import {catchError, map, mergeMap, withLatestFrom} from 'rxjs/operators';
-import {MapsAction, MapsActionType} from './maps.action';
-import {AppState} from '../app.state';
-import {selectMapsState} from './maps.state';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MapImageLoadResult, supportedImageMimeTypes, supportedImageSize} from './map.model';
-import {MimeType, mimeTypesMap} from '../../model/mime-type';
+
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {Action, Store, select} from '@ngrx/store';
+
 import DOMPurify from 'dompurify';
+import {EMPTY, Observable, of} from 'rxjs';
+import {catchError, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+
+import {MimeType, mimeTypesMap} from '../../model/mime-type';
+import {ContentService} from '../../rest/content.service';
+import {AppState} from '../app.state';
+import {MapImageLoadResult, supportedImageMimeTypes, supportedImageSize} from './map.model';
+import {MapsAction, MapsActionType} from './maps.action';
+import {selectMapsState} from './maps.state';
 
 @Injectable()
 export class MapsEffects {

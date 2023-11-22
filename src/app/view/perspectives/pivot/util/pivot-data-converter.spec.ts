@@ -16,21 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {LOCALE_ID} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {PivotDataConverter} from './pivot-data-converter';
-import {PivotConfig} from '../../../../core/store/pivots/pivot';
+import {DataAggregationType, DocumentsAndLinksData, UnknownConstraint} from '@lumeer/data-filters';
+
 import {AttributesResourceType} from '../../../../core/model/resource';
-import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {Collection} from '../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {DocumentsAndLinksData, UnknownConstraint} from '@lumeer/data-filters';
+import {PivotDataConverter} from './pivot-data-converter';
 
 const documents: DocumentModel[] = [
   {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},

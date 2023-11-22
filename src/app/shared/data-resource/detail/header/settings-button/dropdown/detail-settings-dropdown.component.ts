@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,25 +27,28 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {DropdownComponent} from '../../../../../dropdown/dropdown.component';
-import {DropdownPosition} from '../../../../../dropdown/dropdown-position';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../../../core/store/app.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, of} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
-import {combineLatest, Observable, of} from 'rxjs';
-import {selectLinkTypesByCollectionId} from '../../../../../../core/store/common/permissions.selectors';
+import {AppState} from '../../../../../../core/store/app.state';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {
   selectCollectionById,
   selectCollectionsDictionary,
 } from '../../../../../../core/store/collections/collections.state';
-import {map} from 'rxjs/operators';
-import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../../../../utils/link-type.utils';
+import {selectLinkTypesByCollectionId} from '../../../../../../core/store/common/permissions.selectors';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
-import {AttributesResourceData} from '../../../../../settings/attributes/attributes-settings-configuration';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {AttributesSettings} from '../../../../../../core/store/view-settings/view-settings';
+import {DropdownPosition} from '../../../../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../../../../dropdown/dropdown.component';
+import {AttributesResourceData} from '../../../../../settings/attributes/attributes-settings-configuration';
+import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../../../../utils/link-type.utils';
 
 @Component({
   selector: 'detail-settings-dropdown',

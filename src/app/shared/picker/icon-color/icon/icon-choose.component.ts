@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, EventEmitter, Output, Input} from '@angular/core';
-import * as Icons from '../../icons';
 import {BehaviorSubject} from 'rxjs';
+
 import {generateId} from '../../../utils/resource.utils';
+import * as Icons from '../../icons';
 import {IconIdPipe} from '../pipes/icon-id.pipe';
 
 @Component({

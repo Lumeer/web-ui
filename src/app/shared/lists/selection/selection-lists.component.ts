@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
+
 import {ResourceType} from '../../../core/model/resource-type';
 import {AppState} from '../../../core/store/app.state';
-import {Observable} from 'rxjs';
 import {Organization} from '../../../core/store/organizations/organization';
-import {Project} from '../../../core/store/projects/project';
-import {select, Store} from '@ngrx/store';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
 
 @Component({

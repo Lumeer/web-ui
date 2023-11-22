@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DatePipe} from '@angular/common';
-import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+
+import {isDateValid} from '@lumeer/utils';
+
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
-import {isDateValid} from '../../../../../shared/utils/common.utils';
+import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 
 @Component({
   selector: 'payments-order',

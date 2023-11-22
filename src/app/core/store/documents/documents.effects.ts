@@ -16,26 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Action, Store, select} from '@ngrx/store';
+
 import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+
+import {ConstraintType} from '@lumeer/data-filters';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {UserHintService} from '../../../shared/user-hint/user-hint.service';
-import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
+import {objectValues} from '../../../shared/utils/common.utils';
+import {hasFilesAttributeChanged} from '../../../shared/utils/has-files-attribute-changed';
+import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../data-service';
+import {DocumentUtilsService} from '../../service/document-utils.service';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
 import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
 import {CommonAction} from '../common/common.action';
+import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../link-instances/link-instance.converter';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkInstance} from '../link-instances/link.instance';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {OrganizationsAction} from '../organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
+import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
@@ -46,15 +58,6 @@ import {
   selectDocumentsQueries,
   selectPendingDocumentDataUpdatesByCorrelationId,
 } from './documents.state';
-import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../data-service';
-import {OrganizationsAction} from '../organizations/organizations.action';
-import {objectValues} from '../../../shared/utils/common.utils';
-import {ConstraintType} from '@lumeer/data-filters';
-import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
-import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import {DocumentUtilsService} from '../../service/document-utils.service';
-import {selectWorkspaceWithIds} from '../common/common.selectors';
 
 @Injectable()
 export class DocumentsEffects {

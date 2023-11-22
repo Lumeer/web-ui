@@ -16,53 +16,54 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+
+import {ResourceAttributesModule} from './attributes/resource-attributes.module';
 import {BlocklyModule} from './blockly/blockly.module';
+import {BookmarksModule} from './bookmarks/bookmarks.module';
+import {BoxModule} from './box/box.module';
+import {BuilderModule} from './builder/builder.module';
+import {ButtonModule} from './button/button.module';
 import {CollapsibleSidebarModule} from './collapsible-sidebar/collapsible-sidebar.module';
+import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
+import {DataResourceModule} from './data-resource/data-resource.module';
 import {DateTimeModule} from './date-time/date-time.module';
 import {DirectivesModule} from './directives/directives.module';
 import {DocumentHintsModule} from './document-hints/document-hints.module';
-import {DataResourceModule} from './data-resource/data-resource.module';
+import {DropdownModule} from './dropdown/dropdown.module';
+import {FiltersModule} from './filters/filters.module';
 import {InputModule} from './input/input.module';
+import {LayoutModule} from './layout/layout.module';
 import {LinksModule} from './links/links.module';
+import {LoadingModule} from './loading/loading.module';
+import {MenuModule} from './menu/menu.module';
+import {ModalModule} from './modal/modal.module';
 import {PickerModule} from './picker/picker.module';
 import {PipesModule} from './pipes/pipes.module';
 import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
+import {PresenterModule} from './presenter/presenter.module';
 import {PreviewResultsModule} from './preview-results/preview-results.module';
+import {ProgressModule} from './progress/progress.module';
+import {RedDotModule} from './red-dot/red-dot.module';
+import {ResizableSidebarModule} from './resizable-sidebar/resizable-sidebar.module';
+import {ResourceModule} from './resource/resource.module';
+import {RulesModule} from './rules/rules.module';
 import {SelectModule} from './select/select.module';
+import {SequencesModule} from './sequences/sequences.module';
+import {SettingsModule} from './settings/settings.module';
+import {SliderModule} from './slider/slider.module';
+import {TableModule} from './table/table.module';
 import {TagModule} from './tag/tag.module';
 import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 import {TopPanelModule} from './top-panel/top-panel.module';
 import {TourComponent} from './tour/tour.component';
 import {UsersModule} from './users/users.module';
 import {WarningMessageModule} from './warning-message/warning-message.module';
-import {ModalModule} from './modal/modal.module';
-import {PresenterModule} from './presenter/presenter.module';
-import {DropdownModule} from './dropdown/dropdown.module';
-import {SequencesModule} from './sequences/sequences.module';
-import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
-import {BookmarksModule} from './bookmarks/bookmarks.module';
-import {BuilderModule} from './builder/builder.module';
-import {SliderModule} from './slider/slider.module';
-import {SettingsModule} from './settings/settings.module';
-import {TableModule} from './table/table.module';
-import {ResizableSidebarModule} from './resizable-sidebar/resizable-sidebar.module';
-import {RedDotModule} from './red-dot/red-dot.module';
-import {MenuModule} from './menu/menu.module';
-import {ButtonModule} from './button/button.module';
-import {LoadingModule} from './loading/loading.module';
-import {ProgressModule} from './progress/progress.module';
-import {BoxModule} from './box/box.module';
-import {LayoutModule} from './layout/layout.module';
-import {FiltersModule} from './filters/filters.module';
-import {ResourceModule} from './resource/resource.module';
-import {ResourceAttributesModule} from './attributes/resource-attributes.module';
-import {RulesModule} from './rules/rules.module';
 
 @NgModule({
   imports: [

@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, ElementRef, AfterViewInit, OnDestroy} from '@angular/core';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
+import {Store, select} from '@ngrx/store';
+
 import {take} from 'rxjs/operators';
+
+import {AppState} from '../../../core/store/app.state';
 import {ProjectsAction} from '../../../core/store/projects/projects.action';
+import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
 
 @Component({
   selector: 'public-project-message',

@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+
 import {ConstraintData} from '@lumeer/data-filters';
-import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
-import {AttributesResource} from '../../../../../core/model/resource';
-import {User} from '../../../../../core/store/users/user';
+
 import {DEFAULT_USER} from '../../../../../core/constants';
-import {View} from '../../../../../core/store/views/view';
-import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
+import {AttributesResource} from '../../../../../core/model/resource';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
-import {ResourceType} from '../../../../../core/model/resource-type';
+import {User} from '../../../../../core/store/users/user';
+import {View} from '../../../../../core/store/views/view';
+import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 
 @Component({
   selector: 'audit-log',

@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {SearchesAction, SearchesActionType} from './searches.action';
-import {initialSearchesState, searchesAdapter, SearchesState} from './searches.state';
+import {SearchesState, initialSearchesState, searchesAdapter} from './searches.state';
 
 export function searchesReducer(
   state: SearchesState = initialSearchesState,

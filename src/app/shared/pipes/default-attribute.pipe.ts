@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
+
 import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
-import {getAttributesResourceType} from '../utils/resource.utils';
 import {Collection} from '../../core/store/collections/collection';
+import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
+import {getAttributesResourceType} from '../utils/resource.utils';
 
 @Pipe({
   name: 'isDefaultAttribute',

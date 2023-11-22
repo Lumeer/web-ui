@@ -16,17 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
   Input,
   OnChanges,
-  SimpleChanges,
-  EventEmitter,
-  Output,
   OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 import {
   DashboardCell,
   DashboardLayoutType,
@@ -34,19 +39,16 @@ import {
   DashboardTab,
   isDashboardTabDefault,
 } from '../../../../../core/model/dashboard-tab';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {AppState} from '../../../../../core/store/app.state';
+import {selectViewsByReadWithComputedData} from '../../../../../core/store/common/permissions.selectors';
+import {View} from '../../../../../core/store/views/view';
+import {moveItemInArray} from '../../../../utils/array.utils';
 import {
   filterValidDashboardCells,
   findRealDashboardCellIndexByValidIndex,
   isViewDisplayableInDashboard,
 } from '../../../../utils/dashboard.utils';
-import {AppState} from '../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {View} from '../../../../../core/store/views/view';
-import {selectViewsByReadWithComputedData} from '../../../../../core/store/common/permissions.selectors';
-import {map} from 'rxjs/operators';
 import {generateCorrelationId} from '../../../../utils/resource.utils';
-import {moveItemInArray} from '../../../../utils/array.utils';
 
 @Component({
   selector: 'dashboard-tab-settings',

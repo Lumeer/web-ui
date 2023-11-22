@@ -16,42 +16,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {AfterViewInit, Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import * as Sentry from '@sentry/browser';
+import Cookies from 'js-cookie';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
-import {combineLatest, Observable, of, switchMap} from 'rxjs';
+import {defineLocale} from 'ngx-bootstrap/chronos';
+import {BsLocaleService} from 'ngx-bootstrap/datepicker';
+import {csLocale, huLocale} from 'ngx-bootstrap/locale';
+import {TooltipConfig} from 'ngx-bootstrap/tooltip';
+import {Observable, combineLatest, of, switchMap} from 'rxjs';
 import {catchError, delay, filter, first, map, timeout, withLatestFrom} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
+
 import {AuthService} from './auth/auth.service';
-import {ServiceLevelType} from './core/dto/service-level-type';
-import {PusherService} from './core/pusher/pusher.service';
-import {AppState} from './core/store/app.state';
-import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
-import {selectCurrentUser} from './core/store/users/users.state';
-import {hashUserId} from './shared/utils/system.utils';
 import {SessionService} from './auth/session.service';
-import {TooltipConfig} from 'ngx-bootstrap/tooltip';
-import Cookies from 'js-cookie';
-import {APP_NAME_SELECTOR, LUMEER_REFERRAL} from './core/constants';
 import {UserActivityService} from './auth/user-activity.service';
-import {BsLocaleService} from 'ngx-bootstrap/datepicker';
-import {parseQueryParams} from './core/store/navigation/query/query.util';
-import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core/store/projects/projects.state';
 import {ConfigurationService} from './configuration/configuration.service';
+import {APP_NAME_SELECTOR, LUMEER_REFERRAL} from './core/constants';
+import {ServiceLevelType} from './core/dto/service-level-type';
 import {LanguageCode} from './core/model/language';
-import {defineLocale} from 'ngx-bootstrap/chronos';
-import {csLocale, huLocale} from 'ngx-bootstrap/locale';
-import {ModalService} from './shared/modal/modal.service';
-import {selectWorkspace} from './core/store/navigation/navigation.state';
+import {PusherService} from './core/pusher/pusher.service';
 import {ApplicationTourService} from './core/service/application-tour.service';
-import {ViewSettingsService} from './core/service/view-settings.service';
-import {SleepDetectionService} from './core/service/sleep-detection.service';
 import {Ga4Service} from './core/service/ga4.service';
+import {SleepDetectionService} from './core/service/sleep-detection.service';
+import {ViewSettingsService} from './core/service/view-settings.service';
+import {AppState} from './core/store/app.state';
+import {selectWorkspace} from './core/store/navigation/navigation.state';
+import {parseQueryParams} from './core/store/navigation/query/query.util';
+import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
+import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core/store/projects/projects.state';
+import {selectCurrentUser} from './core/store/users/users.state';
+import {ModalService} from './shared/modal/modal.service';
+import {hashUserId} from './shared/utils/system.utils';
 
 @Component({
   selector: APP_NAME_SELECTOR,

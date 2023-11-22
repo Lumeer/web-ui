@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
 import {ViewComponent} from '../../view/view.component';
 import {AppState} from '../store/app.state';
 import {ViewsAction} from '../store/views/views.action';

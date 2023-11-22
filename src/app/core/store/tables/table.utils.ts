@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {objectsByIdMap} from '@lumeer/utils';
 
 import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.utils';
 import {
@@ -24,6 +25,7 @@ import {
   splitAttributeName,
 } from '../../../shared/utils/attribute.utils';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
+import {AllowedPermissions} from '../../model/allowed-permissions';
 import {Attribute, Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
 import {calculateDocumentHierarchyLevel} from '../documents/document.utils';
@@ -39,8 +41,6 @@ import {
   TableConfigRow,
   TableModel,
 } from './table.model';
-import {objectsByIdMap} from '../../../shared/utils/common.utils';
-import {AllowedPermissions} from '../../model/allowed-permissions';
 
 export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
   if (!path || path.length === 0) {

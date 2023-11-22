@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
+
+import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {ViewUserPermissionsPipe} from './view-user-permissions.pipe';
-import {ResourcePermissionType} from '../../../../core/model/resource-permission-type';
 
 @Pipe({
   name: 'viewUserPermissionsMap',

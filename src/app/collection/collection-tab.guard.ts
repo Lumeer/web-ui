@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
 import {map, mergeMap, switchMap, take} from 'rxjs/operators';
-import {selectCollectionById} from '../core/store/collections/collections.state';
-import {select, Store} from '@ngrx/store';
+
+import {RoleType} from '../core/model/role-type';
 import {AppState} from '../core/store/app.state';
+import {Collection} from '../core/store/collections/collection';
+import {selectCollectionById} from '../core/store/collections/collections.state';
 import {selectNavigation} from '../core/store/navigation/navigation.state';
-import {WorkspaceService} from '../workspace/workspace.service';
+import {Organization} from '../core/store/organizations/organization';
 import {Project} from '../core/store/projects/project';
 import {User} from '../core/store/users/user';
-import {Organization} from '../core/store/organizations/organization';
-import {Collection} from '../core/store/collections/collection';
 import {userRoleTypesInResource} from '../shared/utils/permission.utils';
-import {RoleType} from '../core/model/role-type';
+import {WorkspaceService} from '../workspace/workspace.service';
 
 @Injectable()
 export class CollectionTabGuard {

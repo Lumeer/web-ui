@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {ChartAxisSettings, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
-import {AttributesResourceType} from '../../../../../core/model/resource';
 import {Constraint, ConstraintType} from '@lumeer/data-filters';
+
+import {AttributesResourceType} from '../../../../../core/model/resource';
+import {ChartAxisSettings, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 
 export interface ChartData {
   sets: ChartDataSet[];

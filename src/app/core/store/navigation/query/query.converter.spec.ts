@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ConditionType} from '@lumeer/data-filters';
 
 import {Collection} from '../../collections/collection';
-import {addFiltersToQuery} from './query.converter';
 import {Query} from './query';
-import {ConditionType} from '@lumeer/data-filters';
+import {addFiltersToQuery} from './query.converter';
 
 const collection: Collection = {
   id: 'id1',

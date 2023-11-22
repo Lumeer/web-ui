@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -30,22 +29,26 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {FileApiService} from '../../../core/service/file-api.service';
+
+import {FilesDataValue} from '@lumeer/data-filters';
+
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {FileApiService} from '../../../core/service/file-api.service';
+import {AppState} from '../../../core/store/app.state';
 import {FileAttachment, FileAttachmentType} from '../../../core/store/file-attachments/file-attachment.model';
+import {createFileAttachmentUniqueName} from '../../../core/store/file-attachments/file-attachment.utils';
 import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
 import {selectFileAttachmentsByDataCursor} from '../../../core/store/file-attachments/file-attachments.state';
-import {DataCursor, isDataCursorEntityInitialized} from '../data-cursor';
-import {keyboardEventCode, KeyCode} from '../../key-code';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {preventEvent} from '../../utils/common.utils';
-import {FilesDataValue} from '@lumeer/data-filters';
-import {AppState} from '../../../core/store/app.state';
+import {DataCursor, isDataCursorEntityInitialized} from '../data-cursor';
 import {FileDataInputConfiguration} from '../data-input-configuration';
 import {FileDownloadService} from './file-download.service';
-import {createFileAttachmentUniqueName} from '../../../core/store/file-attachments/file-attachment.utils';
 
 @Component({
   selector: 'files-data-input',

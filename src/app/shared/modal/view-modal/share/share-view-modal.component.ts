@@ -16,30 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, HostListener, ViewChild, Input} from '@angular/core';
-import {DialogType} from '../../dialog-type';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
-import {User} from '../../../../core/store/users/user';
-import {Organization} from '../../../../core/store/organizations/organization';
-import {Project} from '../../../../core/store/projects/project';
-import {View} from '../../../../core/store/views/view';
-import {Permissions, Role} from '../../../../core/store/permissions/permissions';
-import {ViewsAction} from '../../../../core/store/views/views.action';
+import {Store, select} from '@ngrx/store';
+
 import mixpanel from 'mixpanel-browser';
-import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
-import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
-import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../../../core/store/users/users.state';
-import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
+import {BsModalRef} from 'ngx-bootstrap/modal';
+import {BehaviorSubject, Observable} from 'rxjs';
+
 import {ConfigurationService} from '../../../../configuration/configuration.service';
-import {selectViewById} from '../../../../core/store/views/views.state';
+import {Ga4Service} from '../../../../core/service/ga4.service';
+import {AppState} from '../../../../core/store/app.state';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
+import {Project} from '../../../../core/store/projects/project';
+import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {Team} from '../../../../core/store/teams/team';
 import {selectTeamsForWorkspace} from '../../../../core/store/teams/teams.state';
-import {Ga4Service} from '../../../../core/service/ga4.service';
+import {User} from '../../../../core/store/users/user';
+import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../../../core/store/users/users.state';
+import {View} from '../../../../core/store/views/view';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectViewById} from '../../../../core/store/views/views.state';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
+import {DialogType} from '../../dialog-type';
+import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
 
 @Component({
   selector: 'share-view-modal',

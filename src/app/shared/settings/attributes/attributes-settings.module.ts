@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+
+import {AccordionModule} from 'ngx-bootstrap/accordion';
+
+import {PipesModule} from '../../pipes/pipes.module';
+import {PresenterModule} from '../../presenter/presenter.module';
 import {AttributesSettingsComponent} from './attributes-settings.component';
 import {AttributesSettingsContentComponent} from './content/attributes-settings-content.component';
-import {PipesModule} from '../../pipes/pipes.module';
 import {AttributeSettingsComponent} from './content/settings/attribute-settings.component';
-import {AccordionModule} from 'ngx-bootstrap/accordion';
-import {PresenterModule} from '../../presenter/presenter.module';
-import {CreateAttributesSettingsOrderPipe} from './pipes/create-attributes-settings-order.pipe';
 import {CountShowedAttributesPipe} from './pipes/count-showed-attributes.pipe';
+import {CreateAttributesSettingsOrderPipe} from './pipes/create-attributes-settings-order.pipe';
 import {ResourceAttributesSettingsPipe} from './pipes/resource-attributes-settings.pipe';
 
 @NgModule({

@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {Store, select} from '@ngrx/store';
+
 import {EMPTY, of} from 'rxjs';
-import {select, Store} from '@ngrx/store';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
+import {DashboardDataService} from '../../data-service/dashboard-data/dashboard-data.service';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {dashboardDataSelectorId, selectDashboardDataEntities, selectDashboardDataLoaded} from './dashboard-data.state';
 import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
-import {DashboardDataService} from '../../data-service/dashboard-data/dashboard-data.service';
 import {convertDashboardDataDtoToModel, convertDashboardDataModelToDto} from './dashboard-data.converter';
+import {dashboardDataSelectorId, selectDashboardDataEntities, selectDashboardDataLoaded} from './dashboard-data.state';
 import {checkDeletedDashboardData} from './dashboard-data.utils';
 
 @Injectable()

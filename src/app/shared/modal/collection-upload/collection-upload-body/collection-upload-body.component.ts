@@ -18,11 +18,12 @@
  */
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {Collection, ImportType} from '../../../../core/store/collections/collection';
-import {SelectItemModel} from '../../../select/select-item/select-item.model';
-import {resourceAttributesSelectItems} from '../../../select/select-item.utils';
-import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Collection, ImportType} from '../../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {resourceAttributesSelectItems} from '../../../select/select-item.utils';
+import {SelectItemModel} from '../../../select/select-item/select-item.model';
 
 @Component({
   selector: 'collection-upload-body',

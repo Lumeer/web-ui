@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {mergeMap} from 'rxjs/operators';
+
+import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
+import {WorkspaceService} from '../../../workspace/workspace.service';
 import {AppState} from '../../store/app.state';
 import {Collection} from '../../store/collections/collection';
-import {WorkspaceService} from '../../../workspace/workspace.service';
-import {ResourcesGuardService} from '../../../workspace/resources-guard.service';
 
 @Injectable()
 export class CollectionsGuard {

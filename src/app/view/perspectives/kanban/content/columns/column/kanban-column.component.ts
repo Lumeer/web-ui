@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
@@ -28,18 +27,21 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import {DRAG_DELAY} from '../../../../../../core/constants';
-import {Query} from '../../../../../../core/store/navigation/query/query';
-import {DataResource} from '../../../../../../core/model/resource';
-import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../../util/kanban-data';
-import {PostItLayoutType} from '../../../../../../shared/post-it/post-it-layout-type';
+
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, throttleTime} from 'rxjs/operators';
+
 import {ConstraintData} from '@lumeer/data-filters';
+
+import {DRAG_DELAY} from '../../../../../../core/constants';
+import {DataResource} from '../../../../../../core/model/resource';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
 import {User} from '../../../../../../core/store/users/user';
 import {ViewSettings} from '../../../../../../core/store/view-settings/view-settings';
-import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {PostItLayoutType} from '../../../../../../shared/post-it/post-it-layout-type';
+import {generateId} from '../../../../../../shared/utils/resource.utils';
+import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../../util/kanban-data';
 
 @Component({
   selector: 'kanban-column',

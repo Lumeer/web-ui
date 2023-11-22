@@ -16,34 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
-import {SharedModule} from '../../../../shared/shared.module';
-import {DashboardTabComponent} from './dashboard-tab.component';
-import {DashboardTabContentComponent} from './content/dashboard-tab-content.component';
-import {DashboardTabRowContentComponent} from './content/row/dashboard-tab-row-content.component';
-import {DashboardTabCellContentComponent} from './content/row/cell/dashboard-tab-cell-content.component';
-import {DashboardTabActionComponent} from './content/row/cell/action/dashboard-tab-action.component';
-import {PerspectivePreviewComponent} from './content/row/perspective-preview/perspective-preview.component';
-import {TablePerspectiveModule} from '../../table/table-perspective.module';
-import {PivotPerspectiveModule} from '../../pivot/pivot-perspective.module';
-import {GanttChartPerspectiveModule} from '../../gantt-chart/gantt-chart-perspective.module';
-import {ChartPerspectiveModule} from '../../chart/chart-perspective.module';
-import {CalendarPerspectiveModule} from '../../calendar/calendar-perspective.module';
-import {KanbanPerspectiveModule} from '../../kanban/kanban-perspective.module';
-import {WorkflowPerspectiveModule} from '../../workflow/workflow-perspective.module';
-import {MapPerspectiveModule} from '../../map/map-perspective.module';
-import {DetailPerspectiveModule} from '../../detail/detail-perspective.module';
-import {SearchViewsModule} from '../search-views/search-views.module';
-import {SearchTasksModule} from '../search-tasks/search-tasks.module';
-import {SearchCollectionsModule} from '../search-collections/search-collections.module';
-import {SearchAllModule} from '../search-all/search-all.module';
-import {DashboardNotesComponent} from './content/row/notes/dashboard-notes.component';
 import {QuillModule} from 'ngx-quill';
+
+import {SharedModule} from '../../../../shared/shared.module';
+import {CalendarPerspectiveModule} from '../../calendar/calendar-perspective.module';
+import {ChartPerspectiveModule} from '../../chart/chart-perspective.module';
+import {DetailPerspectiveModule} from '../../detail/detail-perspective.module';
 import {FormPerspectiveModule} from '../../form/form-perspective.module';
+import {GanttChartPerspectiveModule} from '../../gantt-chart/gantt-chart-perspective.module';
+import {KanbanPerspectiveModule} from '../../kanban/kanban-perspective.module';
+import {MapPerspectiveModule} from '../../map/map-perspective.module';
+import {PivotPerspectiveModule} from '../../pivot/pivot-perspective.module';
+import {TablePerspectiveModule} from '../../table/table-perspective.module';
+import {WorkflowPerspectiveModule} from '../../workflow/workflow-perspective.module';
+import {SearchAllModule} from '../search-all/search-all.module';
+import {SearchCollectionsModule} from '../search-collections/search-collections.module';
+import {SearchTasksModule} from '../search-tasks/search-tasks.module';
+import {SearchViewsModule} from '../search-views/search-views.module';
+import {DashboardTabContentComponent} from './content/dashboard-tab-content.component';
+import {DashboardTabActionComponent} from './content/row/cell/action/dashboard-tab-action.component';
+import {DashboardTabCellContentComponent} from './content/row/cell/dashboard-tab-cell-content.component';
+import {DashboardTabRowContentComponent} from './content/row/dashboard-tab-row-content.component';
+import {DashboardNotesComponent} from './content/row/notes/dashboard-notes.component';
+import {PerspectivePreviewComponent} from './content/row/perspective-preview/perspective-preview.component';
+import {DashboardTabComponent} from './dashboard-tab.component';
 
 @NgModule({
   imports: [

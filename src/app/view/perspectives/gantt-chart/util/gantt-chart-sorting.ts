@@ -16,22 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as moment from 'moment/moment';
 
 import {ConstraintData} from '@lumeer/data-filters';
 import {GanttTask} from '@lumeer/lumeer-gantt';
-import {GANTT_DATE_FORMAT} from '../../../../core/store/gantt-charts/gantt-chart';
-import {Query} from '../../../../core/store/navigation/query/query';
+
 import {Collection} from '../../../../core/store/collections/collection';
+import {GANTT_DATE_FORMAT} from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {queriesAreSame} from '../../../../core/store/navigation/query/query.util';
-import {areArraysSame, isArraySortedSubset} from '../../../../shared/utils/array.utils';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 import {
   viewAttributeSettingsSortChanged,
   viewAttributeSettingsSortDefined,
 } from '../../../../shared/settings/settings.util';
+import {areArraysSame, isArraySortedSubset} from '../../../../shared/utils/array.utils';
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
-import * as moment from 'moment/moment';
 
 export interface GanttTasksSort {
   order: GanttTasksOrder;

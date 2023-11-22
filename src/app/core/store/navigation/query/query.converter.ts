@@ -16,22 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {QueryDto} from '../../../dto';
-import {QueryStemDto} from '../../../dto/query.dto';
-import {CollectionAttributeFilter, Query, QueryStem} from './query';
-import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
-import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
 import {AttributeFilter, ConditionType} from '@lumeer/data-filters';
+import {isNullOrUndefined} from '@lumeer/utils';
+
+import {findAttributeByName} from '../../../../shared/utils/attribute.utils';
+import {QueryDto} from '../../../dto';
 import {
   convertCollectionAttributeFilterDtoToModel,
   convertCollectionAttributeFilterModelToDto,
-  convertLinkAttributeFilterModelToDto,
   convertLinkAttributeFilterDtoToModel,
+  convertLinkAttributeFilterModelToDto,
 } from '../../../dto/attribute-filter.dto';
+import {QueryStemDto} from '../../../dto/query.dto';
 import {Collection} from '../../collections/collection';
-import {findAttributeByName} from '../../../../shared/utils/attribute.utils';
+import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
+import {CollectionAttributeFilter, Query, QueryStem} from './query';
+import {ShortenedQuery, prolongQuery, shortenQuery} from './shortened-query';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return (

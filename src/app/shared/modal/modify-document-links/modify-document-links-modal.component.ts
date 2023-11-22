@@ -16,39 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy} from '@angular/core';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {DialogType} from '../dialog-type';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {AppState} from '../../../core/store/app.state';
 import {filter, map, mergeMap, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {CollectionAttributeFilter, Query} from '../../../core/store/navigation/query/query';
-import {selectDocumentsByCollectionAndQuery} from '../../../core/store/common/permissions.selectors';
+
 import {ConstraintData} from '@lumeer/data-filters';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
-import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {selectLinkInstancesByTypeAndDocuments} from '../../../core/store/link-instances/link-instances.state';
-import {ResultTableRow} from './results-table/results-table.component';
-import {uniqueValues} from '../../utils/array.utils';
-import {getOtherDocumentIdFromLinkInstance} from '../../../core/store/link-instances/link-instance.utils';
-import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+import {uniqueValues} from '@lumeer/utils';
+
+import {AttributesResourceType} from '../../../core/model/resource';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectDocumentsByCollectionAndQuery} from '../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {DocumentModel} from '../../../core/store/documents/document.model';
 import {mergeDocuments} from '../../../core/store/documents/document.utils';
+import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+import {getOtherDocumentIdFromLinkInstance} from '../../../core/store/link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {generateCorrelationId} from '../../utils/resource.utils';
+import {selectLinkInstancesByTypeAndDocuments} from '../../../core/store/link-instances/link-instances.state';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {CollectionAttributeFilter, Query} from '../../../core/store/navigation/query/query';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {ResourceAttributeSettings} from '../../../core/store/view-settings/view-settings';
 import {View} from '../../../core/store/views/view';
 import {selectCurrentView, selectViewById} from '../../../core/store/views/views.state';
-import {AttributesResourceType} from '../../../core/model/resource';
-import {ResourceAttributeSettings} from '../../../core/store/view-settings/view-settings';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
+import {generateCorrelationId} from '../../utils/resource.utils';
+import {DialogType} from '../dialog-type';
+import {ResultTableRow} from './results-table/results-table.component';
 
 @Component({
   selector: 'modify-document-links-modal',

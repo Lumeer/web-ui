@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {AppState} from '../app.state';
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
 import {Sequence} from '../../model/sequence';
+import {AppState} from '../app.state';
 
 export interface SequencesState extends EntityState<Sequence> {
   loaded: boolean;

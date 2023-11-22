@@ -16,16 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {NavigationAction} from '../../../core/store/navigation/navigation.action';
-import {Query} from '../../../core/store/navigation/query/query';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest, of} from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -37,9 +32,15 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {selectNavigatingToOtherWorkspace, selectViewCursor} from '../../../core/store/navigation/navigation.state';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
+import {DataQuery} from '../../../core/model/data-query';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {
   selectCollectionPermissionsByView,
   selectCollectionsByCustomQueryWithoutLinks,
@@ -47,6 +48,15 @@ import {
   selectDocumentsByViewAndCustomQuery,
   selectReadableCollectionsByView,
 } from '../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {createFlatResourcesSettingsQuery, modifyDetailPerspectiveQuery} from '../../../core/store/details/detail.utils';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {generateDocumentData} from '../../../core/store/documents/document.utils';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
+import {NavigationAction} from '../../../core/store/navigation/navigation.action';
+import {selectNavigatingToOtherWorkspace, selectViewCursor} from '../../../core/store/navigation/navigation.state';
+import {Query} from '../../../core/store/navigation/query/query';
 import {
   createCollectionQueryStem,
   filterStemsForCollection,
@@ -55,20 +65,13 @@ import {
   queryContainsOnlyFulltexts,
   queryIsEmpty,
 } from '../../../core/store/navigation/query/query.util';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor, viewCursorsAreSame} from '../../../core/store/navigation/view-cursor/view-cursor';
+import {ViewSettings} from '../../../core/store/view-settings/view-settings';
 import {selectViewDataQuery, selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
 import {View} from '../../../core/store/views/view';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {generateDocumentData} from '../../../core/store/documents/document.utils';
-import {createFlatResourcesSettingsQuery, modifyDetailPerspectiveQuery} from '../../../core/store/details/detail.utils';
-import {DataQuery} from '../../../core/model/data-query';
-import {defaultDetailPerspectiveConfiguration, DetailPerspectiveConfiguration} from '../perspective-configuration';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {ConstraintData} from '@lumeer/data-filters';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
-import {ViewSettings} from '../../../core/store/view-settings/view-settings';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {DetailPerspectiveConfiguration, defaultDetailPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'detail-perspective',

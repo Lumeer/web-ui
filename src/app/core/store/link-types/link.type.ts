@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Attribute, Collection} from '../collections/collection';
-import {Rule} from '../../model/rule';
 import {PermissionsType} from '../../model/permissions-type';
+import {Rule} from '../../model/rule';
+import {Attribute, Collection} from '../collections/collection';
 import {Permissions} from '../permissions/permissions';
 
 export interface LinkType {

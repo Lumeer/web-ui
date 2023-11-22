@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Observable} from 'rxjs';
-import {LinkInstanceDto, LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
+
 import {DocumentLinksDto} from '../../dto/document-links.dto';
+import {LinkInstanceDto, LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class LinkInstanceService {

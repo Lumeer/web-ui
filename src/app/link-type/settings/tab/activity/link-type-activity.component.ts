@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {Workspace} from '../../../../core/store/navigation/workspace';
+
 import {ResourceType} from '../../../../core/model/resource-type';
 import {AppState} from '../../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {selectLinkTypeByWorkspace} from '../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'link-type-activity',

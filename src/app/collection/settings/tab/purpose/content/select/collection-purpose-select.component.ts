@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+
+import {CollectionPurposeType, collectionPurposesIcons} from '../../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
-import {collectionPurposesIcons, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {parseSelectTranslation} from '../../../../../../shared/utils/translation.utils';
 
 @Component({

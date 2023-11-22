@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as pressure from 'pressure';
 
 import {DataValue} from '@lumeer/data-filters';
-import * as pressure from 'pressure';
-import {unescapeHtml} from './common.utils';
+import {unescapeHtml} from '@lumeer/utils';
 
 export class HtmlModifier {
   public static removeHtmlComments(html: HTMLElement): string {
@@ -97,10 +97,6 @@ export function getCaretCharacterOffsetWithin(element) {
     caretOffset = preCaretTextRange.text.length;
   }
   return caretOffset;
-}
-
-export function stripedBackground(color: string, stripeColor: string): string {
-  return `linear-gradient(-45deg, ${color} 25%, ${stripeColor} 25%, ${stripeColor} 50%, ${color} 50%, ${color} 75%, ${stripeColor} 75%, ${stripeColor})`;
 }
 
 export function hex2rgba(hex: string, opacity: number): string {

@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {UserConstraintFormControl} from './user-constraint-form-control';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
+
 import {UserConstraintConfig, UserConstraintType} from '@lumeer/data-filters';
+
 import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
-import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
 import {objectValues} from '../../../../../../utils/common.utils';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
+import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
+import {UserConstraintFormControl} from './user-constraint-form-control';
 
 @Component({
   selector: 'user-constraint-config-form',

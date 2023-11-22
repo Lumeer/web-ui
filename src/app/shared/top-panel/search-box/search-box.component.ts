@@ -16,55 +16,57 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {NavigationEnd, Router} from '@angular/router';
 
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {ViewQueryItem} from './query-item/model/view.query-item';
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
 import {debounceTime, filter, map, skip, startWith, tap, withLatestFrom} from 'rxjs/operators';
+
+import {ConstraintData} from '@lumeer/data-filters';
+import {isNullOrUndefined} from '@lumeer/utils';
+
 import {AppState} from '../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
-import {selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
-import {selectNavigation, selectPerspective, selectRawQuery} from '../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {View} from '../../../core/store/views/view';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {QueryData} from './util/query-data';
-import {QueryItem} from './query-item/model/query-item';
-import {QueryItemType} from './query-item/model/query-item-type';
-import {
-  convertQueryItemsToQueryModel,
-  convertQueryItemsToString,
-  QueryItemsConverter,
-} from './query-item/query-items.converter';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {isQueryItemEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
-import {selectAllUsers} from '../../../core/store/users/users.state';
-import {User} from '../../../core/store/users/user';
-import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
-import {NavigationAction} from '../../../core/store/navigation/navigation.action';
-import {Organization} from '../../../core/store/organizations/organization';
-import {Project} from '../../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
-import {isNullOrUndefined} from '../../utils/common.utils';
-import {
-  addQueryItemWithRelatedItems,
-  findQueryStemIdByIndex,
-  removeQueryItemWithRelatedItems,
-} from './util/search-box.util';
-import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {Query} from '../../../core/store/navigation/query/query';
 import {
   selectAllCollectionsWithoutHiddenAttributes,
   selectAllLinkTypesWithoutHiddenAttributes,
   selectCanChangeViewQuery,
   selectCanManageCurrentViewConfig,
 } from '../../../core/store/common/permissions.selectors';
-import {ConstraintData} from '@lumeer/data-filters';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
+import {NavigationAction} from '../../../core/store/navigation/navigation.action';
+import {selectNavigation, selectPerspective, selectRawQuery} from '../../../core/store/navigation/navigation.state';
+import {Query} from '../../../core/store/navigation/query/query';
+import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
+import {isQueryItemEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {Organization} from '../../../core/store/organizations/organization';
+import {Project} from '../../../core/store/projects/project';
+import {User} from '../../../core/store/users/user';
+import {selectAllUsers} from '../../../core/store/users/users.state';
+import {View} from '../../../core/store/views/view';
+import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {QueryItem} from './query-item/model/query-item';
+import {QueryItemType} from './query-item/model/query-item-type';
+import {ViewQueryItem} from './query-item/model/view.query-item';
+import {
+  QueryItemsConverter,
+  convertQueryItemsToQueryModel,
+  convertQueryItemsToString,
+} from './query-item/query-items.converter';
+import {QueryData} from './util/query-data';
 import {SearchBoxData, SearchBoxService} from './util/search-box.service';
+import {
+  addQueryItemWithRelatedItems,
+  findQueryStemIdByIndex,
+  removeQueryItemWithRelatedItems,
+} from './util/search-box.util';
 
 const ALLOW_AUTOMATIC_SUBMISSION = true;
 

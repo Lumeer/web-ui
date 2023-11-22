@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
-import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
+import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
+import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {RoleType} from '../core/model/role-type';
@@ -31,9 +32,8 @@ import {LinkTypeTabGuard} from './link-type-tab.guard';
 import {LinkTypeSettingsComponent} from './settings/link-type-settings.component';
 import {LinkTypeActivityComponent} from './settings/tab/activity/link-type-activity.component';
 import {LinkTypeAttributesComponent} from './settings/tab/attributes/link-type-attributes.component';
-import {LinkTypeRulesComponent} from './settings/tab/rules/link-type-rules.component';
 import {LinkTypeCollectionsComponent} from './settings/tab/collections/link-type-collections.component';
-import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
+import {LinkTypeRulesComponent} from './settings/tab/rules/link-type-rules.component';
 
 const linkTypeRoutes: Routes = [
   {

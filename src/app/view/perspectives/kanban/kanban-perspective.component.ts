@@ -16,25 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, OnDestroy, Input} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {Query} from '../../../core/store/navigation/query/query';
 import {map} from 'rxjs/operators';
-import {selectKanbanById} from '../../../core/store/kanbans/kanban.state';
-import {KanbanConfig} from '../../../core/store/kanbans/kanban';
-import {ViewConfig} from '../../../core/store/views/view';
-import {KanbansAction} from '../../../core/store/kanbans/kanbans.action';
-import {Collection} from '../../../core/store/collections/collection';
-import {checkOrTransformKanbanConfig} from './util/kanban.util';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {DataPerspectiveDirective} from '../data-perspective.directive';
-import {defaultKanbanPerspectiveConfiguration, KanbanPerspectiveConfiguration} from '../perspective-configuration';
+
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {KanbanConfig} from '../../../core/store/kanbans/kanban';
+import {selectKanbanById} from '../../../core/store/kanbans/kanban.state';
+import {KanbansAction} from '../../../core/store/kanbans/kanbans.action';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {Query} from '../../../core/store/navigation/query/query';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {ViewConfig} from '../../../core/store/views/view';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {KanbanPerspectiveConfiguration, defaultKanbanPerspectiveConfiguration} from '../perspective-configuration';
+import {checkOrTransformKanbanConfig} from './util/kanban.util';
 
 @Component({
   selector: 'kanban-perspective',

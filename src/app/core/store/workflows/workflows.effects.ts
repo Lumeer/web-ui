@@ -16,20 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {EMPTY, of} from 'rxjs';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
+import {EMPTY, of} from 'rxjs';
 import {delay, map, mergeMap, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
-import {NavigationAction} from '../navigation/navigation.action';
-import {AppState} from '../app.state';
-import {selectWorkflowSelectedDocumentId} from './workflow.state';
-import {selectDocumentsDictionary} from '../documents/documents.state';
+
+import {deepObjectsEquals} from '@lumeer/utils';
+
 import {workflowCellToViewCursor} from '../../../view/perspectives/workflow/content/tables/service/workflow-utils';
+import {AppState} from '../app.state';
+import {selectDocumentsDictionary} from '../documents/documents.state';
+import {NavigationAction} from '../navigation/navigation.action';
 import {selectViewCursor} from '../navigation/navigation.state';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {selectWorkflowSelectedDocumentId} from './workflow.state';
+import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
 
 @Injectable()
 export class WorkflowsEffects {

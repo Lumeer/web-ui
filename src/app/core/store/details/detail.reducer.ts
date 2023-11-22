@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createReducer, on} from '@ngrx/store';
-import * as DetailActions from './detail.actions';
-import {detailsAdapter, DetailsState, initialDetailsState} from './detail.state';
+
+import {uniqueValues} from '@lumeer/utils';
+
 import {QueryStem} from '../navigation/query/query';
 import {areQueryStemsEqual} from '../navigation/query/query.helper';
-import {uniqueValues} from '../../../shared/utils/array.utils';
-import {DetailConfig} from './detail';
 import {AttributesSettings} from '../view-settings/view-settings';
+import {DetailConfig} from './detail';
+import * as DetailActions from './detail.actions';
+import {DetailsState, detailsAdapter, initialDetailsState} from './detail.state';
 
 export const detailsReducer = createReducer(
   initialDetailsState,

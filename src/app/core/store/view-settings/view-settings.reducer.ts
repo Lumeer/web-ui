@@ -16,9 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialViewSettingsState, ViewSettingsState} from './view-settings.state';
-import {ViewSettingsAction, ViewSettingsActionType} from './view-settings.action';
 import {
   addAttributeToSettings,
   createAndModifyViewSettings,
@@ -26,8 +23,10 @@ import {
   setAttributeToAttributeSettings,
 } from '../../../shared/settings/settings.util';
 import {AttributesResource, AttributesResourceType} from '../../model/resource';
-import {ResourcesPermissions, ViewSettings} from './view-settings';
 import {Permissions} from '../permissions/permissions';
+import {ResourcesPermissions, ViewSettings} from './view-settings';
+import {ViewSettingsAction, ViewSettingsActionType} from './view-settings.action';
+import {ViewSettingsState, initialViewSettingsState} from './view-settings.state';
 
 export function viewSettingsReducer(
   state: ViewSettingsState = initialViewSettingsState,

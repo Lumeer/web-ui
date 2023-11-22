@@ -16,24 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {DialogType} from '../../../../modal/dialog-type';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {AppState} from '../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectAllUsers} from '../../../../../core/store/users/users.state';
 import {map, take} from 'rxjs/operators';
-import {InvitationType} from '../../../../../core/model/invitation-type';
-import {UsersAction} from '../../../../../core/store/users/users.action';
+
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {InvitationType} from '../../../../../core/model/invitation-type';
+import {UserInvitation} from '../../../../../core/model/user-invitation';
+import {AppState} from '../../../../../core/store/app.state';
+import {selectWorkspaceWithIds} from '../../../../../core/store/common/common.selectors';
 import {
   selectOrganizationPermissions,
   selectProjectPermissions,
 } from '../../../../../core/store/user-permissions/user-permissions.state';
-import {UserInvitation} from '../../../../../core/model/user-invitation';
-import {selectWorkspaceWithIds} from '../../../../../core/store/common/common.selectors';
+import {UsersAction} from '../../../../../core/store/users/users.action';
+import {selectAllUsers} from '../../../../../core/store/users/users.state';
+import {DialogType} from '../../../../modal/dialog-type';
 
 @Component({
   selector: 'invite-user-modal',

@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {Query} from '../../../../core/store/navigation/query/query';
 import {
+  ConstraintData,
   DataObjectAggregator,
   DataObjectAttribute,
   DataObjectInfo,
-} from '../../../../shared/utils/data/data-object-aggregator';
+  DocumentsAndLinksData,
+  userCanEditDataResource,
+} from '@lumeer/data-filters';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
-import {mapMarkerDataId} from './map-content.utils';
-import {ConstraintData, DocumentsAndLinksData, userCanEditDataResource} from '@lumeer/data-filters';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {User} from '../../../../core/store/users/user';
+import {mapMarkerDataId} from './map-content.utils';
 
 enum DataObjectInfoKeyType {
   Color = 'color',

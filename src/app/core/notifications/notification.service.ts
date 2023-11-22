@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {IndividualConfig, ToastrService} from 'ngx-toastr';
+
+import {ConfigurationService} from '../../configuration/configuration.service';
 import {NotificationButton} from './notification-button';
 import {NotificationComponent} from './notification/notification.component';
-import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class NotificationService {

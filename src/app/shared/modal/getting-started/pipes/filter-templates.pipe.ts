@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {removeAccentFromString} from '@lumeer/utils';
+
 import {Project} from '../../../../core/store/projects/project';
-import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'filterTemplates',

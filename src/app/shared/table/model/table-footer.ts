@@ -16,9 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Constraint} from '@lumeer/data-filters';
-import {DataAggregationType} from '../../utils/data/data-aggregation';
+import {Constraint, DataAggregationType} from '@lumeer/data-filters';
 
 export interface TableFooter {
   height: number;

@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  ElementRef,
-  Input,
-  Output,
-  EventEmitter,
-  SimpleChanges,
-  HostListener,
-  OnChanges,
   AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {SliderItem} from './slider-item';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
+
 import {BehaviorSubject} from 'rxjs';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {SliderItem} from './slider-item';
 
 @Component({
   selector: 'values-slider',

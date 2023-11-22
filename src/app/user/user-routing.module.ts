@@ -16,20 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
+import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
 import {RoleType} from '../core/model/role-type';
-import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
-import {WorkspaceUserComponent} from './workspace/workspace-user.component';
 import {WorkspaceUserActivityComponent} from './workspace/activity/workspace-user-activity.component';
 import {WorkspaceUserResourcesComponent} from './workspace/resources/workspace-user-resources.component';
+import {WorkspaceUserCleanUpGuard} from './workspace/workspace-user-clean-up.guard';
 import {WorkspaceUserSettingsGuard} from './workspace/workspace-user-settings.guard';
 import {WorkspaceUserTabGuard} from './workspace/workspace-user-tab.guard';
-import {WorkspaceUserCleanUpGuard} from './workspace/workspace-user-clean-up.guard';
+import {WorkspaceUserComponent} from './workspace/workspace-user.component';
 
 const userRoutes: Routes = [
   {

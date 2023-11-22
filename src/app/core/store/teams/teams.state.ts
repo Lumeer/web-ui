@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
 import {AppState} from '../app.state';
-import {Team} from './team';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {Team} from './team';
 
 export interface TeamsState extends EntityState<Team> {
   loaded: {[organizationId: string]: boolean};

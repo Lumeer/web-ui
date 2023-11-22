@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, EMPTY, groupBy, mergeAll, Observable} from 'rxjs';
+import {Action, Store, select} from '@ngrx/store';
+
+import {EMPTY, Observable, combineLatest, groupBy, mergeAll} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -33,10 +34,17 @@ import {
   take,
   withLatestFrom,
 } from 'rxjs/operators';
+
+import {objectsByIdMap} from '@lumeer/utils';
+
 import {Direction} from '../../../shared/direction';
+import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
+import {AttributesResource} from '../../model/resource';
+import {CopyValueService} from '../../service/copy-value.service';
 import {AppState} from '../app.state';
 import {Attribute, Collection} from '../collections/collection';
+import {findAttributeConstraint} from '../collections/collection.util';
 import {CollectionsAction} from '../collections/collections.action';
 import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
 import {
@@ -47,6 +55,7 @@ import {
   selectDocumentsByViewAndCustomQueryAndIdsSortedByCreation,
   selectResourcesPermissionsByView,
 } from '../common/permissions.selectors';
+import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
 import {selectDocumentsDictionary} from '../documents/documents.state';
@@ -62,11 +71,12 @@ import {LinkTypesAction} from '../link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {NavigationAction} from '../navigation/navigation.action';
 import {selectViewCursor} from '../navigation/navigation.state';
+import {QueryParam} from '../navigation/query-param';
 import {Query} from '../navigation/query/query';
 import {convertQueryModelToString} from '../navigation/query/query.converter';
 import {isSingleCollectionQuery} from '../navigation/query/query.util';
 import {RouterAction} from '../router/router.action';
-import {moveTableCursor, TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
+import {TableBodyCursor, TableCursor, TableHeaderCursor, moveTableCursor} from './table-cursor';
 import {
   TableColumnType,
   TableConfig,
@@ -108,6 +118,7 @@ import {
   selectTableRows,
   selectTableRowsWithHierarchyLevels,
 } from './tables.selector';
+import {selectTable} from './tables.state';
 import {createTableCursorFromViewCursor} from './utils/cursor/create-table-cursor-from-view-cursor';
 import {createViewCursorFromTableCursor} from './utils/cursor/create-view-cursor-from-table-cursor';
 import {
@@ -117,14 +128,6 @@ import {
   filterUnknownLinkInstances,
 } from './utils/table-row-sync.utils';
 import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInitialized} from './utils/table-row.utils';
-import {QueryParam} from '../navigation/query-param';
-import {selectTable} from './tables.state';
-import {AttributesResource} from '../../model/resource';
-import {CopyValueService} from '../../service/copy-value.service';
-import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
-import {selectConstraintData} from '../constraint-data/constraint-data.state';
-import {findAttributeConstraint} from '../collections/collection.util';
-import {objectsByIdMap} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class TablesEffects {

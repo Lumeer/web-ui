@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {View} from './view';
-import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
 import {Query} from '../navigation/query/query';
+import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
+import {View} from './view';
 
 export function filterViewsByQuery(views: View[], query: Query): View[] {
   const filteredViews = (views || []).slice();

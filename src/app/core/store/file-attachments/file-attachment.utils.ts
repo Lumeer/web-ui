@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {FileAttachment} from './file-attachment.model';
-import {FileApiPath} from '../../data-service/attachments/attachments.service';
 import {generateId} from '../../../shared/utils/resource.utils';
+import {FileApiPath} from '../../data-service/attachments/attachments.service';
+import {FileAttachment} from './file-attachment.model';
 
 export function getFileTypeIcon(fileName: string): string {
   if (!fileName) {

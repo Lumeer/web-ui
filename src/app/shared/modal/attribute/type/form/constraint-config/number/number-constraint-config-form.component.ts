@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {minMaxValidator} from '../../../../../../../core/validators/min-max-validator';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
-import {NumberConstraintFormControl} from './number-constraint-form-control';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {map, startWith, withLatestFrom} from 'rxjs/operators';
-import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
-import {isNumeric, objectValues, toNumber} from '../../../../../../utils/common.utils';
+
 import {
   ConstraintData,
   LanguageTag,
@@ -33,11 +31,17 @@ import {
   NumberConstraintConfig,
   NumberDataValue,
 } from '@lumeer/data-filters';
-import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
-import {AppState} from '../../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
+import {isNumeric, toNumber} from '@lumeer/utils';
+
 import {TranslationService} from '../../../../../../../core/service/translation.service';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
+import {minMaxValidator} from '../../../../../../../core/validators/min-max-validator';
+import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
+import {objectValues} from '../../../../../../utils/common.utils';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
+import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
+import {NumberConstraintFormControl} from './number-constraint-form-control';
 
 @Component({
   selector: 'number-constraint-config-form',

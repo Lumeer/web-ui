@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
+import {deepObjectCopy} from '@lumeer/utils';
+
+import {AppState} from '../../../../core/store/app.state';
 import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {createMapDefaultStemConfig} from '../../../../core/store/maps/map-config.utils';
 import {MapConfig, MapStemConfig} from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {deepObjectCopy} from '../../../../shared/utils/common.utils';
-import {createMapDefaultStemConfig} from '../../../../core/store/maps/map-config.utils';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {AppState} from '../../../../core/store/app.state';
 
 @Component({
   selector: 'map-panel',

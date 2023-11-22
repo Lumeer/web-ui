@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {filterOutAttributeAndChildren, updateAttributes} from '../../../shared/utils/attribute.utils';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
-import {initialLinkTypesState, linkTypesAdapter, LinkTypesState} from './link-types.state';
+import {LinkTypesState, initialLinkTypesState, linkTypesAdapter} from './link-types.state';
 import {LinkType} from './link.type';
 
 export function linkTypesReducer(

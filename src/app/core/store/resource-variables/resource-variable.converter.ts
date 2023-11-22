@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ResourceVariableDto} from '../../dto/resource-variable.dto';
-import {ResourceVariable, ResourceVariableType, resourceVariableTypesMap} from './resource-variable';
 import {resourceTypesMap} from '../../model/resource-type';
+import {ResourceVariable, ResourceVariableType, resourceVariableTypesMap} from './resource-variable';
 
 export function convertResourceVariableDtoToModel(dto: ResourceVariableDto, value?: any): ResourceVariable {
   return {

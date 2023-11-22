@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {deepObjectCopy} from '@lumeer/utils';
 
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 import {DefaultViewConfig, View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
-import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
-import {deepObjectCopy} from '../../../shared/utils/common.utils';
-import {permissionsChanged} from '../../../shared/utils/permission.utils';
+import {ViewsState, initialViewsState, viewsAdapter} from './views.state';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {

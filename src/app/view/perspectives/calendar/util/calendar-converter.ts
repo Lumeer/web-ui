@@ -16,31 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
-import {CalendarEvent, CalendarMetaData} from './calendar-event';
-import {isArray, isDateValid, isNotNullOrUndefined, unescapeHtml} from '../../../../shared/utils/common.utils';
-import {
-  DataObjectAggregator,
-  DataObjectAttribute,
-  DataObjectInfo,
-} from '../../../../shared/utils/data/data-object-aggregator';
-import {isAllDayEvent} from './calendar-util';
-import {constraintContainsHoursInConfig, createDatesInterval} from '../../../../shared/utils/date.utils';
-import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {contrastColor} from '../../../../shared/utils/color.utils';
 import * as moment from 'moment';
+
 import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DataObjectAggregator,
+  DataObjectAttribute,
+  DataObjectInfo,
   DocumentsAndLinksData,
   userCanEditDataResource,
 } from '@lumeer/data-filters';
+import {isArray, isDateValid, isNotNullOrUndefined, unescapeHtml} from '@lumeer/utils';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {contrastColor} from '../../../../shared/utils/color.utils';
+import {constraintContainsHoursInConfig, createDatesInterval} from '../../../../shared/utils/date.utils';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
+import {CalendarEvent, CalendarMetaData} from './calendar-event';
+import {isAllDayEvent} from './calendar-util';
 
 enum DataObjectInfoKeyType {
   Name = 'name',

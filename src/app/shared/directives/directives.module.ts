@@ -16,20 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 
-import {NgVarDirective} from './ng-var.directive';
-import {TrimValueAccessorDirective} from './trim-value-accessor.directive';
-import {RenderedDirective} from './rendered.directive';
-import {NumberDirective} from './number.directive';
-import {PercentageDirective} from './percentage.directive';
-import {IntegerDirective} from './integer.directive';
 import {AutoSizeInputDirective} from './autosize-input.directive';
 import {ClickOutsideDirective} from './click-outside.directive';
+import {IntegerDirective} from './integer.directive';
+import {NgVarDirective} from './ng-var.directive';
+import {NumberDirective} from './number.directive';
+import {PercentageDirective} from './percentage.directive';
+import {RenderedDirective} from './rendered.directive';
 import {ResizerDirective} from './resizer.directive';
 import {SmoothSizeDirective} from './smooth-size.directive';
+import {TrimValueAccessorDirective} from './trim-value-accessor.directive';
 
 @NgModule({
   imports: [CommonModule],

@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+
 import {of} from 'rxjs';
-import {NotificationsAction} from '../notifications/notifications.action';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+
 import {AuditLogService} from '../../data-service/audit-log/audit-log.service';
+import {NotificationsAction} from '../notifications/notifications.action';
 import {convertAuditLogDtoToModel} from './audit-log.converter';
 import * as AuditLogActions from './audit-logs.actions';
 

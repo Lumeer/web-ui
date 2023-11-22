@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,12 +27,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import {AbstractControl, UntypedFormGroup} from '@angular/forms';
-import {Attribute} from '../../../../../../core/store/collections/collection';
-import {SelectItem2Model} from '../../../../../select/select-item2/select-item2.model';
-import {FilterBuilderComponent} from '../../../../../builder/filter-builder/filter-builder.component';
-import {findAttribute} from '../../../../../../core/store/collections/collection.util';
+
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+
 import {
   ConditionType,
   ConditionValue,
@@ -42,6 +39,11 @@ import {
   initialConditionType,
   initialConditionValues,
 } from '@lumeer/data-filters';
+
+import {Attribute} from '../../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../../core/store/collections/collection.util';
+import {FilterBuilderComponent} from '../../../../../builder/filter-builder/filter-builder.component';
+import {SelectItem2Model} from '../../../../../select/select-item2/select-item2.model';
 import {parseSelectTranslation} from '../../../../../utils/translation.utils';
 import {ConstraintFiltersFormControl} from '../constraint-conditions-form.component';
 

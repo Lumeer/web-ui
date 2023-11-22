@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {DocumentService} from './document.service';
-import {BaseService} from '../../rest/base.service';
-import {AppState} from '../../store/app.state';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {DocumentDto, LinkInstanceDto} from '../../dto';
 import {DocumentMetaDataDto} from '../../dto/document.dto';
-import {Workspace} from '../../store/navigation/workspace';
+import {BaseService} from '../../rest/base.service';
 import {correlationIdHeader} from '../../rest/interceptors/correlation-id.http-interceptor';
-import {ConfigurationService} from '../../../configuration/configuration.service';
+import {AppState} from '../../store/app.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {DocumentService} from './document.service';
 
 @Injectable()
 export class ApiDocumentService extends BaseService implements DocumentService {

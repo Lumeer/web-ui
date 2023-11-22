@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
-import {AppState} from '../../store/app.state';
-import {Project} from '../../store/projects/project';
-import {Organization} from '../../store/organizations/organization';
+
 import {WorkspaceService} from '../../../workspace/workspace.service';
+import {ResourceType} from '../../model/resource-type';
+import {AppState} from '../../store/app.state';
+import {Organization} from '../../store/organizations/organization';
+import {Project} from '../../store/projects/project';
 import * as ResourceVariableActions from '../../store/resource-variables/resource-variables.actions';
 import {
   selectResourceVariablesByResourceType,
   selectResourceVariablesLoadedForProject,
 } from '../../store/resource-variables/resource-variables.state';
-import {ResourceType} from '../../model/resource-type';
 
 @Injectable()
 export class ResourceVariablesGuard {

@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {WorkflowTableTitle} from '../../../model/workflow-table';
+import {ConstraintType, findResourceByQueryResource} from '@lumeer/data-filters';
+
+import {AttributesResource} from '../../../../../../core/model/resource';
 import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {findResourceByQueryResource} from '../../../../../../core/model/query-attribute';
-import {AttributesResource} from '../../../../../../core/model/resource';
-import {ConstraintType} from '@lumeer/data-filters';
+import {WorkflowTableTitle} from '../../../model/workflow-table';
 
 @Component({
   selector: 'workflow-table-title',

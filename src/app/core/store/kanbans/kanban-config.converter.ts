@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {deepObjectCopy, isNotNullOrUndefined} from '@lumeer/utils';
 
+import {PostItLayoutType} from '../../../shared/post-it/post-it-layout-type';
+import {SizeType} from '../../../shared/slider/size/size-type';
+import {objectValues} from '../../../shared/utils/common.utils';
+import {cleanKanbanAttribute} from '../../../view/perspectives/kanban/util/kanban.util';
+import {AttributesResourceType} from '../../model/resource';
 import {KanbanAttribute, KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from './kanban';
 import {KanbanCollectionConfigV0, KanbanColumnV0, KanbanConfigV0} from './kanban-old';
-import {AttributesResourceType} from '../../model/resource';
-import {deepObjectCopy, isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
-import {SizeType} from '../../../shared/slider/size/size-type';
-import {PostItLayoutType} from '../../../shared/post-it/post-it-layout-type';
-import {cleanKanbanAttribute} from '../../../view/perspectives/kanban/util/kanban.util';
 
 export function convertKanbanConfigDtoToModel(config: any): KanbanConfig {
   if (!config) {

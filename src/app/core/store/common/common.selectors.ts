@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
+
+import {selectWorkspace} from '../navigation/navigation.state';
+import {Workspace} from '../navigation/workspace';
 import {selectAllOrganizations, selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {selectAllProjects, selectProjectByWorkspace} from '../projects/projects.state';
 import {selectAllViews} from '../views/views.state';
-import {Workspace} from '../navigation/workspace';
-import {selectWorkspace} from '../navigation/navigation.state';
 
 export const selectWorkspaceModels = createSelector(
   selectOrganizationByWorkspace,

@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
   Input,
+  Output,
+  QueryList,
   Renderer2,
   ViewChildren,
-  QueryList,
-  ElementRef,
-  Output,
-  EventEmitter,
 } from '@angular/core';
-import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
-import {LinkColumn} from '../../model/link-column';
+
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {LinksListHeaderMenuComponent} from './menu/links-list-header-menu.component';
 import {computeElementPositionInParent} from '../../../../utils/common.utils';
+import {LinkColumn} from '../../model/link-column';
+import {LinksListHeaderMenuComponent} from './menu/links-list-header-menu.component';
 
 const columnMinWidth = 30;
 

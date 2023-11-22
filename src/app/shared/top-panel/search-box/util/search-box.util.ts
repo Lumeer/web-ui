@@ -16,15 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {QueryItem} from '../query-item/model/query-item';
-import {QueryItemType} from '../query-item/model/query-item-type';
-import {LinkQueryItem} from '../query-item/model/link.query-item';
-import {AttributeQueryItem} from '../query-item/model/attribute.query-item';
-import {DocumentQueryItem} from '../query-item/model/document.query-item';
-import {QueryData} from './query-data';
-import {CollectionQueryItem} from '../query-item/model/collection.query-item';
-import {convertQueryItemsToQueryModel, QueryItemsConverter} from '../query-item/query-items.converter';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {
   createCollectionQueryStem,
   filterStemByLinkIndex,
@@ -32,10 +24,17 @@ import {
   findStemIndexForLinkType,
   findStemIndexForLinkTypeToJoin,
 } from '../../../../core/store/navigation/query/query.util';
-import {LinkAttributeQueryItem} from '../query-item/model/link-attribute.query-item';
-import {isAttributeVisibleInResourceSettings} from '../../../utils/attribute.utils';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {View} from '../../../../core/store/views/view';
+import {isAttributeVisibleInResourceSettings} from '../../../utils/attribute.utils';
+import {AttributeQueryItem} from '../query-item/model/attribute.query-item';
+import {CollectionQueryItem} from '../query-item/model/collection.query-item';
+import {DocumentQueryItem} from '../query-item/model/document.query-item';
+import {LinkAttributeQueryItem} from '../query-item/model/link-attribute.query-item';
+import {LinkQueryItem} from '../query-item/model/link.query-item';
+import {QueryItem} from '../query-item/model/query-item';
+import {QueryItemType} from '../query-item/model/query-item-type';
+import {QueryItemsConverter, convertQueryItemsToQueryModel} from '../query-item/query-items.converter';
+import {QueryData} from './query-data';
 
 export function addQueryItemWithRelatedItems(
   queryData: QueryData,

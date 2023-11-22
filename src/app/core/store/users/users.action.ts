@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {DefaultWorkspace, User, UserHints, UserOnboarding} from './user';
-import {PaymentStats} from '../organizations/payment/payment';
+
 import {UserInvitation} from '../../model/user-invitation';
+import {PaymentStats} from '../organizations/payment/payment';
+import {DefaultWorkspace, User, UserHints, UserOnboarding} from './user';
 
 export enum UsersActionType {
   GET = '[Users] Get',

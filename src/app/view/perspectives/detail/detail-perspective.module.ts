@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
-import {SharedModule} from '../../../shared/shared.module';
-import {DetailPerspectiveComponent} from './detail-perspective.component';
 import {RouterModule} from '@angular/router';
+
+import {SharedModule} from '../../../shared/shared.module';
 import {DetailPerspectiveRoutingModule} from './detail-perspective-routing.module';
-import {DetailQueryStemPipe} from './pipes/detail-query-stem.pipe';
+import {DetailPerspectiveComponent} from './detail-perspective.component';
 import {CanCreateNewRecordPipe} from './pipes/can-create-new-record.pipe';
+import {DetailQueryStemPipe} from './pipes/detail-query-stem.pipe';
 
 @NgModule({
   imports: [SharedModule, RouterModule, DetailPerspectiveRoutingModule],

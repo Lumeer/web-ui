@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {AbstractControl, UntypedFormGroup} from '@angular/forms';
+
 import {SelectItemModel} from '../../../select/select-item/select-item.model';
 
 @Component({

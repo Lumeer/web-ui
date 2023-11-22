@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
+import {Constraint, ConstraintType, DateTimeConstraintConfig, DurationConstraintConfig} from '@lumeer/data-filters';
+
 import {Attribute} from '../../../core/store/collections/collection';
 import {SelectItemModel} from '../select-item/select-item.model';
 import {DateTimeConfigOverrideService} from './constraint/date-time';
 import {DurationConfigOverrideService} from './constraint/duration';
-import {Constraint, ConstraintType, DateTimeConstraintConfig, DurationConstraintConfig} from '@lumeer/data-filters';
 
 @Injectable({
   providedIn: 'root',

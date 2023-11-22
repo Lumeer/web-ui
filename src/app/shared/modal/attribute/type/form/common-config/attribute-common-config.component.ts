@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormGroup} from '@angular/forms';
+
 import {ConstraintType} from '@lumeer/data-filters';
+
 import {canShowAttributeHints} from '../../../../../utils/attribute.utils';
 
 @Component({

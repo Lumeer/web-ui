@@ -16,35 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
   Input,
   OnChanges,
-  SimpleChanges,
   OnInit,
   Output,
-  EventEmitter,
+  SimpleChanges,
 } from '@angular/core';
+
+import {BehaviorSubject, Observable, asyncScheduler} from 'rxjs';
+import {filter, map, throttleTime} from 'rxjs/operators';
+
+import {ConstraintData, DataAggregationType, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
+
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {PivotDataConverter} from '../util/pivot-data-converter';
 import {PivotConfig} from '../../../../core/store/pivots/pivot';
-import {asyncScheduler, BehaviorSubject, Observable} from 'rxjs';
-import {filter, map, throttleTime} from 'rxjs/operators';
-import {PivotData} from '../util/pivot-data';
-import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {checkOrTransformPivotConfig} from '../util/pivot-util';
+import {View} from '../../../../core/store/views/view';
+import {ModalService} from '../../../../shared/modal/modal.service';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 import {PivotPerspectiveConfiguration} from '../../perspective-configuration';
-import {View} from '../../../../core/store/views/view';
+import {PivotData} from '../util/pivot-data';
+import {PivotDataConverter} from '../util/pivot-data-converter';
 import {PivotTableCell} from '../util/pivot-table';
-import {ModalService} from '../../../../shared/modal/modal.service';
+import {checkOrTransformPivotConfig} from '../util/pivot-util';
 
 interface Data {
   collections: Collection[];

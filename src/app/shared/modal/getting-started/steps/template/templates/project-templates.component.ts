@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, HostListener, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {createTagsFromTemplates} from './tags/templates-tags.component';
-import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../../../../animations';
-import {Project} from '../../../../../../core/store/projects/project';
+
 import {LoadingState} from '../../../../../../core/model/loading-state';
+import {Project} from '../../../../../../core/store/projects/project';
+import {emptyEnterAnimation, enterLeftAnimation, enterRightAnimation} from '../../../../../animations';
 import {GettingStartedService} from '../../../getting-started.service';
+import {createTagsFromTemplates} from './tags/templates-tags.component';
 
 @Component({
   selector: 'project-templates',

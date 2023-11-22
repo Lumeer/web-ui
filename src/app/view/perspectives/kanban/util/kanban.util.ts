@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
 
+import {Collection} from '../../../../core/store/collections/collection';
 import {
-  defaultKanbanValueType,
   KanbanAggregation,
   KanbanAttribute,
   KanbanColumn,
   KanbanConfig,
   KanbanConfigVersion,
   KanbanStemConfig,
+  defaultKanbanValueType,
 } from '../../../../core/store/kanbans/kanban';
-import {areArraysSame} from '../../../../shared/utils/array.utils';
-import {Collection} from '../../../../core/store/collections/collection';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
+import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
 import {
   checkOrTransformQueryAttribute,
   checkOrTransformQueryResource,
@@ -38,12 +39,11 @@ import {
   queryStemAttributesResourcesOrder,
   queryStemWithoutFiltersAndId,
 } from '../../../../core/store/navigation/query/query.util';
-import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
-import {SizeType} from '../../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {SizeType} from '../../../../shared/slider/size/size-type';
+import {areArraysSame} from '../../../../shared/utils/array.utils';
+import {defaultDataAggregationType} from '../../../../shared/utils/data-aggregation';
 import {createDefaultTaskPurposeConfig} from '../../common/perspective-util';
-import {defaultDataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {

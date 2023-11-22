@@ -16,24 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Collection, CollectionPurposeMetadata} from '../collections/collection';
-import {Query} from '../navigation/query/query';
-import {
-  getQueryFiltersForCollection,
-  getQueryFiltersForLinkType,
-  queryStemsAreSameById,
-} from '../navigation/query/query.util';
-import {DocumentAdditionalDataRequest, DocumentIdsData, DocumentModel} from './document.model';
-import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
-import {createRange} from '../../../shared/utils/array.utils';
-import {isArray, isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
-import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
-import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {
   AttributeFilter,
   ConditionType,
-  conditionTypeNumberOfInputs,
   Constraint,
   ConstraintData,
   ConstraintType,
@@ -41,10 +26,25 @@ import {
   DocumentsAndLinksData,
   FilesDataValue,
   UnknownConstraint,
+  conditionTypeNumberOfInputs,
 } from '@lumeer/data-filters';
+import {isArray, isNotNullOrUndefined, objectsByIdMap} from '@lumeer/utils';
+
+import {createRange} from '../../../shared/utils/array.utils';
+import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
+import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
+import {Collection, CollectionPurposeMetadata} from '../collections/collection';
+import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
 import {LinkInstance} from '../link-instances/link.instance';
-import {defaultTasksSortBy, TaskConfigAttribute, TasksConfigSort, TasksConfigSortBy} from '../searches/search';
+import {Query} from '../navigation/query/query';
+import {
+  getQueryFiltersForCollection,
+  getQueryFiltersForLinkType,
+  queryStemsAreSameById,
+} from '../navigation/query/query.util';
+import {TaskConfigAttribute, TasksConfigSort, TasksConfigSortBy, defaultTasksSortBy} from '../searches/search';
 import {AttributeSortType} from '../view-settings/view-settings';
+import {DocumentAdditionalDataRequest, DocumentIdsData, DocumentModel} from './document.model';
 
 export function createDocumentRequestAdditionalData(
   collection: Collection,
@@ -421,7 +421,7 @@ function dataValueHasValue(dataValue: DataValue, set: Set<any>): boolean {
 }
 
 function getCollectionTaskDataMap(collections: Collection[]): Record<string, CollectionTaskDataMap> {
-  return collections.reduce((map, collection) => {
+  return collections.reduce<Record<string, CollectionTaskDataMap>>((map, collection) => {
     const stateConstraint =
       findAttributeConstraint(collection.attributes, collection.purpose?.metaData?.stateAttributeId) ||
       new UnknownConstraint();

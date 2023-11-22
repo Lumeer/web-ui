@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 import {
   AbstractControl,
@@ -26,19 +25,22 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
-import {ActionConstraintFormControl} from './action-constraint-form-control';
-import {COLOR_SUCCESS} from '../../../../../../../core/constants';
+
 import {Subscription} from 'rxjs';
-import {Rule, RuleType} from '../../../../../../../core/model/rule';
-import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
-import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
-import {IconColorPickerComponent} from '../../../../../../picker/icon-color/icon-color-picker.component';
-import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+
 import {ActionConstraintConfig, ConstraintType} from '@lumeer/data-filters';
+
+import {COLOR_SUCCESS} from '../../../../../../../core/constants';
+import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType} from '../../../../../../../core/model/resource';
+import {Rule, RuleType} from '../../../../../../../core/model/rule';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
+import {IconColorPickerComponent} from '../../../../../../picker/icon-color/icon-color-picker.component';
+import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {getAttributesResourceType} from '../../../../../../utils/resource.utils';
 import {ModalService} from '../../../../../modal.service';
+import {ActionConstraintFormControl} from './action-constraint-form-control';
 
 @Component({
   selector: 'action-constraint-config-form',

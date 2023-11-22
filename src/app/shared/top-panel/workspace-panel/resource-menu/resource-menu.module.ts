@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ResourceStatusLineComponent} from './resource-detail/resource-status-line/resource-status-line.component';
-import {ResourceDetailComponent} from './resource-detail/resource-detail.component';
-import {ResourceMenuComponent} from './resource-menu.component';
-import {ResourceListComponent} from './resource-list/resource-list.component';
+import {NgModule} from '@angular/core';
+
+import {DropdownModule} from '../../../dropdown/dropdown.module';
 import {PipesModule} from '../../../pipes/pipes.module';
 import {CanCreateResourcePipe} from './pipes/can-create-resource.pipe';
-import {DropdownModule} from '../../../dropdown/dropdown.module';
+import {ResourceDetailComponent} from './resource-detail/resource-detail.component';
+import {ResourceStatusLineComponent} from './resource-detail/resource-status-line/resource-status-line.component';
+import {ResourceListComponent} from './resource-list/resource-list.component';
+import {ResourceMenuComponent} from './resource-menu.component';
 
 @NgModule({
   imports: [CommonModule, PipesModule, DropdownModule],

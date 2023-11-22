@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
+  Input,
+  OnChanges,
   Output,
   Renderer2,
-  OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import * as colors from '../../colors';
+
 import {shadeColor} from '../../../utils/html-modifier';
+import * as colors from '../../colors';
 
 @Component({
   selector: 'color-choose',

@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Observable, of} from 'rxjs';
-import {GeocodingService} from './geocoding.service';
+
 import {CoordinatesDto, LocationDto} from '../../dto/location.dto';
+import {GeocodingService} from './geocoding.service';
 
 @Injectable({
   providedIn: 'root',

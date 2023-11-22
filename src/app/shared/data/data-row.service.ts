@@ -16,32 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {Attribute} from '../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, of, Subscription} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {NotificationService} from '../../core/notifications/notification.service';
-import {selectDocumentById} from '../../core/store/documents/documents.state';
-import {selectCollectionById} from '../../core/store/collections/collections.state';
-import {generateCorrelationId, getAttributesResourceType} from '../utils/resource.utils';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {findAttribute, getDefaultAttributeId} from '../../core/store/collections/collection.util';
-import {isNotNullOrUndefined} from '../utils/common.utils';
-import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {deepArrayEquals} from '../utils/array.utils';
-import {findAttributeByName} from '../utils/attribute.utils';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Subscription, combineLatest, of} from 'rxjs';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
 import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../core/model/resource';
-import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
-import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
+import {NotificationService} from '../../core/notifications/notification.service';
+import {AppState} from '../../core/store/app.state';
+import {Attribute} from '../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../core/store/collections/collection.util';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {DocumentModel} from '../../core/store/documents/document.model';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
+import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
-import {createAttributesSettingsOrder} from '../settings/settings.util';
+import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
+import {createAttributesSettingsOrder} from '../settings/settings.util';
+import {deepArrayEquals} from '../utils/array.utils';
+import {findAttributeByName} from '../utils/attribute.utils';
+import {generateCorrelationId, getAttributesResourceType} from '../utils/resource.utils';
 
 export interface DataRow {
   id: string;

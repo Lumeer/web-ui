@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
+
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {createCollectionQueryStem} from '../../../../../core/store/navigation/query/query.util';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
+import {createCollectionQueryStem} from '../../../../../core/store/navigation/query/query.util';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {Perspective} from '../../../../../view/perspectives/perspective';
 
 @Component({

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Directive, ElementRef, Input, ViewChild} from '@angular/core';
 
-import {Input, ElementRef, ViewChild, Directive} from '@angular/core';
 import {DropdownComponent} from './dropdown.component';
 
 @Directive()

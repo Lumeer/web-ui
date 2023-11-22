@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {DataQuery} from '../../model/data-query';
-import {selectViewDataQuery} from '../view-settings/view-settings.state';
-import {isDataQueryLoaded} from '../utils/data-query-payload';
+
 import {configuration} from '../../../../environments/configuration';
+import {DataQuery} from '../../model/data-query';
+import {AppState} from '../app.state';
 import {Query} from '../navigation/query/query';
 import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
+import {isDataQueryLoaded} from '../utils/data-query-payload';
+import {selectViewDataQuery} from '../view-settings/view-settings.state';
 
 export interface DataResourcesState {
   queries: DataQuery[];

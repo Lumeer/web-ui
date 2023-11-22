@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
@@ -28,21 +27,24 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest} from 'rxjs';
 import {debounceTime, delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
+
+import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectDocumentsByViewAndCustomQuery} from '../../../../../core/store/common/permissions.selectors';
+import {selectQueryDataResourcesLoaded} from '../../../../../core/store/data-resources/data-resources.state';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
+import {getTableElementFromInnerElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
-import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
-import {selectQueryDataResourcesLoaded} from '../../../../../core/store/data-resources/data-resources.state';
-import {TablePerspectiveConfiguration} from '../../../perspective-configuration';
 import {View} from '../../../../../core/store/views/view';
-import {getTableElementFromInnerElement} from '../../../../../core/store/tables/table.utils';
+import {TablePerspectiveConfiguration} from '../../../perspective-configuration';
 
 @Component({
   selector: 'table-rows',

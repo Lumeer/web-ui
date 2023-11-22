@@ -16,12 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
-import {CommonModule} from '@angular/common';
+
 import {ResizableModule} from 'angular-resizable-element';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
 import {SharedModule} from '../../../../shared/shared.module';
 import {TableSharedModule} from '../shared/table-shared.module';
 import {TableHeaderAddButtonComponent} from './add-button/table-header-add-button.component';
@@ -38,7 +40,6 @@ import {TableHierarchyColumnComponent} from './hierarchy-column/table-hierarchy-
 import {TableLinkInfoComponent} from './link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './link/table-header-link.component';
 import {TableHeaderComponent} from './table-header.component';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [

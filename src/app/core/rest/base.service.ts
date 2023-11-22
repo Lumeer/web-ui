@@ -16,12 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {filter} from 'rxjs/operators';
+
 import {AppState} from '../store/app.state';
 import {selectWorkspaceWithIds} from '../store/common/common.selectors';
-import {filter} from 'rxjs/operators';
 import {Workspace} from '../store/navigation/workspace';
 import {viewIdHeader} from './interceptors/view.http-interceptor';
 

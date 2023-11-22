@@ -16,17 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+import {filter} from 'rxjs/operators';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {AppState} from '../../../../core/store/app.state';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {filter, take} from 'rxjs/operators';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'collection-purpose',

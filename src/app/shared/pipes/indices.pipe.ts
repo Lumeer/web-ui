@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {isNumeric} from '@lumeer/utils';
+
 import {createRange} from '../utils/array.utils';
-import {isNumeric} from '../utils/common.utils';
 
 @Pipe({
   name: 'indices',

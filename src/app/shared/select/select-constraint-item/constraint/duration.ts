@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {Constraint, DurationConstraint, DurationConstraintConfig, DurationUnit} from '@lumeer/data-filters';
 
+import {parseSelectTranslation} from '../../../utils/translation.utils';
 import {SelectItemModel} from '../../select-item/select-item.model';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
-import {Constraint, DurationConstraint, DurationConstraintConfig, DurationUnit} from '@lumeer/data-filters';
-import {parseSelectTranslation} from '../../../utils/translation.utils';
 
 const maxDurationUnits = [DurationUnit.Days, DurationUnit.Hours, DurationUnit.Minutes, DurationUnit.Seconds];
 

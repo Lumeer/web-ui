@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {LinkInstance} from './link.instance';
 import {DocumentModel} from '../documents/document.model';
+import {LinkInstance} from './link.instance';
 
 export function isLinkInstanceValid(linkInstance: LinkInstance, documentsMap: Record<string, DocumentModel>): boolean {
   return (

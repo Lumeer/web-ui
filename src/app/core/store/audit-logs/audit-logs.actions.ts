@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {createAction, props} from '@ngrx/store';
-import {AuditLog} from './audit-log.model';
+
 import {Workspace} from '../navigation/workspace';
+import {AuditLog} from './audit-log.model';
 
 export const getByProject = createAction(
   '[AuditLogs] Get By Project',

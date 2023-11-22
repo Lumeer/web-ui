@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
+
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
+import {AppState} from '../../../../../../../../core/store/app.state';
+import {Workspace} from '../../../../../../../../core/store/navigation/workspace';
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {
   selectTableRowIndentable,
   selectTableRowOutdentable,
 } from '../../../../../../../../core/store/tables/tables.selector';
-import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
-import {AppState} from '../../../../../../../../core/store/app.state';
-import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
-import {TableDataPermissionsService} from '../../../../../service/table-data-permissions.service';
 import {View} from '../../../../../../../../core/store/views/view';
-import {Workspace} from '../../../../../../../../core/store/navigation/workspace';
+import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
+import {TableDataPermissionsService} from '../../../../../service/table-data-permissions.service';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',

@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {DOCUMENT, DatePipe} from '@angular/common';
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, Input} from '@angular/core';
-import {DatePipe, DOCUMENT} from '@angular/common';
-import {Payment} from '../../../../core/store/organizations/payment/payment';
-import {Organization} from '../../../../core/store/organizations/organization';
+
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {PaymentsAction} from '../../../../core/store/organizations/payment/payments.action';
-import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
-import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {ConfigurationService} from '../../../../configuration/configuration.service';
+import {AppState} from '../../../../core/store/app.state';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {Payment} from '../../../../core/store/organizations/payment/payment';
+import {PaymentsAction} from '../../../../core/store/organizations/payment/payments.action';
+import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
 
 @Component({
   selector: 'payments-panel',

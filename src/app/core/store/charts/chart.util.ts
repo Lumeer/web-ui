@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
 
 import {ChartAxisConfig, ChartAxisType, ChartConfig, ChartSort, ChartType} from './chart';
-import {deepObjectCopy, deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 export function createChartSaveConfig(config: ChartConfig): ChartConfig {
   const configCopy = deepObjectCopy(config);

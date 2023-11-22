@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -31,42 +30,47 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkColumn} from '../model/link-column';
-import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+
+import {Action, Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {LinkRow} from '../model/link-row';
+import {map, switchMap} from 'rxjs/operators';
+
+import {ConstraintData} from '@lumeer/data-filters';
+import {objectsByIdMap} from '@lumeer/utils';
+
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResourceType} from '../../../../core/model/resource';
 import {AppState} from '../../../../core/store/app.state';
-import {Action, select, Store} from '@ngrx/store';
+import {Collection} from '../../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {selectDocumentById, selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {
   selectLinkInstanceById,
   selectLinkInstancesByTypeAndDocuments,
 } from '../../../../core/store/link-instances/link-instances.state';
-import {map, switchMap} from 'rxjs/operators';
 import {
+  LinkInstance,
   getOtherLinkedDocumentId,
   getOtherLinkedDocumentIds,
-  LinkInstance,
 } from '../../../../core/store/link-instances/link.instance';
-import {selectDocumentById, selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {generateCorrelationId} from '../../../utils/resource.utils';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {User} from '../../../../core/store/users/user';
+import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
+import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
 import {
   composeViewSettingsLinkTypeCollectionId,
   createAndModifyAttributesSettings,
   createAttributesSettingsOrder,
   setAttributeToAttributeSettings,
 } from '../../../settings/settings.util';
-import {objectChanged, objectsByIdMap} from '../../../utils/common.utils';
-import {ConstraintData} from '@lumeer/data-filters';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {User} from '../../../../core/store/users/user';
-import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
-import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
-import {Workspace} from '../../../../core/store/navigation/workspace';
+import {objectChanged} from '../../../utils/common.utils';
+import {generateCorrelationId} from '../../../utils/resource.utils';
+import {LinkColumn} from '../model/link-column';
+import {LinkRow} from '../model/link-row';
 
 const columnWidth = 100;
 

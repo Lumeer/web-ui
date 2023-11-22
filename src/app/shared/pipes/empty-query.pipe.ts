@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {queryIsEmpty} from '../../core/store/navigation/query/query.util';
 import {Query} from '../../core/store/navigation/query/query';
+import {queryIsEmpty} from '../../core/store/navigation/query/query.util';
 
 @Pipe({
   name: 'emptyQuery',

@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {combineLatest, Observable} from 'rxjs';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions.selectors';
-import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
+
 import {AppState} from '../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
+import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions.selectors';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {mapLinkTypeCollections} from '../utils/link-type.utils';
 
 @Pipe({

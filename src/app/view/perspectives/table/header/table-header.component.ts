@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,21 +27,24 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
+
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../core/store/app.state';
-import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
-import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
-import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {
   selectCollectionPermissionsByView,
   selectReadableCollectionsByView,
 } from '../../../../core/store/common/permissions.selectors';
-import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {selectTableLastCollectionId} from '../../../../core/store/tables/tables.selector';
 import {Query} from '../../../../core/store/navigation/query/query';
+import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
+import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
+import {TablesAction} from '../../../../core/store/tables/tables.action';
+import {selectTableLastCollectionId} from '../../../../core/store/tables/tables.selector';
+import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {View} from '../../../../core/store/views/view';
 
 @Component({

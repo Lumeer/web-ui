@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {COLOR_QUERY_DEFAULT, COLOR_QUERY_FULLTEXT} from '../../../../../core/constants';
 import {shadeColor} from '../../../../utils/html-modifier';
 import {QueryItem} from '../model/query-item';
 import {QueryItemType} from '../model/query-item-type';
-import {COLOR_QUERY_FULLTEXT, COLOR_QUERY_DEFAULT} from '../../../../../core/constants';
 
 @Pipe({
   name: 'queryItemBackground',

@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {PivotConfig, PivotStemConfig} from '../../../../../core/store/pivots/pivot';
-import {PivotData} from '../../util/pivot-data';
+import {deepObjectCopy} from '@lumeer/utils';
+
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
-import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
+import {PivotConfig, PivotStemConfig} from '../../../../../core/store/pivots/pivot';
+import {PivotData} from '../../util/pivot-data';
 import {createDefaultPivotStemConfig} from '../../util/pivot-util';
 
 @Component({

@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
+
+import {ConstraintType} from '@lumeer/data-filters';
+
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Attribute} from '../../../../../../core/store/collections/collection';
-import {ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'links-list-header-menu',

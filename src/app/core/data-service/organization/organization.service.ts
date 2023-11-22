@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Observable} from 'rxjs';
+
 import {ContactDto, OrganizationDto, ProjectDto, TeamDto} from '../../dto';
-import {PermissionService} from '../common/permission.service';
-import {ServiceLimitsDto} from '../../dto/service-limits.dto';
 import {PaymentDto} from '../../dto/payment.dto';
+import {ServiceLimitsDto} from '../../dto/service-limits.dto';
+import {PermissionService} from '../common/permission.service';
 
 export abstract class OrganizationService extends PermissionService {
   public abstract getAllWorkspaces(): Observable<{

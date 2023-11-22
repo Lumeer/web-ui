@@ -16,35 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
-  Output,
-  OnInit,
-  OnDestroy,
+  Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import {Router} from '@angular/router';
-import {checkSizeType, SearchViewsConfig} from '../../../../../../core/store/searches/search';
-import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
-import {View} from '../../../../../../core/store/views/view';
-import {ViewFavoriteToggleService} from '../../../../../../shared/toggle/view-favorite-toggle.service';
-import {Query} from '../../../../../../core/store/navigation/query/query';
-import {Workspace} from '../../../../../../core/store/navigation/workspace';
-import {AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
-import {SizeType} from '../../../../../../shared/slider/size/size-type';
-import {Perspective} from '../../../../perspective';
-import {SearchTab} from '../../../../../../core/store/navigation/search-tab';
-import {convertQueryModelToString} from '../../../../../../core/store/navigation/query/query.converter';
-import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {SearchPerspectiveConfiguration} from '../../../../perspective-configuration';
+
+import {AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../../../core/store/app.state';
 import {selectHasVisibleSearchTab} from '../../../../../../core/store/common/permissions.selectors';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {convertQueryModelToString} from '../../../../../../core/store/navigation/query/query.converter';
+import {SearchTab} from '../../../../../../core/store/navigation/search-tab';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {SearchViewsConfig, checkSizeType} from '../../../../../../core/store/searches/search';
+import {View} from '../../../../../../core/store/views/view';
+import {SizeType} from '../../../../../../shared/slider/size/size-type';
+import {ViewFavoriteToggleService} from '../../../../../../shared/toggle/view-favorite-toggle.service';
+import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
+import {Perspective} from '../../../../perspective';
+import {SearchPerspectiveConfiguration} from '../../../../perspective-configuration';
 
 @Component({
   selector: 'views-preview-content',

@@ -16,18 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
 import {Observable, of} from 'rxjs';
-import {UserService} from './user.service';
-import {UserDto} from '../../dto';
+
 import {generateId} from '../../../shared/utils/resource.utils';
-import {PaymentStats} from '../../store/organizations/payment/payment';
-import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {DEFAULT_USER} from '../../constants';
-import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
+import {UserDto} from '../../dto';
+import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {UserInvitationDto} from '../../dto/user-invitation.dto';
+import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
+import {PaymentStats} from '../../store/organizations/payment/payment';
+import {UserService} from './user.service';
 
 @Injectable()
 export class PublicUserService implements UserService {

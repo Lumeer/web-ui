@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {View} from '../../../../../core/store/views/view';
-import {QueryItem} from './query-item';
-import {QueryItemType} from './query-item-type';
 import {COLOR_PRIMARY, COLOR_QUERY_FULLTEXT} from '../../../../../core/constants';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {getBaseCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
+import {View} from '../../../../../core/store/views/view';
 import {getViewIcon} from '../../../../../core/store/views/view.utils';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
 export class ViewQueryItem implements QueryItem {
   public type = QueryItemType.View;

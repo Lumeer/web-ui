@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialResourceCommentsState, resourceCommentsAdapter, ResourceCommentsState} from './resource-comments.state';
 import {ResourceCommentsAction, ResourceCommentsActionType} from './resource-comments.action';
+import {ResourceCommentsState, initialResourceCommentsState, resourceCommentsAdapter} from './resource-comments.state';
 
 export function resourceCommentsReducer(
   state: ResourceCommentsState = initialResourceCommentsState,

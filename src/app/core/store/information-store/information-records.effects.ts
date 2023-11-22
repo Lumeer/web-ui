@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {ResourceCommentsAction} from '../resource-comments/resource-comments.action';
-import {catchError, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {Store, select} from '@ngrx/store';
+
 import {of} from 'rxjs';
-import {InformationRecordsAction, InformationRecordsActionType} from './information-records.action';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../app.state';
+import {catchError, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
 import {InformationStoreService} from '../../data-service';
-import {convertInformationRecordDtoToInformationRecord} from './information-record.converter';
-import {NotificationsAction} from '../notifications/notifications.action';
+import {AppState} from '../app.state';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
+import {NotificationsAction} from '../notifications/notifications.action';
+import {ResourceCommentsAction} from '../resource-comments/resource-comments.action';
 import {createCallbackActions} from '../utils/store.utils';
+import {convertInformationRecordDtoToInformationRecord} from './information-record.converter';
+import {InformationRecordsAction, InformationRecordsActionType} from './information-records.action';
 
 @Injectable()
 export class InformationRecordsEffects {

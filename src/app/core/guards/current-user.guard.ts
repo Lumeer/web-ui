@@ -16,24 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import Cookies from 'js-cookie';
+import mixpanel from 'mixpanel-browser';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, first, map, mergeMap, tap} from 'rxjs/operators';
+
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
+
 import {AuthService} from '../../auth/auth.service';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {idToReference} from '../../shared/utils/string.utils';
+import {hashUserId} from '../../shared/utils/system.utils';
+import {LUMEER_REFERRAL} from '../constants';
 import {AppState} from '../store/app.state';
+import {User} from '../store/users/user';
 import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUser} from '../store/users/users.state';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../shared/utils/common.utils';
-import {hashUserId} from '../../shared/utils/system.utils';
-import mixpanel from 'mixpanel-browser';
-import Cookies from 'js-cookie';
-import {LUMEER_REFERRAL} from '../constants';
-import {idToReference} from '../../shared/utils/string.utils';
-import {ConfigurationService} from '../../configuration/configuration.service';
-import {User} from '../store/users/user';
 
 @Injectable()
 export class CurrentUserGuard {

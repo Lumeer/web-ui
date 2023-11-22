@@ -16,34 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 
-import {UserListComponent} from './user-list/user-list.component';
-import {UserComponent} from './user-list/user/user.component';
-import {NewUserComponent} from './new-user/new-user.component';
-import {UsersComponent} from './users.component';
-import {TagModule} from '../tag/tag.module';
-import {InputModule} from '../input/input.module';
-import {UserFilterPipe} from './pipes/user-filter.pipe';
-import {PipesModule} from '../pipes/pipes.module';
-import {UserStampComponent} from './user-stamp/user-stamp.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {GravatarModule} from 'ngx-gravatar';
-import {RolesModule} from '../roles/roles.module';
-import {UserRolesMapPipe} from './pipes/user-roles-map.pipe';
-import {UserTeamsComponent} from './user-list/user/teams/user-teams.component';
+
 import {DropdownModule} from '../dropdown/dropdown.module';
-import {TeamsIdsPipe} from './pipes/teams-ids.pipe';
+import {InputModule} from '../input/input.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {RolesModule} from '../roles/roles.module';
+import {TagModule} from '../tag/tag.module';
+import {NewUserComponent} from './new-user/new-user.component';
 import {FilterTeamsPipe} from './pipes/filter-teams.pipe';
 import {FilterUserTeamsPipe} from './pipes/filter-user-teams.pipe';
-import {UserTableComponent} from './user-list/table/user-table.component';
-import {UserTransitiveRolesPipe} from './pipes/user-transitive-roles.pipe';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {RouterModule} from '@angular/router';
 import {ResourceTypePermissionsMapPipe} from './pipes/resource-type-permissions-map.pipe';
 import {ResourceTypeRolesMapPipe} from './pipes/resource-type-roles-map.pipe';
+import {TeamsIdsPipe} from './pipes/teams-ids.pipe';
+import {UserFilterPipe} from './pipes/user-filter.pipe';
+import {UserRolesMapPipe} from './pipes/user-roles-map.pipe';
+import {UserTransitiveRolesPipe} from './pipes/user-transitive-roles.pipe';
+import {UserTableComponent} from './user-list/table/user-table.component';
+import {UserListComponent} from './user-list/user-list.component';
+import {UserTeamsComponent} from './user-list/user/teams/user-teams.component';
+import {UserComponent} from './user-list/user/user.component';
+import {UserStampComponent} from './user-stamp/user-stamp.component';
+import {UsersComponent} from './users.component';
 
 @NgModule({
   imports: [

@@ -16,44 +16,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {Attribute, AttributeFunction, Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {map, mergeMap, tap} from 'rxjs/operators';
+
+import {AttributeLock} from '@lumeer/data-filters';
+
+import {AttributesResource} from '../../../../core/model/resource';
+import {BlocklyRule, Rule} from '../../../../core/model/rule';
 import {AppState} from '../../../../core/store/app.state';
+import {Attribute, AttributeFunction, Collection} from '../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {
-  selectReadableCollections,
   selectLinkTypesByCollectionId,
+  selectReadableCollections,
   selectViewsByRead,
 } from '../../../../core/store/common/permissions.selectors';
+import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {
   selectAllLinkTypes,
   selectLinkTypeByIdWithCollections,
 } from '../../../../core/store/link-types/link-types.state';
-import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
-import {DialogType} from '../../dialog-type';
-import {AttributesResource} from '../../../../core/model/resource';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
+import {selectSelectionListNamesByWorkspaceSorted} from '../../../../core/store/selection-lists/selection-lists.state';
+import {View} from '../../../../core/store/views/view';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
 import {
   attributeHasEditableFunction,
   attributeHasFunction,
   attributeRuleFunction,
   findAttributeRule,
 } from '../../../utils/attribute.utils';
-import {BlocklyRule, Rule} from '../../../../core/model/rule';
-import {View} from '../../../../core/store/views/view';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {AttributeLock} from '@lumeer/data-filters';
-import {selectSelectionListNamesByWorkspaceSorted} from '../../../../core/store/selection-lists/selection-lists.state';
+import {DialogType} from '../../dialog-type';
 
 @Component({
   selector: 'attribute-function-dialog',

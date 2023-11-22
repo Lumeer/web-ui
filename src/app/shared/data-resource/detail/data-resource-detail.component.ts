@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,55 +28,59 @@ import {
   SimpleChanges,
   TemplateRef,
 } from '@angular/core';
-import {Action, select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
-import {PerspectiveService} from '../../../core/service/perspective.service';
-import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {Workspace} from '../../../core/store/navigation/workspace';
-import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {Attribute, Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Query, QueryStem} from '../../../core/store/navigation/query/query';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {AppState} from '../../../core/store/app.state';
-import {ModalService} from '../../modal/modal.service';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
-import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
-import {getAttributesResourceType} from '../../utils/resource.utils';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {LinkType} from '../../../core/store/link-types/link.type';
-import {View, ViewConfig} from '../../../core/store/views/view';
-import {DetailTabType} from './detail-tab-type';
-import {selectDocumentById, selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+
+import {Action, Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {distinctUntilChanged, filter, map, switchMap, tap} from 'rxjs/operators';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {PerspectiveService} from '../../../core/service/perspective.service';
+import {AppState} from '../../../core/store/app.state';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
+import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {DetailConfig} from '../../../core/store/details/detail';
+import {selectDetailAttributesSettings, selectDetailById} from '../../../core/store/details/detail.state';
+import {checkOrTransformDetailConfig} from '../../../core/store/details/detail.utils';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectDocumentById, selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {
   selectLinkInstanceById,
   selectLinkInstancesByTypesAndDocuments,
 } from '../../../core/store/link-instances/link-instances.state';
-import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
-import {objectChanged} from '../../utils/common.utils';
-import {ConstraintData} from '@lumeer/data-filters';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import {DetailConfig} from '../../../core/store/details/detail';
-import {selectDetailAttributesSettings, selectDetailById} from '../../../core/store/details/detail.state';
-import * as DetailActions from './../../../core/store/details/detail.actions';
-import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-config-perspective.component';
-import {checkOrTransformDetailConfig} from '../../../core/store/details/detail.utils';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
-import {selectCurrentView} from '../../../core/store/views/views.state';
-import {User} from '../../../core/store/users/user';
-import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
-import {composeViewSettingsLinkTypeCollectionId} from '../../settings/settings.util';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
+import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {createCollectionQueryStem} from '../../../core/store/navigation/query/query.util';
+import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {User} from '../../../core/store/users/user';
+import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
-import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
+import {View, ViewConfig} from '../../../core/store/views/view';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-config-perspective.component';
+import {ModalService} from '../../modal/modal.service';
+import {composeViewSettingsLinkTypeCollectionId} from '../../settings/settings.util';
+import {objectChanged} from '../../utils/common.utils';
+import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
+import {getAttributesResourceType} from '../../utils/resource.utils';
+import * as DetailActions from './../../../core/store/details/detail.actions';
+import {DetailTabType} from './detail-tab-type';
 
 @Component({
   selector: 'data-resource-detail',

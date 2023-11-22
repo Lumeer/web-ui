@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {Resource} from '../../../../core/model/resource';
 import {ResourceVariable} from '../../../../core/store/resource-variables/resource-variable';
 

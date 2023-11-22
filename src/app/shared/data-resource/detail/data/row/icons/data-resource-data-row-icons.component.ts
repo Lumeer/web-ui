@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {DataRow} from '../../../../../data/data-row.service';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AttributeLockFiltersStats, ConstraintData, ConstraintType} from '@lumeer/data-filters';
+
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {DataCursor} from '../../../../../data-input/data-cursor';
+import {DataRow} from '../../../../../data/data-row.service';
 
 @Component({
   selector: 'data-resource-data-row-icons',

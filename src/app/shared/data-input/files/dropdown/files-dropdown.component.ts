@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -29,15 +28,18 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
-import {DropdownComponent} from '../../../dropdown/dropdown.component';
-import {DropdownPosition} from '../../../dropdown/dropdown-position';
-import {FileDownloadService} from '../file-download.service';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+
 import {DEFAULT_FILE_SIZE_MB} from '../../../../core/constants';
+import {AppState} from '../../../../core/store/app.state';
+import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {DropdownPosition} from '../../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../../dropdown/dropdown.component';
+import {FileDownloadService} from '../file-download.service';
 
 @Component({
   selector: 'files-dropdown',

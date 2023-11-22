@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {DataResourcesState, initialDataResourcesState} from './data-resources.state';
-import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
 import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
+import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
+import {DataResourcesState, initialDataResourcesState} from './data-resources.state';
 
 export function dataResourcesReducer(
   state: DataResourcesState = initialDataResourcesState,

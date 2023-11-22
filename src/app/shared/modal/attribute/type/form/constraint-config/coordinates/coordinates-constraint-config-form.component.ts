@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-control';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
+
+import {CoordinatesConstraintConfig, CoordinatesDataValue, CoordinatesFormat} from '@lumeer/data-filters';
+
 import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../../../utils/common.utils';
-import {CoordinatesConstraintConfig, CoordinatesDataValue, CoordinatesFormat} from '@lumeer/data-filters';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
+import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-control';
 
 @Component({
   selector: 'coordinates-constraint-config-form',

@@ -16,34 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {select, Store} from '@ngrx/store';
 
-import {AppState} from '../../../../core/store/app.state';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {DefaultViewConfig, View, ViewConfig} from '../../../../core/store/views/view';
-import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
-import {ViewsAction} from '../../../../core/store/views/views.action';
-import {NotificationService} from '../../../../core/notifications/notification.service';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {selectViewsByCustomQuery} from '../../../../core/store/common/permissions.selectors';
-import {SearchConfig, SearchViewsConfig} from '../../../../core/store/searches/search';
-import {selectSearchConfigById} from '../../../../core/store/searches/searches.state';
-import {SearchesAction} from '../../../../core/store/searches/searches.action';
-import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
-import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
-import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../../core/store/views/views.state';
+
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
-import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
-import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
-import {selectAllCollections} from '../../../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
-import {ViewConfigPerspectiveComponent} from '../../view-config-perspective.component';
+import {NotificationService} from '../../../../core/notifications/notification.service';
+import {AppState} from '../../../../core/store/app.state';
 import {Collection} from '../../../../core/store/collections/collection';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
+import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
+import {selectViewsByCustomQuery} from '../../../../core/store/common/permissions.selectors';
+import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {SearchConfig, SearchViewsConfig} from '../../../../core/store/searches/search';
+import {SearchesAction} from '../../../../core/store/searches/searches.action';
+import {selectSearchConfigById} from '../../../../core/store/searches/searches.state';
+import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {DefaultViewConfig, View, ViewConfig} from '../../../../core/store/views/view';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../../core/store/views/views.state';
+import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
+import {SearchPerspectiveConfiguration, defaultSearchPerspectiveConfiguration} from '../../perspective-configuration';
+import {ViewConfigPerspectiveComponent} from '../../view-config-perspective.component';
 
 @Directive()
 export abstract class SearchViewsDirective

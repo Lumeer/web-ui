@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Observable} from 'rxjs';
-import {FileApiPath, AttachmentsService} from './attachments.service';
-import {FileAttachmentDto} from '../../dto/file-attachment.dto';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {FileAttachmentDto} from '../../dto/file-attachment.dto';
+import {AttachmentsService, FileApiPath} from './attachments.service';
 
 @Injectable()
 export class ApiAttachmentsService implements AttachmentsService {

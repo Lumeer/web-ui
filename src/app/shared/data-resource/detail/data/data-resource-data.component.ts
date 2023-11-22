@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,22 +32,25 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {ConstraintData} from '@lumeer/data-filters';
-import {Attribute} from '../../../../core/store/collections/collection';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {DataRow, DataRowService} from '../../../data/data-row.service';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {DataResourceDataRowComponent} from './row/data-resource-data-row.component';
-import {filterUnusedAttributes} from '../../../utils/attribute.utils';
-import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
-import {DataRowFocusService} from '../../../data/data-row-focus-service';
+
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {Workspace} from '../../../../core/store/navigation/workspace';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {View} from '../../../../core/store/views/view';
-import {objectChanged} from '../../../utils/common.utils';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 import {User} from '../../../../core/store/users/user';
 import {ResourceAttributeSettings} from '../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../core/store/views/view';
+import {DataRowFocusService} from '../../../data/data-row-focus-service';
+import {DataRow, DataRowService} from '../../../data/data-row.service';
+import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
+import {filterUnusedAttributes} from '../../../utils/attribute.utils';
+import {objectChanged} from '../../../utils/common.utils';
+import {DataResourceDataRowComponent} from './row/data-resource-data-row.component';
 
 @Component({
   selector: 'data-resource-data',

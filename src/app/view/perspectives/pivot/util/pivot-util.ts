@@ -16,7 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {cleanQueryAttribute} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
 
+import {AttributesResource} from '../../../../core/model/resource';
+import {Collection} from '../../../../core/store/collections/collection';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
+import {
+  checkOrTransformQueryAttribute,
+  collectionIdsChainForStem,
+  findBestStemConfigIndex,
+  queryStemAttributesResourcesOrder,
+} from '../../../../core/store/navigation/query/query.util';
 import {
   PivotAttribute,
   PivotConfig,
@@ -25,18 +37,6 @@ import {
   PivotStemConfig,
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {
-  checkOrTransformQueryAttribute,
-  collectionIdsChainForStem,
-  findBestStemConfigIndex,
-  queryStemAttributesResourcesOrder,
-} from '../../../../core/store/navigation/query/query.util';
-import {AttributesResource} from '../../../../core/model/resource';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
   return deepObjectsEquals(cleanQueryAttribute(a1), cleanQueryAttribute(a2));

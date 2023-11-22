@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {TeamsAction, TeamsActionType} from './teams.action';
-import {initialTeamsState, teamsAdapter, TeamsState} from './teams.state';
 import {objectValues} from '../../../shared/utils/common.utils';
+import {TeamsAction, TeamsActionType} from './teams.action';
+import {TeamsState, initialTeamsState, teamsAdapter} from './teams.state';
 
 export function teamsReducer(state: TeamsState = initialTeamsState, action: TeamsAction.All): TeamsState {
   switch (action.type) {

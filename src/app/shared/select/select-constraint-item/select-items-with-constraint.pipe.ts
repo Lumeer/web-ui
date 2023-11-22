@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {deepObjectsEquals} from '@lumeer/utils';
+
 import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
-import {SelectItemModel} from '../select-item/select-item.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {deepObjectsEquals} from '../../utils/common.utils';
 import {getAttributesResourceType} from '../../utils/resource.utils';
+import {SelectItemModel} from '../select-item/select-item.model';
 
 @Pipe({
   name: 'selectItemsWithConstraint',

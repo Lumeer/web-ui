@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {PublicDataState, initialPublicDataState} from './public-data.state';
 import {PublicDataAction, PublicDataActionType} from './public-data.action';
+import {PublicDataState, initialPublicDataState} from './public-data.state';
 
 export function publicDataReducer(
   state: PublicDataState = initialPublicDataState,

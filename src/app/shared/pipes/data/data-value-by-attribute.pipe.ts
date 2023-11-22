@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+
 import {DataResource} from '../../../core/model/resource';
 import {Attribute} from '../../../core/store/collections/collection';
 

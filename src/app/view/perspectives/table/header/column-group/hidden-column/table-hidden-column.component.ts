@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
+
 import {AppState} from '../../../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {selectCollectionById} from '../../../../../../core/store/collections/collections.state';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigPart, TableModel} from '../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';

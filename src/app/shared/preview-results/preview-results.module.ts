@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+
+import {DataInputModule} from '../data-input/data-input.module';
+import {DirectivesModule} from '../directives/directives.module';
 import {PipesModule} from '../pipes/pipes.module';
+import {PresenterModule} from '../presenter/presenter.module';
+import {TableModule} from '../table/table.module';
+import {WarningMessageModule} from '../warning-message/warning-message.module';
 import {PreviewResultsComponent} from './preview-results.component';
+import {PreviewResultsAlternativeHeaderComponent} from './table/header/preview-results-alternative-header.component';
+import {PreviewRangeStringPipe} from './table/pipes/preview-range-string.pipe';
 import {PreviewResultsTableComponent} from './table/preview-results-table.component';
 import {PreviewResultsTabsComponent} from './tabs/preview-results-tabs.component';
-import {DataInputModule} from '../data-input/data-input.module';
-import {WarningMessageModule} from '../warning-message/warning-message.module';
-import {PresenterModule} from '../presenter/presenter.module';
-import {ScrollingModule} from '@angular/cdk/scrolling';
-import {TableModule} from '../table/table.module';
-import {PreviewResultsAlternativeHeaderComponent} from './table/header/preview-results-alternative-header.component';
-import {DirectivesModule} from '../directives/directives.module';
-import {PreviewRangeStringPipe} from './table/pipes/preview-range-string.pipe';
 
 @NgModule({
   imports: [

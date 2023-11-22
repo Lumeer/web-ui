@@ -16,6 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {
+  AggregatedDataMap,
+  AggregatedDataValues,
+  AggregatedMapData,
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DataAggregationType,
+  DataAggregator,
+  DataAggregatorAttribute,
+  DataValue,
+  DocumentsAndLinksData,
+  UnknownConstraint,
+  aggregateDataResources,
+  dataAggregationConstraint,
+} from '@lumeer/data-filters';
+import {
+  deepObjectsEquals,
+  flattenMatrix,
+  flattenValues,
+  isArray,
+  isNotNullOrUndefined,
+  uniqueValues,
+} from '@lumeer/utils';
 
 import {AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
@@ -30,31 +54,9 @@ import {
   PivotValueAttribute,
 } from '../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {
-  aggregateDataResources,
-  dataAggregationConstraint,
-  DataAggregationType,
-} from '../../../../shared/utils/data/data-aggregation';
-import {
-  AggregatedDataMap,
-  AggregatedDataValues,
-  AggregatedMapData,
-  DataAggregator,
-  DataAggregatorAttribute,
-} from '../../../../shared/utils/data/data-aggregator';
+import {attributesResourcesAttributesMap} from '../../../../shared/utils/resource.utils';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
-import {
-  Constraint,
-  ConstraintData,
-  ConstraintType,
-  DataValue,
-  DocumentsAndLinksData,
-  UnknownConstraint,
-} from '@lumeer/data-filters';
-import {attributesResourcesAttributesMap} from '../../../../shared/utils/resource.utils';
-import {flattenMatrix, flattenValues, uniqueValues} from '../../../../shared/utils/array.utils';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];

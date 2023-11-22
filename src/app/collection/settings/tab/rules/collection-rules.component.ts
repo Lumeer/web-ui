@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {AutoLinkRule, Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
-import {Collection} from '../../../../core/store/collections/collection';
+
+import {Action, Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Action, select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
-import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {filter, first, map, tap} from 'rxjs/operators';
-import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+
+import {AutoLinkRule, Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
+import {AppState} from '../../../../core/store/app.state';
+import {Collection} from '../../../../core/store/collections/collection';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {containsAttributeWithRule} from '../../../../shared/utils/attribute.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
-import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
 
 @Component({
   selector: 'collection-rules',

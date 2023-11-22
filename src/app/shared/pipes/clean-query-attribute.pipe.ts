@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {cleanQueryAttribute, QueryAttribute} from '../../core/model/query-attribute';
+
+import {QueryAttribute, cleanQueryAttribute} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'cleanQueryAttribute',

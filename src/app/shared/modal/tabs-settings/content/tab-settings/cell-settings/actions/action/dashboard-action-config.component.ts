@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+
 import {DashboardAction} from '../../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../../core/store/views/view';
 import {createViewSelectItems} from '../../../../../../../../core/store/views/view.utils';
 import {SelectItemModel} from '../../../../../../../select/select-item/select-item.model';
-import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'dashboard-action-config',

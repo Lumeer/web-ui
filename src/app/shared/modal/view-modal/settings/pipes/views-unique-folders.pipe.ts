@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {uniqueValues} from '@lumeer/utils';
+
 import {View} from '../../../../../core/store/views/view';
 import {cleanObjectFolders} from '../../../../../view/perspectives/dashboard/search-views/folders/content/util/object-folders';
-import {uniqueValues} from '../../../../utils/array.utils';
 
 @Pipe({
   name: 'viewsUniqueFolders',

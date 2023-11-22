@@ -16,38 +16,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {TabsSettingsModalComponent} from './tabs-settings-modal.component';
-import {TabsSettingsContentComponent} from './content/tabs-settings-content.component';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {IsTabDefaultPipe} from './pipes/is-tab-default.pipe';
-import {DashboardTabBadgeComponent} from './content/tab/dashboard-tab-badge.component';
-import {DashboardTabSettingsComponent} from './content/tab-settings/dashboard-tab-settings.component';
-import {FormsModule} from '@angular/forms';
-import {InputModule} from '../../input/input.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {DashboardRowsSettingsComponent} from './content/tab-settings/rows-settings/dashboard-rows-settings.component';
-import {DashboardCellSettingsComponent} from './content/tab-settings/cell-settings/dashboard-cell-settings.component';
-import {DashboardRowSettingsComponent} from './content/tab-settings/rows-settings/row-settings/dashboard-row-settings.component';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
 import {DropdownModule} from '../../dropdown/dropdown.module';
-import {SelectedLayoutInRowPipe} from './pipes/selected-layout-in-row.pipe';
+import {InputModule} from '../../input/input.module';
+import {LayoutModule} from '../../layout/layout.module';
+import {PickerModule} from '../../picker/picker.module';
+import {PipesModule} from '../../pipes/pipes.module';
+import {SelectModule} from '../../select/select.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {DashboardActionConfigComponent} from './content/tab-settings/cell-settings/actions/action/dashboard-action-config.component';
+import {DashboardActionsConfigComponent} from './content/tab-settings/cell-settings/actions/dashboard-actions-config.component';
+import {DashboardCellSettingsComponent} from './content/tab-settings/cell-settings/dashboard-cell-settings.component';
+import {DashboardImageConfigComponent} from './content/tab-settings/cell-settings/image/dashboard-image-config.component';
+import {DashboardCellTitleComponent} from './content/tab-settings/cell-settings/title/dashboard-cell-title.component';
+import {DashboardViewConfigComponent} from './content/tab-settings/cell-settings/view/dashboard-view-config.component';
+import {DashboardTabSettingsComponent} from './content/tab-settings/dashboard-tab-settings.component';
+import {DashboardRowsSettingsComponent} from './content/tab-settings/rows-settings/dashboard-rows-settings.component';
+import {DashboardCellPreviewComponent} from './content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component';
+import {DashboardRowSettingsComponent} from './content/tab-settings/rows-settings/row-settings/dashboard-row-settings.component';
+import {DashboardTabBadgeComponent} from './content/tab/dashboard-tab-badge.component';
+import {TabsSettingsContentComponent} from './content/tabs-settings-content.component';
 import {FilterValidCellsPipe} from './pipes/filter-valid-cells.pipe';
 import {FindCellByCoordinatesPipe} from './pipes/find-cell-by-coordinates.pipe';
-import {SelectModule} from '../../select/select.module';
-import {DashboardViewConfigComponent} from './content/tab-settings/cell-settings/view/dashboard-view-config.component';
-import {DashboardImageConfigComponent} from './content/tab-settings/cell-settings/image/dashboard-image-config.component';
-import {DashboardActionsConfigComponent} from './content/tab-settings/cell-settings/actions/dashboard-actions-config.component';
-import {DashboardCellPreviewComponent} from './content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component';
-import {PipesModule} from '../../pipes/pipes.module';
-import {DashboardActionConfigComponent} from './content/tab-settings/cell-settings/actions/action/dashboard-action-config.component';
-import {PickerModule} from '../../picker/picker.module';
+import {IsTabDefaultPipe} from './pipes/is-tab-default.pipe';
 import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {SelectedLayoutInRowPipe} from './pipes/selected-layout-in-row.pipe';
 import {TabsSettingsSecondaryInfoPipe} from './pipes/tabs-settings-secondary-info.pipe';
-import {LayoutModule} from '../../layout/layout.module';
-import {DashboardCellTitleComponent} from './content/tab-settings/cell-settings/title/dashboard-cell-title.component';
+import {TabsSettingsModalComponent} from './tabs-settings-modal.component';
 
 @NgModule({
   declarations: [

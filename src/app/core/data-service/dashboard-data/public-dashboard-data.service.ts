@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
-import {DashboardDataService} from './dashboard-data.service';
-import {BaseService} from '../../rest/base.service';
 import {Observable, of} from 'rxjs';
+
 import {DashboardDataDto} from '../../dto/dashboard-data.dto';
+import {BaseService} from '../../rest/base.service';
+import {DashboardDataService} from './dashboard-data.service';
 
 @Injectable()
 export class PublicDashboardDataService extends BaseService implements DashboardDataService {

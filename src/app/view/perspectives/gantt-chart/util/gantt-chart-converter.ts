@@ -16,9 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
+
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DataAggregationType,
+  DataAggregatorAttribute,
+  DataObjectAggregator,
+  DataObjectAttribute,
+  DataObjectInfo,
+  DataResourceChain,
+  DateTimeConstraint,
+  DocumentsAndLinksData,
+  PercentageConstraintConfig,
+  SelectConstraint,
+  UnknownConstraint,
+  UserConstraint,
+  aggregateDataValues,
+  queryResourcesAreSame,
+  userCanEditDataResource,
+} from '@lumeer/data-filters';
+import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
+import {Milestone} from '@lumeer/lumeer-gantt/dist/model/task';
+import {
+  isArray,
+  isDateValid,
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+  isNumeric,
+  objectsByIdMap,
+  stripTextHtmlTags,
+  toNumber,
+  uniqueValues,
+} from '@lumeer/utils';
+
+import {Configuration} from '../../../../../environments/configuration-type';
 import {COLOR_PRIMARY} from '../../../../core/constants';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
@@ -38,52 +72,20 @@ import {
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {fillWithNulls} from '../../../../shared/utils/array.utils';
 import {contrastColor} from '../../../../shared/utils/color.utils';
-import {
-  isArray,
-  isDateValid,
-  isNotNullOrUndefined,
-  isNullOrUndefined,
-  isNumeric,
-  objectsByIdMap,
-  toNumber,
-} from '../../../../shared/utils/common.utils';
-import {DataAggregatorAttribute, DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
-import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {Md5} from '../../../../shared/utils/md5';
-import {canCreateTaskByStemConfig} from './gantt-chart-util';
-import {GanttTasksSort, sortGanttTasks} from './gantt-chart-sorting';
+import {sortDocumentsAndLinksStemData} from '../../../../shared/utils/data-resource.utils';
 import {
   constraintContainsHoursInConfig,
   createDatesInterval,
   parseDateTimeByConstraint,
 } from '../../../../shared/utils/date.utils';
-import {
-  DataObjectAggregator,
-  DataObjectAttribute,
-  DataObjectInfo,
-} from '../../../../shared/utils/data/data-object-aggregator';
-import {fillWithNulls, uniqueValues} from '../../../../shared/utils/array.utils';
-import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
-import {
-  Constraint,
-  ConstraintData,
-  ConstraintType,
-  DateTimeConstraint,
-  DocumentsAndLinksData,
-  PercentageConstraintConfig,
-  SelectConstraint,
-  UnknownConstraint,
-  userCanEditDataResource,
-  UserConstraint,
-} from '@lumeer/data-filters';
-import {Configuration} from '../../../../../environments/configuration-type';
-import {sortDocumentsAndLinksStemData} from '../../../../shared/utils/data-resource.utils';
-import {queryResourcesAreSame} from '../../../../core/model/query-attribute';
-import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
-import {Milestone} from '@lumeer/lumeer-gantt/dist/model/task';
+import {shadeColor} from '../../../../shared/utils/html-modifier';
+import {Md5} from '../../../../shared/utils/md5';
+import {GanttTasksSort, sortGanttTasks} from './gantt-chart-sorting';
+import {canCreateTaskByStemConfig} from './gantt-chart-util';
 
 export interface GanttTaskMetadata {
   dataResource: DataResource;

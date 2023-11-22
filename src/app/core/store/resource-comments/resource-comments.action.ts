@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
-import {Workspace} from '../navigation/workspace';
+
 import {ResourceType} from '../../model/resource-type';
+import {Workspace} from '../navigation/workspace';
 import {ResourceCommentModel} from './resource-comment.model';
 
 export enum ResourceCommentsActionType {

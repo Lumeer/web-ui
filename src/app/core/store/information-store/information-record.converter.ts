@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {InformationRecordDto} from '../../dto/information-record.dto';
 import {InformationRecordModel} from './information-record.model';
 

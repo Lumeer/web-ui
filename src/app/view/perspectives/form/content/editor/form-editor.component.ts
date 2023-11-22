@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {transferArrayItem} from '@angular/cdk/drag-drop';
-import {FormButtonsConfig, FormConfig, FormSection} from '../../../../../core/store/form/form-model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+
 import {Collection} from '../../../../../core/store/collections/collection';
+import {FormButtonsConfig, FormConfig, FormSection} from '../../../../../core/store/form/form-model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {AttributesSettings} from '../../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../../core/store/views/view';
 import {generateId} from '../../../../../shared/utils/resource.utils';
 import {collectAttributesIdsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {View} from '../../../../../core/store/views/view';
-import {AttributesSettings} from '../../../../../core/store/view-settings/view-settings';
 
 @Component({
   selector: 'form-editor',

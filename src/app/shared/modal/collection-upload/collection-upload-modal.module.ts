@@ -16,18 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {PresenterModule} from '../../presenter/presenter.module';
-import {PipesModule} from '../../pipes/pipes.module';
 import {InputModule} from '../../input/input.module';
-import {CollectionUploadModalComponent} from './collection-upload-modal.component';
-import {CollectionUploadBodyComponent} from './collection-upload-body/collection-upload-body.component';
+import {PipesModule} from '../../pipes/pipes.module';
+import {PresenterModule} from '../../presenter/presenter.module';
 import {SelectModule} from '../../select/select.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {CollectionUploadBodyComponent} from './collection-upload-body/collection-upload-body.component';
+import {CollectionUploadModalComponent} from './collection-upload-modal.component';
 
 @NgModule({
   declarations: [CollectionUploadModalComponent, CollectionUploadBodyComponent],

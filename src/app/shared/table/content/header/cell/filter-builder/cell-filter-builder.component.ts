@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -29,6 +28,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
+import {Observable} from 'rxjs';
+
 import {
   AttributeFilter,
   ConditionType,
@@ -37,17 +39,17 @@ import {
   initialConditionType,
   initialConditionValues,
 } from '@lumeer/data-filters';
+import {findLastIndex} from '@lumeer/utils';
+
 import {ConstraintDataService} from '../../../../../../core/service/constraint-data.service';
-import {Observable} from 'rxjs';
+import {Attribute} from '../../../../../../core/store/collections/collection';
+import {areFiltersEqual} from '../../../../../../core/store/navigation/query/query.util';
+import {AttributeSortType} from '../../../../../../core/store/view-settings/view-settings';
+import {FilterBuilderContentComponent} from '../../../../../builder/filter-builder/content/filter-builder-content.component';
 import {DropdownPosition} from '../../../../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../../../../dropdown/dropdown.component';
-import {FilterBuilderContentComponent} from '../../../../../builder/filter-builder/content/filter-builder-content.component';
-import {Attribute} from '../../../../../../core/store/collections/collection';
 import {modifyAttributeForQueryFilter} from '../../../../../utils/attribute.utils';
 import {ColumnFilter} from '../../../../model/table-column';
-import {AttributeSortType} from '../../../../../../core/store/view-settings/view-settings';
-import {findLastIndex} from '../../../../../utils/common.utils';
-import {areFiltersEqual} from '../../../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'cell-filter-builder',

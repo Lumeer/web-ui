@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -30,8 +29,9 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {defaultTextEditorOptions} from '../../../../../../../shared/modal/text-editor/text-editor.utils';
+
 import {DashboardNotesCellData} from '../../../../../../../core/store/dashboard-data/dashboard-data';
+import {defaultTextEditorOptions} from '../../../../../../../shared/modal/text-editor/text-editor.utils';
 
 @Component({
   selector: 'dashboard-notes',

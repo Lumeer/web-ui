@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {DataResourceIsWritablePipe} from './data-resource-is-writable.pipe';
+
 import {DataResourceIsDeletablePipe} from './data-resource-is-deletable.pipe';
 import {DataResourceIsReadablePipe} from './data-resource-is-readable.pipe';
+import {DataResourceIsWritablePipe} from './data-resource-is-writable.pipe';
 import {DataResourcePermissionsPipe} from './data-resource-permissions.pipe';
 
 @NgModule({

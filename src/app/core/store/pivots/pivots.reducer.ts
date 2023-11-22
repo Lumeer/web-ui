@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialPivotsState, pivotsAdapter, PivotsState} from './pivots.state';
 import {PivotsAction, PivotsActionType} from './pivots.action';
+import {PivotsState, initialPivotsState, pivotsAdapter} from './pivots.state';
 
 export function pivotsReducer(state: PivotsState = initialPivotsState, action: PivotsAction.All): PivotsState {
   switch (action.type) {

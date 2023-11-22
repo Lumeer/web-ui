@@ -16,23 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Perspective} from '../../../view/perspectives/perspective';
 import {Resource} from '../../model/resource';
+import {RoleType} from '../../model/role-type';
 import {CalendarConfig} from '../calendars/calendar';
 import {ChartConfig} from '../charts/chart';
+import {DetailConfig} from '../details/detail';
+import {FormConfig} from '../form/form-model';
 import {GanttChartConfig} from '../gantt-charts/gantt-chart';
-import {Query} from '../navigation/query/query';
-import {TableConfig} from '../tables/table.model';
 import {KanbanConfig} from '../kanbans/kanban';
+import {MapConfig} from '../maps/map.model';
+import {Query} from '../navigation/query/query';
 import {PivotConfig} from '../pivots/pivot';
 import {SearchConfig} from '../searches/search';
-import {MapConfig} from '../maps/map.model';
-import {WorkflowConfig} from '../workflows/workflow';
-import {DetailConfig} from '../details/detail';
-import {RoleType} from '../../model/role-type';
-import {FormConfig} from '../form/form-model';
+import {TableConfig} from '../tables/table.model';
 import {ViewSettings} from '../view-settings/view-settings';
+import {WorkflowConfig} from '../workflows/workflow';
 
 export interface View extends Resource {
   perspective?: Perspective;

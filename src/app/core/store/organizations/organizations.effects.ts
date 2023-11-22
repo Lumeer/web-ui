@@ -16,34 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {EMPTY, Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Action, Store, select} from '@ngrx/store';
+
+import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
+import {ModalService} from '../../../shared/modal/modal.service';
 import {RouteFinder} from '../../../shared/utils/route-finder';
+import {OrganizationService} from '../../data-service';
+import {PermissionDto} from '../../dto';
 import {AppState} from '../app.state';
+import {CommonAction} from '../common/common.action';
+import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {Permission, PermissionType} from '../permissions/permissions';
+import {convertPermissionModelToDto} from '../permissions/permissions.converter';
+import {ProjectConverter} from '../projects/project.converter';
+import {ProjectsAction} from '../projects/projects.action';
 import {RouterAction} from '../router/router.action';
+import {TeamsAction} from '../teams/teams.action';
+import {convertTeamDtoToModel} from '../teams/teams.converter';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
-import {PermissionDto} from '../../dto';
-import {Permission, PermissionType} from '../permissions/permissions';
-import {convertPermissionModelToDto} from '../permissions/permissions.converter';
-import {CommonAction} from '../common/common.action';
 import {ServiceLimitsAction} from './service-limits/service-limits.action';
-import {selectNavigation} from '../navigation/navigation.state';
-import {OrganizationService} from '../../data-service';
-import {ModalService} from '../../../shared/modal/modal.service';
 import {convertServiceLimitsDtoToModel} from './service-limits/service-limits.converter';
-import {ProjectsAction} from '../projects/projects.action';
-import {ProjectConverter} from '../projects/project.converter';
-import {convertTeamDtoToModel} from '../teams/teams.converter';
-import {TeamsAction} from '../teams/teams.action';
 
 @Injectable()
 export class OrganizationsEffects {

@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
+import {ConstraintData} from '@lumeer/data-filters';
+
+import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
 import {PivotData} from '../../util/pivot-data';
 import {PivotTable, PivotTableCell} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
-import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
-import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'pivot-table',

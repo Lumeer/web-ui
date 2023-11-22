@@ -16,20 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {UserService} from './user.service';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {UserDto} from '../../dto';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
-import {PaymentStats} from '../../store/organizations/payment/payment';
 import {FeedbackDto} from '../../dto/feedback.dto';
-import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 import {UserInvitationDto} from '../../dto/user-invitation.dto';
+import {UserHintsDto, UserOnboardingDto} from '../../dto/user.dto';
+import {PaymentStats} from '../../store/organizations/payment/payment';
+import {UserService} from './user.service';
 
 @Injectable()
 export class ApiUserService implements UserService {

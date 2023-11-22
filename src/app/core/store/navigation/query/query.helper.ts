@@ -16,17 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   containsSameElements,
   deepArrayEquals,
   getArrayDifference,
   isArraySubset,
 } from '../../../../shared/utils/array.utils';
-import {convertQueryModelToString, normalizeQueryModel, normalizeQueryStem} from './query.converter';
-import {Query, QueryStem} from './query';
-import {getBaseCollectionIdsFromQuery, queryWithoutFilters} from './query.util';
 import {DataQuery} from '../../../model/data-query';
+import {Query, QueryStem} from './query';
+import {convertQueryModelToString, normalizeQueryModel, normalizeQueryStem} from './query.converter';
+import {getBaseCollectionIdsFromQuery, queryWithoutFilters} from './query.util';
 
 export function addDataQueryUnique(queries: DataQuery[], newQuery: DataQuery): DataQuery[] {
   if (!newQuery || queries.some(query => areDataQueriesEqual(query, newQuery))) {

@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, switchMap} from 'rxjs';
-import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
-import {FileDownloadService} from '../file-download.service';
-import {objectChanged} from '../../../utils/common.utils';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {User} from '../../../../core/store/users/user';
 import {distinctUntilChanged, filter} from 'rxjs/operators';
+
+import {AppState} from '../../../../core/store/app.state';
+import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
+import {User} from '../../../../core/store/users/user';
 import {selectUserById} from '../../../../core/store/users/users.state';
+import {objectChanged} from '../../../utils/common.utils';
+import {FileDownloadService} from '../file-download.service';
 
 @Component({
   selector: 'file-attachment-button',

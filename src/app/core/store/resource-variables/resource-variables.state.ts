@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {ResourceVariable} from './resource-variable';
+import {EntityAdapter, EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
+import {ResourceType} from '../../model/resource-type';
 import {AppState} from '../app.state';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
-import {ResourceType} from '../../model/resource-type';
+import {ResourceVariable} from './resource-variable';
 
 export interface ResourceVariablesState extends EntityState<ResourceVariable> {
   loadedProjects: string[];

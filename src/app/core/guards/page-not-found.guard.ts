@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
-import {NotificationService} from '../notifications/notification.service';
+
 import {Perspective} from '../../view/perspectives/perspective';
+import {NotificationService} from '../notifications/notification.service';
 
 @Injectable()
 export class PageNotFoundGuard {

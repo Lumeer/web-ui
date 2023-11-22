@@ -16,22 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {uniqueValues} from '@lumeer/utils';
 
+import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
-import {deepArrayEquals, moveItemInArray, uniqueValues} from '../utils/array.utils';
 import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
-import {objectValues} from '../utils/common.utils';
+import {Permissions} from '../../core/store/permissions/permissions';
 import {
   AttributesSettings,
   ResourceAttributeSettings,
   ResourcesPermissions,
   ViewSettings,
 } from '../../core/store/view-settings/view-settings';
+import {deepArrayEquals, moveItemInArray} from '../utils/array.utils';
+import {objectValues} from '../utils/common.utils';
 import {permissionsAreEmpty} from '../utils/permission.utils';
-import {Permissions} from '../../core/store/permissions/permissions';
 
 const composedIdSeparator = ':';
 

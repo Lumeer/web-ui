@@ -16,28 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormGroup} from '@angular/forms';
+
+import {Store, select} from '@ngrx/store';
+
 import * as moment from 'moment';
 import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
 import {map} from 'rxjs/operators';
-import {ChronoUnit, Rule, maxIntervalByChronoUnit} from '../../../../../core/model/rule';
-import {SelectItemModel} from '../../../../select/select-item/select-item.model';
-import {bitClear, bitSet, isDateValid, objectChanged} from '../../../../utils/common.utils';
-import {generateId} from '../../../../utils/resource.utils';
+
+import {isDateValid} from '@lumeer/utils';
+
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import {LanguageCode} from '../../../../../core/model/language';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {View} from '../../../../../core/store/views/view';
+import {ChronoUnit, Rule, maxIntervalByChronoUnit} from '../../../../../core/model/rule';
 import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
 import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
 import {selectViewsByReadSorted} from '../../../../../core/store/common/permissions.selectors';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {getBaseCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
+import {View} from '../../../../../core/store/views/view';
+import {SelectItemModel} from '../../../../select/select-item/select-item.model';
 import {createRange} from '../../../../utils/array.utils';
+import {bitClear, bitSet, objectChanged} from '../../../../utils/common.utils';
 import {defaultDateFormat} from '../../../../utils/date.utils';
+import {generateId} from '../../../../utils/resource.utils';
 
 interface DayOfWeek {
   bit: number;

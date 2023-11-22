@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {SelectionList} from '../selection-list';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {ConstraintType, SelectConstraintConfig} from '@lumeer/data-filters';
+
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {SelectionList} from '../selection-list';
 
 export interface AttributeSelectionList extends SelectionList {
   icons: string[];

@@ -16,21 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {
-  NavigationState,
-  selectNavigatingToOtherWorkspace,
-  selectNavigation,
-  selectPerspectiveSettings,
-  selectSearchTab,
-} from '../../../core/store/navigation/navigation.state';
-import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
+import {Store, select} from '@ngrx/store';
+
+import {Observable, Subscription, combineLatest} from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -42,21 +33,31 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import {combineLatest, Observable, Subscription} from 'rxjs';
-import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
-import {SearchesAction} from '../../../core/store/searches/searches.action';
+
+import {DashboardTab} from '../../../core/model/dashboard-tab';
+import {AppState} from '../../../core/store/app.state';
+import {selectSearchPerspectiveVisibleTabs} from '../../../core/store/common/permissions.selectors';
+import {
+  NavigationState,
+  selectNavigatingToOtherWorkspace,
+  selectNavigation,
+  selectPerspectiveSettings,
+  selectSearchTab,
+} from '../../../core/store/navigation/navigation.state';
+import {QueryParam} from '../../../core/store/navigation/query-param';
+import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
+import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query/query.util';
 import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
-import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
+import {convertPerspectiveSettingsToString} from '../../../core/store/navigation/settings/perspective-settings';
+import {Search, SearchConfig, createDefaultSearchConfig} from '../../../core/store/searches/search';
+import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
-import {ViewsAction} from '../../../core/store/views/views.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
-import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query/query.util';
-import {convertPerspectiveSettingsToString} from '../../../core/store/navigation/settings/perspective-settings';
-import {QueryParam} from '../../../core/store/navigation/query-param';
+import {ViewsAction} from '../../../core/store/views/views.action';
+import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
 import {ModalService} from '../../../shared/modal/modal.service';
-import {DashboardTab} from '../../../core/model/dashboard-tab';
-import {selectSearchPerspectiveVisibleTabs} from '../../../core/store/common/permissions.selectors';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 
 @Component({
   selector: 'search-perspective',

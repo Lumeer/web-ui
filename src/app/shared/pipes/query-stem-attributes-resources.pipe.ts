@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryStem} from '../../core/store/navigation/query/query';
+
+import {AttributesResource} from '../../core/model/resource';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AttributesResource} from '../../core/model/resource';
+import {QueryStem} from '../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/query/query.util';
 
 @Pipe({

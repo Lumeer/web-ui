@@ -16,25 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  HostListener,
-  ElementRef,
-  SimpleChanges,
-  AfterViewInit,
-} from '@angular/core';
-import {DialogType} from '../dialog-type';
 import {PlatformLocation} from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {ModalProgress} from './model/modal-progress';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+
+import {DialogType} from '../dialog-type';
+import {ModalProgress} from './model/modal-progress';
 
 @Component({
   selector: 'modal-wrapper',

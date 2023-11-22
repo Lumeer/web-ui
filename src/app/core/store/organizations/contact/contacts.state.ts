@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {Contact} from './contact';
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+
 import {AppState} from '../../app.state';
 import {selectOrganizationByWorkspace} from '../organizations.state';
+import {Contact} from './contact';
 
 export interface ContactsState extends EntityState<Contact> {}
 

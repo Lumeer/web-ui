@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
-import {CollectionDto} from '../dto';
-import {AppState} from '../store/app.state';
-import {ImportedCollectionDto} from '../dto/imported-collection.dto';
-import {BaseService} from './base.service';
+
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {CollectionDto} from '../dto';
+import {ImportedCollectionDto} from '../dto/imported-collection.dto';
+import {AppState} from '../store/app.state';
+import {BaseService} from './base.service';
 
 @Injectable()
 export class ImportService extends BaseService {

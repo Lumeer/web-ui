@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,16 +26,17 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
-import {Perspective} from '../../../../view/perspectives/perspective';
+
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Collection} from '../../../../core/store/collections/collection';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
-import {permissionsCanManageCollectionDetail} from '../../../utils/permission.utils';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {createCollectionQueryStem, createOpenCollectionQuery} from '../../../../core/store/navigation/query/query.util';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {Perspective} from '../../../../view/perspectives/perspective';
+import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
+import {permissionsCanManageCollectionDetail} from '../../../utils/permission.utils';
 
 @Component({
   selector: 'post-it-collection',

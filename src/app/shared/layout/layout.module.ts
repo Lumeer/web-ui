@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
 import {DropdownModule} from '../dropdown/dropdown.module';
-import {RowLayoutDropdownComponent} from './row-layout/row-layout-dropdown.component';
-import {LayoutTemplateColumnsPipe} from './row-layout/layout-template-columns.pipe';
 import {IsLayoutSelectedPipe} from './row-layout/is-layout-selected.pipe';
+import {LayoutTemplateColumnsPipe} from './row-layout/layout-template-columns.pipe';
+import {RowLayoutDropdownComponent} from './row-layout/row-layout-dropdown.component';
 
 @NgModule({
   imports: [CommonModule, DropdownModule],

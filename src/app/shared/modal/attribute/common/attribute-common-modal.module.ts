@@ -16,18 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 
-import {PresenterModule} from '../../../presenter/presenter.module';
-import {PipesModule} from '../../../pipes/pipes.module';
-import {AttributeModalHeaderComponent} from './header/attribute-modal-header.component';
-import {ConstraintConditionsFormComponent} from './conditions/constraint-conditions-form.component';
-import {ConstraintConditionFormComponent} from './conditions/condition/constraint-condition-form.component';
-import {SelectModule} from '../../../select/select.module';
-import {FilterPreviewModule} from '../../../builder/filter-preview/filter-preview.module';
 import {FilterBuilderModule} from '../../../builder/filter-builder/filter-builder.module';
+import {FilterPreviewModule} from '../../../builder/filter-preview/filter-preview.module';
+import {PipesModule} from '../../../pipes/pipes.module';
+import {PresenterModule} from '../../../presenter/presenter.module';
+import {SelectModule} from '../../../select/select.module';
+import {ConstraintConditionFormComponent} from './conditions/condition/constraint-condition-form.component';
+import {ConstraintConditionsFormComponent} from './conditions/constraint-conditions-form.component';
+import {AttributeModalHeaderComponent} from './header/attribute-modal-header.component';
 
 @NgModule({
   imports: [CommonModule, PresenterModule, PipesModule, SelectModule, FilterPreviewModule, FilterBuilderModule],

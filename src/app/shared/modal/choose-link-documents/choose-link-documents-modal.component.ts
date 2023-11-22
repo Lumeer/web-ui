@@ -16,26 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {DialogType} from '../dialog-type';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {AppState} from '../../../core/store/app.state';
 import {switchMap, tap} from 'rxjs/operators';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {QueryStem} from '../../../core/store/navigation/query/query';
-import {selectDocumentsByCollectionAndQuery} from '../../../core/store/common/permissions.selectors';
+
 import {ConstraintData} from '@lumeer/data-filters';
+
 import {DataResource} from '../../../core/model/resource';
-import {selectViewById} from '../../../core/store/views/views.state';
-import {View} from '../../../core/store/views/view';
-import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectDocumentsByCollectionAndQuery} from '../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {QueryStem} from '../../../core/store/navigation/query/query';
 import {ViewSettings} from '../../../core/store/view-settings/view-settings';
+import {selectViewSettingsByView} from '../../../core/store/view-settings/view-settings.state';
+import {View} from '../../../core/store/views/view';
+import {selectViewById} from '../../../core/store/views/views.state';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'choose-link-documents-modal',

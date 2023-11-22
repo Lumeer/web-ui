@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component';
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BlocklyDebuggerComponent} from './blockly-debugger/blockly-debugger.component';
-import {BlocklyDebuggerRemoteComponent} from './blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component';
-import {PipesModule} from '../pipes/pipes.module';
+import {NgModule} from '@angular/core';
+
 import {DirectivesModule} from '../directives/directives.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {BlocklyDebuggerRemoteComponent} from './blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component';
+import {BlocklyDebuggerComponent} from './blockly-debugger/blockly-debugger.component';
+import {BlocklyEditorComponent} from './blockly-editor/blockly-editor.component';
 
 @NgModule({
   declarations: [BlocklyEditorComponent, BlocklyDebuggerComponent, BlocklyDebuggerRemoteComponent],

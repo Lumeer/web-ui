@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -31,10 +30,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {AttributesResourceType} from '../../../../../core/model/resource';
-import Gantt, {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
+
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+
+import Gantt, {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
+
+import {AttributesResourceType} from '../../../../../core/model/resource';
 import {ganttTaskBarModel, ganttTaskDataResourceId} from '../../util/gantt-chart-util';
 
 @Component({

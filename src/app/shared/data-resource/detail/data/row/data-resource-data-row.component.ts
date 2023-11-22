@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,24 +28,28 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {DataCursor} from '../../../../data-input/data-cursor';
+
 import {BehaviorSubject} from 'rxjs';
-import {DataRow} from '../../../../data/data-row.service';
-import {Attribute} from '../../../../../core/store/collections/collection';
-import {DataRowComponent} from '../../../../data/data-row-component';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../utils/common.utils';
-import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
-import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
+
 import {
   AttributeLockFiltersStats,
   ConstraintData,
   ConstraintType,
   DataValue,
   UnknownConstraint,
+  isAttributeLockEnabledByLockStats,
 } from '@lumeer/data-filters';
+import {deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
+
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {Attribute} from '../../../../../core/store/collections/collection';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {AttributeFormattingStyle, isAttributeLockEnabledByLockStats} from '../../../../utils/attribute.utils';
+import {DataCursor} from '../../../../data-input/data-cursor';
+import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
+import {DataRowComponent} from '../../../../data/data-row-component';
+import {DataRow} from '../../../../data/data-row.service';
+import {AttributeFormattingStyle} from '../../../../utils/attribute.utils';
+import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 
 @Component({
   selector: 'data-resource-data-row',

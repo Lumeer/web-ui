@@ -16,24 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {Contact} from '../../../core/store/organizations/contact/contact';
-import {select, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
-import {AppState} from '../../../core/store/app.state';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+import {take, tap} from 'rxjs/operators';
+
+import {AppState} from '../../../core/store/app.state';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {Contact} from '../../../core/store/organizations/contact/contact';
 import {ContactsAction} from '../../../core/store/organizations/contact/contacts.action';
+import {selectContactByWorkspace} from '../../../core/store/organizations/contact/contacts.state';
 import {Organization} from '../../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
-import {take, tap} from 'rxjs/operators';
-import {selectContactByWorkspace} from '../../../core/store/organizations/contact/contacts.state';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
-import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
 import {Payment} from '../../../core/store/organizations/payment/payment';
-import {selectLastCreatedPayment} from '../../../core/store/organizations/payment/payments.state';
 import {PaymentsAction} from '../../../core/store/organizations/payment/payments.action';
+import {selectLastCreatedPayment} from '../../../core/store/organizations/payment/payments.state';
+import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 
 @Component({
   selector: 'organization-detail',

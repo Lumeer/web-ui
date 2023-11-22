@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Directive, OnChanges, Input, HostBinding, ElementRef, SimpleChanges} from '@angular/core';
+import {Directive, ElementRef, HostBinding, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 @Directive({
   selector: '[smoothSize]',

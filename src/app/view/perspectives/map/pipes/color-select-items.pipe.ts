@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {MapAttributeModel, MapStemConfig} from '../../../../core/store/maps/map.model';
+
 import {mapAttributesAreInAllowedRange} from '../../../../core/store/maps/map-config.utils';
+import {MapAttributeModel, MapStemConfig} from '../../../../core/store/maps/map.model';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 
 @Pipe({
   name: 'colorSelectItems',

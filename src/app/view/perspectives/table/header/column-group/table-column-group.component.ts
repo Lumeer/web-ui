@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -26,19 +25,22 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+
 import {Store} from '@ngrx/store';
+
 import {ResizeEvent} from 'angular-resizable-element';
+
+import {DRAG_DELAY} from '../../../../../core/constants';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableColumnType, TableConfigColumn, TableModel} from '../../../../../core/store/tables/table.model';
 import {getTableElementFromInnerElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
-import {DRAG_DELAY} from '../../../../../core/constants';
 import {View} from '../../../../../core/store/views/view';
-import {Query} from '../../../../../core/store/navigation/query/query';
 
 interface ElementHeight {
   element: HTMLElement;

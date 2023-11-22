@@ -16,19 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, HostListener, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {NotificationSettings, User} from '../../../core/store/users/user';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {UsersAction} from '../../../core/store/users/users.action';
-import {LanguageCode} from '../../../core/model/language';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {deepObjectCopy, deepObjectsEquals} from '../../utils/common.utils';
+
+import {deepObjectCopy, deepObjectsEquals} from '@lumeer/utils';
+
+import {LanguageCode} from '../../../core/model/language';
+import {AppState} from '../../../core/store/app.state';
+import {NotificationSettings, User} from '../../../core/store/users/user';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 
 @Component({
   selector: 'user-settings-modal',

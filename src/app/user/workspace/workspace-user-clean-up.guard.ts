@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+
 import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {ResourcesAction} from '../../core/store/resources/data-resources.action';
+
 import {AppState} from '../../core/store/app.state';
+import {ResourcesAction} from '../../core/store/resources/data-resources.action';
 import {UserSettingsComponent} from '../settings/user-settings.component';
 
 @Injectable({

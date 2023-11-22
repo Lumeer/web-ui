@@ -16,24 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {ConstraintData, ConstraintType, CurrencyData} from '@lumeer/data-filters';
-import {TranslationService} from './translation.service';
-import {ConstraintDataAction} from '../store/constraint-data/constraint-data.action';
-import {Attribute} from '../store/collections/collection';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
 import {map, switchMap} from 'rxjs/operators';
-import {DataResource} from '../model/resource';
-import {AppState} from '../store/app.state';
+
+import {ConstraintData, ConstraintType, CurrencyData} from '@lumeer/data-filters';
+
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {localeLanguageTags} from '../model/language-tag';
+import {DataResource} from '../model/resource';
+import {AppState} from '../store/app.state';
+import {Attribute} from '../store/collections/collection';
 import {
   selectDocumentsByCollectionAndReadPermission,
   selectLinksByLinkTypeAndReadPermission,
 } from '../store/common/permissions.selectors';
+import {ConstraintDataAction} from '../store/constraint-data/constraint-data.action';
+import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
+import {TranslationService} from './translation.service';
 
 @Injectable()
 export class ConstraintDataService {

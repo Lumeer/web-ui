@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -31,32 +30,36 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Action, select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+
+import {Action, Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
+
+import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {escapeHtml, isNotNullOrUndefined, removeAccentFromString, stripTextHtmlTags} from '@lumeer/utils';
+
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
+import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
+import {selectDocumentsByViewAndCustomQuery} from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
+import {LinkInstance, getOtherLinkedDocumentId} from '../../core/store/link-instances/link.instance';
 import {Query} from '../../core/store/navigation/query/query';
 import {User} from '../../core/store/users/user';
 import {selectAllUsers} from '../../core/store/users/users.state';
+import {selectViewById} from '../../core/store/views/views.state';
 import {Direction} from '../direction';
 import {DropdownPosition} from '../dropdown/dropdown-position';
 import {DropdownComponent} from '../dropdown/dropdown.component';
-import {DocumentHintColumn} from './document-hint-column';
-import {getOtherLinkedDocumentId, LinkInstance} from '../../core/store/link-instances/link.instance';
-import {selectDocumentById} from '../../core/store/documents/documents.state';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {escapeHtml, isNotNullOrUndefined, preventEvent} from '../utils/common.utils';
-import {findAttributeConstraint} from '../../core/store/collections/collection.util';
-import {stripTextHtmlTags} from '../utils/data.utils';
 import {isTopPositionDropdown} from '../dropdown/util/dropdown-util';
-import {ConstraintData, DataValue, removeAccentFromString, UnknownConstraint} from '@lumeer/data-filters';
-import {selectDocumentsByViewAndCustomQuery} from '../../core/store/common/permissions.selectors';
-import {selectViewById} from '../../core/store/views/views.state';
 import {ModalService} from '../modal/modal.service';
+import {preventEvent} from '../utils/common.utils';
+import {DocumentHintColumn} from './document-hint-column';
 
 @Component({
   selector: 'document-hints',

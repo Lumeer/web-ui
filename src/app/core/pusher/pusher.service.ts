@@ -16,29 +16,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {LocationStrategy} from '@angular/common';
 import {Injectable, OnDestroy} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {NavigationExtras, Router} from '@angular/router';
+
+import {Store, select} from '@ngrx/store';
+
 import Pusher, {Channel} from 'pusher-js';
-import {of, timer, combineLatest} from 'rxjs';
+import {combineLatest, of, timer} from 'rxjs';
 import {catchError, distinctUntilChanged, filter, first, map, take, withLatestFrom} from 'rxjs/operators';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
 import {AuthService} from '../../auth/auth.service';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../../shared/utils/permission.utils';
+import {OrganizationService, ProjectService} from '../data-service';
 import {OrganizationDto, ProjectDto} from '../dto';
 import {ResourceType, resourceTypesMap} from '../model/resource-type';
+import {NotificationButton} from '../notifications/notification-button';
+import {NotificationService} from '../notifications/notification.service';
+import {AppIdService} from '../service/app-id.service';
+import {PrintService} from '../service/print.service';
 import {AppState} from '../store/app.state';
 import {convertCollectionDtoToModel} from '../store/collections/collection.converter';
 import {CollectionsAction} from '../store/collections/collections.action';
 import {selectCollectionsDictionary} from '../store/collections/collections.state';
 import {selectWorkspaceModels} from '../store/common/common.selectors';
+import * as DashboardDataActions from '../store/dashboard-data/dashboard-data.actions';
+import {convertDashboardDataDtoToModel} from '../store/dashboard-data/dashboard-data.converter';
 import {convertDocumentDtoToModel} from '../store/documents/document.converter';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {selectDocumentById} from '../store/documents/documents.state';
+import {InformationRecordsAction} from '../store/information-store/information-records.action';
 import {convertLinkInstanceDtoToModel} from '../store/link-instances/link-instance.converter';
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
 import {selectLinkInstanceById} from '../store/link-instances/link-instances.state';
 import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
 import {LinkTypesAction} from '../store/link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary} from '../store/link-types/link-types.state';
+import {ModalsAction} from '../store/modals/modals.action';
+import {Query} from '../store/navigation/query/query';
+import {addFiltersToQuery, convertQueryModelToString} from '../store/navigation/query/query.converter';
+import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
 import {ContactConverter} from '../store/organizations/contact/contact.converter';
 import {ContactsAction} from '../store/organizations/contact/contacts.action';
 import {Organization} from '../store/organizations/organization';
@@ -48,10 +68,24 @@ import {selectOrganizationsDictionary} from '../store/organizations/organization
 import {PaymentConverter} from '../store/organizations/payment/payment.converter';
 import {PaymentsAction} from '../store/organizations/payment/payments.action';
 import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
+import {convertServiceLimitsDtoToModel} from '../store/organizations/service-limits/service-limits.converter';
 import {Project} from '../store/projects/project';
 import {ProjectConverter} from '../store/projects/project.converter';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsDictionary} from '../store/projects/projects.state';
+import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
+import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
+import {selectResourceCommentsDictionary} from '../store/resource-comments/resource-comments.state';
+import {convertResourceVariableDtoToModel} from '../store/resource-variables/resource-variable.converter';
+import * as ResourceVariableActions from '../store/resource-variables/resource-variables.actions';
+import {convertSelectionListDtoToModel} from '../store/selection-lists/selection-list.converter';
+import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
+import {convertSequenceDtoToModel} from '../store/sequences/sequence.converter';
+import {SequencesAction} from '../store/sequences/sequences.action';
+import {Team} from '../store/teams/team';
+import {TeamsAction} from '../store/teams/teams.action';
+import {convertTeamDtoToModel} from '../store/teams/teams.converter';
+import {selectTeamById} from '../store/teams/teams.state';
 import {UserNotificationConverter} from '../store/user-notifications/user-notification.converter';
 import {UserNotificationsAction} from '../store/user-notifications/user-notifications.action';
 import {User} from '../store/users/user';
@@ -59,40 +93,9 @@ import {convertUserDtoToModel} from '../store/users/user.converter';
 import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {View} from '../store/views/view';
-import * as DashboardDataActions from '../store/dashboard-data/dashboard-data.actions';
-import * as ResourceVariableActions from '../store/resource-variables/resource-variables.actions';
 import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
-import {SequencesAction} from '../store/sequences/sequences.action';
-import {convertSequenceDtoToModel} from '../store/sequences/sequence.converter';
-import {OrganizationService, ProjectService} from '../data-service';
-import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
-import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
-import {selectResourceCommentsDictionary} from '../store/resource-comments/resource-comments.state';
-import {NotificationService} from '../notifications/notification.service';
-import {AppIdService} from '../service/app-id.service';
-import {NotificationButton} from '../notifications/notification-button';
-import {NavigationExtras, Router} from '@angular/router';
-import {LocationStrategy} from '@angular/common';
-import {addFiltersToQuery, convertQueryModelToString} from '../store/navigation/query/query.converter';
-import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
-import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
-import {ConfigurationService} from '../../configuration/configuration.service';
-import {PrintService} from '../service/print.service';
-import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../../shared/utils/permission.utils';
-import {TeamsAction} from '../store/teams/teams.action';
-import {convertTeamDtoToModel} from '../store/teams/teams.converter';
-import {Team} from '../store/teams/team';
-import {selectTeamById} from '../store/teams/teams.state';
-import {convertSelectionListDtoToModel} from '../store/selection-lists/selection-list.converter';
-import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
-import {convertDashboardDataDtoToModel} from '../store/dashboard-data/dashboard-data.converter';
-import {convertResourceVariableDtoToModel} from '../store/resource-variables/resource-variable.converter';
-import {Query} from '../store/navigation/query/query';
-import {ModalsAction} from '../store/modals/modals.action';
-import {convertServiceLimitsDtoToModel} from '../store/organizations/service-limits/service-limits.converter';
-import {InformationRecordsAction} from '../store/information-store/information-records.action';
 
 @Injectable({
   providedIn: 'root',

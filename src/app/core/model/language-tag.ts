@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {LanguageTag} from '@lumeer/data-filters';
+
 import {LanguageCode} from './language';
 
 export const localeLanguageTags: Record<string, LanguageTag> = {

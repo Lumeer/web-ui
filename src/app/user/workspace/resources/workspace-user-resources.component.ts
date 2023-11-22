@@ -16,30 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, Subscription, combineLatest} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators';
-import {Workspace} from '../../../core/store/navigation/workspace';
+
+import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
+import {RoleType} from '../../../core/model/role-type';
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {selectCurrentUser, selectUserByWorkspace} from '../../../core/store/users/users.state';
-import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
-import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
-import {userRolesInOrganization, userTransitiveRoles} from '../../../shared/utils/permission.utils';
+import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../core/store/navigation/workspace';
 import {Organization} from '../../../core/store/organizations/organization';
-import {User} from '../../../core/store/users/user';
+import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {Project} from '../../../core/store/projects/project';
+import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
+import {User} from '../../../core/store/users/user';
+import {selectCurrentUser, selectUserByWorkspace} from '../../../core/store/users/users.state';
+import {userRolesInOrganization, userTransitiveRoles} from '../../../shared/utils/permission.utils';
 import {
   ResourceRolesData,
-  resourceRolesDataEmptyTitle,
   ResourceRolesDatum,
+  resourceRolesDataEmptyTitle,
 } from '../../settings/tab/resources/list/resource-roles-data';
-import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
-import {RoleType} from '../../../core/model/role-type';
-import {ResourcePermissionType} from '../../../core/model/resource-permission-type';
 
 @Component({
   selector: 'workspace-user-resources',

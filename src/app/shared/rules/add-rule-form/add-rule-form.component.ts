@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,28 +35,32 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+
+import * as moment from 'moment';
+import {Subscription} from 'rxjs';
+
+import {isDateValid} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {
   ChronoUnit,
-  createRuleTiming,
   Rule,
   RuleConfiguration,
   RuleTiming,
+  RuleType,
+  createRuleTiming,
   ruleTimingHasCreate,
   ruleTimingHasDelete,
   ruleTimingHasUpdate,
-  RuleType,
   ruleTypeMap,
 } from '../../../core/model/rule';
-import {Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
-import {SelectItemModel} from '../../select/select-item/select-item.model';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {isDateValid, objectChanged, objectValues} from '../../utils/common.utils';
-import {parseSelectTranslation} from '../../utils/translation.utils';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import * as moment from 'moment';
 import {minLengthValidator} from '../../../core/validators/custom-validators';
-import {offsetRuleConfig, RuleOffsetType} from '../../utils/rule.utils';
+import {SelectItemModel} from '../../select/select-item/select-item.model';
+import {objectChanged, objectValues} from '../../utils/common.utils';
+import {RuleOffsetType, offsetRuleConfig} from '../../utils/rule.utils';
+import {parseSelectTranslation} from '../../utils/translation.utils';
 
 @Component({
   selector: 'add-rule-form',

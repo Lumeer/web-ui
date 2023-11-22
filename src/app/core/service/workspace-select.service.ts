@@ -16,11 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
+
+import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
+import {ModalService} from '../../shared/modal/modal.service';
+import {userHasRoleInOrganization} from '../../shared/utils/permission.utils';
+import {Perspective} from '../../view/perspectives/perspective';
+import {ResourceType} from '../model/resource-type';
 import {RoleType} from '../model/role-type';
 import {AppState} from '../store/app.state';
 import {NotificationsAction} from '../store/notifications/notifications.action';
@@ -30,12 +38,6 @@ import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {User} from '../store/users/user';
 import {selectCurrentUserForWorkspace} from '../store/users/users.state';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {ResourceType} from '../model/resource-type';
-import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
-import {ModalService} from '../../shared/modal/modal.service';
-import {Perspective} from '../../view/perspectives/perspective';
-import {userHasRoleInOrganization} from '../../shared/utils/permission.utils';
 
 @Injectable({
   providedIn: 'root',

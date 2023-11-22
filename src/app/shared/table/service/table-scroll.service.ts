@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 import {
   SelectedTableCell,
@@ -24,7 +25,6 @@ import {
   TableCellType,
   TableModel,
 } from '../model/table-model';
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {groupTableColumns} from '../model/table-utils';
 
 export class TableScrollService {

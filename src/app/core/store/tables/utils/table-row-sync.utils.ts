@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {DocumentModel} from '../../documents/document.model';
 import {LinkInstance} from '../../link-instances/link.instance';
 import {TableConfigRow} from '../table.model';

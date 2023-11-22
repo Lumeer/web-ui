@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,15 +26,9 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {DataRowComponent} from '../../data/data-row-component';
-import {Attribute} from '../../../core/store/collections/collection';
-import {DataRow} from '../../data/data-row.service';
-import {DataCursor} from '../../data-input/data-cursor';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+
 import {BehaviorSubject} from 'rxjs';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
-import {DataInputConfiguration} from '../../data-input/data-input-configuration';
-import {PostItLayoutType} from '../post-it-layout-type';
+
 import {
   AttributeLockFiltersStats,
   ConstraintData,
@@ -43,9 +36,18 @@ import {
   DataValue,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {animateOpacityEnterLeave} from '../../animations';
-import {AttributeFormattingStyle} from '../../utils/attribute.utils';
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {Attribute} from '../../../core/store/collections/collection';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {animateOpacityEnterLeave} from '../../animations';
+import {DataCursor} from '../../data-input/data-cursor';
+import {DataInputConfiguration} from '../../data-input/data-input-configuration';
+import {DataRowComponent} from '../../data/data-row-component';
+import {DataRow} from '../../data/data-row.service';
+import {AttributeFormattingStyle} from '../../utils/attribute.utils';
+import {PostItLayoutType} from '../post-it-layout-type';
 
 @Component({
   selector: 'post-it-row',

@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
-import {Query} from '../../../core/store/navigation/query/query';
-import {map, take} from 'rxjs/operators';
-import {ViewConfig} from '../../../core/store/views/view';
-import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {GanttChartConfig} from '../../../core/store/gantt-charts/gantt-chart';
-import {selectGanttChartById} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
+import {selectGanttChartById} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
+import {Query} from '../../../core/store/navigation/query/query';
+import {ViewConfig} from '../../../core/store/views/view';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
-import {defaultGanttPerspectiveConfiguration, GanttPerspectiveConfiguration} from '../perspective-configuration';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {GanttPerspectiveConfiguration, defaultGanttPerspectiveConfiguration} from '../perspective-configuration';
+import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
 
 @Component({
   selector: 'gantt-chart-perspective',

@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+import {NavigationExtras} from '@angular/router';
+
 import {Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
-import {Organization} from '../store/organizations/organization';
+
 import * as Colors from '../../shared/picker/colors';
 import {safeGetRandomIcon} from '../../shared/picker/icons';
+import {AppState} from '../store/app.state';
+import {Organization} from '../store/organizations/organization';
 import {Project} from '../store/projects/project';
 import {ProjectsAction} from '../store/projects/projects.action';
-import {NavigationExtras} from '@angular/router';
 
 type ProjectCreatePayload = {
   templateId?: string;

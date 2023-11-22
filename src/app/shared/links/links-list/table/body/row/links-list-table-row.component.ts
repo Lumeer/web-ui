@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,25 +29,28 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
+import {Action} from '@ngrx/store';
+
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {distinctUntilChanged, filter} from 'rxjs/operators';
+
+import {ConstraintData, DataValue, UnknownConstraint, isAttributeEditable} from '@lumeer/data-filters';
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {animateOpacityEnterLeave} from '../../../../../animations';
+import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
+import {DataRowComponent} from '../../../../../data/data-row-component';
+import {Direction} from '../../../../../direction';
+import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
+import {KeyCode, isKeyPrintable, keyboardEventCode} from '../../../../../key-code';
 import {LinkColumn} from '../../../model/link-column';
 import {LinkRow} from '../../../model/link-row';
-import {DataRowComponent} from '../../../../../data/data-row-component';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {isNotNullOrUndefined} from '../../../../../utils/common.utils';
-import {distinctUntilChanged, filter} from 'rxjs/operators';
-import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
-import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../key-code';
-import {Direction} from '../../../../../direction';
-import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
-import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {Action} from '@ngrx/store';
-import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {isAttributeEditable} from '../../../../../utils/attribute.utils';
-import {animateOpacityEnterLeave} from '../../../../../animations';
-import {Workspace} from '../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: '[links-list-table-row]',

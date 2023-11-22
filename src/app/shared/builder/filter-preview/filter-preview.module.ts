@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FilterPreviewComponent} from './filter-preview.component';
+import {NgModule} from '@angular/core';
+
 import {DataInputModule} from '../../data-input/data-input.module';
-import {FilterBuilderModule} from '../filter-builder/filter-builder.module';
 import {PipesModule} from '../../pipes/pipes.module';
+import {FilterBuilderModule} from '../filter-builder/filter-builder.module';
 import {FilterBuilderPipesModule} from '../pipes/filter-builder-pipes.module';
+import {FilterPreviewComponent} from './filter-preview.component';
 
 @NgModule({
   declarations: [FilterPreviewComponent],

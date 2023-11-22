@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {SizeType} from '../../../shared/slider/size/size-type';
-import {SearchTab} from '../navigation/search-tab';
 import {DashboardTab} from '../../model/dashboard-tab';
+import {SearchTab} from '../navigation/search-tab';
 import {AttributeSortType} from '../view-settings/view-settings';
 
 export interface Search {

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
+
 import {filter} from 'rxjs/operators';
 
 // eslint-disable-next-line @typescript-eslint/ban-types

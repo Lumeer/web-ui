@@ -16,27 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TeamsComponent} from './teams.component';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {NewTeamComponent} from './new-team/new-team.component';
-import {TeamListComponent} from './team-list/team-list.component';
-import {PipesModule} from '../pipes/pipes.module';
-import {TeamComponent} from './team-list/team/team.component';
-import {InputModule} from '../input/input.module';
-import {TeamUsersComponent} from './team-list/team/users/team-users.component';
-import {GravatarModule} from 'ngx-gravatar';
-import {DropdownModule} from '../dropdown/dropdown.module';
-import {TeamsPipesModule} from './pipes/teams-pipes.module';
-import {RolesModule} from '../roles/roles.module';
-import {TeamTableComponent} from './team-list/table/team-table.component';
+
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {GravatarModule} from 'ngx-gravatar';
+
 import {BoxModule} from '../box/box.module';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {InputModule} from '../input/input.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {RolesModule} from '../roles/roles.module';
+import {NewTeamComponent} from './new-team/new-team.component';
 import {ResourceTypePermissionsMapPipe} from './pipes/resource-type-permissions-map.pipe';
 import {ResourceTypeRolesMapPipe} from './pipes/resource-type-roles-map.pipe';
+import {TeamsPipesModule} from './pipes/teams-pipes.module';
+import {TeamTableComponent} from './team-list/table/team-table.component';
+import {TeamListComponent} from './team-list/team-list.component';
+import {TeamComponent} from './team-list/team/team.component';
+import {TeamUsersComponent} from './team-list/team/users/team-users.component';
+import {TeamsComponent} from './teams.component';
 
 @NgModule({
   declarations: [

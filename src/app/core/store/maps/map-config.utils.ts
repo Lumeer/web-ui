@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ConstraintType} from '@lumeer/data-filters';
+import {deepObjectsEquals} from '@lumeer/utils';
 
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {Attribute, Collection} from '../collections/collection';
-import {MapAttributeModel, MapConfig, MapConfigVersion, MapPosition, MapStemConfig} from './map.model';
-import {Query, QueryStem} from '../navigation/query/query';
 import {LinkType} from '../link-types/link.type';
+import {Query, QueryStem} from '../navigation/query/query';
 import {
   checkOrTransformQueryAttribute,
   collectionIdsChainForStem,
@@ -29,8 +30,7 @@ import {
   queryStemAttributesResourcesOrder,
   queryStemsAreSame,
 } from '../navigation/query/query.util';
-import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
-import {ConstraintType} from '@lumeer/data-filters';
+import {MapAttributeModel, MapConfig, MapConfigVersion, MapPosition, MapStemConfig} from './map.model';
 
 export function mapAttributesAreInAllowedRange(model: MapAttributeModel, otherModel: MapAttributeModel): boolean {
   if (!model || !otherModel) {

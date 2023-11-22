@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Action} from '@ngrx/store';
+
 import {SelectionList} from '../../../shared/lists/selection/selection-list';
 
 export enum SelectionListsActionType {

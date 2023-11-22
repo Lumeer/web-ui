@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DataResourceDetailModalComponent} from './data-resource-detail-modal.component';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {NgModule} from '@angular/core';
+
 import {DataResourceModule} from '../../data-resource/data-resource.module';
-import {PipesModule} from '../../pipes/pipes.module';
 import {LinksModule} from '../../links/links.module';
+import {PipesModule} from '../../pipes/pipes.module';
 import {AttributesSettingsModule} from '../../settings/attributes/attributes-settings.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {DataResourceDetailModalComponent} from './data-resource-detail-modal.component';
 
 @NgModule({
   declarations: [DataResourceDetailModalComponent],

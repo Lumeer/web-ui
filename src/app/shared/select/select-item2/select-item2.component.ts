@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {OverlayContainer} from '@angular/cdk/overlay';
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {SelectedItemDisplayValue, SelectItem2Model} from './select-item2.model';
-import {preventEvent} from '../../utils/common.utils';
+
 import {MenuItem} from '../../menu/model/menu-item';
 import {convertMenuItemsPath} from '../../menu/model/menu-utils';
-import {OverlayContainer} from '@angular/cdk/overlay';
+import {preventEvent} from '../../utils/common.utils';
+import {SelectItem2Model, SelectedItemDisplayValue} from './select-item2.model';
 
 @Component({
   selector: 'select-item2',

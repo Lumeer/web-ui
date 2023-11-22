@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, OnDestroy} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Subscription, combineLatest} from 'rxjs';
-import {AppState} from '../store/app.state';
-import {selectCurrentView} from '../store/views/views.state';
-import {View} from '../store/views/view';
 import {pairwise, startWith, take, withLatestFrom} from 'rxjs/operators';
-import {ViewSettingsAction} from '../store/view-settings/view-settings.action';
-import {viewSettingsChanged} from '../store/views/view.utils';
+
+import {AppState} from '../store/app.state';
+import {Collection} from '../store/collections/collection';
 import {selectCollectionsDictionary} from '../store/collections/collections.state';
 import {selectLinkTypesDictionary} from '../store/link-types/link-types.state';
-import {Collection} from '../store/collections/collection';
 import {LinkType} from '../store/link-types/link.type';
+import {ViewSettingsAction} from '../store/view-settings/view-settings.action';
+import {ViewSettingsState, selectViewSettingsState} from '../store/view-settings/view-settings.state';
 import {viewSettingsIdByView} from '../store/view-settings/view-settings.util';
-import {selectViewSettingsState, ViewSettingsState} from '../store/view-settings/view-settings.state';
+import {View} from '../store/views/view';
+import {viewSettingsChanged} from '../store/views/view.utils';
+import {selectCurrentView} from '../store/views/views.state';
 
 @Injectable({providedIn: 'root'})
 export class ViewSettingsService implements OnDestroy {

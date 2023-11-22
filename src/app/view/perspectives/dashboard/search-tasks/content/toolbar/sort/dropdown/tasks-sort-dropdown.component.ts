@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, QueryList, ViewChildren} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {DropdownDirective} from '../../../../../../../../shared/dropdown/dropdown.directive';
-import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, QueryList, ViewChildren} from '@angular/core';
+
 import {
   TaskConfigAttribute,
   TasksConfigGroupBy,
   TasksConfigSort,
   TasksConfigSortBy,
 } from '../../../../../../../../core/store/searches/search';
-import {SelectItemComponent} from '../../../../../../../../shared/select/select-item/select-item.component';
 import {AttributeSortType} from '../../../../../../../../core/store/view-settings/view-settings';
+import {DropdownDirective} from '../../../../../../../../shared/dropdown/dropdown.directive';
+import {SelectItemComponent} from '../../../../../../../../shared/select/select-item/select-item.component';
+import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'tasks-sort-dropdown',

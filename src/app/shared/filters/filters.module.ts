@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {ResourceFiltersComponent} from './filters/resource-filters.component';
-import {ResourceFilterComponent} from './filters/filter/resource-filter.component';
-import {SelectModule} from '../select/select.module';
+
 import {BuilderModule} from '../builder/builder.module';
-import {PipesModule} from '../pipes/pipes.module';
-import {ResourceFiltersDropdownComponent} from './dropdown/resource-filters-dropdown.component';
 import {DropdownModule} from '../dropdown/dropdown.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {SelectModule} from '../select/select.module';
+import {ResourceFiltersDropdownComponent} from './dropdown/resource-filters-dropdown.component';
+import {ResourceFilterComponent} from './filters/filter/resource-filter.component';
+import {ResourceFiltersComponent} from './filters/resource-filters.component';
 
 @NgModule({
   imports: [CommonModule, SelectModule, BuilderModule, PipesModule, DropdownModule],

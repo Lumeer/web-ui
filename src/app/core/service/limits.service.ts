@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {combineLatest, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {selectCurrentUser} from '../store/users/users.state';
-import {selectOrganizationByWorkspace} from '../store/organizations/organizations.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest} from 'rxjs';
 import {map, take} from 'rxjs/operators';
+
 import {userHasRoleInOrganization} from '../../shared/utils/permission.utils';
 import {RoleType} from '../model/role-type';
+import {AppState} from '../store/app.state';
+import {NotificationsAction} from '../store/notifications/notifications.action';
 import {Organization} from '../store/organizations/organization';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {NotificationsAction} from '../store/notifications/notifications.action';
-import {AppState} from '../store/app.state';
+import {selectOrganizationByWorkspace} from '../store/organizations/organizations.state';
 import {User} from '../store/users/user';
+import {selectCurrentUser} from '../store/users/users.state';
 
 @Injectable({
   providedIn: 'root',

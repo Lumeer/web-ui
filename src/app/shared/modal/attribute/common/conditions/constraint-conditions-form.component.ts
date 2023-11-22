@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {removeAllFormArrayControls} from '../../../../utils/form.utils';
-import {AttributesResource} from '../../../../../core/model/resource';
-import {SelectItem2Model} from '../../../../select/select-item2/select-item2.model';
-import {resourceAttributesSelectItems} from '../../../../select/select-item.utils';
-import {findAttribute} from '../../../../../core/store/collections/collection.util';
-import {Attribute} from '../../../../../core/store/collections/collection';
+
 import {
   AttributeFilter,
   AttributeFilterEquation,
-  conditionTypeNumberOfInputs,
   ConstraintType,
   EquationOperator,
+  conditionTypeNumberOfInputs,
 } from '@lumeer/data-filters';
+
+import {AttributesResource} from '../../../../../core/model/resource';
+import {Attribute} from '../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../core/store/collections/collection.util';
 import {areConditionValuesDefined} from '../../../../../core/store/navigation/query/query.util';
+import {SelectItem2Model} from '../../../../select/select-item2/select-item2.model';
+import {resourceAttributesSelectItems} from '../../../../select/select-item.utils';
+import {removeAllFormArrayControls} from '../../../../utils/form.utils';
 
 export enum ConstraintFiltersFormControl {
   Attribute = 'attribute',

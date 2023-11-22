@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, HostListener, OnInit} from '@angular/core';
-import {LanguageCode} from '../../core/model/language';
-import {ConfigurationService} from '../../configuration/configuration.service';
-import {BehaviorSubject, combineLatest, Observable, switchMap} from 'rxjs';
-import {ApplicationTourService} from '../../core/service/application-tour.service';
-import {ModalService} from '../modal/modal.service';
-import {AppState} from '../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectCurrentUser} from '../../core/store/users/users.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {DeviceDetectorService} from 'ngx-device-detector';
+import {BehaviorSubject, Observable, combineLatest, switchMap} from 'rxjs';
 import {distinctUntilChanged, map, take} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {LanguageCode} from '../../core/model/language';
+import {ApplicationTourService} from '../../core/service/application-tour.service';
+import {AppState} from '../../core/store/app.state';
+import {UsersAction} from '../../core/store/users/users.action';
+import {selectCurrentUser} from '../../core/store/users/users.state';
+import {ModalService} from '../modal/modal.service';
+import {clickedInsideElement} from '../utils/html-modifier';
 import {ButtonState, rotateAnimation, scaleAnimation, shrinkOutAnimation} from './model/get-help.utils';
 import {NewsletterToggleService} from './model/newsletter-toggle.service';
-import {clickedInsideElement} from '../utils/html-modifier';
-import {UsersAction} from '../../core/store/users/users.action';
-import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'get-help',

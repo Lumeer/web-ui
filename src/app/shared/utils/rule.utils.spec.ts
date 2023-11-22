@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as moment from 'moment';
 
 import {ChronoUnit, CronRule, CronRuleConfiguration, RuleType} from '../../core/model/rule';
-import * as moment from 'moment';
 import {computeCronRuleNextExecution} from './rule.utils';
 
 describe('computeCronRuleNextExecution daily', () => {

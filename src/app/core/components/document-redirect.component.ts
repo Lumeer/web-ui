@@ -16,26 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+
+import {Store, select} from '@ngrx/store';
+
 import {combineLatest, of} from 'rxjs';
 import {catchError, map, take} from 'rxjs/operators';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../store/app.state';
-import {DocumentService} from '../data-service';
-import {DocumentModel} from '../store/documents/document.model';
-import {NotificationsAction} from '../store/notifications/notifications.action';
-import {selectCollectionById} from '../store/collections/collections.state';
-import {selectViewsDictionaryByCode} from '../store/views/views.state';
-import {selectCollectionsPermissions, selectViewsPermissions} from '../store/user-permissions/user-permissions.state';
+
 import {ModalService} from '../../shared/modal/modal.service';
-import {convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../view/perspectives/perspective';
-import {QueryParam} from '../store/navigation/query-param';
-import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cursor/view-cursor';
+import {DocumentService} from '../data-service';
+import {AppState} from '../store/app.state';
 import {getDefaultAttributeId} from '../store/collections/collection.util';
+import {selectCollectionById} from '../store/collections/collections.state';
 import {convertDocumentDtoToModel} from '../store/documents/document.converter';
+import {DocumentModel} from '../store/documents/document.model';
+import {QueryParam} from '../store/navigation/query-param';
+import {convertQueryModelToString} from '../store/navigation/query/query.converter';
+import {ViewCursor, convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
+import {NotificationsAction} from '../store/notifications/notifications.action';
+import {selectCollectionsPermissions, selectViewsPermissions} from '../store/user-permissions/user-permissions.state';
+import {selectViewsDictionaryByCode} from '../store/views/views.state';
 
 @Component({
   template: '',

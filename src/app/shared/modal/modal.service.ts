@@ -16,57 +16,59 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable, TemplateRef} from '@angular/core';
-import {select, Store} from '@ngrx/store';
 import {NavigationExtras} from '@angular/router';
 
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef, BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
-import {AttributeTypeModalComponent} from './attribute/type/attribute-type-modal.component';
-import {AppState} from '../../core/store/app.state';
-import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
+import {Observable, combineLatest, interval} from 'rxjs';
 import {first, map, mergeMap, take} from 'rxjs/operators';
-import {combineLatest, interval, Observable} from 'rxjs';
-import {Organization} from '../../core/store/organizations/organization';
-import {AttributeFunctionModalComponent} from './attribute/function/attribute-function-modal.component';
-import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
-import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
-import {View} from '../../core/store/views/view';
-import {ShareViewModalComponent} from './view-modal/share/share-view-modal.component';
+
+import {AttributeLock} from '@lumeer/data-filters';
+
 import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
-import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
-import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
+import {LimitsService} from '../../core/service/limits.service';
+import {AppState} from '../../core/store/app.state';
+import {findAttribute} from '../../core/store/collections/collection.util';
+import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
-import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {GettingStartedModalComponent} from './getting-started/getting-started-modal.component';
+import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
+import {LinkType} from '../../core/store/link-types/link.type';
 import {ModalsAction} from '../../core/store/modals/modals.action';
-import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
-import {findAttribute} from '../../core/store/collections/collection.util';
-import {AttributeDescriptionModalComponent} from './attribute/description/attribute-description-modal.component';
-import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-document-links-modal.component';
-import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
-import {Workspace} from '../../core/store/navigation/workspace';
-import {DataResourcesDetailModalComponent} from './data-resources-detail/data-resources-detail-modal.component';
-import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
-import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
-import {AttributeLock} from '@lumeer/data-filters';
-import {GettingStartedModalType} from './getting-started/model/getting-started-modal-type';
-import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
-import {BookProductDemoModalComponent} from './book-product-demo/book-product-demo-modal.component';
-import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading/data-resource-detail-loading-modal.component';
-import {ChooseLinkDocumentsModalComponent} from './choose-link-documents/choose-link-documents-modal.component';
-import {DataResourcesChain} from './data-resource-detail/model/data-resources-chain';
 import {QueryStem} from '../../core/store/navigation/query/query';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {Organization} from '../../core/store/organizations/organization';
+import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
+import {View} from '../../core/store/views/view';
+import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
+import {ConditionalFormattingModalComponent} from './attribute/conditional-formatting/conditional-formatting-modal.component';
+import {AttributeDescriptionModalComponent} from './attribute/description/attribute-description-modal.component';
+import {AttributeFunctionModalComponent} from './attribute/function/attribute-function-modal.component';
+import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
+import {AttributeTypeModalComponent} from './attribute/type/attribute-type-modal.component';
+import {BookProductDemoModalComponent} from './book-product-demo/book-product-demo-modal.component';
+import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
+import {ChooseLinkDocumentsModalComponent} from './choose-link-documents/choose-link-documents-modal.component';
 import {ChooseResourceModalComponent} from './choose-resource/choose-resource-modal.component';
 import {ChooseStemModalComponent} from './choose-stem/choose-stem-modal.component';
-import {LimitsService} from '../../core/service/limits.service';
-import {ConditionalFormattingModalComponent} from './attribute/conditional-formatting/conditional-formatting-modal.component';
-import {ResourceAttributeSettings} from '../../core/store/view-settings/view-settings';
 import {CollectionUploadModalComponent} from './collection-upload/collection-upload-modal.component';
+import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
+import {DataResourceDetailLoadingModalComponent} from './data-resource-detail-loading/data-resource-detail-loading-modal.component';
+import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
+import {DataResourcesChain} from './data-resource-detail/model/data-resources-chain';
+import {DataResourcesDetailModalComponent} from './data-resources-detail/data-resources-detail-modal.component';
+import {GetInTouchModalComponent} from './get-in-touch/get-in-touch-modal.component';
+import {GettingStartedModalComponent} from './getting-started/getting-started-modal.component';
+import {GettingStartedModalType} from './getting-started/model/getting-started-modal-type';
+import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-document-links-modal.component';
+import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
 import {ViewLinkTypePermissionsModalComponent} from './view-modal/link-type-permissions/view-link-type-permissions-modal.component';
+import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
+import {ShareViewModalComponent} from './view-modal/share/share-view-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 

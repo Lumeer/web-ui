@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow} from '../table.model';
 
 export function createTableSaveConfig(config: TableConfig): TableConfig {

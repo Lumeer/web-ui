@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {of} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
+
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
-import {Router} from '@angular/router';
-import {ContactConverter} from './contact.converter';
+
+import {of} from 'rxjs';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+
+import {OrganizationService} from '../../../data-service';
 import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
-import {ContactsAction, ContactsActionType} from './contacts.action';
-import {OrganizationService} from '../../../data-service';
 import {createCallbackActions} from '../../utils/store.utils';
+import {ContactConverter} from './contact.converter';
+import {ContactsAction, ContactsActionType} from './contacts.action';
 
 @Injectable()
 export class ContactsEffects {

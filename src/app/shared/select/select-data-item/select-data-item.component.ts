@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,14 +27,18 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {SelectDataItemModel} from './select-data-item.model';
-import {DataOptionsDropdownComponent} from '../../data-dropdown/data-options/data-options-dropdown.component';
-import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {AppState} from '../../../core/store/app.state';
+
 import {ConstraintData} from '@lumeer/data-filters';
+
+import {AppState} from '../../../core/store/app.state';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
+import {DataOptionsDropdownComponent} from '../../data-dropdown/data-options/data-options-dropdown.component';
+import {SelectDataItemModel} from './select-data-item.model';
 
 @Component({
   selector: 'select-data-item',

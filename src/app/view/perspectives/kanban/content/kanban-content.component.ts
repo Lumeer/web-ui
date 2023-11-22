@@ -16,39 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
+  Component,
   EventEmitter,
+  Input,
   OnChanges,
-  SimpleChanges,
-  OnInit,
-  SimpleChange,
   OnDestroy,
+  OnInit,
+  Output,
+  SimpleChange,
+  SimpleChanges,
 } from '@angular/core';
+
+import {Store} from '@ngrx/store';
+
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {debounceTime, filter, map} from 'rxjs/operators';
+
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../core/store/app.state';
 import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {KanbanConverter} from '../util/kanban-converter';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {AppState} from '../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {debounceTime, filter, map} from 'rxjs/operators';
-import {View} from '../../../../core/store/views/view';
-import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
-import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
-import {KanbanPerspectiveConfiguration} from '../../perspective-configuration';
-import {moveItemInArray} from '../../../../shared/utils/array.utils';
 import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../core/store/views/view';
+import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {moveItemInArray} from '../../../../shared/utils/array.utils';
+import {KanbanPerspectiveConfiguration} from '../../perspective-configuration';
+import {KanbanConverter} from '../util/kanban-converter';
+import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
+import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
 
 interface Data {
   collections: Collection[];

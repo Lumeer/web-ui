@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {ModalWrapperModule} from '../../wrapper/modal-wrapper.module';
-import {PipesModule} from '../../../pipes/pipes.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {AttributeLockModalComponent} from './attribute-lock-modal.component';
-import {AttributeCommonModalModule} from '../common/attribute-common-modal.module';
-import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
-import {DataInputModule} from '../../../data-input/data-input.module';
-import {AttributeLockExceptionGroupComponent} from './content/exception-group/attribute-lock-exception-group.component';
+
 import {BoxModule} from '../../../box/box.module';
+import {DataInputModule} from '../../../data-input/data-input.module';
+import {PipesModule} from '../../../pipes/pipes.module';
 import {SelectModule} from '../../../select/select.module';
+import {ModalWrapperModule} from '../../wrapper/modal-wrapper.module';
+import {AttributeCommonModalModule} from '../common/attribute-common-modal.module';
+import {AttributeLockModalComponent} from './attribute-lock-modal.component';
+import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
+import {AttributeLockExceptionGroupComponent} from './content/exception-group/attribute-lock-exception-group.component';
 
 @NgModule({
   declarations: [AttributeLockModalComponent, AttributeLockContentComponent, AttributeLockExceptionGroupComponent],

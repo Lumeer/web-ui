@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {DataAggregationType, QueryAttribute} from '@lumeer/data-filters';
 
-import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {QueryStem} from '../navigation/query/query';
-import {QueryAttribute} from '../../model/query-attribute';
 
 export interface Pivot {
   id: string;

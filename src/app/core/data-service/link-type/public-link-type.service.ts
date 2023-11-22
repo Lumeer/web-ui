@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {LinkTypeService} from './link-type.service';
+import {map, take} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {generateId} from '../../../shared/utils/resource.utils';
+import {AttributeDto, LinkTypeDto} from '../../dto';
+import {RuleDto} from '../../dto/rule.dto';
 import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
-import {AttributeDto, LinkTypeDto} from '../../dto';
-import {Workspace} from '../../store/navigation/workspace';
-import {generateId} from '../../../shared/utils/resource.utils';
-import {selectLinkTypeById} from '../../store/link-types/link-types.state';
-import {map, take} from 'rxjs/operators';
-import {convertLinkTypeModelToDto} from '../../store/link-types/link-type.converter';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import {RuleDto} from '../../dto/rule.dto';
 import {convertCollectionModelToDto} from '../../store/collections/collection.converter';
+import {convertLinkTypeModelToDto} from '../../store/link-types/link-type.converter';
+import {selectLinkTypeById} from '../../store/link-types/link-types.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {LinkTypeService} from './link-type.service';
 
 @Injectable()
 export class PublicLinkTypeService extends BaseService implements LinkTypeService {

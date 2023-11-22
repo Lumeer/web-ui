@@ -17,17 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {DialogType} from '../dialog-type';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {CollectionsAction} from '../../../core/store/collections/collections.action';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {Collection, ImportedCollection, ImportType} from '../../../core/store/collections/collection';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
+
+import {Store, select} from '@ngrx/store';
+
+import {BsModalRef} from 'ngx-bootstrap/modal';
+import {BehaviorSubject, Observable} from 'rxjs';
+
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AppState} from '../../../core/store/app.state';
+import {Collection, ImportType, ImportedCollection} from '../../../core/store/collections/collection';
+import {CollectionsAction} from '../../../core/store/collections/collections.action';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'collection-upload-modal',

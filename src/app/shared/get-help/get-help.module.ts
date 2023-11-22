@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {GetHelpComponent} from './get-help.component';
+import {NgModule} from '@angular/core';
+
 import {DirectivesModule} from '../directives/directives.module';
 import {InputModule} from '../input/input.module';
+import {GetHelpComponent} from './get-help.component';
 
 @NgModule({
   declarations: [GetHelpComponent],

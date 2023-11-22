@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {removeAllFormControls} from '../../../../../utils/form.utils';
-import {Attribute} from '../../../../../../core/store/collections/collection';
-import {AttributesResource} from '../../../../../../core/model/resource';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+
 import {ConstraintConfig, ConstraintType} from '@lumeer/data-filters';
+
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AttributesResource} from '../../../../../../core/model/resource';
+import {Attribute} from '../../../../../../core/store/collections/collection';
+import {removeAllFormControls} from '../../../../../utils/form.utils';
 
 @Component({
   selector: 'constraint-config-form',

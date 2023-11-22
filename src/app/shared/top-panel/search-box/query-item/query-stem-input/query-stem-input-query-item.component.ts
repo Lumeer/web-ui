@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,12 +27,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {QueryStemInputQueryItem} from '../model/query-stem-input.query-item';
-import {QueryItem} from '../model/query-item';
-import {SearchSuggestionsComponent} from '../../input/suggestions/search-suggestions.component';
-import {keyboardEventCode, KeyCode} from '../../../../key-code';
-import {QueryItemType} from '../model/query-item-type';
+
 import {Direction} from '../../../../direction';
+import {KeyCode, keyboardEventCode} from '../../../../key-code';
+import {SearchSuggestionsComponent} from '../../input/suggestions/search-suggestions.component';
+import {QueryItem} from '../model/query-item';
+import {QueryItemType} from '../model/query-item-type';
+import {QueryStemInputQueryItem} from '../model/query-stem-input.query-item';
 
 @Component({
   selector: 'query-stem-input-query-item',

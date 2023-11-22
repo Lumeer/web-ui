@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {UntypedFormGroup} from '@angular/forms';
+
+import {ConstraintData} from '@lumeer/data-filters';
 
 import {QueryItem} from './model/query-item';
-import {UntypedFormGroup} from '@angular/forms';
-import {ConstraintData} from '@lumeer/data-filters';
 import {QueryItemType} from './model/query-item-type';
 
 @Component({

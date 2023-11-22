@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {QueryAttribute} from '@lumeer/data-filters';
 
 import {QueryStem} from '../navigation/query/query';
-import {QueryAttribute} from '../../model/query-attribute';
 
 export interface Calendar {
   id: string;

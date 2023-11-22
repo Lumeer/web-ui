@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,39 +28,43 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {Router} from '@angular/router';
-import {QueryParam} from '../../../../../core/store/navigation/query-param';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {checkSizeType, SearchTasksConfig} from '../../../../../core/store/searches/search';
-import {Collection, CollectionPurposeType} from '../../../../../core/store/collections/collection';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {SizeType} from '../../../../../shared/slider/size/size-type';
-import {Perspective} from '../../../perspective';
-import {SearchTab} from '../../../../../core/store/navigation/search-tab';
-import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
-import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
-import {Organization} from '../../../../../core/store/organizations/organization';
-import {Project} from '../../../../../core/store/projects/project';
-import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+
+import {ConstraintData} from '@lumeer/data-filters';
+import {objectsByIdMap} from '@lumeer/utils';
+
 import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {ConstraintData} from '@lumeer/data-filters';
-import {ModalService} from '../../../../../shared/modal/modal.service';
-import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
+import {Collection, CollectionPurposeType} from '../../../../../core/store/collections/collection';
 import {
   selectHasVisibleSearchTab,
   selectTasksCollections,
 } from '../../../../../core/store/common/permissions.selectors';
-import {View} from '../../../../../core/store/views/view';
-import {User} from '../../../../../core/store/users/user';
-import {selectDefaultDocumentViews} from '../../../../../core/store/views/views.state';
-import {
-  defaultSearchPerspectiveConfiguration,
-  SearchPerspectiveConfiguration,
-} from '../../../perspective-configuration';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {QueryParam} from '../../../../../core/store/navigation/query-param';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
+import {SearchTab} from '../../../../../core/store/navigation/search-tab';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {Organization} from '../../../../../core/store/organizations/organization';
+import {Project} from '../../../../../core/store/projects/project';
+import {SearchTasksConfig, checkSizeType} from '../../../../../core/store/searches/search';
 import {selectViewsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
+import {User} from '../../../../../core/store/users/user';
+import {View} from '../../../../../core/store/views/view';
+import {selectDefaultDocumentViews} from '../../../../../core/store/views/views.state';
+import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
+import {ModalService} from '../../../../../shared/modal/modal.service';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
+import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
+import {Perspective} from '../../../perspective';
+import {
+  SearchPerspectiveConfiguration,
+  defaultSearchPerspectiveConfiguration,
+} from '../../../perspective-configuration';
 import {TasksGroup} from '../model/tasks-group';
 
 @Component({

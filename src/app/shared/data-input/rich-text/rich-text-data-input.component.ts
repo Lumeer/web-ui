@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -32,31 +31,36 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {keyboardEventCode, KeyCode} from '../../key-code';
+import {DeviceDetectorService} from 'ngx-device-detector';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {isNotNullOrUndefined, preventEvent, unescapeHtml} from '../../utils/common.utils';
-import {CommonDataInputConfiguration} from '../data-input-configuration';
-import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {DataInputModalService} from '../data-input-modal.service';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 import {ConstraintType, DataValue, TextDataValue} from '@lumeer/data-filters';
-import {clickedInsideElement} from '../../utils/html-modifier';
-import {defaultTextEditorBubbleOptions} from '../../modal/text-editor/text-editor.utils';
-import {animateOpacityEnterLeave} from '../../animations';
+import {isNotNullOrUndefined, unescapeHtml} from '@lumeer/utils';
+
 import {ModalData} from '../../../core/model/modal-data';
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {ViewSettingsAction} from '../../../core/store/view-settings/view-settings.action';
-import {ModalSettings} from '../../../core/store/view-settings/view-settings';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {viewSettingsIdByWorkspace} from '../../../core/store/view-settings/view-settings.util';
+import {ModalSettings} from '../../../core/store/view-settings/view-settings';
+import {ViewSettingsAction} from '../../../core/store/view-settings/view-settings.action';
 import {selectViewSettingsById} from '../../../core/store/view-settings/view-settings.state';
-import {map} from 'rxjs/operators';
-import {RichTextDropdownComponent} from './dropdown/rich-text-dropdown.component';
+import {viewSettingsIdByWorkspace} from '../../../core/store/view-settings/view-settings.util';
+import {animateOpacityEnterLeave} from '../../animations';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
-import {DeviceDetectorService} from 'ngx-device-detector';
+import {defaultTextEditorBubbleOptions} from '../../modal/text-editor/text-editor.utils';
+import {preventEvent} from '../../utils/common.utils';
+import {clickedInsideElement} from '../../utils/html-modifier';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputModalService} from '../data-input-modal.service';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {RichTextDropdownComponent} from './dropdown/rich-text-dropdown.component';
 
 const modalKey = 'rich-text';
 

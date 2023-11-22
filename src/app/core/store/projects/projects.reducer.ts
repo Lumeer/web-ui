@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {ProjectsAction, ProjectsActionType} from './projects.action';
-import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.state';
+import {objectValues} from '../../../shared/utils/common.utils';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
+import {LoadingState} from '../../model/loading-state';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Project} from './project';
-import {LoadingState} from '../../model/loading-state';
-import {permissionsChanged} from '../../../shared/utils/permission.utils';
-import {objectValues} from '../../../shared/utils/common.utils';
+import {ProjectsAction, ProjectsActionType} from './projects.action';
+import {ProjectsState, initialProjectsState, projectsAdapter} from './projects.state';
 
 export function projectsReducer(
   state: ProjectsState = initialProjectsState,

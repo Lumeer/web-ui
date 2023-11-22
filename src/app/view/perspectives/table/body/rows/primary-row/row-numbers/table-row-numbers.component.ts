@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -30,20 +29,20 @@ import {
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, map, mergeMap, switchMap, take} from 'rxjs/operators';
+
+import {AppState} from '../../../../../../../core/store/app.state';
+import {selectCollectionById} from '../../../../../../../core/store/collections/collections.state';
+import {selectDocumentById} from '../../../../../../../core/store/documents/documents.state';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElementFromInnerElement} from '../../../../../../../core/store/tables/table.utils';
-import {TableRowNumberService} from '../../../../service/table-row-number.service';
-import {ResizeObserverEntry, ResizeObserver} from '../../../../../../../shared/resize-observer';
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
-import {selectDocumentById} from '../../../../../../../core/store/documents/documents.state';
-import {selectCollectionById} from '../../../../../../../core/store/collections/collections.state';
-import {AppState} from '../../../../../../../core/store/app.state';
-
-declare let ResizeObserver: ResizeObserver;
+import {TableRowNumberService} from '../../../../service/table-row-number.service';
 
 @Component({
   selector: 'table-row-numbers',

@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {BaseService} from '../../rest/base.service';
-import {SelectionListsService} from './selection-lists.service';
-import {SelectionListDto} from '../../dto/selection-list.dto';
-import {Observable} from 'rxjs';
-import {Workspace} from '../../store/navigation/workspace';
-import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../store/app.state';
+
+import {Observable} from 'rxjs';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {SelectionListDto} from '../../dto/selection-list.dto';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {Workspace} from '../../store/navigation/workspace';
+import {SelectionListsService} from './selection-lists.service';
 
 @Injectable()
 export class ApiSelectionListsService extends BaseService implements SelectionListsService {

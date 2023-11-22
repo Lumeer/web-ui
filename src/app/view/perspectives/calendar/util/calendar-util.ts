@@ -16,7 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as moment from 'moment';
 
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DateTimeConstraint,
+  DurationConstraint,
+  durationCountsMapToString,
+  queryAttributePermissions,
+} from '@lumeer/data-filters';
+import {deepObjectsEquals, isDateValid, toNumber} from '@lumeer/utils';
+
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResource} from '../../../../core/model/resource';
 import {
   CalendarBar,
   CalendarConfig,
@@ -26,30 +40,17 @@ import {
   defaultSlotDuration,
 } from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {deepObjectsEquals, isDateValid, toNumber} from '../../../../shared/utils/common.utils';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {
   checkOrTransformQueryAttribute,
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
-import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
-import * as moment from 'moment';
-import {queryAttributePermissions} from '../../../../core/model/query-attribute';
-import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {
-  Constraint,
-  ConstraintData,
-  ConstraintType,
-  DateTimeConstraint,
-  DurationConstraint,
-  durationCountsMapToString,
-} from '@lumeer/data-filters';
 import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
-import {AttributesResource} from '../../../../core/model/resource';
+import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 
 export function isAllDayEvent(start: Date, end: Date): boolean {
   return isAllDayEventSingle(start) && isAllDayEventSingle(end);

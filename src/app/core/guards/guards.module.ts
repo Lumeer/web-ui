@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+
 import {CurrentUserGuard} from './current-user.guard';
 import {CollectionsGuard} from './data/collections.guard';
+import {DashboardDataGuard} from './data/dashboard-data.guard';
 import {LinkTypesGuard} from './data/link-types.guard';
-import {ViewsGuard} from './data/views.guard';
-import {PageNotFoundGuard} from './page-not-found.guard';
-import {ViewRedirectGuard} from './view-redirect.guard';
+import {OrganizationsProjectsGuard} from './data/organizations-projects.guard';
+import {ResourceVariablesGuard} from './data/resource-variables.guard';
 import {UsersGuard} from './data/users.guard';
 import {ViewDefaultConfigsGuard} from './data/view-default-configs.guard';
+import {ViewsGuard} from './data/views.guard';
+import {PageNotFoundGuard} from './page-not-found.guard';
 import {SelectionListsGuard} from './selection-lists.guard';
-import {DashboardDataGuard} from './data/dashboard-data.guard';
-import {ResourceVariablesGuard} from './data/resource-variables.guard';
-import {OrganizationsProjectsGuard} from './data/organizations-projects.guard';
+import {ViewRedirectGuard} from './view-redirect.guard';
 
 @NgModule({
   imports: [CommonModule],

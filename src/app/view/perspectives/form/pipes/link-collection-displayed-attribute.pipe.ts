@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {Collection} from '../../../../core/store/collections/collection';
-import {FormLinkCellConfig} from '../../../../core/store/form/form-model';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {FormLinkCellConfig} from '../../../../core/store/form/form-model';
 
 @Pipe({
   name: 'linkCollectionDisplayedAttribute',

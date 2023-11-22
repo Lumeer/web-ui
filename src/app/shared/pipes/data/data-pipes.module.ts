@@ -16,18 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {DataValuePipe} from './data-value.pipe';
-import {FormatDataValuePipe} from './format-data-value.pipe';
-import {IsDataValueValidPipe} from './is-data-value-valid.pipe';
-import {SerializeDataValuePipe} from './serialize-data-value.pipe';
-import {PreviewDataValuePipe} from './preview-data-value.pipe';
-import {FormatDataValueForEditPipe} from './format-data-value-for-edit.pipe';
-import {FormatDataValueTitlePipe} from './format-data-value-title.pipe';
+
 import {DataInputEditInfoPipe} from './data-input-edit-info.pipe';
 import {DataValueByAttributePipe} from './data-value-by-attribute.pipe';
+import {DataValuePipe} from './data-value.pipe';
+import {FormatDataValueForEditPipe} from './format-data-value-for-edit.pipe';
+import {FormatDataValueTitlePipe} from './format-data-value-title.pipe';
+import {FormatDataValuePipe} from './format-data-value.pipe';
+import {IsDataValueValidPipe} from './is-data-value-valid.pipe';
+import {PreviewDataValuePipe} from './preview-data-value.pipe';
+import {SerializeDataValuePipe} from './serialize-data-value.pipe';
 
 @NgModule({
   imports: [CommonModule],

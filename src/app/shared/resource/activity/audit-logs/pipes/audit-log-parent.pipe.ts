@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
+
 import {AttributesResource} from '../../../../../core/model/resource';
 import {ResourceType} from '../../../../../core/model/resource-type';
+import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 

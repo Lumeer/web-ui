@@ -16,40 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
-import {DialogType} from '../../dialog-type';
-import {BehaviorSubject, Observable} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {keyboardEventCode, KeyCode} from '../../../key-code';
-import {User} from '../../../../core/store/users/user';
-import {Organization} from '../../../../core/store/organizations/organization';
-import {Project} from '../../../../core/store/projects/project';
-import {View} from '../../../../core/store/views/view';
-import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
-import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
-import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../../../core/store/users/users.state';
-import {ViewLinkTypePermissionsBodyComponent} from './body/view-link-type-permissions-body.component';
-import {selectCurrentView} from '../../../../core/store/views/views.state';
-import {Team} from '../../../../core/store/teams/team';
-import {selectTeamsForWorkspace} from '../../../../core/store/teams/teams.state';
-import {Permissions} from '../../../../core/store/permissions/permissions';
-import {
-  selectViewSettingsCollectionPermissions,
-  selectViewSettingsId,
-  selectViewSettingsLinkTypePermissions,
-} from '../../../../core/store/view-settings/view-settings.state';
-import {ViewSettingsAction} from '../../../../core/store/view-settings/view-settings.action';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {take} from 'rxjs/operators';
+
+import {AppState} from '../../../../core/store/app.state';
+import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {
   selectAllLinkTypes,
   selectLinkTypeByIdWithCollections,
 } from '../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {Collection} from '../../../../core/store/collections/collection';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {Permissions} from '../../../../core/store/permissions/permissions';
+import {Project} from '../../../../core/store/projects/project';
+import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
+import {Team} from '../../../../core/store/teams/team';
+import {selectTeamsForWorkspace} from '../../../../core/store/teams/teams.state';
+import {User} from '../../../../core/store/users/user';
+import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../../../core/store/users/users.state';
+import {ViewSettingsAction} from '../../../../core/store/view-settings/view-settings.action';
+import {
+  selectViewSettingsCollectionPermissions,
+  selectViewSettingsId,
+  selectViewSettingsLinkTypePermissions,
+} from '../../../../core/store/view-settings/view-settings.state';
+import {View} from '../../../../core/store/views/view';
+import {selectCurrentView} from '../../../../core/store/views/views.state';
+import {KeyCode, keyboardEventCode} from '../../../key-code';
+import {DialogType} from '../../dialog-type';
+import {ViewLinkTypePermissionsBodyComponent} from './body/view-link-type-permissions-body.component';
 
 @Component({
   selector: 'view-link-type-permissions-modal',

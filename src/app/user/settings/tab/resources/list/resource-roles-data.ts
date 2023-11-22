@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 import {Role} from '../../../../../core/store/permissions/permissions';
 import {parseSelectTranslation} from '../../../../../shared/utils/translation.utils';
-import {ResourcePermissionType} from '../../../../../core/model/resource-permission-type';
 
 export interface ResourceRolesData {
   objects: ResourceRolesDatum[];

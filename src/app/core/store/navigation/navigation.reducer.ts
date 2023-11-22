@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ROUTER_CANCEL,
   ROUTER_NAVIGATED,
@@ -25,18 +24,21 @@ import {
   RouterNavigatedAction,
   RouterNavigationAction,
 } from '@ngrx/router-store';
-import {deepObjectsEquals, objectValues} from '../../../shared/utils/common.utils';
+
+import {deepObjectsEquals} from '@lumeer/utils';
+
+import {objectValues} from '../../../shared/utils/common.utils';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {parseMapCoordinates} from '../maps/map-coordinates';
 import {MapPosition} from '../maps/map.model';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
-import {initialNavigationState, NavigationState} from './navigation.state';
+import {NavigationState, initialNavigationState} from './navigation.state';
 import {QueryParam} from './query-param';
 import {convertQueryStringToModel} from './query/query.converter';
 import {parseSearchTabFromUrl} from './search-tab';
-import {convertStringToViewCursor} from './view-cursor/view-cursor';
 import {convertStringToPerspectiveSettings} from './settings/perspective-settings';
+import {convertStringToViewCursor} from './view-cursor/view-cursor';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
   const {params, queryParams, url} = action.payload.routerState;

@@ -18,7 +18,8 @@
  */
 import {APIRequestContext} from '@playwright/test';
 import dotenv from 'dotenv';
-import {getUserApiCall, createCollectionApiCall, addCollectionAttributesApiCall, addDocumentApiCall} from './apiCalls';
+
+import {addCollectionAttributesApiCall, addDocumentApiCall, createCollectionApiCall, getUserApiCall} from './apiCalls';
 
 dotenv.config();
 

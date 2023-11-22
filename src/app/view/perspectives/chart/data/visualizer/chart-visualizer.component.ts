@@ -16,26 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
-  SimpleChanges,
-  ViewChild,
-  ElementRef,
-  Output,
-  EventEmitter,
   OnDestroy,
   OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {AxisSettingsChange, ChartVisualizer, ClickEvent, ValueChange} from '../../visualizer/chart-visualizer';
-import {ChartData, ChartSettings} from '../convertor/chart-data';
+
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import {generateId} from '../../../../../shared/utils/resource.utils';
+import {AxisSettingsChange, ChartVisualizer, ClickEvent, ValueChange} from '../../visualizer/chart-visualizer';
+import {ChartData, ChartSettings} from '../convertor/chart-data';
 
 @Component({
   selector: 'chart-visualizer',

@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {Contact} from '../../../../core/store/organizations/contact/contact';
-import {CountriesData} from '../../../../core/store/organizations/contact/countries.data';
-import {ContactsAction} from '../../../../core/store/organizations/contact/contacts.action';
-import {Organization} from '../../../../core/store/organizations/organization';
-import {AppState} from '../../../../core/store/app.state';
-import {BehaviorSubject} from 'rxjs';
+
 import {Store} from '@ngrx/store';
+
+import {BehaviorSubject} from 'rxjs';
+
+import {AppState} from '../../../../core/store/app.state';
+import {Contact} from '../../../../core/store/organizations/contact/contact';
+import {ContactsAction} from '../../../../core/store/organizations/contact/contacts.action';
+import {CountriesData} from '../../../../core/store/organizations/contact/countries.data';
+import {Organization} from '../../../../core/store/organizations/organization';
 
 @Component({
   selector: 'contact-form',

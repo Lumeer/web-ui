@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {filterOutAttributeAndChildren, updateAttributes} from '../../../shared/utils/attribute.utils';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
-import {collectionsAdapter, CollectionsState, initialCollectionsState} from './collections.state';
-import {permissionsChanged} from '../../../shared/utils/permission.utils';
+import {CollectionsState, collectionsAdapter, initialCollectionsState} from './collections.state';
 
 export function collectionsReducer(
   state: CollectionsState = initialCollectionsState,

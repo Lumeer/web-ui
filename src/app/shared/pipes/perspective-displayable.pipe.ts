@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {isNullOrUndefined} from '@lumeer/utils';
+
 import {Query} from '../../core/store/navigation/query/query';
-import {isNullOrUndefined} from '../utils/common.utils';
 
 @Pipe({
   name: 'perspectiveDisplayable',

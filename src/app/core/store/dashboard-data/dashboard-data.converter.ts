@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {DashboardDataDto} from '../../dto/dashboard-data.dto';
 import {DashboardData, dashboardDataTypesMap} from './dashboard-data';
 

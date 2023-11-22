@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 
-import {SearchViewsDirective} from '../search-views.directive';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../core/store/app.state';
+import {SearchViewsDirective} from '../search-views.directive';
 
 @Component({
   selector: 'search-views-preview',

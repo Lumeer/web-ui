@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../app.state';
 import {Router} from '@angular/router';
-import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {Store, select} from '@ngrx/store';
+
 import {EMPTY, of} from 'rxjs';
-import * as ResourceVariableActions from './resource-variables.actions';
-import {NotificationsAction} from '../notifications/notifications.action';
-import {selectResourceVariablesDictionary, selectResourceVariablesLoadedProjects} from './resource-variables.state';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+
 import {ResourceVariablesService} from '../../data-service/resource-variables/resource-variables.service';
-import {convertResourceVariableDtoToModel, convertResourceVariableModelToDto} from './resource-variable.converter';
+import {AppState} from '../app.state';
+import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions} from '../utils/store.utils';
+import {convertResourceVariableDtoToModel, convertResourceVariableModelToDto} from './resource-variable.converter';
+import * as ResourceVariableActions from './resource-variables.actions';
+import {selectResourceVariablesDictionary, selectResourceVariablesLoadedProjects} from './resource-variables.state';
 
 @Injectable()
 export class ResourceVariablesEffects {

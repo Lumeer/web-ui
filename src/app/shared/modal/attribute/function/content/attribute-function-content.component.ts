@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+
 import {Attribute, AttributeFunction, Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {View} from '../../../../../core/store/views/view';

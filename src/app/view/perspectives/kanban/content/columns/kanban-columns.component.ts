@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,26 +30,28 @@ import {
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
-import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {AppState} from '../../../../../core/store/app.state';
+
 import {Store} from '@ngrx/store';
+
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+
 import {DRAG_DELAY} from '../../../../../core/constants';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {KanbanColumnComponent} from './column/kanban-column.component';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
-import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {DataResource} from '../../../../../core/model/resource';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
-import {User} from '../../../../../core/store/users/user';
-import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration';
 import {CreateDataResourceService} from '../../../../../core/service/create-data-resource.service';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {User} from '../../../../../core/store/users/user';
 import {ViewSettings} from '../../../../../core/store/view-settings/view-settings';
+import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
+import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration';
+import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
+import {KanbanColumnComponent} from './column/kanban-column.component';
 
 @Component({
   selector: 'kanban-columns',

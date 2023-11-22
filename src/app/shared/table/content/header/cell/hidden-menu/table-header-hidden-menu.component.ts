@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, ChangeDetectionStrategy, Input, ViewChild, EventEmitter, Output} from '@angular/core';
-import {TableColumn} from '../../../../model/table-column';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
+
 import {preventEvent} from '../../../../../utils/common.utils';
+import {TableColumn} from '../../../../model/table-column';
 
 @Component({
   selector: 'table-header-hidden-menu',

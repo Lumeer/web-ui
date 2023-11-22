@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ShowAxisSelectPipe} from './axis/show-axis-select.pipe';
-import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
-import {ConfigAxisByTypePipe} from './axis/config-axis-by-type.pipe';
-import {SortSelectItemsPipe} from './sort/sort-select-items.pipe';
-import {ChartDraggable} from './chart-draggable';
-import {SortTypeSelectItemsPipe} from './sort/sort-type-select-items.pipe';
+import {NgModule} from '@angular/core';
+
 import {ChartAxisSelectItemIdPipe} from './axis/chart-axis-select-item-id.pipe';
 import {ChartCleanAxisPipe} from './axis/chart-clean-axis';
+import {ConfigAxisByTypePipe} from './axis/config-axis-by-type.pipe';
+import {ShowAxisSelectPipe} from './axis/show-axis-select.pipe';
+import {ChartDraggable} from './chart-draggable';
+import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
+import {SortSelectItemsPipe} from './sort/sort-select-items.pipe';
+import {SortTypeSelectItemsPipe} from './sort/sort-type-select-items.pipe';
 
 @NgModule({
   imports: [CommonModule],

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+
 import {CalendarPropertyItemsPipe} from './calendar-property-items.pipe';
 import {CalendarPropertyPlaceholderPipe} from './calendar-property-placeholder.pipe';
 import {CalendarValuePropertyPipe} from './calendar-value-property.pipe';

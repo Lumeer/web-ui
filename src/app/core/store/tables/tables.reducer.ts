@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Direction} from '../../../shared/direction';
 import {copyAndSpliceArray} from '../../../shared/utils/array.utils';
 import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
@@ -40,7 +39,7 @@ import {
   splitRowPath,
 } from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
-import {initialTablesState, tablesAdapter, TablesState} from './tables.state';
+import {TablesState, initialTablesState, tablesAdapter} from './tables.state';
 
 export function tablesReducer(state = initialTablesState, action: TablesAction.All): TablesState {
   switch (action.type) {

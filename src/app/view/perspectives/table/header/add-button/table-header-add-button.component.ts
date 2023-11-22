@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,26 +28,29 @@ import {
   ViewChild,
 } from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest} from 'rxjs';
 import {first, map} from 'rxjs/operators';
-import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
-import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
-import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {ModalService} from '../../../../../shared/modal/modal.service';
-import {TableConfigPart} from '../../../../../core/store/tables/table.model';
-import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
-import {AppState} from '../../../../../core/store/app.state';
+
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {View} from '../../../../../core/store/views/view';
+import {AppState} from '../../../../../core/store/app.state';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
 import {
   selectReadableCollectionsByView,
   selectReadableLinkTypesByView,
 } from '../../../../../core/store/common/permissions.selectors';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
 import {Query} from '../../../../../core/store/navigation/query/query';
+import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
+import {TableConfigPart} from '../../../../../core/store/tables/table.model';
+import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
+import {View} from '../../../../../core/store/views/view';
+import {ModalService} from '../../../../../shared/modal/modal.service';
+import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'table-header-add-button',

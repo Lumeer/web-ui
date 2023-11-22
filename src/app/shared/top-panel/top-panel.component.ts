@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -30,23 +29,23 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, Subscription, combineLatest} from 'rxjs';
+
+import {AppPropertiesAction} from '../../core/store/app-properties/app-properties.action';
+import {selectTopPanelOpened} from '../../core/store/app-properties/app-properties.state';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {User} from '../../core/store/users/user';
+import {selectCurrentUser} from '../../core/store/users/users.state';
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
 import {UserPanelComponent} from './user-panel/user-panel.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
-import {ResizeObserver} from '../resize-observer';
-import {selectTopPanelOpened} from '../../core/store/app-properties/app-properties.state';
-import {AppPropertiesAction} from '../../core/store/app-properties/app-properties.action';
-import {User} from '../../core/store/users/user';
-import {selectCurrentUser} from '../../core/store/users/users.state';
-
-declare let ResizeObserver: ResizeObserver;
 
 @Component({
   selector: 'top-panel',

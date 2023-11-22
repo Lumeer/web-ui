@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Layout, d3} from 'plotly.js';
+
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ChartDataSet} from '../../data/convertor/chart-data';
 import {AxisDraggablePlotMaker} from './axis-draggable-plot-maker';

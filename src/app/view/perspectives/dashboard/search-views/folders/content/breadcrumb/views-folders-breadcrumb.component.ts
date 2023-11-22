@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, EventEmitter, Output, Input} from '@angular/core';
-import {ObjectFolders} from '../util/object-folders';
 import {View} from '../../../../../../../core/store/views/view';
+import {ObjectFolders} from '../util/object-folders';
 
 @Component({
   selector: 'views-folders-breadcrumb',

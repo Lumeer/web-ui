@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../../core/store/app.state';
 import {Collection} from '../../../../core/store/collections/collection';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {selectLinkTypeByWorkspaceWithCollections} from '../../../../core/store/link-types/link-types.state';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
+import {selectLinkTypeByWorkspaceWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'link-type-collections',

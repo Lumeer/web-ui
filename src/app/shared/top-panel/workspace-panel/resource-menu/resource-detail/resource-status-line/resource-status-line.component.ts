@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Project} from '../../../../../../core/store/projects/project';
-import {Organization} from '../../../../../../core/store/organizations/organization';
-import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../../../../core/store/app.state';
+import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
+import {Organization} from '../../../../../../core/store/organizations/organization';
+import {Project} from '../../../../../../core/store/projects/project';
 import {selectProjectsForWorkspace} from '../../../../../../core/store/projects/projects.state';
 import {selectUsersForWorkspace} from '../../../../../../core/store/users/users.state';
-import {map} from 'rxjs/operators';
-import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'resource-status-line',

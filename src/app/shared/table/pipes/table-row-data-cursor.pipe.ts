@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableRow} from '../model/table-row';
-import {TableColumn} from '../model/table-column';
+
 import {DataCursor} from '../../data-input/data-cursor';
+import {TableColumn} from '../model/table-column';
+import {TableRow} from '../model/table-row';
 
 @Pipe({
   name: 'tableRowDataCursor',

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,16 +27,23 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+
+import {Store} from '@ngrx/store';
+
+import {BehaviorSubject, Subscription, combineLatest} from 'rxjs';
 import {map, skip} from 'rxjs/operators';
-import {User, UserHintsKeys} from '../../../../../core/store/users/user';
-import {Organization} from '../../../../../core/store/organizations/organization';
-import {Project} from '../../../../../core/store/projects/project';
-import {View} from '../../../../../core/store/views/view';
-import {Permission, Permissions, Role} from '../../../../../core/store/permissions/permissions';
-import {BehaviorSubject, combineLatest, Subscription} from 'rxjs';
+
+import {deepObjectsEquals, uniqueValues} from '@lumeer/utils';
+
+import {RoleType} from '../../../../../core/model/role-type';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
-import {generateCorrelationId} from '../../../../utils/resource.utils';
-import {uniqueValues} from '../../../../utils/array.utils';
+import {AppState} from '../../../../../core/store/app.state';
+import {Organization} from '../../../../../core/store/organizations/organization';
+import {Permission, Permissions, Role} from '../../../../../core/store/permissions/permissions';
+import {Project} from '../../../../../core/store/projects/project';
+import {Team} from '../../../../../core/store/teams/team';
+import {User, UserHintsKeys} from '../../../../../core/store/users/user';
+import {View} from '../../../../../core/store/views/view';
 import {
   rolesChanged,
   teamCanReadWorkspace,
@@ -48,11 +54,7 @@ import {
   userHasRoleInOrganization,
   userHasRoleInProject,
 } from '../../../../utils/permission.utils';
-import {Team} from '../../../../../core/store/teams/team';
-import {RoleType} from '../../../../../core/model/role-type';
-import {deepObjectsEquals} from '../../../../utils/common.utils';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../../../core/store/app.state';
+import {generateCorrelationId} from '../../../../utils/resource.utils';
 
 export enum ViewTab {
   Users = 'users',

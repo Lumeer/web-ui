@@ -16,30 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {User, UserHintsKeys} from '../../../../core/store/users/user';
-import {AuthService} from '../../../../auth/auth.service';
-import {AppState} from '../../../../core/store/app.state';
-import {selectCurrentUser} from '../../../../core/store/users/users.state';
-import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {map} from 'rxjs/operators';
+
+import {AuthService} from '../../../../auth/auth.service';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
+import {Language, LanguageCode, availableLanguages} from '../../../../core/model/language';
+import {ApplicationTourService} from '../../../../core/service/application-tour.service';
+import {AppPropertiesAction} from '../../../../core/store/app-properties/app-properties.action';
+import {selectIsFullscreen} from '../../../../core/store/app-properties/app-properties.state';
+import {AppState} from '../../../../core/store/app.state';
+import {NavigationAction} from '../../../../core/store/navigation/navigation.action';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {User, UserHintsKeys} from '../../../../core/store/users/user';
 import {UsersAction} from '../../../../core/store/users/users.action';
+import {selectCurrentUser} from '../../../../core/store/users/users.state';
 import {ModalService} from '../../../modal/modal.service';
 import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview/referrals-overview-modal.component';
 import {UserSettingsModalComponent} from '../../../modal/user-settings/user-settings-modal.component';
-import {availableLanguages, Language, LanguageCode} from '../../../../core/model/language';
-import {ConfigurationService} from '../../../../configuration/configuration.service';
-import {ApplicationTourService} from '../../../../core/service/application-tour.service';
-import {NavigationAction} from '../../../../core/store/navigation/navigation.action';
-import {selectIsFullscreen} from '../../../../core/store/app-properties/app-properties.state';
-import {AppPropertiesAction} from '../../../../core/store/app-properties/app-properties.action';
 
 @Component({
   selector: 'user-menu',

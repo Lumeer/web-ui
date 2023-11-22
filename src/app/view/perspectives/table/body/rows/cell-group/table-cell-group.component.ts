@@ -16,15 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {filter, switchMap} from 'rxjs/operators';
+
+import {ConstraintData} from '@lumeer/data-filters';
+
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AttributesResource} from '../../../../../../core/model/resource';
+import {AppState} from '../../../../../../core/store/app.state';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {selectAllCollections, selectCollectionById} from '../../../../../../core/store/collections/collections.state';
+import {
+  selectCollectionPermissionsByView,
+  selectLinkTypePermissionsByView,
+} from '../../../../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
 import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
 import {
@@ -41,22 +57,9 @@ import {
   selectTablePartLeafColumns,
   selectTableParts,
 } from '../../../../../../core/store/tables/tables.selector';
-import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {selectAllCollections, selectCollectionById} from '../../../../../../core/store/collections/collections.state';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
-import {ConstraintData} from '@lumeer/data-filters';
-import {AppState} from '../../../../../../core/store/app.state';
-import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/users.state';
-import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {User} from '../../../../../../core/store/users/user';
-import {AttributesResource} from '../../../../../../core/model/resource';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/users.state';
 import {View} from '../../../../../../core/store/views/view';
-import {
-  selectCollectionPermissionsByView,
-  selectLinkTypePermissionsByView,
-} from '../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'table-cell-group',

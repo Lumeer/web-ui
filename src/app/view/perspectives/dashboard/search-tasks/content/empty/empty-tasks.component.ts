@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {Query} from '../../../../../../core/store/navigation/query/query';
-import {AppState} from '../../../../../../core/store/app.state';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {selectAllDocumentsCount} from '../../../../../../core/store/documents/documents.state';
-import {selectProjectPermissions} from '../../../../../../core/store/user-permissions/user-permissions.state';
 import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../../../../core/store/app.state';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {selectAllDocumentsCount} from '../../../../../../core/store/documents/documents.state';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {selectProjectPermissions} from '../../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'empty-tasks',

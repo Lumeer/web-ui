@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {DataAggregationType} from '../../../../../../../shared/utils/data/data-aggregation';
+
+import {DataAggregationType} from '@lumeer/data-filters';
+
 import {KanbanAggregation, KanbanValueType} from '../../../../../../../core/store/kanbans/kanban';
 import {objectValues} from '../../../../../../../shared/utils/common.utils';
 

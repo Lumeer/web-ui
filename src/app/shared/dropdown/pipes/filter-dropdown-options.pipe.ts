@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {removeAccentFromString, unescapeHtml} from '@lumeer/utils';
+
+import {sortObjectsByScore} from '../../utils/common.utils';
 import {DropdownOption} from '../options/dropdown-option';
-import {sortObjectsByScore, unescapeHtml} from '../../utils/common.utils';
-import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'filterDropdownOptions',

@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {UntypedFormArray, UntypedFormControl} from '@angular/forms';
+
 import {moveFormArrayItem} from './form.utils';
 
 describe('moveFormArrayItem', () => {

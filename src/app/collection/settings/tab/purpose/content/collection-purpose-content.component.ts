@@ -16,30 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
   Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
   SimpleChange,
   SimpleChanges,
-  OnChanges,
-  OnInit,
-  OnDestroy,
 } from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
+
+import {Subscription} from 'rxjs';
+
 import {
   Collection,
   CollectionPurpose,
   CollectionPurposeMetadata,
-  collectionPurposesMap,
   CollectionPurposeType,
+  collectionPurposesMap,
 } from '../../../../../core/store/collections/collection';
-import {TaskPurposeFormControl} from './form/tasks/task-purpose-form-control';
-import {Subscription} from 'rxjs';
-import {UpdatePurposeService} from './update-purpose.service';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {TaskPurposeFormControl} from './form/tasks/task-purpose-form-control';
+import {UpdatePurposeService} from './update-purpose.service';
 
 @Component({
   selector: 'collection-purpose-content',

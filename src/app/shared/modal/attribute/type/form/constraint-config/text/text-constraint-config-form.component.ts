@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
+
+import {CaseStyle, TextConstraintConfig} from '@lumeer/data-filters';
+
 import {minMaxValidator} from '../../../../../../../core/validators/min-max-validator';
 import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
-import {TextConstraintFormControl} from './text-constraint-form-control';
-import {CaseStyle, TextConstraintConfig} from '@lumeer/data-filters';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {parseSelectTranslation} from '../../../../../../utils/translation.utils';
+import {TextConstraintFormControl} from './text-constraint-form-control';
 
 @Component({
   selector: 'text-constraint-config-form',

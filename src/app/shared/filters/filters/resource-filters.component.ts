@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+
 import {BehaviorSubject} from 'rxjs';
+
+import {AttributeFilter} from '@lumeer/data-filters';
+
+import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
+import {findAttribute} from '../../../core/store/collections/collection.util';
+import {CollectionAttributeFilter, LinkAttributeFilter} from '../../../core/store/navigation/query/query';
+import {areConditionValuesDefined} from '../../../core/store/navigation/query/query.util';
 import {SelectItem2Model} from '../../select/select-item2/select-item2.model';
 import {resourceAttributesSelectItems} from '../../select/select-item.utils';
-import {findAttribute} from '../../../core/store/collections/collection.util';
-import {areConditionValuesDefined} from '../../../core/store/navigation/query/query.util';
-import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
-import {CollectionAttributeFilter, LinkAttributeFilter} from '../../../core/store/navigation/query/query';
-import {AttributeFilter} from '@lumeer/data-filters';
 
 @Component({
   selector: 'resource-filters',

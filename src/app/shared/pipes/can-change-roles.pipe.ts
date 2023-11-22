@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {User} from '../../core/store/users/user';
 import {ResourceType} from '../../core/model/resource-type';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
+import {User} from '../../core/store/users/user';
 import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../utils/permission.utils';
 
 @Pipe({

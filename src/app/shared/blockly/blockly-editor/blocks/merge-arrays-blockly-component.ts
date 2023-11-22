@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {COLOR_AMBER} from '../../../../core/constants';
+import {View} from '../../../../core/store/views/view';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {BlocklyComponent} from './blockly-component';
-import {View} from '../../../../core/store/views/view';
 
 declare var Blockly: any;
 

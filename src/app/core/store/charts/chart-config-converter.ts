@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isNotNullOrUndefined} from '@lumeer/utils';
 
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {ChartAxisConfig, ChartAxisType, ChartConfig, ChartConfigVersion} from './chart';
 import {ChartConfigV0} from './chart-old';
 

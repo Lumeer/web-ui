@@ -16,29 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
+import {ResourceAttributesModule} from '../shared/attributes/resource-attributes.module';
+import {DirectivesModule} from '../shared/directives/directives.module';
+import {InputModule} from '../shared/input/input.module';
+import {PipesModule} from '../shared/pipes/pipes.module';
+import {PresenterModule} from '../shared/presenter/presenter.module';
+import {ResourceActivityModule} from '../shared/resource/activity/resource-activity.module';
+import {RulesModule} from '../shared/rules/rules.module';
+import {TopPanelModule} from '../shared/top-panel/top-panel.module';
+import {LinkTypeRoutingModule} from './link-type-routing.module';
 import {LinkTypeSettingsGuard} from './link-type-settings.guard';
 import {LinkTypeTabGuard} from './link-type-tab.guard';
-import {LinkTypeSettingsComponent} from './settings/link-type-settings.component';
-import {LinkTypeRoutingModule} from './link-type-routing.module';
-import {LinkTypeActivityComponent} from './settings/tab/activity/link-type-activity.component';
 import {LinkTypeHeaderComponent} from './settings/header/link-type-header.component';
+import {LinkTypeSettingsComponent} from './settings/link-type-settings.component';
+import {LinkTypeActivityComponent} from './settings/tab/activity/link-type-activity.component';
 import {LinkTypeAttributesComponent} from './settings/tab/attributes/link-type-attributes.component';
-import {ResourceAttributesModule} from '../shared/attributes/resource-attributes.module';
-import {LinkTypeRulesComponent} from './settings/tab/rules/link-type-rules.component';
-import {RulesModule} from '../shared/rules/rules.module';
-import {LinkTypeCollectionsComponent} from './settings/tab/collections/link-type-collections.component';
 import {LinkTypeCollectionComponent} from './settings/tab/collections/collection/link-type-collection.component';
-import {PipesModule} from '../shared/pipes/pipes.module';
-import {DirectivesModule} from '../shared/directives/directives.module';
-import {PresenterModule} from '../shared/presenter/presenter.module';
-import {InputModule} from '../shared/input/input.module';
-import {ResourceActivityModule} from '../shared/resource/activity/resource-activity.module';
-import {TopPanelModule} from '../shared/top-panel/top-panel.module';
+import {LinkTypeCollectionsComponent} from './settings/tab/collections/link-type-collections.component';
+import {LinkTypeRulesComponent} from './settings/tab/rules/link-type-rules.component';
 
 @NgModule({
   imports: [

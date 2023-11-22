@@ -16,27 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {AuthGuard} from '../auth/auth.guard';
+import {DocumentRedirectComponent} from '../core/components/document-redirect.component';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
+import {DashboardDataGuard} from '../core/guards/data/dashboard-data.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
+import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
+import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
+import {ViewDefaultConfigsGuard} from '../core/guards/data/view-default-configs.guard';
 import {ViewsGuard} from '../core/guards/data/views.guard';
+import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up.guard';
 import {ViewRedirectGuard} from '../core/guards/view-redirect.guard';
 import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {Perspective} from './perspectives/perspective';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
-import {ViewDefaultConfigsGuard} from '../core/guards/data/view-default-configs.guard';
-import {DocumentRedirectComponent} from '../core/components/document-redirect.component';
-import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
-import {DashboardDataGuard} from '../core/guards/data/dashboard-data.guard';
-import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
-import {OrganizationsProjectsGuard} from '../core/guards/data/organizations-projects.guard';
 
 const viewRoutes: Routes = [
   {

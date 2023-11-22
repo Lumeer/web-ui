@@ -16,11 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest, of} from 'rxjs';
 import {distinctUntilChanged, filter, map, switchMap} from 'rxjs/operators';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../../core/service/load-data.service';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {
@@ -30,15 +33,14 @@ import {
   selectViewsByCustomQuery,
   selectViewsByRead,
 } from '../../../../core/store/common/permissions.selectors';
-import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
-import {selectCurrentView, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
-import {Query} from '../../../../core/store/navigation/query/query';
 import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {Query} from '../../../../core/store/navigation/query/query';
 import {queryIsEmpty} from '../../../../core/store/navigation/query/query.util';
 import {View} from '../../../../core/store/views/view';
-import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {LoadDataService, LoadDataServiceProvider} from '../../../../core/service/load-data.service';
+import {selectCurrentView, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {SearchPerspectiveConfiguration, defaultSearchPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Component({
   selector: 'search-all',

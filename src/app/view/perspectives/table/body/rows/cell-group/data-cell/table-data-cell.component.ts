@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,14 +32,30 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {Actions, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {Action, Store, select} from '@ngrx/store';
+
+import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
 import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
+
+import {
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  UnknownConstraint,
+  UnknownDataValue,
+  isAttributeEditable,
+} from '@lumeer/data-filters';
+import {deepObjectsEquals, isNotNullOrUndefined} from '@lumeer/utils';
+
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
+import {AttributesResource} from '../../../../../../../core/model/resource';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -50,6 +65,7 @@ import {LinkInstancesAction} from '../../../../../../../core/store/link-instance
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {Query} from '../../../../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
 import {findTableRow, getTableColumnWidth, isTableRowStriped} from '../../../../../../../core/store/tables/table.utils';
@@ -60,33 +76,25 @@ import {
   selectTablePart,
   selectTableRow,
 } from '../../../../../../../core/store/tables/tables.selector';
+import {View} from '../../../../../../../core/store/views/view';
+import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
+import {animateOpacityEnterLeave} from '../../../../../../../shared/animations';
+import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
-import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../../../shared/key-code';
+import {KeyCode, isKeyPrintable, keyboardEventCode} from '../../../../../../../shared/key-code';
 import {
   generateAttributeNameFromAttributes,
   isAttributeConstraintType,
-  isAttributeEditable,
 } from '../../../../../../../shared/utils/attribute.utils';
-import {EDITABLE_EVENT} from '../../../../table-perspective.component';
-import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 import {
   computeElementPositionInParent,
-  deepObjectsEquals,
-  isNotNullOrUndefined,
   objectChanged,
   preventEvent,
 } from '../../../../../../../shared/utils/common.utils';
-import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
-import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
-import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
-import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 import {initForceTouch} from '../../../../../../../shared/utils/html-modifier';
-import {View} from '../../../../../../../core/store/views/view';
-import {Workspace} from '../../../../../../../core/store/navigation/workspace';
-import {AttributesResource} from '../../../../../../../core/model/resource';
-import {animateOpacityEnterLeave} from '../../../../../../../shared/animations';
-import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
+import {EDITABLE_EVENT} from '../../../../table-perspective.component';
+import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 
 @Component({
   selector: 'table-data-cell',

@@ -16,49 +16,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined, uniqueValues} from '@lumeer/utils';
 
-import {
-  createCalendarSaveConfig,
-  isCalendarConfigChanged,
-} from '../../../view/perspectives/calendar/util/calendar-util';
-import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
-import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
-import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
-import {createChartSaveConfig, isChartConfigChanged} from '../charts/chart.util';
-import {Collection} from '../collections/collection';
-import {DocumentModel} from '../documents/document.model';
-import {LinkType} from '../link-types/link.type';
-import {isMapConfigChanged} from '../maps/map-config.utils';
-import {TableConfig} from '../tables/table.model';
-import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
-import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {PerspectiveConfig, View, ViewConfig} from './view';
-import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
-import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
-import {CalendarConfig} from '../calendars/calendar';
+import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
 import {
   createSaveAttributesSettings,
   createSavePermissionsSettings,
   viewAttributeSettingsChanged,
   viewAttributeSettingsSortChanged,
 } from '../../../shared/settings/settings.util';
-import {Query} from '../navigation/query/query';
-import {ChartConfig} from '../charts/chart';
-import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
-import {WorkflowConfig} from '../workflows/workflow';
-import {createDetailSaveConfig, isDetailConfigChanged} from '../details/detail.utils';
-import {DetailConfig} from '../details/detail';
-import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
-import {DashboardTab} from '../../model/dashboard-tab';
+import {areArraysSame} from '../../../shared/utils/array.utils';
 import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
-import {SearchConfig} from '../searches/search';
-import {AllowedPermissions} from '../../model/allowed-permissions';
-import {formViewConfigLinkQueries} from '../../../view/perspectives/form/form-utils';
-import {FormConfig} from '../form/form-model';
-import {DataSettings, ModalsSettings, ResourcesPermissions, ViewSettings} from '../view-settings/view-settings';
-import {areArraysSame, uniqueValues} from '../../../shared/utils/array.utils';
 import {permissionsChanged} from '../../../shared/utils/permission.utils';
+import {
+  createCalendarSaveConfig,
+  isCalendarConfigChanged,
+} from '../../../view/perspectives/calendar/util/calendar-util';
+import {formViewConfigLinkQueries} from '../../../view/perspectives/form/form-utils';
+import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
+import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
+import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
+import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
+import {AllowedPermissions} from '../../model/allowed-permissions';
+import {DashboardTab} from '../../model/dashboard-tab';
+import {CalendarConfig} from '../calendars/calendar';
+import {ChartConfig} from '../charts/chart';
+import {createChartSaveConfig, isChartConfigChanged} from '../charts/chart.util';
+import {Collection} from '../collections/collection';
+import {DetailConfig} from '../details/detail';
+import {createDetailSaveConfig, isDetailConfigChanged} from '../details/detail.utils';
+import {DocumentModel} from '../documents/document.model';
+import {FormConfig} from '../form/form-model';
+import {LinkType} from '../link-types/link.type';
+import {isMapConfigChanged} from '../maps/map-config.utils';
+import {Query} from '../navigation/query/query';
 import {Permissions} from '../permissions/permissions';
+import {SearchConfig} from '../searches/search';
+import {TableConfig} from '../tables/table.model';
+import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
+import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
+import {DataSettings, ModalsSettings, ResourcesPermissions, ViewSettings} from '../view-settings/view-settings';
+import {WorkflowConfig} from '../workflows/workflow';
+import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
+import {PerspectiveConfig, View, ViewConfig} from './view';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -255,15 +255,6 @@ export function createSaveViewSettings(
       permissions: createSavePermissionsSettings(settings.permissions),
     }
   );
-}
-
-export function getViewColor(view: View, collectionsMap: Record<string, Collection>): string {
-  return view?.color || defaultViewColorFromQuery(view, collectionsMap);
-}
-
-export function defaultViewColorFromQuery(view: View, collectionsMap: Record<string, Collection>): string {
-  const firstStemCollectionId = view?.query?.stems?.[0]?.collectionId;
-  return (firstStemCollectionId && collectionsMap?.[firstStemCollectionId]?.color) || '';
 }
 
 export function getViewIcon(view: View): string {

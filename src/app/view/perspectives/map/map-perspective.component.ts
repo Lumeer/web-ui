@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of, Subscription} from 'rxjs';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, Subscription, combineLatest, of} from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -31,12 +32,22 @@ import {
   take,
   withLatestFrom,
 } from 'rxjs/operators';
+
+import {deepObjectsEquals} from '@lumeer/utils';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
+import {selectCollectionsInCustomQuery} from '../../../core/store/common/permissions.selectors';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {checkOrTransformMapConfig, mapPositionChanged} from '../../../core/store/maps/map-config.utils';
 import {DEFAULT_MAP_CONFIG, MapConfig, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
+import {selectMap} from '../../../core/store/maps/maps.state';
 import {selectMapPosition, selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
+import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {DefaultViewConfig, ViewConfig} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {
@@ -44,18 +55,10 @@ import {
   selectDefaultViewConfigSnapshot,
   selectViewQuery,
 } from '../../../core/store/views/views.state';
-import {MapContentComponent} from './content/map-content.component';
-import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
-import {checkOrTransformMapConfig, mapPositionChanged} from '../../../core/store/maps/map-config.utils';
-import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {LinkType} from '../../../core/store/link-types/link.type';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
-import {AppState} from '../../../core/store/app.state';
-import {selectMap} from '../../../core/store/maps/maps.state';
-import {defaultMapPerspectiveConfiguration, MapPerspectiveConfiguration} from '../perspective-configuration';
-import {selectCollectionsInCustomQuery} from '../../../core/store/common/permissions.selectors';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
+import {MapPerspectiveConfiguration, defaultMapPerspectiveConfiguration} from '../perspective-configuration';
+import {MapContentComponent} from './content/map-content.component';
 
 @Component({
   selector: 'map-perspective',

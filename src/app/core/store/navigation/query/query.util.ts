@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AbstractControl,
   UntypedFormArray,
@@ -29,47 +28,47 @@ import {
 import {
   AttributeFilter,
   ConditionType,
-  conditionTypeNumberOfInputs,
   ConditionValue,
   ConstraintType,
   UnknownConstraint,
   UserConstraint,
   UserConstraintConditionValue,
   UserConstraintType,
+  conditionTypeNumberOfInputs,
 } from '@lumeer/data-filters';
+import {QueryAttribute, QueryResource} from '@lumeer/data-filters';
+import {deepObjectsEquals, isNullOrUndefined, uniqueValues} from '@lumeer/utils';
+
+import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
+import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
+import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
+import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
+import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
-import {LinkType} from '../../link-types/link.type';
 import {
   areArraysSame,
   arraySubtract,
   containsSameElements,
   createRange,
   isArraySubset,
-  uniqueValues,
 } from '../../../../shared/utils/array.utils';
-import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
-import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
-import {AttributesResource, AttributesResourceType} from '../../../model/resource';
-import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
-import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
-import {Workspace} from '../workspace';
-import {MapPosition} from '../../maps/map.model';
-import {formatMapCoordinates} from '../../maps/map-coordinates';
-import {generateId, getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
-import {COLOR_PRIMARY} from '../../../constants';
-import {DataQuery} from '../../../model/data-query';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../model/allowed-permissions';
-import {normalizeQueryStem} from './query.converter';
-import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
-import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
-import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
-import {View} from '../../views/view';
 import {isAttributeVisibleInResourceSettings} from '../../../../shared/utils/attribute.utils';
+import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
+import {generateId, getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+import {COLOR_PRIMARY} from '../../../constants';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../../model/allowed-permissions';
+import {DataQuery} from '../../../model/data-query';
+import {AttributesResource, AttributesResourceType} from '../../../model/resource';
+import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
+import {LinkType} from '../../link-types/link.type';
+import {formatMapCoordinates} from '../../maps/map-coordinates';
+import {MapPosition} from '../../maps/map.model';
 import {AttributesSettings, ResourceAttributeSettings} from '../../view-settings/view-settings';
+import {View} from '../../views/view';
+import {Workspace} from '../workspace';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
+import {normalizeQueryStem} from './query.converter';
 import {WorkspaceQuery} from './workspace-query';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {

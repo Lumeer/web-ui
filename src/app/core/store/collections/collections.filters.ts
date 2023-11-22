@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Collection} from './collection';
-import {DocumentModel} from '../documents/document.model';
-import {mergeCollections} from './collection.util';
-import {groupDocumentsByCollection} from '../documents/document.utils';
-import {Query} from '../navigation/query/query';
-import {LinkType} from '../link-types/link.type';
-import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
 import {ConstraintData, someDocumentMeetFulltexts} from '@lumeer/data-filters';
+
+import {DocumentModel} from '../documents/document.model';
+import {groupDocumentsByCollection} from '../documents/document.utils';
+import {LinkType} from '../link-types/link.type';
+import {Query} from '../navigation/query/query';
+import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
+import {Collection} from './collection';
+import {mergeCollections} from './collection.util';
 
 export function filterCollectionsByQuery(
   collections: Collection[],

@@ -16,31 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
-  SimpleChanges,
-  OnChanges,
   AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {HtmlModifier} from '../../../../../utils/html-modifier';
-import {
-  filterOutInvalidAttributeNameCharacters,
-  FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS,
-} from '../../../../../utils/attribute.utils';
-import {keyboardEventCode, KeyCode} from '../../../../../key-code';
-import {preventEvent} from '../../../../../utils/common.utils';
-import {TableColumn} from '../../../../model/table-column';
-import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
+
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../../../../core/store/app.state';
+
 import {POPUP_DELAY} from '../../../../../../core/constants';
+import {AppState} from '../../../../../../core/store/app.state';
+import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
+import {KeyCode, keyboardEventCode} from '../../../../../key-code';
+import {
+  FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS,
+  filterOutInvalidAttributeNameCharacters,
+} from '../../../../../utils/attribute.utils';
+import {preventEvent} from '../../../../../utils/common.utils';
+import {HtmlModifier} from '../../../../../utils/html-modifier';
+import {TableColumn} from '../../../../model/table-column';
 
 @Component({
   selector: 'table-header-input',

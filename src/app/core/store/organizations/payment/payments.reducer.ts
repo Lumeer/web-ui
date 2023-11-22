@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {PaymentsAction, PaymentsActionType} from './payments.action';
-import {initialPaymentsState, paymentsAdapter, PaymentsState} from './payments.state';
 import {Payment} from './payment';
+import {PaymentsAction, PaymentsActionType} from './payments.action';
+import {PaymentsState, initialPaymentsState, paymentsAdapter} from './payments.state';
 
 export function paymentsReducer(
   state: PaymentsState = initialPaymentsState,

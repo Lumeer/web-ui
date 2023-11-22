@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   HttpClient,
   HttpEvent,
@@ -27,9 +26,11 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
+import {DeviceDetectorService} from 'ngx-device-detector';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {DeviceDetectorService} from 'ngx-device-detector';
+
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {isBackendUrl} from '../../api/api.utils';
 

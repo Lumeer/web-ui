@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,23 +27,26 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+
 import {FullCalendarComponent} from '@fullcalendar/angular';
 import {ButtonTextCompoundInput, CalendarOptions, CustomButtonInput, ToolbarInput, ViewApi} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
-import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import * as moment from 'moment';
+
+import {isNotNullOrUndefined} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import {
   CalendarGridMode,
   CalendarMode,
   SlotDuration,
   slotDurationsMap,
 } from '../../../../../core/store/calendars/calendar';
-import * as moment from 'moment';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
 
 @Component({
   selector: 'calendar-visualization',

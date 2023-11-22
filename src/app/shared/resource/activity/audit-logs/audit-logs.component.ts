@@ -16,39 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {AuditLog} from '../../../../core/store/audit-logs/audit-log.model';
-import {AppState} from '../../../../core/store/app.state';
-import {Action, select, Store} from '@ngrx/store';
-import {User} from '../../../../core/store/users/user';
+
+import {Action, Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
-import {selectUsersDictionary} from '../../../../core/store/users/users.state';
+import {first, map} from 'rxjs/operators';
+
 import {ConstraintData} from '@lumeer/data-filters';
-import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
-import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
+import {objectsByIdMap} from '@lumeer/utils';
+
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {selectOrganizationPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
-import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
-import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
-import {first, map} from 'rxjs/operators';
+import {ResourceType} from '../../../../core/model/resource-type';
+import {AppState} from '../../../../core/store/app.state';
+import {AuditLog} from '../../../../core/store/audit-logs/audit-log.model';
+import * as AuditLogActions from '../../../../core/store/audit-logs/audit-logs.actions';
 import {selectRevertingAuditLogsIds} from '../../../../core/store/audit-logs/audit-logs.state';
-import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
-import {AuditLogFilters} from './model/audit-log-filters';
-import {View} from '../../../../core/store/views/view';
-import {selectViewsWithComputedData} from '../../../../core/store/views/views.state';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {selectLinkTypesWithCollections} from '../../../../core/store/link-types/link-types.state';
-import {objectsByIdMap} from '../../../utils/common.utils';
-import {AuditLogConfiguration} from './model/audit-log-configuration';
-import {ModalService} from '../../../modal/modal.service';
-import {ResourceType} from '../../../../core/model/resource-type';
-import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
-import * as AuditLogActions from '../../../../core/store/audit-logs/audit-logs.actions';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
+import {selectOrganizationPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {User} from '../../../../core/store/users/user';
+import {selectUsersDictionary} from '../../../../core/store/users/users.state';
+import {View} from '../../../../core/store/views/view';
+import {selectViewsWithComputedData} from '../../../../core/store/views/views.state';
+import {ModalService} from '../../../modal/modal.service';
+import {AuditLogConfiguration} from './model/audit-log-configuration';
+import {AuditLogFilters} from './model/audit-log-filters';
 
 @Component({
   selector: 'audit-logs',

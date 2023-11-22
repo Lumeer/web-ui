@@ -16,17 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {FormError, FormValidation, FormViewErrorType} from './form-validation';
+
+import Big from 'big.js';
 import {Observable, Subject} from 'rxjs';
-import {
-  FormAttributeCellConfig,
-  FormCell,
-  FormCellType,
-  FormConfig,
-  FormLinkCellConfig,
-} from '../../../../../../core/store/form/form-model';
+import {debounceTime, map} from 'rxjs/operators';
+
 import {
   ConstraintType,
   DataValue,
@@ -35,13 +30,20 @@ import {
   PercentageConstraint,
   TextConstraint,
 } from '@lumeer/data-filters';
+import {objectsByIdMap} from '@lumeer/utils';
+
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
-import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
+import {
+  FormAttributeCellConfig,
+  FormCell,
+  FormCellType,
+  FormConfig,
+  FormLinkCellConfig,
+} from '../../../../../../core/store/form/form-model';
 import {arraySubtract} from '../../../../../../shared/utils/array.utils';
-import {debounceTime, map} from 'rxjs/operators';
-import Big from 'big.js';
 import {mergeAttributeOverride} from '../../../../../../shared/utils/attribute.utils';
+import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
+import {FormError, FormValidation, FormViewErrorType} from './form-validation';
 
 @Injectable()
 export class FormValidationService {

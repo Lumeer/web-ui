@@ -16,12 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {ResourceType} from '../../../core/model/resource-type';
+import {WorkspaceSelectService} from '../../../core/service/workspace-select.service';
 import {AppState} from '../../../core/store/app.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {Organization} from '../../../core/store/organizations/organization';
@@ -31,8 +35,6 @@ import {
 } from '../../../core/store/organizations/organizations.state';
 import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
-import {WorkspaceSelectService} from '../../../core/service/workspace-select.service';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   selector: 'workspace-panel',

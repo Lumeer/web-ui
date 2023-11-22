@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {HttpResponse} from '@angular/common/http';
+import {NavigationExtras} from '@angular/router';
 
 import {Action} from '@ngrx/store';
+
+import {SampleDataType} from '../../model/sample-data-type';
+import {Workspace} from '../navigation/workspace';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {Project} from './project';
-import {Workspace} from '../navigation/workspace';
-import {NavigationExtras} from '@angular/router';
-import {SampleDataType} from '../../model/sample-data-type';
-import {HttpResponse} from '@angular/common/http';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',

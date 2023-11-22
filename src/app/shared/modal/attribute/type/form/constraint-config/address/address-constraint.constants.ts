@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {LanguageCode} from '../../../../../../../core/model/language';
 import {Address, AddressField} from '@lumeer/data-filters';
+
 import {Configuration} from '../../../../../../../../environments/configuration-type';
+import {LanguageCode} from '../../../../../../../core/model/language';
 
 const CZECH_DEFAULT_FIELDS = [AddressField.Street, AddressField.HouseNumber, AddressField.City, AddressField.Country];
 const ENGLISH_DEFAULT_FIELDS = [

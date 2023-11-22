@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {mergeMap, Observable, of} from 'rxjs';
-import {ContactDto, OrganizationDto, ProjectDto, TeamDto} from '../../dto';
-import {PublicPermissionService} from '../common/public-permission.service';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, mergeMap, of} from 'rxjs';
 import {map, take} from 'rxjs/operators';
-import {ServiceLimitsDto} from '../../dto/service-limits.dto';
+
+import {DEFAULT_USER} from '../../constants';
+import {ContactDto, OrganizationDto, ProjectDto, TeamDto} from '../../dto';
 import {PaymentDto} from '../../dto/payment.dto';
-import {OrganizationService} from './organization.service';
-import {select, Store} from '@ngrx/store';
+import {ServiceLimitsDto} from '../../dto/service-limits.dto';
+import {RoleType} from '../../model/role-type';
 import {AppState} from '../../store/app.state';
 import {selectPublicOrganizationId} from '../../store/public-data/public-data.state';
 import {setDefaultUserPermissions} from '../common/public-api-util';
-import {DEFAULT_USER} from '../../constants';
-import {RoleType} from '../../model/role-type';
-import {PublicProjectService} from '../project/public-project.service';
+import {PublicPermissionService} from '../common/public-permission.service';
 import {ProjectService} from '../project/project.service';
+import {PublicProjectService} from '../project/public-project.service';
+import {OrganizationService} from './organization.service';
 
 @Injectable()
 export class PublicOrganizationService extends PublicPermissionService implements OrganizationService {

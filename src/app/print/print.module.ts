@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PrintComponent} from './print/print.component';
+import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
+
 import {SharedModule} from '../shared/shared.module';
 import {PrintRoutingModule} from './print-routing.module';
+import {PrintComponent} from './print/print.component';
 
 @NgModule({
   declarations: [PrintComponent],

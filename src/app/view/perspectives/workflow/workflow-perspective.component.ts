@@ -16,17 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Collection} from '../../../core/store/collections/collection';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {Query} from '../../../core/store/navigation/query/query';
 import {map, switchMap, take} from 'rxjs/operators';
-import {ViewConfig} from '../../../core/store/views/view';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {AppState} from '../../../core/store/app.state';
+import {Collection} from '../../../core/store/collections/collection';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {LinkType} from '../../../core/store/link-types/link.type';
+import {Query} from '../../../core/store/navigation/query/query';
+import {ViewConfig} from '../../../core/store/views/view';
+import {ViewsAction} from '../../../core/store/views/views.action';
 import {selectPanelWidth} from '../../../core/store/views/views.state';
 import {WorkflowConfig} from '../../../core/store/workflows/workflow';
 import {
@@ -36,13 +42,9 @@ import {
 } from '../../../core/store/workflows/workflow.state';
 import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
-import {ViewsAction} from '../../../core/store/views/views.action';
-import {DataPerspectiveDirective} from '../data-perspective.directive';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {defaultWorkflowPerspectiveConfiguration, WorkflowPerspectiveConfiguration} from '../perspective-configuration';
 import {generateId} from '../../../shared/utils/resource.utils';
-import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {WorkflowPerspectiveConfiguration, defaultWorkflowPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'workflow-perspective',

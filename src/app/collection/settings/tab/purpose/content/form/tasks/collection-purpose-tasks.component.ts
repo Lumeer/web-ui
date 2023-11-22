@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,32 +27,32 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {Collection, TaskPurposeMetadata} from '../../../../../../../core/store/collections/collection';
-import {TaskPurposeFormControl} from './task-purpose-form-control';
-import {removeAllFormControls} from '../../../../../../../shared/utils/form.utils';
-import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable} from 'rxjs';
-import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
-import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
-import {AppState} from '../../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {
-  deepObjectsEquals,
-  isArray,
-  isNullOrUndefined,
-  objectChanged,
-} from '../../../../../../../shared/utils/common.utils';
-import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {map, startWith} from 'rxjs/operators';
+
 import {ConstraintData, ConstraintType, DataValue} from '@lumeer/data-filters';
-import {View} from '../../../../../../../core/store/views/view';
+import {deepObjectsEquals, isArray, isNullOrUndefined} from '@lumeer/utils';
+
+import {LoadDataService, LoadDataServiceProvider} from '../../../../../../../core/service/load-data.service';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {Collection, TaskPurposeMetadata} from '../../../../../../../core/store/collections/collection';
+import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
+import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
 import {
   selectDocumentsByCollectionAndReadPermission,
   selectViewsByReadSorted,
 } from '../../../../../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
+import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {getBaseCollectionIdsFromQuery} from '../../../../../../../core/store/navigation/query/query.util';
-import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
-import {LoadDataService, LoadDataServiceProvider} from '../../../../../../../core/service/load-data.service';
+import {View} from '../../../../../../../core/store/views/view';
+import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
+import {objectChanged} from '../../../../../../../shared/utils/common.utils';
+import {removeAllFormControls} from '../../../../../../../shared/utils/form.utils';
+import {TaskPurposeFormControl} from './task-purpose-form-control';
 
 @Component({
   selector: 'collection-purpose-tasks',

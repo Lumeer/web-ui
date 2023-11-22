@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {AppState} from '../store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectOrganizationByCode} from '../store/organizations/organizations.state';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
-import {Organization} from '../store/organizations/organization';
+
 import {SelectionList} from '../../shared/lists/selection/selection-list';
+import {AppState} from '../store/app.state';
+import {Organization} from '../store/organizations/organization';
+import {selectOrganizationByCode} from '../store/organizations/organizations.state';
 import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
 import {
   selectSelectionListsByOrganizationSorted,

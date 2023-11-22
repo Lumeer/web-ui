@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import * as d3Select from 'd3-selection';
+
 import {MapMarkerProperties} from '../../../../../../core/store/maps/map.model';
 import {iconsMap} from '../../../../../../shared/picker/icons';
+import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 
 export type SVGContainer = d3Select.Selection<SVGElement, any, any, any>;
 

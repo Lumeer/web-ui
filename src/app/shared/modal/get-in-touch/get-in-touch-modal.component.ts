@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, OnInit} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+
+import {Store} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {DialogType} from '../dialog-type';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {UsersAction} from '../../../core/store/users/users.action';
-import {Store} from '@ngrx/store';
+
 import {AppState} from '../../../core/store/app.state';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'get-in-touch-modal',

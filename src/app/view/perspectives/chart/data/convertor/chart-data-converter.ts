@@ -16,8 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
+
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DataAggregatorAttribute,
+  DataObjectAggregator,
+  DataObjectAttribute,
+  DataObjectInfo,
+  DateTimeConstraint,
+  DurationConstraint,
+  NumberConstraint,
+  PercentageConstraint,
+  SelectConstraint,
+  UnknownConstraint,
+  aggregateDataValues,
+  isValueAggregation,
+  userCanEditDataResource,
+} from '@lumeer/data-filters';
+import {isArray, isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber, uniqueValues} from '@lumeer/utils';
+
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {AttributesResourceType, DataResource} from '../../../../../core/model/resource';
 import {
@@ -34,39 +54,12 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {
-  isArray,
-  isNotNullOrUndefined,
-  isNullOrUndefined,
-  isNumeric,
-  objectValues,
-  toNumber,
-} from '../../../../../shared/utils/common.utils';
-import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
-import {DataAggregatorAttribute} from '../../../../../shared/utils/data/data-aggregator';
-import {hex2rgba, shadeColor} from '../../../../../shared/utils/html-modifier';
-import {ChartAxisData, ChartAxisTick, ChartData, ChartDataSet, ChartPoint, ChartYAxisType} from './chart-data';
-import {
-  DataObjectAggregator,
-  DataObjectAttribute,
-  DataObjectInfo,
-} from '../../../../../shared/utils/data/data-object-aggregator';
-import {uniqueValues} from '../../../../../shared/utils/array.utils';
-import {createRange} from '../../visualizer/plot-maker/plot-util';
-import {
-  Constraint,
-  ConstraintData,
-  ConstraintType,
-  DateTimeConstraint,
-  DurationConstraint,
-  NumberConstraint,
-  PercentageConstraint,
-  SelectConstraint,
-  UnknownConstraint,
-  userCanEditDataResource,
-} from '@lumeer/data-filters';
 import {User} from '../../../../../core/store/users/user';
+import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {objectValues} from '../../../../../shared/utils/common.utils';
+import {hex2rgba, shadeColor} from '../../../../../shared/utils/html-modifier';
+import {createRange} from '../../visualizer/plot-maker/plot-util';
+import {ChartAxisData, ChartAxisTick, ChartData, ChartDataSet, ChartPoint, ChartYAxisType} from './chart-data';
 
 enum DataObjectInfoKeyType {
   X = 'x',

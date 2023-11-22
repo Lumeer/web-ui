@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {uniqueValues} from '@lumeer/utils';
+
 import {Role} from '../../../core/store/permissions/permissions';
-import {uniqueValues} from '../../utils/array.utils';
 
 @Pipe({
   name: 'rolesCount',

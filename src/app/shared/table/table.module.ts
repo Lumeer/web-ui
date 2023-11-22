@@ -16,49 +16,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
 
-import {TableComponent} from './table.component';
-import {TableHeaderComponent} from './content/header/table-header.component';
-import {TableRowComponent} from './content/row/table-row.component';
-import {DataInputModule} from '../data-input/data-input.module';
-import {PipesModule} from '../pipes/pipes.module';
-import {ColumnHandleLeftPipe} from './pipes/column-handle-left.pipe';
-import {TableItemSizeDirective} from './strategy/table-item-size-directive';
-import {TableAlternativeHeaderComponent} from './content/alternative-header/table-alternative-header.component';
-import {TableResizeHeaderComponent} from './content/resize-header/table-resize-header.component';
-import {TableRowDataCursorPipe} from './pipes/table-row-data-cursor.pipe';
-import {InputModule} from '../input/input.module';
-import {TableCellSelectedPipe} from './pipes/table-cell-selected.pipe';
-import {TableCellEditedPipe} from './pipes/table-cell-edited.pipe';
-import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
-import {TableHeaderInputComponent} from './content/header/cell/input/table-header-input.component';
-import {TableHeaderCellComponent} from './content/header/cell/table-header-cell.component';
-import {TableHeaderHiddenComponent} from './content/header/cell/hidden/table-header-hidden.component';
-import {GroupTableColumnsPipe} from './pipes/group-table-columns.pipe';
-import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/table-header-hidden-menu.component';
-import {ColumnHeaderRestrictedNamesPipe} from './pipes/column-header-restricted-names.pipe';
-import {ResizableSidebarModule} from '../resizable-sidebar/resizable-sidebar.module';
-import {TableNewRowComponent} from './new-row/table-new-row.component';
-import {DocumentHintsModule} from '../document-hints/document-hints.module';
-import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
-import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
-import {DirectivesModule} from '../directives/directives.module';
-import {MenuModule} from '../menu/menu.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {CellFilterBuilderComponent} from './content/header/cell/filter-builder/cell-filter-builder.component';
-import {DropdownModule} from '../dropdown/dropdown.module';
+
 import {FilterBuilderModule} from '../builder/filter-builder/filter-builder.module';
 import {FilterPreviewModule} from '../builder/filter-preview/filter-preview.module';
-import {TableCellAffectedPipe} from './pipes/table-cell-affected.pipe';
+import {DataInputModule} from '../data-input/data-input.module';
+import {DirectivesModule} from '../directives/directives.module';
+import {DocumentHintsModule} from '../document-hints/document-hints.module';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {InputModule} from '../input/input.module';
+import {MenuModule} from '../menu/menu.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {ResizableSidebarModule} from '../resizable-sidebar/resizable-sidebar.module';
 import {ResourceCommentsModule} from '../resource/comments/resource-comments.module';
+import {TableAlternativeHeaderComponent} from './content/alternative-header/table-alternative-header.component';
 import {TableFooterComponent} from './content/footer/table-footer.component';
+import {CellFilterBuilderComponent} from './content/header/cell/filter-builder/cell-filter-builder.component';
+import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/table-header-hidden-menu.component';
+import {TableHeaderHiddenComponent} from './content/header/cell/hidden/table-header-hidden.component';
+import {TableHeaderInputComponent} from './content/header/cell/input/table-header-input.component';
+import {TableHeaderCellComponent} from './content/header/cell/table-header-cell.component';
+import {TableHeaderComponent} from './content/header/table-header.component';
+import {TableResizeHeaderComponent} from './content/resize-header/table-resize-header.component';
+import {TableRowComponent} from './content/row/table-row.component';
+import {TableNewRowComponent} from './new-row/table-new-row.component';
+import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
+import {ColumnHandleLeftPipe} from './pipes/column-handle-left.pipe';
+import {ColumnHeaderRestrictedNamesPipe} from './pipes/column-header-restricted-names.pipe';
+import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
+import {GroupTableColumnsPipe} from './pipes/group-table-columns.pipe';
+import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
+import {TableCellAffectedPipe} from './pipes/table-cell-affected.pipe';
+import {TableCellEditedPipe} from './pipes/table-cell-edited.pipe';
+import {TableCellSelectedPipe} from './pipes/table-cell-selected.pipe';
 import {TableFooterCellDropdownOptionsPipe} from './pipes/table-footer-cell-dropdown-options.pipe';
+import {TableRowDataCursorPipe} from './pipes/table-row-data-cursor.pipe';
+import {TableItemSizeDirective} from './strategy/table-item-size-directive';
+import {TableComponent} from './table.component';
 
 @NgModule({
   declarations: [

@@ -16,30 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ResourceType} from '../../core/model/resource-type';
-import {Team} from '../../core/store/teams/team';
+
+import {MemoizedSelector, Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {Organization} from '../../core/store/organizations/organization';
-import {Project} from '../../core/store/projects/project';
-import {Resource} from '../../core/model/resource';
-import {MemoizedSelector, select, Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {filter, map, tap} from 'rxjs/operators';
-import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
-import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
-import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
-import {TeamsAction} from '../../core/store/teams/teams.action';
-import {Permission, PermissionType, Role} from '../../core/store/permissions/permissions';
-import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {ProjectsAction} from '../../core/store/projects/projects.action';
+
+import {objectsByIdMap} from '@lumeer/utils';
+
+import {Resource} from '../../core/model/resource';
+import {ResourceType} from '../../core/model/resource-type';
+import {AppState} from '../../core/store/app.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
+import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
+import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
+import {Organization} from '../../core/store/organizations/organization';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
-import {objectsByIdMap} from '../utils/common.utils';
+import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
+import {Permission, PermissionType, Role} from '../../core/store/permissions/permissions';
+import {Project} from '../../core/store/projects/project';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {Team} from '../../core/store/teams/team';
+import {TeamsAction} from '../../core/store/teams/teams.action';
+import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
 import {User} from '../../core/store/users/user';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 

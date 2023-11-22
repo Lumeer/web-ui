@@ -16,19 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Store} from '@ngrx/store';
+
+import {BehaviorSubject} from 'rxjs';
+
 import {ConstraintData, DataValue} from '@lumeer/data-filters';
+
+import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
+import {AppState} from '../../../../../../../../core/store/app.state';
 import {Collection} from '../../../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
-import {TaskAttributes} from '../../../../model/task-attributes';
-import {DataInputConfiguration} from '../../../../../../../../shared/data-input/data-input-configuration';
-import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
-import {View} from '../../../../../../../../core/store/views/view';
 import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
-import {AppState} from '../../../../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {BehaviorSubject} from 'rxjs';
+import {View} from '../../../../../../../../core/store/views/view';
+import {DataInputConfiguration} from '../../../../../../../../shared/data-input/data-input-configuration';
+import {TaskAttributes} from '../../../../model/task-attributes';
 
 @Component({
   selector: 'task-first-line',

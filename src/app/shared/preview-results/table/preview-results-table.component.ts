@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -32,21 +33,22 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Collection} from '../../../core/store/collections/collection';
-import {DataInputConfiguration} from '../../data-input/data-input-configuration';
-import {Constraint, ConstraintData} from '@lumeer/data-filters';
-import {View} from '../../../core/store/views/view';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
-import {getAttributesResourceType} from '../../utils/resource.utils';
-import {clickedInsideElement, shadeColor} from '../../utils/html-modifier';
-import {filterVisibleAttributesBySettings} from '../../utils/attribute.utils';
-import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
+
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, map, tap} from 'rxjs/operators';
-import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
-import {KeyCode} from '../../key-code';
+
+import {Constraint, ConstraintData} from '@lumeer/data-filters';
+
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {Collection} from '../../../core/store/collections/collection';
+import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {AttributesSettings} from '../../../core/store/view-settings/view-settings';
+import {View} from '../../../core/store/views/view';
+import {DataInputConfiguration} from '../../data-input/data-input-configuration';
+import {KeyCode} from '../../key-code';
+import {filterVisibleAttributesBySettings} from '../../utils/attribute.utils';
+import {clickedInsideElement, shadeColor} from '../../utils/html-modifier';
+import {getAttributesResourceType} from '../../utils/resource.utils';
 
 const ROW_HEIGHT = 32;
 const COLUMN_WIDTH = 120;

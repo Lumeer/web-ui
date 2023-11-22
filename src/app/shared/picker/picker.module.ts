@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {IconChooseComponent} from './icon-color/icon/icon-choose.component';
+
+import {ColorPickerModule} from 'ngx-color-picker';
+
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {PipesModule} from '../pipes/pipes.module';
+import {ColorPickerComponent} from './color/color-picker.component';
 import {ColorChooseComponent} from './icon-color/color/color-choose.component';
 import {IconColorPickerComponent} from './icon-color/icon-color-picker.component';
+import {IconChooseComponent} from './icon-color/icon/icon-choose.component';
 import {HighlightColorPipe} from './icon-color/pipes/highlight-color.pipe';
-import {IconIdPipe} from './icon-color/pipes/icon-id.pipe';
-import {PipesModule} from '../pipes/pipes.module';
 import {IconFilterPipe} from './icon-color/pipes/icon-filter.pipe';
-import {ColorPickerModule} from 'ngx-color-picker';
-import {DropdownModule} from '../dropdown/dropdown.module';
-import {ColorPickerComponent} from './color/color-picker.component';
+import {IconIdPipe} from './icon-color/pipes/icon-id.pipe';
 
 @NgModule({
   imports: [CommonModule, FormsModule, PipesModule, ColorPickerModule, DropdownModule],

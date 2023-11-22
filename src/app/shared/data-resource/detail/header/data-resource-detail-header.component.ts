@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,28 +27,31 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+
+import {Store, select} from '@ngrx/store';
+
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {selectUserById} from '../../../../core/store/users/users.state';
 import {filter, map} from 'rxjs/operators';
-import {Perspective, perspectiveIconsMap} from '../../../../view/perspectives/perspective';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {DocumentFavoriteToggleService} from '../../../toggle/document-favorite-toggle.service';
-import {Workspace} from '../../../../core/store/navigation/workspace';
-import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
-import {Attribute} from '../../../../core/store/collections/collection';
-import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
-import {User} from '../../../../core/store/users/user';
 
 import {ConstraintData} from '@lumeer/data-filters';
-import {View} from '../../../../core/store/views/view';
+
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {ClipboardService} from '../../../../core/service/clipboard.service';
+import {AppState} from '../../../../core/store/app.state';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {User} from '../../../../core/store/users/user';
+import {selectUserById} from '../../../../core/store/users/users.state';
 import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../core/store/views/view';
+import {Perspective, perspectiveIconsMap} from '../../../../view/perspectives/perspective';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {DocumentFavoriteToggleService} from '../../../toggle/document-favorite-toggle.service';
 
 @Component({
   selector: 'data-resource-detail-header',

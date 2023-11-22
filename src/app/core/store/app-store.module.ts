@@ -16,33 +16,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {NgModule} from '@angular/core';
+
 import {EffectsModule} from '@ngrx/effects';
 import {routerReducer} from '@ngrx/router-store';
 import {ActionReducerMap, StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+
+import {configuration} from '../../../environments/configuration';
+import {appPropertiesReducer} from './app-properties/app-properties.reducer';
 import {AppState, initialAppState} from './app.state';
+import {AuditLogsEffects} from './audit-logs/audit-logs.effects';
+import {auditLogsReducer} from './audit-logs/audit-logs.reducer';
 import {calendarsReducer} from './calendars/calendars.reducer';
 import {chartsReducer} from './charts/charts.reducer';
 import {CollectionsEffects} from './collections/collections.effects';
 import {collectionsReducer} from './collections/collections.reducer';
 import {CommonEffects} from './common/common.effects';
+import {constraintDataReducer} from './constraint-data/constraint-data.reducer';
+import {DashboardDataEffects} from './dashboard-data/dashboard-data.effects';
+import {dashboardDataReducer} from './dashboard-data/dashboard-data.reducer';
+import {DataResourcesEffects} from './data-resources/data-resources.effects';
+import {dataResourcesReducer} from './data-resources/data-resources.reducer';
+import {detailsReducer} from './details/detail.reducer';
 import {DocumentsEffects} from './documents/documents.effects';
 import {documentsReducer} from './documents/documents.reducer';
 import {FileAttachmentsEffects} from './file-attachments/file-attachments.effects';
 import {fileAttachmentsReducer} from './file-attachments/file-attachments.reducer';
+import {formsReducer} from './form/form.reducer';
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 import {GeocodingEffects} from './geocoding/geocoding.effects';
 import {geocodingReducer} from './geocoding/geocoding.reducer';
-import {TeamsEffects} from './teams/teams.effects';
-import {teamsReducer} from './teams/teams.reducer';
+import {InformationRecordsEffects} from './information-store/information-records.effects';
 import {kanbansReducer} from './kanbans/kanbans.reducer';
 import {LinkInstancesEffects} from './link-instances/link-instances.effects';
 import {linkInstancesReducer} from './link-instances/link-instances.reducer';
 import {LinkTypesEffects} from './link-types/link-types.effects';
 import {linkTypesReducer} from './link-types/link-types.reducer';
+import {MapsEffects} from './maps/maps.effects';
 import {mapsReducer} from './maps/maps.reducer';
+import {ModalsEffects} from './modals/modals.effects';
+import {modalsReducer} from './modals/modals.reducer';
 import {NavigationEffects} from './navigation/navigation.effects';
 import {navigationReducer} from './navigation/navigation.reducer';
 import {NotificationsEffects} from './notifications/notifications.effects';
@@ -57,46 +71,33 @@ import {serviceLimitsReducer} from './organizations/service-limits/service-limit
 import {pivotsReducer} from './pivots/pivots.reducer';
 import {ProjectsEffects} from './projects/projects.effects';
 import {projectsReducer} from './projects/projects.reducer';
+import {publicDataReducer} from './public-data/public-data.reducer';
+import {ResourceCommentsEffects} from './resource-comments/resource-comments.effects';
+import {resourceCommentsReducer} from './resource-comments/resource-comments.reducer';
+import {ResourceVariablesEffects} from './resource-variables/resource-variables.effects';
+import {resourceVariablesReducer} from './resource-variables/resource-variables.reducer';
+import {ResourcesEffects} from './resources/data-resources.effects';
+import {resourcesReducer} from './resources/data-resources.reducer';
 import {RouterEffects} from './router/router.effects';
-import {TablesEffects} from './tables/tables.effects';
-import {tablesReducer} from './tables/tables.reducer';
-import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
-import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
-import {UsersEffects} from './users/users.effects';
-import {usersReducer} from './users/users.reducer';
-import {ViewsEffects} from './views/views.effects';
-import {viewsReducer} from './views/views.reducer';
 import {searchesReducer} from './searches/searches.reducer';
+import {SelectionListsEffects} from './selection-lists/selection-lists.effects';
+import {selectionListsReducer} from './selection-lists/selection-lists.reducer';
 import {SequencesEffects} from './sequences/sequences.effects';
 import {sequencesReducer} from './sequences/sequences.reducer';
-import {constraintDataReducer} from './constraint-data/constraint-data.reducer';
-import {MapsEffects} from './maps/maps.effects';
-import {publicDataReducer} from './public-data/public-data.reducer';
-import {viewSettingsReducer} from './view-settings/view-settings.reducer';
-import {workflowsReducer} from './workflows/workflows.reducer';
-import {resourceCommentsReducer} from './resource-comments/resource-comments.reducer';
-import {ResourceCommentsEffects} from './resource-comments/resource-comments.effects';
-import {modalsReducer} from './modals/modals.reducer';
-import {ModalsEffects} from './modals/modals.effects';
+import {TablesEffects} from './tables/tables.effects';
+import {tablesReducer} from './tables/tables.reducer';
+import {TeamsEffects} from './teams/teams.effects';
+import {teamsReducer} from './teams/teams.reducer';
+import {UserNotificationsEffects} from './user-notifications/user-notifications.effects';
+import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
 import {userPermissionsReducer} from './user-permissions/user-permissions.reducer';
+import {UsersEffects} from './users/users.effects';
+import {usersReducer} from './users/users.reducer';
+import {viewSettingsReducer} from './view-settings/view-settings.reducer';
+import {ViewsEffects} from './views/views.effects';
+import {viewsReducer} from './views/views.reducer';
 import {WorkflowsEffects} from './workflows/workflows.effects';
-import {dataResourcesReducer} from './data-resources/data-resources.reducer';
-import {DataResourcesEffects} from './data-resources/data-resources.effects';
-import {configuration} from '../../../environments/configuration';
-import {auditLogsReducer} from './audit-logs/audit-logs.reducer';
-import {AuditLogsEffects} from './audit-logs/audit-logs.effects';
-import {detailsReducer} from './details/detail.reducer';
-import {selectionListsReducer} from './selection-lists/selection-lists.reducer';
-import {SelectionListsEffects} from './selection-lists/selection-lists.effects';
-import {dashboardDataReducer} from './dashboard-data/dashboard-data.reducer';
-import {DashboardDataEffects} from './dashboard-data/dashboard-data.effects';
-import {formsReducer} from './form/form.reducer';
-import {resourceVariablesReducer} from './resource-variables/resource-variables.reducer';
-import {ResourceVariablesEffects} from './resource-variables/resource-variables.effects';
-import {appPropertiesReducer} from './app-properties/app-properties.reducer';
-import {resourcesReducer} from './resources/data-resources.reducer';
-import {ResourcesEffects} from './resources/data-resources.effects';
-import {InformationRecordsEffects} from './information-store/information-records.effects';
+import {workflowsReducer} from './workflows/workflows.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,

@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {GanttChartBarModel, GanttChartStemConfig} from '../../../../../../core/store/gantt-charts/gantt-chart';
+
+import {Constraint} from '@lumeer/data-filters';
+import {deepObjectCopy} from '@lumeer/utils';
+
 import {Collection} from '../../../../../../core/store/collections/collection';
+import {GanttChartBarModel, GanttChartStemConfig} from '../../../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
+import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
-import {deepObjectCopy} from '../../../../../../shared/utils/common.utils';
-import {Constraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'gantt-chart-array-bar-model-select',

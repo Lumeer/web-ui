@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentHintColumn} from '../../../../shared/document-hints/document-hint-column';
-import {filterVisibleAttributesBySettings} from '../../../../shared/utils/attribute.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {AttributesSettings} from '../../../../core/store/view-settings/view-settings';
+import {DocumentHintColumn} from '../../../../shared/document-hints/document-hint-column';
+import {filterVisibleAttributesBySettings} from '../../../../shared/utils/attribute.utils';
 
 const defaultColumnWidth = 100;
 

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+
 import {TableCellScrollDirective} from './directives/table-cell-scroll.directive';
 import {TableHiddenInputComponent} from './hidden-input/table-hidden-input.component';
 import {TablePipesModule} from './pipes/table-pipes.module';

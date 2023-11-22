@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {AttributeLockFiltersStats} from '@lumeer/data-filters';
 
 import {MenuItem} from '../../menu/model/menu-item';
-import {AttributeLockFiltersStats} from '@lumeer/data-filters';
-import {TableRowHierarchy} from './table-hierarchy';
 import {DataResourcesChain} from '../../modal/data-resource-detail/model/data-resources-chain';
+import {TableRowHierarchy} from './table-hierarchy';
 
 export interface TableRow {
   id: string;

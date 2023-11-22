@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+
+import {AddressConstraintConfig, AddressDataValue, AddressField, AddressesMap} from '@lumeer/data-filters';
+
+import {ConfigurationService} from '../../../../../../../configuration/configuration.service';
+import {objectValues} from '../../../../../../utils/common.utils';
+import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {AddressConstraintFormControl} from './address-constraint-form-control';
 import {addressDefaultFields, addressExample} from './address-constraint.constants';
-import {removeAllFormControls} from '../../../../../../utils/form.utils';
-import {objectValues} from '../../../../../../utils/common.utils';
-import {AddressConstraintConfig, AddressDataValue, AddressesMap, AddressField} from '@lumeer/data-filters';
-import {ConfigurationService} from '../../../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'address-constraint-config-form',

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {DashboardCell, DashboardRow} from '../../../../../../core/model/dashboard-tab';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 import {View} from '../../../../../../core/store/views/view';
 import {filterValidDashboardCells} from '../../../../../../shared/utils/dashboard.utils';
-import {Query} from '../../../../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'dashboard-tab-row-content',

@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+
+import {DropdownModule} from '../dropdown/dropdown.module';
 import {AttributesSettingsModule} from './attributes/attributes-settings.module';
 import {DataSettingsModule} from './data/data-settings.module';
 import {ViewSettingsDropdownComponent} from './dropdown/view-settings-dropdown.component';
-import {DropdownModule} from '../dropdown/dropdown.module';
 
 @NgModule({
   declarations: [ViewSettingsDropdownComponent],

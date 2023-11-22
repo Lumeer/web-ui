@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {PivotTableCell} from '../util/pivot-table';
-import {DataInputConfiguration} from '../../../../shared/data-input/data-input-configuration';
+
 import {ConstraintType} from '@lumeer/data-filters';
+
+import {DataInputConfiguration} from '../../../../shared/data-input/data-input-configuration';
+import {PivotTableCell} from '../util/pivot-table';
 
 @Pipe({
   name: 'pivotCellConfiguration',

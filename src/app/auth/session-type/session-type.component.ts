@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+
+import {BehaviorSubject} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+
 import {AuthService} from '../auth.service';
 import {SessionType} from '../common/session-type';
-import {map, take} from 'rxjs/operators';
-import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'session-type',

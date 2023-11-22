@@ -16,36 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
-import {of, Observable, combineLatest} from 'rxjs';
-import {select, Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest, of} from 'rxjs';
 import {catchError, filter, first, map, mergeMap, skipWhile, switchMap, take, tap} from 'rxjs/operators';
+
+import {isNotNullOrUndefined, isNullOrUndefined} from '@lumeer/utils';
+
+import {AuthService} from '../auth/auth.service';
+import {OrganizationService, ProjectService} from '../core/data-service';
+import {RoleType} from '../core/model/role-type';
 import {AppState} from '../core/store/app.state';
-import {OrganizationConverter} from '../core/store/organizations/organization.converter';
+import {CommonAction} from '../core/store/common/common.action';
 import {Organization} from '../core/store/organizations/organization';
+import {OrganizationConverter} from '../core/store/organizations/organization.converter';
 import {OrganizationsAction} from '../core/store/organizations/organizations.action';
 import {selectAllOrganizations} from '../core/store/organizations/organizations.state';
-import {ProjectConverter} from '../core/store/projects/project.converter';
 import {Project} from '../core/store/projects/project';
+import {ProjectConverter} from '../core/store/projects/project.converter';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {
   selectProjectsByOrganizationId,
   selectProjectsLoadedForOrganization,
   selectReadableProjectsForOrganization,
 } from '../core/store/projects/projects.state';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.utils';
-import {User} from '../core/store/users/user';
-import {CommonAction} from '../core/store/common/common.action';
-import {OrganizationService, ProjectService} from '../core/data-service';
-import {selectCurrentUserForOrganization} from '../core/store/users/users.state';
-import {selectTeamsByOrganization, selectTeamsLoadedForOrganization} from '../core/store/teams/teams.state';
-import {TeamsAction} from '../core/store/teams/teams.action';
 import {Team} from '../core/store/teams/team';
+import {TeamsAction} from '../core/store/teams/teams.action';
+import {selectTeamsByOrganization, selectTeamsLoadedForOrganization} from '../core/store/teams/teams.state';
+import {User} from '../core/store/users/user';
+import {selectCurrentUserForOrganization} from '../core/store/users/users.state';
 import {userHasRoleInProject} from '../shared/utils/permission.utils';
-import {RoleType} from '../core/model/role-type';
-import {AuthService} from '../auth/auth.service';
 
 @Injectable()
 export class WorkspaceService {

@@ -16,35 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
+  AfterViewChecked,
   ChangeDetectionStrategy,
-  Input,
+  Component,
+  ElementRef,
   EventEmitter,
-  Output,
+  Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
-  ElementRef,
-  AfterViewChecked,
 } from '@angular/core';
+
+import {BehaviorSubject} from 'rxjs';
+
+import {ConstraintData, SelectConstraintOption, UnknownConstraint} from '@lumeer/data-filters';
+import {uniqueValues} from '@lumeer/utils';
+
 import {Collection} from '../../../../../../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../../../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../../../../../core/store/link-types/link.type';
-import {BehaviorSubject} from 'rxjs';
-import {ConstraintData, SelectConstraintOption, UnknownConstraint} from '@lumeer/data-filters';
-import {DropdownOption} from '../../../../../../../../shared/dropdown/options/dropdown-option';
-import {findAttribute, getDefaultAttributeId} from '../../../../../../../../core/store/collections/collection.util';
-import {OptionsDropdownComponent} from '../../../../../../../../shared/dropdown/options/options-dropdown.component';
-import {arraySubtract, uniqueValues} from '../../../../../../../../shared/utils/array.utils';
-import {HtmlModifier, isElementActive, shadeColor} from '../../../../../../../../shared/utils/html-modifier';
-import {keyboardEventCode, KeyCode} from '../../../../../../../../shared/key-code';
-import {FormLinkSelectedData} from '../../../model/form-link-data';
 import {
   DataInputSaveAction,
   keyboardEventInputSaveAction,
 } from '../../../../../../../../shared/data-input/data-input-save-action';
+import {DropdownOption} from '../../../../../../../../shared/dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../../../../../../../shared/dropdown/options/options-dropdown.component';
+import {KeyCode, keyboardEventCode} from '../../../../../../../../shared/key-code';
+import {arraySubtract} from '../../../../../../../../shared/utils/array.utils';
+import {HtmlModifier, isElementActive, shadeColor} from '../../../../../../../../shared/utils/html-modifier';
+import {FormLinkSelectedData} from '../../../model/form-link-data';
 
 @Component({
   selector: 'form-view-cell-link',

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -32,14 +31,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+
 import * as moment from 'moment';
 import {BsDatepickerInlineConfig, BsDatepickerInlineDirective} from 'ngx-bootstrap/datepicker';
 import {Subscription} from 'rxjs';
+
+import {isDateValid} from '@lumeer/utils';
+
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {keyboardEventCode, KeyCode} from '../../key-code';
+import {KeyCode, keyboardEventCode} from '../../key-code';
 import {DateTimeOptions, detectDatePickerViewMode, hasTimeOption} from '../date-time-options';
-import {isDateValid} from '../../utils/common.utils';
 
 @Component({
   selector: 'date-time-picker',

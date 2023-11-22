@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {NotificationService} from './notification.service';
-import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+import {ToastrModule} from 'ngx-toastr';
+
+import {NotificationService} from './notification.service';
 import {NotificationComponent} from './notification/notification.component';
 
 @NgModule({

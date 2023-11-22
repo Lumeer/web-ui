@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SearchViewsModule} from './search-views/search-views.module';
-import {SearchTasksModule} from './search-tasks/search-tasks.module';
-import {SearchCollectionsModule} from './search-collections/search-collections.module';
+import {NgModule} from '@angular/core';
+
 import {DashboardTabModule} from './dashboard-tab/dashboard-tab.module';
 import {SearchAllModule} from './search-all/search-all.module';
+import {SearchCollectionsModule} from './search-collections/search-collections.module';
+import {SearchTasksModule} from './search-tasks/search-tasks.module';
+import {SearchViewsModule} from './search-views/search-views.module';
 
 @NgModule({
   imports: [

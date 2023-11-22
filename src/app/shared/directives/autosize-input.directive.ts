@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {AfterViewChecked, AfterViewInit, Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
 
 @Directive({

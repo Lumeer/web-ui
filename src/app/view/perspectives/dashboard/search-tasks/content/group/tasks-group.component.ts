@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {ConstraintData} from '@lumeer/data-filters';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {View} from '../../../../../../core/store/views/view';
-import {User} from '../../../../../../core/store/users/user';
-import {TaskAttributes} from '../../model/task-attributes';
+
 import {AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {SearchTasksConfig} from '../../../../../../core/store/searches/search';
+import {User} from '../../../../../../core/store/users/user';
+import {View} from '../../../../../../core/store/views/view';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
-import {SearchTasksConfig} from '../../../../../../core/store/searches/search';
+import {TaskAttributes} from '../../model/task-attributes';
 
 @Component({
   selector: 'tasks-group',

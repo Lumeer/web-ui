@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {AppPropertiesState, initialAppPropertiesState} from './app-properties.state';
 import {AppPropertiesAction, AppPropertiesActionType} from './app-properties.action';
+import {AppPropertiesState, initialAppPropertiesState} from './app-properties.state';
 
 export function appPropertiesReducer(
   state: AppPropertiesState = initialAppPropertiesState,

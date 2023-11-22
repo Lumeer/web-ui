@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BookmarkComponent} from './bookmark/bookmark.component';
-import {BookmarkToolbarComponent} from './bookmark-toolbar/bookmark-toolbar.component';
-import {ViewsBookmarksComponent} from './views-bookmarks/views-bookmarks.component';
-import {QueryItemsPipe} from './views-bookmarks/query-items.pipe';
+import {NgModule} from '@angular/core';
+
 import {PipesModule} from '../pipes/pipes.module';
+import {BookmarkToolbarComponent} from './bookmark-toolbar/bookmark-toolbar.component';
+import {BookmarkComponent} from './bookmark/bookmark.component';
+import {QueryItemsPipe} from './views-bookmarks/query-items.pipe';
+import {ViewsBookmarksComponent} from './views-bookmarks/views-bookmarks.component';
 
 @NgModule({
   declarations: [BookmarkComponent, BookmarkToolbarComponent, ViewsBookmarksComponent, QueryItemsPipe],

@@ -51,10 +51,10 @@ jobs:
           name: test
           command: npm run test
 
-      - run:  # check formatting
+      - run: # check formatting
           name: format
           command: npm run format:check
 
-      - run:  # check lint errors
+      - run: # check lint errors
           name: lint
           command: npm run lint

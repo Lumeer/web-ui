@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {ResourceType} from '../../../core/model/resource-type';
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {ResourceType} from '../../../core/model/resource-type';
+import {AppState} from '../../../core/store/app.state';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {Project} from '../../../core/store/projects/project';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
 import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 
 @Component({
   selector: 'project-activity',

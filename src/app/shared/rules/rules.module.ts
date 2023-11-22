@@ -16,35 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
+
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+
+import {BlocklyModule} from '../blockly/blockly.module';
+import {DateTimeModule} from '../date-time/date-time.module';
+import {DirectivesModule} from '../directives/directives.module';
+import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
-import {AddRuleComponent} from './add-rule/add-rule.component';
+import {SelectModule} from '../select/select.module';
 import {AddRuleFormComponent} from './add-rule-form/add-rule-form.component';
-import {CronFormComponent} from './add-rule-form/cron-form/cron-form.component';
-import {CronConfigurationFormComponent} from './add-rule-form/cron-form/configuration-form/cron-configuration-form.component';
-import {BlocklyFormComponent} from './add-rule-form/blockly-form/blockly-form.component';
 import {AutoLinkFormComponent} from './add-rule-form/auto-link-form/auto-link-form.component';
-import {SingleRuleComponent} from './single-rule/single-rule.component';
-import {HasUpdatePipe} from './single-rule/pipes/has-update.pipe';
-import {HasDeletePipe} from './single-rule/pipes/has-delete.pipe';
-import {HasCreatePipe} from './single-rule/pipes/has-create.pipe';
-import {AttributeNamesPipe} from './single-rule/pipes/attribute-names.pipe';
-import {ShowOccurrencePipe} from './add-rule-form/cron-form/configuration-form/pipes/show-occurrence.pipe';
+import {BlocklyFormComponent} from './add-rule-form/blockly-form/blockly-form.component';
+import {CronConfigurationFormComponent} from './add-rule-form/cron-form/configuration-form/cron-configuration-form.component';
+import {IsDayOfWeekSelectedPipe} from './add-rule-form/cron-form/configuration-form/pipes/is-day-of-week-selected.pipe';
 import {MaxIntervalByUnitPipe} from './add-rule-form/cron-form/configuration-form/pipes/max-interval-by-unit.pipe';
 import {ShowDaysOfWeekPipe} from './add-rule-form/cron-form/configuration-form/pipes/show-days-of-week.pipe';
-import {IsDayOfWeekSelectedPipe} from './add-rule-form/cron-form/configuration-form/pipes/is-day-of-week-selected.pipe';
-import {NoRulesComponent} from './no-rules/no-rules.component';
-import {BlocklyModule} from '../blockly/blockly.module';
-import {SelectModule} from '../select/select.module';
-import {InputModule} from '../input/input.module';
-import {DirectivesModule} from '../directives/directives.module';
-import {DateTimeModule} from '../date-time/date-time.module';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {RuleRunInfoPipe} from './single-rule/pipes/rule-run-info.pipe';
+import {ShowOccurrencePipe} from './add-rule-form/cron-form/configuration-form/pipes/show-occurrence.pipe';
+import {CronFormComponent} from './add-rule-form/cron-form/cron-form.component';
+import {AddRuleComponent} from './add-rule/add-rule.component';
 import {RuleRunInfoComponent} from './common/rule-run-info/rule-run-info.component';
+import {NoRulesComponent} from './no-rules/no-rules.component';
+import {AttributeNamesPipe} from './single-rule/pipes/attribute-names.pipe';
+import {HasCreatePipe} from './single-rule/pipes/has-create.pipe';
+import {HasDeletePipe} from './single-rule/pipes/has-delete.pipe';
+import {HasUpdatePipe} from './single-rule/pipes/has-update.pipe';
+import {RuleRunInfoPipe} from './single-rule/pipes/rule-run-info.pipe';
+import {SingleRuleComponent} from './single-rule/single-rule.component';
 
 @NgModule({
   imports: [

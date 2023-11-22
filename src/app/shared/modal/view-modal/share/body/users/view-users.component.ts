@@ -16,29 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-  Output,
+  Component,
   EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
-import {User} from '../../../../../../core/store/users/user';
-import {Organization} from '../../../../../../core/store/organizations/organization';
-import {View} from '../../../../../../core/store/views/view';
-import {Project} from '../../../../../../core/store/projects/project';
-import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {Team} from '../../../../../../core/store/teams/team';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
+import {AppState} from '../../../../../../core/store/app.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../../../../core/store/collections/collections.state';
+import {Organization} from '../../../../../../core/store/organizations/organization';
 import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
-import {ResourcePermissionType} from '../../../../../../core/model/resource-permission-type';
+import {Project} from '../../../../../../core/store/projects/project';
+import {Team} from '../../../../../../core/store/teams/team';
+import {User} from '../../../../../../core/store/users/user';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'view-users',

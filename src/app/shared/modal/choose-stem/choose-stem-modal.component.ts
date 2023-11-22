@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
-import {DialogType} from '../dialog-type';
+import {Store, select} from '@ngrx/store';
+
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {QueryStem} from '../../../core/store/navigation/query/query';
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
+
+import {AppState} from '../../../core/store/app.state';
 import {
   selectAllCollectionsWithoutHiddenAttributes,
   selectAllLinkTypesWithoutHiddenAttributes,
 } from '../../../core/store/common/permissions.selectors';
-import {QueryItemsConverter} from '../../top-panel/search-box/query-item/query-items.converter';
+import {QueryStem} from '../../../core/store/navigation/query/query';
 import {QueryItem} from '../../top-panel/search-box/query-item/model/query-item';
+import {QueryItemsConverter} from '../../top-panel/search-box/query-item/query-items.converter';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'choose-stem-modal',

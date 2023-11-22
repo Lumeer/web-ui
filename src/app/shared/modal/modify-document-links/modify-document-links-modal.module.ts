@@ -16,24 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {SelectModule} from '../../select/select.module';
-import {PipesModule} from '../../pipes/pipes.module';
-import {ModifyDocumentLinksModalComponent} from './modify-document-links-modal.component';
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {PreviewResultsModule} from '../../preview-results/preview-results.module';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
 import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
-import {ResultsTableComponent} from './results-table/results-table.component';
 import {DataInputModule} from '../../data-input/data-input.module';
-import {InputModule} from '../../input/input.module';
-import {IsResultRowCheckedPipe} from './results-table/pipes/is-result-row-checked.pipe';
-import {WarningMessageModule} from '../../warning-message/warning-message.module';
-import {CountSelectedLinkedDocumentsPipe} from './pipes/count-selected-linked-documents.pipe';
 import {FiltersModule} from '../../filters/filters.module';
+import {InputModule} from '../../input/input.module';
+import {PipesModule} from '../../pipes/pipes.module';
+import {PreviewResultsModule} from '../../preview-results/preview-results.module';
+import {SelectModule} from '../../select/select.module';
+import {WarningMessageModule} from '../../warning-message/warning-message.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {ModifyDocumentLinksModalComponent} from './modify-document-links-modal.component';
+import {CountSelectedLinkedDocumentsPipe} from './pipes/count-selected-linked-documents.pipe';
+import {IsResultRowCheckedPipe} from './results-table/pipes/is-result-row-checked.pipe';
+import {ResultsTableComponent} from './results-table/results-table.component';
 
 @NgModule({
   declarations: [

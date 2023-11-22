@@ -16,35 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AsyncValidatorFn, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {NavigationExtras} from '@angular/router';
 
-import {Action, select, Store} from '@ngrx/store';
+import {Action, Store, select} from '@ngrx/store';
+
+import {BsModalRef} from 'ngx-bootstrap/modal';
+import {BehaviorSubject, Observable, Subject, Subscription, combineLatest, of} from 'rxjs';
 import {distinctUntilChanged, filter, map, startWith} from 'rxjs/operators';
-import {AppState} from '../../../core/store/app.state';
+
 import {ResourceType} from '../../../core/model/resource-type';
-import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
-import {ProjectsAction} from '../../../core/store/projects/projects.action';
-import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
-import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
+import {AppState} from '../../../core/store/app.state';
 import {Organization} from '../../../core/store/organizations/organization';
-import {Project} from '../../../core/store/projects/project';
+import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
 import {
   selectAllOrganizations,
   selectOrganizationById,
   selectOrganizationsLoaded,
 } from '../../../core/store/organizations/organizations.state';
+import {Project} from '../../../core/store/projects/project';
+import {ProjectsAction} from '../../../core/store/projects/projects.action';
 import {
   selectProjectsByOrganizationId,
   selectProjectsLoadedForOrganization,
 } from '../../../core/store/projects/projects.state';
-import {BsModalRef} from 'ngx-bootstrap/modal';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {NavigationExtras} from '@angular/router';
-import {AsyncValidatorFn, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {ProjectValidators} from '../../../core/validators/project.validators';
-import {OrganizationValidators} from '../../../core/validators/organization.validators';
 import {minLengthValidator} from '../../../core/validators/custom-validators';
+import {OrganizationValidators} from '../../../core/validators/organization.validators';
+import {ProjectValidators} from '../../../core/validators/project.validators';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
 
 @Component({
   selector: 'create-resource-modal',

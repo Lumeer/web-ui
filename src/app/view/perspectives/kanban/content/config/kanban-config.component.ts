@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+
+import {ConstraintData} from '@lumeer/data-filters';
+import {deepObjectCopy} from '@lumeer/utils';
+
 import {Collection} from '../../../../../core/store/collections/collection';
 import {KanbanAggregation, KanbanConfig, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
-import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
-import {createDefaultKanbanStemConfig, isKanbanAggregationDefined} from '../../util/kanban.util';
-import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {SliderItem} from '../../../../../shared/slider/values/slider-item';
-import {SizeType} from '../../../../../shared/slider/size/size-type';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {PostItLayoutType} from '../../../../../shared/post-it/post-it-layout-type';
-import {ConstraintData} from '@lumeer/data-filters';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
+import {SliderItem} from '../../../../../shared/slider/values/slider-item';
+import {createDefaultKanbanStemConfig, isKanbanAggregationDefined} from '../../util/kanban.util';
 
 @Component({
   selector: 'kanban-config',

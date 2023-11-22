@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {ResizeEvent} from 'angular-resizable-element';
+
+import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
 import {getTableColumnWidth, hasTableColumnChildren} from '../../../../../core/store/tables/table.utils';
 import {getLastFromArray} from '../../../../../shared/utils/array.utils';
-import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
 
 const MIN_COLUMN_WIDTH = 30;
 

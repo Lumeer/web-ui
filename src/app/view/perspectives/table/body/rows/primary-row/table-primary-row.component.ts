@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,9 +26,15 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
+
+import {AppState} from '../../../../../../core/store/app.state';
+import {selectReadableCollectionsByView} from '../../../../../../core/store/common/permissions.selectors';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableConfigRow} from '../../../../../../core/store/tables/table.model';
 import {isTableRowStriped} from '../../../../../../core/store/tables/table.utils';
@@ -40,9 +45,6 @@ import {
   selectTablePart,
   selectTableRowWithHierarchyLevel,
 } from '../../../../../../core/store/tables/tables.selector';
-import {selectReadableCollectionsByView} from '../../../../../../core/store/common/permissions.selectors';
-import {AppState} from '../../../../../../core/store/app.state';
-import {Query} from '../../../../../../core/store/navigation/query/query';
 import {View} from '../../../../../../core/store/views/view';
 
 @Component({

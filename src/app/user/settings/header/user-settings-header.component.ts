@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {User} from '../../../core/store/users/user';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 import {Team} from '../../../core/store/teams/team';
+import {User} from '../../../core/store/users/user';
 
 @Component({
   selector: 'user-settings-header',

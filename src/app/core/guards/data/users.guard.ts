@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+
+import {Store, select} from '@ngrx/store';
+
 import {Observable, of} from 'rxjs';
-import {User} from '../../store/users/user';
-import {AppState} from '../../store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectOrganizationByCode} from '../../store/organizations/organizations.state';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
+
+import {AppState} from '../../store/app.state';
 import {Organization} from '../../store/organizations/organization';
-import {selectAllUsers, selectUsersLoadedForOrganization} from '../../store/users/users.state';
+import {selectOrganizationByCode} from '../../store/organizations/organizations.state';
+import {User} from '../../store/users/user';
 import {UsersAction} from '../../store/users/users.action';
+import {selectAllUsers, selectUsersLoadedForOrganization} from '../../store/users/users.state';
 
 @Injectable()
 export class UsersGuard {

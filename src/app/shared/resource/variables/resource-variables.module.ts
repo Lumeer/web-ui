@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {ResourceVariablesComponent} from './resource-variables.component';
-import {ResourceVariableRowComponent} from './table/row/resource-variable-row.component';
+
+import {InputModule} from '../../input/input.module';
+import {PipesModule} from '../../pipes/pipes.module';
 import {ResourceVariableHeaderComponent} from './header/resource-variable-header.component';
-import {ResourceVariablesTableComponent} from './table/resource-variables-table.component';
 import {FilterResourceVariablesPipe} from './pipes/filter-resource-variables.pipe';
 import {ResourceVariablesKeysPipe} from './pipes/resource-variables-keys.pipe';
-import {PipesModule} from '../../pipes/pipes.module';
-import {InputModule} from '../../input/input.module';
+import {ResourceVariablesComponent} from './resource-variables.component';
+import {ResourceVariablesTableComponent} from './table/resource-variables-table.component';
+import {ResourceVariableRowComponent} from './table/row/resource-variable-row.component';
 
 @NgModule({
   declarations: [

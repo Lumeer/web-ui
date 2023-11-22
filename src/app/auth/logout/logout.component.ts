@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {AuthService} from '../auth.service';
-import {ModalsAction} from '../../core/store/modals/modals.action';
-import {AppState} from '../../core/store/app.state';
+
 import {Store} from '@ngrx/store';
+
+import {AppState} from '../../core/store/app.state';
+import {ModalsAction} from '../../core/store/modals/modals.action';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'logout',

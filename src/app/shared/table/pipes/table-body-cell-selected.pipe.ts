@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableCell, TableCellType} from '../model/table-model';
+
 import {TableColumn} from '../model/table-column';
+import {TableCell, TableCellType} from '../model/table-model';
 import {TableRow} from '../model/table-row';
 import {isTableCellSelected, isTableColumnDirectlyEditable} from '../model/table-utils';
 

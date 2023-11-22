@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {CollectionQueryItem} from './collection.query-item';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionQueryItem} from './collection.query-item';
 
 export class QueryStemQueryItem implements QueryItem {
   public type = QueryItemType.QueryStem;

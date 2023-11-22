@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
+import {Store} from '@ngrx/store';
+
 import {Observable} from 'rxjs';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {ContactDto, OrganizationDto, ProjectDto, TeamDto} from '../../dto';
+import {PaymentDto} from '../../dto/payment.dto';
+import {ServiceLimitsDto} from '../../dto/service-limits.dto';
+import {AppState} from '../../store/app.state';
+import {Workspace} from '../../store/navigation/workspace';
 import {ApiPermissionService} from '../common/api-permission.service';
 import {OrganizationService} from './organization.service';
-import {ContactDto, OrganizationDto, ProjectDto, TeamDto} from '../../dto';
-import {ServiceLimitsDto} from '../../dto/service-limits.dto';
-import {Workspace} from '../../store/navigation/workspace';
-import {PaymentDto} from '../../dto/payment.dto';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store/app.state';
-import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiOrganizationService extends ApiPermissionService implements OrganizationService {

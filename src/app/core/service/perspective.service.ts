@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable, combineLatest} from 'rxjs';
 import {map, take} from 'rxjs/operators';
+
 import {Perspective} from '../../view/perspectives/perspective';
 import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
-import {QueryParam} from '../store/navigation/query-param';
-import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cursor/view-cursor';
-import {combineLatest, Observable} from 'rxjs';
-import {Query} from '../store/navigation/query/query';
 import {selectCollectionsByQueryWithoutLinks} from '../store/common/permissions.selectors';
 import {modifyDetailPerspectiveQuery} from '../store/details/detail.utils';
+import {selectWorkspace} from '../store/navigation/navigation.state';
+import {QueryParam} from '../store/navigation/query-param';
+import {Query} from '../store/navigation/query/query';
+import {ViewCursor, convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
 import {selectViewDataQuery} from '../store/view-settings/view-settings.state';
 
 @Injectable({

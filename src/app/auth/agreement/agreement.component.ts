@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+
 import {Store} from '@ngrx/store';
+
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
+
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {LanguageCode} from '../../core/model/language';
 import {AppState} from '../../core/store/app.state';
+import {ModalsAction} from '../../core/store/modals/modals.action';
 import {UsersAction} from '../../core/store/users/users.action';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
-import {ModalsAction} from '../../core/store/modals/modals.action';
-import {ConfigurationService} from '../../configuration/configuration.service';
-import {LanguageCode} from '../../core/model/language';
 
 const termsOfServiceLinks = {
   cs: 'https://www.lumeer.io/cs/vseobecne-obchodni-podminky/',

@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+
 import {BehaviorSubject} from 'rxjs';
-import {ModalService} from '../../../shared/modal/modal.service';
+
 import {Collection} from '../../../core/store/collections/collection';
+import {ModalService} from '../../../shared/modal/modal.service';
 
 @Component({
   selector: 'collection-upload',

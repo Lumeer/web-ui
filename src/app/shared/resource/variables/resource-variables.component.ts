@@ -16,20 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+
+import {Store, select} from '@ngrx/store';
+
+import {Observable} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+
 import {Resource} from '../../../core/model/resource';
 import {ResourceType} from '../../../core/model/resource-type';
-import {ResourceVariable} from '../../../core/store/resource-variables/resource-variable';
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import * as ResourceVariableActions from '../../../core/store/resource-variables/resource-variables.actions';
-import {Observable} from 'rxjs';
-import {objectChanged} from '../../utils/common.utils';
-import {selectResourceVariablesByResourceType} from '../../../core/store/resource-variables/resource-variables.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {map, take} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {ResourceVariable} from '../../../core/store/resource-variables/resource-variable';
+import * as ResourceVariableActions from '../../../core/store/resource-variables/resource-variables.actions';
+import {selectResourceVariablesByResourceType} from '../../../core/store/resource-variables/resource-variables.state';
+import {objectChanged} from '../../utils/common.utils';
 
 @Component({
   selector: 'resource-variables',

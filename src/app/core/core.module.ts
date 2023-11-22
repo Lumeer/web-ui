@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
+
+import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {AlertModule} from 'ngx-bootstrap/alert';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
@@ -30,25 +31,25 @@ import {ModalModule} from 'ngx-bootstrap/modal';
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import {TimepickerModule} from 'ngx-bootstrap/timepicker';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
+
 import {SharedModule} from '../shared/shared.module';
+import {DocumentRedirectComponent} from './components/document-redirect.component';
+import {HomeComponent} from './components/home.component';
+import {RedirectComponent} from './components/redirect.component';
+import {DataServiceModule} from './data-service/data-service.module';
 import {SentryErrorHandler} from './error/sentry.error-handler';
 import {GuardsModule} from './guards/guards.module';
-import {HomeComponent} from './components/home.component';
 import {NotificationsModule} from './notifications/notifications.module';
 import {PusherService} from './pusher/pusher.service';
-import {RedirectComponent} from './components/redirect.component';
 import {ImportService} from './rest';
 import {BaseService} from './rest/base.service';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
+import {SequenceService} from './rest/sequence.service';
+import {TemplateService} from './rest/template.service';
 import {UserNotificationsService} from './rest/user-notifications.service';
 import {AppStoreModule} from './store/app-store.module';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
-import {SequenceService} from './rest/sequence.service';
-import {AccordionModule} from 'ngx-bootstrap/accordion';
-import {TemplateService} from './rest/template.service';
-import {DataServiceModule} from './data-service/data-service.module';
-import {DocumentRedirectComponent} from './components/document-redirect.component';
 
 @NgModule({
   imports: [

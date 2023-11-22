@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import {perspectivesMap} from '../../../view/perspectives/perspective';
 import {UserNotificationDto} from '../../dto/user-notification.dto';
 import {UserNotification, UserNotificationType, UserNotificationTypeMap} from '../../model/user-notification';
-import {perspectivesMap} from '../../../view/perspectives/perspective';
 
 export namespace UserNotificationConverter {
   export function fromDtos(dtos: UserNotificationDto[]): UserNotification[] {

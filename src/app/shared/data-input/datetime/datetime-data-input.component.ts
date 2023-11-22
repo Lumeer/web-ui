@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
   AfterViewChecked,
   AfterViewInit,
@@ -31,17 +30,19 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
-import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
-import {keyboardEventCode, KeyCode} from '../../key-code';
-import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
-import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+
+import {ConstraintType, DateTimeDataValue} from '@lumeer/data-filters';
+import {isDateValid, isNotNullOrUndefined} from '@lumeer/utils';
+
+import {ConfigurationService} from '../../../configuration/configuration.service';
 import {LanguageCode} from '../../../core/model/language';
+import {DateTimeOptions, createDateTimeOptions} from '../../date-time/date-time-options';
+import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
+import {KeyCode, keyboardEventCode} from '../../key-code';
+import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
-import {ConstraintType, DateTimeDataValue} from '@lumeer/data-filters';
-import {ConfigurationService} from '../../../configuration/configuration.service';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'datetime-data-input',

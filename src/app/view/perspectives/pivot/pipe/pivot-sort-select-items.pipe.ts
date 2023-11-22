@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Pipe, PipeTransform} from '@angular/core';
+
+import {cleanQueryAttribute} from '@lumeer/data-filters';
+
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
-import {PivotStemData} from '../util/pivot-data';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {PivotStemData} from '../util/pivot-data';
 
 @Pipe({
   name: 'pivotSortSelectItems',

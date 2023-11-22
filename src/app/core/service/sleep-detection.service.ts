@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
-import {AppState} from '../store/app.state';
+
 import {Store} from '@ngrx/store';
-import {ProjectsAction} from '../store/projects/projects.action';
-import {UsersAction} from '../store/users/users.action';
+
 import {AuthService} from '../../auth/auth.service';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {AppState} from '../store/app.state';
+import {ProjectsAction} from '../store/projects/projects.action';
+import {UsersAction} from '../store/users/users.action';
 
 @Injectable({
   providedIn: 'root',

@@ -16,11 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
-import {groupDocumentsByCollection} from '../../core/store/documents/document.utils';
-import {groupLinkInstancesByLinkTypes} from '../../core/store/link-instances/link-instance.utils';
-import {isArray, objectsByIdMap, objectValues} from './common.utils';
 import {
   Constraint,
   ConstraintData,
@@ -28,18 +23,24 @@ import {
   DocumentsAndLinksStemData,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {isArray, objectsByIdMap} from '@lumeer/utils';
+
+import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
 import {Attribute, Collection} from '../../core/store/collections/collection';
-import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {DocumentModel} from '../../core/store/documents/document.model';
+import {groupDocumentsByCollection} from '../../core/store/documents/document.utils';
+import {groupLinkInstancesByLinkTypes} from '../../core/store/link-instances/link-instance.utils';
+import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {composeViewSettingsLinkTypeCollectionId} from '../settings/settings.util';
-import {getAttributesResourceType} from './resource.utils';
 import {
   AttributeSortType,
   AttributesSettings,
   ResourceAttributeSettings,
   ViewSettings,
 } from '../../core/store/view-settings/view-settings';
+import {composeViewSettingsLinkTypeCollectionId} from '../settings/settings.util';
+import {objectValues} from './common.utils';
+import {getAttributesResourceType} from './resource.utils';
 
 export function sortDataResourcesByViewSettings<T extends DataResource>(
   dataResources: T[],

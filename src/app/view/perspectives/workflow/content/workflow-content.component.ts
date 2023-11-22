@@ -16,33 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {
-  Component,
+  AfterViewInit,
   ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
   Input,
   Output,
-  EventEmitter,
-  ElementRef,
-  AfterViewInit,
-  HostListener,
 } from '@angular/core';
-import {View} from '../../../../core/store/views/view';
-import {Query} from '../../../../core/store/navigation/query/query';
+
+import {BehaviorSubject} from 'rxjs';
+
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {View} from '../../../../core/store/views/view';
 import {WorkflowConfig} from '../../../../core/store/workflows/workflow';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
-import {WorkflowTablesService} from './tables/service/workflow-tables.service';
-import {WorkflowTablesStateService} from './tables/service/workflow-tables-state.service';
-import {WorkflowTablesMenuService} from './tables/service/workflow-tables-menu.service';
+import {WorkflowPerspectiveConfiguration} from '../../perspective-configuration';
 import {WorkflowTablesDataService} from './tables/service/workflow-tables-data.service';
 import {WorkflowTablesKeyboardService} from './tables/service/workflow-tables-keyboard.service';
-import {WorkflowPerspectiveConfiguration} from '../../perspective-configuration';
-import {BehaviorSubject} from 'rxjs';
-import {ViewSettings} from '../../../../core/store/view-settings/view-settings';
+import {WorkflowTablesMenuService} from './tables/service/workflow-tables-menu.service';
+import {WorkflowTablesStateService} from './tables/service/workflow-tables-state.service';
+import {WorkflowTablesService} from './tables/service/workflow-tables.service';
 
 @Component({
   selector: 'workflow-content',

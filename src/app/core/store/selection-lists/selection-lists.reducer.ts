@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {initialSelectionListsState, selectionListsAdapter, SelectionListsState} from './selection-lists.state';
 import {SelectionListsAction, SelectionListsActionType} from './selection-lists.action';
+import {SelectionListsState, initialSelectionListsState, selectionListsAdapter} from './selection-lists.state';
 
 export function selectionListsReducer(
   state: SelectionListsState = initialSelectionListsState,

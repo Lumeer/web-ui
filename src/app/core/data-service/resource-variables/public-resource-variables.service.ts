@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import {Injectable} from '@angular/core';
 
-import {BaseService} from '../../rest/base.service';
-import {ResourceVariablesService} from './resource-variables.service';
 import {Observable, of} from 'rxjs';
+
 import {generateId} from '../../../shared/utils/resource.utils';
 import {ResourceVariableDto} from '../../dto/resource-variable.dto';
+import {BaseService} from '../../rest/base.service';
+import {ResourceVariablesService} from './resource-variables.service';
 
 @Injectable()
 export class PublicResourceVariablesService extends BaseService implements ResourceVariablesService {
