@@ -25,9 +25,29 @@
                    [config]="pivotConfig"
                    [query]="query"
                    [transform]="transform"
+                   [strings]="strings"
                    [constraintData]="constraintData"
                    (cellClick)="onCellClick($event)"
                    (pivotDataChange)="pivotData$.next($event)">
+
+    <ng-template lmr-table-cell-tmp let-cell="cell">
+      <data-input-preview class="flex-grow-1 h-100 text-truncate d-inline-block"
+                          [class.clickable-cell]="cell | pivotCellClickable"
+                          [constraint]="cell.constraint"
+                          [configuration]="cell | pivotCellConfiguration"
+                          [dataValue]="cell.value | dataValue:cell.constraint:constraintData"
+                          (click)="onCellClick(cell)">
+      </data-input-preview>
+    </ng-template>
+    <ng-template lmr-empty-tables-tmp>
+      <empty-state *ngIf="dataLoaded" class="w-100" icon="far fa-empty-set">
+        <h3 i18n="@@perspective.pivot.table.empty.title">Cannot display anything</h3>
+        <div i18n="@@perspective.pivot.table.empty.description">
+          Please make sure your query results in some data (by switching to the Detail view for example).
+          Also check your pivot table configuration in the sidebar on the left.
+        </div>
+      </empty-state>
+    </ng-template>
   </lmr-pivot-table>
 </ng-container>
 

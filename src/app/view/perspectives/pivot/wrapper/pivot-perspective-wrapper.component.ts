@@ -21,7 +21,13 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {BehaviorSubject} from 'rxjs';
 
 import {ConstraintData, DataAggregationType, DocumentsAndLinksData} from '@lumeer/data-filters';
-import {LmrPivotConfig, LmrPivotData, LmrPivotTableCell, LmrPivotTransform} from '@lumeer/lmr-pivot-table';
+import {
+  LmrPivotConfig,
+  LmrPivotData,
+  LmrPivotStrings,
+  LmrPivotTableCell,
+  LmrPivotTransform,
+} from '@lumeer/lmr-pivot-table';
 import {deepObjectsEquals} from '@lumeer/utils';
 
 import {Collection} from '../../../../core/store/collections/collection';
@@ -83,6 +89,10 @@ export class PivotPerspectiveWrapperComponent implements OnChanges {
   public pivotData$ = new BehaviorSubject<LmrPivotData>(null);
 
   public transform: LmrPivotTransform;
+  public strings: LmrPivotStrings = {
+    headerSummaryString: $localize`:@@perspective.pivot.table.summary.header:Summary of`,
+    summaryString: $localize`:@@perspective.pivot.table.summary.total:Summary`,
+  };
 
   constructor(
     private constraintItemsFormatter: SelectItemWithConstraintFormatter,
