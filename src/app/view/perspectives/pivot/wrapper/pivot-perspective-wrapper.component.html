@@ -33,6 +33,7 @@
     <ng-template lmr-table-cell-tmp let-cell="cell">
       <data-input-preview class="d-inline-block"
                           [ngClass]="cell.summary ? 'flex-grow-1 h-100 text-truncate' : ''"
+                          [class.h-100]="cell.constraint?.type === ConstraintType.Color"
                           [class.clickable-cell]="cell | pivotCellClickable"
                           [constraint]="cell.constraint"
                           [configuration]="cell | pivotCellConfiguration"

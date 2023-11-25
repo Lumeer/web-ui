@@ -20,7 +20,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 
 import {BehaviorSubject} from 'rxjs';
 
-import {ConstraintData, DataAggregationType, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {ConstraintData, ConstraintType, DataAggregationType, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {LmrPivotConfig, LmrPivotData, LmrPivotStrings, LmrPivotTableCell, LmrPivotTransform} from '@lumeer/pivot';
 import {deepObjectsEquals} from '@lumeer/utils';
 
@@ -79,6 +79,8 @@ export class PivotPerspectiveWrapperComponent implements OnChanges {
 
   @Output()
   public sidebarToggle = new EventEmitter();
+
+  protected readonly ConstraintType = ConstraintType;
 
   public pivotData$ = new BehaviorSubject<LmrPivotData>(null);
 

@@ -112,7 +112,11 @@ $app-theme: mat.define-light-theme(
 @include mat.all-legacy-component-themes($app-theme);
 @include mat.all-component-typographies($typography);
 
-button.mat-menu-item {
+.menu-edges-content .mat-menu-mdc-content {
+  padding: 0 !important;
+}
+
+button.mat-menu-mdc-item {
   outline: none;
 }
 
@@ -176,8 +180,4 @@ button.mat-menu-item {
 
 .mat-mdc-menu-item[disabled] {
   opacity: 100% !important;
-}
-
-.mat-mdc-menu-content {
-  padding: 0 !important;
 }
