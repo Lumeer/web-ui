@@ -3,3 +3,11 @@
   flex-grow: 1;
   min-height: 100%;
 }
+
+data-input-preview.clickable-cell {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

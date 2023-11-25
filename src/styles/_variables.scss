@@ -88,6 +88,8 @@ $table-cell-padding-md: 0.5rem !default;
 
 // Dropdowns
 
+$dropdown-padding-x: 0;
+$dropdown-padding-y: 0;
 $dropdown-link-color: $primary;
 $dropdown-link-hover-color: $primary;
 $dropdown-link-hover-bg: $light;
@@ -145,6 +147,7 @@ $close-text-shadow: none !default;
 
 // Application-specific variables
 
+$border-color: $gray-400;
 $border-radius-base: 4px !default;
 $border-radius-large: 6px !default;
 $border-radius-small: 3px !default;

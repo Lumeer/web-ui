@@ -31,7 +31,8 @@
                    (pivotDataChange)="pivotData$.next($event)">
 
     <ng-template lmr-table-cell-tmp let-cell="cell">
-      <data-input-preview class="flex-grow-1 h-100 text-truncate d-inline-block"
+      <data-input-preview class="d-inline-block"
+                          [ngClass]="cell.summary ? 'flex-grow-1 h-100 text-truncate' : ''"
                           [class.clickable-cell]="cell | pivotCellClickable"
                           [constraint]="cell.constraint"
                           [configuration]="cell | pivotCellConfiguration"

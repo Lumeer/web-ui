@@ -112,10 +112,6 @@ $app-theme: mat.define-light-theme(
 @include mat.all-legacy-component-themes($app-theme);
 @include mat.all-component-typographies($typography);
 
-.menu-edges-content .mat-menu-content {
-  padding: 0 !important;
-}
-
 button.mat-menu-item {
   outline: none;
 }
@@ -126,6 +122,7 @@ button.mat-menu-item {
   .mat-mdc-menu-item-text {
     line-height: 1.2rem !important;
     font-size: 15px !important;
+    letter-spacing: normal !important;
   }
 
   &:hover:not([disabled]) {
@@ -175,4 +172,12 @@ button.mat-menu-item {
 .mat-mdc-menu-panel {
   min-width: 50px !important;
   min-height: 30px !important;
+}
+
+.mat-mdc-menu-item[disabled] {
+  opacity: 100% !important;
+}
+
+.mat-mdc-menu-content {
+  padding: 0 !important;
 }
