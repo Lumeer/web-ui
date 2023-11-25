@@ -18,7 +18,7 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {LmrPivotData} from '@lumeer/lmr-pivot-table';
+import {LmrPivotData} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotDataEmpty',

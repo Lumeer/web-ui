@@ -18,7 +18,7 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {LmrPivotTableCell} from '@lumeer/lmr-pivot-table';
+import {LmrPivotTableCell} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotCellClickable',

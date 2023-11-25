@@ -18,7 +18,7 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {LmrPivotRowColumnAttribute} from '@lumeer/lmr-pivot-table';
+import {LmrPivotRowColumnAttribute} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotHeaderCanSetSticky',

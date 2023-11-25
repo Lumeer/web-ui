@@ -18,7 +18,7 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {LmrPivotRowColumnAttribute} from '@lumeer/lmr-pivot-table';
+import {LmrPivotRowColumnAttribute} from '@lumeer/pivot';
 
 import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 

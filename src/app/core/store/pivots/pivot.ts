@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {LmrPivotConfig} from '@lumeer/lmr-pivot-table';
+import {LmrPivotConfig} from '@lumeer/pivot';
 
 export interface Pivot {
   id: string;

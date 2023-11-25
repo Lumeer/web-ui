@@ -21,13 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {BehaviorSubject} from 'rxjs';
 
 import {ConstraintData, DataAggregationType, DocumentsAndLinksData} from '@lumeer/data-filters';
-import {
-  LmrPivotConfig,
-  LmrPivotData,
-  LmrPivotStrings,
-  LmrPivotTableCell,
-  LmrPivotTransform,
-} from '@lumeer/lmr-pivot-table';
+import {LmrPivotConfig, LmrPivotData, LmrPivotStrings, LmrPivotTableCell, LmrPivotTransform} from '@lumeer/pivot';
 import {deepObjectsEquals} from '@lumeer/utils';
 
 import {Collection} from '../../../../core/store/collections/collection';

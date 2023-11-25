@@ -20,7 +20,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
-import {LmrPivotTableModule} from '@lumeer/lmr-pivot-table';
+import {LmrPivotTableModule} from '@lumeer/pivot';
 
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {SharedModule} from '../../../shared/shared.module';

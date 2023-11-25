@@ -26,7 +26,7 @@ import {
   LmrPivotSortList,
   LmrPivotSortValue,
   LmrPivotStemData,
-} from '@lumeer/lmr-pivot-table';
+} from '@lumeer/pivot';
 
 import {SelectItemModel} from '../../../../../../../../../shared/select/select-item/select-item.model';
 

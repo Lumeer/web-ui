@@ -23,7 +23,7 @@ import {
   LmrPivotRowColumnAttribute,
   LmrPivotStemConfig,
   LmrPivotValueAttribute,
-} from '@lumeer/lmr-pivot-table';
+} from '@lumeer/pivot';
 import {deepObjectsEquals} from '@lumeer/utils';
 
 import {AttributesResource} from '../../../../core/model/resource';

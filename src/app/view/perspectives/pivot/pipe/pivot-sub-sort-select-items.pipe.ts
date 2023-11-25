@@ -18,7 +18,7 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {LmrPivotDataHeader, LmrPivotRowColumnAttribute} from '@lumeer/lmr-pivot-table';
+import {LmrPivotDataHeader, LmrPivotRowColumnAttribute} from '@lumeer/pivot';
 import {isNotNullOrUndefined} from '@lumeer/utils';
 
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';

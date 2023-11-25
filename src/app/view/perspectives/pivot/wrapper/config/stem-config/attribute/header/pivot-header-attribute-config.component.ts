@@ -19,7 +19,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Constraint} from '@lumeer/data-filters';
-import {LmrPivotAttribute, LmrPivotRowColumnAttribute, LmrPivotStemData} from '@lumeer/lmr-pivot-table';
+import {LmrPivotAttribute, LmrPivotRowColumnAttribute, LmrPivotStemData} from '@lumeer/pivot';
 
 import {AttributesResource} from '../../../../../../../../core/model/resource';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';

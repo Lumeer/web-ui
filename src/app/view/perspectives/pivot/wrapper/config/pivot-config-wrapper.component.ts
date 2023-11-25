@@ -18,7 +18,7 @@
  */
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {LmrPivotConfig, LmrPivotData, LmrPivotStemConfig} from '@lumeer/lmr-pivot-table';
+import {LmrPivotConfig, LmrPivotData, LmrPivotStemConfig} from '@lumeer/pivot';
 import {deepObjectCopy} from '@lumeer/utils';
 
 import {Collection} from '../../../../../core/store/collections/collection';

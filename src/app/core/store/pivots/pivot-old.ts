@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {LmrPivotColumnAttribute, LmrPivotRowAttribute, LmrPivotValueAttribute} from '@lumeer/lmr-pivot-table';
+import {LmrPivotColumnAttribute, LmrPivotRowAttribute, LmrPivotValueAttribute} from '@lumeer/pivot';
 
 export interface PivotConfigV0 {
   rowAttributes: LmrPivotRowAttribute[];

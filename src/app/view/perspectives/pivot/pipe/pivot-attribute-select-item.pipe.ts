@@ -19,7 +19,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {cleanQueryAttribute} from '@lumeer/data-filters';
-import {LmrPivotRowColumnAttribute} from '@lumeer/lmr-pivot-table';
+import {LmrPivotRowColumnAttribute} from '@lumeer/pivot';
 
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';

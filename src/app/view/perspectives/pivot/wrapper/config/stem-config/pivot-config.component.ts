@@ -29,7 +29,7 @@ import {
   LmrPivotStemData,
   LmrPivotValueAttribute,
   pivotAttributesAreSame,
-} from '@lumeer/lmr-pivot-table';
+} from '@lumeer/pivot';
 import {deepObjectCopy, isNotNullOrUndefined} from '@lumeer/utils';
 
 import {DRAG_DELAY} from '../../../../../../core/constants';

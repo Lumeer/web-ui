@@ -18,7 +18,7 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {LmrPivotDataHeader, LmrPivotRowColumnAttribute, LmrPivotSortValue} from '@lumeer/lmr-pivot-table';
+import {LmrPivotDataHeader, LmrPivotRowColumnAttribute, LmrPivotSortValue} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotSubSortValues',

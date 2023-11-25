@@ -19,7 +19,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {ConstraintType} from '@lumeer/data-filters';
-import {LmrPivotTableCell} from '@lumeer/lmr-pivot-table';
+import {LmrPivotTableCell} from '@lumeer/pivot';
 
 import {DataInputConfiguration} from '../../../../shared/data-input/data-input-configuration';
 

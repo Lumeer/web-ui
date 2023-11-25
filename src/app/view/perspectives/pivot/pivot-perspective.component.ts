@@ -23,7 +23,7 @@ import {Store, select} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {LmrPivotConfig} from '@lumeer/lmr-pivot-table';
+import {LmrPivotConfig} from '@lumeer/pivot';
 
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 import {AppState} from '../../../core/store/app.state';

@@ -18,7 +18,7 @@
  */
 import {Action} from '@ngrx/store';
 
-import {LmrPivotConfig} from '@lumeer/lmr-pivot-table';
+import {LmrPivotConfig} from '@lumeer/pivot';
 
 import {Pivot} from './pivot';
 
