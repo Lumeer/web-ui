@@ -16,28 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {LmrPivotConfig, LmrPivotConfigVersion} from '@lumeer/pivot';
 import {isNotNullOrUndefined} from '@lumeer/utils';
 
-import {PivotConfig, PivotConfigVersion} from './pivot';
 import {PivotConfigV0} from './pivot-old';
 
-export function convertPivotConfigDtoToModel(config: any): PivotConfig {
+export function convertPivotConfigDtoToModel(config: any): LmrPivotConfig {
   if (!config) {
     return config;
   }
   const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
   switch (version) {
-    case PivotConfigVersion.V1:
+    case LmrPivotConfigVersion.V1:
       return convertPivotConfigDtoToModelV1(config);
     default:
       return convertPivotConfigDtoToModelV0(config);
   }
 }
 
-function convertPivotConfigDtoToModelV1(config: PivotConfig): PivotConfig {
+function convertPivotConfigDtoToModelV1(config: LmrPivotConfig): LmrPivotConfig {
   return config;
 }
 
-function convertPivotConfigDtoToModelV0(config: PivotConfigV0): PivotConfig {
-  return {version: PivotConfigVersion.V1, stemsConfigs: [config]};
+function convertPivotConfigDtoToModelV0(config: PivotConfigV0): LmrPivotConfig {
+  return {version: LmrPivotConfigVersion.V1, stemsConfigs: [config]};
 }

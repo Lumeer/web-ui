@@ -1,33 +1,56 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
 
-  <ng-container *ngIf="{pivotData: pivotData$ | async} as data">
+  <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && canManageConfig && pivotConfig"
+                       [collapsed]="!sidebarOpened"
+                       (toggle)="onSidebarToggle()">
 
-    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && canManageConfig && pivotConfig"
-                         [collapsed]="!sidebarOpened"
-                         (toggle)="onSidebarToggle()">
+    <pivot-config-wrapper class="d-block m-3"
+                          [config]="pivotConfig"
+                          [pivotData]="pivotData$ | async"
+                          [collections]="collections"
+                          [linkTypes]="linkTypes"
+                          [query]="query"
+                          (configChange)="onConfigChange($event)">
+    </pivot-config-wrapper>
 
-      <pivot-config-wrapper class="d-block m-3"
-                            [config]="pivotConfig"
-                            [pivotData]="data.pivotData"
-                            [collections]="collections"
-                            [linkTypes]="linkTypes"
-                            [query]="query"
-                            (configChange)="onConfigChange($event)">
-      </pivot-config-wrapper>
+  </collapsible-sidebar>
 
-    </collapsible-sidebar>
+  <lmr-pivot-table *ngIf="pivotConfig"
+                   class="flex-grow-1 h-100 overflow-auto"
+                   [class.mx-4]="perspectiveConfiguration?.additionalSpace"
+                   [class.bottom-padding-4]="perspectiveConfiguration?.additionalSpace"
+                   [collections]="collections"
+                   [data]="data"
+                   [linkTypes]="linkTypes"
+                   [config]="pivotConfig"
+                   [query]="query"
+                   [transform]="transform"
+                   [strings]="strings"
+                   [constraintData]="constraintData"
+                   (cellClick)="onCellClick($event)"
+                   (pivotDataChange)="pivotData$.next($event)">
 
-    <pivot-table *ngIf="pivotConfig"
-                 class="flex-grow-1 h-100 overflow-auto"
-                 [class.mx-4]="perspectiveConfiguration?.additionalSpace"
-                 [class.bottom-padding-4]="perspectiveConfiguration?.additionalSpace"
-                 [pivotData]="data.pivotData"
-                 [constraintData]="constraintData"
-                 [dataLoaded]="dataLoaded"
-                 (cellClick)="onCellClick($event)">
-    </pivot-table>
-
-  </ng-container>
+    <ng-template lmr-table-cell-tmp let-cell="cell">
+      <data-input-preview class="d-inline-block"
+                          [ngClass]="cell.summary ? 'flex-grow-1 h-100 text-truncate' : ''"
+                          [class.h-100]="cell.constraint?.type === ConstraintType.Color"
+                          [class.clickable-cell]="cell | pivotCellClickable"
+                          [constraint]="cell.constraint"
+                          [configuration]="cell | pivotCellConfiguration"
+                          [dataValue]="cell.value | dataValue:cell.constraint:constraintData"
+                          (click)="onCellClick(cell)">
+      </data-input-preview>
+    </ng-template>
+    <ng-template lmr-empty-tables-tmp>
+      <empty-state *ngIf="dataLoaded" class="w-100" icon="far fa-empty-set">
+        <h3 i18n="@@perspective.pivot.table.empty.title">Cannot display anything</h3>
+        <div i18n="@@perspective.pivot.table.empty.description">
+          Please make sure your query results in some data (by switching to the Detail view for example).
+          Also check your pivot table configuration in the sidebar on the left.
+        </div>
+      </empty-state>
+    </ng-template>
+  </lmr-pivot-table>
 </ng-container>
 
 <ng-template #notDisplayable>

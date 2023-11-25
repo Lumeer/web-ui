@@ -19,9 +19,9 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {ConstraintType} from '@lumeer/data-filters';
+import {LmrPivotTableCell} from '@lumeer/pivot';
 
 import {DataInputConfiguration} from '../../../../shared/data-input/data-input-configuration';
-import {PivotTableCell} from '../util/pivot-table';
 
 @Pipe({
   name: 'pivotCellConfiguration',
@@ -29,7 +29,7 @@ import {PivotTableCell} from '../util/pivot-table';
 export class PivotCellConfigurationPipe implements PipeTransform {
   public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40, inheritColor: true}};
 
-  public transform(cell: PivotTableCell): DataInputConfiguration {
+  public transform(cell: LmrPivotTableCell): DataInputConfiguration {
     const constraintType = cell?.constraint?.type;
     if (constraintType === ConstraintType.Boolean) {
       return {...this.configuration, boolean: {additionalLabel: cell.label}};

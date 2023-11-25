@@ -18,7 +18,9 @@
  */
 import {Action} from '@ngrx/store';
 
-import {Pivot, PivotConfig} from './pivot';
+import {LmrPivotConfig} from '@lumeer/pivot';
+
+import {Pivot} from './pivot';
 
 export enum PivotsActionType {
   ADD_PIVOT = '[Pivot] Add pivot',
@@ -45,7 +47,7 @@ export namespace PivotsAction {
   export class SetConfig implements Action {
     public readonly type = PivotsActionType.SET_CONFIG;
 
-    public constructor(public payload: {pivotId: string; config: PivotConfig}) {}
+    public constructor(public payload: {pivotId: string; config: LmrPivotConfig}) {}
   }
 
   export class Clear implements Action {

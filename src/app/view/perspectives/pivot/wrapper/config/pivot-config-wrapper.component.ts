@@ -18,13 +18,12 @@
  */
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
+import {LmrPivotConfig, LmrPivotData, LmrPivotStemConfig} from '@lumeer/pivot';
 import {deepObjectCopy} from '@lumeer/utils';
 
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
-import {PivotConfig, PivotStemConfig} from '../../../../../core/store/pivots/pivot';
-import {PivotData} from '../../util/pivot-data';
 import {createDefaultPivotStemConfig} from '../../util/pivot-util';
 
 @Component({
@@ -34,10 +33,10 @@ import {createDefaultPivotStemConfig} from '../../util/pivot-util';
 })
 export class PivotConfigWrapperComponent {
   @Input()
-  public config: PivotConfig;
+  public config: LmrPivotConfig;
 
   @Input()
-  public pivotData: PivotData;
+  public pivotData: LmrPivotData;
 
   @Input()
   public collections: Collection[];
@@ -49,12 +48,12 @@ export class PivotConfigWrapperComponent {
   public query: Query;
 
   @Output()
-  public configChange = new EventEmitter<PivotConfig>();
+  public configChange = new EventEmitter<LmrPivotConfig>();
 
   public readonly defaultStemConfig = createDefaultPivotStemConfig();
 
-  public onStemConfigChange(stemConfig: PivotStemConfig, stem: QueryStem, index: number) {
-    const config = deepObjectCopy<PivotConfig>(this.config);
+  public onStemConfigChange(stemConfig: LmrPivotStemConfig, stem: QueryStem, index: number) {
+    const config = deepObjectCopy<LmrPivotConfig>(this.config);
     config.stemsConfigs[index] = {...stemConfig, stem};
     this.configChange.emit(config);
   }

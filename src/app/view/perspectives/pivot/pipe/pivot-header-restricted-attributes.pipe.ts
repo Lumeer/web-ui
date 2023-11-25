@@ -18,9 +18,9 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
+import {LmrPivotRowColumnAttribute} from '@lumeer/pivot';
 import {deepObjectsEquals} from '@lumeer/utils';
 
-import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
@@ -28,8 +28,8 @@ import {SelectItemWithConstraintId} from '../../../../shared/select/select-const
 })
 export class PivotHeaderRestrictedAttributesPipe implements PipeTransform {
   public transform(
-    pivotRowColumnAttributes: PivotRowColumnAttribute[],
-    currentRowColumnAttribute: PivotRowColumnAttribute
+    pivotRowColumnAttributes: LmrPivotRowColumnAttribute[],
+    currentRowColumnAttribute: LmrPivotRowColumnAttribute
   ): SelectItemWithConstraintId[] {
     return (pivotRowColumnAttributes || [])
       .filter(attribute => !currentRowColumnAttribute || !deepObjectsEquals(attribute, currentRowColumnAttribute))

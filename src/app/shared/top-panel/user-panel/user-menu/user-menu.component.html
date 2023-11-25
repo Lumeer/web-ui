@@ -27,7 +27,7 @@
 
         <button mat-menu-item [matMenuTriggerFor]="languageMenu">
           <span [ngClass]="currentLanguage.icon"></span>
-          <span>{{currentLanguage.name}}</span>&nbsp;(<span>{{currentLanguage.translatedName}}</span>)
+          <span [style.margin-left.px]="2">{{currentLanguage.name}}</span>&nbsp;(<span>{{currentLanguage.translatedName}}</span>)
         </button>
         <button mat-menu-item (click)="onSettings()"
                 title="User Settings" i18n-title="@@menu.user.settings">

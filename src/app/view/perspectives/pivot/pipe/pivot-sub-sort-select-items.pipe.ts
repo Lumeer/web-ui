@@ -18,19 +18,18 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
+import {LmrPivotDataHeader, LmrPivotRowColumnAttribute} from '@lumeer/pivot';
 import {isNotNullOrUndefined} from '@lumeer/utils';
 
-import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {PivotDataHeader} from '../util/pivot-data';
 
 @Pipe({
   name: 'pivotSubSortSelectItems',
 })
 export class PivotSubSortSelectItemsPipe implements PipeTransform {
   public transform(
-    pivotAttribute: PivotRowColumnAttribute,
-    otherSideHeaders: PivotDataHeader[],
+    pivotAttribute: LmrPivotRowColumnAttribute,
+    otherSideHeaders: LmrPivotDataHeader[],
     index: number,
     summaryTitle: string
   ): SelectItemModel[] {
@@ -62,7 +61,7 @@ export class PivotSubSortSelectItemsPipe implements PipeTransform {
     ];
   }
 
-  private isLastHeader(otherSideHeaders: PivotDataHeader[]): boolean {
+  private isLastHeader(otherSideHeaders: LmrPivotDataHeader[]): boolean {
     if (otherSideHeaders && otherSideHeaders[0] && otherSideHeaders[0].children) {
       return otherSideHeaders[0].children[0] && isNotNullOrUndefined(otherSideHeaders[0].children[0].targetIndex);
     }

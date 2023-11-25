@@ -20,23 +20,23 @@ import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} f
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {DataAggregationType, cleanQueryAttribute} from '@lumeer/data-filters';
+import {
+  LmrPivotAttribute,
+  LmrPivotColumnAttribute,
+  LmrPivotRowAttribute,
+  LmrPivotRowColumnAttribute,
+  LmrPivotStemConfig,
+  LmrPivotStemData,
+  LmrPivotValueAttribute,
+  pivotAttributesAreSame,
+} from '@lumeer/pivot';
 import {deepObjectCopy, isNotNullOrUndefined} from '@lumeer/utils';
 
 import {DRAG_DELAY} from '../../../../../../core/constants';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {
-  PivotAttribute,
-  PivotColumnAttribute,
-  PivotRowAttribute,
-  PivotRowColumnAttribute,
-  PivotStemConfig,
-  PivotValueAttribute,
-} from '../../../../../../core/store/pivots/pivot';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {PivotStemData} from '../../../util/pivot-data';
-import {pivotAttributesAreSame} from '../../../util/pivot-util';
 
 @Component({
   selector: 'pivot-config',
@@ -46,10 +46,10 @@ import {pivotAttributesAreSame} from '../../../util/pivot-util';
 })
 export class PivotConfigComponent {
   @Input()
-  public config: PivotStemConfig;
+  public config: LmrPivotStemConfig;
 
   @Input()
-  public pivotData: PivotStemData;
+  public pivotData: LmrPivotStemData;
 
   @Input()
   public collections: Collection[];
@@ -61,14 +61,14 @@ export class PivotConfigComponent {
   public stem: QueryStem;
 
   @Output()
-  public configChange = new EventEmitter<PivotStemConfig>();
+  public configChange = new EventEmitter<LmrPivotStemConfig>();
 
   public readonly rowsListId = `${generateId()}:row`;
   public readonly columnsListId = `${generateId()}:column`;
   public readonly valuesListId = `${generateId()}:value`;
   public readonly dragDelay = DRAG_DELAY;
 
-  public onRowAttributeSelect(attribute: PivotRowAttribute, previousAttribute?: PivotRowAttribute) {
+  public onRowAttributeSelect(attribute: LmrPivotRowAttribute, previousAttribute?: LmrPivotRowAttribute) {
     this.onAttributeChange(attribute, previousAttribute, 'rowAttributes');
   }
 
@@ -76,11 +76,11 @@ export class PivotConfigComponent {
     this.onAttributeRemove(index, 'rowAttributes');
   }
 
-  public onRowAttributeChange(index: number, attribute: PivotRowAttribute) {
+  public onRowAttributeChange(index: number, attribute: LmrPivotRowAttribute) {
     this.onAttributeChange(attribute, attribute, 'rowAttributes', index);
   }
 
-  public onColumnAttributeSelect(attribute: PivotColumnAttribute, previousAttribute?: PivotColumnAttribute) {
+  public onColumnAttributeSelect(attribute: LmrPivotColumnAttribute, previousAttribute?: LmrPivotColumnAttribute) {
     this.onAttributeChange(attribute, previousAttribute, 'columnAttributes');
   }
 
@@ -88,11 +88,11 @@ export class PivotConfigComponent {
     this.onAttributeRemove(index, 'columnAttributes');
   }
 
-  public onColumnAttributeChange(index: number, attribute: PivotColumnAttribute) {
+  public onColumnAttributeChange(index: number, attribute: LmrPivotColumnAttribute) {
     this.onAttributeChange(attribute, attribute, 'columnAttributes', index);
   }
 
-  public onValueAttributeSelect(attribute: PivotValueAttribute, previousAttribute?: PivotValueAttribute) {
+  public onValueAttributeSelect(attribute: LmrPivotValueAttribute, previousAttribute?: LmrPivotValueAttribute) {
     this.onAttributeChange(attribute, previousAttribute, 'valueAttributes');
   }
 
@@ -100,13 +100,13 @@ export class PivotConfigComponent {
     this.onAttributeRemove(index, 'valueAttributes');
   }
 
-  public onValueAttributeChange(index: number, attribute: PivotValueAttribute) {
+  public onValueAttributeChange(index: number, attribute: LmrPivotValueAttribute) {
     this.onAttributeChange(attribute, attribute, 'valueAttributes', index);
   }
 
   private onAttributeChange(
-    attribute: PivotAttribute,
-    previousAttribute: PivotAttribute,
+    attribute: LmrPivotAttribute,
+    previousAttribute: LmrPivotAttribute,
     parameterName: string,
     index?: number
   ) {
@@ -133,11 +133,11 @@ export class PivotConfigComponent {
     }
   }
 
-  public trackByAttribute(index: number, attribute: PivotAttribute): string {
+  public trackByAttribute(index: number, attribute: LmrPivotAttribute): string {
     return `${attribute.resourceIndex}:${attribute.resourceId}:${attribute.attributeId}`;
   }
 
-  public rowsListPredicate(event: CdkDrag<PivotAttribute>) {
+  public rowsListPredicate(event: CdkDrag<LmrPivotAttribute>) {
     if (event.dropContainer.id === this.rowsListId) {
       return true;
     }
@@ -145,7 +145,7 @@ export class PivotConfigComponent {
     return !(this.config.rowAttributes || []).some(attribute => pivotAttributesAreSame(attribute, event.data));
   }
 
-  public columnsListPredicate(event: CdkDrag<PivotAttribute>) {
+  public columnsListPredicate(event: CdkDrag<LmrPivotAttribute>) {
     if (event.dropContainer.id === this.columnsListId) {
       return true;
     }
@@ -153,12 +153,12 @@ export class PivotConfigComponent {
     return !(this.config.columnAttributes || []).some(attribute => pivotAttributesAreSame(attribute, event.data));
   }
 
-  public onDrop(event: CdkDragDrop<PivotAttribute, PivotAttribute>) {
+  public onDrop(event: CdkDragDrop<LmrPivotAttribute, LmrPivotAttribute>) {
     if (event.previousContainer.id === event.container.id && event.previousIndex === event.currentIndex) {
       return;
     }
 
-    const config = deepObjectCopy<PivotStemConfig>(this.config);
+    const config = deepObjectCopy<LmrPivotStemConfig>(this.config);
     const previousContainerArray = this.getConfigArrayByContainerId(event.previousContainer.id, config);
     const containerArray = this.getConfigArrayByContainerId(event.container.id, config);
 
@@ -173,42 +173,45 @@ export class PivotConfigComponent {
   }
 
   private resetAttributeByDrag(
-    previousContainer: CdkDropList<PivotAttribute>,
-    container: CdkDropList<PivotAttribute>,
-    containerArray: PivotAttribute[],
+    previousContainer: CdkDropList<LmrPivotAttribute>,
+    container: CdkDropList<LmrPivotAttribute>,
+    containerArray: LmrPivotAttribute[],
     currentIndex: number
   ) {
     const pivotAttribute = containerArray[currentIndex];
     const cleanedAttribute = cleanQueryAttribute(pivotAttribute);
     if (this.movedFromValuesOrHeaderToHeader(previousContainer, container)) {
-      const asc = !!(<PivotRowColumnAttribute>cleanedAttribute).sort
-        ? (<PivotRowColumnAttribute>cleanedAttribute).sort.asc
+      const asc = !!(<LmrPivotRowColumnAttribute>cleanedAttribute).sort
+        ? (<LmrPivotRowColumnAttribute>cleanedAttribute).sort.asc
         : true;
       containerArray[currentIndex] = {
         ...cleanedAttribute,
         showSums: true,
         sort: {attribute: cleanedAttribute, asc},
-      } as PivotRowColumnAttribute;
+      } as LmrPivotRowColumnAttribute;
     } else if (this.movedFromHeaderToValues(previousContainer, container)) {
-      containerArray[currentIndex] = {...cleanedAttribute, aggregation: DataAggregationType.Sum} as PivotValueAttribute;
+      containerArray[currentIndex] = {
+        ...cleanedAttribute,
+        aggregation: DataAggregationType.Sum,
+      } as LmrPivotValueAttribute;
     }
   }
 
   private movedFromValuesOrHeaderToHeader(
-    previousContainer: CdkDropList<PivotAttribute>,
-    container: CdkDropList<PivotAttribute>
+    previousContainer: CdkDropList<LmrPivotAttribute>,
+    container: CdkDropList<LmrPivotAttribute>
   ): boolean {
     return previousContainer.id !== container.id && [this.rowsListId, this.columnsListId].includes(container.id);
   }
 
   private movedFromHeaderToValues(
-    previousContainer: CdkDropList<PivotAttribute>,
-    container: CdkDropList<PivotAttribute>
+    previousContainer: CdkDropList<LmrPivotAttribute>,
+    container: CdkDropList<LmrPivotAttribute>
   ): boolean {
     return [this.rowsListId, this.columnsListId].includes(previousContainer.id) && container.id === this.valuesListId;
   }
 
-  private getConfigArrayByContainerId(id: string, config: PivotStemConfig): PivotAttribute[] {
+  private getConfigArrayByContainerId(id: string, config: LmrPivotStemConfig): LmrPivotAttribute[] {
     if (id === this.rowsListId) {
       return config.rowAttributes;
     } else if (id === this.columnsListId) {

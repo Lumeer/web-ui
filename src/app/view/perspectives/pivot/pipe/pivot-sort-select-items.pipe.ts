@@ -19,10 +19,9 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {cleanQueryAttribute} from '@lumeer/data-filters';
+import {LmrPivotRowColumnAttribute, LmrPivotStemData} from '@lumeer/pivot';
 
-import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {PivotStemData} from '../util/pivot-data';
 
 @Pipe({
   name: 'pivotSortSelectItems',
@@ -35,9 +34,9 @@ export class PivotSortSelectItemsPipe implements PipeTransform {
   }
 
   public transform(
-    pivotAttribute: PivotRowColumnAttribute,
+    pivotAttribute: LmrPivotRowColumnAttribute,
     attributeSelectItem: SelectItemModel,
-    pivotData: PivotStemData
+    pivotData: LmrPivotStemData
   ): SelectItemModel[] {
     const items: SelectItemModel[] = [];
     const cleanedPivotAttribute = cleanQueryAttribute(pivotAttribute);

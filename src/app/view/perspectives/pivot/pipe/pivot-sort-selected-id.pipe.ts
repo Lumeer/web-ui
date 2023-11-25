@@ -19,16 +19,16 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {cleanQueryAttribute} from '@lumeer/data-filters';
+import {LmrPivotRowColumnAttribute} from '@lumeer/pivot';
 import {deepObjectsEquals} from '@lumeer/utils';
 
-import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 
 @Pipe({
   name: 'pivotSortSelectedId',
 })
 export class PivotSortSelectedIdPipe implements PipeTransform {
-  public transform(pivotAttribute: PivotRowColumnAttribute, items: SelectItemModel[]): any {
+  public transform(pivotAttribute: LmrPivotRowColumnAttribute, items: SelectItemModel[]): any {
     if (
       pivotAttribute.sort &&
       pivotAttribute.sort.list &&

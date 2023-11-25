@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {PivotColumnAttribute, PivotRowAttribute, PivotValueAttribute} from './pivot';
+import {LmrPivotColumnAttribute, LmrPivotRowAttribute, LmrPivotValueAttribute} from '@lumeer/pivot';
 
 export interface PivotConfigV0 {
-  rowAttributes: PivotRowAttribute[];
-  columnAttributes: PivotColumnAttribute[];
-  valueAttributes: PivotValueAttribute[];
+  rowAttributes: LmrPivotRowAttribute[];
+  columnAttributes: LmrPivotColumnAttribute[];
+  valueAttributes: LmrPivotValueAttribute[];
 }

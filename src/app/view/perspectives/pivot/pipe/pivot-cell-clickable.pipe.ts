@@ -18,13 +18,13 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {PivotTableCell} from '../util/pivot-table';
+import {LmrPivotTableCell} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotCellClickable',
 })
 export class PivotCellClickablePipe implements PipeTransform {
-  public transform(cell: PivotTableCell): boolean {
+  public transform(cell: LmrPivotTableCell): boolean {
     return !cell.isHeader && cell.dataResources?.length > 0;
   }
 }
