@@ -1,33 +1,34 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
 
-  <ng-container *ngIf="{pivotData: pivotData$ | async} as data">
+  <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && canManageConfig && pivotConfig"
+                       [collapsed]="!sidebarOpened"
+                       (toggle)="onSidebarToggle()">
 
-    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && canManageConfig && pivotConfig"
-                         [collapsed]="!sidebarOpened"
-                         (toggle)="onSidebarToggle()">
+    <pivot-config-wrapper class="d-block m-3"
+                          [config]="pivotConfig"
+                          [pivotData]="pivotData$ | async"
+                          [collections]="collections"
+                          [linkTypes]="linkTypes"
+                          [query]="query"
+                          (configChange)="onConfigChange($event)">
+    </pivot-config-wrapper>
 
-      <pivot-config-wrapper class="d-block m-3"
-                            [config]="pivotConfig"
-                            [pivotData]="data.pivotData"
-                            [collections]="collections"
-                            [linkTypes]="linkTypes"
-                            [query]="query"
-                            (configChange)="onConfigChange($event)">
-      </pivot-config-wrapper>
+  </collapsible-sidebar>
 
-    </collapsible-sidebar>
-
-    <pivot-table *ngIf="pivotConfig"
-                 class="flex-grow-1 h-100 overflow-auto"
-                 [class.mx-4]="perspectiveConfiguration?.additionalSpace"
-                 [class.bottom-padding-4]="perspectiveConfiguration?.additionalSpace"
-                 [pivotData]="data.pivotData"
-                 [constraintData]="constraintData"
-                 [dataLoaded]="dataLoaded"
-                 (cellClick)="onCellClick($event)">
-    </pivot-table>
-
-  </ng-container>
+  <lmr-pivot-table *ngIf="pivotConfig"
+                   class="flex-grow-1 h-100 overflow-auto"
+                   [class.mx-4]="perspectiveConfiguration?.additionalSpace"
+                   [class.bottom-padding-4]="perspectiveConfiguration?.additionalSpace"
+                   [collections]="collections"
+                   [data]="data"
+                   [linkTypes]="linkTypes"
+                   [config]="pivotConfig"
+                   [query]="query"
+                   [transform]="transform"
+                   [constraintData]="constraintData"
+                   (cellClick)="onCellClick($event)"
+                   (pivotDataChange)="pivotData$.next($event)">
+  </lmr-pivot-table>
 </ng-container>
 
 <ng-template #notDisplayable>

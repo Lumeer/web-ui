@@ -18,14 +18,15 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
+import {LmrPivotRowColumnAttribute} from '@lumeer/lmr-pivot-table';
+
 import {SelectItemWithConstraintId} from '../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
   name: 'pivotHeaderMapAttribute',
 })
 export class PivotHeaderMapAttributePipe implements PipeTransform {
-  public transform(pivotAttribute: PivotRowColumnAttribute): SelectItemWithConstraintId {
+  public transform(pivotAttribute: LmrPivotRowColumnAttribute): SelectItemWithConstraintId {
     return pivotAttribute && {resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId};
   }
 }

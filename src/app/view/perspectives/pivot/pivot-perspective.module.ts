@@ -20,6 +20,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
+import {LmrPivotTableModule} from '@lumeer/lmr-pivot-table';
+
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {PivotAttributeSelectItemPipe} from './pipe/pivot-attribute-select-item.pipe';
@@ -44,14 +46,12 @@ import {PivotAttributeSortComponent} from './wrapper/config/stem-config/attribut
 import {PivotValueAttributeConfigComponent} from './wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component';
 import {PivotConfigComponent} from './wrapper/config/stem-config/pivot-config.component';
 import {PivotPerspectiveWrapperComponent} from './wrapper/pivot-perspective-wrapper.component';
-import {PivotTableComponent} from './wrapper/table/pivot-table.component';
 
 @NgModule({
   declarations: [
     PivotPerspectiveComponent,
     PivotPerspectiveWrapperComponent,
     PivotConfigComponent,
-    PivotTableComponent,
     PivotCleanAttributePipe,
     PivotValueAttributeConfigComponent,
     PivotHeaderAttributeConfigComponent,
@@ -71,7 +71,14 @@ import {PivotTableComponent} from './wrapper/table/pivot-table.component';
     PivotCellClickablePipe,
     PivotHeaderCanSetStickyPipe,
   ],
-  imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule, DataInputModule],
+  imports: [
+    SharedModule,
+    RouterModule,
+    PivotPerspectiveRoutingModule,
+    DragDropModule,
+    DataInputModule,
+    LmrPivotTableModule,
+  ],
   exports: [PivotPerspectiveComponent],
 })
 export class PivotPerspectiveModule {}

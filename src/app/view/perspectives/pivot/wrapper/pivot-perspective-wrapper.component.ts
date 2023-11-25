@@ -16,45 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
-import {BehaviorSubject, Observable, asyncScheduler} from 'rxjs';
-import {filter, map, throttleTime} from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs';
 
 import {ConstraintData, DataAggregationType, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {LmrPivotConfig, LmrPivotData, LmrPivotTableCell, LmrPivotTransform} from '@lumeer/lmr-pivot-table';
 import {deepObjectsEquals} from '@lumeer/utils';
 
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {View} from '../../../../core/store/views/view';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 import {PivotPerspectiveConfiguration} from '../../perspective-configuration';
-import {PivotData} from '../util/pivot-data';
-import {PivotDataConverter} from '../util/pivot-data-converter';
-import {PivotTableCell} from '../util/pivot-table';
 import {checkOrTransformPivotConfig} from '../util/pivot-util';
-
-interface Data {
-  collections: Collection[];
-  linkTypes: LinkType[];
-  data: DocumentsAndLinksData;
-  query: Query;
-  constraintData: ConstraintData;
-  config: PivotConfig;
-}
 
 @Component({
   selector: 'pivot-perspective-wrapper',
@@ -62,7 +40,7 @@ interface Data {
   styleUrls: ['./pivot-perspective-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
+export class PivotPerspectiveWrapperComponent implements OnChanges {
   @Input()
   public collections: Collection[];
 
@@ -79,7 +57,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public pivotConfig: PivotConfig;
+  public pivotConfig: LmrPivotConfig;
 
   @Input()
   public canManageConfig: boolean;
@@ -97,23 +75,27 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   public perspectiveConfiguration: PivotPerspectiveConfiguration;
 
   @Output()
-  public configChange = new EventEmitter<PivotConfig>();
+  public configChange = new EventEmitter<LmrPivotConfig>();
 
   @Output()
   public sidebarToggle = new EventEmitter();
 
-  private readonly pivotTransformer: PivotDataConverter;
-  private dataSubject = new BehaviorSubject<Data>(null);
+  public pivotData$ = new BehaviorSubject<LmrPivotData>(null);
 
-  public pivotData$: Observable<PivotData>;
+  public transform: LmrPivotTransform;
 
   constructor(
     private constraintItemsFormatter: SelectItemWithConstraintFormatter,
     private modalService: ModalService
   ) {
-    this.pivotTransformer = new PivotDataConverter(constraintItemsFormatter, type =>
-      this.createValueAggregationTitle(type)
-    );
+    this.transform = {
+      checkValidConstraintOverride: (c1, c2) => this.constraintItemsFormatter.checkValidConstraintOverride(c1, c2),
+      translateAggregation: type => this.createValueAggregationTitle(type),
+    };
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.checkConfig(changes);
   }
 
   private createValueAggregationTitle(aggregation: DataAggregationType): string {
@@ -121,31 +103,6 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
       $localize`:@@perspective.pivot.data.aggregation:{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of}}`,
       {aggregation}
     );
-  }
-
-  public ngOnInit() {
-    const observable = this.dataSubject.pipe(filter(data => !!data));
-
-    this.pivotData$ = observable.pipe(
-      throttleTime(200, asyncScheduler, {trailing: true, leading: true}),
-      map(data => this.handleData(data))
-    );
-  }
-
-  private handleData(data: Data): PivotData {
-    return this.pivotTransformer.transform(
-      data.config,
-      data.collections,
-      data.linkTypes,
-      data.data,
-      data.query,
-      data.constraintData
-    );
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    this.checkConfig(changes);
-    this.checkData(changes);
   }
 
   private checkConfig(changes: SimpleChanges) {
@@ -158,27 +115,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
     }
   }
 
-  private checkData(changes: SimpleChanges) {
-    if (
-      changes.data ||
-      changes.pivotConfig ||
-      changes.collections ||
-      changes.linkTypes ||
-      changes.query ||
-      changes.constraintData
-    ) {
-      this.dataSubject.next({
-        config: this.pivotConfig,
-        collections: this.collections,
-        linkTypes: this.linkTypes,
-        data: this.data,
-        query: this.query,
-        constraintData: this.constraintData,
-      });
-    }
-  }
-
-  public onConfigChange(config: PivotConfig) {
+  public onConfigChange(config: LmrPivotConfig) {
     this.configChange.emit(config);
   }
 
@@ -186,7 +123,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
     this.sidebarToggle.emit();
   }
 
-  public onCellClick(cell: PivotTableCell) {
+  public onCellClick(cell: LmrPivotTableCell) {
     if (!cell.isHeader && cell.dataResources?.length > 0) {
       const modalTitle = $localize`:@@perspective.pivot.cell.detail.title:Records by value: <b>${cell.value}</b>`;
       this.modalService.showDataResourcesDetail(cell.dataResources, modalTitle, this.view?.id);

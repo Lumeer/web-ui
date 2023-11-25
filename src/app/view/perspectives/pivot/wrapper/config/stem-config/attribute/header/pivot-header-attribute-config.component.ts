@@ -19,12 +19,11 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Constraint} from '@lumeer/data-filters';
+import {LmrPivotAttribute, LmrPivotRowColumnAttribute, LmrPivotStemData} from '@lumeer/lmr-pivot-table';
 
 import {AttributesResource} from '../../../../../../../../core/model/resource';
-import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {generateCorrelationId, getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
-import {PivotStemData} from '../../../../../util/pivot-data';
 
 @Component({
   selector: 'pivot-header-attribute-config',
@@ -33,28 +32,28 @@ import {PivotStemData} from '../../../../../util/pivot-data';
 })
 export class PivotHeaderAttributeConfigComponent {
   @Input()
-  public pivotAttribute: PivotRowColumnAttribute;
+  public pivotAttribute: LmrPivotRowColumnAttribute;
 
   @Input()
   public attributesResources: AttributesResource[];
 
   @Input()
-  public selectedAttributes: PivotRowColumnAttribute[];
+  public selectedAttributes: LmrPivotRowColumnAttribute[];
 
   @Input()
   public isRow: boolean;
 
   @Input()
-  public pivotData: PivotStemData;
+  public pivotData: LmrPivotStemData;
 
   @Input()
   public canSetSticky: boolean;
 
   @Output()
-  public attributeSelect = new EventEmitter<PivotRowColumnAttribute>();
+  public attributeSelect = new EventEmitter<LmrPivotRowColumnAttribute>();
 
   @Output()
-  public attributeChange = new EventEmitter<PivotRowColumnAttribute>();
+  public attributeChange = new EventEmitter<LmrPivotRowColumnAttribute>();
 
   @Output()
   public attributeRemove = new EventEmitter();
@@ -85,13 +84,13 @@ export class PivotHeaderAttributeConfigComponent {
     }
 
     const resourceType = getAttributesResourceType(resource);
-    const attribute: PivotAttribute = {...itemId, resourceId: resource.id, resourceType};
-    const headerAttribute: PivotRowColumnAttribute = {...attribute, showSums: true, sort: {attribute, asc: true}};
+    const attribute: LmrPivotAttribute = {...itemId, resourceId: resource.id, resourceType};
+    const headerAttribute: LmrPivotRowColumnAttribute = {...attribute, showSums: true, sort: {attribute, asc: true}};
     this.attributeSelect.emit(headerAttribute);
   }
 
   public onSelectedConstraint(constraint: Constraint) {
-    const headerAttribute: PivotRowColumnAttribute = {...this.pivotAttribute, constraint};
+    const headerAttribute: LmrPivotRowColumnAttribute = {...this.pivotAttribute, constraint};
     this.attributeChange.emit(headerAttribute);
   }
 

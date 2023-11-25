@@ -19,12 +19,12 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {cleanQueryAttribute} from '@lumeer/data-filters';
+import {LmrPivotRowColumnAttribute} from '@lumeer/lmr-pivot-table';
 
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 
@@ -33,7 +33,7 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 })
 export class PivotAttributeSelectItemPipe implements PipeTransform {
   public transform(
-    pivotAttribute: PivotRowColumnAttribute,
+    pivotAttribute: LmrPivotRowColumnAttribute,
     attributesResources: AttributesResource[]
   ): SelectItemModel {
     const resource = attributesResources[pivotAttribute.resourceIndex];

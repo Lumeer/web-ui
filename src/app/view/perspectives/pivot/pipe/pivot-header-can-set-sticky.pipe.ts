@@ -18,13 +18,13 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
+import {LmrPivotRowColumnAttribute} from '@lumeer/lmr-pivot-table';
 
 @Pipe({
   name: 'pivotHeaderCanSetSticky',
 })
 export class PivotHeaderCanSetStickyPipe implements PipeTransform {
-  public transform(attributes: PivotRowColumnAttribute[], index: number): boolean {
+  public transform(attributes: LmrPivotRowColumnAttribute[], index: number): boolean {
     if (index === 0) {
       return true;
     }

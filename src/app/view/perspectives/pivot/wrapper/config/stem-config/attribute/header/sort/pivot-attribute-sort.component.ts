@@ -19,16 +19,16 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {cleanQueryAttribute} from '@lumeer/data-filters';
-
 import {
-  PivotAttribute,
-  PivotRowColumnAttribute,
-  PivotSort,
-  PivotSortList,
-  PivotSortValue,
-} from '../../../../../../../../../core/store/pivots/pivot';
+  LmrPivotAttribute,
+  LmrPivotRowColumnAttribute,
+  LmrPivotSort,
+  LmrPivotSortList,
+  LmrPivotSortValue,
+  LmrPivotStemData,
+} from '@lumeer/lmr-pivot-table';
+
 import {SelectItemModel} from '../../../../../../../../../shared/select/select-item/select-item.model';
-import {PivotStemData} from '../../../../../../util/pivot-data';
 
 @Component({
   selector: 'pivot-attribute-sort',
@@ -38,19 +38,19 @@ import {PivotStemData} from '../../../../../../util/pivot-data';
 })
 export class PivotAttributeSortComponent {
   @Input()
-  public pivotAttribute: PivotRowColumnAttribute;
+  public pivotAttribute: LmrPivotRowColumnAttribute;
 
   @Input()
   public attributeSelectItem: SelectItemModel;
 
   @Input()
-  public pivotData: PivotStemData;
+  public pivotData: LmrPivotStemData;
 
   @Input()
   public isRow: boolean;
 
   @Output()
-  public attributeChange = new EventEmitter<PivotRowColumnAttribute>();
+  public attributeChange = new EventEmitter<LmrPivotRowColumnAttribute>();
 
   public readonly summaryTitle: string;
   public readonly subSortPlaceholder: string;
@@ -61,23 +61,26 @@ export class PivotAttributeSortComponent {
     this.subSortPlaceholder = $localize`:@@perspective.pivot.config.subSort:Next sort by...`;
   }
 
-  public onSortSelected(sort: PivotAttribute | string) {
+  public onSortSelected(sort: LmrPivotAttribute | string) {
     const currentSort = this.getCurrentSort();
     if (sort['attributeId']) {
       const newAttribute = {
         ...this.pivotAttribute,
-        sort: {attribute: sort as PivotAttribute, value: null, asc: currentSort.asc},
+        sort: {attribute: sort as LmrPivotAttribute, value: null, asc: currentSort.asc},
       };
       this.attributeChange.emit(newAttribute);
     } else {
-      const list: PivotSortList = {valueTitle: sort as string, values: [{title: this.summaryTitle, isSummary: true}]};
+      const list: LmrPivotSortList = {
+        valueTitle: sort as string,
+        values: [{title: this.summaryTitle, isSummary: true}],
+      };
       const newAttribute = {...this.pivotAttribute, sort: {attribute: null, list, asc: currentSort.asc}};
       this.attributeChange.emit(newAttribute);
     }
   }
 
   public onSortToggle() {
-    const currentSort: PivotSort = this.pivotAttribute.sort || {
+    const currentSort: LmrPivotSort = this.pivotAttribute.sort || {
       attribute: cleanQueryAttribute(this.pivotAttribute),
       asc: true,
     };
@@ -85,11 +88,11 @@ export class PivotAttributeSortComponent {
     this.attributeChange.emit(newAttribute);
   }
 
-  private getCurrentSort(): PivotSort {
+  private getCurrentSort(): LmrPivotSort {
     return this.pivotAttribute.sort || {attribute: cleanQueryAttribute(this.pivotAttribute), asc: true};
   }
 
-  public onSubSortSelected(index: number, value: PivotSortValue) {
+  public onSubSortSelected(index: number, value: LmrPivotSortValue) {
     const list = this.pivotAttribute.sort.list;
     if (list) {
       const values = [...list.values];
@@ -111,7 +114,7 @@ export class PivotAttributeSortComponent {
     }
   }
 
-  private changeSortValues(values: PivotSortValue[]) {
+  private changeSortValues(values: LmrPivotSortValue[]) {
     const newAttribute = {
       ...this.pivotAttribute,
       sort: {...this.pivotAttribute.sort, list: {...this.pivotAttribute.sort.list, values}},

@@ -18,14 +18,16 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {PivotRowColumnAttribute, PivotSortValue} from '../../../../core/store/pivots/pivot';
-import {PivotDataHeader} from '../util/pivot-data';
+import {LmrPivotDataHeader, LmrPivotRowColumnAttribute, LmrPivotSortValue} from '@lumeer/lmr-pivot-table';
 
 @Pipe({
   name: 'pivotSubSortValues',
 })
 export class PivotSubSortValuesPipe implements PipeTransform {
-  public transform(pivotAttribute: PivotRowColumnAttribute, otherSideHeaders: PivotDataHeader[]): PivotSortValue[] {
+  public transform(
+    pivotAttribute: LmrPivotRowColumnAttribute,
+    otherSideHeaders: LmrPivotDataHeader[]
+  ): LmrPivotSortValue[] {
     if (!otherSideHeaders) {
       return [];
     }
@@ -57,7 +59,7 @@ export class PivotSubSortValuesPipe implements PipeTransform {
     return [...items, null];
   }
 
-  private isLastHeader(otherSideHeaders: PivotDataHeader[]): boolean {
+  private isLastHeader(otherSideHeaders: LmrPivotDataHeader[]): boolean {
     return otherSideHeaders.length === 0 || otherSideHeaders[0].isValueHeader;
   }
 }

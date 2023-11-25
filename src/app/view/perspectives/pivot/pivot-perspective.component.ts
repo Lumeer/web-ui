@@ -23,12 +23,13 @@ import {Store, select} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
+import {LmrPivotConfig} from '@lumeer/lmr-pivot-table';
+
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Query} from '../../../core/store/navigation/query/query';
-import {PivotConfig} from '../../../core/store/pivots/pivot';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {selectPivotById} from '../../../core/store/pivots/pivots.state';
 import {ViewConfig} from '../../../core/store/views/view';
@@ -43,7 +44,7 @@ import {checkOrTransformPivotConfig, createDefaultPivotConfig} from './util/pivo
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
 })
-export class PivotPerspectiveComponent extends DataPerspectiveDirective<PivotConfig> implements OnInit, OnDestroy {
+export class PivotPerspectiveComponent extends DataPerspectiveDirective<LmrPivotConfig> implements OnInit, OnDestroy {
   @Input()
   public perspectiveConfiguration: PivotPerspectiveConfiguration = defaultPivotPerspectiveConfiguration;
 
@@ -55,34 +56,34 @@ export class PivotPerspectiveComponent extends DataPerspectiveDirective<PivotCon
   }
 
   public checkOrTransformConfig(
-    config: PivotConfig,
+    config: LmrPivotConfig,
     query: Query,
     collections: Collection[],
     linkTypes: LinkType[]
-  ): PivotConfig {
+  ): LmrPivotConfig {
     return checkOrTransformPivotConfig(config, query, collections, linkTypes);
   }
 
-  public subscribeConfig$(perspectiveId: string): Observable<PivotConfig> {
+  public subscribeConfig$(perspectiveId: string): Observable<LmrPivotConfig> {
     return this.store$.pipe(
       select(selectPivotById(perspectiveId)),
       map(entity => entity?.config)
     );
   }
 
-  public configChanged(perspectiveId: string, config: PivotConfig) {
+  public configChanged(perspectiveId: string, config: LmrPivotConfig) {
     this.store$.dispatch(new PivotsAction.AddPivot({pivot: {id: perspectiveId, config}}));
   }
 
-  public onConfigChange(config: PivotConfig) {
+  public onConfigChange(config: LmrPivotConfig) {
     this.store$.dispatch(new PivotsAction.SetConfig({pivotId: this.perspectiveId$.value, config}));
   }
 
-  public getConfig(viewConfig: ViewConfig): PivotConfig {
+  public getConfig(viewConfig: ViewConfig): LmrPivotConfig {
     return viewConfig?.pivot;
   }
 
-  protected getDefaultConfig(query: Query): PivotConfig {
+  protected getDefaultConfig(query: Query): LmrPivotConfig {
     return createDefaultPivotConfig(query);
   }
 

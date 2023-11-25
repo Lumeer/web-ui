@@ -19,14 +19,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {cleanQueryAttribute} from '@lumeer/data-filters';
-
-import {PivotAttribute} from '../../../../core/store/pivots/pivot';
+import {LmrPivotAttribute} from '@lumeer/lmr-pivot-table';
 
 @Pipe({
   name: 'pivotCleanAttribute',
 })
 export class PivotCleanAttributePipe implements PipeTransform {
-  public transform(attribute: PivotAttribute): PivotAttribute {
+  public transform(attribute: LmrPivotAttribute): LmrPivotAttribute {
     return attribute && cleanQueryAttribute(attribute);
   }
 }

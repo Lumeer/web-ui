@@ -19,9 +19,9 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Constraint, DataAggregationType} from '@lumeer/data-filters';
+import {LmrPivotAttribute, LmrPivotValueAttribute, LmrPivotValueType} from '@lumeer/lmr-pivot-table';
 
 import {AttributesResource} from '../../../../../../../../core/model/resource';
-import {PivotAttribute, PivotValueAttribute, PivotValueType} from '../../../../../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 import {objectValues} from '../../../../../../../../shared/utils/common.utils';
@@ -34,7 +34,7 @@ import {getAttributesResourceType} from '../../../../../../../../shared/utils/re
 })
 export class PivotValueAttributeConfigComponent {
   @Input()
-  public pivotAttribute: PivotValueAttribute;
+  public pivotAttribute: LmrPivotValueAttribute;
 
   @Input()
   public attributesResources: AttributesResource[];
@@ -43,10 +43,10 @@ export class PivotValueAttributeConfigComponent {
   public availableAttributes: SelectItemModel[];
 
   @Output()
-  public attributeSelect = new EventEmitter<PivotValueAttribute>();
+  public attributeSelect = new EventEmitter<LmrPivotValueAttribute>();
 
   @Output()
-  public attributeChange = new EventEmitter<PivotValueAttribute>();
+  public attributeChange = new EventEmitter<LmrPivotValueAttribute>();
 
   @Output()
   public attributeRemove = new EventEmitter();
@@ -54,8 +54,8 @@ export class PivotValueAttributeConfigComponent {
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly aggregationPlaceholder: string;
   public readonly aggregations = objectValues(DataAggregationType);
-  public readonly valueTypes = objectValues(PivotValueType);
-  public readonly valueType = PivotValueType;
+  public readonly valueTypes = objectValues(LmrPivotValueType);
+  public readonly valueType = LmrPivotValueType;
   public readonly emptyValueString: string;
 
   constructor() {
@@ -75,11 +75,11 @@ export class PivotValueAttributeConfigComponent {
     }
 
     const resourceType = getAttributesResourceType(resource);
-    const attribute: PivotAttribute = {...itemId, resourceId: resource.id, resourceType};
-    const headerAttribute: PivotValueAttribute = {
+    const attribute: LmrPivotAttribute = {...itemId, resourceId: resource.id, resourceType};
+    const headerAttribute: LmrPivotValueAttribute = {
       ...attribute,
       aggregation: this.pivotAttribute?.aggregation || DataAggregationType.Sum,
-      valueType: this.pivotAttribute?.valueType || PivotValueType.Default,
+      valueType: this.pivotAttribute?.valueType || LmrPivotValueType.Default,
     };
     this.attributeSelect.emit(headerAttribute);
   }
@@ -88,13 +88,13 @@ export class PivotValueAttributeConfigComponent {
     this.attributeRemove.emit();
   }
 
-  public onValueTypeSelected(valueType: PivotValueType) {
-    const valueAttribute: PivotValueAttribute = {...this.pivotAttribute, valueType};
+  public onValueTypeSelected(valueType: LmrPivotValueType) {
+    const valueAttribute: LmrPivotValueAttribute = {...this.pivotAttribute, valueType};
     this.attributeChange.emit(valueAttribute);
   }
 
   public onSelectedConstraint(constraint: Constraint) {
-    const headerAttribute: PivotValueAttribute = {...this.pivotAttribute, constraint};
+    const headerAttribute: LmrPivotValueAttribute = {...this.pivotAttribute, constraint};
     this.attributeChange.emit(headerAttribute);
   }
 }

@@ -18,13 +18,13 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {PivotData} from '../util/pivot-data';
+import {LmrPivotData} from '@lumeer/lmr-pivot-table';
 
 @Pipe({
   name: 'pivotDataEmpty',
 })
 export class PivotDataEmptyPipe implements PipeTransform {
-  public transform(value: PivotData): boolean {
+  public transform(value: LmrPivotData): boolean {
     let anythingToDisplay = false;
 
     value?.data?.forEach(d => {
