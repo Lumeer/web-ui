@@ -60,7 +60,7 @@
     "@fullcalendar/list": "^6.1.9",
     "@fullcalendar/resource-timegrid": "^6.1.9",
     "@fullcalendar/timegrid": "^6.1.9",
-    "@lumeer/data-filters": "^0.8.5",
+    "@lumeer/data-filters": "^0.8.6",
     "@lumeer/lumeer-gantt": "^1.2.9",
     "@lumeer/utils": "^0.1.3",
     "@lumeer/pivot": "^0.0.3",

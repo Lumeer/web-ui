@@ -4,6 +4,7 @@
                      [minWidth]="170"
                      [minHeight]="170"
                      [minSize]="600"
+                     [closeOnClickOutside]="false"
                      (dataChange)="dataChange.emit($event)">
   <div class="card h-100" *ngIf="isOpen$ | async">
     <quill-editor

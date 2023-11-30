@@ -115,8 +115,16 @@ export class FileDownloadService {
   }
 
   private onDownloadFileSuccess(file: Blob, attachment: FileAttachment) {
-    saveAs(file, attachment.fileName);
+    const downloadBlob = this.checkBlobType(file, attachment);
+    saveAs(downloadBlob, attachment.fileName);
     this.markDownloadStopped(attachment);
+  }
+
+  private checkBlobType(file: Blob, attachment: FileAttachment) {
+    if (attachment.fileName.includes('.')) {
+      return file;
+    }
+    return file.slice(0, file.size, 'text/text');
   }
 
   private showErrorNotification(error: HttpErrorResponse) {
