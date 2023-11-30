@@ -70,6 +70,9 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy
   @Input()
   public minSize: number;
 
+  @Input()
+  public closeOnClickOutside = true;
+
   @ViewChild('dropdown')
   public portal: TemplatePortal;
 
@@ -141,7 +144,9 @@ export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy
 
     this.overlayRef = this.overlay.create(overlayConfig);
     this.overlayRef.attach(this.portal);
-    this.overlayRef.backdropClick().subscribe(() => this.close());
+    if (this.closeOnClickOutside) {
+      this.overlayRef.backdropClick().subscribe(() => this.close());
+    }
 
     this.renderer.setStyle(this.overlayRef.overlayElement, 'height', `${this.currentHeight}vh`);
     this.renderer.setStyle(this.overlayRef.overlayElement, 'width', `${this.currentWidth}vw`);

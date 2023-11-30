@@ -18,19 +18,18 @@
  */
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {NavigationEnd, Router} from '@angular/router';
+import {NavigationEnd, Router, RouterEvent, Scroll} from '@angular/router';
 
 import {Store, select} from '@ngrx/store';
 
 import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
-import {debounceTime, filter, map, skip, startWith, tap, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, filter, map, skip, startWith, tap} from 'rxjs/operators';
 
 import {ConstraintData} from '@lumeer/data-filters';
 import {isNullOrUndefined} from '@lumeer/utils';
 
 import {AppState} from '../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
-import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {
   selectAllCollectionsWithoutHiddenAttributes,
   selectAllLinkTypesWithoutHiddenAttributes,
@@ -45,8 +44,6 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
 import {isQueryItemEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {Organization} from '../../../core/store/organizations/organization';
-import {Project} from '../../../core/store/projects/project';
 import {User} from '../../../core/store/users/user';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {View} from '../../../core/store/views/view';
@@ -93,8 +90,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   private workspace: Workspace;
-  private organization: Organization;
-  private project: Project;
   private perspective: Perspective;
   private queryData: QueryData;
   private searchBoxService: SearchBoxService;
@@ -127,12 +122,15 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const querySubscription = combineLatest([this.store$.pipe(select(selectRawQuery)), this.subscribeData$()])
+    const querySubscription = combineLatest([
+      this.store$.pipe(select(selectRawQuery)),
+      this.subscribeData$(),
+      this.router.events.pipe(startWith(null)),
+    ])
       .pipe(
         debounceTime(100),
-        withLatestFrom(this.router.events.pipe(startWith(null))),
-        map(([[query, data], event]) => ({query, data, event})),
-        filter(({query, event}) => !!query && (!event || event instanceof NavigationEnd)),
+        map(([query, data, event]) => ({query, data, event})),
+        filter(({query, event}) => !!query && this.isNavigationFinished(event as RouterEvent)),
         tap(({data}) => (this.queryData = data)),
         map(({query, data}) => ({queryItems: new QueryItemsConverter(data).fromQuery(query, true), query}))
       )
@@ -150,18 +148,22 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscriptions.add(querySubscription);
   }
 
+  private isNavigationFinished(event: RouterEvent): boolean {
+    if (!event || event instanceof NavigationEnd) {
+      return true;
+    }
+    if (event instanceof Scroll) {
+      return event.routerEvent instanceof NavigationEnd;
+    }
+    return false;
+  }
+
   private subscribeToNavigation() {
     const navigationSubscription = this.store$.pipe(select(selectNavigation)).subscribe(navigation => {
       this.workspace = navigation.workspace;
       this.perspective = navigation.perspective;
     });
     this.subscriptions.add(navigationSubscription);
-
-    const workspaceSubscription = this.store$.pipe(select(selectWorkspaceModels)).subscribe(models => {
-      this.organization = models.organization;
-      this.project = models.project;
-    });
-    this.subscriptions.add(workspaceSubscription);
   }
 
   private subscribeData$(): Observable<QueryData> {

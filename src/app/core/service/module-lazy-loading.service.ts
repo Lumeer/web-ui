@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Injectable, OnDestroy} from '@angular/core';
-import {NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
+import {NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, Scroll} from '@angular/router';
 
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 
@@ -41,6 +41,9 @@ export class ModuleLazyLoadingService implements OnDestroy {
         this.lazyLoading$.next(true);
       }
       if (event instanceof RouteConfigLoadEnd || event instanceof NavigationEnd) {
+        this.lazyLoading$.next(false);
+      }
+      if (event instanceof Scroll && event.routerEvent instanceof NavigationEnd) {
         this.lazyLoading$.next(false);
       }
     });

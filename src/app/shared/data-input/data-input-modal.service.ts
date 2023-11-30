@@ -40,7 +40,11 @@ export class DataInputModalService {
     return this.addModalRef(this.bsModalService.show(content, config));
   }
 
-  public showStaticDialog(initialState: any, content: string | TemplateRef<any>, classString: string = ''): BsModalRef {
+  public showStaticDialog<T>(
+    initialState: any,
+    content: string | TemplateRef<any> | {new (...args: any[]): T},
+    classString: string = ''
+  ): BsModalRef {
     const config = {initialState, keyboard: false, class: classString};
     config['backdrop'] = 'static';
     return this.show(content, config);

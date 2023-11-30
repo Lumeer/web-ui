@@ -221,18 +221,18 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private openModal() {
-    const content = this.text;
-    this.modalRef = this.modalService.show(TextEditorModalComponent, {
-      keyboard: true,
-      backdrop: 'static',
-      class: 'modal-xxl modal-h-100',
-      initialState: {
-        readonly: this.readonly && !this.editableInReadonly,
-        content,
-        minLength: this.value?.config?.minLength,
-        maxLength: this.value?.config?.maxLength,
+    this.modalRef = this.modalService.showStaticDialog(
+      {
+        initialState: {
+          readonly: this.readonly && !this.editableInReadonly,
+          content: this.text,
+          minLength: this.value?.config?.minLength,
+          maxLength: this.value?.config?.maxLength,
+        },
       },
-    });
+      TextEditorModalComponent,
+      'modal-xxl modal-h-100'
+    );
 
     this.modalSubscription.add(this.modalRef.content.onSave$.subscribe(value => this.onSave(value)));
     this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.onCancel()));
