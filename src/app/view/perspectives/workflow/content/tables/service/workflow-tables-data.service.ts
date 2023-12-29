@@ -202,11 +202,13 @@ export class WorkflowTablesDataService {
     constraintData: ConstraintData,
     aggregatorAttribute: DataAggregatorAttribute
   ): any {
-    const kanbanConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
-    const overrideConstraint =
-      kanbanConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanConstraint);
-    const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
-    const serializedValue = finalConstraint.createDataValue(value, constraintData).serialize();
+    const workflowConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
+    const serializedValue = this.constraintItemsFormatter.serializeValueWithConstraintOverride(
+      value,
+      constraint,
+      workflowConstraint,
+      constraintData
+    );
     if (serializedValue && isArray(serializedValue)) {
       return serializedValue[0]; // i.e. multiselect constraints (user, select) serialize value as array
     }

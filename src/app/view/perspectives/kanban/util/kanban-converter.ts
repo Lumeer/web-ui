@@ -338,10 +338,12 @@ export class KanbanConverter {
     aggregatorAttribute: DataAggregatorAttribute
   ): any {
     const kanbanConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
-    const overrideConstraint =
-      kanbanConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanConstraint);
-    const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
-    return finalConstraint.createDataValue(value, constraintData).serialize();
+    return this.constraintItemsFormatter.serializeValueWithConstraintOverride(
+      value,
+      constraint,
+      kanbanConstraint,
+      constraintData
+    );
   }
 
   private fillCreateResources(config: KanbanConfig, data: KanbanData, permissions: ResourcesPermissions) {

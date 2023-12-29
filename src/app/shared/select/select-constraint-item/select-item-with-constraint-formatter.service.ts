@@ -18,7 +18,14 @@
  */
 import {Injectable} from '@angular/core';
 
-import {Constraint, ConstraintType, DateTimeConstraintConfig, DurationConstraintConfig} from '@lumeer/data-filters';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DateTimeConstraintConfig,
+  DurationConstraintConfig,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 
 import {Attribute} from '../../../core/store/collections/collection';
 import {SelectItemModel} from '../select-item/select-item.model';
@@ -71,5 +78,38 @@ export class SelectItemWithConstraintFormatter {
       default:
         return constraint;
     }
+  }
+
+  public serializeValueWithConstraintOverride(
+    value: any,
+    constraint: Constraint,
+    overrideConstraint: Constraint,
+    constraintData: ConstraintData
+  ): any {
+    const overriddenConstraint = this.checkValidConstraintOverride(constraint, overrideConstraint);
+
+    switch (overriddenConstraint?.type) {
+      case ConstraintType.DateTime:
+      case ConstraintType.Duration:
+        const serializedValue = constraint.createDataValue(value, constraintData).serialize();
+        return overriddenConstraint.createDataValue(serializedValue, constraintData).format();
+      default:
+        return (overriddenConstraint || constraint || new UnknownConstraint())
+          .createDataValue(value, constraintData)
+          .serialize();
+    }
+  }
+
+  public formatValueWithConstraintOverride(
+    value: any,
+    constraint: Constraint,
+    overrideConstraint: Constraint,
+    constraintData: ConstraintData
+  ): any {
+    const overriddenConstraint = this.checkValidConstraintOverride(constraint, overrideConstraint);
+    const serializedValue = (constraint || new UnknownConstraint()).createDataValue(value, constraintData).serialize();
+    return (overriddenConstraint || constraint || new UnknownConstraint())
+      .createDataValue(serializedValue, constraintData)
+      .format();
   }
 }

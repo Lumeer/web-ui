@@ -112,10 +112,12 @@ export class ChartDataConverter {
     aggregatorAttribute: DataAggregatorAttribute
   ): any {
     const overrideConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
-    const chartConstraint =
-      overrideConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, overrideConstraint);
-    const finalConstraint = chartConstraint || constraint || new UnknownConstraint();
-    return finalConstraint.createDataValue(value, constraintData).format();
+    return this.constraintItemsFormatter.formatValueWithConstraintOverride(
+      value,
+      constraint,
+      overrideConstraint,
+      constraintData
+    );
   }
 
   public updateData(

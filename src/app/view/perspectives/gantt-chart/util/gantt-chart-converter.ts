@@ -541,9 +541,9 @@ export class GanttChartConverter {
   private formatSwimlaneValueByConstraint(value: any, constraint: Constraint): GanttSwimlane | null {
     const formattedValue = constraint.createDataValue(value, this.constraintData).format();
     if (formattedValue) {
-      if (constraint.type === ConstraintType.Color) {
+      if (constraint?.type === ConstraintType.Color) {
         return {background: formattedValue, value: formattedValue, title: ''};
-      } else if (constraint.type === ConstraintType.Boolean) {
+      } else if (constraint?.type === ConstraintType.Boolean) {
         return {title: '', value: value, type: GanttSwimlaneType.Checkbox};
       }
 
@@ -561,7 +561,7 @@ export class GanttChartConverter {
   }
 
   private swimlaneBackground(value: any, constraint: Constraint): string {
-    if (constraint.type === ConstraintType.Select) {
+    if (constraint?.type === ConstraintType.Select) {
       const options = (<SelectConstraint>constraint).createDataValue(value).options;
       return options && options[0] && options[0].background;
     }
@@ -578,7 +578,7 @@ export class GanttChartConverter {
   }
 
   private swimlaneTitle(formattedValue: string, constraint: Constraint): string {
-    if (constraint.type === ConstraintType.User && (<UserConstraint>constraint).config?.onlyIcon) {
+    if (constraint?.type === ConstraintType.User && (<UserConstraint>constraint).config?.onlyIcon) {
       return '';
     }
     return formattedValue;
@@ -591,20 +591,20 @@ export class GanttChartConverter {
     aggregatorAttribute: DataAggregatorAttribute
   ): any {
     const ganttConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
-    const overrideConstraint =
-      ganttConstraint && this.formatter.checkValidConstraintOverride(constraint, ganttConstraint);
-    const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
-    const dataValue = finalConstraint.createDataValue(value, data);
-
-    switch (finalConstraint.type) {
+    switch (constraint?.type) {
       case ConstraintType.Select:
       case ConstraintType.User:
       case ConstraintType.View:
       case ConstraintType.Boolean:
-        const value = dataValue.serialize();
-        return isArray(value) ? value[0] : value;
+        const serializedValue = this.formatter.serializeValueWithConstraintOverride(
+          value,
+          constraint,
+          ganttConstraint,
+          data
+        );
+        return isArray(serializedValue) ? serializedValue[0] : serializedValue;
       default:
-        return dataValue.format();
+        return this.formatter.formatValueWithConstraintOverride(value, constraint, ganttConstraint, data);
     }
   }
 }
