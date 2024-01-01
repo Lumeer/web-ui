@@ -18,6 +18,8 @@ mvn install -DskipTests -DskipITs -B --quiet
 cd war
 
 echo "Starting engine..."
+rm -rf target/embedmongo
+mkdir -p target/embedmongo
 export SKIP_LIMITS=true
 mvn -s settings.xml wildfly:run -PstartEngine -B --quiet &
 echo $! > $ORIG/engine.pid

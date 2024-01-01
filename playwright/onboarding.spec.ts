@@ -93,11 +93,13 @@ test('On boarding path', async ({page, request}) => {
     data: loginFormData.toString(),
   });
 
+  expect(loginReponse.ok()).toBeTruthy();
+
   const parsed_body = JSON.parse(await loginReponse.text());
 
   await request.post('http://localhost:8080/lumeer-engine/rest/users/current/emailVerified', {
     headers: {
-      Authorization: `Bearer ${parsed_body['access_token']}`,
+      Authorization: `Bearer ${parsed_body['accessToken']}`,
     },
   });
 
@@ -121,7 +123,7 @@ test('On boarding path', async ({page, request}) => {
 
 test('prepare auth token', async ({request}) => {
   const loginParsedBody = await loginApiCall(request, userEmail, userPassword);
-  const authToken = loginParsedBody['access_token'];
+  const authToken = loginParsedBody['accessToken'];
 
   if (!authToken) {
     throw new Error('could not login');

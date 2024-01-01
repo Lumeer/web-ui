@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {BehaviorSubject} from 'rxjs';
 
 import {ConstraintData, ConstraintType, DataAggregationType, DocumentsAndLinksData} from '@lumeer/data-filters';
-import {LmrPivotConfig, LmrPivotData, LmrPivotStrings, LmrPivotTableCell, LmrPivotTransform} from '@lumeer/pivot';
+import {LmrPivotConfig, LmrPivotData, LmrPivotTableCell, LmrPivotTransform} from '@lumeer/pivot';
 import {deepObjectsEquals} from '@lumeer/utils';
 
 import {Collection} from '../../../../core/store/collections/collection';
@@ -85,18 +85,20 @@ export class PivotPerspectiveWrapperComponent implements OnChanges {
   public pivotData$ = new BehaviorSubject<LmrPivotData>(null);
 
   public transform: LmrPivotTransform;
-  public strings: LmrPivotStrings = {
-    headerSummaryString: $localize`:@@perspective.pivot.table.summary.header:Summary of`,
-    summaryString: $localize`:@@perspective.pivot.table.summary.total:Summary`,
-  };
 
   constructor(
     private constraintItemsFormatter: SelectItemWithConstraintFormatter,
     private modalService: ModalService
   ) {
+    const headerSummaryString = $localize`:@@perspective.pivot.table.summary.header:Summary of`;
+    const summaryString = $localize`:@@perspective.pivot.table.summary.total:Summary`;
     this.transform = {
       checkValidConstraintOverride: (c1, c2) => this.constraintItemsFormatter.checkValidConstraintOverride(c1, c2),
-      translateAggregation: type => this.createValueAggregationTitle(type),
+      formatAggregation: type => this.createValueAggregationTitle(type),
+      formatSummaryHeader: (header, level) => ({
+        title: header?.title,
+        summary: level ? headerSummaryString : summaryString,
+      }),
     };
   }
 
