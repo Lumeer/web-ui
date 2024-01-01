@@ -39,7 +39,7 @@ test('Remove user from Auth0', async ({page, request}) => {
 
   const deleteUserRequest = await request.delete('http://localhost:8080/lumeer-engine/rest/users/current', {
     headers: {
-      Authorization: `Bearer ${parsed_body['access_token']}`,
+      Authorization: `Bearer ${parsed_body['accessToken']}`,
     },
   });
 });
