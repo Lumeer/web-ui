@@ -39,7 +39,7 @@ export class TemplateService extends BaseService {
   }
 
   public getTemplates(): Observable<ProjectDto[]> {
-    return this.http.get<ProjectDto[]>(this.apiPrefix());
+    return this.http.get<ProjectDto[]>(`${this.apiPrefix()}/`);
   }
 
   public getTemplateByCode(code: string): Observable<ProjectDto> {
