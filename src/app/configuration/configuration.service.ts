@@ -56,8 +56,8 @@ export class ConfigurationService {
     const apiUrl = env['LUMEER_ENGINE'] || 'http://localhost:8080/lumeer-engine';
     const apiProdUrl = env['LUMEER_ENGINE_PROD'] || 'https://get.lumeer.io/lumeer-engine';
     const pageUrl = env['LUMEER_PAGE'] || 'https://www.lumeer.io';
-    const authClientId = env['AUTH_CLIENT_ID'] || 'Hjee0La2DjlYjIH5ClCx3Xnfaj02n2On';
-    const authDomain = env['AUTH_DOMAIN'] || 'lumeer.eu.auth0.com';
+    const authClientId = env['AUTH_CLIENT_ID'] || 'sGSx8FFsjhV7m9PcNSpMlOxlPlT1nAdI';
+    const authDomain = env['AUTH_DOMAIN'] || 'lumeer-local.eu.auth0.com';
     const buildNumber = env['BUILD_NUMBER'];
     const locale = env['I18N_LOCALE'] || parseLanguageFromLocation();
     const i18nFormat = env['I18N_FORMAT'] || 'xlf';
