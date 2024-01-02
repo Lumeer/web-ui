@@ -60,7 +60,7 @@ test('On boarding path', async ({page, request}) => {
   await page.getByRole('button', {name: 'Sign Up', exact: true}).click();
 
   await expect(page.locator('span:text("Authorize App")')).toBeVisible();
-  await page.click('button[id="allow"]');
+  await page.click('button[value="accept"]');
 
   await page.waitForLoadState('networkidle');
 
