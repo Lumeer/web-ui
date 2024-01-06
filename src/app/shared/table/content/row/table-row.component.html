@@ -73,8 +73,8 @@
                [style.background-color]="data.cell?.background"
                (click)="onDetailClick($event)"
                (dblclick)="$event.preventDefault(); $event.stopPropagation()">
-            <span class="detail-text btn-link ps-1 me-2">Detail&nbsp;&gt;</span>
-            <comments-count *ngIf="row.commentsCount" [count]="row.commentsCount">
+            <span class="detail-text btn btn-link small p-0 ps-1 me-2">Detail&nbsp;&gt;</span>
+            <comments-count *ngIf="row.commentsCount" [count]="row.commentsCount" class="small">
             </comments-count>
           </div>
           <div *ngIf="hoverData.showLock" class="lock-icon cursor-pointer" @enterOpacityAnimation
