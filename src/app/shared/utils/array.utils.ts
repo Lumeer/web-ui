@@ -78,7 +78,13 @@ export function getArrayDifference<T>(bigArray: T[], smallArray: T[]): T[] {
 }
 
 export function containsSameElements(array1: any[], array2: any[]): boolean {
-  return array1.length === array2.length && arrayIntersection(array1, array2).length === array1.length;
+  return array1.length === array2.length && deepArrayIntersection(array1, array2).length === array1.length;
+}
+
+export function deepArrayIntersection<T>(array1: T[], array2: T[]): T[] {
+  const a = array1 || [];
+  const b = array2 || [];
+  return a.filter(x => b.some(y => deepObjectsEquals(x, y)));
 }
 
 export function shiftArray<T>(array: T[], fromItem: T): T[] {
