@@ -47,7 +47,7 @@ describe('Table perspective :: Columns', () => {
       .should('have.text', 'First')
       .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-right"]').click({force: true});
-    // cy.get('body').click();
+    cy.get('table-perspective').click();
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
@@ -59,7 +59,7 @@ describe('Table perspective :: Columns', () => {
       .should('have.text', 'Add Column')
       .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-right"]').click({force: true});
-    // cy.get('body').click();
+    cy.get('table-perspective').click();
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
 
     // rename last column
