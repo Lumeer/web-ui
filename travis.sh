@@ -20,10 +20,10 @@ PASSED=false
 echo "Running E2E tests..."
 set +e
 export CYPRESS_baseUrl="http://localhost:7000"
-npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203
+npm run cypress:run
 if [[ $? -ne 0 ]]; then
   set -e
-  npm run cypress:run
+  npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203
 
   if [[ $? -eq 0 ]]; then
     PASSED=true
