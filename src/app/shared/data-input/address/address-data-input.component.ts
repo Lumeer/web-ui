@@ -104,7 +104,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
 
   private bindAddressOptions(): Observable<DropdownOption[]> {
     return this.value$.pipe(
-      debounceTime(200),
+      debounceTime(1000),
       mergeMap(value => {
         if (!value || value.length < 3) {
           return of([]);
