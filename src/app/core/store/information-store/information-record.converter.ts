@@ -22,8 +22,6 @@ import {InformationRecordModel} from './information-record.model';
 export function convertInformationRecordDtoToInformationRecord(dto: InformationRecordDto): InformationRecordModel {
   return {
     ...dto,
-    date: new Date(
-      `${dto.date.year}-${dto.date.monthValue}-${dto.date.dayOfMonth} ${dto.date.hour}:${dto.date.minute}:${dto.date.second}${dto.date.offset.id}`
-    ),
+    date: new Date(dto.date),
   };
 }
