@@ -1,5 +1,5 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
-@import '@angular/material/theming';
 @import '../variables';
 
 @include mat.core();
@@ -80,8 +80,8 @@ $success-mat-palette: mat.define-palette($success-palette);
 @function theme-foreground($color) {
   @return (
     base: $color,
-    divider: $black-12-opacity,
-    dividers: $black-12-opacity,
+    divider: rgba($color, 0.12),
+    dividers: rgba($color, 0.12),
     disabled: rgba($color, 0.38),
     disabled-button: rgba($color, 0.38),
     disabled-text: rgba($color, 0.38),
@@ -96,7 +96,7 @@ $success-mat-palette: mat.define-palette($success-palette);
   );
 }
 
-$foreground-color: theme-foreground(mat.get-color-from-palette($primary-mat-palette, 500));
+$foreground-config: theme-foreground(mat.get-color-from-palette($primary-mat-palette, 500));
 
 $app-theme: mat.define-light-theme(
   (
@@ -107,6 +107,8 @@ $app-theme: mat.define-light-theme(
     typography: $typography,
   )
 );
+
+$app-theme: map.set($app-theme, color, foreground, $foreground-config);
 
 @include mat.all-component-themes($app-theme);
 @include mat.all-legacy-component-themes($app-theme);
