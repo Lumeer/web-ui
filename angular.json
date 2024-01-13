@@ -221,6 +221,7 @@
             },
             "local": {
               "progress": true,
+              "sourceMap": true,
               "baseHref": "/ui/"
             },
             "cs": {
