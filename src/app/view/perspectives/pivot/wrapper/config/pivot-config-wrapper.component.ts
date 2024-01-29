@@ -18,13 +18,12 @@
  */
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {LmrPivotConfig, LmrPivotData, LmrPivotStemConfig} from '@lumeer/pivot';
+import {LmrPivotConfig, LmrPivotData, LmrPivotStemConfig, createDefaultPivotStemConfig} from '@lumeer/pivot';
 import {deepObjectCopy} from '@lumeer/utils';
 
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
-import {createDefaultPivotStemConfig} from '../../util/pivot-util';
 
 @Component({
   selector: 'pivot-config-wrapper',

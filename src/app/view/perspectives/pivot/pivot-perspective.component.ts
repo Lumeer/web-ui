@@ -23,7 +23,7 @@ import {Store, select} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {LmrPivotConfig} from '@lumeer/pivot';
+import {LmrPivotConfig, createDefaultPivotConfig} from '@lumeer/pivot';
 
 import {LoadDataService, LoadDataServiceProvider} from '../../../core/service/load-data.service';
 import {AppState} from '../../../core/store/app.state';
@@ -35,7 +35,7 @@ import {selectPivotById} from '../../../core/store/pivots/pivots.state';
 import {ViewConfig} from '../../../core/store/views/view';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {PivotPerspectiveConfiguration, defaultPivotPerspectiveConfiguration} from '../perspective-configuration';
-import {checkOrTransformPivotConfig, createDefaultPivotConfig} from './util/pivot-util';
+import {checkOrTransformPivotConfig} from './util/pivot-util';
 
 @Component({
   selector: 'pivot-perspective',

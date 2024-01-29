@@ -432,7 +432,7 @@ export class GanttChartConverter {
 
         let minProgress,
           maxProgress = null;
-        if (progressConstraint && progressConstraint.type === ConstraintType.Percentage) {
+        if (progressConstraint?.type === ConstraintType.Percentage) {
           const config = progressConstraint.config as PercentageConstraintConfig;
           minProgress = isNotNullOrUndefined(config.minValue) ? Math.max(0, config.minValue) : null;
           maxProgress = isNotNullOrUndefined(config.maxValue) ? config.maxValue : null;
@@ -488,7 +488,7 @@ export class GanttChartConverter {
             name: nameFormatted,
             start: interval.start,
             end: interval.end,
-            progress: createProgress(progress),
+            progress: createProgress(progress, !!stemConfig.progress),
             dependencies: (canEditDependencies && parentChildren[dataResourceId]) || [],
             allowedDependencies: canEditDependencies ? editableTaskIds.filter(id => id !== taskId) : [],
             barColor,
@@ -629,7 +629,10 @@ function isDateValidRange(dateString: string): boolean {
   return isDateValid(startDate) && momentDate.year() > 1970 && momentDate.year() < 2200;
 }
 
-function createProgress(progress: any): number {
+function createProgress(progress: any, hasProgressConfig: boolean): number {
+  if (!hasProgressConfig) {
+    return 100;
+  }
   if (isNullOrUndefined(progress)) {
     return 0;
   }
