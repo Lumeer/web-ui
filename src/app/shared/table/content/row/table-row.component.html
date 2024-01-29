@@ -67,7 +67,7 @@
         showDetail: row.documentId && !dataInputInfo.editing && group.column && group.column.id === detailColumnId,
         showLock: group.column?.id === (mouseHoverColumnId$ | async) && dataInputInfo.showLockStats && !(group.column?.attribute | isAttributeEnabledByLockStats:data.cell?.lockStats)
         } as hoverData">
-          <div *ngIf="hoverData.showDetail" class="detail-trigger small ps-1 pe-1 cursor-pointer"
+          <div *ngIf="hoverData.showDetail" class="detail-trigger ps-1 pe-1 cursor-pointer"
                [class.has-comments]="row.commentsCount"
                [class.has-lock]="hoverData.showLock"
                [style.background-color]="data.cell?.background"

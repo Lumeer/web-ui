@@ -19,12 +19,12 @@
 import {
   LmrPivotAttribute,
   LmrPivotConfig,
-  LmrPivotConfigVersion,
   LmrPivotRowColumnAttribute,
   LmrPivotStemConfig,
   LmrPivotValueAttribute,
+  createDefaultPivotConfig,
+  createDefaultPivotStemConfig,
 } from '@lumeer/pivot';
-import {deepObjectsEquals} from '@lumeer/utils';
 
 import {AttributesResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -36,30 +36,6 @@ import {
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
-
-export function isPivotConfigChanged(viewConfig: LmrPivotConfig, currentConfig: LmrPivotConfig): boolean {
-  if (!!viewConfig.mergeTables !== !!currentConfig.mergeTables && (currentConfig.stemsConfigs || []).length > 1) {
-    return true;
-  }
-
-  return pivotStemConfigsHasChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
-}
-
-function pivotStemConfigsHasChanged(s1: LmrPivotStemConfig[], s2: LmrPivotStemConfig[]): boolean {
-  if (s1.length !== s2.length) {
-    return true;
-  }
-
-  return s1.some((stemConfig, index) => pivotStemConfigHasChanged(stemConfig, s2[index]));
-}
-
-function pivotStemConfigHasChanged(s1: LmrPivotStemConfig, s2: LmrPivotStemConfig): boolean {
-  return (
-    !deepObjectsEquals(s1.rowAttributes || [], s2.rowAttributes || []) ||
-    !deepObjectsEquals(s1.columnAttributes || [], s2.columnAttributes || []) ||
-    !deepObjectsEquals(s1.valueAttributes || [], s2.valueAttributes || [])
-  );
-}
 
 export function checkOrTransformPivotConfig(
   config: LmrPivotConfig,
@@ -107,7 +83,7 @@ export function checkOrTransformPivotStemConfig(
     rowAttributes: checkOrTransformPivotAttributes<LmrPivotRowColumnAttribute>(
       config.rowAttributes,
       attributesResourcesOrder
-    ),
+    ).map(attribute => ({...attribute, showHeader: true})),
     columnAttributes: checkOrTransformPivotAttributes<LmrPivotRowColumnAttribute>(
       config.columnAttributes,
       attributesResourcesOrder
@@ -130,14 +106,4 @@ function checkOrTransformPivotAttributes<T extends LmrPivotAttribute>(
   return pivotAttributes
     .map(pivotAttribute => checkOrTransformQueryAttribute(pivotAttribute, attributesResourcesOrder))
     .filter(attribute => !!attribute);
-}
-
-export function createDefaultPivotConfig(query: Query): LmrPivotConfig {
-  const stems = (query && query.stems) || [];
-  const stemsConfigs = stems.map(stem => createDefaultPivotStemConfig(stem));
-  return {version: LmrPivotConfigVersion.V1, stemsConfigs: stemsConfigs, mergeTables: true};
-}
-
-export function createDefaultPivotStemConfig(stem?: QueryStem): LmrPivotStemConfig {
-  return {stem, rowAttributes: [], columnAttributes: [], valueAttributes: []};
 }

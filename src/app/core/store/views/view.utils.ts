@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {isPivotConfigChanged} from '@lumeer/pivot';
 import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined, uniqueValues} from '@lumeer/utils';
 
 import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
@@ -36,7 +37,6 @@ import {formViewConfigLinkQueries} from '../../../view/perspectives/form/form-ut
 import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
 import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
-import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {AllowedPermissions} from '../../model/allowed-permissions';
 import {DashboardTab} from '../../model/dashboard-tab';
 import {CalendarConfig} from '../calendars/calendar';

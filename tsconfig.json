@@ -15,10 +15,10 @@
     "lib": ["es2018", "dom"],
     "typeRoots": ["node_modules/@types"],
     "types": ["node"],
-    "paths": {
-      "assert": ["./node_modules/assert"],
-      "stream": ["./node_modules/stream-browserify"]
-    },
     "useDefineForClassFields": false
+  },
+  "paths": {
+    "assert": ["./node_modules/assert"],
+    "stream": ["./node_modules/stream-browserify"]
   }
 }
