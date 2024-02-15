@@ -156,7 +156,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   public hasSelection(): boolean {
-    return this.selectedIndex$.getValue() > 0;
+    return this.selectedIndex$.getValue() >= 0;
   }
 
   public useSelection(text: string) {
