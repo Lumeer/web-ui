@@ -48,7 +48,7 @@ export class MetaCharactersBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.META_CHARACTERS,
-          message0: 'special character %1', //'%{BKY_BLOCK_META_CHARACTERS}', // now
+          message0: '%{BKY_BLOCK_META_CHARACTERS}', // special character %1
           args0: [
             {
               type: 'field_dropdown',
@@ -56,7 +56,7 @@ export class MetaCharactersBlocklyComponent extends BlocklyComponent {
               options: [
                 [`${this_.lf} (\\n)`, '\\n'],
                 [`${this_.cr} (\\r)`, '\\r'],
-                [`${this_.cr} ${this.lf} (\\r\\n)`, '\\r\\n'],
+                [`${this_.cr} ${this_.lf} (\\r\\n)`, '\\r\\n'],
                 [`${this_.tab} (\\t)`, '\\t'],
               ],
             },
