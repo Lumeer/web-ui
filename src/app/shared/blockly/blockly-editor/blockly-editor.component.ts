@@ -43,6 +43,7 @@ import {TranslationService} from '../../../core/service/translation.service';
 import {AppState} from '../../../core/store/app.state';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 import {View} from '../../../core/store/views/view';
 import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {RuleVariable} from '../rule-variable-type';
@@ -104,6 +105,7 @@ import {LinkDocumentsReturnBlocklyComponent} from './blocks/link-documents-retur
 import {LoopBreakBlocklyComponent} from './blocks/loop-break-blockly-component';
 import {LoopContinueBlocklyComponent} from './blocks/loop-continue-blockly-component';
 import {MergeArraysBlocklyComponent} from './blocks/merge-arrays-blockly-component';
+import {MetaCharactersBlocklyComponent} from './blocks/meta-characters-blockly-component';
 import {MsToDateBlocklyComponent} from './blocks/ms-to-date-blockly-component';
 import {MsToUnitBlocklyComponent} from './blocks/ms-to-unit-blockly-component';
 import {NavigateBlocklyComponent} from './blocks/navigate-blockly-component';
@@ -174,6 +176,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   @Input()
   public masterType: MasterBlockType = MasterBlockType.Rule;
 
+  @Input()
+  public serviceLimits: ServiceLimits;
+
   @Output()
   public onJsUpdate = new EventEmitter<string>();
 
@@ -189,7 +194,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   private workspace: any;
   private initializing = false;
   private destroying = false;
-  private blocklyUtils = new BlocklyUtils(null, [], [], [], [], []);
+  private blocklyUtils = new BlocklyUtils(null, [], [], [], [], [], null);
 
   constructor(
     private store$: Store<AppState>,
@@ -209,7 +214,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       this.linkTypes,
       this.views,
       this.variables,
-      this.selectionLists
+      this.selectionLists,
+      this.serviceLimits
     );
     if (isNotNullOrUndefined(lumeerVar)) {
       this.blocklyUtils.setLumeerVariable(lumeerVar);
@@ -296,6 +302,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetSelectionListValuesBlocklyComponent(this.blocklyUtils),
       new GetSelectionListDisplayValuesBlocklyComponent(this.blocklyUtils),
       new ToNumberBlocklyComponent(this.blocklyUtils),
+      new MetaCharactersBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));

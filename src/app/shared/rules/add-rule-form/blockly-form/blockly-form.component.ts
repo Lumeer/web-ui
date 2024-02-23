@@ -32,6 +32,8 @@ import {
   selectViewsByRead,
 } from '../../../../core/store/common/permissions.selectors';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
 import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
 import {selectSelectionListNamesByWorkspaceSorted} from '../../../../core/store/selection-lists/selection-lists.state';
 import {View} from '../../../../core/store/views/view';
@@ -63,6 +65,7 @@ export class BlocklyFormComponent implements OnInit {
   public views$: Observable<View[]>;
   public variableNames$: Observable<string[]>;
   public selectionLists$: Observable<string[]>;
+  public serviceLimits$: Observable<ServiceLimits>;
 
   public variables: RuleVariable[];
   public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
@@ -110,6 +113,7 @@ export class BlocklyFormComponent implements OnInit {
     this.linkTypes$ = this.store$.pipe(select(selectReadableLinkTypes));
     this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
     this.selectionLists$ = this.store$.pipe(select(selectSelectionListNamesByWorkspaceSorted));
+    this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
     if (this.collection) {
       this.variables = [

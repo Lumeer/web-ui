@@ -16,19 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {COLOR_CYAN} from '../../../../core/constants';
+import {COLOR_PINK} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {BlocklyComponent} from './blockly-component';
 
 declare var Blockly: any;
 
-export class GetSelectionListDisplayValuesBlocklyComponent extends BlocklyComponent {
+export class MetaCharactersBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
+  private cr: string;
+  private lf: string;
+  private tab: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.getSelectionListDisplayValuesBlock:Get display values of a project selection list.`;
+    this.tooltip = $localize`:@@blockly.tooltip.metaCharactersBlock:Gets a special meta character.`;
+    this.lf = $localize`:@@blockly.text.metaCharactersBlock.lf:Line Feed`;
+    this.cr = $localize`:@@blockly.text.metaCharactersBlock.cr:Carriage Return`;
+    this.tab = $localize`:@@blockly.text.metaCharactersBlock.tab:Tab`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -37,40 +43,34 @@ export class GetSelectionListDisplayValuesBlocklyComponent extends BlocklyCompon
 
   public registerBlock(workspace: any) {
     const this_ = this;
-    let lists = this.blocklyUtils.getSelectionLists();
-    if (!lists || lists.length === 0) {
-      lists = ['?'];
-    }
 
-    Blockly.Blocks[BlocklyUtils.GET_SELECTION_LIST_DISPLAY_VALUES] = {
+    Blockly.Blocks[BlocklyUtils.META_CHARACTERS] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.GET_SELECTION_LIST_DISPLAY_VALUES,
-          message0: '%{BKY_BLOCK_GET_SELECTION_LIST_DISPLAY_VALUES}', // get display values of selection list %1,
+          type: BlocklyUtils.META_CHARACTERS,
+          message0: 'special character %1', //'%{BKY_BLOCK_META_CHARACTERS}', // now
           args0: [
             {
               type: 'field_dropdown',
-              name: 'SELECTION_LIST_NAME',
-              options: function () {
-                return lists.map(l => [l, l === '?' ? '' : l]);
-              },
+              name: 'CHARACTER',
+              options: [
+                [`${this_.lf} (\\n)`, '\\n'],
+                [`${this_.cr} (\\r)`, '\\r'],
+                [`${this_.cr} ${this.lf} (\\r\\n)`, '\\r\\n'],
+                [`${this_.tab} (\\t)`, '\\t'],
+              ],
             },
           ],
-          output: '',
-          colour: COLOR_CYAN,
+          output: 'String',
+          colour: '%{BKY_TEXTS_HUE}',
           tooltip: this_.tooltip,
           helpUrl: '',
         });
       },
     };
-
-    Blockly.JavaScript[BlocklyUtils.GET_SELECTION_LIST_DISPLAY_VALUES] = function (block) {
-      const selectionListName = block.getFieldValue('SELECTION_LIST_NAME');
-
-      const code =
-        this_.blocklyUtils.getLumeerVariable() + ".getSelectionListDisplayValues('" + selectionListName + "')";
-
-      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    Blockly.JavaScript[BlocklyUtils.META_CHARACTERS] = function (block) {
+      var code = "'" + (block.getFieldValue('CHARACTER') || '') + "'";
+      return [code, Blockly.JavaScript.ORDER_ATOMIC];
     };
   }
 }

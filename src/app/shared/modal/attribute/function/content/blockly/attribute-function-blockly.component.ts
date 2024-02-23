@@ -21,6 +21,7 @@ import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 
 import {Attribute, AttributeFunction, Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {ServiceLimits} from '../../../../../../core/store/organizations/service-limits/service.limits';
 import {View} from '../../../../../../core/store/views/view';
 import {BlocklyDebugDisplay} from '../../../../../blockly/blockly-debugger/blockly-debugger.component';
 import {
@@ -70,6 +71,9 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
 
   @Input()
   public form: UntypedFormGroup;
+
+  @Input()
+  public serviceLimits: ServiceLimits;
 
   public variables: RuleVariable[];
   public masterType: MasterBlockType;

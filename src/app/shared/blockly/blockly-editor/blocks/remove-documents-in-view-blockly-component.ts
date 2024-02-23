@@ -39,7 +39,9 @@ export class RemoveDocumentsInViewBlocklyComponent extends BlocklyComponent {
       this.viewOptions.push(['?', '']);
     }
 
-    const limit = BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT;
+    const limit = !!this.blocklyUtils.getServiceLimits()
+      ? this.blocklyUtils.getServiceLimits().maxCreatedRecords
+      : BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT;
     this.tooltip = $localize`:@@blockly.tooltip.removeDocumentsInViewBlock:Remove records in the view specified by ID (as read from an attribute of type View). At most ${limit}:limit: records are deleted at once.`;
   }
 

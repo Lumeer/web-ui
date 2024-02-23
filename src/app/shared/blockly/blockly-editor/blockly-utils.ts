@@ -22,6 +22,7 @@ import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
 import {COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_PRIMARY} from '../../../core/constants';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 import {View} from '../../../core/store/views/view';
 import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {shadeColor} from '../../utils/html-modifier';
@@ -80,6 +81,7 @@ export class BlocklyUtils {
   public static readonly DATE_TO_ISO = 'date_to_iso';
   public static readonly DATE_TO_MS = 'date_to_ms';
   public static readonly DATE_NOW = 'date_now';
+  public static readonly META_CHARACTERS = 'meta_characters';
   public static readonly DATE_NOW_MS = 'date_now_ms';
   public static readonly MS_TO_UNIT = 'ms_to_unit';
   public static readonly PARSE_DATE = 'parse_date';
@@ -158,7 +160,8 @@ export class BlocklyUtils {
     private linkTypes: LinkType[],
     private views: View[],
     private variables: RuleVariable[],
-    private selectionLists: string[]
+    private selectionLists: string[],
+    private serviceLimits: ServiceLimits
   ) {}
 
   public setLumeerVariable(variable: string) {
@@ -171,6 +174,10 @@ export class BlocklyUtils {
 
   public getCollections() {
     return this.collections;
+  }
+
+  public getServiceLimits() {
+    return this.serviceLimits;
   }
 
   public getLinkTypes() {

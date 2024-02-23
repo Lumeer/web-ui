@@ -46,6 +46,8 @@ import {
 } from '../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
 import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
 import {selectSelectionListNamesByWorkspaceSorted} from '../../../../core/store/selection-lists/selection-lists.state';
 import {View} from '../../../../core/store/views/view';
@@ -87,6 +89,7 @@ export class AttributeFunctionModalComponent implements OnInit {
   public views$: Observable<View[]>;
   public variableNames$: Observable<string[]>;
   public selectionLists$: Observable<string[]>;
+  public serviceLimits$: Observable<ServiceLimits>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -110,6 +113,7 @@ export class AttributeFunctionModalComponent implements OnInit {
     this.views$ = this.store$.pipe(select(selectViewsByRead));
     this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
     this.selectionLists$ = this.store$.pipe(select(selectSelectionListNamesByWorkspaceSorted));
+    this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(

@@ -37,6 +37,10 @@ export class GetSelectionListValuesBlocklyComponent extends BlocklyComponent {
 
   public registerBlock(workspace: any) {
     const this_ = this;
+    let lists = this.blocklyUtils.getSelectionLists();
+    if (!lists || lists.length === 0) {
+      lists = ['?'];
+    }
 
     Blockly.Blocks[BlocklyUtils.GET_SELECTION_LIST_VALUES] = {
       init: function () {
@@ -48,7 +52,7 @@ export class GetSelectionListValuesBlocklyComponent extends BlocklyComponent {
               type: 'field_dropdown',
               name: 'SELECTION_LIST_NAME',
               options: function () {
-                return (this_.blocklyUtils.getSelectionLists() || []).map(l => [l, l]);
+                return lists.map(l => [l, l === '?' ? '' : l]);
               },
             },
           ],

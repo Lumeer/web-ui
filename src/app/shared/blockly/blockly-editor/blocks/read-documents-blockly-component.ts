@@ -41,7 +41,9 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
       this.viewOptions.push(['?', '']);
     }
 
-    const limit = BlocklyUtils.MAXIMUM_DOCUMENTS_RETURNED;
+    const limit = !!this.blocklyUtils.getServiceLimits()
+      ? this.blocklyUtils.getServiceLimits().maxViewReadRecords
+      : BlocklyUtils.MAXIMUM_DOCUMENTS_RETURNED;
     this.tooltip = $localize`:@@blockly.tooltip.readDocumentsBlock:Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most ${limit}:limit: records are returned.`;
   }
 
