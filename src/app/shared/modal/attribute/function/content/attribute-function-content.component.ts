@@ -21,6 +21,7 @@ import {UntypedFormGroup} from '@angular/forms';
 
 import {Attribute, AttributeFunction, Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 import {View} from '../../../../../core/store/views/view';
 
 @Component({
@@ -58,6 +59,9 @@ export class AttributeFunctionContentComponent implements OnInit {
 
   @Input()
   public form: UntypedFormGroup;
+
+  @Input()
+  public serviceLimits: ServiceLimits;
 
   public ngOnInit() {
     this.form.patchValue({

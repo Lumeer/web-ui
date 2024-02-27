@@ -32,4 +32,7 @@ export interface ServiceLimits {
   validUntil: Date;
   rulesPerCollection: number;
   functionsPerCollection: number;
+  maxCreatedRecords: number;
+  maxViewReadRecords: number;
+  automationTimeout: number;
 }

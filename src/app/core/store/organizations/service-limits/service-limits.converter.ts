@@ -35,5 +35,8 @@ export function convertServiceLimitsDtoToModel(organizationId: string, dto: Serv
     validUntil: new Date(dto.validUntil),
     rulesPerCollection: dto.rulesPerCollection,
     functionsPerCollection: dto.functionsPerCollection,
+    maxCreatedRecords: dto.maxCreatedRecords,
+    maxViewReadRecords: dto.maxViewReadRecords,
+    automationTimeout: dto.automationTimeout,
   };
 }

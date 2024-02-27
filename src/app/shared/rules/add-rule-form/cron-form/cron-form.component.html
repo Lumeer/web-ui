@@ -32,6 +32,7 @@
   <blockly-editor
     (onJsUpdate)="onJsUpdate($event)"
     (onXmlUpdate)="onXmlUpdate($event)"
+    [serviceLimits]="serviceLimits$ | async"
     [toolbox]="functionToolbox"
     [collections]="collections$ | async"
     [views]="views$ | async"

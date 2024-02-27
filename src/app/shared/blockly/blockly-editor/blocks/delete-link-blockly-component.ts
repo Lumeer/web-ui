@@ -30,7 +30,9 @@ export class DeleteLinkBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    const limit = BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT;
+    const limit = !!this.blocklyUtils.getServiceLimits()
+      ? this.blocklyUtils.getServiceLimits().maxCreatedRecords
+      : BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT;
     this.tooltip = $localize`:@@blockly.tooltip.deleteLinkBlock:Deletes an existing link. To prevent large damage, only up to ${limit}:limit: links can be deleted within a single sequence of automations and functions.`;
   }
 
