@@ -74,6 +74,10 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
     if (this.isOpen() && this.valid && code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
       this.onSave();
     }
+    if (this.isOpen() && code === KeyCode.Escape) {
+      this.onCancel();
+    }
+    event.stopPropagation();
   };
 
   public contentChanged(event: ContentChange) {
@@ -105,6 +109,7 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
   }
 
   public onCancel() {
+    this.content = '';
     this.close();
     this.cancel.emit();
   }

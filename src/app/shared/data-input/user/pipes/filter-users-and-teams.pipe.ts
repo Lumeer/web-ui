@@ -36,7 +36,7 @@ export class FilterUsersAndTeamsPipe implements PipeTransform {
     const teamsGroup = $localize`:@@user.constraint.type.teams:Teams`;
 
     const filteredTeams: DropdownOption[] = (teams || [])
-      .filter(team => removeAccentFromString(team.name).includes(textWithoutAccent))
+      .filter(team => teamContainsText(team, textWithoutAccent))
       .map(team => ({
         value: userDataValueCreateTeamValue(team.id),
         displayValue: team.name,
@@ -48,7 +48,7 @@ export class FilterUsersAndTeamsPipe implements PipeTransform {
     const usersGroup = $localize`:@@user.constraint.type.users:Users`;
 
     const filteredUsersOptions: DropdownOption[] = (users || [])
-      .filter(user => removeAccentFromString(user.name || user.email).includes(textWithoutAccent))
+      .filter(user => userContainsText(user, textWithoutAccent))
       .map(user => ({
         gravatar: user.email,
         value: user.email || user.name,
@@ -61,4 +61,15 @@ export class FilterUsersAndTeamsPipe implements PipeTransform {
       ...sortObjectsByScore<DropdownOption>(filteredUsersOptions, text, ['displayValue', 'value']),
     ];
   }
+}
+
+function userContainsText(user: User, text: string): boolean {
+  if (user.name) {
+    return removeAccentFromString(user.name).includes(text) || removeAccentFromString(user.email).includes(text);
+  }
+  return removeAccentFromString(user.email).includes(text);
+}
+
+function teamContainsText(team: Team, text: string): boolean {
+  return removeAccentFromString(team.name).includes(text);
 }
