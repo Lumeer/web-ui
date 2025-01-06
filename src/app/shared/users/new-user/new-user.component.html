@@ -17,7 +17,7 @@
 </form>
 <small id="emailValid" class="invalid-message" *ngIf="emailField.invalid && emailField.touched"
        i18n="@@users.user.email.invalid">
-  Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).
+  Please enter a valid e-mail address (e.g. alan.turing&#64;lumeer.io).
 </small>
 <small class="invalid-message" *ngIf="emailField.valid && isDuplicate" i18n="@@users.user.email.duplicate">
   This user email is already invited. Try another one!
