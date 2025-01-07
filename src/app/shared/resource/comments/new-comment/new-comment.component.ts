@@ -28,8 +28,8 @@ import {
 } from '@angular/core';
 
 import {ContentChange} from 'ngx-quill';
-import * as QuillNamespace from 'quill';
-import QuillMention from 'quill-mention';
+import Quill from 'quill';
+import {Mention, MentionBlot} from 'quill-mention';
 import {BehaviorSubject} from 'rxjs';
 
 import {ResourceCommentModel} from '../../../../core/store/resource-comments/resource-comment.model';
@@ -107,8 +107,7 @@ export class NewCommentComponent implements OnInit, AfterViewChecked {
   constructor(private _sourceRenderer: Renderer2) {}
 
   public ngOnInit() {
-    const Quill: any = QuillNamespace;
-    Quill.register({'modules/mention': QuillMention}, true);
+    Quill.register({'blots/mention': MentionBlot, 'modules/mention': Mention});
 
     if (this.initialComment || this.startEditing) {
       this.commentText = this.initialComment.comment;
