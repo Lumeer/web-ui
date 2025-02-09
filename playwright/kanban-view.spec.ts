@@ -103,7 +103,7 @@ test('dragging', async ({page}) => {
   await prepareKanbanBoard(page);
 
   // simulating drag and drop
-  await page.locator('post-it:has-text("Analyze UI tests scenarios")').hover();
+  await page.locator('post-it:has-text("Analyze UI tests scenarios")').locator('post-it-header').hover();
   await page.mouse.down();
   // needs to be twice to simulate dragover
   await page.locator('kanban-column').nth(0).locator('post-it').nth(0).hover();
@@ -118,7 +118,7 @@ test('dragging', async ({page}) => {
   await expect(page.locator('kanban-column').nth(1).locator('post-it')).toHaveCount(2);
 
   // simulating drag and drop
-  await page.locator('post-it:has-text("Analyze UI tests scenarios")').hover();
+  await page.locator('post-it:has-text("Analyze UI tests scenarios")').locator('post-it-header').hover();
   await page.mouse.down();
   // needs to be twice to simulate dragover
   await page.locator('kanban-column').nth(1).locator('post-it').nth(0).hover();

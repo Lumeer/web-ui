@@ -111,7 +111,6 @@ $app-theme: mat.define-light-theme(
 $app-theme: map.set($app-theme, color, foreground, $foreground-config);
 
 @include mat.all-component-themes($app-theme);
-@include mat.all-legacy-component-themes($app-theme);
 @include mat.all-component-typographies($typography);
 
 .menu-edges-content .mat-menu-mdc-content {

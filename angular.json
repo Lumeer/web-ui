@@ -90,7 +90,6 @@
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
               "node_modules/pusher-js/dist/web/pusher.min.js",
-              "node_modules/quill/dist/quill.min.js",
               "node_modules/pressure/dist/pressure.min.js"
             ],
             "vendorChunk": false,
@@ -271,25 +270,25 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "lumeer:build:local",
-            "port": 7000
+            "port": 7000,
+            "buildTarget": "lumeer:build:local"
           },
           "configurations": {
             "cs": {
-              "browserTarget": "lumeer:build:cs"
+              "buildTarget": "lumeer:build:cs"
             },
             "hu": {
-              "browserTarget": "lumeer:build:hu"
+              "buildTarget": "lumeer:build:hu"
             },
             "en": {
-              "browserTarget": "lumeer:build:en"
+              "buildTarget": "lumeer:build:en"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "lumeer:build"
+            "buildTarget": "lumeer:build"
           }
         },
         "test": {

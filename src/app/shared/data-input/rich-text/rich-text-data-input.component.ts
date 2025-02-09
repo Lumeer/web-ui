@@ -288,7 +288,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
       const text = this.value.format();
       const textToPaste = unescapeHtml(text);
       const editor = this.textEditor?.quillEditor;
-      const value = editor?.clipboard.convert(textToPaste);
+      const value = editor?.clipboard.convert({html: textToPaste});
       editor?.setContents(value);
       setTimeout(() => editor?.setSelection(Number.MAX_SAFE_INTEGER, 1));
     }

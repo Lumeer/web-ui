@@ -9,6 +9,7 @@ bin/
 
 .vscode/
 .idea/
+.env
 *.iml
 *.log
 
