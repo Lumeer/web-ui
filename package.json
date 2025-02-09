@@ -28,7 +28,7 @@
     "cypress:open": "npx cypress open",
     "cypress:run": "npx cypress run",
     "prepare": "husky install",
-    "playwright:run": "playwright test --headed kanban-view.spec.ts"
+    "playwright:run": "playwright test"
   },
   "repository": {
     "type": "git",
