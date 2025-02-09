@@ -28,7 +28,7 @@
     "cypress:open": "npx cypress open",
     "cypress:run": "npx cypress run",
     "prepare": "husky install",
-    "playwright:run": "playwright test"
+    "playwright:run": "playwright test --headed kanban-view.spec.ts"
   },
   "repository": {
     "type": "git",
@@ -124,7 +124,7 @@
     "@angular/language-service": "^17.3.12",
     "@compodoc/compodoc": "^1.1.26",
     "@ngrx/schematics": "^17.2.0",
-    "@playwright/test": "^1.39.0",
+    "@playwright/test": "^1.50.1",
     "@sentry/cli": "^2.21.3",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/auth0-js": "^9.21.6",
