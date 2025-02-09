@@ -50,27 +50,27 @@ test('create table', async ({page}) => {
   tableUrl = (await newCard.getAttribute('href')).replace('table', 'workflow');
 });
 
-test('Worklflow table add collumns and rows with data', async ({page}) => {
+test('Worklflow table add columns and rows with data', async ({page}) => {
   await page.goto(tableUrl);
 
-  const addCollumnHeader = page.locator('thead').locator('input[placeholder="Add Column"]');
-  const addCollumnHeaderDiv = page.locator('th').filter({has: page.locator('input[placeholder="Add Column"]')});
+  const addColumnHeader = page.locator('thead').locator('input[placeholder="Add Column"]');
+  const addColumnHeaderDiv = page.locator('th').filter({has: page.locator('input[placeholder="Add Column"]')});
 
-  await expect(addCollumnHeader).toBeVisible();
+  await expect(addColumnHeader).toBeVisible();
 
-  await addCollumnHeaderDiv.dblclick();
+  await addColumnHeaderDiv.dblclick();
   const inputLocator = page
     .locator('th[class="cdk-drag sticky-header table-cell text-nowrap ng-star-inserted editing"]')
     .locator('input');
 
   await inputLocator.fill('Name');
   await inputLocator.press('Enter');
-  //wait for new collumn to apply.
+  //wait for new column to apply.
   await page.waitForTimeout(1000);
 
   await expect(page.locator('thead').locator('input[placeholder="Add Column"]')).toBeVisible();
 
-  await addCollumnHeaderDiv.dblclick();
+  await addColumnHeaderDiv.dblclick();
   await inputLocator.fill('Age');
   await inputLocator.press('Enter');
   await page.waitForTimeout(1000);
@@ -84,7 +84,8 @@ test('Worklflow table add collumns and rows with data', async ({page}) => {
   const firstRow = await rows.at(0).locator('td').all();
 
   const addInputToTableCell = async (locator: Locator, text: string) => {
-    await locator.dblclick();
+    await locator.click({button: 'right'});
+    await page.locator('.mat-mdc-menu-item:has-text("Edit value")').click();
     await locator.locator('input').fill(text);
     await locator.press('Enter');
 
@@ -121,6 +122,7 @@ test('Worklflow table add collumns and rows with data', async ({page}) => {
   await expect(finalRows.at(2).locator('td')).toHaveCount(3);
 
   const assertTableRow = async (row: Locator[], cells: string[]) => {
+    await row.at(0).locator(`div:text("${cells[0]}")`).click();
     await expect(row.at(0).locator(`div:text("${cells[0]}")`)).toBeVisible();
     await expect(row.at(1).locator(`div:text("${cells[1]}")`)).toBeVisible();
   };
@@ -130,7 +132,7 @@ test('Worklflow table add collumns and rows with data', async ({page}) => {
   await assertTableRow(await finalRows.at(2).locator('td').all(), tableCellsInput.thirdRow);
 });
 
-test('Add collumns with attribute type', async ({page}) => {
+test('Add columns with attribute type', async ({page}) => {
   await page.goto(tableUrl);
 
   const headerName = 'Due to';

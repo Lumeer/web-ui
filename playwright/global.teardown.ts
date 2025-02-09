@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {test} from '@playwright/test';
+import {expect, test} from '@playwright/test';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -42,4 +42,5 @@ test('Remove user from Auth0', async ({page, request}) => {
       Authorization: `Bearer ${parsed_body['accessToken']}`,
     },
   });
+  expect(deleteUserRequest.ok()).toBeTruthy();
 });
