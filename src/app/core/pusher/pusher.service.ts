@@ -662,6 +662,19 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(new LinkTypesAction.GetSingle({linkTypeId: data.id}));
       }
     });
+    this.channel.bind('LinkType:reload', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new LinkTypesAction.Get({
+            workspace: {
+              organizationId: this.currentOrganization?.id,
+              projectId: this.currentProject?.id,
+              linkTypeId: data.object.id,
+            },
+          })
+        );
+      }
+    });
     this.channel.bind('LinkType:remove', data => {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(new LinkTypesAction.DeleteSuccess({linkTypeId: data.id}));

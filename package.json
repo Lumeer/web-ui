@@ -40,6 +40,9 @@
   },
   "homepage": "https://github.com/Lumeer/web-ui#readme",
   "private": true,
+  "resolutions": {
+    "nan": "github:jkleinsc/nan#remove_accessor_signature"
+  },
   "dependencies": {
     "@angular/animations": "^17.3.12",
     "@angular/cdk": "^17.3.10",
