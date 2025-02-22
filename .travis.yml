@@ -2,10 +2,10 @@ language: java
 dist: focal
 cache:
   directories:
-    - ~/.cache
-    - ~/.embedmongo
-    - ~/.engine
-    - ~/.m2
+#    - ~/.cache
+#    - ~/.embedmongo
+#    - ~/.engine
+#    - ~/.m2
   timeout: 900
 #jdk:
 #  - openjdk14
