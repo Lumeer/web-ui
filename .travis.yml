@@ -17,11 +17,11 @@ addons:
 before_install:
   - curl -s "https://get.sdkman.io" | bash
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
-  - sdk install java 21.0.1-open
-  - sdk use java 21.0.1-open
+  - sdk install java 23.0.1-open
+  - sdk use java 23.0.1-open
   - 'sudo apt-get install -y libgconf-2-4'
-  - 'nvm install v18.18.0'
-  - 'nvm use v18.18.0'
+  - 'nvm install v22.14.0'
+  - 'nvm use v22.14.0'
   - 'npm i -g npm@latest'
 install:
   - './travis-build.sh'
