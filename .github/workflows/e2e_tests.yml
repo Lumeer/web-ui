@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install libssl and libcrypto
+        run: sudo apt-get install libssl-dev libcrypto++-dev
       - name: Generate password to env variables
         run: echo "TEST_USER_PASSWORD=$(uuidgen)" >> "$GITHUB_ENV"
       - name: Build (mvn clean install)
