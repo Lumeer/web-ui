@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 20
       - name: Install libssl and libcrypto
-        run: sudo echo "deb http://security.ubuntu.com/ubuntu focal-security main" >> /etc/apt/sources.list && sudo apt-get update && sudo apt-get install libssl-dev=1.1.1f-1ubuntu2.24
+        run: sudo chmod u+w /etc/apt/sources.list && sudo echo "deb http://security.ubuntu.com/ubuntu focal-security main" >> /etc/apt/sources.list && sudo apt-get update && sudo apt-get install libssl-dev=1.1.1f-1ubuntu2.24
       - name: Generate password to env variables
         run: echo "TEST_USER_PASSWORD=$(uuidgen)" >> "$GITHUB_ENV"
       - name: Build (mvn clean install)
