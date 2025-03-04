@@ -22,6 +22,11 @@
         <i class="far fa-file" aria-hidden="true"></i>&nbsp;<span>{{ data.collection.documentsCount }}</span>
       </div>
 
+      <collection-download *ngIf="data.permissions?.roles?.DataRead"
+                            [collection]="data.collection"
+                           class="d-block me-3">
+      </collection-download>
+
       <collection-upload *ngIf="data.permissions?.roles?.DataContribute"
                          class="d-block me-3"
                          [collection]="data.collection">

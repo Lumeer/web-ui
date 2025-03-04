@@ -87,6 +87,7 @@
     "dompurify": "^3.2.3",
     "dotenv": "^16.4.7",
     "driver.js": "^0.9.8",
+    "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "flag-icons": "^6.15.0",
     "hammerjs": "^2.0.8",
