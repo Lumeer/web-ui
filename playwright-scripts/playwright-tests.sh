@@ -14,7 +14,7 @@ while ! curl --output /dev/null --silent -r 0-0 --fail "http://127.0.0.1:7000"; 
 done
 cd playwright-scripts
 echo "Starting backend..."
-./start-engine.sh
+./start-engine.sh || exit $?
 RESPONSE=$(curl http://localhost:8080/lumeer-engine/)
 
 PASSED=false
