@@ -131,6 +131,7 @@ describe('Table perspective :: Columns', () => {
     // add new column left in first table
     cy.get('[data-test="table-column-input"]').first().trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
+    cy.get('[data-test="table-column-input"]').first().type('{esc}');
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
@@ -151,6 +152,7 @@ describe('Table perspective :: Columns', () => {
       .should('have.text', 'A')
       .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
+    cy.get('[data-test="table-column-input"].text-default-attribute').first().type('{esc}');
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 6);
