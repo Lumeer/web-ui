@@ -48,6 +48,7 @@ describe('Table perspective :: Columns', () => {
       .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-right"]').click({force: true});
     cy.get('table-perspective').click();
+    cy.get('[data-test="table-column-input"]').first().type('{esc}');
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
@@ -60,6 +61,7 @@ describe('Table perspective :: Columns', () => {
       .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-right"]').click({force: true});
     cy.get('table-perspective').click();
+    cy.get('[data-test="table-column-input"]').first().type('{esc}');
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
 
     // rename last column

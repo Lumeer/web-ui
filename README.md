@@ -112,23 +112,33 @@ $ npm run i18n
 
 It will add your new texts into all translation files (`src/i18n/messages.en.xlf` and `src/i18n/messages.cs.xlf`). You then need to open these files and translate the texts by adding the translations between the `<target>...</target>` tags.
 
+## Run Cypress tests locally
+
+Start your own MongoDB.
+Start the engine (use VM parameter `-Djboss.bind.address=0.0.0.0`, so that
+cypress can access it).
+On MacOS under Settings -> General -> Airdrop & Handoff disable AirPlay receiver
+(collision on port 7000). Start the frontend.
+
+`npm run cypress:open` will open the Cypress GUI. You can then run the tests from there.
+
 ## Run Playwright tests locally
 
 Playwright tests consist of multiple projects. First is an Onboarding test that setup the user in for us. All other tests are dependent on Onboarding tests.
 After testing is over the teardown project removes the user from Auth0. To sucessfuly run the tests again the user's data need to be wiped from the database.
 
-To setup the user in Playwright tests you need to add the email of the user you will use as ADMIN user in the your instance of engine. The tests loads the from environment variables. Create `.env` and add the email and user password into `.env` file
+To setup the user in Playwright tests you need to add the email of the user you will use as ADMIN user in the your instance of engine (in `defaults-dev.properties`). The tests loads the from environment variables. Create `.env` and add the email and user password into `.env` file
 
 ```
 TEST_USER_EMAIL=<EMAIL_WITH_ADMIN_PRIVILEGES>
 TEST_USER_PASSWORD=<PASSWORD>
 ```
 
-To prevent failing tests the user should not be already stored in the database and have an instance in Auth0.
+To prevent failing tests the user should not be already stored in the database and must not be stored in Auth0.
 
 To run Playwright tests use `npm run playwright:run` command.
 
-To open the HTML report after the tesiting use `npx playwright show-report` command.
+To open the HTML report after the testing use `npx playwright show-report` command.
 
 ## How To Contribute
 
