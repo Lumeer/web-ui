@@ -42,26 +42,30 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').first().should('have.text', 'Zeroth');
 
     // add new column right
+    cy.log('Add new column to the right');
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .first()
       .should('have.text', 'First')
       .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-right"]').click({force: true});
     cy.get('table-perspective').click();
-    cy.get('[data-test="table-column-input"]').first().type('{esc}');
+    cy.get('[data-test="table-column-input"]').first().trigger('keypress', {code: 'ESC'});
+    cy.get('[data-test="table-column-menu-add-right"]').should('not.exist');
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
     cy.get('[data-test="table-column-input"]').eq(2).should('have.text', 'Add Column');
 
     // add new column as the last one
+    cy.log('Add new column as the last one');
     cy.get('[data-test="table-column-input"]')
       .last()
       .should('have.text', 'Add Column')
       .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-right"]').click({force: true});
     cy.get('table-perspective').click();
-    cy.get('[data-test="table-column-input"]').first().type('{esc}');
+    cy.get('[data-test="table-column-input"]').first().trigger('keypress', {code: 'ESC'});
+    cy.get('[data-test="table-column-menu-add-right"]').should('not.exist');
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
 
     // rename last column
@@ -129,9 +133,11 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').last().should('have.text', 'Add Column').click({force: true});
 
     // add new column left in first table
+    cy.log('Add new column to the left in the first table');
     cy.get('[data-test="table-column-input"]').first().trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
-    cy.get('[data-test="table-column-input"]').first().type('{esc}');
+    cy.get('[data-test="table-column-input"]').first().trigger('keypress', {code: 'ESC'});
+    cy.get('[data-test="table-column-menu-add-left"]').should('not.exist');
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
@@ -147,12 +153,14 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-input"]').first().should('have.text', '0');
 
     // add new first column in the second table
+    cy.log('Add new column to the left in the second table');
     cy.get('[data-test="table-column-input"].text-default-attribute')
       .last()
       .should('have.text', 'A')
       .trigger('contextmenu', {force: true});
     cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
-    cy.get('[data-test="table-column-input"].text-default-attribute').first().type('{esc}');
+    cy.get('[data-test="table-column-input"].text-default-attribute').first().trigger('keypress', {code: 'ESC'});
+    cy.get('[data-test="table-column-menu-add-left"]').should('not.exist');
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 6);
