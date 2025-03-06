@@ -27,12 +27,32 @@ export SKIP_LIMITS=true
 mvn -s settings.xml wildfly:run -PstartEngine -B --quiet &
 echo $! > $ORIG/engine.pid
 
-echo "Waiting for engine to start..."
-while test $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:8080/lumeer-engine/rest/users) != 401; do
+echo "Waiting for MongoDB to start..."
+RETRY_COUNT=0
+while [ $(curl -s -o /dev/null -I -w "%{exitcode}" "http://localhost:27017/") == 7 ]; do
   sleep 10
+  RETRY_COUNT=$((RETRY_COUNT+1))
+
+  if [ $RETRY_COUNT -ge 20 ]; then
+    echo "Failed to start MongoDB within the retry limit."
+    exit 1
+  fi
 done
 sleep 5
+echo "MongoDB started!"
 
+echo "Waiting for engine to start..."
+RETRY_COUNT=0
+while [ $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:8080/lumeer-engine/rest/users) != 401 ]; do
+  sleep 10
+  RETRY_COUNT=$((RETRY_COUNT+1))
+
+  if [ $RETRY_COUNT -ge 20 ]; then
+    echo "Failed to start engine within the retry limit."
+    exit 2
+  fi
+done
+sleep 5
 echo "Engine started!"
 
 cd $ORIG

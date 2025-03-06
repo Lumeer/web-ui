@@ -39,6 +39,7 @@ import {CollectionRoutingModule} from './collection-routing.module';
 import {CollectionSettingsGuard} from './collection-settings.guard';
 import {CollectionTabGuard} from './collection-tab.guard';
 import {CollectionSettingsComponent} from './settings/collection-settings.component';
+import {CollectionDownloadComponent} from './settings/download/collection-download.component';
 import {CollectionActivityComponent} from './settings/tab/activity/collection-activity.component';
 import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
 import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
@@ -90,6 +91,7 @@ import {CollectionUploadComponent} from './settings/upload/collection-upload.com
     CollectionTeamsComponent,
     CollectionActivityComponent,
     CollectionUploadComponent,
+    CollectionDownloadComponent,
   ],
   providers: [CollectionSettingsGuard, CollectionTabGuard],
 })
