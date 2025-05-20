@@ -996,13 +996,15 @@ export class WorkflowTablesDataService {
   public setColumnAggregation(column: TableColumn, aggregation: DataAggregationType) {
     const table = this.stateService.findTableByColumn(column);
     if (column.attribute) {
+      const currentAggregation = table.footer?.cellsMap?.[column.id]?.selectedType;
+      const newAggregation = aggregation !== currentAggregation ? aggregation : undefined;
       this.store$.dispatch(
         new WorkflowsAction.SetFooterAttributeConfig({
           workflowId: this.perspectiveId,
           attributeId: column.attribute.id,
           resourceType: column.collectionId ? AttributesResourceType.Collection : AttributesResourceType.LinkType,
           stem: table.stem,
-          config: {aggregation},
+          config: {aggregation: newAggregation},
         })
       );
     }
