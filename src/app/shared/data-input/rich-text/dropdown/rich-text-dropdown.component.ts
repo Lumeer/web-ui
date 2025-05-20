@@ -69,6 +69,8 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
 
   public valid = true;
 
+  private initialContent: string;
+
   private keyboardEventListener = (event: KeyboardEvent) => {
     const code = keyboardEventCode(event);
     if (this.isOpen() && this.valid && code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
@@ -104,12 +106,12 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
   public focusEditor(editor: any) {
     setTimeout(() => {
       editor.setSelection({index: Number.MAX_SAFE_INTEGER, length: 1});
-      editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
+      editor.container.scrollTop = Number.MAX_SAFE_INTEGER;
     }, 200);
   }
 
   public onCancel() {
-    this.content = '';
+    this.content = this.initialContent;
     this.close();
     this.cancel.emit();
   }
@@ -135,6 +137,8 @@ export class RichTextDropdownComponent extends FullscreenDropdownDirective {
   public open() {
     super.open();
     document.addEventListener('keydown', this.keyboardEventListener, {capture: true});
+
+    this.initialContent = this.content;
   }
 
   public close() {

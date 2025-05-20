@@ -339,7 +339,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private preventSaveAndBlur() {
-    if (this.textEditor && this.textEditor.quillEditor) {
+    if (this.textEditor?.quillEditor) {
       this.preventSave = true;
       this.textEditor.quillEditor.root.blur();
     }
