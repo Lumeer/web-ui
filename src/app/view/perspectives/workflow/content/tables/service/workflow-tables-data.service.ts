@@ -110,6 +110,7 @@ import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/t
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
+import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
@@ -350,11 +351,20 @@ export class WorkflowTablesDataService {
         );
         const linkVisibleColumns = linkColumns.filter(column => !column.hidden);
 
+        // sort documents
+        const stemDocumentsSorted = sortDataResourcesByViewSettings(
+          stemDocuments,
+          collectionsMap,
+          AttributesResourceType.Collection,
+          viewSettings?.attributes,
+          constraintData
+        );
+
         // aggregate documents and links to create rows
         const attribute = findAttributeByQueryAttribute(stemConfig.attribute, collections, linkTypes);
         this.dataAggregator.updateData(
           collections,
-          stemDocuments,
+          stemDocumentsSorted,
           linkTypes,
           stemLinkInstances,
           stemConfig.stem,
