@@ -22,7 +22,7 @@ before_install:
   - 'sudo apt-get install -y libgconf-2-4'
   - 'nvm install v22.14.0'
   - 'nvm use v22.14.0'
-  - 'npm i -g npm@latest'
+  - 'npm i -g npm@10'
 install:
   - './travis-build.sh'
 script:
