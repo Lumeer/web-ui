@@ -116,7 +116,7 @@ function isTableCompoundColumnChanged(savedColumn: TableConfigColumn, shownColum
 }
 
 function isTableHiddenColumnChanged(savedColumn: TableConfigColumn, shownColumn: TableConfigColumn): boolean {
-  return false; // it does not matter if there is a difference in hidden attributes since it is not a visual change
+  return savedColumn.attributeIds.length !== shownColumn.attributeIds.length;
 }
 
 export function areTableConfigRowsChanged(
