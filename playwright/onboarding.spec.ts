@@ -59,8 +59,15 @@ test('On boarding path', async ({page, request}) => {
   await page.getByPlaceholder('your password').fill(userPassword);
   await page.getByRole('button', {name: 'Sign Up', exact: true}).click();
 
-  await expect(page.locator('h1:text("Authorize App")')).toBeVisible();
-  await page.click('button[value="accept"]');
+  // Auth0 may skip the consent screen and redirect straight back to the app
+  const acceptConsent = page.locator('button[value="accept"]');
+  const consentShown = await acceptConsent.waitFor({state: 'visible', timeout: 10000}).then(
+    () => true,
+    () => false
+  );
+  if (consentShown) {
+    await acceptConsent.click();
+  }
 
   await page.waitForLoadState('networkidle');
 
