@@ -9,14 +9,15 @@ const auth0Url = () => `https://${Cypress.env('auth0Domain')}`;
 
 // Auth0 always asks for consent when redirect_uri is localhost, so the login flow is done via HTTP requests
 // and the consent screen is accepted when shown. Yields the authorization code.
+// The redirect URI must match the one configured in the engine (authRedirectUri env can override it).
 Cypress.Commands.add('requestAuthorizationCode', () => {
-  const baseUrl = Cypress.config('baseUrl');
+  const redirectUri = Cypress.env('authRedirectUri') || Cypress.config('baseUrl') + '/auth';
 
   return cy
     .request({
       method: 'POST',
       url: `${auth0Url()}/co/authenticate`,
-      headers: {Origin: new URL(baseUrl).origin},
+      headers: {Origin: new URL(redirectUri).origin},
       body: {
         client_id: Cypress.env('auth0ClientId'),
         username: Cypress.env('username'),
@@ -30,7 +31,7 @@ Cypress.Commands.add('requestAuthorizationCode', () => {
         qs: {
           client_id: Cypress.env('auth0ClientId'),
           response_type: 'code',
-          redirect_uri: baseUrl + '/auth',
+          redirect_uri: redirectUri,
           scope: 'openid profile email',
           audience: Cypress.env('engineServer'),
           login_ticket: response.body.login_ticket,
@@ -103,6 +104,13 @@ Cypress.Commands.add('login', () => {
         cy.setCookie(ACCESS_TOKEN_KEY, accessToken);
         cy.setCookie(EXPIRES_AT_KEY, authExpiresAt);
         window['lumeerAuth'] = {authAccessToken: accessToken, authExpiresAt};
+
+        // the first authenticated request initializes a new user (incl. demo workspace) on the engine,
+        // it has to be a read like in the app, otherwise a following user update could overwrite it
+        cy.request({
+          url: `${Cypress.env('engineUrl')}rest/users/current`,
+          auth: {bearer: accessToken},
+        });
       });
   }
 });
