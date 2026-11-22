@@ -336,14 +336,16 @@ describe('Table perspective :: Constraints', () => {
     cy.get('.datetime-input').eq(2).click({force: true});
     cy.focused().should('have.attr', 'data-test', 'table-hidden-input').trigger('keydown', {code: 'Enter'});
 
+    // years picker shows 16 years starting 7 years before the current one
+    const pickedYear = new Date().getFullYear() - 5;
     cy.contains('button.current', new Date().getFullYear()).click();
-    cy.contains('td[role="gridcell"] > span', '2018').click();
+    cy.contains('td[role="gridcell"] > span', String(pickedYear)).click();
     cy.contains('td[role="gridcell"] > span', 'January').click(); // bug in ngx-bootstrap (February)
     cy.contains('td[role="gridcell"] > span', /^6$/).click();
     cy.get('[data-test="date-time-picker-save-button"]').click();
 
     cy.wait('@patchDocumentData').its('response.statusCode').should('eq', 200);
-    cy.get('.datetime-input').eq(2).should('have.text', '2018-01-06'); // bug in ngx-bootstrap (2018-02-06)
+    cy.get('.datetime-input').eq(2).should('have.text', `${pickedYear}-01-06`); // bug in ngx-bootstrap (YYYY-02-06)
 
     // change date value in the fourth row
 

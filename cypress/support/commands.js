@@ -85,19 +85,24 @@ Cypress.Commands.add('login', () => {
   } else {
     // we will skip session type screen
     cy.setCookie('auth_session_handling', SessionType.NeverAsk);
-    // login via auth0 API and let the app exchange the code
-    cy.requestAuthorizationCode().then(code => cy.visit(`/auth?code=${encodeURIComponent(code)}`));
+    // login via auth0 API and exchange the code for tokens the same way the app does
+    cy.requestAuthorizationCode()
+      .then(code =>
+        cy.request({
+          method: 'POST',
+          url: `${Cypress.env('engineUrl')}rest/auth/exchange-code`,
+          qs: {code},
+        })
+      )
+      .then(response => {
+        const {accessToken, expiresIn} = response.body;
+        expect(accessToken || '', 'access token').not.to.be.empty;
 
-    cy.waitForLogin();
-
-    cy.getCookie(ACCESS_TOKEN_KEY)
-      .then(cookie => cookie?.value)
-      .then(token => {
-        expect(token || '').not.to.be.empty;
-
-        Cypress.env('authAccessToken', token);
-        const authExpiresAt = new Date(24 * 60 * 60 * 1000 + new Date().getTime()).getTime();
-        window['lumeerAuth'] = {authAccessToken: token, authExpiresAt: String(authExpiresAt)};
+        const authExpiresAt = String(new Date().getTime() + expiresIn * 1000);
+        Cypress.env('authAccessToken', accessToken);
+        cy.setCookie(ACCESS_TOKEN_KEY, accessToken);
+        cy.setCookie(EXPIRES_AT_KEY, authExpiresAt);
+        window['lumeerAuth'] = {authAccessToken: accessToken, authExpiresAt};
       });
   }
 });
