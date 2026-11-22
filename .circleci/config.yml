@@ -25,7 +25,7 @@ jobs:
 
       - run:
           name: update-npm
-          command: 'sudo npm install -g npm@latest'
+          command: 'sudo npm install -g npm@10'
 
       # Download and cache dependencies
       - restore_cache:

@@ -223,12 +223,10 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private openModal() {
     this.modalRef = this.modalService.showStaticDialog(
       {
-        initialState: {
-          readonly: this.readonly && !this.editableInReadonly,
-          content: this.text,
-          minLength: this.value?.config?.minLength,
-          maxLength: this.value?.config?.maxLength,
-        },
+        readonly: this.readonly && !this.editableInReadonly,
+        content: this.text,
+        minLength: this.value?.config?.minLength,
+        maxLength: this.value?.config?.maxLength,
       },
       TextEditorModalComponent,
       'modal-xxl modal-h-100'
