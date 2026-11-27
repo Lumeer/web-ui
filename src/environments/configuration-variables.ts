@@ -39,8 +39,8 @@ export interface ConfigurationVariables {
   blocklyCdn: string;
   publicViewCdn: string;
   publicScriptCdn: string;
-  logzioKey: string;
-  logzioRegion: string;
+  betterStackHost: string;
+  betterStackToken: string;
   smartlookKey: string;
   mixpanelKey: string;
   contactUrl: string;

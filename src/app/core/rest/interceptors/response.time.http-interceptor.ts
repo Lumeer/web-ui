@@ -34,13 +34,6 @@ import {tap} from 'rxjs/operators';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {isBackendUrl} from '../../api/api.utils';
 
-class CustomHttpRequest<T> extends HttpRequest<T> {
-  // Prevent automatic adding of the Content-Type header
-  public detectContentTypeHeader(): string | null {
-    return null;
-  }
-}
-
 @Injectable()
 export class ResponseTimeHttpInterceptor implements HttpInterceptor {
   private readonly TIMESTAMP_HEADER = 'X-Lumeer-Start-Timestamp';
@@ -52,12 +45,8 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
   ) {}
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.url.indexOf('logz.io') >= 0) {
-      const custReq = new CustomHttpRequest('POST', req.url, req.body);
-      return next.handle(custReq);
-    }
-
-    if (!this.configurationService.getConfiguration().logzioKey) {
+    const {betterStackHost, betterStackToken} = this.configurationService.getConfiguration();
+    if (!betterStackHost || !betterStackToken) {
       return next.handle(req);
     }
 
@@ -88,10 +77,10 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
             if (random < 10 || responseTime > 999) {
               this.http
                 .post(
-                  `https://listener-${this.configurationService.getConfiguration().logzioRegion}.logz.io:8071/?token=${
-                    this.configurationService.getConfiguration().logzioKey
-                  }`,
+                  `https://${betterStackHost}`,
                   {
+                    dt: new Date(endTimestamp).toISOString(),
+                    message: `Response time ${responseTime} ms: ${res.url}`,
                     startTime: headerStartTimestamp,
                     endTime: endTimestamp,
                     responseTime: responseTime,
@@ -100,9 +89,14 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
                     environment: this.configurationService.getConfiguration().name || 'localhost',
                     deviceInfo: JSON.stringify(deviceInfo),
                   },
-                  {headers: new HttpHeaders()}
+                  {
+                    headers: new HttpHeaders({
+                      Authorization: `Bearer ${betterStackToken}`,
+                      'Content-Type': 'application/json',
+                    }),
+                  }
                 )
-                .subscribe();
+                .subscribe({error: () => {}}); // never let logging failures surface in the app
             }
           }
         }
