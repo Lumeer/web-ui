@@ -44,7 +44,7 @@ npm run bundlesize
 
 if [ "x$PASSED" = "xtrue" ]; then
   echo Tests passed, triggering docker image creation...
-  ./docker-trigger.sh
+  ./docker-trigger.sh || echo "Docker image trigger failed, see errors above"
 fi
 
 kill $PING_LOOP_PID
