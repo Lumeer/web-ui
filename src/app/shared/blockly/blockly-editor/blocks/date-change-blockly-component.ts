@@ -97,44 +97,13 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
       },
     };
     Blockly.JavaScript[BlocklyUtils.DATE_CHANGE] = function (block) {
-      let tmpDateVar = '';
-      let unit: string = block.getFieldValue('UNIT');
+      const unit: string = block.getFieldValue('UNIT');
       const op: string = block.getFieldValue('OP');
       const count = Blockly.JavaScript.valueToCode(block, 'COUNT', Blockly.JavaScript.ORDER_ATOMIC) || null;
       const input_date = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
-      let code = '/** MomentJs **/ ';
-      let sticky = false;
-
-      if (unit.startsWith('sticky_')) {
-        sticky = true;
-        unit = unit.substring(7);
-        tmpDateVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer_date_tmp', Blockly.Variables.NAME_TYPE);
-      }
-
-      if (op === 'add' || op === 'subtract') {
-        if (sticky) {
-          // (l = moment(startdate)).daysInMonth() === l.date() ? l.add(3, 'months').endOf('months') : l.add(3, 'months')
-          code += `((${tmpDateVar} = moment(${input_date})).daysInMonth() === ${tmpDateVar}.date() ? ${tmpDateVar}.add((${count}), '${unit}').endOf('${unit}') : ${tmpDateVar}.add((${count}), '${unit}')).toDate()`;
-        } else {
-          if (unit === 'businessDays') {
-            code += `moment(${input_date}).businessAdd(${op === 'add' ? '' : '-'}(${count})).toDate()`;
-          } else {
-            code += `moment(${input_date}).${op}((${count}), '${unit}').toDate()`;
-          }
-        }
-      } else {
-        if (unit === 'days' || unit === 'businessDays') {
-          code += `moment(${input_date}).date((${count}) - 1).toDate()`;
-        } else {
-          const fce = unit.substring(0, unit.length - 1);
-          if (sticky) {
-            code += `((${tmpDateVar} = moment(${input_date})).daysInMonth() === ${tmpDateVar}.date() ? ${tmpDateVar}.${fce}(${count}).endOf('${unit}') : ${tmpDateVar}.${fce}(${count})).toDate()`;
-          } else {
-            code += `moment(${input_date}).${fce}(${count}).toDate()`;
-          }
-        }
-      }
+      // evaluated by the engine (sticky units keep the last day of the month)
+      const code = `new Date(${this_.blocklyUtils.getLumeerVariable()}.changeDate(${input_date}, '${op}', (${count}), '${unit}'))`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

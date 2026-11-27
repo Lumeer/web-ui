@@ -88,8 +88,7 @@ export class ShiftDateOfBlocklyComponent extends BlocklyComponent {
       const op: string = block.getFieldValue('OP');
       const input_date = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
-      let code = '/** MomentJs **/ ';
-      code += `moment(${input_date}).${op}('${unit}').toDate()`;
+      const code = `new Date(${this_.blocklyUtils.getLumeerVariable()}.shiftDate(${input_date}, '${op}', '${unit}'))`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

@@ -76,7 +76,7 @@ export class ParseDateBlocklyComponent extends BlocklyComponent {
         return '';
       }
 
-      const code = 'parseMomentJsDate(' + argumentDate + ', ' + argumentFormat + ', ' + argumentLocale + ')';
+      const code = `${this_.blocklyUtils.getLumeerVariable()}.parseDate(${argumentDate}, ${argumentFormat}, ${argumentLocale})`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
