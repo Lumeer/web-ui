@@ -50,10 +50,11 @@ Here is the example command to build the application WAR file with all configura
 ```bash
 $ AUTH_CLIENT_ID=<auth0 client id> \
 > AUTH_DOMAIN=<auth0 app domain> \
+> BETTERSTACK_HOST=<ingesting host> \
+> BETTERSTACK_TOKEN=<source token> \
 > BLOCKLY_CDN=<javascript library url> \
 > BUILD_NUMBER=42 \
 > I18N_LOCALE=en \
-> LOGZIO_KEY=<access token> \
 > LUMEER_ENGINE=lumeer-engine \
 > LUMEER_ENV=production \
 > MAPBOX_KEY=<access token> \
@@ -72,10 +73,11 @@ $ AUTH_CLIENT_ID=<auth0 client id> \
 
 - `AUTH_CLIENT_ID`: client ID of Auth0 application
 - `AUTH_DOMAIN`: base URL for Auth0 authentication
+- `BETTERSTACK_HOST`: Better Stack ingesting host of the browser source (e.g. `s123456.eu-nbg-2.betterstackdata.com`), response times are not logged when empty
+- `BETTERSTACK_TOKEN`: Better Stack source token (a source token, not an API token, as it is visible in the browser)
 - `BLOCKLY_CDN`: Blockly JavaScript library URL (optional)
 - `BUILD_NUMBER`: build number to be shown in the application
 - `I18N_LOCALE`: language to be used in the application (`en`, `cs` or empty to use default `en`)
-- `LOGZIO_KEY`: Logz.io access token
 - `LUMEER_ENGINE`: back-end deployment context root
 - `LUMEER_ENV`: environment in which the application runs (`staging`, `production` or empty)
 - `MAPBOX_KEY`: Mapbox access token

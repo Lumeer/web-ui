@@ -76,8 +76,8 @@ export class ConfigurationService {
     const publicViewCdn = env['PUBLIC_VIEW_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/index.html`;
     const publicScriptCdn =
       env['PUBLIC_SCRIPT_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/public-view.js`;
-    const logzioKey = env['LOGZIO_KEY'] || '';
-    const logzioRegion = env['LOGZIO_REGION'] || 'eu';
+    const betterStackHost = env['BETTERSTACK_HOST'] || '';
+    const betterStackToken = env['BETTERSTACK_TOKEN'] || '';
     const smartlookKey = env['SMARTLOOK_KEY'] || '';
     const mixpanelKey = env['MIXPANEL_KEY'] || '';
     const contactUrl =
@@ -106,8 +106,8 @@ export class ConfigurationService {
       blocklyCdn,
       publicViewCdn,
       publicScriptCdn,
-      logzioKey,
-      logzioRegion,
+      betterStackHost,
+      betterStackToken,
       smartlookKey,
       mixpanelKey,
       contactUrl,
