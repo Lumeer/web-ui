@@ -59,7 +59,7 @@ export class UnescapeHtmlBlocklyComponent extends BlocklyComponent {
     };
     Blockly.JavaScript[BlocklyUtils.UNESCAPE_HTML] = function (block) {
       const value_message = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ATOMIC) || null;
-      const code = `/** he.js **/ he.unescape(${value_message})`;
+      const code = `${this_.blocklyUtils.getLumeerVariable()}.unescapeHtml(${value_message})`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

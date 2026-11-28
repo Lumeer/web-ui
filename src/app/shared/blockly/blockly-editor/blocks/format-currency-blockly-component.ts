@@ -89,7 +89,7 @@ export class FormatCurrencyBlocklyComponent extends BlocklyComponent {
       const locale = block.getFieldValue('LOCALE') || null;
       const decimals = block.getFieldValue('DECIMALS') || 0;
       const value_number = Blockly.JavaScript.valueToCode(block, 'NUMBER', Blockly.JavaScript.ORDER_ATOMIC) || null;
-      const code = `/** numbro.js **/ lumeer_numbro('${locale}', ${decimals}, ${value_number})`;
+      const code = `${this_.blocklyUtils.getLumeerVariable()}.formatCurrency('${locale}', ${decimals}, ${value_number})`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

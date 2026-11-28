@@ -76,7 +76,7 @@ export class FormatDateBlocklyComponent extends BlocklyComponent {
         return '';
       }
 
-      const code = 'formatMomentJsDate(' + argumentTime + ', ' + argumentFormat + ', ' + argumentLocale + ')';
+      const code = `${this_.blocklyUtils.getLumeerVariable()}.formatDate(${argumentTime}, ${argumentFormat}, ${argumentLocale})`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
