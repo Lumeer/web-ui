@@ -228,7 +228,7 @@ export class BlocklyUtils {
 
       // set output type of read documents block
       if (block.type === BlocklyUtils.READ_DOCUMENTS) {
-        const viewId = block.getField('VIEW_ID').value_;
+        const viewId = block.getField('VIEW_ID').getValue();
         const view = this.views.find(v => v.id === viewId);
 
         if (view) {
@@ -243,11 +243,11 @@ export class BlocklyUtils {
       if (block.type === BlocklyUtils.GET_PARENT_DOCUMENT) {
         const input = block.getInput('DOCUMENT');
 
-        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
           const inputType =
-            input.connection.targetConnection?.check_ instanceof Array
-              ? input.connection.targetConnection?.check_[0]
-              : input.connection.targetConnection?.check_;
+            input.connection.targetConnection?.check instanceof Array
+              ? input.connection.targetConnection?.check[0]
+              : input.connection.targetConnection?.check;
 
           block.setOutput(true, inputType);
         }
@@ -263,11 +263,11 @@ export class BlocklyUtils {
       ) {
         const input = block.getInput('DOCUMENT');
 
-        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
           const inputType =
-            input.connection.targetConnection?.check_ instanceof Array
-              ? input.connection.targetConnection?.check_[0]
-              : input.connection.targetConnection?.check_;
+            input.connection.targetConnection?.check instanceof Array
+              ? input.connection.targetConnection?.check[0]
+              : input.connection.targetConnection?.check;
 
           block.setOutput(
             true,
@@ -278,7 +278,7 @@ export class BlocklyUtils {
 
       // set output type of link creation block
       if (block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {
-        const linkTypeId = block.getField('LINKTYPE').value_;
+        const linkTypeId = block.getField('LINKTYPE').getValue();
         block.setOutput(true, linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX);
       }
 
@@ -311,8 +311,8 @@ export class BlocklyUtils {
 
       // create document output check
       if (block.type === BlocklyUtils.CREATE_DOCUMENT) {
-        const collectionId = block.inputList[0]?.fieldRow[1]?.value_;
-        block.outputConnection.check_ = collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+        const collectionId = block.inputList[0]?.fieldRow[1]?.getValue();
+        block.outputConnection.check = collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
       }
     });
 
@@ -414,7 +414,7 @@ export class BlocklyUtils {
           if (childOutputType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)) {
             const newType = childOutputType.replace(BlocklyUtils.ARRAY_TYPE_SUFFIX, '');
             this.updateVariableType(workspace, block.getField('VAR').getVariable(), newType);
-            block.getField('VAR').setTypes_([newType], newType);
+            block.getField('VAR').setTypes([newType], newType);
           }
         }
       }
@@ -428,7 +428,7 @@ export class BlocklyUtils {
           if (childOutputType.endsWith(BlocklyUtils.LINK_TYPE_ARRAY_SUFFIX)) {
             const newType = childOutputType.replace(BlocklyUtils.LINK_TYPE_ARRAY_SUFFIX, BlocklyUtils.LINK_VAR_SUFFIX);
             this.updateVariableType(workspace, block.getField('VAR').getVariable(), newType);
-            block.getField('VAR').setTypes_([newType], newType);
+            block.getField('VAR').setTypes([newType], newType);
           }
         }
       }
@@ -466,16 +466,15 @@ export class BlocklyUtils {
     const firstCollectionName = firstCollection.name;
 
     parentBlock.getField('COLLECTION').setValue(firstCollectionId);
-    parentBlock.getField('COLLECTION').text_ = firstCollectionName;
     parentBlock.getField('COLLECTION').forceRerender();
     options.splice(0, originalLength);
 
-    parentBlock.outputConnection.check_ = firstCollectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+    parentBlock.outputConnection.check = firstCollectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
   }
 
   public getOutputConnectionCheck(block: any): string {
-    if (block.outputConnection && block.outputConnection.check_) {
-      return isArray(block.outputConnection.check_) ? block.outputConnection.check_[0] : block.outputConnection.check_;
+    if (block.outputConnection && block.outputConnection.check) {
+      return isArray(block.outputConnection.check) ? block.outputConnection.check[0] : block.outputConnection.check;
     }
 
     return '';
@@ -541,7 +540,6 @@ export class BlocklyUtils {
       parentBlock.getField('ATTR').setValue(defaultValue);
 
       // force attribute name render when the same value was already selected
-      parentBlock.getField('ATTR').text_ = defaultText;
       parentBlock.getField('ATTR').forceRerender();
       options.splice(0, originalLength);
 
@@ -558,7 +556,7 @@ export class BlocklyUtils {
         if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
           this.tryDisconnect(parentBlock, parentBlock.outputConnection);
         }
-        parentBlock.outputConnection.check_ = newType;
+        parentBlock.outputConnection.check = newType;
       }
     }
   }
@@ -584,11 +582,11 @@ export class BlocklyUtils {
             if (children[idx].type === BlocklyUtils.GET_PARENT_DOCUMENT) {
               const input = children[idx].getInput('DOCUMENT');
 
-              if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+              if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
                 const inputType =
-                  input.connection.targetConnection?.check_ instanceof Array
-                    ? input.connection.targetConnection?.check_[0]
-                    : input.connection.targetConnection?.check_;
+                  input.connection.targetConnection?.check instanceof Array
+                    ? input.connection.targetConnection?.check[0]
+                    : input.connection.targetConnection?.check;
                 const [collectionId] = inputType.split('_');
                 this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
                 block.inputList[0].fieldRow[1].variableTypes = [variable.type];
@@ -726,7 +724,7 @@ export class BlocklyUtils {
     for (let i = 0, input; (input = block.inputList[i]); i++) {
       for (let j = 0, field; (field = input.fieldRow[j]); j++) {
         if (field instanceof Blockly.FieldVariable && field.variableTypes === null) {
-          field.setTypes_([''], '');
+          field.setTypes([''], '');
         }
       }
     }
@@ -740,68 +738,55 @@ export class BlocklyUtils {
     }
 
     if (!block.getParent()) {
-      block.moveBy(Blockly.SNAP_RADIUS, Blockly.SNAP_RADIUS);
+      block.moveBy(Blockly.config.snapRadius, Blockly.config.snapRadius);
     }
   }
 
   public updateVariableType(workspace, variable, newType) {
-    const variableMap = workspace.getVariableMap();
-    const type = variable.type;
-
-    if (type === newType) {
-      return;
-    }
-
-    // Remove the variable from the original list of type
-    const variableList = variableMap.getVariablesOfType(type);
-    const variableIndex = variableList.indexOf(variable);
-    variableMap.variableMap_[type].splice(variableIndex, 1);
-
-    // And put it to the new one (either brand new, or existing one)
-    variable.type = newType;
-    if (!variableMap.variableMap_[newType]) {
-      variableMap.variableMap_[newType] = [variable];
-    } else {
-      variableMap.variableMap_[newType].push(variable);
+    if (variable.type !== newType) {
+      workspace.getVariableMap().changeVariableType(variable, newType);
     }
   }
 
   public registerDocumentVariables(workspace): any[] {
     const xmlList = [];
 
-    workspace.getAllVariables().forEach(variable => {
-      if (
-        variable.type.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
-        variable.type.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
-      ) {
-        this.ensureVariableTypeBlock(variable.type);
-        const blockText =
-          '<xml>' +
-          '<block type="' +
-          BlocklyUtils.VARIABLES_GET_PREFIX +
-          variable.type +
-          '">' +
-          '<field name="VAR" id="' +
-          variable.getId() +
-          '" variabletype="' +
-          variable.type +
-          '">' +
-          variable.name +
-          '</field>' +
-          '</block>' +
-          '</xml>';
-        const block = Blockly.Xml.textToDom(blockText).firstChild;
-        xmlList.push(block);
-      }
-    });
+    workspace
+      .getVariableMap()
+      .getAllVariables()
+      .forEach(variable => {
+        if (
+          variable.type.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+          variable.type.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
+        ) {
+          this.ensureVariableTypeBlock(variable.type);
+          const blockText =
+            '<xml>' +
+            '<block type="' +
+            BlocklyUtils.VARIABLES_GET_PREFIX +
+            variable.type +
+            '">' +
+            '<field name="VAR" id="' +
+            variable.getId() +
+            '" variabletype="' +
+            variable.type +
+            '">' +
+            variable.name +
+            '</field>' +
+            '</block>' +
+            '</xml>';
+          const block = Blockly.utils.xml.textToDom(blockText).firstChild;
+          xmlList.push(block);
+        }
+      });
 
-    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
     xmlList.push(
-      Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.GET_ATTRIBUTE + '"></block></xml>').firstChild
+      Blockly.utils.xml.textToDom('<xml><block type="' + BlocklyUtils.GET_ATTRIBUTE + '"></block></xml>').firstChild
     );
     if (this.masterType === MasterBlockType.Rule) {
       xmlList.push(
-        Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.SET_ATTRIBUTE + '"></block></xml>').firstChild
+        Blockly.utils.xml.textToDom('<xml><block type="' + BlocklyUtils.SET_ATTRIBUTE + '"></block></xml>').firstChild
       );
     }
 
@@ -810,9 +795,9 @@ export class BlocklyUtils {
       .map(component => component.getDocumentVariablesXml(workspace))
       .filter(xml => isNotNullOrUndefined(xml));
     if (xmls?.length > 0) {
-      xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+      xmlList.push(Blockly.utils.xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
-      xmls.forEach(xml => xmlList.push(Blockly.Xml.textToDom(xml).firstChild));
+      xmls.forEach(xml => xmlList.push(Blockly.utils.xml.textToDom(xml).firstChild));
     }
 
     return xmlList;
@@ -821,28 +806,31 @@ export class BlocklyUtils {
   public registerLinkInstanceVariables(workspace): any[] {
     const xmlList = [];
 
-    workspace.getAllVariables().forEach(variable => {
-      if (variable.type.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
-        this.ensureLinkInstanceVariableTypeBlock(variable.type);
-        const blockText =
-          '<xml>' +
-          '<block type="' +
-          BlocklyUtils.VARIABLES_GET_PREFIX +
-          variable.type +
-          '">' +
-          '<field name="VAR" id="' +
-          variable.getId() +
-          '" variabletype="' +
-          variable.type +
-          '">' +
-          variable.name +
-          '</field>' +
-          '</block>' +
-          '</xml>';
-        const block = Blockly.Xml.textToDom(blockText).firstChild;
-        xmlList.push(block);
-      }
-    });
+    workspace
+      .getVariableMap()
+      .getAllVariables()
+      .forEach(variable => {
+        if (variable.type.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
+          this.ensureLinkInstanceVariableTypeBlock(variable.type);
+          const blockText =
+            '<xml>' +
+            '<block type="' +
+            BlocklyUtils.VARIABLES_GET_PREFIX +
+            variable.type +
+            '">' +
+            '<field name="VAR" id="' +
+            variable.getId() +
+            '" variabletype="' +
+            variable.type +
+            '">' +
+            variable.name +
+            '</field>' +
+            '</block>' +
+            '</xml>';
+          const block = Blockly.utils.xml.textToDom(blockText).firstChild;
+          xmlList.push(block);
+        }
+      });
 
     return xmlList;
   }
@@ -903,7 +891,8 @@ export class BlocklyUtils {
           });
         },
       };
-      Blockly.JavaScript[BlocklyUtils.VARIABLES_GET_PREFIX + type] = Blockly.JavaScript['variables_get'];
+      Blockly.JavaScript.forBlock[BlocklyUtils.VARIABLES_GET_PREFIX + type] =
+        Blockly.JavaScript.forBlock['variables_get'];
     }
   }
 
@@ -947,7 +936,8 @@ export class BlocklyUtils {
           });
         },
       };
-      Blockly.JavaScript[BlocklyUtils.VARIABLES_GET_PREFIX + type] = Blockly.JavaScript['variables_get'];
+      Blockly.JavaScript.forBlock[BlocklyUtils.VARIABLES_GET_PREFIX + type] =
+        Blockly.JavaScript.forBlock['variables_get'];
     }
   }
 
@@ -977,19 +967,21 @@ export class BlocklyUtils {
     const xmlList = this.registerLinkInstanceVariables(workspace);
 
     if (xmlList.length) {
-      xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+      xmlList.push(Blockly.utils.xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
     }
 
     xmlList.push(
-      Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.GET_LINK_ATTRIBUTE + '"></block></xml>').firstChild
+      Blockly.utils.xml.textToDom('<xml><block type="' + BlocklyUtils.GET_LINK_ATTRIBUTE + '"></block></xml>')
+        .firstChild
     );
     if (this.masterType === MasterBlockType.Rule) {
       xmlList.push(
-        Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.SET_LINK_ATTRIBUTE + '"></block></xml>').firstChild
+        Blockly.utils.xml.textToDom('<xml><block type="' + BlocklyUtils.SET_LINK_ATTRIBUTE + '"></block></xml>')
+          .firstChild
       );
     }
     xmlList.push(
-      Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.GET_LINK_DOCUMENT + '"></block></xml>').firstChild
+      Blockly.utils.xml.textToDom('<xml><block type="' + BlocklyUtils.GET_LINK_DOCUMENT + '"></block></xml>').firstChild
     );
 
     const xmls = this.components
@@ -997,33 +989,33 @@ export class BlocklyUtils {
       .map(component => component.getLinkVariablesXml(workspace))
       .filter(xml => isNotNullOrUndefined(xml));
     if (xmls?.length > 0) {
-      xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+      xmlList.push(Blockly.utils.xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
-      xmls.forEach(xml => xmlList.push(Blockly.Xml.textToDom(xml).firstChild));
+      xmls.forEach(xml => xmlList.push(Blockly.utils.xml.textToDom(xml).firstChild));
     }
 
-    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
     this.linkTypes.forEach(linkType => {
       this.ensureLinkTypeBlock(linkType);
 
       const blockText = '<xml>' + '<block type="' + this.getBlocklyLinkType(linkType) + '">' + '</block>' + '</xml>';
-      const block = Blockly.Xml.textToDom(blockText).firstChild;
+      const block = Blockly.utils.xml.textToDom(blockText).firstChild;
       xmlList.push(block);
     });
 
-    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
     this.linkTypes.forEach(linkType => {
       this.ensureLinkInstanceBlock(linkType);
 
       const blockText =
         '<xml>' + '<block type="' + this.getBlocklyLinkInstance(linkType) + '">' + '</block>' + '</xml>';
-      const block = Blockly.Xml.textToDom(blockText).firstChild;
+      const block = Blockly.utils.xml.textToDom(blockText).firstChild;
       xmlList.push(block);
     });
 
-    xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
     return xmlList;
   }
@@ -1031,28 +1023,28 @@ export class BlocklyUtils {
   public registerDates(workspace): any[] {
     const xmlList = [];
 
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_iso"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="iso_to_date"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="iso_to_ms"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="date_to_iso"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="iso_to_date"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="iso_to_ms"></block></xml>').firstChild);
     xmlList.push(
-      Blockly.Xml.textToDom(
+      Blockly.utils.xml.textToDom(
         '<xml><block type="date_change"><value name="COUNT"><shadow type="math_number"><field name="NUM">1</field></shadow></value></block></xml>'
       ).firstChild
     );
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="shift_date_of"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now_ms"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="current_date"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_unit"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="shift_date_of"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="date_now"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="date_now_ms"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="current_date"></block></xml>').firstChild);
+    xmlList.push(Blockly.utils.xml.textToDom('<xml><block type="ms_to_unit"></block></xml>').firstChild);
     xmlList.push(
-      Blockly.Xml.textToDom(
+      Blockly.utils.xml.textToDom(
         '<xml><block type="parse_date"><value name="FORMAT"><shadow type="text"><field name="TEXT">DD.MM.YYYY</field></shadow></value><value name="LOCALE"><shadow type="text"><field name="TEXT">en</field></shadow></value></block></xml>'
       ).firstChild
     );
     xmlList.push(
-      Blockly.Xml.textToDom(
+      Blockly.utils.xml.textToDom(
         '<xml><block type="format_date"><value name="FORMAT"><shadow type="text"><field name="TEXT">DD.MM.YYYY</field></shadow></value><value name="LOCALE"><shadow type="text"><field name="TEXT">en</field></shadow></value></block></xml>'
       ).firstChild
     );
@@ -1108,10 +1100,10 @@ export class BlocklyUtils {
       };
 
       const this_ = this;
-      Blockly.JavaScript[type] = function (block) {
+      Blockly.JavaScript.forBlock[type] = function (block) {
         const lumeerVar = this_.lumeerVar
           ? this_.lumeerVar
-          : Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+          : Blockly.JavaScript.nameDB_.getDistinctName('lumeer', Blockly.Names.NameType.VARIABLE);
         if (!this_.lumeerVar) {
           this_.lumeerVar = lumeerVar;
         }
@@ -1183,10 +1175,10 @@ export class BlocklyUtils {
       };
 
       const this_ = this;
-      Blockly.JavaScript[type] = function (block) {
+      Blockly.JavaScript.forBlock[type] = function (block) {
         const lumeerVar = this_.lumeerVar
           ? this_.lumeerVar
-          : Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+          : Blockly.JavaScript.nameDB_.getDistinctName('lumeer', Blockly.Names.NameType.VARIABLE);
         if (!this_.lumeerVar) {
           this_.lumeerVar = lumeerVar;
         }

@@ -67,7 +67,7 @@ export class GetVariableBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_RESOURCE_VARIABLE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_RESOURCE_VARIABLE] = function (block) {
       const variableId = block.getFieldValue('VARIABLE_NAME') || null;
 
       if (!variableId) {

@@ -78,7 +78,7 @@ export class ShareViewBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.SHARE_VIEW] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SHARE_VIEW] = function (block) {
       const viewId = Blockly.JavaScript.valueToCode(block, 'VIEW_ID', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const userEmail =
         Blockly.JavaScript.valueToCode(block, 'USER_EMAIL', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;

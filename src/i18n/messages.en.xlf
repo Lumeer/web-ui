@@ -6210,6 +6210,12 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
         <source>This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).</source><target state="final">This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">82</context></context-group></trans-unit></body>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="collection.export.content.icon" datatype="html">
+        <source>Export table content as XLSX</source><target state="final">Export table content as XLSX</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/download/collection-download.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="blockly.language" datatype="html">
+        <source>en</source><target state="final">en</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/blockly.service.ts</context><context context-type="linenumber">34</context></context-group></trans-unit></body>
   </file>
 </xliff>

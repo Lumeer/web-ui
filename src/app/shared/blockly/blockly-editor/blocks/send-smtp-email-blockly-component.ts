@@ -91,7 +91,7 @@ export class SendSmtpEmailBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.SEND_SMTP_EMAIL] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SEND_SMTP_EMAIL] = function (block) {
       const value_email = Blockly.JavaScript.valueToCode(block, 'EMAIL', Blockly.JavaScript.ORDER_ATOMIC);
       const value_subject = Blockly.JavaScript.valueToCode(block, 'SUBJECT', Blockly.JavaScript.ORDER_ATOMIC);
       const value_body = Blockly.JavaScript.valueToCode(block, 'BODY', Blockly.JavaScript.ORDER_ATOMIC);

@@ -62,7 +62,7 @@ export class SequenceChangeBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.SEQUENCE_CHANGE_BLOCK] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SEQUENCE_CHANGE_BLOCK] = function (block) {
       const sequence = block.getFieldValue('SEQUENCE');
       const change = block.getFieldValue('CHANGE');
 

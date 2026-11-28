@@ -57,7 +57,7 @@ export class SequenceCurrentBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.SEQUENCE_CURRENT_BLOCK] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SEQUENCE_CURRENT_BLOCK] = function (block) {
       const sequence = block.getFieldValue('SEQUENCE');
 
       const code = this_.blocklyUtils.getLumeerVariable() + ".getCurrentSequenceNumber('" + sequence + "')";

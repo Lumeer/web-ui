@@ -16,18 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   HostListener,
-  Inject,
   Input,
   OnDestroy,
   Output,
-  Renderer2,
 } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
@@ -46,6 +43,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 import {View} from '../../../core/store/views/view';
 import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
+import {blocklyOptions} from '../custom/blockly-loader';
 import {RuleVariable} from '../rule-variable-type';
 import {BlocklyUtils, MasterBlockType} from './blockly-utils';
 import {BlockCommentBlocklyComponent} from './blocks/block-comment-blockly-component';
@@ -201,8 +199,6 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private contrastColorPipe: ContrastColorPipe,
     private blocklyService: BlocklyService,
-    private renderer2: Renderer2,
-    @Inject(DOCUMENT) private document,
     private translationService: TranslationService
   ) {}
 
@@ -305,7 +301,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new MetaCharactersBlocklyComponent(this.blocklyUtils),
     ]);
 
-    this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
+    this.blocklyService.loadBlockly().then(() => this.blocklyOnLoad());
   }
 
   public blocklyOnLoad() {
@@ -314,7 +310,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     } else {
       // in case the dialog got closed very quickly
       if (!this.destroying) {
-        this.workspace = (window as any).Blockly.init(this.blocklyId, this.toolbox);
+        this.workspace = Blockly.inject('blocklyDiv' + this.blocklyId, blocklyOptions(this.toolbox));
         setTimeout(() => {
           if (!this.destroying) {
             this.onResize();
@@ -347,7 +343,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
     if (this.xml) {
       // initiate from previously stored XML
-      const dom: Element = Blockly.Xml.textToDom(this.xml);
+      const dom: Element = Blockly.utils.xml.textToDom(this.xml);
       const vars = dom.getElementsByTagName('variable');
       for (let i = 0; i < vars.length; i++) {
         const varType = vars.item(i).attributes.getNamedItem('type').value;
@@ -427,21 +423,25 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
     // make sure we have all variables created (no matter how the workspace was initiated - either from XML or empty)
     this.variables.forEach(variable => {
-      if (this.workspace.getVariable(variable.name) == null) {
+      if (this.workspace.getVariableMap().getVariable(variable.name) == null) {
         if (variable.collectionId) {
-          this.workspace.createVariable(
-            variable.name,
-            variable.collectionId +
-              (variable.list ? BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX : BlocklyUtils.DOCUMENT_VAR_SUFFIX),
-            null
-          );
+          this.workspace
+            .getVariableMap()
+            .createVariable(
+              variable.name,
+              variable.collectionId +
+                (variable.list ? BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX : BlocklyUtils.DOCUMENT_VAR_SUFFIX),
+              null
+            );
         } else if (variable.linkTypeId) {
-          this.workspace.createVariable(variable.name, variable.linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX, null);
+          this.workspace
+            .getVariableMap()
+            .createVariable(variable.name, variable.linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX, null);
         }
       }
     });
     if (this.masterType === MasterBlockType.Rule) {
-      this.workspace.createVariable('lumeerActionName', null, null);
+      this.workspace.getVariableMap().createVariable('lumeerActionName', null, null);
     }
     setTimeout(() => {
       this.initializing = false;
@@ -487,8 +487,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             });
           },
         };
-        Blockly.JavaScript[BlocklyUtils.STATEMENT_CONTAINER] = function (block) {
-          const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+        Blockly.JavaScript.forBlock[BlocklyUtils.STATEMENT_CONTAINER] = function (block) {
+          const lumeerVar = Blockly.JavaScript.nameDB_.getDistinctName('lumeer', Blockly.Names.NameType.VARIABLE);
           this_.blocklyUtils.setLumeerVariable(lumeerVar);
           const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
           return code + Blockly.JavaScript.statementToCode(block, 'COMMANDS') + '\n';
@@ -528,8 +528,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             });
           },
         };
-        Blockly.JavaScript[BlocklyUtils.STATEMENT_CONTAINER] = function (block) {
-          const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+        Blockly.JavaScript.forBlock[BlocklyUtils.STATEMENT_CONTAINER] = function (block) {
+          const lumeerVar = Blockly.JavaScript.nameDB_.getDistinctName('lumeer', Blockly.Names.NameType.VARIABLE);
           this_.blocklyUtils.setLumeerVariable(lumeerVar);
           const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
           return code + Blockly.JavaScript.statementToCode(block, 'COMMANDS') + '\n';
@@ -567,8 +567,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             });
           },
         };
-        Blockly.JavaScript[BlocklyUtils.VALUE_CONTAINER] = function (block) {
-          const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+        Blockly.JavaScript.forBlock[BlocklyUtils.VALUE_CONTAINER] = function (block) {
+          const lumeerVar = Blockly.JavaScript.nameDB_.getDistinctName('lumeer', Blockly.Names.NameType.VARIABLE);
           this_.blocklyUtils.setLumeerVariable(lumeerVar);
           const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
           const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || null;
@@ -625,8 +625,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           },
         };
 
-        Blockly.JavaScript[BlocklyUtils.LINK_CONTAINER] = function (block) {
-          const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+        Blockly.JavaScript.forBlock[BlocklyUtils.LINK_CONTAINER] = function (block) {
+          const lumeerVar = Blockly.JavaScript.nameDB_.getDistinctName('lumeer', Blockly.Names.NameType.VARIABLE);
           this_.blocklyUtils.setLumeerVariable(lumeerVar);
           const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
           const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || null;
@@ -672,7 +672,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     this.blocklyUtils.preventDeletionOfInitialVariables(mainBlock);
 
     if (mainBlock.type === BlocklyUtils.GET_ATTRIBUTE || mainBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE) {
-      mainBlock.outputConnection.check_ = [BlocklyUtils.UNKNOWN];
+      mainBlock.outputConnection.check = [BlocklyUtils.UNKNOWN];
     }
 
     if (!this.initializing && changeEvent.ids) {
@@ -772,17 +772,17 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
     // keep for easy debugging
     /*console.log(changeEvent);
-    if (changeEvent instanceof Blockly.Events.Ui) {
+    if (changeEvent instanceof Blockly.Events.UiBase) {
       const block = workspace.getBlockById(changeEvent.blockId);
       console.log(block);
     }*/
 
-    if (changeEvent instanceof Blockly.Events.Create) {
+    if (changeEvent instanceof Blockly.Events.BlockCreate) {
       this.onWorkspaceBlockCreate(changeEvent, workspace);
     }
 
     // change output type in getter of linked document from link instance
-    if (changeEvent instanceof Blockly.Events.Change) {
+    if (changeEvent instanceof Blockly.Events.BlockChange) {
       const block = workspace.getBlockById(changeEvent.blockId);
 
       if (
@@ -790,7 +790,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         changeEvent.element === 'field' &&
         changeEvent.name === 'COLLECTION'
       ) {
-        block.outputConnection.check_ =
+        block.outputConnection.check =
           changeEvent.newValue === '?'
             ? BlocklyUtils.GET_LINK_DOCUMENT_UNKNOWN
             : changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
@@ -846,28 +846,28 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       // disconnect invalid foreach input
       if (parentBlock.type === BlocklyUtils.FOREACH_DOCUMENT_ARRAY) {
-        if (parentBlock.getInput('LIST').connection?.targetConnection?.sourceBlock_.id === block.id) {
+        if (parentBlock.getInput('LIST').connection?.targetConnection?.getSourceBlock().id === block.id) {
           if (!blockOutputType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)) {
             parentBlock.getInput('LIST').connection.disconnect();
           } else {
             // otherwise set a correct type of the cycle variable
             const newType = blockOutputType.replace(BlocklyUtils.ARRAY_TYPE_SUFFIX, '');
             this.blocklyUtils.updateVariableType(workspace, parentBlock.getField('VAR').getVariable(), newType);
-            parentBlock.getField('VAR').setTypes_([newType], newType);
+            parentBlock.getField('VAR').setTypes([newType], newType);
           }
         }
       }
 
       // disconnect invalid foreach input
       if (parentBlock.type === BlocklyUtils.FOREACH_LINK_ARRAY) {
-        if (parentBlock.getInput('LIST').connection?.targetConnection?.sourceBlock_.id === block.id) {
+        if (parentBlock.getInput('LIST').connection?.targetConnection?.getSourceBlock().id === block.id) {
           if (!blockOutputType.endsWith(BlocklyUtils.LINK_TYPE_ARRAY_SUFFIX)) {
             parentBlock.getInput('LIST').connection.disconnect();
           } else {
             // otherwise set a correct type of the cycle variable
             const newType = blockOutputType.replace(BlocklyUtils.LINK_TYPE_ARRAY_SUFFIX, BlocklyUtils.LINK_VAR_SUFFIX);
             this.blocklyUtils.updateVariableType(workspace, parentBlock.getField('VAR').getVariable(), newType);
-            parentBlock.getField('VAR').setTypes_([newType], newType);
+            parentBlock.getField('VAR').setTypes([newType], newType);
           }
         }
       }

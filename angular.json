@@ -47,6 +47,11 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/blockly/media",
+                "output": "assets/blockly/media"
+              },
               "src/browserconfig.xml",
               "src/manifest.json",
               "src/public-view.js",
@@ -304,7 +309,16 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "assets": ["src/favicon.ico", "src/assets", "src/public-view.js"]
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/blockly/media",
+                "output": "assets/blockly/media"
+              },
+              "src/public-view.js"
+            ]
           }
         },
         "lint": {

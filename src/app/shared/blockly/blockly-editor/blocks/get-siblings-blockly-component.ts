@@ -66,7 +66,7 @@ export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyCom
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.GET_SIBLINGS] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_SIBLINGS] = function (block) {
       const dropdown_linktype = block.getFieldValue('LINKTYPE') || null;
       const value_document = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
@@ -82,7 +82,7 @@ export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyCom
 
   private checkWorkspaceChange(workspace, changeEvent, block) {
     if (isNotNullOrUndefined(block) && block.type === BlocklyUtils.GET_SIBLINGS) {
-      const linkTypeId = block.getField('LINKTYPE').value_;
+      const linkTypeId = block.getField('LINKTYPE').getValue();
       const linkType = this.linkTypes?.find(lt => lt.id === linkTypeId);
 
       if (linkType) {
@@ -90,11 +90,11 @@ export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyCom
         const input = block.getInput('DOCUMENT');
 
         // is the input connected?
-        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
           const inputType =
-            input.connection.targetConnection?.check_ instanceof Array
-              ? input.connection.targetConnection?.check_[0]
-              : input.connection.targetConnection?.check_;
+            input.connection.targetConnection?.check instanceof Array
+              ? input.connection.targetConnection?.check[0]
+              : input.connection.targetConnection?.check;
 
           if (inputType === checks[0] + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
             block.setOutput(true, checks[0] + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
@@ -112,9 +112,9 @@ export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyCom
 
   public onWorkspaceChange(workspace, changeEvent) {
     if (
-      changeEvent instanceof Blockly.Events.Create ||
-      changeEvent instanceof Blockly.Events.Change ||
-      changeEvent instanceof Blockly.Events.Move
+      changeEvent instanceof Blockly.Events.BlockCreate ||
+      changeEvent instanceof Blockly.Events.BlockChange ||
+      changeEvent instanceof Blockly.Events.BlockMove
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
       this.checkWorkspaceChange(workspace, changeEvent, block);

@@ -64,7 +64,7 @@ export class GetSelectionListDisplayValuesBlocklyComponent extends BlocklyCompon
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.GET_SELECTION_LIST_DISPLAY_VALUES] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_SELECTION_LIST_DISPLAY_VALUES] = function (block) {
       const selectionListName = block.getFieldValue('SELECTION_LIST_NAME');
 
       const code =

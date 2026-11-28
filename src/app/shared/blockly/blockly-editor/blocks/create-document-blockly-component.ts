@@ -66,7 +66,7 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.CREATE_DOCUMENT] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.CREATE_DOCUMENT] = function (block) {
       const collectionId = block.getFieldValue('COLLECTION_ID');
 
       const code = this_.blocklyUtils.getLumeerVariable() + ".createDocument('" + collectionId + "')";
@@ -82,26 +82,26 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
   public onWorkspaceChange(workspace, changeEvent) {
     const block = workspace.getBlockById(changeEvent.blockId);
 
-    if (changeEvent instanceof Blockly.Events.Create) {
+    if (changeEvent instanceof Blockly.Events.BlockCreate) {
       if (block.type === BlocklyUtils.CREATE_DOCUMENT) {
-        block.outputConnection.check_ = this.blocklyUtils.getCollections()[0]?.id + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+        block.outputConnection.check = this.blocklyUtils.getCollections()[0]?.id + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
       }
-    } else if (changeEvent instanceof Blockly.Events.Change) {
+    } else if (changeEvent instanceof Blockly.Events.BlockChange) {
       if (
         block.type === BlocklyUtils.CREATE_DOCUMENT &&
         changeEvent.element === 'field' &&
         changeEvent.name === 'COLLECTION_ID'
       ) {
-        block.outputConnection.check_ = changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+        block.outputConnection.check = changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
 
         this.blocklyUtils.checkVariablesType(changeEvent, workspace);
 
         if (
-          !isNullOrUndefined(block.parentBlock_) &&
-          (block.parentBlock_.type === BlocklyUtils.SET_ATTRIBUTE ||
-            block.parentBlock_.type === BlocklyUtils.GET_ATTRIBUTE)
+          !isNullOrUndefined(block.getParent()) &&
+          (block.getParent().type === BlocklyUtils.SET_ATTRIBUTE ||
+            block.getParent().type === BlocklyUtils.GET_ATTRIBUTE)
         ) {
-          this.blocklyUtils.setterAndGetterOutputType(block.parentBlock_, block, true);
+          this.blocklyUtils.setterAndGetterOutputType(block.getParent(), block, true);
         }
       }
     }

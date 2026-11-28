@@ -56,7 +56,7 @@ export class GetUserTeamsBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_USER_TEAMS] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_USER_TEAMS] = function (block) {
       const argument0 =
         Blockly.JavaScript.valueToCode(block, 'USER_EMAIL', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 

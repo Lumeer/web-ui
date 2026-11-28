@@ -74,7 +74,7 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.READ_DOCUMENTS] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.READ_DOCUMENTS] = function (block) {
       const viewId = block.getFieldValue('VIEW_ID') || null;
 
       const code = this_.blocklyUtils.getLumeerVariable() + `.readView('${viewId}')`;
@@ -87,14 +87,14 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
     super.onWorkspaceChange(workspace, changeEvent);
 
     if (
-      changeEvent instanceof Blockly.Events.Create ||
-      changeEvent instanceof Blockly.Events.Change ||
-      changeEvent instanceof Blockly.Events.Move
+      changeEvent instanceof Blockly.Events.BlockCreate ||
+      changeEvent instanceof Blockly.Events.BlockChange ||
+      changeEvent instanceof Blockly.Events.BlockMove
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
 
       if (isNotNullOrUndefined(block) && block.type === BlocklyUtils.READ_DOCUMENTS) {
-        const viewId = block.getField('VIEW_ID').value_;
+        const viewId = block.getField('VIEW_ID').getValue();
         const view = this.views.find(v => v.id === viewId);
 
         if (view) {

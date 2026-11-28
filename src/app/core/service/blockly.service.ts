@@ -16,36 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Injectable, Renderer2} from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import {ConfigurationService} from '../../configuration/configuration.service';
-
-export interface BlocklyLoadFn {
-  ();
-}
+import {loadBlockly} from '../../shared/blockly/custom/blockly-loader';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BlocklyService {
-  private readonly blocklyId = 'blocklyScript';
-
-  constructor(private configurationService: ConfigurationService) {}
-
-  public loadBlockly(renderer2: Renderer2, document: Document, onLoad?: BlocklyLoadFn) {
-    const e = document.getElementById(this.blocklyId);
-
-    if (!e) {
-      const script = renderer2.createElement('script');
-      script.id = this.blocklyId;
-      script.type = 'text/javascript';
-      script.src = this.configurationService.getConfiguration().blocklyCdn;
-      if (onLoad) {
-        script.onload = onLoad;
-      }
-      renderer2.appendChild(document.body, script);
-    } else if (onLoad) {
-      onLoad();
-    }
+  /**
+   * Loads Blockly on demand, it is not a part of the main bundle.
+   */
+  public loadBlockly(): Promise<any> {
+    // Translated to the language code in each message file, so Blockly always speaks the language the application
+    // was built in. The locale in configuration comes from the URL, which does not say it when running locally.
+    const language = $localize`:@@blockly.language:en`;
+    return loadBlockly(language);
   }
 }

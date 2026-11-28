@@ -72,7 +72,7 @@ export class RemoveDocumentsInViewBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.REMOVE_DOCUMENTS_IN_VIEW] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.REMOVE_DOCUMENTS_IN_VIEW] = function (block) {
       const viewId = Blockly.JavaScript.valueToCode(block, 'VIEW_ID', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
       return this_.blocklyUtils.getLumeerVariable() + `.removeDocumentsInView(${viewId});\n`;

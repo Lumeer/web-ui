@@ -56,7 +56,7 @@ export class IsoToDateBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.ISO_TO_DATE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.ISO_TO_DATE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'ISO', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {

@@ -53,7 +53,7 @@ export class GetDocumentCreatedAuthorBlocklyComponent extends GetDocumentPropert
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_DOCUMENT_CREATED_AUTHOR] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_DOCUMENT_CREATED_AUTHOR] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {

@@ -61,7 +61,7 @@ export class GetViewNameBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.GET_VIEW_NAME] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_VIEW_NAME] = function (block) {
       const viewId = Blockly.JavaScript.valueToCode(block, 'VIEW_ID', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
       if (!viewId) {

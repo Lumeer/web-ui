@@ -50,7 +50,7 @@ export class CurrentLocaleBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.CURRENT_LOCALE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.CURRENT_LOCALE] = function (block) {
       const code = this_.blocklyUtils.getLumeerVariable() + '.getCurrentLocale()';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];

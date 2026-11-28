@@ -80,7 +80,7 @@ export class GeneratePdfBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GENERATE_PDF] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GENERATE_PDF] = function (block) {
       const value_html = Blockly.JavaScript.valueToCode(block, 'HTML', Blockly.JavaScript.ORDER_ATOMIC) || null;
       const dropdown_attr = block.getFieldValue('ATTR');
       const value_document = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ATOMIC) || null;

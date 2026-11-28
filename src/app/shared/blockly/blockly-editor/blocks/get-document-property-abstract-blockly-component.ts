@@ -39,11 +39,11 @@ export abstract class GetDocumentPropertyAbstractBlocklyComponent extends Blockl
       const input = block.getInput('DOCUMENT');
 
       // is the input connected?
-      if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+      if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
         const inputType =
-          input.connection.targetConnection?.check_ instanceof Array
-            ? input.connection.targetConnection?.check_[0]
-            : input.connection.targetConnection?.check_;
+          input.connection.targetConnection?.check instanceof Array
+            ? input.connection.targetConnection?.check[0]
+            : input.connection.targetConnection?.check;
 
         // something unsupported got connected
         if (!inputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
@@ -55,9 +55,9 @@ export abstract class GetDocumentPropertyAbstractBlocklyComponent extends Blockl
 
   public onWorkspaceChange(workspace, changeEvent) {
     if (
-      changeEvent instanceof Blockly.Events.Create ||
-      changeEvent instanceof Blockly.Events.Change ||
-      changeEvent instanceof Blockly.Events.Move
+      changeEvent instanceof Blockly.Events.BlockCreate ||
+      changeEvent instanceof Blockly.Events.BlockChange ||
+      changeEvent instanceof Blockly.Events.BlockMove
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
       this.checkWorkspaceChange(workspace, changeEvent, block);

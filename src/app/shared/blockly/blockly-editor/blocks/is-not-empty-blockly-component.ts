@@ -55,7 +55,7 @@ export class IsNotEmptyBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.IS_NOT_EMPTY] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.IS_NOT_EMPTY] = function (block) {
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       const code = `(!lumeer_isEmpty(${val}))`;

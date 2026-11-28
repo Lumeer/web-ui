@@ -69,6 +69,6 @@ export class ForEachDocumentArrayBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.FOREACH_DOCUMENT_ARRAY] = Blockly.JavaScript['controls_forEach'];
+    Blockly.JavaScript.forBlock[BlocklyUtils.FOREACH_DOCUMENT_ARRAY] = Blockly.JavaScript.forBlock['controls_forEach'];
   }
 }

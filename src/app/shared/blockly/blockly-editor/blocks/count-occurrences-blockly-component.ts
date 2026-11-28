@@ -63,7 +63,7 @@ export class CountOccurrencesBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.COUNT_OCCURRENCES] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.COUNT_OCCURRENCES] = function (block) {
       const text_needle = Blockly.JavaScript.valueToCode(block, 'NEEDLE', Blockly.JavaScript.ORDER_MEMBER) || "''";
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 

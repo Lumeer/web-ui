@@ -67,7 +67,7 @@ export class CopyDocumentValuesSimpleBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.COPY_DOCUMENT_VALUES_SIMPLE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.COPY_DOCUMENT_VALUES_SIMPLE] = function (block) {
       const value_from_document =
         Blockly.JavaScript.valueToCode(block, 'FROM_DOCUMENT', Blockly.JavaScript.ORDER_ATOMIC) || null;
       const value_to_document =
@@ -94,11 +94,11 @@ export class CopyDocumentValuesSimpleBlocklyComponent extends BlocklyComponent {
 
   private checkInput(input, block) {
     // is the input connected?
-    if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+    if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
       const inputType =
-        input.connection.targetConnection?.check_ instanceof Array
-          ? input.connection.targetConnection?.check_[0]
-          : input.connection.targetConnection?.check_;
+        input.connection.targetConnection?.check instanceof Array
+          ? input.connection.targetConnection?.check[0]
+          : input.connection.targetConnection?.check;
 
       // something unsupported got connected
       if (!inputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
@@ -119,9 +119,9 @@ export class CopyDocumentValuesSimpleBlocklyComponent extends BlocklyComponent {
 
   public onWorkspaceChange(workspace, changeEvent) {
     if (
-      changeEvent instanceof Blockly.Events.Create ||
-      changeEvent instanceof Blockly.Events.Change ||
-      changeEvent instanceof Blockly.Events.Move
+      changeEvent instanceof Blockly.Events.BlockCreate ||
+      changeEvent instanceof Blockly.Events.BlockChange ||
+      changeEvent instanceof Blockly.Events.BlockMove
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
       this.checkWorkspaceChange(block);

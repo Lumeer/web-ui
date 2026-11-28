@@ -63,7 +63,7 @@ export class DeleteLinkBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.DELETE_LINK] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.DELETE_LINK] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       return this_.blocklyUtils.getLumeerVariable() + '.removeLink(' + argument0 + ');\n';
@@ -77,14 +77,14 @@ export class DeleteLinkBlocklyComponent extends BlocklyComponent {
   public onWorkspaceChange(workspace, changeEvent) {
     const block = workspace.getBlockById(changeEvent.blockId);
 
-    if (changeEvent instanceof Blockly.Events.Move) {
+    if (changeEvent instanceof Blockly.Events.BlockMove) {
       const newParentId = changeEvent.newParentId;
 
       if (isNotNullOrUndefined(newParentId)) {
         const parentBlock = workspace.getBlockById(newParentId);
 
         if (isNotNullOrUndefined(parentBlock) && parentBlock.type === BlocklyUtils.DELETE_LINK) {
-          if (!block.outputConnection?.check_[0]?.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
+          if (!block.outputConnection?.check[0]?.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
             this.blocklyUtils.tryDisconnect(block, block.outputConnection);
           }
         }

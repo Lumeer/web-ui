@@ -85,7 +85,7 @@ export class FormatCurrencyBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.FORMAT_CURRENCY] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.FORMAT_CURRENCY] = function (block) {
       const locale = block.getFieldValue('LOCALE') || null;
       const decimals = block.getFieldValue('DECIMALS') || 0;
       const value_number = Blockly.JavaScript.valueToCode(block, 'NUMBER', Blockly.JavaScript.ORDER_ATOMIC) || null;

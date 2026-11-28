@@ -60,7 +60,7 @@ export class BlockCommentBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.BLOCK_COMMENT] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.BLOCK_COMMENT] = function (block) {
       const comment = block.getFieldValue('COMMENT');
 
       return `/* ${comment} */\n`;

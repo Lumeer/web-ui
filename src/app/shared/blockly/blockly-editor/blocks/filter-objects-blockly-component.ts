@@ -70,7 +70,7 @@ export class FilterObjectsBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.FILTER_OBJECTS] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.FILTER_OBJECTS] = function (block) {
       const text_key = Blockly.JavaScript.valueToCode(block, 'KEY', Blockly.JavaScript.ORDER_MEMBER) || "''";
       const text_value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || "''";
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;

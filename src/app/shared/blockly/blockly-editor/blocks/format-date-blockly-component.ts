@@ -65,7 +65,7 @@ export class FormatDateBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.FORMAT_DATE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.FORMAT_DATE] = function (block) {
       const argumentTime = Blockly.JavaScript.valueToCode(block, 'TIME', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const argumentFormat =
         Blockly.JavaScript.valueToCode(block, 'FORMAT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;

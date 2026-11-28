@@ -62,7 +62,7 @@ export class DisplayAttributeBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.DISPLAY_ATTRIBUTE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.DISPLAY_ATTRIBUTE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const attrId = block.getFieldValue('ATTR');
 

@@ -50,7 +50,7 @@ export class CurrentUserBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.CURRENT_USER] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.CURRENT_USER] = function (block) {
       const code = this_.blocklyUtils.getLumeerVariable() + '.getCurrentUser()';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
