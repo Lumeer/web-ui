@@ -25,3 +25,8 @@ src/assets/config/config.json
 /playwright-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Bitbucket pipeline trigger tokens
+.bb.token
+.bb.devel.token
+.bb.pub.token

@@ -17,8 +17,9 @@ addons:
 before_install:
   - curl -s "https://get.sdkman.io" | bash
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
-  - sdk install java 25.0.5.1+2-tem
-  - sdk use java 25.0.5.1+2-tem
+  - export LUMEER_JDK=$(sdk list java | grep -o '25\.[0-9.+]*-tem' | head -1)
+  - sdk install java $LUMEER_JDK
+  - sdk use java $LUMEER_JDK
   - 'sudo apt-get install -y libgconf-2-4'
   - 'nvm install v22.14.0'
   - 'nvm use v22.14.0'

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {HttpResponse} from '@angular/common/http';
 import {NavigationExtras} from '@angular/router';
 
 import {Action} from '@ngrx/store';
@@ -302,7 +301,7 @@ export namespace ProjectsAction {
   export class DownloadRawContentSuccess implements Action {
     public readonly type = ProjectsActionType.DOWNLOAD_RAW_CONTENT_SUCCESS;
 
-    public constructor(public payload: {data: HttpResponse<Blob>; projectName?: string}) {}
+    public constructor(public payload: {url: string; projectName?: string}) {}
   }
 
   export class Clear implements Action {

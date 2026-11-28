@@ -113,7 +113,7 @@ export class PublicProjectService extends PublicPermissionService implements Pro
     return of();
   }
 
-  public downloadRawContent(organizationId: string, projectId: string): Observable<any> {
+  public createRawContentDownloadUrl(organizationId: string, projectId: string): Observable<string> {
     return of();
   }
 

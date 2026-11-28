@@ -32,7 +32,10 @@ export class SentryHttpInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError(error => {
-        if (this.configurationService.getConfiguration().sentryDsn && ![402, 500].includes(error.status)) {
+        const {sentryDsn, betterStackHost} = this.configurationService.getConfiguration();
+        // failed response time logging to Better Stack is not an application error
+        const isLoggingRequest = !!betterStackHost && request.url.includes(betterStackHost);
+        if (sentryDsn && !isLoggingRequest && ![402, 500].includes(error.status)) {
           this.processError(error);
         }
 
