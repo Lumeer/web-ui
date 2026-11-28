@@ -28,6 +28,7 @@ const MIN_COLUMN_WIDTH = 30;
 
 @Pipe({
   name: 'resizeValidate',
+  standalone: false,
 })
 export class ResizeValidatePipe implements PipeTransform {
   public transform(column: TableConfigColumn, showHiddenColumns: boolean = false): (event: ResizeEvent) => boolean {

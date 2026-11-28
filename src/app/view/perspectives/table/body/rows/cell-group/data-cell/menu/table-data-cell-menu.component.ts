@@ -67,6 +67,7 @@ import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
   selector: 'table-data-cell-menu',
   templateUrl: './table-data-cell-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableDataCellMenuComponent implements OnChanges {
   @Input()

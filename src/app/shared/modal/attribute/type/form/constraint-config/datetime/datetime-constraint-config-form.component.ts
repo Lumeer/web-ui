@@ -42,6 +42,7 @@ import {DatetimeConstraintFormControl} from './datetime-constraint-form-control'
   templateUrl: './datetime-constraint-config-form.component.html',
   styleUrls: ['./datetime-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

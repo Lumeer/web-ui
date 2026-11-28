@@ -22,6 +22,7 @@ import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 
 @Pipe({
   name: 'isFirstRow',
+  standalone: false,
 })
 export class IsFirstRowPipe implements PipeTransform {
   public transform(cursor: TableBodyCursor): boolean {

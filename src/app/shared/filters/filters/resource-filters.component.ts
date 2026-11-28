@@ -33,6 +33,7 @@ import {resourceAttributesSelectItems} from '../../select/select-item.utils';
   selector: 'resource-filters',
   templateUrl: './resource-filters.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceFiltersComponent implements OnChanges {
   @Input()

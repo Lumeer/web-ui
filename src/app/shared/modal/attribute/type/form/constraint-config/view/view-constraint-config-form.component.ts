@@ -28,6 +28,7 @@ import {ViewConstraintFormControl} from './view-constraint-form-control';
   selector: 'view-constraint-config-form',
   templateUrl: './view-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewConstraintConfigFormComponent implements OnChanges {
   @Input()

@@ -23,6 +23,7 @@ import {translateAuditType} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'auditLogTitle',
+  standalone: false,
 })
 export class AuditLogTitlePipe implements PipeTransform {
   public transform(auditLog: AuditLog): string {

@@ -37,6 +37,7 @@ import {SelectItemModel} from './select-item.model';
   templateUrl: './select-item.component.html',
   styleUrls: ['./select-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectItemComponent implements OnChanges, OnDestroy {
   @Input()

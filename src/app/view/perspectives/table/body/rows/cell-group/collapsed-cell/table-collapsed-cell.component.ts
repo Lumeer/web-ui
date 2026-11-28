@@ -46,6 +46,7 @@ import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.
   templateUrl: './table-collapsed-cell.component.html',
   styleUrls: ['./table-collapsed-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableCollapsedCellComponent implements OnInit, OnChanges {
   @Input()

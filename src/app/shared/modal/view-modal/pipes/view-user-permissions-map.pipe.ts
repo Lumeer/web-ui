@@ -24,6 +24,7 @@ import {ViewUserPermissionsPipe} from './view-user-permissions.pipe';
 
 @Pipe({
   name: 'viewUserPermissionsMap',
+  standalone: false,
 })
 @Injectable()
 export class ViewUserPermissionsMapPipe implements PipeTransform {

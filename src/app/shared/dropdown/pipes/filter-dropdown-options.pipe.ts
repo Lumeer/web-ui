@@ -25,6 +25,7 @@ import {DropdownOption} from '../options/dropdown-option';
 
 @Pipe({
   name: 'filterDropdownOptions',
+  standalone: false,
 })
 export class FilterDropdownOptionsPipe implements PipeTransform {
   public transform(options: DropdownOption[], text: string): DropdownOption[] {

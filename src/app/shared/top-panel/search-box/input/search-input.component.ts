@@ -40,6 +40,7 @@ import {SearchSuggestionsComponent} from './suggestions/search-suggestions.compo
   styleUrls: ['./search-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'cursor-text'},
+  standalone: false,
 })
 export class SearchInputComponent {
   @Input()

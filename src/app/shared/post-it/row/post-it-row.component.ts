@@ -55,6 +55,7 @@ import {PostItLayoutType} from '../post-it-layout-type';
   styleUrls: ['./post-it-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [animateOpacityEnterLeave],
+  standalone: false,
 })
 export class PostItRowComponent implements DataRowComponent, OnChanges {
   @Input()

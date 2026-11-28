@@ -27,6 +27,7 @@ import {Organization} from '../../../../../../../core/store/organizations/organi
   selector: '[notification-text]',
   templateUrl: './notification-text.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NotificationTextComponent implements OnChanges {
   @Input()

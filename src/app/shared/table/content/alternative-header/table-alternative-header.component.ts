@@ -27,6 +27,7 @@ import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/ta
   styleUrls: ['./table-alternative-header.component.scss', '../common/table-cell.scss'],
   host: {class: 'alternative-header w-100'},
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableAlternativeHeaderComponent {
   @Input()

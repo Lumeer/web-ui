@@ -26,6 +26,7 @@ import {User} from '../../../core/store/users/user';
 
 @Pipe({
   name: 'dataResourceIsDeletable',
+  standalone: false,
 })
 export class DataResourceIsDeletablePipe implements PipeTransform {
   public transform(

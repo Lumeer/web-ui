@@ -25,6 +25,7 @@ import {FormButtonConfig, FormButtonsConfig} from '../../../../../../core/store/
   templateUrl: './form-editor-buttons.component.html',
   styleUrls: ['./form-editor-buttons.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorButtonsComponent {
   @Input()

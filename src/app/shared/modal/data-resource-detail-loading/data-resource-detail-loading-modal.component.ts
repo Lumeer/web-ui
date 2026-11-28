@@ -39,6 +39,7 @@ import {DialogType} from '../dialog-type';
   templateUrl: './data-resource-detail-loading-modal.component.html',
   styleUrls: ['./data-resource-detail-loading-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataResourceDetailLoadingModalComponent implements OnInit {
   @Input()

@@ -102,6 +102,7 @@ import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component'
   styleUrls: ['./table-data-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [animateOpacityEnterLeave],
+  standalone: false,
 })
 export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

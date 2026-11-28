@@ -40,6 +40,7 @@ import {SelectionListModalComponent} from './modal/selection-list-modal.componen
   templateUrl: './selection-lists-content.component.html',
   styleUrls: ['./selection-lists-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectionListsContentComponent implements OnChanges {
   @Input()

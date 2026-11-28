@@ -46,6 +46,7 @@ import {parseSelectTranslation} from '../../utils/translation.utils';
   templateUrl: './resource-header.component.html',
   styleUrls: ['./resource-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceHeaderComponent implements OnInit, OnChanges {
   @Input()

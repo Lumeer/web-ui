@@ -56,6 +56,7 @@ import {FileDownloadService} from './file-download.service';
   styleUrls: ['./files-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FileDownloadService],
+  standalone: false,
 })
 export class FilesDataInputComponent implements OnInit, OnChanges {
   @Input()

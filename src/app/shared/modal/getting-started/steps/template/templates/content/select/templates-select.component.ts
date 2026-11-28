@@ -27,6 +27,7 @@ import {Project} from '../../../../../../../../core/store/projects/project';
   templateUrl: './templates-select.component.html',
   styleUrls: ['./templates-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TemplatesSelectComponent implements OnChanges {
   @Input()

@@ -22,6 +22,7 @@ import {ConditionType, Constraint, ConstraintType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'conditionShouldBeItalic',
+  standalone: false,
 })
 export class ConditionShouldBeItalicPipe implements PipeTransform {
   public transform(condition: ConditionType, constraint: Constraint): boolean {

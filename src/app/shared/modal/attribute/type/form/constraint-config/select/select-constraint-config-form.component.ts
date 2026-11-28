@@ -50,6 +50,7 @@ import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from '.
   selector: 'select-constraint-config-form',
   templateUrl: './select-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectConstraintConfigFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

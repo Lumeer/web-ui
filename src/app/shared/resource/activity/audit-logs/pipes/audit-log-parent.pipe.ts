@@ -26,6 +26,7 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'auditLogParent',
+  standalone: false,
 })
 export class AuditLogParentPipe implements PipeTransform {
   public transform(

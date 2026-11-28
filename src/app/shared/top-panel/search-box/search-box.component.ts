@@ -71,6 +71,7 @@ const ALLOW_AUTOMATIC_SUBMISSION = true;
   selector: 'search-box',
   templateUrl: './search-box.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SearchBoxComponent implements OnInit, OnDestroy {
   public currentView$ = new BehaviorSubject<View>(null);

@@ -39,6 +39,7 @@ import {getCalendarDefaultStemConfig} from '../util/calendar-util';
   selector: 'calendar-config',
   templateUrl: './calendar-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CalendarConfigComponent {
   @Input()

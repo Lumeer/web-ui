@@ -22,6 +22,7 @@ import {shadeColor} from '../utils/html-modifier';
 
 @Pipe({
   name: 'lightenColor',
+  standalone: false,
 })
 export class LightenColorPipe implements PipeTransform {
   public transform(color: string, percent: number): string {

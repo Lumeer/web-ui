@@ -22,6 +22,7 @@ import {TableColumnType, TableConfigColumn} from '../../../../../core/store/tabl
 
 @Pipe({
   name: 'isCompoundColumn',
+  standalone: false,
 })
 export class IsCompoundColumnPipe implements PipeTransform {
   public transform(column: TableConfigColumn): boolean {

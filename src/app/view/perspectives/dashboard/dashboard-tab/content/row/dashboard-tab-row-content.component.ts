@@ -28,6 +28,7 @@ import {filterValidDashboardCells} from '../../../../../../shared/utils/dashboar
   templateUrl: './dashboard-tab-row-content.component.html',
   styleUrls: ['./dashboard-tab-row-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardTabRowContentComponent implements OnChanges {
   @Input()

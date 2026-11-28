@@ -22,5 +22,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   selector: 'empty-map',
   templateUrl: './empty-map.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptyMapComponent {}

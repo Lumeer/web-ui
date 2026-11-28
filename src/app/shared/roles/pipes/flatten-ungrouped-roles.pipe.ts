@@ -22,6 +22,7 @@ import {RoleGroup, TranslatedRole} from '../model/role-group';
 
 @Pipe({
   name: 'flattenUngroupedRoles',
+  standalone: false,
 })
 export class FlattenUngroupedRolesPipe implements PipeTransform {
   public transform(groups: RoleGroup[]): TranslatedRole[] {

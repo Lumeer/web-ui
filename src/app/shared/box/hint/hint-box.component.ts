@@ -40,6 +40,7 @@ import {selectCurrentUser} from '../../../core/store/users/users.state';
     ]),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class HintBoxComponent implements OnInit {
   @Input()

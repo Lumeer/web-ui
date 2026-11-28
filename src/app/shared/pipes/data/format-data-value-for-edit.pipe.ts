@@ -22,6 +22,7 @@ import {DataValue} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'formatDataValueForEdit',
+  standalone: false,
 })
 export class FormatDataValueForEditPipe implements PipeTransform {
   public transform(dataValue: DataValue): string {

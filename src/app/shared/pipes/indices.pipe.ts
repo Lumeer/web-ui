@@ -24,6 +24,7 @@ import {createRange} from '../utils/array.utils';
 
 @Pipe({
   name: 'indices',
+  standalone: false,
 })
 export class IndicesPipe implements PipeTransform {
   public transform(number: number): number[] {

@@ -25,6 +25,7 @@ import {ObjectFolders} from '../util/object-folders';
   selector: 'views-folders-breadcrumb',
   templateUrl: './views-folders-breadcrumb.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewsFoldersBreadcrumbComponent {
   @Input()

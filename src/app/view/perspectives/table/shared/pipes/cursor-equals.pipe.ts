@@ -22,6 +22,7 @@ import {TableCursor, areTableCursorsEqual} from '../../../../../core/store/table
 
 @Pipe({
   name: 'cursorEquals',
+  standalone: false,
 })
 export class CursorEqualsPipe implements PipeTransform {
   public transform(cursor1: TableCursor, cursor2: TableCursor): boolean {

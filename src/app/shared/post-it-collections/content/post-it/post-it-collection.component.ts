@@ -43,6 +43,7 @@ import {permissionsCanManageCollectionDetail} from '../../../utils/permission.ut
   templateUrl: './post-it-collection.component.html',
   styleUrls: ['./post-it-collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PostItCollectionComponent implements OnChanges {
   @Input()

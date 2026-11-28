@@ -25,6 +25,7 @@ import {cleanObjectFolders} from '../../../../../view/perspectives/dashboard/sea
 
 @Pipe({
   name: 'viewsUniqueFolders',
+  standalone: false,
 })
 export class ViewsUniqueFoldersPipe implements PipeTransform {
   public transform(views: View[]): string[] {

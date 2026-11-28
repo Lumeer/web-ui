@@ -69,6 +69,7 @@ import {MarkerMoveEvent} from './render/marker-move.event';
   templateUrl: './map-globe-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'w-100'},
+  standalone: false,
 })
 export class MapGlobeContentComponent implements OnChanges {
   @Input()

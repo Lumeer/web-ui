@@ -29,6 +29,7 @@ import {DataInputConfiguration} from '../../data-input/data-input-configuration'
   templateUrl: './filter-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-inline-flex text-truncate text-nowrap align-items-center'},
+  standalone: false,
 })
 export class FilterPreviewComponent implements OnChanges {
   @Input()

@@ -20,6 +20,7 @@ import {AfterViewInit, Directive, ElementRef, EventEmitter, Output} from '@angul
 
 @Directive({
   selector: '[rendered]',
+  standalone: false,
 })
 export class RenderedDirective implements AfterViewInit {
   @Output()

@@ -42,6 +42,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   selector: 'number-data-input',
   templateUrl: './number-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NumberDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()

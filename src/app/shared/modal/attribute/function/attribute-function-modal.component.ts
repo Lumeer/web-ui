@@ -64,6 +64,7 @@ import {DialogType} from '../../dialog-type';
   selector: 'attribute-function-dialog',
   templateUrl: './attribute-function-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeFunctionModalComponent implements OnInit {
   @Input()

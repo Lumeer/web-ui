@@ -28,6 +28,7 @@ import {AuthService} from '../auth.service';
 @Component({
   selector: 'logout',
   template: '',
+  standalone: false,
 })
 export class LogoutComponent implements OnInit {
   public constructor(

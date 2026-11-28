@@ -28,6 +28,7 @@ import {Organization} from '../../../../../core/store/organizations/organization
   templateUrl: './notifications-menu-content.component.html',
   styleUrls: ['./notifications-menu-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NotificationsMenuContentComponent {
   @Input()

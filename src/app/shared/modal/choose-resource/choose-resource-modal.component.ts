@@ -33,6 +33,7 @@ import {DialogType} from '../dialog-type';
   selector: 'choose-resource-modal',
   templateUrl: './choose-resource-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChooseResourceModalComponent implements OnInit {
   @Input()

@@ -54,6 +54,7 @@ import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../../../..
   selector: 'detail-settings-dropdown',
   templateUrl: './detail-settings-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DetailSettingsDropdownComponent implements OnChanges {
   @Input()

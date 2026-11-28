@@ -38,6 +38,7 @@ import {TaskAttributes} from '../../../../model/task-attributes';
   templateUrl: './task-first-line.component.html',
   styleUrls: ['./task-first-line.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TaskFirstLineComponent {
   @Input()

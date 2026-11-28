@@ -27,6 +27,7 @@ import {NotificationButton} from '../notification-button';
   selector: 'notification',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss'],
+  standalone: false,
 })
 export class NotificationComponent extends Toast {
   public toastId: number;

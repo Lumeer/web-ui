@@ -22,6 +22,7 @@ import {filterNotNull} from '../utils/array.utils';
 
 @Pipe({
   name: 'filterNotNull',
+  standalone: false,
 })
 export class FilterNotNullPipe implements PipeTransform {
   public transform<T>(values: T[]): T[] {

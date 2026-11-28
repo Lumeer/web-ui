@@ -24,6 +24,7 @@ import {MatMenuTrigger} from '@angular/material/menu';
   templateUrl: './table-collapsed-cell-menu.component.html',
   styleUrls: ['./table-collapsed-cell-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableCollapsedCellMenuComponent {
   @Output()

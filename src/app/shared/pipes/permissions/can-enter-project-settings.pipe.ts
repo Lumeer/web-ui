@@ -23,6 +23,7 @@ import {permissionsCanManageProjectDetail} from '../../utils/permission.utils';
 
 @Pipe({
   name: 'canEnterProjectSettings',
+  standalone: false,
 })
 export class CanEnterProjectSettingsPipe implements PipeTransform {
   public transform(permissions: AllowedPermissions): boolean {

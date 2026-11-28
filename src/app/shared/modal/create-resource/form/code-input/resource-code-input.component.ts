@@ -23,6 +23,7 @@ import {AbstractControl, UntypedFormGroup} from '@angular/forms';
   selector: 'resource-code-input',
   templateUrl: './resource-code-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceCodeInputComponent {
   @Input()

@@ -22,6 +22,7 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'linkTypeFilter',
+  standalone: false,
 })
 @Injectable()
 export class LinkTypeFilterPipe implements PipeTransform {

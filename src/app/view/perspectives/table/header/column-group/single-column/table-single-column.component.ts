@@ -70,6 +70,7 @@ import {TableColumnContextMenuComponent} from './context-menu/table-column-conte
   styleUrls: ['./table-single-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'position-relative'},
+  standalone: false,
 })
 export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

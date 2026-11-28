@@ -30,6 +30,7 @@ import {ProjectsAction} from '../../../../../../../core/store/projects/projects.
   selector: 'empty-tasks-collections',
   templateUrl: './empty-tasks-collections.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptyTasksCollectionsComponent {
   @Input()

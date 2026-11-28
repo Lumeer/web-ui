@@ -55,6 +55,7 @@ import {generateCorrelationId} from '../../../../utils/resource.utils';
   templateUrl: './dashboard-tab-settings.component.html',
   styleUrls: ['./dashboard-tab-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardTabSettingsComponent implements OnInit, OnChanges {
   @Input()

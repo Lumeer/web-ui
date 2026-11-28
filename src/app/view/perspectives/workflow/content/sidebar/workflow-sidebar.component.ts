@@ -42,6 +42,7 @@ import {WORKFLOW_SIDEBAR_SELECTOR, viewCursorToWorkflowTable} from '../tables/se
   styleUrls: ['./workflow-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class WorkflowSidebarComponent implements OnInit, OnDestroy {
   @Input()

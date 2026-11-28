@@ -39,6 +39,7 @@ import {Perspective} from '../../../view/perspectives/perspective';
   selector: 'empty-data',
   templateUrl: './empty-data.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptyDataComponent implements OnInit {
   @Input()

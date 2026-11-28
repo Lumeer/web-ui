@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'lengthGreaterThan',
+  standalone: false,
 })
 export class LengthGreaterThanPipe implements PipeTransform {
   public transform(value: {length: number}, threshold: number): boolean {

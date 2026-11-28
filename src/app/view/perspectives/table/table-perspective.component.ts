@@ -87,6 +87,7 @@ export const EDITABLE_EVENT = 'editableEvent';
   styleUrls: ['./table-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableRowNumberService, LoadDataServiceProvider],
+  standalone: false,
 })
 export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

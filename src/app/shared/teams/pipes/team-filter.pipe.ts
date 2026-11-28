@@ -24,6 +24,7 @@ import {Team} from '../../../core/store/teams/team';
 
 @Pipe({
   name: 'teamFilter',
+  standalone: false,
 })
 @Injectable()
 export class TeamFilterPipe implements PipeTransform {

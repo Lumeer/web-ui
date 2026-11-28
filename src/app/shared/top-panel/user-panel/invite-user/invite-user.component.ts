@@ -36,6 +36,7 @@ import {InviteUserModalComponent} from './modal/invite-user-modal.component';
   templateUrl: './invite-user.component.html',
   styleUrls: ['./invite-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class InviteUserComponent implements OnInit {
   @Input()

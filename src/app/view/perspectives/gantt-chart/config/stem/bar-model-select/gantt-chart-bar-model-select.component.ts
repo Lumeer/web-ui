@@ -25,6 +25,7 @@ import {SelectItemModel} from '../../../../../../shared/select/select-item/selec
   selector: 'gantt-chart-bar-model-select',
   templateUrl: './gantt-chart-bar-model-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartBarModelSelectComponent {
   @Input()

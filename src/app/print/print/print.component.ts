@@ -39,6 +39,7 @@ import {selectWorkspace} from '../../core/store/navigation/navigation.state';
   styleUrls: ['./print.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class PrintComponent implements OnInit {
   public value$: Observable<any>;

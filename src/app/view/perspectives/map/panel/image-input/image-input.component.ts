@@ -39,6 +39,7 @@ import {LanguageCode} from '../../../../../core/model/language';
   templateUrl: './image-input.component.html',
   styleUrls: ['./image-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ImageInputComponent implements OnChanges, OnInit, OnDestroy {
   @Input()

@@ -47,6 +47,7 @@ import {
   selector: 'workspace-user-resources',
   templateUrl: './workspace-user-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class WorkspaceUserResourcesComponent implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;

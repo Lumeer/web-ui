@@ -23,6 +23,7 @@ import {isNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'formatDataValue',
+  standalone: false,
 })
 export class FormatDataValuePipe implements PipeTransform {
   public transform(dataValue: DataValue, defaultValue?: any): string {

@@ -39,6 +39,7 @@ import {isEmailValid} from '../../../utils/email.utils';
   templateUrl: './view-users-input.component.html',
   styleUrls: ['./view-users-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewUsersInputComponent implements OnChanges {
   @Input()

@@ -33,6 +33,7 @@ import {selectProjectByWorkspace} from '../../../core/store/projects/projects.st
   selector: 'selection-lists',
   templateUrl: './selection-lists.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectionListsComponent implements OnInit {
   @Input()

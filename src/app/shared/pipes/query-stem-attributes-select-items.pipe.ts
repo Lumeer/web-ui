@@ -28,6 +28,7 @@ import {SelectItemModel} from '../select/select-item/select-item.model';
 
 @Pipe({
   name: 'queryStemAttributesSelectItems',
+  standalone: false,
 })
 export class QueryStemAttributesSelectItemsPipe implements PipeTransform {
   public transform(stem: QueryStem, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {

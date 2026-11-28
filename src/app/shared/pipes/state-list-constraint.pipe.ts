@@ -41,6 +41,7 @@ import {createSuggestionDataValues} from '../utils/data-resource.utils';
 
 @Pipe({
   name: 'stateListConstraint',
+  standalone: false,
 })
 export class StateListConstraintPipe implements PipeTransform {
   public transform(

@@ -22,6 +22,7 @@ import {DocumentHintColumn} from '../../../../../shared/document-hints/document-
 
 @Pipe({
   name: 'documentHintsOffset',
+  standalone: false,
 })
 export class DocumentHintsOffsetPipe implements PipeTransform {
   public transform(columns: DocumentHintColumn[], attributeId: string): number {

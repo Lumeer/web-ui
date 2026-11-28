@@ -25,6 +25,7 @@ import {QueryItemType} from '../model/query-item-type';
 
 @Pipe({
   name: 'queryItemCollectionId',
+  standalone: false,
 })
 export class QueryItemCollectionIdPipe implements PipeTransform {
   public transform(queryItem: QueryItem): string {

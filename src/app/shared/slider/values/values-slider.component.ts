@@ -41,6 +41,7 @@ import {SliderItem} from './slider-item';
   templateUrl: './values-slider.component.html',
   styleUrls: ['./values-slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ValuesSliderComponent implements OnChanges, AfterViewInit {
   @Input()

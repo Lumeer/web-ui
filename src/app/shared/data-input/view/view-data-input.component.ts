@@ -56,6 +56,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   templateUrl: './view-data-input.component.html',
   styleUrls: ['./view-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input()

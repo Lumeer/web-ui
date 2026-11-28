@@ -42,6 +42,7 @@ import {generateId} from '../../../utils/resource.utils';
   templateUrl: './tabs-settings-content.component.html',
   styleUrls: ['./tabs-settings-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TabsSettingsContentComponent implements OnInit, OnChanges {
   @Input()

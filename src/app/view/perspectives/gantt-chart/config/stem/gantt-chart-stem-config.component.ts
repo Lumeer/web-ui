@@ -28,6 +28,7 @@ import {SelectItemModel} from '../../../../../shared/select/select-item/select-i
   selector: 'gantt-chart-stem-config',
   templateUrl: './gantt-chart-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartStemConfigComponent {
   @Input()

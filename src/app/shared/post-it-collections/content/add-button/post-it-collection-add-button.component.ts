@@ -31,6 +31,7 @@ import {ProjectsAction} from '../../../../core/store/projects/projects.action';
   templateUrl: './post-it-collection-add-button.component.html',
   styleUrls: ['./post-it-collection-add-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PostItCollectionAddButtonComponent {
   @Input()

@@ -31,6 +31,7 @@ import {Attribute} from '../../../core/store/collections/collection';
 
 @Pipe({
   name: 'dataInputEditInfo',
+  standalone: false,
 })
 export class DataInputEditInfoPipe implements PipeTransform {
   public transform(

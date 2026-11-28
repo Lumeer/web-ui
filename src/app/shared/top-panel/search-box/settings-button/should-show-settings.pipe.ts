@@ -24,6 +24,7 @@ import {Perspective} from '../../../../view/perspectives/perspective';
 
 @Pipe({
   name: 'shouldShowSettings',
+  standalone: false,
 })
 export class ShouldShowSettingsPipe implements PipeTransform {
   public transform(perspective: Perspective, query: Query): boolean {

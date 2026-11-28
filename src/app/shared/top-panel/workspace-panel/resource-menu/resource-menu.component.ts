@@ -59,6 +59,7 @@ import {objectChanged} from '../../../utils/common.utils';
   selector: 'resource-menu',
   templateUrl: './resource-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

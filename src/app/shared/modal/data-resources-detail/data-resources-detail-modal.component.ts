@@ -52,6 +52,7 @@ import {DialogType} from '../dialog-type';
   styleUrls: ['./data-resources-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [enterLeftAnimation, enterRightAnimation, emptyEnterAnimation],
+  standalone: false,
 })
 export class DataResourcesDetailModalComponent implements OnInit {
   @Input()

@@ -55,6 +55,7 @@ import {DialogType} from '../dialog-type';
   templateUrl: './document-detail-modal.component.html',
   styleUrls: ['./document-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

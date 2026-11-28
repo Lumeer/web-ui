@@ -37,6 +37,7 @@ import {ServiceLimits} from '../../../../core/store/organizations/service-limits
   selector: 'payments-panel',
   templateUrl: './payments-panel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PaymentsPanelComponent implements AfterViewInit {
   @Input()

@@ -43,6 +43,7 @@ import {DialogType} from '../../dialog-type';
   selector: 'view-settings-modal',
   templateUrl: './view-settings-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewSettingsModalComponent implements OnInit {
   @Input()

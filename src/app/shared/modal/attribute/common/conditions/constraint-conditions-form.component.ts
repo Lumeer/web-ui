@@ -47,6 +47,7 @@ export enum ConstraintFiltersFormControl {
   selector: 'constraint-conditions-form',
   templateUrl: './constraint-conditions-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ConstraintConditionsFormComponent implements OnChanges {
   @Input()

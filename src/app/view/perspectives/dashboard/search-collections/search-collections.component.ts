@@ -25,6 +25,7 @@ import {SearchPerspectiveConfiguration, defaultSearchPerspectiveConfiguration} f
   selector: 'search-collections',
   templateUrl: './search-collections.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SearchCollectionsComponent {
   @Input()

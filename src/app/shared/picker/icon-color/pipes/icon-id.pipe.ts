@@ -20,6 +20,7 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'iconId',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

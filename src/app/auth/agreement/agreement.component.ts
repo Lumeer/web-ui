@@ -52,6 +52,7 @@ const dataProcessingAgreementLinks = {
   selector: 'agreement',
   templateUrl: './agreement.component.html',
   styleUrls: ['./agreement.component.scss'],
+  standalone: false,
 })
 export class AgreementComponent implements OnInit, OnDestroy {
   public readonly agreementName = 'agreement';

@@ -23,6 +23,7 @@ import {QueryItemType} from '../model/query-item-type';
 
 @Pipe({
   name: 'isDeletedItem',
+  standalone: false,
 })
 export class IsDeletedItemPipe implements PipeTransform {
   public transform(queryItem: QueryItem): boolean {

@@ -31,6 +31,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
   selector: 'link-type-attributes',
   templateUrl: './link-type-attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTypeAttributesComponent implements OnInit {
   public linkType$: Observable<LinkType>;

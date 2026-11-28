@@ -27,6 +27,7 @@ import {InputBoxComponent, TRIM_REGEX} from '../../../../input/input-box/input-b
   templateUrl: './resource-variable-row.component.html',
   styleUrls: ['./resource-variable-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceVariableRowComponent {
   @Input()

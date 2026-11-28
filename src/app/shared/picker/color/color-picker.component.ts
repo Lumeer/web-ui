@@ -39,6 +39,7 @@ import {greyscale, palette, saturated, sepia} from '../colors';
   selector: 'color-picker',
   templateUrl: './color-picker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ColorPickerComponent {
   @Input()

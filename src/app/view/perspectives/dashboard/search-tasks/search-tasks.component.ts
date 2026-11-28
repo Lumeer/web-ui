@@ -66,6 +66,7 @@ const PAGE_SIZE = 50;
   templateUrl: './search-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class SearchTasksComponent
   extends ViewConfigPerspectiveComponent<SearchTasksConfig>

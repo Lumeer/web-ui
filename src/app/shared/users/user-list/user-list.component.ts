@@ -47,6 +47,7 @@ import {
   selector: 'user-list',
   templateUrl: './user-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserListComponent implements OnChanges {
   @Input()

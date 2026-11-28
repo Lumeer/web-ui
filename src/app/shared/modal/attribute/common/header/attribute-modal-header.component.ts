@@ -26,6 +26,7 @@ import {Attribute} from '../../../../../core/store/collections/collection';
   templateUrl: './attribute-modal-header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'p-3'},
+  standalone: false,
 })
 export class AttributeModalHeaderComponent {
   @Input()

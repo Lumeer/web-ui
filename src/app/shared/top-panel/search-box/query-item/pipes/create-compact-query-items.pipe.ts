@@ -29,6 +29,7 @@ import {QueryStemQueryItem} from '../model/query-stem.query-item';
 
 @Pipe({
   name: 'createCompactQueryItems',
+  standalone: false,
 })
 export class CreateCompactQueryItemsPipe implements PipeTransform {
   public transform(

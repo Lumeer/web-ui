@@ -24,6 +24,7 @@ import {ResourceType} from '../../../core/model/resource-type';
   selector: 'project-users',
   templateUrl: './project-users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectUsersComponent {
   public readonly resourceType = ResourceType.Project;

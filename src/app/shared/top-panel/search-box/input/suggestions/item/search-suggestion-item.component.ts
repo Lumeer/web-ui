@@ -25,6 +25,7 @@ import {QueryItemType} from '../../../query-item/model/query-item-type';
   selector: 'search-suggestion-item',
   templateUrl: './search-suggestion-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SuggestionItemComponent implements OnChanges {
   @Input()

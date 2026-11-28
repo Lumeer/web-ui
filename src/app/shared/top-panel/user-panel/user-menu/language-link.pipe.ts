@@ -22,6 +22,7 @@ import {createLanguageUrl} from '../../../../core/model/language';
 
 @Pipe({
   name: 'languageLink',
+  standalone: false,
 })
 export class LanguageLinkPipe implements PipeTransform {
   public transform(path: string, languageCode: string): string {

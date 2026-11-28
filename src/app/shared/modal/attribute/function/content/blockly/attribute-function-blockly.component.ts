@@ -40,6 +40,7 @@ import {attributeHasEditableFunction} from '../../../../../utils/attribute.utils
   selector: 'attribute-function-blockly',
   templateUrl: './attribute-function-blockly.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeFunctionBlocklyComponent implements OnChanges {
   @Input()

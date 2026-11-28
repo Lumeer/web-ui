@@ -36,6 +36,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
       ]),
     ]),
   ],
+  standalone: false,
 })
 export class ResizableSidebarComponent {
   @Input()

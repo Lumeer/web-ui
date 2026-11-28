@@ -29,6 +29,7 @@ import {generateCorrelationId, getAttributesResourceType} from '../../../../../.
   selector: 'pivot-header-attribute-config',
   templateUrl: './pivot-header-attribute-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PivotHeaderAttributeConfigComponent {
   @Input()

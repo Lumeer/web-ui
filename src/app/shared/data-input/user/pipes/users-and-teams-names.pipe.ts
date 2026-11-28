@@ -23,6 +23,7 @@ import {User} from '../../../../core/store/users/user';
 
 @Pipe({
   name: 'usersAndTeamsNames',
+  standalone: false,
 })
 export class UsersAndTeamsNamesPipe implements PipeTransform {
   public transform(users: User[], teams: Team[]): string {

@@ -22,6 +22,7 @@ import {LinkColumn} from '../model/link-column';
 
 @Pipe({
   name: 'columnHandleLeft',
+  standalone: false,
 })
 export class ColumnHandleLeftPipe implements PipeTransform {
   public transform(columns: LinkColumn[], index: number): number {

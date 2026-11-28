@@ -52,6 +52,7 @@ import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.compone
   templateUrl: './top-panel.component.html',
   styleUrls: ['./top-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()

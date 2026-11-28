@@ -37,6 +37,7 @@ import {TablesAction} from '../../../../../../core/store/tables/tables.action';
   templateUrl: './table-hidden-column.component.html',
   styleUrls: ['./table-hidden-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHiddenColumnComponent implements OnChanges {
   @Input()

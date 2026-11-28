@@ -46,6 +46,7 @@ import {ActionConstraintFormControl} from './action-constraint-form-control';
   selector: 'action-constraint-config-form',
   templateUrl: './action-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy {
   @Input()

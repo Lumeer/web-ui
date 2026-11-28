@@ -32,6 +32,7 @@ import {TasksGroup} from '../model/tasks-group';
 
 @Pipe({
   name: 'createTasksGroups',
+  standalone: false,
 })
 export class CreateTasksGroupsPipe implements PipeTransform {
   private dataObjectAggregator = new DataObjectAggregator<string>();

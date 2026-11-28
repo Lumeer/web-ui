@@ -52,6 +52,7 @@ import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
   selector: 'calendar-visualization',
   templateUrl: './calendar-visualization.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CalendarVisualizationComponent implements OnChanges {
   @Input()

@@ -22,6 +22,7 @@ import {Team} from '../../../core/store/teams/team';
 
 @Pipe({
   name: 'teamsIds',
+  standalone: false,
 })
 export class TeamsIdsPipe implements PipeTransform {
   public transform(teams: Team[]): any[] {

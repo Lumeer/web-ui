@@ -34,6 +34,7 @@ import {createDefaultKanbanStemConfig, isKanbanAggregationDefined} from '../../u
   selector: 'kanban-config',
   templateUrl: './kanban-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class KanbanConfigComponent {
   @Input()

@@ -27,6 +27,7 @@ import {SelectItemModel} from '../../../../../../shared/select/select-item/selec
   selector: 'gantt-chart-progress-bar-model-select',
   templateUrl: './gantt-chart-progress-bar-model-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartProgressBarModelSelectComponent {
   @Input()

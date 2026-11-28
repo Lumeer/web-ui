@@ -32,6 +32,7 @@ import {OrganizationConverter} from '../store/organizations/organization.convert
 @Component({
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RedirectComponent implements OnInit {
   constructor(

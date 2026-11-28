@@ -33,6 +33,7 @@ import {selectProjectsByOrganizationId} from '../../../../../core/store/projects
   selector: 'create-resource-dialog-parent',
   templateUrl: './create-resource-dialog-parent.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CreateResourceDialogParentComponent implements OnInit {
   @Input()

@@ -84,6 +84,7 @@ interface Data {
   templateUrl: './map-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-grow-1 overflow-hidden'},
+  standalone: false,
 })
 export class MapContentComponent implements OnInit, OnChanges {
   @Input()

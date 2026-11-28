@@ -22,6 +22,7 @@ import {KanbanColumn} from '../../../../core/store/kanbans/kanban';
 
 @Pipe({
   name: 'kanbanDragColumns',
+  standalone: false,
 })
 export class KanbanDragColumnsPipe implements PipeTransform {
   public transform(column: KanbanColumn, columns: KanbanColumn[]): any {

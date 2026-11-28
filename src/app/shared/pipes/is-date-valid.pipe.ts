@@ -22,6 +22,7 @@ import {isDateValid} from '@lumeer/utils';
 
 @Pipe({
   name: 'isDateValid',
+  standalone: false,
 })
 export class IsDateValidPipe implements PipeTransform {
   public transform(date: Date): boolean {

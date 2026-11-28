@@ -23,6 +23,7 @@ import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'createCombinedSelectValue',
+  standalone: false,
 })
 export class CreateCombinedSelectValuePipe implements PipeTransform {
   public transform(values: any[], constraint: SelectConstraint): SelectDataValue {

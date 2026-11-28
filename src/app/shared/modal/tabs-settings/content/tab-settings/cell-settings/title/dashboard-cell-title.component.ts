@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   selector: 'dashboard-cell-title',
   templateUrl: './dashboard-cell-title.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardCellTitleComponent {
   @Input()

@@ -52,6 +52,7 @@ const DRAG_HOST_CLASS = 'cdk-drag';
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [{provide: CDK_DRAG_PARENT, useExisting: CdkDrag}],
+  standalone: false,
 })
 export class FsCdkDragDirective extends CdkDrag {
   constructor(

@@ -35,6 +35,7 @@ import {ResourceRolesData, ResourceRolesDatum, resourceRolesDataEmptyTitle} from
   selector: 'user-link-types',
   templateUrl: './user-link-types.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserLinkTypesComponent implements OnChanges {
   @Input()

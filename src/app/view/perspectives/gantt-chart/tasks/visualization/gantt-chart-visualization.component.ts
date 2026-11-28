@@ -43,6 +43,7 @@ import {ganttTaskBarModel, ganttTaskDataResourceId} from '../../util/gantt-chart
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @Input()

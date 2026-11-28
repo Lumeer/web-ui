@@ -48,6 +48,7 @@ import {DateTimeOptions, detectDatePickerViewMode, hasTimeOption} from '../date-
   templateUrl: './date-time-picker.component.html',
   styleUrls: ['./date-time-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   @Input()

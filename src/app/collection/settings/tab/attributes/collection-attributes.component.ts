@@ -31,6 +31,7 @@ import {selectCollectionByWorkspace} from '../../../../core/store/collections/co
   selector: 'collection-attributes',
   templateUrl: './collection-attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionAttributesComponent implements OnInit {
   public collection$: Observable<Collection>;

@@ -58,6 +58,7 @@ import {createUserDataInputTeams, createUserDataInputUsers} from './user-data-in
   templateUrl: './user-data-input.component.html',
   styleUrls: ['./user-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()

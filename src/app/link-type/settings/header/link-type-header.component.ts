@@ -34,6 +34,7 @@ import {containsSameElements} from '../../../shared/utils/array.utils';
   templateUrl: './link-type-header.component.html',
   styleUrls: ['./link-type-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTypeHeaderComponent {
   @ViewChild(InputBoxComponent)

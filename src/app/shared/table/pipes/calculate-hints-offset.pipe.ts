@@ -22,6 +22,7 @@ import {TableColumnGroup} from '../model/table-column';
 
 @Pipe({
   name: 'calculateHintsOffset',
+  standalone: false,
 })
 export class CalculateHintsOffsetPipe implements PipeTransform {
   public transform(groups: TableColumnGroup[]): number {

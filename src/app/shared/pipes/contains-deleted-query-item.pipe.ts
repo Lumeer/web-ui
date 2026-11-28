@@ -23,6 +23,7 @@ import {QueryItemType} from '../top-panel/search-box/query-item/model/query-item
 
 @Pipe({
   name: 'containsDeletedQueryItem',
+  standalone: false,
 })
 export class ContainsDeletedQueryItemPipe implements PipeTransform {
   public transform(queryItems: QueryItem[]): boolean {

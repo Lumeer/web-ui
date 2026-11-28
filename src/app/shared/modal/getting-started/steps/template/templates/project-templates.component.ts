@@ -32,6 +32,7 @@ import {createTagsFromTemplates} from './tags/templates-tags.component';
   styleUrls: ['./project-templates.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [enterLeftAnimation, enterRightAnimation, emptyEnterAnimation],
+  standalone: false,
 })
 export class ProjectTemplatesComponent implements OnInit, OnChanges {
   @Input()

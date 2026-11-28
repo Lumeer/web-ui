@@ -24,6 +24,7 @@ import {USER_AVATAR_SIZE} from '../../../../core/constants';
   selector: 'user-avatar',
   templateUrl: './user-avatar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserAvatarComponent {
   @Input()

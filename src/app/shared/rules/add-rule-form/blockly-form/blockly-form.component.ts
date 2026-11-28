@@ -46,6 +46,7 @@ import {RuleVariable} from '../../../blockly/rule-variable-type';
   selector: 'blockly-form',
   templateUrl: './blockly-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BlocklyFormComponent implements OnInit {
   @Input()

@@ -24,6 +24,7 @@ import {DataCursor} from '../data-cursor';
 
 @Pipe({
   name: 'dataIdCursor',
+  standalone: false,
 })
 export class DataIdCursorPipe implements PipeTransform {
   public transform(id: string, resource: AttributesResource, attributeId: string, viewId: string): DataCursor {

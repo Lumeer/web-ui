@@ -20,6 +20,7 @@ import {Directive, ElementRef, EventEmitter, HostListener, Input, Output, Render
 
 @Directive({
   selector: '[resizer]',
+  standalone: false,
 })
 export class ResizerDirective {
   @Input()

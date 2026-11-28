@@ -30,6 +30,7 @@ import {actionConstraintConfirmationPlaceholder} from '../action-constraint.util
   templateUrl: './action-constraint-confirmation-form.component.html',
   styleUrls: ['./action-constraint-confirmation-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ActionConstraintConfirmationFormComponent implements OnInit {
   @Input()

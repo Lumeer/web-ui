@@ -20,6 +20,7 @@ import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
 
 @Directive({
   selector: '[ngVar]',
+  standalone: false,
 })
 export class NgVarDirective {
   @Input()

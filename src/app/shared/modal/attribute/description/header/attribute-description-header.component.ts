@@ -25,6 +25,7 @@ import {Attribute} from '../../../../../core/store/collections/collection';
   selector: 'attribute-description-header',
   templateUrl: './attribute-description-header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeDescriptionHeaderComponent {
   @Input()

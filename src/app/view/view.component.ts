@@ -48,6 +48,7 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FileAttachmentsService],
+  standalone: false,
 })
 export class ViewComponent implements OnInit {
   @ViewChild(ViewControlsComponent)

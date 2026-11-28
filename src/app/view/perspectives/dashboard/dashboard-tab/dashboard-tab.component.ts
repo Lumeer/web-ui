@@ -32,6 +32,7 @@ import {selectSearchTab} from '../../../../core/store/navigation/navigation.stat
   selector: 'dashboard-tab',
   templateUrl: './dashboard-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardTabComponent implements OnInit {
   public dashboardTab$: Observable<DashboardTab>;

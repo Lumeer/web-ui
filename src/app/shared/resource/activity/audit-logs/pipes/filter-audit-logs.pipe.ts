@@ -28,6 +28,7 @@ import {AuditLogFilters, filterAuditLogs} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'filterAuditLogs',
+  standalone: false,
 })
 export class FilterAuditLogsPipe implements PipeTransform {
   public transform(

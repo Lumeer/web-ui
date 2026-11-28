@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   selector: 'color-collapsed-cell',
   templateUrl: './color-collapsed-cell.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ColorCollapsedCellComponent {
   @Input()

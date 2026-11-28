@@ -23,6 +23,7 @@ import {filterValidDashboardCells} from '../../../utils/dashboard.utils';
 
 @Pipe({
   name: 'filterValidCells',
+  standalone: false,
 })
 export class FilterValidCellsPipe implements PipeTransform {
   public transform(cells: DashboardCell[]): DashboardCell[] {

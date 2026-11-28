@@ -44,6 +44,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   selector: 'text-data-input',
   templateUrl: './text-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()

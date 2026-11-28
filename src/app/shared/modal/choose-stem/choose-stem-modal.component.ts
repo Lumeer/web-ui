@@ -39,6 +39,7 @@ import {DialogType} from '../dialog-type';
   templateUrl: './choose-stem-modal.component.html',
   styleUrls: ['./choose-stem-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChooseStemModalComponent implements OnInit {
   @Input()

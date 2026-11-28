@@ -32,6 +32,7 @@ import {selectProjectByWorkspace} from '../../../core/store/projects/projects.st
   styleUrls: ['./public-project-message.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block'},
+  standalone: false,
 })
 export class PublicProjectMessageComponent implements AfterViewInit, OnDestroy {
   constructor(

@@ -36,6 +36,7 @@ import {selectViewQuery} from '../../../core/store/views/views.state';
   templateUrl: './table-import-button.component.html',
   styleUrls: ['./table-import-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableImportButtonComponent {
   public dragging: boolean = false;

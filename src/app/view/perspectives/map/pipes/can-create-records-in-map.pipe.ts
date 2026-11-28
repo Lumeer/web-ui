@@ -22,6 +22,7 @@ import {MapConfig} from '../../../../core/store/maps/map.model';
 
 @Pipe({
   name: 'canCreateRecordsInMap',
+  standalone: false,
 })
 export class CanCreateRecordsInMapPipe implements PipeTransform {
   public transform(config: MapConfig): boolean {

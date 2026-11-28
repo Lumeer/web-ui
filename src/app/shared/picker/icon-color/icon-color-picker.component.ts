@@ -29,6 +29,7 @@ import {IconChooseComponent} from './icon/icon-choose.component';
   templateUrl: './icon-color-picker.component.html',
   styleUrls: ['./icon-color-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class IconColorPickerComponent extends DropdownDirective implements OnDestroy {
   @Input()

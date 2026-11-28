@@ -24,6 +24,7 @@ import {escapeStringForRegex} from '../utils/string.utils';
 
 @Pipe({
   name: 'highlightText',
+  standalone: false,
 })
 export class HighlightTextPipe implements PipeTransform {
   public transform(text: any, highlightedText: any): string {

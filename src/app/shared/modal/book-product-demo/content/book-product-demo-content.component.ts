@@ -26,6 +26,7 @@ import {SelectItemModel} from '../../../select/select-item/select-item.model';
   templateUrl: './book-product-demo-content.component.html',
   styleUrls: ['./book-product-demo-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BookProductDemoContentComponent {
   @Input()

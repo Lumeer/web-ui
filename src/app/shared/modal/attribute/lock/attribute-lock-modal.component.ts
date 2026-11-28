@@ -42,6 +42,7 @@ import {AttributeLockContentComponent} from './content/attribute-lock-content.co
   selector: 'attribute-lock-modal',
   templateUrl: './attribute-lock-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeLockModalComponent implements OnInit {
   @Input()

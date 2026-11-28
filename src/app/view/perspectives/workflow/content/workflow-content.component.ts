@@ -57,6 +57,7 @@ import {WorkflowTablesService} from './tables/service/workflow-tables.service';
     WorkflowTablesStateService,
     WorkflowTablesKeyboardService,
   ],
+  standalone: false,
 })
 export class WorkflowContentComponent implements AfterViewInit {
   @Input()

@@ -45,6 +45,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   templateUrl: './color-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./color-data-input.component.scss'],
+  standalone: false,
 })
 export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()

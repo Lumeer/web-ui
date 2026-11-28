@@ -40,6 +40,7 @@ import {AttributeDescriptionContentComponent} from './content/attribute-descript
   selector: 'attribute-description-modal',
   templateUrl: './attribute-description-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeDescriptionModalComponent implements OnInit {
   @Input()

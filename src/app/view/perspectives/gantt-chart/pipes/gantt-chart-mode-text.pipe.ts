@@ -23,6 +23,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 
 @Pipe({
   name: 'ganttChartModeText',
+  standalone: false,
 })
 export class GanttChartModeTextPipe implements PipeTransform {
   public transform(mode: GanttChartMode): string {

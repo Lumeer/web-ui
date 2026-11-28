@@ -35,6 +35,7 @@ import {DataInputConfiguration} from '../../../../data-input/data-input-configur
   templateUrl: './audit-log.component.html',
   styleUrls: ['./audit-log.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AuditLogComponent implements OnChanges {
   @Input()

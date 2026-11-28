@@ -51,6 +51,7 @@ const defaults = {
       deps: [forwardRef(() => TableItemSizeDirective)],
     },
   ],
+  standalone: false,
 })
 export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDestroy {
   @Input('lmrItemSize')

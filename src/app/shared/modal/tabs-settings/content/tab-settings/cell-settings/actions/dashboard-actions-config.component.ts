@@ -27,6 +27,7 @@ import {View} from '../../../../../../../core/store/views/view';
   templateUrl: './dashboard-actions-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-column'},
+  standalone: false,
 })
 export class DashboardActionsConfigComponent {
   @Input()

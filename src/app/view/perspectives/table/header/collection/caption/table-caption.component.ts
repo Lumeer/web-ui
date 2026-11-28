@@ -28,6 +28,7 @@ import {getTableElementFromInnerElement} from '../../../../../../core/store/tabl
   templateUrl: './table-caption.component.html',
   styleUrls: ['./table-caption.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableCaptionComponent implements OnChanges {
   @Input()

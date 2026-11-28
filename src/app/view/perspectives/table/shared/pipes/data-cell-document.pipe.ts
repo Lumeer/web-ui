@@ -28,6 +28,7 @@ import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/
 
 @Pipe({
   name: 'dataCellDocument',
+  standalone: false,
 })
 export class DataCellDocumentPipe implements PipeTransform {
   public transform(

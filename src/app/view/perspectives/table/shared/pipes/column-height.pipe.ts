@@ -26,6 +26,7 @@ export const TABLE_ROW_HEIGHT = 35;
 
 @Pipe({
   name: 'columnHeight',
+  standalone: false,
 })
 export class ColumnHeightPipe implements PipeTransform {
   public transform(column: TableConfigColumn, table: TableModel, cursor: TableHeaderCursor): number {

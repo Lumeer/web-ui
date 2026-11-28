@@ -31,6 +31,7 @@ import {WorkflowTableTitle} from '../../../model/workflow-table';
   selector: 'workflow-table-title',
   templateUrl: './workflow-table-title.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class WorkflowTableTitleComponent implements OnChanges {
   @Input()

@@ -22,6 +22,7 @@ import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '
 @Directive({
   selector: '[percentage]',
   providers: [{provide: NG_VALUE_ACCESSOR, useExisting: PercentageDirective, multi: true}],
+  standalone: false,
 })
 export class PercentageDirective extends DefaultValueAccessor {
   private _sourceRenderer: Renderer2;

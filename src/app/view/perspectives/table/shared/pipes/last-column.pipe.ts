@@ -22,6 +22,7 @@ import {TableConfigColumn, TableConfigPart} from '../../../../../core/store/tabl
 
 @Pipe({
   name: 'lastColumn',
+  standalone: false,
 })
 export class LastColumnPipe implements PipeTransform {
   public transform(parts: TableConfigPart[]): TableConfigColumn {

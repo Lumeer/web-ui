@@ -43,6 +43,7 @@ import {ChartData, ChartSettings} from '../convertor/chart-data';
   templateUrl: './chart-visualizer.component.html',
   styleUrls: ['./chart-visualizer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

@@ -37,6 +37,7 @@ import {objectChanged} from '../../utils/common.utils';
   selector: 'resource-variables',
   templateUrl: './resource-variables.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceVariablesComponent implements OnChanges {
   @Input()

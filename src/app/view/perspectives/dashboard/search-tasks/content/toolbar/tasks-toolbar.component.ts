@@ -36,6 +36,7 @@ import {SizeType} from '../../../../../../shared/slider/size/size-type';
   templateUrl: './tasks-toolbar.component.html',
   styleUrls: ['./tasks-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TasksToolbarComponent implements OnChanges {
   @Input()

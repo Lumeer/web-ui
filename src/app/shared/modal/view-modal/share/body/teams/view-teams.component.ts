@@ -39,6 +39,7 @@ import {View} from '../../../../../../core/store/views/view';
   selector: 'view-teams',
   templateUrl: './view-teams.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewTeamsComponent implements OnInit {
   @Input()

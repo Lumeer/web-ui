@@ -28,6 +28,7 @@ import {LinkConstraintFormControl} from './link-constraint-form-control';
   selector: 'link-constraint-config-form',
   templateUrl: './link-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkConstraintConfigFormComponent implements OnChanges {
   @Input()

@@ -22,6 +22,7 @@ import {DropdownOption} from '../options/dropdown-option';
 
 @Pipe({
   name: 'groupDropdownOptions',
+  standalone: false,
 })
 export class GroupDropdownOptionsPipe implements PipeTransform {
   public transform(options: DropdownOption[]): {group: string; options: DropdownOption[]}[] {

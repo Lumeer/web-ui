@@ -29,6 +29,7 @@ import {SelectItem2Model} from '../select-item2/select-item2.model';
 
 @Pipe({
   name: 'selectItemsWithConstraint2',
+  standalone: false,
 })
 export class SelectItemsWithConstraint2Pipe implements PipeTransform {
   constructor(private formatter: SelectItemWithConstraintFormatter) {}

@@ -41,6 +41,7 @@ import {TableRowsComponent} from './rows/table-rows.component';
   selector: 'table-body',
   templateUrl: './table-body.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableBodyComponent implements OnChanges {
   @Input()

@@ -29,6 +29,7 @@ import {
   templateUrl: './dashboard-image-config.component.html',
   styleUrls: ['./dashboard-image-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardImageConfigComponent implements OnChanges {
   @Input()

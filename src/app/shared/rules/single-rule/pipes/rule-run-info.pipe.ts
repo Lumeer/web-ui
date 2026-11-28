@@ -23,6 +23,7 @@ import {computeCronRuleNextExecution} from '../../../utils/rule.utils';
 
 @Pipe({
   name: 'ruleRunInfo',
+  standalone: false,
 })
 export class RuleRunInfoPipe implements PipeTransform {
   public transform(rule: Rule): {lastRun: Date; nextRun: Date} {

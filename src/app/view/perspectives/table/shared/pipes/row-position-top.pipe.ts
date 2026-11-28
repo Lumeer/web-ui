@@ -24,6 +24,7 @@ import {countLinkedRows} from '../../../../../core/store/tables/table.utils';
 
 @Pipe({
   name: 'rowPositionTop',
+  standalone: false,
 })
 export class RowPositionTopPipe implements PipeTransform {
   public transform(rows: TableConfigRow[], rowIndex: number): number {

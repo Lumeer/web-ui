@@ -33,6 +33,7 @@ import {selectProjectByWorkspace} from '../../../core/store/projects/projects.st
   selector: 'project-activity',
   templateUrl: './project-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectActivityComponent implements OnInit {
   public project$: Observable<Project>;

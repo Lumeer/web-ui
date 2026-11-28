@@ -44,6 +44,7 @@ import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
   selector: 'invalid-query',
   templateUrl: './invalid-query.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class InvalidQueryComponent implements OnChanges {
   @Input()

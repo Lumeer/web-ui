@@ -22,6 +22,7 @@ import {contrastColor} from '../utils/color.utils';
 
 @Pipe({
   name: 'contrastColor',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

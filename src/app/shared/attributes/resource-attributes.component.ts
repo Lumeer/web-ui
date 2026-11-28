@@ -41,6 +41,7 @@ import {ResourceAttributesTableComponent} from './table/resource-attributes-tabl
   selector: 'resource-attributes',
   templateUrl: './resource-attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceAttributesComponent implements OnChanges {
   @ViewChild(ResourceAttributesTableComponent)

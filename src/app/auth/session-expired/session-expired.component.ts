@@ -36,6 +36,7 @@ import {SessionService} from '../session.service';
   selector: 'session-expired',
   templateUrl: './session-expired.component.html',
   styleUrls: ['../common/auth-styles.scss'],
+  standalone: false,
 })
 export class SessionExpiredComponent implements OnInit {
   public readonly sessionTimeout;

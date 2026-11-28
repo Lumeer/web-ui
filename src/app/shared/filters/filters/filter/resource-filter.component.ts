@@ -55,6 +55,7 @@ import {modifyAttributeForQueryFilter} from '../../../utils/attribute.utils';
   templateUrl: './resource-filter.component.html',
   styleUrls: ['./resource-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceFilterComponent implements OnInit, OnChanges {
   @Input()

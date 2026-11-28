@@ -27,6 +27,7 @@ import {ObjectFolders, getAllObjectFoldersObjects} from '../../util/object-folde
   templateUrl: './views-folder.component.html',
   styleUrls: ['../../../../common/view-detail/view-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewsFolderComponent implements OnChanges {
   @Input()

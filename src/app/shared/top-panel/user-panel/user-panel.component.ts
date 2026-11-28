@@ -33,6 +33,7 @@ import {selectCurrentUser} from '../../../core/store/users/users.state';
   templateUrl: './user-panel.component.html',
   styleUrls: ['./user-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserPanelComponent implements OnInit {
   @Input()

@@ -34,6 +34,7 @@ import {PublicScriptType} from './public-script-type';
   templateUrl: './project-template-script.component.html',
   styleUrls: ['./project-template-script.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
   @Input()

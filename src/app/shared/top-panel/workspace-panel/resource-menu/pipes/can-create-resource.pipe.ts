@@ -29,6 +29,7 @@ import {userHasRoleInOrganization} from '../../../../utils/permission.utils';
 
 @Pipe({
   name: 'canCreateResource',
+  standalone: false,
 })
 export class CanCreateResourcePipe implements PipeTransform {
   constructor(private configurationService: ConfigurationService) {}

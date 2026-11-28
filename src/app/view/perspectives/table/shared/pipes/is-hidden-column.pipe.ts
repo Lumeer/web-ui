@@ -22,6 +22,7 @@ import {TableColumnType, TableConfigColumn} from '../../../../../core/store/tabl
 
 @Pipe({
   name: 'isHiddenColumn',
+  standalone: false,
 })
 export class IsHiddenColumnPipe implements PipeTransform {
   public transform(column: TableConfigColumn): boolean {

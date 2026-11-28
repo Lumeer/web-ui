@@ -28,6 +28,7 @@ import {SelectItemModel} from '../select-item/select-item.model';
 
 @Pipe({
   name: 'selectItemsWithConstraint',
+  standalone: false,
 })
 export class SelectItemsWithConstraintPipe implements PipeTransform {
   public transform(

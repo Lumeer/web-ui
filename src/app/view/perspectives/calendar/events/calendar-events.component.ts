@@ -87,6 +87,7 @@ interface PatchData {
   selector: 'calendar-events',
   templateUrl: './calendar-events.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CalendarEventsComponent implements OnInit, OnChanges {
   @Input()

@@ -22,6 +22,7 @@ import {WorkflowTable} from '../model/workflow-table';
 
 @Pipe({
   name: 'workflowTablesIds',
+  standalone: false,
 })
 export class WorkflowTablesIdsPipe implements PipeTransform {
   public transform(tables: WorkflowTable[]): string[] {

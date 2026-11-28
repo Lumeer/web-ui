@@ -22,6 +22,7 @@ import {Resource} from '../../core/model/resource';
 
 @Pipe({
   name: 'colors',
+  standalone: false,
 })
 export class ColorsPipe implements PipeTransform {
   public transform(entities: Resource[]): string[] {

@@ -37,6 +37,7 @@ import {View} from '../../../../../../core/store/views/view';
   selector: 'view-resource-permissions-teams',
   templateUrl: './view-resource-permissions-teams.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewResourcePermissionsTeamsComponent implements OnInit {
   @Input()

@@ -30,6 +30,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'linksCount',
+  standalone: false,
 })
 export class LinksCountPipe implements PipeTransform {
   constructor(private store$: Store<AppState>) {}

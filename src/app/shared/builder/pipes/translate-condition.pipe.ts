@@ -25,6 +25,7 @@ import {Attribute} from '../../../core/store/collections/collection';
 
 @Pipe({
   name: 'translateCondition',
+  standalone: false,
 })
 @Injectable()
 export class TranslateConditionPipe implements PipeTransform {

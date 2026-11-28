@@ -39,6 +39,7 @@ import {DropdownComponent} from '../../../../../dropdown/dropdown.component';
   templateUrl: './notifications-menu-dropdown.component.html',
   styleUrls: ['./notifications-menu-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NotificationsMenuDropdownComponent implements OnDestroy {
   @Input()

@@ -45,6 +45,7 @@ import {DialogType} from '../dialog-type';
   templateUrl: './choose-link-documents-modal.component.html',
   styleUrls: ['./choose-link-documents-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChooseLinkDocumentsModalComponent implements OnInit {
   @Input()

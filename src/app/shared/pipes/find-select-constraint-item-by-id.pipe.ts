@@ -25,6 +25,7 @@ import {SelectItemModel} from '../select/select-item/select-item.model';
 
 @Pipe({
   name: 'findSelectConstraintItemById',
+  standalone: false,
 })
 export class FindSelectConstraintItemByIdPipe implements PipeTransform {
   public transform(items: SelectItemModel[], id: Constraint): SelectItemModel {

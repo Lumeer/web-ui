@@ -56,6 +56,7 @@ import {ColumnFilter} from '../../../../model/table-column';
   templateUrl: './cell-filter-builder.component.html',
   styleUrls: ['./cell-filter-builder.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CellFilterBuilderComponent implements OnChanges, AfterViewInit {
   @Input()

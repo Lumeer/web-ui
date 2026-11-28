@@ -23,6 +23,7 @@ import {filterUniqueWorkflowConfigStems} from '../../../../core/store/workflows/
 
 @Pipe({
   name: 'filterUniqueStemsConfigs',
+  standalone: false,
 })
 export class FilterUniqueStemsConfigsPipe implements PipeTransform {
   public transform(config: WorkflowConfig): WorkflowStemConfig[] {

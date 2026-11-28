@@ -24,6 +24,7 @@ import {FormLinkCellConfig} from '../../../../core/store/form/form-model';
 
 @Pipe({
   name: 'linkCollectionDisplayedAttribute',
+  standalone: false,
 })
 export class LinkCollectionDisplayedAttributePipe implements PipeTransform {
   public transform(collection: Collection, config: FormLinkCellConfig): string[] {

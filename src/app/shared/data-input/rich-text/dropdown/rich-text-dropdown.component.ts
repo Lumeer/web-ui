@@ -32,6 +32,7 @@ import {isMacOS} from '../../../utils/system.utils';
   templateUrl: './rich-text-dropdown.component.html',
   styleUrls: ['./rich-text-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RichTextDropdownComponent extends FullscreenDropdownDirective {
   @Input()

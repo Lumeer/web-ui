@@ -25,6 +25,7 @@ import {getAttributesResourceType} from '../utils/resource.utils';
 
 @Pipe({
   name: 'isDefaultAttribute',
+  standalone: false,
 })
 @Injectable()
 export class DefaultAttributePipe implements PipeTransform {

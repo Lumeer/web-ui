@@ -44,6 +44,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   templateUrl: './percentage-data-input.component.html',
   styleUrls: ['./percentage-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PercentageDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()

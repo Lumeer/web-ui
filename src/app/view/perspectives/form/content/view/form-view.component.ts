@@ -76,6 +76,7 @@ import {FormValidationService} from './validation/form-validation.service';
   templateUrl: './form-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormValidationService, FormStateService],
+  standalone: false,
 })
 export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

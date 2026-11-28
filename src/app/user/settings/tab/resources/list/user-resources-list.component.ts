@@ -26,6 +26,7 @@ import {ResourceRolesData, ResourceRolesDatum} from './resource-roles-data';
   templateUrl: './user-resources-list.component.html',
   styleUrls: ['./user-resources-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserResourcesListComponent {
   @Input()

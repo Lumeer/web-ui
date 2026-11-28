@@ -23,6 +23,7 @@ import {View} from '../../core/store/views/view';
 
 @Pipe({
   name: 'viewLink',
+  standalone: false,
 })
 export class ViewLinkPipe implements PipeTransform {
   public transform(view: View, workspace: Workspace): any[] {

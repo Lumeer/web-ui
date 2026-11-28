@@ -24,6 +24,7 @@ import {User} from '../../../core/store/users/user';
 
 @Pipe({
   name: 'userFilter',
+  standalone: false,
 })
 @Injectable()
 export class UserFilterPipe implements PipeTransform {

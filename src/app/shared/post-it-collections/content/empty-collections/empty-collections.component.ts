@@ -31,6 +31,7 @@ import {selectProjectPermissions} from '../../../../core/store/user-permissions/
   selector: 'empty-collections',
   templateUrl: './empty-collections.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptyCollectionsComponent implements OnInit {
   @Input()

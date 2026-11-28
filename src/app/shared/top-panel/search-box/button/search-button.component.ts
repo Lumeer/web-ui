@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   selector: 'search-button',
   templateUrl: './search-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SearchButtonComponent {
   @Input()

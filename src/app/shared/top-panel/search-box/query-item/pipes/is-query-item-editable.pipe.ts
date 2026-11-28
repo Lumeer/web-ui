@@ -24,6 +24,7 @@ import {QueryItem} from '../model/query-item';
 
 @Pipe({
   name: 'isQueryItemEditable',
+  standalone: false,
 })
 export class IsQueryItemEditablePipe implements PipeTransform {
   public transform(index: number, queryItems: QueryItem[], canManageQuery: boolean, viewQuery: Query): boolean {

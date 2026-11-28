@@ -22,6 +22,7 @@ import {SelectConstraintOption} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'selectOptionsValues',
+  standalone: false,
 })
 export class SelectOptionsValuesPipe implements PipeTransform {
   public transform(options: SelectConstraintOption[]): any[] {

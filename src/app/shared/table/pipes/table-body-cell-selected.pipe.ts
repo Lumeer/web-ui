@@ -25,6 +25,7 @@ import {isTableCellSelected, isTableColumnDirectlyEditable} from '../model/table
 
 @Pipe({
   name: 'tableBodyCellSelected',
+  standalone: false,
 })
 export class TableBodyCellSelectedPipe implements PipeTransform {
   public transform(

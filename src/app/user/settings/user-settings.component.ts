@@ -42,6 +42,7 @@ import {selectCurrentUser, selectUserByWorkspace} from '../../core/store/users/u
   selector: 'user-settings',
   templateUrl: './user-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserSettingsComponent implements OnInit {
   @Output()

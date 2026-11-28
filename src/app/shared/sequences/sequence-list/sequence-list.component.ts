@@ -29,6 +29,7 @@ import {SequencesAction} from '../../../core/store/sequences/sequences.action';
   templateUrl: './sequence-list.component.html',
   styleUrls: ['./sequence-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SequenceListComponent {
   @Input()

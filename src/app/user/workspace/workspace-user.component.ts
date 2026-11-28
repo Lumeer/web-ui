@@ -44,6 +44,7 @@ import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
   selector: 'workspace-user',
   templateUrl: './workspace-user.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class WorkspaceUserComponent implements OnInit, OnDestroy {
   public readonly type = ResourceType.Organization;

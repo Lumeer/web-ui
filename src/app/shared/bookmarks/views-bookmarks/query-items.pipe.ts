@@ -25,6 +25,7 @@ import {QueryData} from '../../top-panel/search-box/util/query-data';
 
 @Pipe({
   name: 'queryItems',
+  standalone: false,
 })
 export class QueryItemsPipe implements PipeTransform {
   public transform(query: Query, queryData: QueryData): QueryItem[] {

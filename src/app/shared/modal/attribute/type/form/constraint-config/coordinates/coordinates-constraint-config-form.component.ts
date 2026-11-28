@@ -34,6 +34,7 @@ import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-co
   selector: 'coordinates-constraint-config-form',
   templateUrl: './coordinates-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   @Input()

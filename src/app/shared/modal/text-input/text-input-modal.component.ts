@@ -27,6 +27,7 @@ import {DialogType} from '../dialog-type';
 @Component({
   selector: 'text-input-modal',
   templateUrl: './text-input-modal.component.html',
+  standalone: false,
 })
 export class TextInputModalComponent {
   @Input()

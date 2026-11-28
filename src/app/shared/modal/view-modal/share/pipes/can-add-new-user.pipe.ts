@@ -23,6 +23,7 @@ import {isEmailValid} from '../../../../utils/email.utils';
 
 @Pipe({
   name: 'canAddNewUser',
+  standalone: false,
 })
 export class CanAddNewUserPipe implements PipeTransform {
   public transform(text: string, currentUsers: User[]): boolean {

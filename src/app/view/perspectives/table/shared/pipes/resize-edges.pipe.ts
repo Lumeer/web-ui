@@ -26,6 +26,7 @@ import {hasLastTableColumnChildHidden, isLastTableColumnChild} from '../../../..
 
 @Pipe({
   name: 'resizeEdges',
+  standalone: false,
 })
 export class ResizeEdgesPipe implements PipeTransform {
   public transform(column: TableConfigColumn, table: TableModel, cursor: TableHeaderCursor): Edges {

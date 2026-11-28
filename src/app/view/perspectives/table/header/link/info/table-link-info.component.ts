@@ -41,6 +41,7 @@ import {getTableElementFromInnerElement} from '../../../../../../core/store/tabl
   templateUrl: './table-link-info.component.html',
   styleUrls: ['./table-link-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
   @Input()

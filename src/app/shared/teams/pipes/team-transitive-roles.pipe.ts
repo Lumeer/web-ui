@@ -28,6 +28,7 @@ import {teamTransitiveRoles} from '../../utils/permission.utils';
 
 @Pipe({
   name: 'teamTransitiveRoles',
+  standalone: false,
 })
 export class TeamTransitiveRolesPipe implements PipeTransform {
   public transform(

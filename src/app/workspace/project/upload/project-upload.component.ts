@@ -31,6 +31,7 @@ import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/
   selector: 'project-upload',
   templateUrl: './project-upload.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectUploadComponent implements OnInit, OnDestroy {
   @Input()

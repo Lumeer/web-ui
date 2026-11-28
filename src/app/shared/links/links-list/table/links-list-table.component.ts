@@ -79,6 +79,7 @@ const columnWidth = 100;
   templateUrl: './links-list-table.component.html',
   styleUrls: ['./links-list-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()

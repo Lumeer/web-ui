@@ -23,6 +23,7 @@ import {findAttribute} from '../../core/store/collections/collection.util';
 
 @Pipe({
   name: 'findAttribute',
+  standalone: false,
 })
 export class FindAttributePipe implements PipeTransform {
   public transform(attributes: Attribute[], attributeId: string): Attribute {

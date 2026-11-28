@@ -22,6 +22,7 @@ import {getFileTypeIcon} from '../../../core/store/file-attachments/file-attachm
 
 @Pipe({
   name: 'fileTypeIcon',
+  standalone: false,
 })
 export class FileTypeIconPipe implements PipeTransform {
   public transform(fileName: string): string {

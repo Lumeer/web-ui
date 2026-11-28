@@ -30,6 +30,7 @@ import {View} from '../../../../../../core/store/views/view';
   selector: 'view-resource-permissions-users',
   templateUrl: './view-resource-permissions-users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewResourcePermissionsUsersComponent implements OnChanges {
   @Input()

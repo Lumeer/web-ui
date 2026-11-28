@@ -44,6 +44,7 @@ import {areArraysSame} from '../../../../utils/array.utils';
   templateUrl: './user-teams.component.html',
   styleUrls: ['./user-teams.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserTeamsComponent implements OnChanges {
   @Input()

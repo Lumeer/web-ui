@@ -32,6 +32,7 @@ import {Perspective} from '../../../perspective';
   selector: 'chart-main-config',
   templateUrl: './chart-main-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChartMainConfigComponent {
   @Input()

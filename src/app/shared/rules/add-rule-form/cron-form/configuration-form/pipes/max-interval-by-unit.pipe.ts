@@ -22,6 +22,7 @@ import {ChronoUnit, maxIntervalByChronoUnit} from '../../../../../../core/model/
 
 @Pipe({
   name: 'maxIntervalByUnit',
+  standalone: false,
 })
 export class MaxIntervalByUnitPipe implements PipeTransform {
   public transform(unit: ChronoUnit): number {

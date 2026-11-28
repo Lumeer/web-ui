@@ -29,6 +29,7 @@ import {generateId} from '../../../utils/resource.utils';
   templateUrl: './resource-variable-header.component.html',
   styleUrls: ['./resource-variable-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceVariableHeaderComponent implements OnChanges {
   @Input()

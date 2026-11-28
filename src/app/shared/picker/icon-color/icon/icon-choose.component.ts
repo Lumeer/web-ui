@@ -29,6 +29,7 @@ import {IconIdPipe} from '../pipes/icon-id.pipe';
   templateUrl: './icon-choose.component.html',
   styleUrls: ['./icon-choose.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class IconChooseComponent {
   @Input()

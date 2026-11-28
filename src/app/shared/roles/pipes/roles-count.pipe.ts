@@ -24,6 +24,7 @@ import {Role} from '../../../core/store/permissions/permissions';
 
 @Pipe({
   name: 'rolesCount',
+  standalone: false,
 })
 export class RolesCountPipe implements PipeTransform {
   public transform(roles: Role[], transitiveRoles: Role[]): number {

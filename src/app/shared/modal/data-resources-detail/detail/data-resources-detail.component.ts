@@ -47,6 +47,7 @@ import {getAttributesResourceType} from '../../../utils/resource.utils';
   templateUrl: './data-resources-detail.component.html',
   styleUrls: ['./data-resources-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataResourcesDetailComponent implements OnInit {
   @Input()

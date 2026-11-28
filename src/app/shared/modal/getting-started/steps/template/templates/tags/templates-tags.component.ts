@@ -28,6 +28,7 @@ import {Project} from '../../../../../../../core/store/projects/project';
   styleUrls: ['./templates-tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-column'},
+  standalone: false,
 })
 export class TemplatesTagsComponent implements OnChanges {
   @Input()

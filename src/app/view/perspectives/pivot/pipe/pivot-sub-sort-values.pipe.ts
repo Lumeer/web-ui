@@ -22,6 +22,7 @@ import {LmrPivotDataHeader, LmrPivotRowColumnAttribute, LmrPivotSortValue} from 
 
 @Pipe({
   name: 'pivotSubSortValues',
+  standalone: false,
 })
 export class PivotSubSortValuesPipe implements PipeTransform {
   public transform(

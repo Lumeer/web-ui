@@ -88,6 +88,7 @@ import {DetailTabType} from './detail-tab-type';
   styleUrls: ['./data-resource-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class DataResourceDetailComponent
   extends ViewConfigPerspectiveComponent<DetailConfig>

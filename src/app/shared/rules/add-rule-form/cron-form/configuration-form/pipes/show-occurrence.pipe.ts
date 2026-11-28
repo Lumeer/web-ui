@@ -22,6 +22,7 @@ import {ChronoUnit} from '../../../../../../core/model/rule';
 
 @Pipe({
   name: 'showOccurrence',
+  standalone: false,
 })
 export class ShowOccurrencePipe implements PipeTransform {
   public transform(unit: ChronoUnit): boolean {

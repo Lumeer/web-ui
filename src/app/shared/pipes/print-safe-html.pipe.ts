@@ -23,6 +23,7 @@ import DOMPurify from 'dompurify';
 
 @Pipe({
   name: 'printSafeHtml',
+  standalone: false,
 })
 export class PrintSafeHtmlPipe implements PipeTransform {
   constructor(private sanitized: DomSanitizer) {}

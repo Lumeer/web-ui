@@ -46,6 +46,7 @@ import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
   styleUrls: ['./gantt-chart-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class GanttChartPerspectiveComponent
   extends DataPerspectiveDirective<GanttChartConfig>

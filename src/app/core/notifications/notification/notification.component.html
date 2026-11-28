@@ -1,5 +1,5 @@
 <ng-container *ngIf="{buttons: buttons$ | async, type: type$ | async, icon: icon$ | async} as data">
-  <div class="notification-wrapper" [style.display]="state.value === 'inactive' ? 'none' : ''"
+  <div class="notification-wrapper" [style.display]="state().value === 'inactive' ? 'none' : ''"
        [ngClass]="data.type">
     <div class="content p-3 d-flex align-items-center">
       <div class="flex-grow-1">
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div *ngIf="options.progressBar">
-      <div class="toast-progress position-relative" [style.width]="width + '%'"></div>
+      <div class="toast-progress position-relative" [style.width]="width() + '%'"></div>
     </div>
     <div *ngIf="data.buttons?.length" class="btn-group w-100" role="group">
       <button *ngFor="let button of data.buttons; let first = first; let last = last" type="button"

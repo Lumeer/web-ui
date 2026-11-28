@@ -22,6 +22,7 @@ import {HtmlModifier} from '../utils/html-modifier';
 
 @Pipe({
   name: 'removeHtmlComments',
+  standalone: false,
 })
 export class RemoveHtmlCommentsPipe implements PipeTransform {
   public transform(html: HTMLElement): string {

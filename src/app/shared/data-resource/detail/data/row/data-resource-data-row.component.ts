@@ -56,6 +56,7 @@ import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-
   templateUrl: './data-resource-data-row.component.html',
   styleUrls: ['./data-resource-data-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataResourceDataRowComponent implements DataRowComponent, OnChanges {
   @Input()

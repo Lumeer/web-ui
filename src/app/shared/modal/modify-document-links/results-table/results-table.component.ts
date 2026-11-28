@@ -53,6 +53,7 @@ export type ResultTableRow = {document: DocumentModel; linkInstance?: LinkInstan
   templateUrl: './results-table.component.html',
   styleUrls: ['./results-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResultsTableComponent implements OnChanges {
   @Input()

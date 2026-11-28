@@ -22,6 +22,7 @@ import {DashboardTab, isDashboardTabDefault} from '../../../../core/model/dashbo
 
 @Pipe({
   name: 'isTabDefault',
+  standalone: false,
 })
 export class IsTabDefaultPipe implements PipeTransform {
   public transform(tab: DashboardTab): boolean {

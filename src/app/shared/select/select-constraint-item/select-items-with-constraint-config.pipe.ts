@@ -26,6 +26,7 @@ import {SelectItemWithConstraintId} from './select-item-with-constraint.componen
 
 @Pipe({
   name: 'selectItemWithConstraintConfig',
+  standalone: false,
 })
 export class SelectItemWithConstraintConfigPipe implements PipeTransform {
   constructor(private formatter: SelectItemWithConstraintFormatter) {}

@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'uniqueEntities',
+  standalone: false,
 })
 export class UniqueEntitiesPipe implements PipeTransform {
   public transform(entities: {id?: string; correlationId?: string}[]): any[] {

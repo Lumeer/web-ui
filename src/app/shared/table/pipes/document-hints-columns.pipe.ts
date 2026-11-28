@@ -23,6 +23,7 @@ import {TableColumnGroup} from '../model/table-column';
 
 @Pipe({
   name: 'documentHintsColumns',
+  standalone: false,
 })
 export class DocumentHintsColumnsPipe implements PipeTransform {
   public transform(groups: TableColumnGroup[]): DocumentHintColumn[] {

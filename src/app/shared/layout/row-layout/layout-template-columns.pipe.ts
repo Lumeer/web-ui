@@ -22,6 +22,7 @@ import {RowLayoutType} from './row-layout';
 
 @Pipe({
   name: 'layoutTemplateColumns',
+  standalone: false,
 })
 export class LayoutTemplateColumnsPipe implements PipeTransform {
   public transform(layout: RowLayoutType): string {

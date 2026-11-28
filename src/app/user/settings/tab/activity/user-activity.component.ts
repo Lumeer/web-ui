@@ -37,6 +37,7 @@ import {AuditLogConfiguration} from '../../../../shared/resource/activity/audit-
   selector: 'user-activity',
   templateUrl: './user-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserActivityComponent implements OnChanges {
   @Input()

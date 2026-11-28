@@ -23,6 +23,7 @@ import {SelectItem2Model} from './select-item2.model';
 
 @Pipe({
   name: 'getSelectedItems',
+  standalone: false,
 })
 export class GetSelectedItemsPipe implements PipeTransform {
   public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}

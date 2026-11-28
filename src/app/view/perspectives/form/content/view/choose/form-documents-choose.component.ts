@@ -43,6 +43,7 @@ import {objectChanged} from '../../../../../../shared/utils/common.utils';
   selector: 'form-documents-choose',
   templateUrl: './form-documents-choose.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormDocumentsChooseComponent implements OnChanges {
   @Input()

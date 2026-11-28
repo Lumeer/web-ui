@@ -33,6 +33,7 @@ import {selectViewById} from '../../../../core/store/views/views.state';
   templateUrl: './view-header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'p-3 text-center bg-success text-white w-100 rounded-top'},
+  standalone: false,
 })
 export class ViewHeaderComponent implements OnInit {
   @Input()

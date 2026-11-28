@@ -25,6 +25,7 @@ import {AttributesResource} from '../../../../core/model/resource';
   templateUrl: './resource-modal-header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'p-3'},
+  standalone: false,
 })
 export class ResourceModalHeaderComponent {
   @Input()

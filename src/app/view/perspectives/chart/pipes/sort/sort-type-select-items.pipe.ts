@@ -24,6 +24,7 @@ import {parseSelectTranslation} from '../../../../../shared/utils/translation.ut
 
 @Pipe({
   name: 'sortTypeSelectItems',
+  standalone: false,
 })
 export class SortTypeSelectItemsPipe implements PipeTransform {
   public transform(types: ChartSortType[]): SelectItemModel[] {

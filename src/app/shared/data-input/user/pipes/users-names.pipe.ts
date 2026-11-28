@@ -22,6 +22,7 @@ import {User} from '../../../../core/store/users/user';
 
 @Pipe({
   name: 'usersNames',
+  standalone: false,
 })
 export class UsersNamesPipe implements PipeTransform {
   public transform(users: User[]): any[] {

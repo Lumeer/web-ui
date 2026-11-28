@@ -113,6 +113,7 @@ type PatchDataMap = Record<string, Record<string, any>>;
   styleUrls: ['./gantt-chart-tasks.component.scss'],
   templateUrl: './gantt-chart-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Input()

@@ -26,6 +26,7 @@ import {GANTT_DATE_FORMAT} from '../../../../core/store/gantt-charts/gantt-chart
 
 @Pipe({
   name: 'tasksInvalidRangeInfo',
+  standalone: false,
 })
 export class TasksInvalidRangeInfoPipe implements PipeTransform {
   public transform(tasks: GanttTask[]): {minTask: GanttTask; minDate: Date; maxTask: GanttTask; maxDate: Date} {

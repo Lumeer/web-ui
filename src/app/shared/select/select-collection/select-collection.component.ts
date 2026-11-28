@@ -25,6 +25,7 @@ import {Collection} from '../../../core/store/collections/collection';
   templateUrl: './select-collection.component.html',
   styleUrls: ['./select-collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectCollectionComponent {
   @Input()

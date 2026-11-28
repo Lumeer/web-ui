@@ -24,6 +24,7 @@ import {ResourceType} from '../../../../core/model/resource-type';
   selector: 'collection-users',
   templateUrl: './collection-users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionUsersComponent {
   public readonly resourceType = ResourceType.Collection;

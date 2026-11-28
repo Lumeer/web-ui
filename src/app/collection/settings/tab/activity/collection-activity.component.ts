@@ -33,6 +33,7 @@ import {Project} from '../../../../core/store/projects/project';
   selector: 'collection-activity',
   templateUrl: './collection-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionActivityComponent implements OnInit {
   public collection$: Observable<Project>;

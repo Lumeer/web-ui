@@ -24,6 +24,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 
 @Pipe({
   name: 'kanbanValueTypeSelectItems',
+  standalone: false,
 })
 export class KanbanValueTypeSelectItemsPipe implements PipeTransform {
   public transform(types: KanbanValueType[]): SelectItemModel[] {

@@ -27,6 +27,7 @@ import {View} from '../../../../../../core/store/views/view';
   templateUrl: './dashboard-rows-settings.component.html',
   styleUrls: ['./dashboard-rows-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardRowsSettingsComponent {
   @Input()

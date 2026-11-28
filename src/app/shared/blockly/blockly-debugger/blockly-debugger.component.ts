@@ -40,6 +40,7 @@ export enum BlocklyDebugDisplay {
   templateUrl: './blockly-debugger.component.html',
   styleUrls: ['./blockly-debugger.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BlocklyDebuggerComponent implements OnInit {
   @Input()

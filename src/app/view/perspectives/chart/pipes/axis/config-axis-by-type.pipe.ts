@@ -22,6 +22,7 @@ import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/c
 
 @Pipe({
   name: 'configAxisByType',
+  standalone: false,
 })
 export class ConfigAxisByTypePipe implements PipeTransform {
   public transform(type: ChartAxisType, config: ChartConfig): ChartAxis {

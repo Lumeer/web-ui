@@ -23,6 +23,7 @@ import {extractAttributeLastName} from '../../../../../shared/utils/attribute.ut
 
 @Pipe({
   name: 'attributeNameChanged',
+  standalone: false,
 })
 export class AttributeNameChangedPipe implements PipeTransform {
   public transform(attribute: Attribute, newLastName: string): boolean {

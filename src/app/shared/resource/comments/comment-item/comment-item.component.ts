@@ -28,6 +28,7 @@ import {User} from '../../../../core/store/users/user';
   templateUrl: './comment-item.component.html',
   styleUrls: ['./comment-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CommentItemComponent implements OnChanges {
   @Input()

@@ -47,6 +47,7 @@ import {RuleVariable} from '../../../blockly/rule-variable-type';
   templateUrl: './cron-form.component.html',
   styleUrls: ['./cron-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CronFormComponent implements OnInit {
   @Input()

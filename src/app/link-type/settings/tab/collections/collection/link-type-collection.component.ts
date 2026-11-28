@@ -30,6 +30,7 @@ import {Perspective} from '../../../../../view/perspectives/perspective';
   selector: '[link-type-collection]',
   templateUrl: './link-type-collection.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTypeCollectionComponent {
   @Input()

@@ -24,6 +24,7 @@ import {dataAggregationName} from '../utils/data-aggregation';
 
 @Pipe({
   name: 'aggregationTypeName',
+  standalone: false,
 })
 export class AggregationTypeNamePipe implements PipeTransform {
   public transform(aggregation: DataAggregationType): string {

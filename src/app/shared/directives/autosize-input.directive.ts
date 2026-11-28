@@ -20,6 +20,7 @@ import {AfterViewChecked, AfterViewInit, Directive, ElementRef, HostListener, In
 
 @Directive({
   selector: '[autoSizeInput]',
+  standalone: false,
 })
 export class AutoSizeInputDirective implements AfterViewInit, AfterViewChecked {
   @Input()

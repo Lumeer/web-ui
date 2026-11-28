@@ -26,6 +26,7 @@ import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../utils/
 
 @Pipe({
   name: 'canChangeRoles',
+  standalone: false,
 })
 export class CanChangeRolesPipe implements PipeTransform {
   public transform(user: User, resourceType: ResourceType, organization?: Organization, project?: Project): boolean {

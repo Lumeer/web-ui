@@ -31,6 +31,7 @@ import {createActionEquationFromFormArray} from '../../common/conditions/constra
   templateUrl: './attribute-lock-content.component.html',
   styleUrls: ['./attribute-lock-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeLockContentComponent implements OnInit {
   @Input()

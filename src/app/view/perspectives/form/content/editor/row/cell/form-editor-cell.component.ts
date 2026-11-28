@@ -41,6 +41,7 @@ import {getOtherLinkedCollectionId} from '../../../../../../../shared/utils/link
   templateUrl: './form-editor-cell.component.html',
   styleUrls: ['./form-editor-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorCellComponent implements OnChanges {
   @Input()

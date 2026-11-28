@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'data',
+  standalone: false,
 })
 export class DataPipe implements PipeTransform {
   public transform(entity: {data: any}, attributeId: string): any {

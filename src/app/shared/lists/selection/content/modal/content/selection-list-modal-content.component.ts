@@ -27,6 +27,7 @@ import {AttributeSelectionList} from '../../attribute-selection-list';
   selector: 'selection-list-modal-content',
   templateUrl: './selection-list-modal-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectionListModalContentComponent implements OnChanges {
   @Input()

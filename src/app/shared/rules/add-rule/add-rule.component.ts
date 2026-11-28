@@ -22,5 +22,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   selector: '[add-rule]',
   templateUrl: './add-rule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AddRuleComponent {}

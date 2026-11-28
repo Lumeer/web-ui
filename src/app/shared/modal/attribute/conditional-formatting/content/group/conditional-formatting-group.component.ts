@@ -33,6 +33,7 @@ import {AttributeFormattingStyle, computeAttributeFormattingStyle} from '../../.
   templateUrl: './conditional-formatting-group.component.html',
   styleUrls: ['./conditional-formatting-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ConditionalFormattingGroupComponent implements OnInit {
   @Input()

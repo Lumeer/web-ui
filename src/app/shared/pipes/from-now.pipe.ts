@@ -24,6 +24,7 @@ import {isDateValid} from '@lumeer/utils';
 
 @Pipe({
   name: 'fromNow',
+  standalone: false,
 })
 export class FromNowPipe implements PipeTransform {
   public transform(date: Date, format?: string, tolerance?: number): string {

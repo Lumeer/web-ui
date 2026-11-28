@@ -22,6 +22,7 @@ import {DropdownOption} from '../options/dropdown-option';
 
 @Pipe({
   name: 'dropdownOptionsValues',
+  standalone: false,
 })
 export class DropdownOptionsValuesPipe implements PipeTransform {
   public transform(options: DropdownOption[]): any[] {

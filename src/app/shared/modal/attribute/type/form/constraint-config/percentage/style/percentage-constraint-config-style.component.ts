@@ -37,6 +37,7 @@ interface PercentageStyleItem {
   templateUrl: './percentage-constraint-config-style.component.html',
   styleUrls: ['./percentage-constraint-config-style.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PercentageConstraintConfigStyleComponent implements OnInit {
   @Input()

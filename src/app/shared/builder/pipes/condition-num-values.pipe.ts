@@ -22,6 +22,7 @@ import {ConditionType, conditionTypeNumberOfInputs} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'conditionNumValues',
+  standalone: false,
 })
 @Injectable()
 export class ConditionNumValuesPipe implements PipeTransform {

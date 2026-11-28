@@ -25,6 +25,7 @@ import {getAttributesResourceType} from '../utils/resource.utils';
 
 @Pipe({
   name: 'resourceIconsColors',
+  standalone: false,
 })
 export class ResourceIconsColorsPipe implements PipeTransform {
   public transform(resource: AttributesResource): {colors: string[]; icons: string[]} {

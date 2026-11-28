@@ -24,6 +24,7 @@ import {DataSettings} from '../../../core/store/view-settings/view-settings';
   selector: 'data-settings',
   templateUrl: './data-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataSettingsComponent {
   @Input()

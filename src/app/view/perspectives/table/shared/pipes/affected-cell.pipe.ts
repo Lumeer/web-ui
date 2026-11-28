@@ -25,6 +25,7 @@ import {EditedAttribute} from '../../../../../core/store/tables/tables.state';
 
 @Pipe({
   name: 'affectedCell',
+  standalone: false,
 })
 export class AffectedCellPipe implements PipeTransform {
   public transform(

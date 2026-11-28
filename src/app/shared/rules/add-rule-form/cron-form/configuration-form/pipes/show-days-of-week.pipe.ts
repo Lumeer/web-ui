@@ -22,6 +22,7 @@ import {ChronoUnit} from '../../../../../../core/model/rule';
 
 @Pipe({
   name: 'showDaysOfWeek',
+  standalone: false,
 })
 export class ShowDaysOfWeekPipe implements PipeTransform {
   public transform(unit: ChronoUnit): boolean {

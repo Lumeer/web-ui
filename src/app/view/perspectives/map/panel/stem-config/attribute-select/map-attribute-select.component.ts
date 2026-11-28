@@ -25,6 +25,7 @@ import {SelectItemModel} from '../../../../../../shared/select/select-item/selec
   selector: 'map-attribute-select',
   templateUrl: './map-attribute-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MapAttributeSelectComponent implements OnChanges {
   @Input()

@@ -23,6 +23,7 @@ import {findFirstAuditLogWithSameResource} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'auditLogRevertable',
+  standalone: false,
 })
 export class AuditLogRevertablePipe implements PipeTransform {
   public transform(auditLog: AuditLog, allLogs: AuditLog[]): boolean {

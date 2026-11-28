@@ -35,6 +35,7 @@ import {SelectItemModel} from '../../../../../../../../../shared/select/select-i
   templateUrl: './pivot-attribute-sort.component.html',
   styleUrls: ['./pivot-attribute-sort.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PivotAttributeSortComponent {
   @Input()

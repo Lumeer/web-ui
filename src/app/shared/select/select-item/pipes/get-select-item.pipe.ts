@@ -23,6 +23,7 @@ import {AreIdsEqualPipe} from './are-ids-equal.pipe';
 
 @Pipe({
   name: 'getSelectItem',
+  standalone: false,
 })
 export class GetSelectItemPipe implements PipeTransform {
   public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}

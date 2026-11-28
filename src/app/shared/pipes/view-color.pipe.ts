@@ -25,6 +25,7 @@ import {View} from '../../core/store/views/view';
 
 @Pipe({
   name: 'viewColor',
+  standalone: false,
 })
 export class ViewColorPipe implements PipeTransform {
   public transform(view: View, collectionsMap: Record<string, Collection>): string {

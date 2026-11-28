@@ -25,6 +25,7 @@ import {AttributesResource} from '../../../core/model/resource';
   templateUrl: './preview-results-tabs.component.html',
   styleUrls: ['./preview-results-tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PreviewResultsTabsComponent {
   @Input()

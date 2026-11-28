@@ -25,6 +25,7 @@ import {objectValues} from '../../../../../shared/utils/common.utils';
   selector: 'gantt-chart-header',
   templateUrl: './gantt-chart-header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartHeaderComponent {
   @Input()

@@ -29,6 +29,7 @@ import {KeyCode, keyboardEventCode} from '../../key-code';
   selector: 'hidden-input',
   templateUrl: './hidden-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class HiddenInputComponent implements DataRowHiddenComponent {
   @Output()

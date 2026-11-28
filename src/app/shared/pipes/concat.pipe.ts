@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'concat',
+  standalone: false,
 })
 export class ConcatPipe implements PipeTransform {
   public transform<T>(values: T[][]): T[] {

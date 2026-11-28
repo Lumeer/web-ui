@@ -23,6 +23,7 @@ import {TableModel} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'isLastPart',
+  standalone: false,
 })
 export class IsLastPartPipe implements PipeTransform {
   public transform(cursor: TableCursor, table: TableModel): boolean {

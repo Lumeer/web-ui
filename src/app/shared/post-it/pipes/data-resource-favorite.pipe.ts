@@ -23,6 +23,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 
 @Pipe({
   name: 'dataResourceFavorite',
+  standalone: false,
 })
 export class DataResourceFavoritePipe implements PipeTransform {
   public transform(dataResource: DataResource): boolean {

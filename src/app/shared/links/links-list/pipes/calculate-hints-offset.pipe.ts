@@ -22,6 +22,7 @@ import {LinkColumn} from '../model/link-column';
 
 @Pipe({
   name: 'calculateHintsOffset',
+  standalone: false,
 })
 export class CalculateHintsOffsetPipe implements PipeTransform {
   public transform(columns: LinkColumn[]): number {

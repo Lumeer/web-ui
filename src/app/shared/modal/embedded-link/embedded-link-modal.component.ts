@@ -27,6 +27,7 @@ import {DialogType} from '../dialog-type';
   selector: 'embedded-link-modal',
   templateUrl: './embedded-link-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmbeddedLinkModalComponent {
   @Input()

@@ -51,6 +51,7 @@ import {TabsSettingsContentComponent} from './content/tabs-settings-content.comp
   selector: 'tabs-settings-modal',
   templateUrl: './tabs-settings-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TabsSettingsModalComponent implements OnInit, OnDestroy {
   @Input()

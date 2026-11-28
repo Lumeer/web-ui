@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular
   templateUrl: './audit-log-filter-badge.component.html',
   styleUrls: ['./audit-log-filter-badge.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AuditLogFilterBadgeComponent {
   @Output()

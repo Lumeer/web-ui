@@ -22,6 +22,7 @@ import {RoleGroup} from '../model/role-group';
 
 @Pipe({
   name: 'filterGroupedRolesWithHeader',
+  standalone: false,
 })
 export class FilterGroupedRolesWithHeaderPipe implements PipeTransform {
   public transform(groups: RoleGroup[]): RoleGroup[] {

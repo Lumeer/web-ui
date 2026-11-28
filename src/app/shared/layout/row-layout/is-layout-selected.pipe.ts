@@ -23,6 +23,7 @@ import {RowLayoutType} from './row-layout';
 
 @Pipe({
   name: 'isLayoutSelected',
+  standalone: false,
 })
 export class IsLayoutSelectedPipe implements PipeTransform {
   public transform(layout: RowLayoutType, selected: RowLayoutType): boolean {

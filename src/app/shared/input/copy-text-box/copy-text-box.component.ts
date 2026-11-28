@@ -27,6 +27,7 @@ import {ClipboardService} from '../../../core/service/clipboard.service';
   templateUrl: './copy-text-box.component.html',
   styleUrls: ['./copy-text-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CopyTextBoxComponent implements OnInit {
   @Input()

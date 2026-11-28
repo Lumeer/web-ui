@@ -24,6 +24,7 @@ import {findFirstAuditLogWithSameResource} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'auditLogHasDetail',
+  standalone: false,
 })
 export class AuditLogHasDetailPipe implements PipeTransform {
   public transform(auditLog: AuditLog, allLogs: AuditLog[]): boolean {

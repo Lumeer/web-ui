@@ -50,6 +50,7 @@ import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
   templateUrl: './post-it-collections.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class PostItCollectionsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

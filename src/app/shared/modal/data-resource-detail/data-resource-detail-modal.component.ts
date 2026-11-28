@@ -55,6 +55,7 @@ import {DataResourcesChain} from './model/data-resources-chain';
   templateUrl: './data-resource-detail-modal.component.html',
   styleUrls: ['./data-resource-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataResourceDetailModalComponent implements OnInit {
   @Input()

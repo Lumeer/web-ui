@@ -45,6 +45,7 @@ const allowedCodes = [
 @Directive({
   selector: '[integer]',
   providers: [{provide: NG_VALUE_ACCESSOR, useExisting: IntegerDirective, multi: true}],
+  standalone: false,
 })
 export class IntegerDirective extends DefaultValueAccessor {
   @Input()

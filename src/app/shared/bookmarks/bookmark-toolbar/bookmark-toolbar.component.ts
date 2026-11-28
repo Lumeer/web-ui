@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   templateUrl: './bookmark-toolbar.component.html',
   styleUrls: ['./bookmark-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BookmarkToolbarComponent {
   @Input()

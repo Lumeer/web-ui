@@ -25,6 +25,7 @@ import {FileDownloadService} from '../file-download.service';
   templateUrl: './file-button.component.html',
   styleUrls: ['./file-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FileButtonComponent {
   @Input()

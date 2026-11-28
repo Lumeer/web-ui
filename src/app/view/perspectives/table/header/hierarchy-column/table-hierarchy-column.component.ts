@@ -32,6 +32,7 @@ import {selectTableHierarchyMaxLevel} from '../../../../../core/store/tables/tab
   templateUrl: './table-hierarchy-column.component.html',
   styleUrls: ['./table-hierarchy-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHierarchyColumnComponent implements OnChanges {
   @Input()

@@ -22,6 +22,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 
 @Pipe({
   name: 'ganttChartBarPlaceholder',
+  standalone: false,
 })
 export class GanttChartBarPlaceholderPipe implements PipeTransform {
   public transform(barProperty: string): string {

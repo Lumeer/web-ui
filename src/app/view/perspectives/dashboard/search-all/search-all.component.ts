@@ -47,6 +47,7 @@ import {SearchPerspectiveConfiguration, defaultSearchPerspectiveConfiguration} f
   templateUrl: './search-all.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

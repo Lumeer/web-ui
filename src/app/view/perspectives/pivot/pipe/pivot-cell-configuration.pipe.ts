@@ -25,6 +25,7 @@ import {DataInputConfiguration} from '../../../../shared/data-input/data-input-c
 
 @Pipe({
   name: 'pivotCellConfiguration',
+  standalone: false,
 })
 export class PivotCellConfigurationPipe implements PipeTransform {
   public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40, inheritColor: true}};

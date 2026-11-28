@@ -23,6 +23,7 @@ import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
 
 @Pipe({
   name: 'perspectivesOptions',
+  standalone: false,
 })
 export class PerspectivesOptionsPipe implements PipeTransform {
   public transform(perspectives: {perspective: Perspective; name: string}[]): DropdownOption[] {

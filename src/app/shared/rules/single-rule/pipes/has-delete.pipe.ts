@@ -22,6 +22,7 @@ import {RuleTiming} from '../../../../core/model/rule';
 
 @Pipe({
   name: 'hasDelete',
+  standalone: false,
 })
 export class HasDeletePipe implements PipeTransform {
   private readonly deleteTimings = [

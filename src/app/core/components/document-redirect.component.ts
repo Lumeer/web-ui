@@ -42,6 +42,7 @@ import {selectViewsDictionaryByCode} from '../store/views/views.state';
 @Component({
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DocumentRedirectComponent implements OnInit {
   constructor(

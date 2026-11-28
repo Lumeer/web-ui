@@ -27,6 +27,7 @@ const DANGER_COLOR = '#dc3545';
 
 @Pipe({
   name: 'queryItemBorder',
+  standalone: false,
 })
 export class QueryItemBorderPipe extends QueryItemBackgroundPipe implements PipeTransform {
   public transform(queryItem: QueryItem, isValid: boolean): string {

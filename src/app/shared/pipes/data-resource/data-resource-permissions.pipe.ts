@@ -30,6 +30,7 @@ import {dataResourcePermissions} from '../../utils/permission.utils';
 
 @Pipe({
   name: 'dataResourcePermissions',
+  standalone: false,
 })
 export class DataResourcePermissionsPipe implements PipeTransform {
   public transform(

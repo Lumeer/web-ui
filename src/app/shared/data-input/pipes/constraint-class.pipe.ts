@@ -22,6 +22,7 @@ import {Constraint, ConstraintType, TextConstraint} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'constraintClass',
+  standalone: false,
 })
 export class ConstraintClassPipe implements PipeTransform {
   public transform(constraint: Constraint): string {

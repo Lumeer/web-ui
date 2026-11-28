@@ -43,6 +43,7 @@ import {generateId} from '../../../../../../shared/utils/resource.utils';
   templateUrl: './pivot-config.component.html',
   styleUrls: ['pivot-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PivotConfigComponent {
   @Input()

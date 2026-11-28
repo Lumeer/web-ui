@@ -38,6 +38,7 @@ import {GettingStartedStage} from './model/getting-started-stage';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [PublicProjectService, GettingStartedService],
   animations: [animateOpacityEnterLeave],
+  standalone: false,
 })
 export class GettingStartedModalComponent implements OnInit, OnDestroy {
   @Input()

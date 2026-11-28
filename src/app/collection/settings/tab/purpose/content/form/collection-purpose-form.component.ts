@@ -27,6 +27,7 @@ import {removeAllFormControls} from '../../../../../../shared/utils/form.utils';
   selector: 'collection-purpose-form',
   templateUrl: './collection-purpose-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionPurposeFormComponent implements OnChanges {
   @Input()

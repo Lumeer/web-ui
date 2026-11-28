@@ -30,6 +30,7 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 
 @Pipe({
   name: 'pivotAttributeSelectItem',
+  standalone: false,
 })
 export class PivotAttributeSelectItemPipe implements PipeTransform {
   public transform(

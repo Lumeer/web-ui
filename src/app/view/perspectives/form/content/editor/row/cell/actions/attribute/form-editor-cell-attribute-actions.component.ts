@@ -25,6 +25,7 @@ import {FormAttributeCellConfig} from '../../../../../../../../../core/store/for
   templateUrl: './form-editor-cell-attribute-actions.component.html',
   styleUrls: ['./form-editor-cell-attribute-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorCellAttributeActionsComponent {
   @Input()

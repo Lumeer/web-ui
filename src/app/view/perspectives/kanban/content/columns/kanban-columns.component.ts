@@ -59,6 +59,7 @@ import {KanbanColumnComponent} from './column/kanban-column.component';
   styleUrls: ['./kanban-columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
+  standalone: false,
 })
 export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChildren('kanbanColumn')

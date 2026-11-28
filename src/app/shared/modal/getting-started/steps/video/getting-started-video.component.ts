@@ -32,6 +32,7 @@ import {GettingStartedService} from '../../getting-started.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./getting-started-video.component.scss'],
   host: {class: 'd-block'},
+  standalone: false,
 })
 export class GettingStartedVideoComponent implements OnInit, OnDestroy {
   public readonly elementId = `videoPlaceholder${generateId()}`;

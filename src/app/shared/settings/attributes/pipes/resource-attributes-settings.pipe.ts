@@ -24,6 +24,7 @@ import {composeViewSettingsLinkTypeCollectionId} from '../../settings.util';
 
 @Pipe({
   name: 'resourceAttributesSettings',
+  standalone: false,
 })
 export class ResourceAttributesSettingsPipe implements PipeTransform {
   public transform(

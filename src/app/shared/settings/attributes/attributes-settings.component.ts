@@ -25,6 +25,7 @@ import {AttributesResourceData} from './attributes-settings-configuration';
   selector: 'attributes-settings',
   templateUrl: './attributes-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributesSettingsComponent {
   @Input()

@@ -37,6 +37,7 @@ import {filterVisibleAttributesInQueryItems} from '../../../../../../shared/top-
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewDetailComponent implements OnChanges {
   @Input()

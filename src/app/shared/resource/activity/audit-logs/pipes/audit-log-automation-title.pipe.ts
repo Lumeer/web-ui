@@ -23,6 +23,7 @@ import {Attribute} from '../../../../../core/store/collections/collection';
 
 @Pipe({
   name: 'auditLogAutomationTitle',
+  standalone: false,
 })
 export class AuditLogAutomationTitlePipe implements PipeTransform {
   public transform(auditLog: AuditLog, attributes: Attribute[]): string {

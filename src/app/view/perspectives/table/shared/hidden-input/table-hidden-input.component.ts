@@ -46,6 +46,7 @@ import {EDITABLE_EVENT} from '../../table-perspective.component';
   styleUrls: ['./table-hidden-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableDataPermissionsService],
+  standalone: false,
 })
 export class TableHiddenInputComponent implements OnInit, OnDestroy {
   @Input()

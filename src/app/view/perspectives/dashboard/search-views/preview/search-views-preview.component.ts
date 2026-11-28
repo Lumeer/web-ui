@@ -28,6 +28,7 @@ import {SearchViewsDirective} from '../search-views.directive';
   selector: 'search-views-preview',
   templateUrl: './search-views-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SearchViewsPreviewComponent extends SearchViewsDirective implements OnInit, OnDestroy {
   @Input()

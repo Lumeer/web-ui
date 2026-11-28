@@ -24,6 +24,7 @@ import * as Driver from 'driver.js';
   selector: 'tour',
   templateUrl: './tour.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TourComponent implements OnInit {
   private driver: Driver;

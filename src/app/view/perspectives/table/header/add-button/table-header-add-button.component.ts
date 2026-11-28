@@ -57,6 +57,7 @@ import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/re
   templateUrl: './table-header-add-button.component.html',
   styleUrls: ['./table-header-add-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHeaderAddButtonComponent implements OnChanges {
   @Input()

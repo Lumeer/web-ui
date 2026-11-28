@@ -47,6 +47,7 @@ import {shadeColor} from '../../utils/html-modifier';
   templateUrl: './resource-attributes-table.component.html',
   styleUrls: ['./resource-attributes-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceAttributesTableComponent implements OnChanges {
   @Input()

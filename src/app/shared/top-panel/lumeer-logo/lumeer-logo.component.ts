@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/co
   templateUrl: './lumeer-logo.component.html',
   styleUrls: ['./lumeer-logo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LumeerLogoComponent {
   @Input()

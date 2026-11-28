@@ -22,6 +22,7 @@ import {stripTextHtmlTags} from '@lumeer/utils';
 
 @Pipe({
   name: 'stripHtml',
+  standalone: false,
 })
 @Injectable({providedIn: 'root'})
 export class StripHtmlPipe implements PipeTransform {

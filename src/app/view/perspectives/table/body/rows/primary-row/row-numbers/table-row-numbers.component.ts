@@ -49,6 +49,7 @@ import {TableRowNumberService} from '../../../../service/table-row-number.servic
   templateUrl: './table-row-numbers.component.html',
   styleUrls: ['./table-row-numbers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()

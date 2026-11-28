@@ -24,6 +24,7 @@ import {defaultTextEditorBubbleOptions} from '../../../text-editor/text-editor.u
   selector: 'attribute-description-content',
   templateUrl: './attribute-description-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeDescriptionContentComponent implements OnInit {
   @Input()

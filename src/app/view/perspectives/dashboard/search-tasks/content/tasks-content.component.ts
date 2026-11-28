@@ -72,6 +72,7 @@ import {TasksGroup} from '../model/tasks-group';
   templateUrl: './tasks-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
+  standalone: false,
 })
 export class TasksContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

@@ -25,6 +25,7 @@ import {Attribute} from '../../../../../../../core/store/collections/collection'
   templateUrl: './table-column-icons.component.html',
   styleUrls: ['./table-column-icons.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableColumnIconsComponent {
   @Input()

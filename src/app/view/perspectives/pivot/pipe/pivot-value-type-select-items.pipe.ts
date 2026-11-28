@@ -25,6 +25,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 
 @Pipe({
   name: 'pivotValueTypeSelectItems',
+  standalone: false,
 })
 export class PivotValueTypeSelectItemsPipe implements PipeTransform {
   public transform(types: LmrPivotValueType[]): SelectItemModel[] {

@@ -29,6 +29,7 @@ import {SelectItem2Model} from '../../select/select-item2/select-item2.model';
   selector: 'notification-settings',
   templateUrl: './notification-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NotificationSettingsComponent implements OnInit {
   @Input()

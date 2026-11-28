@@ -58,6 +58,7 @@ import {TableRow, TableRowWithData} from '../../model/table-row';
   styleUrls: ['./table-row.component.scss', '../common/table-cell.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [animateOpacityEnterLeave],
+  standalone: false,
 })
 export class TableRowComponent implements OnInit, OnChanges {
   @Input()

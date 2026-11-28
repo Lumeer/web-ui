@@ -21,6 +21,7 @@ import {ChangeDetectorRef, Directive, HostBinding, Input} from '@angular/core';
 
 @Directive({
   selector: '[dropdownOption]',
+  standalone: false,
 })
 export class DropdownOptionDirective implements Highlightable {
   @Input()

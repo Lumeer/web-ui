@@ -25,6 +25,7 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
 
 @Pipe({
   name: 'pivotSubSortSelectItems',
+  standalone: false,
 })
 export class PivotSubSortSelectItemsPipe implements PipeTransform {
   public transform(

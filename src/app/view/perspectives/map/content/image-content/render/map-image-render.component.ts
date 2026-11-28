@@ -42,6 +42,7 @@ import {SvgImageMap} from './svg-image-map';
   styleUrls: ['./map-image-render.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-column w-100 h-100 position-relative'},
+  standalone: false,
 })
 export class MapImageRenderComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

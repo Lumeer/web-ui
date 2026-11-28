@@ -63,6 +63,7 @@ export enum ViewTab {
   templateUrl: './view-link-type-permissions-body.component.html',
   styleUrls: ['./view-link-type-permissions-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewLinkTypePermissionsBodyComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

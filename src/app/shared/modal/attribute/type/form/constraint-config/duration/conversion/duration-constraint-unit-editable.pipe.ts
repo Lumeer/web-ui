@@ -22,6 +22,7 @@ import {DurationUnit} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'durationConstraintUnitEditable',
+  standalone: false,
 })
 export class DurationConstraintUnitEditablePipe implements PipeTransform {
   public transform(unit: DurationUnit): boolean {

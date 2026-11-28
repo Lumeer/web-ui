@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular
   selector: 'see-more-button',
   templateUrl: './see-more-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SeeMoreButtonComponent {
   @Output()

@@ -24,6 +24,7 @@ import {Team} from '../../../core/store/teams/team';
 
 @Pipe({
   name: 'teamRolesMap',
+  standalone: false,
 })
 export class TeamRolesMapPipe implements PipeTransform {
   public transform(

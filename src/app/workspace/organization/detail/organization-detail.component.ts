@@ -41,6 +41,7 @@ import {ServiceLimits} from '../../../core/store/organizations/service-limits/se
   selector: 'organization-detail',
   templateUrl: './organization-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class OrganizationDetailComponent implements OnInit {
   public contact$: Observable<Contact>;

@@ -32,6 +32,7 @@ import {createActionEquationFromFormArray} from '../../common/conditions/constra
   selector: 'conditional-formatting-content',
   templateUrl: './conditional-formatting-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ConditionalFormattingContentComponent implements OnInit {
   @Input()

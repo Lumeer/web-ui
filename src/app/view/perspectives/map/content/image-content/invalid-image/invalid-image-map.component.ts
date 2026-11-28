@@ -24,6 +24,7 @@ import {MapImageLoadResult} from '../../../../../../core/store/maps/map.model';
   selector: 'invalid-image-map',
   templateUrl: './invalid-image-map.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class InvalidImageMapComponent {
   @Input()

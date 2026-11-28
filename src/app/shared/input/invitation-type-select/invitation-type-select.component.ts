@@ -24,6 +24,7 @@ import {InvitationType} from '../../../core/model/invitation-type';
   selector: 'invitation-type-select',
   templateUrl: './invitation-type-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class InvitationTypeSelectComponent {
   @Input()

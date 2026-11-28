@@ -37,6 +37,7 @@ interface ChangeEntry {
   templateUrl: './audit-log-entries.component.html',
   styleUrls: ['./audit-log-entries.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AuditLogEntriesComponent implements OnChanges {
   @Input()

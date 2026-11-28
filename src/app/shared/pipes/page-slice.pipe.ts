@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'pageSlice',
+  standalone: false,
 })
 export class PageSlicePipe implements PipeTransform {
   public transform(array: any[], page: number, pageSize: number): any[] {

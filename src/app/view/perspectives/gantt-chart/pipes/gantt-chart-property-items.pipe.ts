@@ -28,6 +28,7 @@ const sameCollectionProperties = ['start', 'end'];
 
 @Pipe({
   name: 'ganttChartPropertyItems',
+  standalone: false,
 })
 export class GanttChartPropertyItemsPipe implements PipeTransform {
   public transform(selectItems: SelectItemModel[], property: string, config: GanttChartStemConfig): SelectItemModel[] {

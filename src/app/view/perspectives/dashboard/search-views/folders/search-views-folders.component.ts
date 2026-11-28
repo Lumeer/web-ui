@@ -34,6 +34,7 @@ import {SearchViewsDirective} from '../search-views.directive';
   selector: 'search-views-folders',
   templateUrl: './search-views-folders.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SearchViewsFoldersComponent extends SearchViewsDirective implements OnInit, OnDestroy {
   public foldersPath$: Observable<string[]>;

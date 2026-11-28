@@ -22,5 +22,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   selector: 'view-loading',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewLoadingComponent {}

@@ -25,6 +25,7 @@ import {BehaviorSubject} from 'rxjs';
   templateUrl: './collapsible-sidebar.component.html',
   styleUrls: ['./collapsible-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollapsibleSidebarComponent implements OnChanges {
   @Input()

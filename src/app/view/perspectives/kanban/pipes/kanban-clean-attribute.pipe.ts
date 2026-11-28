@@ -23,6 +23,7 @@ import {cleanKanbanAttribute} from '../util/kanban.util';
 
 @Pipe({
   name: 'kanbanCleanAttribute',
+  standalone: false,
 })
 export class KanbanCleanAttributePipe implements PipeTransform {
   public transform(attribute: KanbanAttribute): KanbanAttribute {

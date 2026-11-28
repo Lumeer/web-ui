@@ -22,6 +22,7 @@ import {LmrPivotRowColumnAttribute} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotHeaderCanSetSticky',
+  standalone: false,
 })
 export class PivotHeaderCanSetStickyPipe implements PipeTransform {
   public transform(attributes: LmrPivotRowColumnAttribute[], index: number): boolean {

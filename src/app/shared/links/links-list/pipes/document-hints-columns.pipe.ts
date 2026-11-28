@@ -23,6 +23,7 @@ import {LinkColumn} from '../model/link-column';
 
 @Pipe({
   name: 'documentHintsColumns',
+  standalone: false,
 })
 export class DocumentHintsColumnsPipe implements PipeTransform {
   public transform(columns: LinkColumn[]): DocumentHintColumn[] {

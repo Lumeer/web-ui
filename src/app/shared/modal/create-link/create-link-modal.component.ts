@@ -40,6 +40,7 @@ import {DialogType} from '../dialog-type';
   selector: 'create-link-modal',
   templateUrl: './create-link-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CreateLinkModalComponent implements OnInit {
   @Input()

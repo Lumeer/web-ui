@@ -43,6 +43,7 @@ import {View} from '../../../../../../../core/store/views/view';
     '[class.table-bg-light]': 'striped',
     '[class.table-bg-white]': '!striped',
   },
+  standalone: false,
 })
 export class TableLinkedRowComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

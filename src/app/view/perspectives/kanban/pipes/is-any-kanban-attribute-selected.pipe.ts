@@ -24,6 +24,7 @@ import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
 
 @Pipe({
   name: 'isAnyKanbanAttributeSelected',
+  standalone: false,
 })
 export class IsAnyKanbanAttributeSelectedPipe implements PipeTransform {
   public transform(config: KanbanConfig): boolean {

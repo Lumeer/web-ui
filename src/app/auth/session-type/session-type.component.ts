@@ -29,6 +29,7 @@ import {SessionType} from '../common/session-type';
   selector: 'session-type',
   templateUrl: './session-type.component.html',
   styleUrls: ['../common/auth-styles.scss', './session-type.component.scss'],
+  standalone: false,
 })
 export class SessionTypeComponent {
   public performingRequest$ = new BehaviorSubject(false);

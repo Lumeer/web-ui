@@ -25,6 +25,7 @@ import {getAttributesResourceType} from '../../../../../../../utils/resource.uti
 
 @Pipe({
   name: 'collectionSettingsPath',
+  standalone: false,
 })
 export class CollectionSettingsPathPipe implements PipeTransform {
   public transform(resource: AttributesResource, workspace: Workspace): any[] {

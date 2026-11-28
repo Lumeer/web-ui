@@ -21,6 +21,7 @@ import {Directive, ElementRef, HostBinding, Input, OnChanges, SimpleChanges} fro
 @Directive({
   selector: '[smoothSize]',
   host: {'[style.display]': '"block"', '[style.overflow]': '"hidden"'},
+  standalone: false,
 })
 export class SmoothSizeDirective implements OnChanges {
   @Input()

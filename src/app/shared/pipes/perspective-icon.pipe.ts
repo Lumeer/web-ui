@@ -22,6 +22,7 @@ import {perspectiveIconsMap} from '../../view/perspectives/perspective';
 
 @Pipe({
   name: 'perspectiveIcon',
+  standalone: false,
 })
 export class PerspectiveIconPipe implements PipeTransform {
   public transform(perspective: string): string {

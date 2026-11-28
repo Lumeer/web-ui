@@ -25,6 +25,7 @@ import {DocumentHintColumn} from '../../../../../shared/document-hints/document-
 
 @Pipe({
   name: 'documentHintColumns',
+  standalone: false,
 })
 export class DocumentHintColumnsPipe implements PipeTransform {
   public transform(

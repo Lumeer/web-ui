@@ -45,6 +45,7 @@ import {filterOutInvalidAttributeNameCharacters} from '../../utils/attribute.uti
   templateUrl: './add-resource-attribute.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block'},
+  standalone: false,
 })
 export class AddResourceAttributeComponent implements OnInit, OnChanges {
   @Input()

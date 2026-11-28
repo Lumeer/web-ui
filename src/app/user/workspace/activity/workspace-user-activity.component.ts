@@ -36,6 +36,7 @@ import {SelectItemModel} from '../../../shared/select/select-item/select-item.mo
   selector: 'workspace-user',
   templateUrl: './workspace-user-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class WorkspaceUserActivityComponent implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;

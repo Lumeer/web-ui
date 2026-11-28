@@ -30,6 +30,7 @@ import {TaskAttributes} from '../../../../model/task-attributes';
   styleUrls: ['./task-second-line.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-row flex-nowrap text-truncate justify-content-end'},
+  standalone: false,
 })
 export class TaskSecondLineComponent {
   @Input()

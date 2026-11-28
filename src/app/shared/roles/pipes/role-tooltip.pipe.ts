@@ -23,6 +23,7 @@ import {TranslatedRole} from '../model/role-group';
 
 @Pipe({
   name: 'roleTooltip',
+  standalone: false,
 })
 export class RoleTooltipPipe implements PipeTransform {
   public transform(role: TranslatedRole, resourceType: ResourcePermissionType): string {

@@ -24,6 +24,7 @@ import {Project} from '../../../../../../../../core/store/projects/project';
   selector: 'templates-toolbar',
   templateUrl: './templates-toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TemplatesToolbarComponent {
   @Input()

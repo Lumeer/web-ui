@@ -54,6 +54,7 @@ import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} 
   selector: 'team-list',
   templateUrl: './team-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TeamListComponent implements OnInit, OnChanges {
   @Input()

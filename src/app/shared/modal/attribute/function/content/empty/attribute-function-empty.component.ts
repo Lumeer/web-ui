@@ -22,5 +22,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   selector: 'attribute-function-empty',
   templateUrl: './attribute-function-empty.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeFunctionEmptyComponent {}

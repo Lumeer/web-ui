@@ -57,6 +57,7 @@ import {LinksListTableRowComponent} from './row/links-list-table-row.component';
   selector: '[links-list-table-body]',
   templateUrl: './links-list-table-body.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinksListTableBodyComponent implements OnInit, OnChanges {
   @Input()

@@ -50,6 +50,7 @@ const initialMargin = 3;
   styleUrls: ['./fullscreen-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CdkDrag],
+  standalone: false,
 })
 export class FullscreenDropdownComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

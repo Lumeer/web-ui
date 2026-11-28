@@ -59,6 +59,7 @@ import {DocumentFavoriteToggleService} from '../../../toggle/document-favorite-t
   styleUrls: ['./data-resource-detail-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
+  standalone: false,
 })
 export class DataResourceDetailHeaderComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

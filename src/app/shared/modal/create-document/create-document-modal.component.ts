@@ -52,6 +52,7 @@ import {
   templateUrl: './create-document-modal.component.html',
   styleUrls: ['./create-document-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CreateDocumentModalComponent implements OnInit {
   @Input()

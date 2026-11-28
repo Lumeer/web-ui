@@ -23,6 +23,7 @@ import {SelectItemModel} from '../../../../../../../../shared/select/select-item
 
 @Pipe({
   name: 'filterUnusedSortItems',
+  standalone: false,
 })
 export class FilterUnusedSortItemsPipe implements PipeTransform {
   public transform(

@@ -79,6 +79,7 @@ const OPENMAPTILES_LANGUAGE_URL = 'https://cdn.klokantech.com/openmaptiles-langu
   styleUrls: ['./map-globe-render.component.scss', '../../../../../../../../node_modules/mapbox-gl/dist/mapbox-gl.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()

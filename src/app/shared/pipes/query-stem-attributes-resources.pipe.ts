@@ -26,6 +26,7 @@ import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/que
 
 @Pipe({
   name: 'queryStemAttributesResources',
+  standalone: false,
 })
 export class QueryStemAttributesResourcesPipe implements PipeTransform {
   public transform(stem: QueryStem, collections: Collection[], linkTypes: LinkType[]): AttributesResource[] {

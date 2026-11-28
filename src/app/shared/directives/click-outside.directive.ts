@@ -32,7 +32,10 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-@Directive({selector: '[clickOutside]'})
+@Directive({
+  selector: '[clickOutside]',
+  standalone: false,
+})
 export class ClickOutsideDirective implements OnInit, OnChanges, OnDestroy {
   @Input()
   public clickOutsideEnabled: boolean = true;

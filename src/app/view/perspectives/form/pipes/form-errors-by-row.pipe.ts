@@ -22,6 +22,7 @@ import {FormError} from '../content/view/validation/form-validation';
 
 @Pipe({
   name: 'formErrorsByRow',
+  standalone: false,
 })
 export class FormErrorsByRowPipe implements PipeTransform {
   public transform(errors: FormError[], rowId: string): FormError[] {

@@ -54,6 +54,7 @@ import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from '.
   templateUrl: './select-constraint-options-form.component.html',
   styleUrls: ['./select-constraint-options-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectConstraintOptionsFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

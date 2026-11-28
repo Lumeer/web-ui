@@ -36,6 +36,7 @@ import {selectLinkTypeById} from '../../../core/store/link-types/link-types.stat
   templateUrl: './attribute-lock-filters-stats.component.html',
   styleUrls: ['./attribute-lock-filters-stats.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeLockFiltersStatsComponent implements OnChanges {
   @Input()

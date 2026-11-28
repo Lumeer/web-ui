@@ -23,6 +23,7 @@ import {filterValidDashboardCells} from '../../../utils/dashboard.utils';
 
 @Pipe({
   name: 'findCellByCoordinates',
+  standalone: false,
 })
 export class FindCellByCoordinatesPipe implements PipeTransform {
   public transform(rows: DashboardRow[], coordinates: {row: number; column: number}): DashboardCell {

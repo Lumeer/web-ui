@@ -33,6 +33,7 @@ import {TaskAttributes} from '../model/task-attributes';
 
 @Pipe({
   name: 'dataValueEntries',
+  standalone: false,
 })
 export class DataValueEntriesPipe implements PipeTransform {
   public transform(

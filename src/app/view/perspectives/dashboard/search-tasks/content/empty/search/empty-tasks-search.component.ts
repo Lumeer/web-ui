@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   selector: 'empty-tasks-search',
   templateUrl: './empty-tasks-search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptyTasksSearchComponent {
   @Input()

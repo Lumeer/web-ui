@@ -25,6 +25,7 @@ import {TableConfigRow} from '../../../../../../../core/store/tables/table.model
   templateUrl: './table-link-cell.component.html',
   styleUrls: ['./table-link-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableLinkCellComponent {
   @Input()

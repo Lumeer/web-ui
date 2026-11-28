@@ -44,6 +44,7 @@ import {selectCurrentUser} from '../store/users/users.state';
 
 @Component({
   template: '',
+  standalone: false,
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();

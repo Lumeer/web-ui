@@ -23,6 +23,7 @@ import {TableConfigPart, TableModel} from '../../../../../core/store/tables/tabl
 
 @Pipe({
   name: 'part',
+  standalone: false,
 })
 export class PartPipe implements PipeTransform {
   public transform(table: TableModel, cursor: TableCursor): TableConfigPart {

@@ -33,6 +33,7 @@ import {selectProjectPermissions} from '../../../../../../core/store/user-permis
   selector: 'empty-tasks',
   templateUrl: './empty-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptyTasksComponent implements OnInit {
   @Input()

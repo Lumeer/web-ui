@@ -22,6 +22,7 @@ import {shadeColor} from '../../../utils/html-modifier';
 
 @Pipe({
   name: 'highlightColor',
+  standalone: false,
 })
 export class HighlightColorPipe implements PipeTransform {
   public transform(color: string, selected: string): string {

@@ -23,6 +23,7 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 
 @Pipe({
   name: 'countSelectedLinkedDocuments',
+  standalone: false,
 })
 export class CountSelectedLinkedDocumentsPipe implements PipeTransform {
   public transform(

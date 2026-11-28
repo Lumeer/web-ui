@@ -31,6 +31,7 @@ import {selectProjectByWorkspace} from '../../../core/store/projects/projects.st
   selector: 'project-variables',
   templateUrl: './project-variables.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectVariablesComponent implements OnInit {
   public readonly resourceType = ResourceType.Project;

@@ -45,6 +45,7 @@ import {getAttributesResourceType} from '../../../../../../shared/utils/resource
   selector: 'kanban-stem-config',
   templateUrl: './kanban-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class KanbanStemConfigComponent implements OnChanges {
   @Input()

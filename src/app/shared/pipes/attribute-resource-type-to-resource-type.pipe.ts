@@ -23,6 +23,7 @@ import {ResourceType} from '../../core/model/resource-type';
 
 @Pipe({
   name: 'attributeResourceTypeToResourceType',
+  standalone: false,
 })
 export class AttributeResourceTypeToResourceTypePipe implements PipeTransform {
   public transform(value: AttributesResourceType): ResourceType {

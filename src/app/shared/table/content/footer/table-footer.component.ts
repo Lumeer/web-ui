@@ -31,6 +31,7 @@ import {SelectedTableCell} from '../../model/table-model';
   templateUrl: './table-footer.component.html',
   styleUrls: ['./table-footer.component.scss', '../common/table-cell.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableFooterComponent {
   @Input()

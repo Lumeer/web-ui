@@ -22,6 +22,7 @@ import {ResultTableRow} from '../results-table.component';
 
 @Pipe({
   name: 'isResultRowChecked',
+  standalone: false,
 })
 export class IsResultRowCheckedPipe implements PipeTransform {
   public transform(row: ResultTableRow, removedLinkInstanceIds: string[], selectedDocumentIds: string[]): boolean {

@@ -90,6 +90,7 @@ export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
   templateUrl: './view-controls.component.html',
   styleUrls: ['./view-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

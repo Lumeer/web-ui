@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   templateUrl: './red-dot.component.html',
   styleUrls: ['./red-dot.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RedDotComponent {
   @Input()

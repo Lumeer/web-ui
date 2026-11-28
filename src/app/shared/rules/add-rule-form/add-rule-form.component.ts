@@ -67,6 +67,7 @@ import {parseSelectTranslation} from '../../utils/translation.utils';
   templateUrl: './add-rule-form.component.html',
   styleUrls: ['./add-rule-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

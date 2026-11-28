@@ -23,6 +23,7 @@ import {canShowAttributeHints} from '../utils/attribute.utils';
 
 @Pipe({
   name: 'canShowAttributeHints',
+  standalone: false,
 })
 export class CanShowAttributeHintsPipe implements PipeTransform {
   public transform(attribute: Attribute): boolean {

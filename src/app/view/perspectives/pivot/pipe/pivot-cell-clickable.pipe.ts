@@ -22,6 +22,7 @@ import {LmrPivotTableCell} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotCellClickable',
+  standalone: false,
 })
 export class PivotCellClickablePipe implements PipeTransform {
   public transform(cell: LmrPivotTableCell): boolean {

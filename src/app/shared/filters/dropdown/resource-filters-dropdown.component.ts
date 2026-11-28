@@ -27,6 +27,7 @@ import {DropdownDirective} from '../../dropdown/dropdown.directive';
   selector: 'resource-filters-dropdown',
   templateUrl: './resource-filters-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceFiltersDropdownComponent extends DropdownDirective implements OnChanges {
   @Input()

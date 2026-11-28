@@ -26,6 +26,7 @@ import {ResourceRolesData, ResourceRolesDatum} from '../../../settings/tab/resou
   selector: 'user-projects',
   templateUrl: './user-projects.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserProjectsComponent {
   @Input()

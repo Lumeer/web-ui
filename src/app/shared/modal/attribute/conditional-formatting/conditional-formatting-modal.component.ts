@@ -40,6 +40,7 @@ import {ConditionalFormattingContentComponent} from './content/conditional-forma
   selector: 'conditional-formatting-modal',
   templateUrl: './conditional-formatting-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ConditionalFormattingModalComponent implements OnInit {
   @Input()

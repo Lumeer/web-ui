@@ -40,6 +40,7 @@ import {RoleGroupService} from './model/role-group.service';
   styleUrls: ['./roles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RoleGroupService],
+  standalone: false,
 })
 export class RolesComponent implements OnChanges {
   @Input()

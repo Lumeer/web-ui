@@ -23,6 +23,7 @@ import {extractAttributeParentName} from '../../../../../shared/utils/attribute.
 
 @Pipe({
   name: 'attributeName',
+  standalone: false,
 })
 export class AttributeNamePipe implements PipeTransform {
   public transform(attribute: Attribute, newLastName: string): any {

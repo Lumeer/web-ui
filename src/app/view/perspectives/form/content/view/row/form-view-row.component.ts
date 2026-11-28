@@ -36,6 +36,7 @@ import {FormError} from '../validation/form-validation';
   templateUrl: './form-view-row.component.html',
   styleUrls: ['./form-view-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormViewRowComponent implements OnChanges {
   @Input()

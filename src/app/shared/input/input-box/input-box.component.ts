@@ -42,6 +42,7 @@ const WARNING_STYLE = ['border', 'border-danger', 'rounded'];
   selector: 'input-box',
   templateUrl: './input-box.component.html',
   styleUrls: ['./input-box.component.scss'],
+  standalone: false,
 })
 export class InputBoxComponent implements OnInit, OnChanges {
   @ViewChild('input', {static: true}) public input: ElementRef<HTMLDivElement>;

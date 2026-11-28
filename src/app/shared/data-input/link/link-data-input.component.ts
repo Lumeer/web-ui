@@ -42,6 +42,7 @@ import {DataInputSaveAction} from '../data-input-save-action';
   styleUrls: ['./link-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'px-1 w-100 h-100 d-flex align-items-center'},
+  standalone: false,
 })
 export class LinkDataInputComponent implements OnChanges {
   @Input()

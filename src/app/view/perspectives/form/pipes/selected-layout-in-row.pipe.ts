@@ -22,6 +22,7 @@ import {FormRow, FormRowLayoutType} from '../../../../core/store/form/form-model
 
 @Pipe({
   name: 'selectedLayoutInRow',
+  standalone: false,
 })
 export class SelectedLayoutInRowPipe implements PipeTransform {
   public transform(row: FormRow): FormRowLayoutType {

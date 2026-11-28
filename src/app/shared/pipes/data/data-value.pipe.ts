@@ -22,6 +22,7 @@ import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/
 
 @Pipe({
   name: 'dataValue',
+  standalone: false,
 })
 export class DataValuePipe implements PipeTransform {
   public transform(value: any, constraint: Constraint, constraintData?: ConstraintData): DataValue {

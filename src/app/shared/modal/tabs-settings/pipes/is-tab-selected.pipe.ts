@@ -23,6 +23,7 @@ import {isTabSelected} from '../content/tabs-settings-content.component';
 
 @Pipe({
   name: 'isTabSelected',
+  standalone: false,
 })
 export class IsTabSelectedPipe implements PipeTransform {
   public transform(tab: DashboardTab, selectedValue: string): boolean {

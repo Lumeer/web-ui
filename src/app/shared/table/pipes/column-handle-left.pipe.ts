@@ -22,6 +22,7 @@ import {TableColumnGroup} from '../model/table-column';
 
 @Pipe({
   name: 'columnHandleLeft',
+  standalone: false,
 })
 export class ColumnHandleLeftPipe implements PipeTransform {
   public transform(columns: TableColumnGroup[], index: number): number {

@@ -24,6 +24,7 @@ import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'extractValue',
+  standalone: false,
 })
 export class ExtractValuePipe implements PipeTransform {
   public transform(entity: DocumentModel | LinkInstance, column: TableConfigColumn): string {

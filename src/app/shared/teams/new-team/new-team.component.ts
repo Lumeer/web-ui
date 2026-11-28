@@ -25,6 +25,7 @@ import {Team} from '../../../core/store/teams/team';
   templateUrl: './new-team.component.html',
   styleUrls: ['./new-team.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NewTeamComponent {
   @Input()

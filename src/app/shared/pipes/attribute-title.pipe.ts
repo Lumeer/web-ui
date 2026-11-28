@@ -24,6 +24,7 @@ import {Attribute} from '../../core/store/collections/collection';
 
 @Pipe({
   name: 'attributeTitle',
+  standalone: false,
 })
 export class AttributeTitlePipe implements PipeTransform {
   public transform(attribute: Attribute, backupValue: string = '', skipDescription = false): string {

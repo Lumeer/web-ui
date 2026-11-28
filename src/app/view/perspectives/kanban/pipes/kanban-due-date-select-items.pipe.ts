@@ -26,6 +26,7 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
 
 @Pipe({
   name: 'kanbanDueDateSelectItems',
+  standalone: false,
 })
 export class KanbanDueDateSelectItemsPipe implements PipeTransform {
   public transform(attributesResourcesOrder: AttributesResource[], attribute?: KanbanResource): SelectItemModel[] {

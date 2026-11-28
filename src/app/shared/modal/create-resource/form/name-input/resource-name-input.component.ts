@@ -23,6 +23,7 @@ import {UntypedFormGroup} from '@angular/forms';
   selector: 'resource-name-input',
   templateUrl: './resource-name-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceNameInputComponent {
   @Input()

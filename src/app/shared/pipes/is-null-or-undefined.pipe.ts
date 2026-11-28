@@ -22,6 +22,7 @@ import {isNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'isNullOrUndefined',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

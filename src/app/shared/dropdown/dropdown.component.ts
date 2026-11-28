@@ -48,6 +48,7 @@ import {DropdownPosition, connectedPositionsMap, convertDropdownToConnectedPosit
   selector: 'dropdown',
   templateUrl: './dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input()
