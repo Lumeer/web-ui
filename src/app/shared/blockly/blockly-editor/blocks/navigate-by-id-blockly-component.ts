@@ -92,7 +92,7 @@ export class NavigateByIdBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID] = function (block) {
       const viewId = Blockly.JavaScript.valueToCode(block, 'VIEW_ID', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const newWindow = block.getFieldValue('NEW_WINDOW') || false;
       const sidebar = block.getFieldValue('SIDEBAR') || false;

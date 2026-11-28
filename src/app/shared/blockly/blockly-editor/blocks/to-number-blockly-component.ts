@@ -56,7 +56,7 @@ export class ToNumberBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.TO_NUMBER] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.TO_NUMBER] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {

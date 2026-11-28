@@ -59,7 +59,7 @@ export class GetParentDocumentBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.GET_PARENT_DOCUMENT] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_PARENT_DOCUMENT] = function (block) {
       const value_document = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
       const code = this_.blocklyUtils.getLumeerVariable() + `.getParentDocument(${value_document})`;
@@ -77,11 +77,11 @@ export class GetParentDocumentBlocklyComponent extends BlocklyComponent {
       const input = block.getInput('DOCUMENT');
 
       // is the input connected?
-      if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+      if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
         const inputType =
-          input.connection.targetConnection?.check_ instanceof Array
-            ? input.connection.targetConnection?.check_[0]
-            : input.connection.targetConnection?.check_;
+          input.connection.targetConnection?.check instanceof Array
+            ? input.connection.targetConnection?.check[0]
+            : input.connection.targetConnection?.check;
 
         // something unsupported got connected
         if (!inputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
@@ -98,9 +98,9 @@ export class GetParentDocumentBlocklyComponent extends BlocklyComponent {
 
   public onWorkspaceChange(workspace, changeEvent) {
     if (
-      changeEvent instanceof Blockly.Events.Create ||
-      changeEvent instanceof Blockly.Events.Change ||
-      changeEvent instanceof Blockly.Events.Move
+      changeEvent instanceof Blockly.Events.BlockCreate ||
+      changeEvent instanceof Blockly.Events.BlockChange ||
+      changeEvent instanceof Blockly.Events.BlockMove
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
       this.checkWorkspaceChange(workspace, changeEvent, block);

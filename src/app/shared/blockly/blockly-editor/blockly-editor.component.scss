@@ -12,12 +12,12 @@
     color: black;
   }
 
-  .blocklyTreeRow {
+  .blocklyToolboxCategory {
     line-height: 1.8rem;
     height: 2rem;
   }
 
-  .blocklyTreeLabel {
+  .blocklyToolboxCategoryLabel {
     font-family: LatoWeb;
   }
 
@@ -45,7 +45,7 @@
     }
   }
 
-  div.blocklyToolboxDiv {
+  div.blocklyToolbox {
     background-color: $gray-100;
   }
 

@@ -62,7 +62,7 @@ export class PrintAttributeBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.PRINT_ATTRIBUTE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.PRINT_ATTRIBUTE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const attrId = block.getFieldValue('ATTR');
 

@@ -61,7 +61,7 @@ export class GetAttributeBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_ATTRIBUTE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_ATTRIBUTE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const attrId = block.getFieldValue('ATTR');
 

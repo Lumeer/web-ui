@@ -50,7 +50,7 @@ export class CurrentDateBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.CURRENT_DATE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.CURRENT_DATE] = function (block) {
       const code = '(new Date())';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];

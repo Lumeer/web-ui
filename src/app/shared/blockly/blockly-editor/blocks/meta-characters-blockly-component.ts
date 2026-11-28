@@ -68,7 +68,7 @@ export class MetaCharactersBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.META_CHARACTERS] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.META_CHARACTERS] = function (block) {
       var code = "'" + (block.getFieldValue('CHARACTER') || '') + "'";
       return [code, Blockly.JavaScript.ORDER_ATOMIC];
     };

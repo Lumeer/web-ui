@@ -96,7 +96,7 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.DATE_CHANGE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.DATE_CHANGE] = function (block) {
       const unit: string = block.getFieldValue('UNIT');
       const op: string = block.getFieldValue('OP');
       const count = Blockly.JavaScript.valueToCode(block, 'COUNT', Blockly.JavaScript.ORDER_ATOMIC) || null;

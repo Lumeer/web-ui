@@ -64,7 +64,7 @@ export class SequenceBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.SEQUENCE_BLOCK] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SEQUENCE_BLOCK] = function (block) {
       const sequence = block.getFieldValue('SEQUENCE');
       const digits = block.getFieldValue('DIGITS');
 

@@ -70,7 +70,7 @@ export class ShowMessageBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.SHOW_MESSAGE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SHOW_MESSAGE] = function (block) {
       const message_type = block.getFieldValue('TYPE');
       const value_message = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ATOMIC) || null;
 

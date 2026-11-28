@@ -69,7 +69,7 @@ export class GetLinkDocumentBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_LINK_DOCUMENT] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_LINK_DOCUMENT] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const collectionId = block.getFieldValue('COLLECTION');
 

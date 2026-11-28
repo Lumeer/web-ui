@@ -50,7 +50,7 @@ export class DateNowBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.DATE_NOW] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.DATE_NOW] = function (block) {
       const code = '((new Date()).toISOString())';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];

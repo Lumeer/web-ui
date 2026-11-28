@@ -75,7 +75,7 @@ export class SetLinkAttributeBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.SET_LINK_ATTRIBUTE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SET_LINK_ATTRIBUTE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const argument1 = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const attrId = block.getFieldValue('ATTR');

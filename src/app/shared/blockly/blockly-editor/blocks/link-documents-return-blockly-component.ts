@@ -68,7 +68,7 @@ export class LinkDocumentsReturnBlocklyComponent extends LinkDocumentsNoReturnBl
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.LINK_DOCUMENTS_RETURN] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.LINK_DOCUMENTS_RETURN] = function (block) {
       const dropdown_linktype = block.getFieldValue('LINKTYPE') || null;
       const value_document1 =
         Blockly.JavaScript.valueToCode(block, 'DOCUMENT1', Blockly.JavaScript.ORDER_ATOMIC) || null;
@@ -97,14 +97,14 @@ export class LinkDocumentsReturnBlocklyComponent extends LinkDocumentsNoReturnBl
     super.onWorkspaceChange(workspace, changeEvent);
 
     if (
-      changeEvent instanceof Blockly.Events.Create ||
-      changeEvent instanceof Blockly.Events.Change ||
-      changeEvent instanceof Blockly.Events.Move
+      changeEvent instanceof Blockly.Events.BlockCreate ||
+      changeEvent instanceof Blockly.Events.BlockChange ||
+      changeEvent instanceof Blockly.Events.BlockMove
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
 
       if (isNotNullOrUndefined(block) && block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {
-        const linkTypeId = block.getField('LINKTYPE').value_;
+        const linkTypeId = block.getField('LINKTYPE').getValue();
         block.setOutput(true, linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX);
         this.blocklyUtils.checkVariablesType(changeEvent, workspace);
       }

@@ -67,7 +67,7 @@ export class ReplacePatternBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.REPLACE_PATTERN] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.REPLACE_PATTERN] = function (block) {
       const value_text = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC) || '';
       const value_patterns = Blockly.JavaScript.valueToCode(block, 'PATTERNS', Blockly.JavaScript.ORDER_ATOMIC) || '';
       const value_splitter = Blockly.JavaScript.valueToCode(block, 'SPLITTER', Blockly.JavaScript.ORDER_ATOMIC) || ':';

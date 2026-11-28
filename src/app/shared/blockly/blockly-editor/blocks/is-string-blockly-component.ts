@@ -55,7 +55,7 @@ export class IsStringBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.IS_STRING] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.IS_STRING] = function (block) {
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       const code = `(typeof (${val}) === 'string')`;

@@ -68,7 +68,7 @@ export class MergeArraysBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.MERGE_ARRAYS] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.MERGE_ARRAYS] = function (block) {
       const array1 = Blockly.JavaScript.valueToCode(block, 'ARRAY1', Blockly.JavaScript.ORDER_ATOMIC) || [];
       const array2 = Blockly.JavaScript.valueToCode(block, 'ARRAY2', Blockly.JavaScript.ORDER_ATOMIC) || [];
       const delim = Blockly.JavaScript.valueToCode(block, 'DELIM', Blockly.JavaScript.ORDER_ATOMIC) || '';

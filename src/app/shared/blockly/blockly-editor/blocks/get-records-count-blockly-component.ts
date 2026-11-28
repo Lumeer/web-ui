@@ -58,7 +58,7 @@ export class GetRecordsCountBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_RECORDS_COUNT] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_RECORDS_COUNT] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'RECORDS', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       const code = this_.blocklyUtils.getLumeerVariable() + `.getListSize(${argument0})`;
@@ -73,11 +73,11 @@ export class GetRecordsCountBlocklyComponent extends BlocklyComponent {
 
   private checkInput(input, block) {
     // is the input connected?
-    if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+    if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
       const inputType =
-        input.connection.targetConnection?.check_ instanceof Array
-          ? input.connection.targetConnection?.check_[0]
-          : input.connection.targetConnection?.check_;
+        input.connection.targetConnection?.check instanceof Array
+          ? input.connection.targetConnection?.check[0]
+          : input.connection.targetConnection?.check;
 
       // something unsupported got connected
       if (!inputType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)) {
@@ -95,9 +95,9 @@ export class GetRecordsCountBlocklyComponent extends BlocklyComponent {
 
   public onWorkspaceChange(workspace, changeEvent) {
     if (
-      changeEvent instanceof Blockly.Events.Create ||
-      changeEvent instanceof Blockly.Events.Change ||
-      changeEvent instanceof Blockly.Events.Move
+      changeEvent instanceof Blockly.Events.BlockCreate ||
+      changeEvent instanceof Blockly.Events.BlockChange ||
+      changeEvent instanceof Blockly.Events.BlockMove
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
       this.checkWorkspaceChange(block);

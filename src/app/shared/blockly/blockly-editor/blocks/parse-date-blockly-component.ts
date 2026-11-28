@@ -65,7 +65,7 @@ export class ParseDateBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.PARSE_DATE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.PARSE_DATE] = function (block) {
       const argumentDate = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const argumentFormat =
         Blockly.JavaScript.valueToCode(block, 'FORMAT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;

@@ -80,7 +80,7 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.LINK_DOCUMENTS_NO_RETURN] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.LINK_DOCUMENTS_NO_RETURN] = function (block) {
       const dropdown_linktype = block.getFieldValue('LINKTYPE') || null;
       const value_document1 =
         Blockly.JavaScript.valueToCode(block, 'DOCUMENT1', Blockly.JavaScript.ORDER_ATOMIC) || null;
@@ -105,7 +105,7 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
   }
 
   private processWorkspaceChange(workspace, changeEvent, block) {
-    const linkTypeId = block.getField('LINKTYPE').value_;
+    const linkTypeId = block.getField('LINKTYPE').getValue();
 
     // what types can we have based on the selected link type?
     const linkType = this.linkTypes?.find(lt => lt.id === linkTypeId);
@@ -118,12 +118,12 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
         if (isNotNullOrUndefined(input.connection.targetConnection)) {
           if (
             checks[0] + BlocklyUtils.DOCUMENT_VAR_SUFFIX !==
-              input.connection.targetConnection?.sourceBlock_?.outputConnection?.check_[0] &&
+              input.connection.targetConnection?.getSourceBlock()?.outputConnection?.check[0] &&
             checks[1] + BlocklyUtils.DOCUMENT_VAR_SUFFIX !==
-              input.connection.targetConnection?.sourceBlock_?.outputConnection?.check_[0]
+              input.connection.targetConnection?.getSourceBlock()?.outputConnection?.check[0]
           ) {
             this.blocklyUtils.tryDisconnect(
-              input.connection.targetConnection.sourceBlock_,
+              input.connection.targetConnection.getSourceBlock(),
               input.connection.targetConnection
             );
           }
@@ -133,8 +133,8 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
       // what do we already have connected on inputs?
       const connected = [];
       block.inputList.forEach(input => {
-        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
-          const check = input.connection.targetConnection?.check_;
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check)) {
+          const check = input.connection.targetConnection?.check;
           if (check instanceof Array) {
             connected.push(...check);
           } else {
@@ -158,7 +158,7 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
 
       // set the type only where there isn't anything connected
       block.inputList.forEach(input => {
-        if (isNullOrUndefined(input.connection.targetConnection?.check_)) {
+        if (isNullOrUndefined(input.connection.targetConnection?.check)) {
           input.setCheck(checkTypes);
         }
       });
@@ -167,9 +167,9 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
 
   public onWorkspaceChange(workspace, changeEvent) {
     if (
-      changeEvent instanceof Blockly.Events.Create ||
-      changeEvent instanceof Blockly.Events.Change ||
-      changeEvent instanceof Blockly.Events.Move
+      changeEvent instanceof Blockly.Events.BlockCreate ||
+      changeEvent instanceof Blockly.Events.BlockChange ||
+      changeEvent instanceof Blockly.Events.BlockMove
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
 

@@ -67,7 +67,7 @@ export class MsToUnitBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.MS_TO_UNIT] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.MS_TO_UNIT] = function (block) {
       const dropdown_unit = block.getFieldValue('UNIT');
       const value_ms = Blockly.JavaScript.valueToCode(block, 'MS', Blockly.JavaScript.ORDER_ATOMIC);
       let code = '(' + value_ms + '/';

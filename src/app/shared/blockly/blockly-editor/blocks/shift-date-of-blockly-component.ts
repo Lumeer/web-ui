@@ -83,7 +83,7 @@ export class ShiftDateOfBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.SHIFT_DATE_OF] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SHIFT_DATE_OF] = function (block) {
       const unit: string = block.getFieldValue('UNIT');
       const op: string = block.getFieldValue('OP');
       const input_date = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ATOMIC) || null;

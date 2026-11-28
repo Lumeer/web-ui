@@ -107,7 +107,7 @@ export class NavigateSearchBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.NAVIGATE_TO_VIEW_SEARCH] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.NAVIGATE_TO_VIEW_SEARCH] = function (block) {
       const viewId = block.getFieldValue('VIEW_ID') || null;
       const newWindow = block.getFieldValue('NEW_WINDOW') || false;
       const sidebar = block.getFieldValue('SIDEBAR') || false;

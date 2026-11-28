@@ -56,7 +56,7 @@ export class IsUserInTeamBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.IS_USER_IN_TEAM] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.IS_USER_IN_TEAM] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'TEAM', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {

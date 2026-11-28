@@ -58,7 +58,7 @@ export class PrintTextBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.PRINT_TEXT] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.PRINT_TEXT] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {

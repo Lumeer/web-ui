@@ -57,7 +57,7 @@ export class EscapeHtmlBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.ESCAPE_HTML] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.ESCAPE_HTML] = function (block) {
       const value_message = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ATOMIC) || null;
       const code = `${this_.blocklyUtils.getLumeerVariable()}.escapeHtml(${value_message})`;
 

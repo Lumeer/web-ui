@@ -71,7 +71,7 @@ export class StringReplaceBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.STRING_REPLACE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.STRING_REPLACE] = function (block) {
       const strArg = Blockly.JavaScript.valueToCode(block, 'STR', Blockly.JavaScript.ORDER_MEMBER) || "''";
       const patArg = Blockly.JavaScript.valueToCode(block, 'PAT', Blockly.JavaScript.ORDER_NONE) || "''";
       const flagsArg = Blockly.JavaScript.valueToCode(block, 'FLAGS', Blockly.JavaScript.ORDER_NONE) || "''";

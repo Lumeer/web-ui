@@ -69,6 +69,6 @@ export class ForEachLinkArrayBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.FOREACH_LINK_ARRAY] = Blockly.JavaScript['controls_forEach'];
+    Blockly.JavaScript.forBlock[BlocklyUtils.FOREACH_LINK_ARRAY] = Blockly.JavaScript.forBlock['controls_forEach'];
   }
 }

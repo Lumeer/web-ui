@@ -95,7 +95,7 @@ export class GetSmtpConfigurationBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_SMTP_CONFIGURATION] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.GET_SMTP_CONFIGURATION] = function (block) {
       const value_host = Blockly.JavaScript.valueToCode(block, 'HOST', Blockly.JavaScript.ORDER_ATOMIC);
       const value_port = Blockly.JavaScript.valueToCode(block, 'PORT', Blockly.JavaScript.ORDER_ATOMIC);
       const value_user = Blockly.JavaScript.valueToCode(block, 'USER', Blockly.JavaScript.ORDER_ATOMIC);

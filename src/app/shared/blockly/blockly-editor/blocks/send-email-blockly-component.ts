@@ -71,7 +71,7 @@ export class SendEmailBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.SEND_EMAIL] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.SEND_EMAIL] = function (block) {
       const email = Blockly.JavaScript.valueToCode(block, 'EMAIL', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const subject = Blockly.JavaScript.valueToCode(block, 'SUBJECT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const body = Blockly.JavaScript.valueToCode(block, 'BODY', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;

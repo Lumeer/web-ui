@@ -55,7 +55,7 @@ export class IsBooleanBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.IS_BOOLEAN] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.IS_BOOLEAN] = function (block) {
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       const code = `(typeof (${val}) === 'boolean')`;

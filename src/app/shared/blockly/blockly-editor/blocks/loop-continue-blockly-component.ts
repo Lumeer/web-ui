@@ -50,7 +50,7 @@ export class LoopContinueBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.LOOP_CONTINUE] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.LOOP_CONTINUE] = function (block) {
       return 'continue;';
     };
   }

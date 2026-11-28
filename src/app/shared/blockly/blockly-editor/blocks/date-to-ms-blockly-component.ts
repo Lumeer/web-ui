@@ -56,7 +56,7 @@ export class DateToMsBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.DATE_TO_MS] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.DATE_TO_MS] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {

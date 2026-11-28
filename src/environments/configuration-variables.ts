@@ -36,7 +36,6 @@ export interface ConfigurationVariables {
   sessionTimeout: number;
   pusherCluster: string;
   pusherKey: string;
-  blocklyCdn: string;
   publicViewCdn: string;
   publicScriptCdn: string;
   betterStackHost: string;

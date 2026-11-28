@@ -55,7 +55,7 @@ export class IsNumberBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.IS_NUMBER] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.IS_NUMBER] = function (block) {
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       const code = `(typeof (${val}) === 'number')`;

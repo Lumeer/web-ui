@@ -70,9 +70,6 @@ export class ConfigurationService {
     const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
     const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
     const pusherKey = env['PUSHER_KEY'] || '';
-    const blocklyCdn =
-      env['BLOCKLY_CDN'] ||
-      `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v51/blockly.${blocklyCdnLanguagePath(locale)}.min.js`;
     const publicViewCdn = env['PUBLIC_VIEW_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/index.html`;
     const publicScriptCdn =
       env['PUBLIC_SCRIPT_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/public-view.js`;
@@ -103,7 +100,6 @@ export class ConfigurationService {
       sessionTimeout,
       pusherCluster,
       pusherKey,
-      blocklyCdn,
       publicViewCdn,
       publicScriptCdn,
       betterStackHost,
@@ -128,13 +124,5 @@ function parseLanguageFromLocation(): string {
     }
   }
 
-  return LanguageCode.EN;
-}
-
-function blocklyCdnLanguagePath(locale: string): string {
-  const supportedLanguages = [LanguageCode.CZ, LanguageCode.EN];
-  if (supportedLanguages.some(language => language === locale)) {
-    return locale;
-  }
   return LanguageCode.EN;
 }

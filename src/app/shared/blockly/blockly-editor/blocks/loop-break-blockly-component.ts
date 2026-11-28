@@ -50,7 +50,7 @@ export class LoopBreakBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.LOOP_BREAK] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.LOOP_BREAK] = function (block) {
       return 'break;';
     };
   }

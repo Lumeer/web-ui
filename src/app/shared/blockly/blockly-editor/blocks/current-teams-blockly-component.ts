@@ -50,7 +50,7 @@ export class CurrentTeamsBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.CURRENT_TEAMS] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.CURRENT_TEAMS] = function (block) {
       const code = this_.blocklyUtils.getLumeerVariable() + '.getUserTeams()';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];

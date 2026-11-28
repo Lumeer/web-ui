@@ -55,7 +55,7 @@ export class IsArrayBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.IS_ARRAY] = function (block) {
+    Blockly.JavaScript.forBlock[BlocklyUtils.IS_ARRAY] = function (block) {
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       const code = `Array.isArray(${val})`;
