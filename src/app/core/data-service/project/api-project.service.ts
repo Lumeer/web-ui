@@ -22,6 +22,7 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {ProjectDto} from '../../dto';
@@ -96,11 +97,11 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
     return this.httpClient.delete(`${this.apiPrefix(organizationId, projectId)}/sample-data`, {params: {confirmation}});
   }
 
-  public downloadRawContent(organizationId: string, projectId: string): Observable<HttpResponse<Blob>> {
-    return this.httpClient.get(`${this.apiPrefix(organizationId, projectId)}/raw`, {
-      observe: 'response',
-      responseType: 'blob',
-    });
+  // a short-term signed URL the browser downloads as an ordinary file, blobs are limited in size
+  public createRawContentDownloadUrl(organizationId: string, projectId: string): Observable<string> {
+    return this.httpClient
+      .post<{url: string}>(`${this.apiPrefix(organizationId, projectId)}/raw/link`, {})
+      .pipe(map(response => response.url));
   }
 
   public getUploadRawContentUrl(organizationId: string, projectId: string): string {
