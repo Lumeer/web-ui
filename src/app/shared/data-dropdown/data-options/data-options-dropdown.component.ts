@@ -46,6 +46,7 @@ import {DataDropdownOption} from './data-dropdown-option';
   templateUrl: './data-options-dropdown.component.html',
   styleUrls: ['./data-options-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataOptionsDropdownComponent implements AfterViewInit, OnChanges {
   @Input()

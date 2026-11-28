@@ -41,6 +41,7 @@ import {TableDataPermissionsService} from '../../../../../service/table-data-per
   templateUrl: './table-hierarchy-cell-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableDataPermissionsService],
+  standalone: false,
 })
 export class TableHierarchyCellMenuComponent implements OnChanges {
   @Input()

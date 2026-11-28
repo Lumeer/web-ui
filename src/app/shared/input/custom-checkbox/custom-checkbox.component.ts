@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   templateUrl: './custom-checkbox.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'form-check'},
+  standalone: false,
 })
 export class CustomCheckboxComponent {
   @Input()

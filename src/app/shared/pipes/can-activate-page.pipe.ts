@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'canActivatePage',
+  standalone: false,
 })
 export class CanActivatePagePipe implements PipeTransform {
   public transform(page: number, pageSize: number, maxItems: number): boolean {

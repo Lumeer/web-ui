@@ -24,6 +24,7 @@ import {constraintIconsMap} from '../../core/model/constraint';
 
 @Pipe({
   name: 'constraintTypeIcon',
+  standalone: false,
 })
 export class ConstraintTypeIconPipe implements PipeTransform {
   public transform(constraint: Constraint): string {

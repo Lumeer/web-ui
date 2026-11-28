@@ -36,6 +36,7 @@ import {QueryData} from '../../top-panel/search-box/util/query-data';
   selector: 'views-bookmarks',
   templateUrl: './views-bookmarks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewsBookmarksComponent implements OnInit {
   @Input()

@@ -47,6 +47,7 @@ import {DataSuggestion} from './data-suggestion';
   templateUrl: './data-input.component.html',
   styleUrls: ['./data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataInputComponent implements OnChanges, OnDestroy {
   @Input()

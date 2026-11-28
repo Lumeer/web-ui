@@ -25,6 +25,7 @@ import {View} from '../../../../../../../../core/store/views/view';
   selector: 'dashboard-tab-action',
   templateUrl: './dashboard-tab-action.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardTabActionComponent implements OnChanges {
   @Input()

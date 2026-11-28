@@ -44,6 +44,7 @@ import {User} from '../../../core/store/users/user';
   templateUrl: './user-settings.component.html',
   styleUrls: ['./user-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserSettingsComponent {
   @Input()

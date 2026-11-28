@@ -30,6 +30,7 @@ import {SelectItemModel} from '../../../../../../../select/select-item/select-it
   templateUrl: './dashboard-action-config.component.html',
   styleUrls: ['./dashboard-action-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardActionConfigComponent implements OnChanges {
   @Input()

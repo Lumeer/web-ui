@@ -78,6 +78,7 @@ enum UpdateType {
   templateUrl: './chart-data.component.html',
   providers: [ChartDataConverter],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChartDataComponent implements OnInit, OnChanges {
   @Input()

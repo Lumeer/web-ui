@@ -31,6 +31,7 @@ import {objectChanged} from '../../../utils/common.utils';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserComponent implements OnChanges {
   @Input()

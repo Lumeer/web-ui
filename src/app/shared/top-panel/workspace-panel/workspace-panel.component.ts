@@ -41,6 +41,7 @@ import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../../cor
   templateUrl: './workspace-panel.component.html',
   styleUrls: ['./workspace-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class WorkspacePanelComponent implements OnInit {
   @Input()

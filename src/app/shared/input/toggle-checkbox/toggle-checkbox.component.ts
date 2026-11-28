@@ -24,6 +24,7 @@ import {generateId} from '../../utils/resource.utils';
   selector: 'toggle-checkbox',
   templateUrl: './toggle-checkbox.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ToggleCheckboxComponent {
   @Input()

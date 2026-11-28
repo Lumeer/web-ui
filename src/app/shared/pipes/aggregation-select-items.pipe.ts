@@ -25,6 +25,7 @@ import {dataAggregationName} from '../utils/data-aggregation';
 
 @Pipe({
   name: 'aggregationSelectItems',
+  standalone: false,
 })
 export class AggregationSelectItemsPipe implements PipeTransform {
   public transform(aggregations: DataAggregationType[]): SelectItemModel[] {

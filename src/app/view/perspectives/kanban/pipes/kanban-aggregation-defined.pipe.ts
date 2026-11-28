@@ -23,6 +23,7 @@ import {isKanbanAggregationDefined} from '../util/kanban.util';
 
 @Pipe({
   name: 'kanbanAggregationDefined',
+  standalone: false,
 })
 export class KanbanAggregationDefinedPipe implements PipeTransform {
   public transform(config: KanbanConfig): boolean {

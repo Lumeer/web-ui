@@ -34,6 +34,7 @@ import {FormError} from '../validation/form-validation';
   selector: 'form-view-section',
   templateUrl: './form-view-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormViewSectionComponent implements OnChanges {
   @Input()

@@ -24,6 +24,7 @@ import {findTableRow, splitRowPath} from '../../../../../core/store/tables/table
 
 @Pipe({
   name: 'previousLinkedRow',
+  standalone: false,
 })
 export class PreviousLinkedRowPipe implements PipeTransform {
   public transform(table: TableModel, cursor: TableBodyCursor): TableConfigRow {

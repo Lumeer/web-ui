@@ -22,6 +22,7 @@ import * as moment from 'moment';
 
 @Pipe({
   name: 'formatDate',
+  standalone: false,
 })
 export class FormatDatePipe implements PipeTransform {
   public transform(value: Date, format?: string, utc?: boolean): string {

@@ -30,6 +30,7 @@ import {removeAllFormControls} from '../../../../../utils/form.utils';
   selector: 'constraint-config-form',
   templateUrl: './constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ConstraintConfigFormComponent implements OnChanges {
   @Input()

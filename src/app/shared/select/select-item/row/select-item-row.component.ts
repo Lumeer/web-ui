@@ -26,6 +26,7 @@ import {SelectItem2Model, SelectedItemDisplayValue} from '../../select-item2/sel
   templateUrl: './select-item-row.component.html',
   styleUrls: ['./select-item-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectItemRowComponent implements OnChanges {
   @Input()

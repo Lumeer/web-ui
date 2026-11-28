@@ -41,6 +41,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   selector: 'duration-data-input',
   templateUrl: './duration-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()

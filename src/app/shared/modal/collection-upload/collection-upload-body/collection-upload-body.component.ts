@@ -30,6 +30,7 @@ import {SelectItemModel} from '../../../select/select-item/select-item.model';
   templateUrl: './collection-upload-body.component.html',
   styleUrls: ['./collection-upload-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionUploadBodyComponent implements OnChanges {
   @Input()

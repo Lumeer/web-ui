@@ -66,6 +66,7 @@ import {DocumentHintColumn} from './document-hint-column';
   templateUrl: './document-hints.component.html',
   styleUrls: ['./document-hints.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()

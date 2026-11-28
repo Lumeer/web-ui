@@ -48,6 +48,7 @@ import {ConditionItem, ConstraintConditionValueItem} from '../model/condition-it
   styleUrls: ['./filter-builder-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-row flex-nowrap'},
+  standalone: false,
 })
 export class FilterBuilderContentComponent implements OnChanges {
   @Input()

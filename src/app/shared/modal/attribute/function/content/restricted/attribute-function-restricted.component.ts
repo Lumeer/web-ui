@@ -22,5 +22,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   selector: 'attribute-function-restricted',
   templateUrl: './attribute-function-restricted.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeFunctionRestrictedComponent {}

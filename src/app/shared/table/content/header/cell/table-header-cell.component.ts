@@ -44,6 +44,7 @@ import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-
   styleUrls: ['./table-header-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block'},
+  standalone: false,
 })
 export class TableHeaderCellComponent implements OnInit {
   @Input()

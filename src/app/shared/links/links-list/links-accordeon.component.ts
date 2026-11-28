@@ -45,6 +45,7 @@ import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
   templateUrl: './links-accordeon.component.html',
   styleUrls: ['./links-accordeon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinksAccordeonComponent implements OnInit {
   @Input()

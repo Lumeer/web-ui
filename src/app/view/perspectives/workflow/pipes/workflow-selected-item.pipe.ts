@@ -23,6 +23,7 @@ import {SelectItemWithConstraintId} from '../../../../shared/select/select-const
 
 @Pipe({
   name: 'workflowSelectedItem',
+  standalone: false,
 })
 export class WorkflowSelectedItemPipe implements PipeTransform {
   public transform(config: WorkflowStemConfig): SelectItemWithConstraintId {

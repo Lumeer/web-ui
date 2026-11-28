@@ -33,6 +33,7 @@ import {getAttributesResourceType} from '../../../../../../shared/utils/resource
   selector: 'gantt-chart-array-bar-model-select',
   templateUrl: './gantt-chart-array-bar-model-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartArrayBarModelSelectComponent implements OnChanges {
   @Input()

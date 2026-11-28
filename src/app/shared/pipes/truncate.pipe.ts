@@ -22,6 +22,7 @@ import {truncate} from '../utils/string.utils';
 
 @Pipe({
   name: 'truncate',
+  standalone: false,
 })
 export class TruncatePipe implements PipeTransform {
   public transform(value: string, limit: number): any {

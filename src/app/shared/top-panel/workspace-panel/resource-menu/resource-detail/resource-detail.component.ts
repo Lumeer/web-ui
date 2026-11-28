@@ -32,6 +32,7 @@ import {
   selector: 'resource-detail',
   templateUrl: './resource-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceDetailComponent implements OnChanges {
   @Input()

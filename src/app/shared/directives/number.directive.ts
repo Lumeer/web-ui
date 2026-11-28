@@ -24,6 +24,7 @@ import {isNotNullOrUndefined} from '@lumeer/utils';
 @Directive({
   selector: '[number]',
   providers: [{provide: NG_VALUE_ACCESSOR, useExisting: NumberDirective, multi: true}],
+  standalone: false,
 })
 export class NumberDirective extends DefaultValueAccessor {
   private _sourceRenderer: Renderer2;

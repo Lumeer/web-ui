@@ -22,6 +22,7 @@ import {isEmailValid} from '../../utils/email.utils';
 
 @Pipe({
   name: 'emailValid',
+  standalone: false,
 })
 export class EmailValidPipe implements PipeTransform {
   public transform(email: string): boolean {

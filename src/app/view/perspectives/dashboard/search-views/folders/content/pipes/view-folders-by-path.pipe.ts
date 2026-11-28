@@ -23,6 +23,7 @@ import {ObjectFolders} from '../util/object-folders';
 
 @Pipe({
   name: 'viewFoldersByPath',
+  standalone: false,
 })
 export class ViewFoldersByPathPipe implements PipeTransform {
   public transform(viewFolders: ObjectFolders<View>, path: string[]): ObjectFolders<View> {

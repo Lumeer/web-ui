@@ -20,6 +20,7 @@ import {AfterViewChecked, Directive, ElementRef, Input, OnChanges, OnDestroy, Si
 
 @Directive({
   selector: '[tableCellScroll]',
+  standalone: false,
 })
 export class TableCellScrollDirective implements OnChanges, AfterViewChecked, OnDestroy {
   @Input()

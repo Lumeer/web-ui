@@ -22,6 +22,7 @@ import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 
 @Pipe({
   name: 'nextRowCursor',
+  standalone: false,
 })
 export class NextRowCursorPipe implements PipeTransform {
   public transform(cursor: TableBodyCursor, rowIndex: number): TableBodyCursor {

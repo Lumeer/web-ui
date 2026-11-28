@@ -22,6 +22,7 @@ import {parseSelectTranslation} from '../utils/translation.utils';
 
 @Pipe({
   name: 'perspectiveName',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

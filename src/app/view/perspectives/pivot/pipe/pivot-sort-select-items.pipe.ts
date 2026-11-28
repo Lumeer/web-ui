@@ -25,6 +25,7 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
 
 @Pipe({
   name: 'pivotSortSelectItems',
+  standalone: false,
 })
 export class PivotSortSelectItemsPipe implements PipeTransform {
   public readonly summaryString: string;

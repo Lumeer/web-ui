@@ -24,6 +24,7 @@ import {ResourceType} from '../../../core/model/resource-type';
   selector: 'project-selection-lists',
   templateUrl: './project-selection-lists.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectSelectionListsComponent {
   public readonly resourceType = ResourceType.Project;

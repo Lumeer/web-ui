@@ -23,6 +23,7 @@ import {SelectItemWithConstraintId} from '../../../../../shared/select/select-co
 
 @Pipe({
   name: 'chartAxisSelectItemId',
+  standalone: false,
 })
 export class ChartAxisSelectItemIdPipe implements PipeTransform {
   public transform(axis: ChartAxis): SelectItemWithConstraintId {

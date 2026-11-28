@@ -23,6 +23,7 @@ import {View} from '../../core/store/views/view';
 
 @Pipe({
   name: 'viewWorkspace',
+  standalone: false,
 })
 export class ViewWorkspacePipe implements PipeTransform {
   public transform(view: View, workspace?: Workspace): Workspace {

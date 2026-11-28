@@ -33,6 +33,7 @@ import {isTableRowCollapsed} from '../../../../../core/store/tables/utils/table-
  */
 @Pipe({
   name: 'cellCollapsed',
+  standalone: false,
 })
 export class CellCollapsedPipe implements PipeTransform {
   constructor(private store$: Store<AppState>) {}

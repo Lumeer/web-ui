@@ -46,6 +46,7 @@ import {mapLinkTypeCollections} from '../../../../shared/utils/link-type.utils';
   templateUrl: './collection-link-types.component.html',
   styleUrls: ['./collection-link-types.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionLinkTypesComponent implements OnInit {
   public linkTypes$: Observable<LinkType[]>;

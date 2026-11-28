@@ -27,6 +27,7 @@ import {Project} from '../../../../../core/store/projects/project';
   templateUrl: './resource-list.component.html',
   styleUrls: ['./resource-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceListComponent {
   @Input()

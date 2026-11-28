@@ -33,6 +33,7 @@ import {SelectItemModel} from '../../../../../../shared/select/select-item/selec
   templateUrl: './gantt-chart-milestones-select.component.html',
   styleUrls: ['./gantt-chart-milestones-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartMilestonesSelectComponent implements OnChanges {
   @Input()

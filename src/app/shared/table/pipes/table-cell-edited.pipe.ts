@@ -25,6 +25,7 @@ import {isTableCellEdited} from '../model/table-utils';
 
 @Pipe({
   name: 'tableCellEdited',
+  standalone: false,
 })
 export class TableCellEditedPipe implements PipeTransform {
   public transform(cell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {

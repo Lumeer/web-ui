@@ -22,6 +22,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 
 @Pipe({
   name: 'ganttChartBarEmptyValue',
+  standalone: false,
 })
 export class GanttChartBarEmptyValuePipe implements PipeTransform {
   public transform(emptyProperty: string): string {

@@ -23,6 +23,7 @@ import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/
 
 @Pipe({
   name: 'dataCellLinkInstance',
+  standalone: false,
 })
 export class DataCellLinkInstancePipe implements PipeTransform {
   public transform(

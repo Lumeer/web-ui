@@ -29,6 +29,7 @@ import {userRoleTypesInOrganization, userRoleTypesInProject, userRoleTypesInReso
 
 @Pipe({
   name: 'userRolesInResource',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

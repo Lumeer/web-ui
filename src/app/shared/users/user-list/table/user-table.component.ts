@@ -32,6 +32,7 @@ import {View} from '../../../../core/store/views/view';
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserTableComponent {
   @Input()

@@ -33,6 +33,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
   selector: 'link-type-activity',
   templateUrl: './link-type-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTypeActivityComponent implements OnInit {
   public linkType$: Observable<LinkType>;

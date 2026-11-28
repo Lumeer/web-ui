@@ -56,6 +56,7 @@ import {objectChanged} from '../../utils/common.utils';
   templateUrl: './link-tables-accordeon.component.html',
   styleUrls: ['./links-accordeon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTablesAccordeonComponent implements OnInit, OnChanges {
   @Input()

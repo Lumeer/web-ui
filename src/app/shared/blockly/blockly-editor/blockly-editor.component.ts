@@ -138,6 +138,7 @@ declare var Blockly: any;
   templateUrl: './blockly-editor.component.html',
   styleUrls: ['./blockly-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   @Input()

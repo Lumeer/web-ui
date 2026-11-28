@@ -22,6 +22,7 @@ import {UserNotification, UserNotificationType} from '../../../../core/model/use
 
 @Pipe({
   name: 'validNotificationFilter',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

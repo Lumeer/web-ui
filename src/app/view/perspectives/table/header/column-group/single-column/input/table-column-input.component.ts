@@ -42,6 +42,7 @@ import {HtmlModifier} from '../../../../../../../shared/utils/html-modifier';
   templateUrl: './table-column-input.component.html',
   styleUrls: ['./table-column-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableColumnInputComponent implements OnChanges {
   @Input()

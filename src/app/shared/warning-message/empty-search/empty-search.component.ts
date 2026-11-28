@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   selector: 'empty-search',
   templateUrl: './empty-search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptySearchComponent {
   @Input()

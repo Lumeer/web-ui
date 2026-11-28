@@ -54,6 +54,7 @@ import {SearchPerspectiveConfiguration} from '../../../../perspective-configurat
   styleUrls: ['./views-preview-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ViewFavoriteToggleService],
+  standalone: false,
 })
 export class ViewsPreviewContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

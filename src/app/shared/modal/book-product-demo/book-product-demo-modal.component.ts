@@ -36,6 +36,7 @@ import {DialogType} from '../dialog-type';
   selector: 'book-product-demo-modal',
   templateUrl: './book-product-demo-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BookProductDemoModalComponent implements OnInit {
   public readonly form = new UntypedFormGroup({

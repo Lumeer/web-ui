@@ -31,6 +31,7 @@ import {generateCorrelationId} from '../../../../../../shared/utils/resource.uti
   templateUrl: './form-editor-section.component.html',
   styleUrls: ['./form-editor-section.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorSectionComponent {
   @Input()

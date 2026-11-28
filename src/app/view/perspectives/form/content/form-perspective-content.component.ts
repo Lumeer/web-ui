@@ -49,6 +49,7 @@ import {FormPerspectiveConfiguration} from '../../perspective-configuration';
   selector: 'form-perspective-content',
   templateUrl: './form-perspective-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormPerspectiveContentComponent implements OnInit, OnChanges {
   @Input()

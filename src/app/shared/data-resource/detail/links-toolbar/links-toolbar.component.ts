@@ -43,6 +43,7 @@ import {View} from '../../../../core/store/views/view';
   selector: 'links-toolbar',
   templateUrl: './links-toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinksToolbarComponent implements OnChanges, OnInit {
   @Input()

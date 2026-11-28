@@ -31,6 +31,7 @@ import {UserConstraintFormControl} from './user-constraint-form-control';
   selector: 'user-constraint-config-form',
   templateUrl: './user-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserConstraintConfigFormComponent implements OnChanges {
   @Input()

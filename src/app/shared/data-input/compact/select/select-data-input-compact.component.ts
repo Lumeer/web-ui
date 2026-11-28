@@ -41,6 +41,7 @@ import {createSelectDataInputDropdownOptions} from '../../select/select-data-inp
   selector: 'select-data-input-compact',
   templateUrl: './select-data-input-compact.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectDataInputCompactComponent implements OnChanges {
   @Input()

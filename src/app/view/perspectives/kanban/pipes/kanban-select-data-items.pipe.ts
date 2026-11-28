@@ -25,6 +25,7 @@ import {SelectDataItemModel} from '../../../../shared/select/select-data-item/se
 
 @Pipe({
   name: 'kanbanSelectDataItems',
+  standalone: false,
 })
 export class KanbanSelectDataItemsPipe implements PipeTransform {
   public transform(

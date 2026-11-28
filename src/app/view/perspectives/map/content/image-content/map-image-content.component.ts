@@ -47,6 +47,7 @@ import {populateCoordinateProperties} from '../map-content.utils';
   templateUrl: './map-image-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'w-100'},
+  standalone: false,
 })
 export class MapImageContentComponent implements OnChanges {
   @Input()

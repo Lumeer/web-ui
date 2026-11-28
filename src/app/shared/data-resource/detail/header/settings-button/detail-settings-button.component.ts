@@ -25,6 +25,7 @@ import {AttributesSettings, ViewSettings} from '../../../../../core/store/view-s
   selector: 'detail-settings-button',
   templateUrl: './detail-settings-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DetailSettingsButtonComponent {
   @Input()

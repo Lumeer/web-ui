@@ -73,6 +73,7 @@ const MAX_SUGGESTIONS_COUNT = 5;
   templateUrl: './table-attribute-suggestions.component.html',
   styleUrls: ['./table-attribute-suggestions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()

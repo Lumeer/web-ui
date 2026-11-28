@@ -28,6 +28,7 @@ import {generateCorrelationId} from '../../../../../../utils/resource.utils';
   templateUrl: './dashboard-row-settings.component.html',
   styleUrls: ['./dashboard-row-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardRowSettingsComponent implements OnChanges {
   @Input()

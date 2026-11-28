@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'empty',
+  standalone: false,
 })
 export class EmptyPipe implements PipeTransform {
   public transform(value: any[] | string): boolean {

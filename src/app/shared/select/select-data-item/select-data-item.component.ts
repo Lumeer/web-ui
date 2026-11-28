@@ -45,6 +45,7 @@ import {SelectDataItemModel} from './select-data-item.model';
   templateUrl: './select-data-item.component.html',
   styleUrls: ['./select-data-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectDataItemComponent implements OnInit, OnChanges {
   @Input()

@@ -36,6 +36,7 @@ import {DialogType} from '../dialog-type';
   selector: 'collection-upload-modal',
   templateUrl: './collection-upload-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionUploadModalComponent implements OnInit {
   @Input()

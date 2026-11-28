@@ -31,6 +31,7 @@ import {getAttributesResourceType} from '../../../../../../../../shared/utils/re
   selector: 'pivot-value-attribute-config',
   templateUrl: './pivot-value-attribute-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PivotValueAttributeConfigComponent {
   @Input()

@@ -22,6 +22,7 @@ import {DashboardLayoutType, DashboardRow} from '../../../../core/model/dashboar
 
 @Pipe({
   name: 'selectedLayoutInRow',
+  standalone: false,
 })
 export class SelectedLayoutInRowPipe implements PipeTransform {
   public transform(row: DashboardRow): DashboardLayoutType {

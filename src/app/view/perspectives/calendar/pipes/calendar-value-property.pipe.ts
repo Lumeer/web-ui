@@ -22,6 +22,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 
 @Pipe({
   name: 'calendarPropertyEmptyValue',
+  standalone: false,
 })
 export class CalendarValuePropertyPipe implements PipeTransform {
   public transform(barProperty: string): string {

@@ -22,6 +22,7 @@ import {SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filte
 
 @Pipe({
   name: 'selectOptionIsValid',
+  standalone: false,
 })
 export class SelectOptionIsValidPipe implements PipeTransform {
   public transform(option: SelectConstraintOption, config: SelectConstraintConfig, length: number): boolean {

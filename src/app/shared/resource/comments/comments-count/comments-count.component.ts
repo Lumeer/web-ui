@@ -24,6 +24,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   styleUrls: ['./comments-count.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'fa-stack'},
+  standalone: false,
 })
 export class CommentsCountComponent {
   @Input()

@@ -22,6 +22,7 @@ import {AuditLogFilters} from '../model/audit-log-filters';
 
 @Pipe({
   name: 'auditLogFiltersCount',
+  standalone: false,
 })
 export class AuditLogFiltersCountPipe implements PipeTransform {
   public transform(filters: AuditLogFilters): number {

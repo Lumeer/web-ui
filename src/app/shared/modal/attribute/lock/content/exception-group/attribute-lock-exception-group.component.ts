@@ -42,6 +42,7 @@ import {deepArrayEquals} from '../../../../../utils/array.utils';
   templateUrl: './attribute-lock-exception-group.component.html',
   styleUrls: ['./attribute-lock-exception-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeLockExceptionGroupComponent implements OnInit {
   @Input()

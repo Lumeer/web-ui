@@ -23,6 +23,7 @@ import {isSingleCollectionQuery} from '../../core/store/navigation/query/query.u
 
 @Pipe({
   name: 'singleCollectionQuery',
+  standalone: false,
 })
 export class SingleCollectionQueryPipe implements PipeTransform {
   public transform(query: Query): boolean {

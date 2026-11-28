@@ -45,6 +45,7 @@ import {isUrlValid} from '../../../utils/url.utils';
   templateUrl: './link-input-dropdown.component.html',
   styleUrls: ['./link-input-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkInputDropdownComponent implements OnInit, AfterViewInit {
   @Input()

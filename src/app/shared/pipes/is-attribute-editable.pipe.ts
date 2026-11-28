@@ -25,6 +25,7 @@ import {Attribute} from '../../core/store/collections/collection';
 
 @Pipe({
   name: 'isAttributeEditable',
+  standalone: false,
 })
 export class IsAttributeEditablePipe implements PipeTransform {
   public transform(

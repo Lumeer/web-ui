@@ -35,6 +35,7 @@ import * as colors from '../../colors';
   templateUrl: './color-choose.component.html',
   styleUrls: ['./color-choose.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ColorChooseComponent implements OnChanges {
   @Input()

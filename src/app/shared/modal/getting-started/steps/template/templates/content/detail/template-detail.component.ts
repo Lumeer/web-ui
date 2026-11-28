@@ -27,6 +27,7 @@ import {Project} from '../../../../../../../../core/store/projects/project';
   templateUrl: './template-detail.component.html',
   styleUrls: ['./template-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TemplateDetailComponent implements OnChanges {
   @Input()

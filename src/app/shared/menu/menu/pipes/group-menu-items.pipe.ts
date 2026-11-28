@@ -22,6 +22,7 @@ import {MenuItem} from '../../model/menu-item';
 
 @Pipe({
   name: 'groupMenuItems',
+  standalone: false,
 })
 export class GroupMenuItemsPipe implements PipeTransform {
   public transform(items: MenuItem[]): {group: number; items: MenuItem[]}[] {

@@ -49,6 +49,7 @@ import {generateId} from '../../utils/resource.utils';
   templateUrl: './resource-comments.component.html',
   styleUrls: ['./resource-comments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceCommentsComponent implements OnInit, OnChanges {
   @Input()

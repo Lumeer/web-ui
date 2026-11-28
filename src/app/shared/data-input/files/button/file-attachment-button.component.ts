@@ -35,6 +35,7 @@ import {FileDownloadService} from '../file-download.service';
   templateUrl: './file-attachment-button.component.html',
   styleUrls: ['./file-attachment-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FileAttachmentButtonComponent implements OnInit, OnChanges {
   @Input()

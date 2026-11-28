@@ -25,6 +25,7 @@ import {isTableCellSelected} from '../model/table-utils';
 
 @Pipe({
   name: 'tableCellSelected',
+  standalone: false,
 })
 export class TableCellSelectedPipe implements PipeTransform {
   public transform(selectedCell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {

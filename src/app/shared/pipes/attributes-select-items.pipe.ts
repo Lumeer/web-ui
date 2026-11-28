@@ -26,6 +26,7 @@ import {SelectItemModel} from '../select/select-item/select-item.model';
 
 @Pipe({
   name: 'attributesSelectItems',
+  standalone: false,
 })
 export class AttributesSelectItemsPipe implements PipeTransform {
   public transform(collection: Collection, type?: ConstraintType): SelectItemModel[] {

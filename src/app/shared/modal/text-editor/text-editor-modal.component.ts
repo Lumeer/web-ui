@@ -49,6 +49,7 @@ export interface TextEditorChanged {
   templateUrl: './text-editor-modal.component.html',
   styleUrls: ['./text-editor-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TextEditorModalComponent implements OnInit, AfterViewInit {
   @Input()

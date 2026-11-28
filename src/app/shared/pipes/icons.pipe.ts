@@ -22,6 +22,7 @@ import {Resource} from '../../core/model/resource';
 
 @Pipe({
   name: 'icons',
+  standalone: false,
 })
 export class IconsPipe implements PipeTransform {
   public transform(entities: Resource[]): string[] {

@@ -39,6 +39,7 @@ import {generateId} from '../../../../shared/utils/resource.utils';
   selector: 'collection-rules',
   templateUrl: './collection-rules.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionRulesComponent implements OnInit {
   public collection$: Observable<Collection>;

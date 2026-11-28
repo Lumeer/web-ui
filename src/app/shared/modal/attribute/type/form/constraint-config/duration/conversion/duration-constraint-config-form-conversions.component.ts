@@ -28,6 +28,7 @@ import {
   selector: 'duration-constraint-config-form-conversion',
   templateUrl: './duration-constraint-config-form-conversions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DurationConstraintConfigFormConversionsComponent {
   @Input()

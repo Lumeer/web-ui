@@ -23,5 +23,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   templateUrl: './info-box.component.html',
   styleUrls: ['./info-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class InfoBoxComponent {}

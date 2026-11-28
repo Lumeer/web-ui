@@ -49,6 +49,7 @@ import * as DashboardDataActions from './../../../../../../../core/store/dashboa
   templateUrl: './dashboard-tab-cell-content.component.html',
   styleUrls: ['./dashboard-tab-cell-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardTabCellContentComponent implements OnChanges {
   @Input()

@@ -28,6 +28,7 @@ import {DataInputConfiguration} from '../../../data-input/data-input-configurati
   templateUrl: 'attribute-lock-filter-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-inline-flex text-truncate text-nowrap align-items-center'},
+  standalone: false,
 })
 export class AttributeLockFilterPreviewComponent {
   @Input()

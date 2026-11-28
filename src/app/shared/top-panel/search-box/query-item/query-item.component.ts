@@ -29,6 +29,7 @@ import {QueryItemType} from './model/query-item-type';
   templateUrl: './query-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'mw-100'},
+  standalone: false,
 })
 export class QueryItemComponent {
   @Input()

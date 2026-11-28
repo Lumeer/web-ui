@@ -24,6 +24,7 @@ import {attributeHasFunction, attributeHasRuleFunction} from '../utils/attribute
 
 @Pipe({
   name: 'attributeFunctionDefined',
+  standalone: false,
 })
 export class AttributeFunctionDefinedPipe implements PipeTransform {
   public transform(attribute: Attribute, rules?: Rule[]): boolean {

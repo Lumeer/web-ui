@@ -38,6 +38,7 @@ import {TableHierarchyCellMenuComponent} from './menu/table-hierarchy-cell-menu.
   templateUrl: './table-hierarchy-cell.component.html',
   styleUrls: ['./table-hierarchy-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHierarchyCellComponent implements OnChanges {
   @Input()

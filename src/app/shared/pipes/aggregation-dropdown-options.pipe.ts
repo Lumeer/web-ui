@@ -25,6 +25,7 @@ import {dataAggregationIconMap, dataAggregationName} from '../utils/data-aggrega
 
 @Pipe({
   name: 'aggregationDropdownOptions',
+  standalone: false,
 })
 export class AggregationDropdownOptionsPipe implements PipeTransform {
   public transform(aggregations: DataAggregationType[]): DropdownOption[] {

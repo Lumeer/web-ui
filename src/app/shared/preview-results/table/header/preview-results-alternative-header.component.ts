@@ -26,6 +26,7 @@ import {PreviewResultsColumn} from '../preview-results-table.component';
   styleUrls: ['./preview-results-alternative-header.component.scss'],
   host: {class: 'alternative-header w-100'},
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PreviewResultsAlternativeHeaderComponent {
   @Input()

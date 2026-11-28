@@ -35,6 +35,7 @@ import {ServiceLimitsAction} from '../../../../../core/store/organizations/servi
   selector: 'payments-list',
   templateUrl: './payments-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PaymentsListComponent implements OnInit {
   @Input()

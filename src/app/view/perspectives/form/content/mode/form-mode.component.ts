@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   selector: 'form-mode',
   templateUrl: './form-mode.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormModeComponent {
   @Input()

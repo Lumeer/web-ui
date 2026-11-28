@@ -24,6 +24,7 @@ import {attributesWithRule} from '../../../utils/attribute.utils';
 
 @Pipe({
   name: 'attributeNames',
+  standalone: false,
 })
 export class AttributeNamesPipe implements PipeTransform {
   public transform(value: Rule, attributes: Attribute[]): string {

@@ -43,6 +43,7 @@ import {checkOrTransformPivotConfig} from './util/pivot-util';
   styleUrls: ['./pivot-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class PivotPerspectiveComponent extends DataPerspectiveDirective<LmrPivotConfig> implements OnInit, OnDestroy {
   @Input()

@@ -47,6 +47,7 @@ import {DropdownOptionDirective} from './dropdown-option.directive';
   templateUrl: './options-dropdown.component.html',
   styleUrls: ['./options-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class OptionsDropdownComponent implements OnChanges {
   @Input()

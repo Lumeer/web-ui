@@ -52,6 +52,7 @@ import {WorkflowPerspectiveConfiguration, defaultWorkflowPerspectiveConfiguratio
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block h-100'},
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class WorkflowPerspectiveComponent
   extends DataPerspectiveDirective<WorkflowConfig>

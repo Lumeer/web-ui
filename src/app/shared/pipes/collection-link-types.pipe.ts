@@ -31,6 +31,7 @@ import {mapLinkTypeCollections} from '../utils/link-type.utils';
 
 @Pipe({
   name: 'collectionLinkTypes',
+  standalone: false,
 })
 @Injectable()
 export class CollectionLinkTypesPipe implements PipeTransform {

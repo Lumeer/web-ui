@@ -25,6 +25,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
   templateUrl: './links-list-tabs.component.html',
   styleUrls: ['./links-list-tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinksListTabsComponent {
   @Input()

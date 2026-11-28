@@ -52,6 +52,7 @@ import {createUserDataInputTeams, createUserDataInputUsers} from '../../user/use
   templateUrl: './user-data-input-compact.component.html',
   styleUrls: ['./user-data-input-compact.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserDataInputCompactComponent implements OnChanges {
   @Input()

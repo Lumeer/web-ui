@@ -24,6 +24,7 @@ import {DropdownDirective} from '../../../../../../../../../../shared/dropdown/d
   selector: 'form-link-range-dropdown',
   templateUrl: './form-link-range-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormLinkRangeDropdownComponent extends DropdownDirective implements OnChanges {
   @Input()

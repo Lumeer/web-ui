@@ -51,6 +51,7 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TeamsComponent implements OnInit, OnDestroy {
   @Input() public resourceType: ResourceType;

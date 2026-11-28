@@ -53,6 +53,7 @@ import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../core
   selector: 'users',
   templateUrl: './users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UsersComponent implements OnInit, OnDestroy {
   @Input()

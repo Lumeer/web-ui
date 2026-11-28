@@ -22,6 +22,7 @@ import {preventEvent} from '../utils/common.utils';
 
 @Directive({
   selector: '[horizontal-resizer]',
+  standalone: false,
 })
 export class HorizontalResizerDirective implements OnInit {
   @Output()

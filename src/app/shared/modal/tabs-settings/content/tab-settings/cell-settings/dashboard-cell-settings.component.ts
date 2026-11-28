@@ -35,6 +35,7 @@ import {createDefaultAction} from './actions/dashboard-actions-config.component'
   selector: 'dashboard-cell-settings',
   templateUrl: './dashboard-cell-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardCellSettingsComponent {
   @Input()

@@ -63,6 +63,7 @@ import {TableScrollService} from './service/table-scroll.service';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

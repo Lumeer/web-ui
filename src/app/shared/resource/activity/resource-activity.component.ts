@@ -50,6 +50,7 @@ import {AuditLogConfiguration} from './audit-logs/model/audit-log-configuration'
   selector: 'resource-activity',
   templateUrl: './resource-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceActivityComponent implements OnChanges, OnDestroy {
   @Input()

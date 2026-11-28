@@ -33,6 +33,7 @@ import {View} from '../../../../../../../../core/store/views/view';
   templateUrl: './dashboard-cell-preview.component.html',
   styleUrls: ['./dashboard-cell-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardCellPreviewComponent implements OnChanges {
   @Input()

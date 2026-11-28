@@ -25,6 +25,7 @@ import {LoadingState} from '../../../../../../../core/model/loading-state';
   templateUrl: './empty-templates.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block w-100 h-100'},
+  standalone: false,
 })
 export class EmptyTemplatesComponent {
   @Input()

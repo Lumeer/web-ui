@@ -50,6 +50,7 @@ import {TablePerspectiveConfiguration} from '../../../perspective-configuration'
   selector: 'table-rows',
   templateUrl: './table-rows.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableRowsComponent implements OnChanges {
   @Input()

@@ -44,6 +44,7 @@ const maximumWidth = 97;
   templateUrl: './loading-line.component.html',
   styleUrls: ['./loading-line.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LoadingLineComponent implements OnInit, AfterViewInit {
   public width$: Observable<number>;

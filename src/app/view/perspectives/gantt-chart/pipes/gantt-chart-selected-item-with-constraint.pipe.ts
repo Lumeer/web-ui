@@ -23,6 +23,7 @@ import {SelectItemWithConstraintId} from '../../../../shared/select/select-const
 
 @Pipe({
   name: 'ganttChartSelectedItemWithConstraint',
+  standalone: false,
 })
 export class GanttChartSelectedItemWithConstraintPipe implements PipeTransform {
   public transform(model: GanttChartBarModel): SelectItemWithConstraintId {

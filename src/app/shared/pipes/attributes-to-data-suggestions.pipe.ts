@@ -23,6 +23,7 @@ import {DataSuggestion} from '../data-input/data-suggestion';
 
 @Pipe({
   name: 'attributesToDataSuggestions',
+  standalone: false,
 })
 export class AttributesToDataSuggestionsPipe implements PipeTransform {
   public transform(attributes: Attribute[]): DataSuggestion[] {

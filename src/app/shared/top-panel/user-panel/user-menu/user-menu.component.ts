@@ -47,6 +47,7 @@ import {UserSettingsModalComponent} from '../../../modal/user-settings/user-sett
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserMenuComponent implements OnInit {
   @Input()

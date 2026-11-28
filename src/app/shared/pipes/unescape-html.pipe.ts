@@ -22,6 +22,7 @@ import {unescapeHtml} from '@lumeer/utils';
 
 @Pipe({
   name: 'unescapeHtml',
+  standalone: false,
 })
 export class UnescapeHtmlPipe implements PipeTransform {
   public transform(value: any): string {

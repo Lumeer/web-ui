@@ -23,6 +23,7 @@ import {LinkType} from '../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'canReadLinkDirectly',
+  standalone: false,
 })
 @Injectable({providedIn: 'root'})
 export class CanReadLinkDirectlyPipe implements PipeTransform {

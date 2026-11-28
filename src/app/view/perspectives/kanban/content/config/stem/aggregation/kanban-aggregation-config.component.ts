@@ -27,6 +27,7 @@ import {objectValues} from '../../../../../../../shared/utils/common.utils';
   selector: 'kanban-aggregation-config',
   templateUrl: './kanban-aggregation-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class KanbanAggregationConfigComponent {
   @Input()

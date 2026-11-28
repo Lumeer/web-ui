@@ -49,6 +49,7 @@ import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
   selector: 'organization-settings',
   templateUrl: './organization-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;

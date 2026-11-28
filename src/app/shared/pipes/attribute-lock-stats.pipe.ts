@@ -25,6 +25,7 @@ import {Attribute} from '../../core/store/collections/collection';
 
 @Pipe({
   name: 'attributeLockStats',
+  standalone: false,
 })
 export class AttributeLockStatsPipe implements PipeTransform {
   public transform(

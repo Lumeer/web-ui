@@ -47,6 +47,7 @@ import {NumberConstraintFormControl} from './number-constraint-form-control';
   selector: 'number-constraint-config-form',
   templateUrl: './number-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NumberConstraintConfigFormComponent implements OnChanges {
   @Input()

@@ -40,6 +40,7 @@ import {generateId} from '../../../../shared/utils/resource.utils';
   templateUrl: './link-type-rules.component.html',
   styleUrls: ['./link-type-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTypeRulesComponent implements OnInit {
   public rulesCountLimit$: Observable<number>;

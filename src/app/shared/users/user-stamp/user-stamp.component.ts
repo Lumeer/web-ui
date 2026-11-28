@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   templateUrl: './user-stamp.component.html',
   styleUrls: ['./user-stamp.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserStampComponent {
   @Input()

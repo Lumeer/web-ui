@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'log',
+  standalone: false,
 })
 export class LogPipe implements PipeTransform {
   public transform(value: any, label?: string, skip?: boolean): any {

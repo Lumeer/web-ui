@@ -23,6 +23,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'asAttributeResource',
+  standalone: false,
 })
 export class AsAttributeResourcePipe implements PipeTransform {
   public transform(value: LinkType): AttributesResource {

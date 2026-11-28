@@ -29,6 +29,7 @@ import {parseSelectTranslation} from '../../../../../utils/translation.utils';
   selector: 'attribute-type-select',
   templateUrl: './attribute-type-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeTypeSelectComponent implements OnInit {
   @Input()

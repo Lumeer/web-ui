@@ -23,6 +23,7 @@ import {ChartData} from '../data/convertor/chart-data';
 
 @Pipe({
   name: 'chartDraggable',
+  standalone: false,
 })
 export class ChartDraggable implements PipeTransform {
   public transform(data: ChartData): boolean {

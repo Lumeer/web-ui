@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, O
   templateUrl: './collapsible-sidebar-toggle.component.html',
   styleUrls: ['./collapsible-sidebar-toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollapsibleSidebarToggleComponent {
   @Input()

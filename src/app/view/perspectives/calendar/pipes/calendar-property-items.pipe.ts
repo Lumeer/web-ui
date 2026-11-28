@@ -28,6 +28,7 @@ const sameCollectionProperties = ['start', 'end'];
 
 @Pipe({
   name: 'calendarPropertyItems',
+  standalone: false,
 })
 export class CalendarPropertyItemsPipe implements PipeTransform {
   public transform(selectItems: SelectItemModel[], property: string, config: CalendarStemConfig): SelectItemModel[] {

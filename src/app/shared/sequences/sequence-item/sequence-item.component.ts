@@ -25,6 +25,7 @@ import {NotificationService} from '../../../core/notifications/notification.serv
   selector: '[sequence-item]',
   templateUrl: './sequence-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SequenceItemComponent {
   @Input()

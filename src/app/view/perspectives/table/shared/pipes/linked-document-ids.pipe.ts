@@ -22,6 +22,7 @@ import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'linkedDocumentIds',
+  standalone: false,
 })
 export class LinkedDocumentIdsPipe implements PipeTransform {
   public transform(row: TableConfigRow): string[] {

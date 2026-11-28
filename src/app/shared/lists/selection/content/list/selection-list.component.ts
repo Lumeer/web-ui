@@ -26,6 +26,7 @@ import {SelectionList} from '../../selection-list';
   styleUrls: ['./selection-list.component.scss'],
   host: {class: 'card p-2'},
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectionListComponent {
   @Input()

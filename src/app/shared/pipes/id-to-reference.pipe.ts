@@ -22,6 +22,7 @@ import {idToReference} from '../utils/string.utils';
 
 @Pipe({
   name: 'idToReference',
+  standalone: false,
 })
 export class IdToReferencePipe implements PipeTransform {
   public transform(value: string): string {

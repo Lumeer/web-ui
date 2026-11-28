@@ -40,6 +40,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   templateUrl: './boolean-data-input.component.html',
   styleUrls: ['./boolean-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BooleanDataInputComponent implements OnChanges, OnInit, OnDestroy {
   @Input()

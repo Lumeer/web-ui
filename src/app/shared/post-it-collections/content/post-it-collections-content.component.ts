@@ -74,6 +74,7 @@ const UNCREATED_THRESHOLD = 5;
       ]),
     ]),
   ],
+  standalone: false,
 })
 export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

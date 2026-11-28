@@ -24,6 +24,7 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
 
 @Pipe({
   name: 'colorSelectItems',
+  standalone: false,
 })
 export class ColorSelectItemsPipe implements PipeTransform {
   public transform(selectItems: SelectItemModel[], stemConfig: MapStemConfig): SelectItemModel[] {

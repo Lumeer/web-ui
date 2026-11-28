@@ -23,6 +23,7 @@ import {isTopPositionDropdown} from '../util/dropdown-util';
 
 @Pipe({
   name: 'reverseArrayByDropdownPosition',
+  standalone: false,
 })
 export class ReverseArrayByDropdownPositionPipe implements PipeTransform {
   public transform<T>(array: T[], position: DropdownPosition): T[] {

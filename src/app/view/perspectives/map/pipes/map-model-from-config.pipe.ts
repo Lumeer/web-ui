@@ -22,6 +22,7 @@ import {MapConfig, MapModel} from '../../../../core/store/maps/map.model';
 
 @Pipe({
   name: 'mapModelFromConfig',
+  standalone: false,
 })
 export class MapModelFromConfigPipe implements PipeTransform {
   public transform(id: string, config: MapConfig): MapModel {

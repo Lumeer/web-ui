@@ -27,6 +27,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
   templateUrl: './auto-link-form.component.html',
   styleUrls: ['./auto-link-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AutoLinkFormComponent implements OnInit {
   @Input()

@@ -24,6 +24,7 @@ import {User} from '../../../core/store/users/user';
 
 @Pipe({
   name: 'userRolesMap',
+  standalone: false,
 })
 export class UserRolesMapPipe implements PipeTransform {
   public transform(

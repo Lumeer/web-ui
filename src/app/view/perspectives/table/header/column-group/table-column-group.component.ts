@@ -52,6 +52,7 @@ interface ElementHeight {
   templateUrl: './table-column-group.component.html',
   styleUrls: ['./table-column-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()

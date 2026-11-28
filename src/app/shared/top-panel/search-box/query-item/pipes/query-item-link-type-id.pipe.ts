@@ -27,6 +27,7 @@ import {QueryItemType} from '../model/query-item-type';
 
 @Pipe({
   name: 'queryItemLinkTypeId',
+  standalone: false,
 })
 export class QueryItemLinkTypeIdPipe implements PipeTransform {
   public transform(queryItem: QueryItem): string {

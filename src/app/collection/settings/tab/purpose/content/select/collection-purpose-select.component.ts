@@ -27,6 +27,7 @@ import {parseSelectTranslation} from '../../../../../../shared/utils/translation
   selector: 'collection-purpose-select',
   templateUrl: './collection-purpose-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionPurposeSelectComponent implements OnInit {
   @Input()

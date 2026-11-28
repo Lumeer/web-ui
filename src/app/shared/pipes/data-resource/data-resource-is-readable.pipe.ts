@@ -26,6 +26,7 @@ import {User} from '../../../core/store/users/user';
 
 @Pipe({
   name: 'dataResourceIsReadable',
+  standalone: false,
 })
 export class DataResourceIsReadablePipe implements PipeTransform {
   public transform(

@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
   templateUrl: './progress-bar.component.html',
   styleUrls: ['./progress-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProgressBarComponent implements OnChanges {
   @Input()

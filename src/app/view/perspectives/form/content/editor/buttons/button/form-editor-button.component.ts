@@ -24,6 +24,7 @@ import {FormButtonConfig} from '../../../../../../../core/store/form/form-model'
   selector: 'form-editor-button',
   templateUrl: './form-editor-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorButtonComponent implements OnChanges {
   @Input()

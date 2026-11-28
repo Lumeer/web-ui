@@ -43,6 +43,7 @@ import {DateTimePickerComponent} from '../picker/date-time-picker.component';
   templateUrl: './date-time-input.component.html',
   styleUrls: ['./date-time-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DateTimeInputComponent implements OnChanges {
   @Input()

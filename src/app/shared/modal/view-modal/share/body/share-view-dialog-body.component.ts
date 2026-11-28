@@ -66,6 +66,7 @@ export enum ViewTab {
   templateUrl: './share-view-dialog-body.component.html',
   styleUrls: ['./share-view-dialog-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

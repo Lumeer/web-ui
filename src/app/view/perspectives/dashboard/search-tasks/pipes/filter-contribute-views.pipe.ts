@@ -23,6 +23,7 @@ import {View} from '../../../../../core/store/views/view';
 
 @Pipe({
   name: 'filterContributeViews',
+  standalone: false,
 })
 export class FilterContributeViewsPipe implements PipeTransform {
   public transform(views: View[], permissions: AllowedPermissionsMap): View[] {

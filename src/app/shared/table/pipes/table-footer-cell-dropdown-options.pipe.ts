@@ -26,6 +26,7 @@ import {TableFooterCell} from '../model/table-footer';
 
 @Pipe({
   name: 'tableFooterCellDropdownOptions',
+  standalone: false,
 })
 export class TableFooterCellDropdownOptionsPipe implements PipeTransform {
   public transform(cell: TableFooterCell): DropdownOption[] {

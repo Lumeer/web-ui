@@ -23,6 +23,7 @@ import {LinkType} from '../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'canCreateLinks',
+  standalone: false,
 })
 @Injectable({providedIn: 'root'})
 export class CanCreateLinksPipe implements PipeTransform {

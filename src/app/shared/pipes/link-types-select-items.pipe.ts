@@ -24,6 +24,7 @@ import {SelectItemModel} from '../select/select-item/select-item.model';
 
 @Pipe({
   name: 'linkTypesSelectItems',
+  standalone: false,
 })
 export class LinkTypesSelectItemsPipe implements PipeTransform {
   public transform(linkTypes: LinkType[]): SelectItemModel[] {

@@ -57,6 +57,7 @@ import {AuditLogFilters} from './model/audit-log-filters';
   selector: 'audit-logs',
   templateUrl: './audit-logs.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AuditLogsComponent implements OnInit {
   @Input()

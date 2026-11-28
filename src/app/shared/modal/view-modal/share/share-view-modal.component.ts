@@ -47,6 +47,7 @@ import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.compon
   selector: 'share-view-modal',
   templateUrl: './share-view-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ShareViewModalComponent implements OnInit {
   @Input()

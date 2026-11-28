@@ -23,6 +23,7 @@ import {isArray, isNotNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'createCombinedUserValue',
+  standalone: false,
 })
 export class CreateCombinedUserValuePipe implements PipeTransform {
   public transform(values: any[], constraint: UserConstraint, constraintData: ConstraintData): UserDataValue {

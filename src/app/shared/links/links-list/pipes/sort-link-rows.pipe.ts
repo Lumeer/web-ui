@@ -28,6 +28,7 @@ import {LinkRow} from '../model/link-row';
 
 @Pipe({
   name: 'sortLinkRows',
+  standalone: false,
 })
 export class SortLinkRowsPipe implements PipeTransform {
   public transform(

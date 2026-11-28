@@ -44,6 +44,7 @@ import {FilterBuilderContentComponent} from './content/filter-builder-content.co
   templateUrl: './filter-builder.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConstraintDataService],
+  standalone: false,
 })
 export class FilterBuilderComponent implements OnChanges, AfterViewInit {
   @Input()

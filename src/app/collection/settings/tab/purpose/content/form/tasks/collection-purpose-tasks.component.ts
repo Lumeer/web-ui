@@ -59,6 +59,7 @@ import {TaskPurposeFormControl} from './task-purpose-form-control';
   templateUrl: './collection-purpose-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class CollectionPurposeTasksComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

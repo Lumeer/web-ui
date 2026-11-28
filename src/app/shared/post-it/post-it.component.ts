@@ -71,6 +71,7 @@ export interface PostItTag {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DataRowService],
   host: {class: 'card'},
+  standalone: false,
 })
 export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   @Input()

@@ -23,6 +23,7 @@ import {Role} from '../../../core/store/permissions/permissions';
 
 @Pipe({
   name: 'resourceTypeRolesMap',
+  standalone: false,
 })
 export class ResourceTypeRolesMapPipe implements PipeTransform {
   public transform(resourceType: ResourcePermissionType, roles: Role[]): Record<ResourcePermissionType, Role[]> {

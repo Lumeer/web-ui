@@ -35,6 +35,7 @@ import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
   selector: 'gantt-chart-config',
   templateUrl: './gantt-chart-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartConfigComponent {
   @Input()

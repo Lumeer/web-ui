@@ -42,6 +42,7 @@ import {DialogType} from '../../../../modal/dialog-type';
   templateUrl: './invite-user-modal.component.html',
   styleUrls: ['./invite-user-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class InviteUserModalComponent implements OnInit {
   public readonly dialogType = DialogType;

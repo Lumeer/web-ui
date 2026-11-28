@@ -22,6 +22,7 @@ import {ChartAxis} from '../../../../../core/store/charts/chart';
 
 @Pipe({
   name: 'chartCleanAxis',
+  standalone: false,
 })
 export class ChartCleanAxisPipe implements PipeTransform {
   public transform(axis: ChartAxis): ChartAxis {

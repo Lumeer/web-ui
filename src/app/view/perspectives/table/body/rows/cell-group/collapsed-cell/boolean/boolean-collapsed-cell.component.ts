@@ -24,6 +24,7 @@ import {BooleanConstraint} from '@lumeer/data-filters';
   selector: 'boolean-collapsed-cell',
   templateUrl: './boolean-collapsed-cell.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BooleanCollapsedCellComponent implements OnChanges {
   @Input()

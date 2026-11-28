@@ -79,6 +79,7 @@ import {DetailPerspectiveConfiguration, defaultDetailPerspectiveConfiguration} f
   styleUrls: ['./detail-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

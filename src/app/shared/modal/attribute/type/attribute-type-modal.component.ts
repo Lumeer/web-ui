@@ -45,6 +45,7 @@ import {AttributeTypeFormComponent} from './form/attribute-type-form.component';
   selector: 'attribute-type-modal',
   templateUrl: './attribute-type-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeTypeModalComponent implements OnInit, OnDestroy {
   @Input()

@@ -35,6 +35,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
   selector: 'collection-purpose',
   templateUrl: './collection-purpose.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionPurposeComponent implements OnInit {
   public collection$: Observable<Collection>;

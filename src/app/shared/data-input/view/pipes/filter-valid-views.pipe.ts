@@ -22,6 +22,7 @@ import {View} from '../../../../core/store/views/view';
 
 @Pipe({
   name: 'filterValidViews',
+  standalone: false,
 })
 export class FilterValidViewsPipe implements PipeTransform {
   public transform(views: View[]): View[] {

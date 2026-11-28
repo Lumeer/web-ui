@@ -24,6 +24,7 @@ import {TaskAttributes} from '../model/task-attributes';
 
 @Pipe({
   name: 'collectionTaskAttributes',
+  standalone: false,
 })
 export class CollectionsTaskAttributesPipe implements PipeTransform {
   public transform(collections: Collection[]): Record<string, TaskAttributes> {

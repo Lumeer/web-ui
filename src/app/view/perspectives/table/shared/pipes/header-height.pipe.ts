@@ -25,6 +25,7 @@ import {TABLE_ROW_HEIGHT} from './column-height.pipe';
 
 @Pipe({
   name: 'headerHeight',
+  standalone: false,
 })
 export class HeaderHeightPipe implements PipeTransform {
   public transform(table: TableModel, cursor: TableHeaderCursor): number {

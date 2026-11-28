@@ -27,6 +27,7 @@ import {ModalService} from '../../../shared/modal/modal.service';
   selector: 'collection-upload',
   templateUrl: './collection-upload.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionUploadComponent {
   @Input()

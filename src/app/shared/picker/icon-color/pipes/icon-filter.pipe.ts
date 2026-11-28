@@ -22,6 +22,7 @@ import {getPureIconName, searchIconsByMeta} from '../../icons';
 
 @Pipe({
   name: 'iconFilter',
+  standalone: false,
 })
 export class IconFilterPipe implements PipeTransform {
   public transform(icons: string[], filter: string): string[] {

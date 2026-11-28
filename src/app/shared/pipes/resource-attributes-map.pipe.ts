@@ -25,6 +25,7 @@ import {Attribute} from '../../core/store/collections/collection';
 
 @Pipe({
   name: 'resourceAttributesMap',
+  standalone: false,
 })
 export class ResourceAttributesMapPipe implements PipeTransform {
   public transform(resource: AttributesResource): Record<string, Attribute> {

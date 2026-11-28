@@ -42,6 +42,7 @@ import {ModalProgress} from './model/modal-progress';
   templateUrl: './modal-wrapper.component.html',
   styleUrls: ['./modal-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ModalWrapperComponent implements OnChanges, AfterViewInit {
   @Input()

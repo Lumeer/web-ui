@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   selector: 'table-new-row',
   templateUrl: './table-new-row.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableNewRowComponent {
   @Input()

@@ -37,6 +37,7 @@ import {View} from '../../../core/store/views/view';
   templateUrl: './project-template.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block mt-4'},
+  standalone: false,
 })
 export class ProjectTemplateComponent implements OnInit {
   public views$: Observable<View[]>;

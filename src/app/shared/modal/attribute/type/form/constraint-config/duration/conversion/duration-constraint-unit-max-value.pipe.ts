@@ -22,6 +22,7 @@ import {DurationUnit, durationConstraintUnitMaxValue} from '@lumeer/data-filters
 
 @Pipe({
   name: 'durationConstraintUnitMaxValue',
+  standalone: false,
 })
 export class DurationConstraintUnitMaxValuePipe implements PipeTransform {
   public transform(unit: DurationUnit): number {

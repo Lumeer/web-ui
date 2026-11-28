@@ -52,6 +52,7 @@ import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-f
   templateUrl: './create-resource-modal.component.html',
   styleUrls: ['./create-resource-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CreateResourceModalComponent implements OnInit, OnDestroy {
   @Input()

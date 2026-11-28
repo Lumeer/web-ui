@@ -52,6 +52,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   selector: 'address-data-input',
   templateUrl: './address-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input()

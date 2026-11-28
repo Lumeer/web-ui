@@ -27,6 +27,7 @@ import {generateId} from '../../../../../shared/utils/resource.utils';
   selector: 'gantt-chart-config-settings',
   templateUrl: './gantt-chart-config-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartConfigSettingsComponent {
   @Input()

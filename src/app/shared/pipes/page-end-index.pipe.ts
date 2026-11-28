@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'pageEndIndex',
+  standalone: false,
 })
 export class PageEndIndexPipe implements PipeTransform {
   public transform(page: number, pageSize: number, maxItems: number): number {

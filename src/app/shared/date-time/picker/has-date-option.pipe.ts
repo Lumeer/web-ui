@@ -22,6 +22,7 @@ import {DateTimeOptions, hasDateOption} from '../date-time-options';
 
 @Pipe({
   name: 'hasDateOption',
+  standalone: false,
 })
 export class HasDateOptionPipe implements PipeTransform {
   public transform(options: DateTimeOptions): boolean {

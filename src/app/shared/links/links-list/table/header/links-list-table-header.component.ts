@@ -41,6 +41,7 @@ const columnMinWidth = 30;
   templateUrl: './links-list-table-header.component.html',
   styleUrls: ['./links-list-table-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinksListTableHeaderComponent {
   @Input()

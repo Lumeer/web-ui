@@ -23,6 +23,7 @@ import {PerspectiveNamePipe} from './perspective-name.pipe';
 
 @Pipe({
   name: 'sortPerspectives',
+  standalone: false,
 })
 export class SortPerspectivesPipe implements PipeTransform {
   public constructor(private perspectiveNamePipe: PerspectiveNamePipe) {}

@@ -22,6 +22,7 @@ import {DataValue} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'isDataValueValid',
+  standalone: false,
 })
 export class IsDataValueValidPipe implements PipeTransform {
   public transform(dataValue: DataValue): boolean {

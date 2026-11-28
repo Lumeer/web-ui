@@ -31,6 +31,7 @@ import {PercentageConstraintFormControl} from './percentage-constraint-form-cont
   templateUrl: './percentage-constraint-config-form.component.html',
   styleUrls: ['./percentage-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PercentageConstraintConfigFormComponent implements OnChanges {
   @Input()

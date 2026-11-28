@@ -23,6 +23,7 @@ import DOMPurify from 'dompurify';
 
 @Pipe({
   name: 'safeHtml',
+  standalone: false,
 })
 export class SafeHtmlPipe implements PipeTransform {
   constructor(private sanitized: DomSanitizer) {}

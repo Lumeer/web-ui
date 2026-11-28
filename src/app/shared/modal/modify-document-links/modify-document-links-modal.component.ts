@@ -58,6 +58,7 @@ import {ResultTableRow} from './results-table/results-table.component';
   templateUrl: './modify-document-links-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class ModifyDocumentLinksModalComponent implements OnInit, OnDestroy {
   @Input()

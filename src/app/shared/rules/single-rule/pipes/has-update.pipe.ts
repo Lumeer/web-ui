@@ -22,6 +22,7 @@ import {RuleTiming} from '../../../../core/model/rule';
 
 @Pipe({
   name: 'hasUpdate',
+  standalone: false,
 })
 export class HasUpdatePipe implements PipeTransform {
   private readonly updateTimings = [

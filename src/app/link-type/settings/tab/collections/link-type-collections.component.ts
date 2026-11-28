@@ -34,6 +34,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
   templateUrl: './link-type-collections.component.html',
   styleUrls: ['./link-type-collections.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTypeCollectionsComponent implements OnInit {
   public collections$: Observable<Collection[]>;

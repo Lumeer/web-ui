@@ -22,6 +22,7 @@ import {Attribute} from '../../../core/store/collections/collection';
 
 @Pipe({
   name: 'attributeFilter',
+  standalone: false,
 })
 @Injectable()
 export class AttributeFilterPipe implements PipeTransform {

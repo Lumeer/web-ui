@@ -28,6 +28,7 @@ const defaultColumnWidth = 100;
 
 @Pipe({
   name: 'collectionHintColumns',
+  standalone: false,
 })
 export class CollectionHintColumnsPipe implements PipeTransform {
   public transform(

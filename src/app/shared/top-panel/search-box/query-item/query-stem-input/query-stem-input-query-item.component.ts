@@ -40,6 +40,7 @@ import {QueryStemInputQueryItem} from '../model/query-stem-input.query-item';
   templateUrl: './query-stem-input-query-item.component.html',
   styleUrls: ['./query-stem-input-query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class QueryStemInputQueryItemComponent implements OnChanges {
   @Input()

@@ -29,6 +29,7 @@ import {Query, QueryStem} from '../../../../../core/store/navigation/query/query
   selector: 'pivot-config-wrapper',
   templateUrl: './pivot-config-wrapper.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PivotConfigWrapperComponent {
   @Input()

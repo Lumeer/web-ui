@@ -22,6 +22,7 @@ import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'expandable',
+  standalone: false,
 })
 export class ExpandablePipe implements PipeTransform {
   public transform(row: TableConfigRow): boolean {

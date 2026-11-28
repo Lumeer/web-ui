@@ -27,6 +27,7 @@ import {PostItTag} from '../post-it.component';
   templateUrl: './post-it-header.component.html',
   styleUrls: ['./post-it-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PostItHeaderComponent {
   @Input()

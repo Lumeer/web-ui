@@ -24,6 +24,7 @@ import {QueryItemType} from '../model/query-item-type';
 
 @Pipe({
   name: 'queryItemForeground',
+  standalone: false,
 })
 export class QueryItemForegroundPipe implements PipeTransform {
   public transform(queryItem: QueryItem, isValid?: boolean): string {

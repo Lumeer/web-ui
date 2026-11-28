@@ -22,6 +22,7 @@ import {FormCoordinates, formCoordinatesAreSame} from '../content/view/model/for
 
 @Pipe({
   name: 'formCellIsEdited',
+  standalone: false,
 })
 export class FormCellIsEditedPipe implements PipeTransform {
   public transform(editedCell: FormCoordinates, sectionId: string, rowId: string, cellId: string): boolean {

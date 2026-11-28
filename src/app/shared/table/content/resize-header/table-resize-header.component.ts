@@ -28,6 +28,7 @@ import {TABLE_COLUMN_MIN_WIDTH, TABLE_ROW_HEIGHT} from '../../model/table-model'
   styleUrls: ['./table-resize-header.component.scss', '../header/table-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'w-100'},
+  standalone: false,
 })
 export class TableResizeHeaderComponent {
   @Input()

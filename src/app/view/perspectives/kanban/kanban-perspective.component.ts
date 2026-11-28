@@ -44,6 +44,7 @@ import {checkOrTransformKanbanConfig} from './util/kanban.util';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['kanban-perspective.component.scss'],
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class KanbanPerspectiveComponent extends DataPerspectiveDirective<KanbanConfig> implements OnInit, OnDestroy {
   @Input()

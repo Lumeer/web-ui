@@ -26,6 +26,7 @@ import {View} from '../../../../../core/store/views/view';
 
 @Pipe({
   name: 'checkResourcesInView',
+  standalone: false,
 })
 export class CheckResourcesInViewPipe implements PipeTransform {
   public transform(

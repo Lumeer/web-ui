@@ -22,6 +22,7 @@ import {PostItLayoutType} from '../post-it-layout-type';
 
 @Pipe({
   name: 'postItLayoutTypeClass',
+  standalone: false,
 })
 export class PostItLayoutTypeClassPipe implements PipeTransform {
   public transform(type: PostItLayoutType): string {

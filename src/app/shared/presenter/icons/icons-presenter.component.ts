@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   templateUrl: './icons-presenter.component.html',
   styleUrls: ['./icons-presenter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class IconsPresenterComponent {
   @Input()

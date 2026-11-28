@@ -24,6 +24,7 @@ import {createAttributesSettingsOrder} from '../../settings.util';
 
 @Pipe({
   name: 'createAttributesSettingsOrder',
+  standalone: false,
 })
 export class CreateAttributesSettingsOrderPipe implements PipeTransform {
   public transform(attributes: Attribute[], settings: ResourceAttributeSettings[]): ResourceAttributeSettings[] {

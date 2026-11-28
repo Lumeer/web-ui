@@ -58,6 +58,7 @@ const COLUMN_WIDTH = 120;
   templateUrl: './preview-results-table.component.html',
   styleUrls: ['./preview-results-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()

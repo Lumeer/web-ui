@@ -26,6 +26,7 @@ import {TableColumn} from '../../../../model/table-column';
   selector: 'table-header-hidden-menu',
   templateUrl: './table-header-hidden-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHeaderHiddenMenuComponent {
   @Input()

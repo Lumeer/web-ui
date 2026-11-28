@@ -67,6 +67,7 @@ import {FormError} from '../../validation/form-validation';
   templateUrl: './form-view-cell.component.html',
   styleUrls: ['./form-view-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormViewCellComponent implements OnInit, OnChanges {
   @Input()

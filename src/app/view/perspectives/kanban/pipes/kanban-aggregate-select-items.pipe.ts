@@ -26,6 +26,7 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
 
 @Pipe({
   name: 'kanbanAggregateSelectItems',
+  standalone: false,
 })
 export class KanbanAggregateSelectItemsPipe implements PipeTransform {
   public transform(config: KanbanStemConfig, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {

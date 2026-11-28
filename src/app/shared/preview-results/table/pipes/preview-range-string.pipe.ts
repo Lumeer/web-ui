@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'previewRangeString',
+  standalone: false,
 })
 export class PreviewRangeStringPipe implements PipeTransform {
   public transform(index: number, numVisibleRows: number, dataResourcesLength: number): string {

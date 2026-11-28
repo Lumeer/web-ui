@@ -27,6 +27,7 @@ import {Organization} from '../../../../../../../core/store/organizations/organi
   selector: 'notification-item',
   templateUrl: './notification-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NotificationItemComponent {
   @Input()

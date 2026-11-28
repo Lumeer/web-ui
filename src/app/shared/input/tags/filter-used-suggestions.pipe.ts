@@ -22,6 +22,7 @@ import {DropdownOption} from '../../dropdown/options/dropdown-option';
 
 @Pipe({
   name: 'filterUsedSuggestions',
+  standalone: false,
 })
 export class FilterUsedSuggestionsPipe implements PipeTransform {
   public transform(suggestions: DropdownOption[], tags: string[]): DropdownOption[] {

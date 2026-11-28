@@ -28,6 +28,7 @@ import {
   selector: 'tasks-sort',
   templateUrl: './tasks-sort.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TasksSortComponent {
   @Input()

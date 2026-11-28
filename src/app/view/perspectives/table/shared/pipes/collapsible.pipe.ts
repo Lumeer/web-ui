@@ -22,6 +22,7 @@ import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'collapsible',
+  standalone: false,
 })
 export class CollapsiblePipe implements PipeTransform {
   public transform(row: TableConfigRow): boolean {

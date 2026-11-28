@@ -27,6 +27,7 @@ import {User} from '../../../../../core/store/users/user';
   selector: 'file-attachment-tooltip',
   templateUrl: './file-attachment-tooltip.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FileAttachmentTooltipComponent implements OnChanges {
   @Input()

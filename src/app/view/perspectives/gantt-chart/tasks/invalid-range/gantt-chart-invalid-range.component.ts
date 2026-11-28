@@ -24,6 +24,7 @@ import {GanttTask} from '@lumeer/lumeer-gantt';
   selector: 'gantt-chart-invalid-range',
   templateUrl: './gantt-chart-invalid-range.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GanttChartInvalidRangeComponent {
   @Input()

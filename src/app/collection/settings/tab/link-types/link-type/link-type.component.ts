@@ -26,6 +26,7 @@ import {Workspace} from '../../../../../core/store/navigation/workspace';
   selector: '[link-type]',
   templateUrl: './link-type.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTypeComponent {
   @Input()

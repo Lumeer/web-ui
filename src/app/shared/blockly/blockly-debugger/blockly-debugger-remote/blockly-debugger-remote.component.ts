@@ -25,6 +25,7 @@ import {BlocklyDebugDisplay} from '../blockly-debugger.component';
   templateUrl: './blockly-debugger-remote.component.html',
   styleUrls: ['./blockly-debugger-remote.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BlocklyDebuggerRemoteComponent {
   @Input()

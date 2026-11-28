@@ -24,6 +24,7 @@ import {Query} from '../../../../../../core/store/navigation/query/query';
   selector: 'empty-views',
   templateUrl: './empty-views.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptyViewsComponent {
   @Input()

@@ -24,6 +24,7 @@ import {ResourceType} from '../../../core/model/resource-type';
   selector: 'organization-teams',
   templateUrl: './organization-teams.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class OrganizationTeamsComponent {
   public readonly resourceType = ResourceType.Organization;

@@ -24,6 +24,7 @@ import {ViewGroupPermissionsPipe} from './view-group-permissions.pipe';
 
 @Pipe({
   name: 'viewGroupPermissionsMap',
+  standalone: false,
 })
 @Injectable()
 export class ViewGroupPermissionsMapPipe implements PipeTransform {

@@ -28,6 +28,7 @@ import {DataInputConfiguration} from '../data-input-configuration';
   templateUrl: './data-input-compact.component.html',
   styleUrls: ['./data-input-compact.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataInputCompactComponent {
   @Input()

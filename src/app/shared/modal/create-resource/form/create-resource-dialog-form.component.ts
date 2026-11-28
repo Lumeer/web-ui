@@ -32,6 +32,7 @@ import {safeGetRandomIcon} from '../../../picker/icons';
   selector: 'create-resource-dialog-form',
   templateUrl: './create-resource-dialog-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CreateResourceDialogFormComponent implements OnInit {
   @Input()

@@ -24,6 +24,7 @@ import {QueryItem} from '../model/query-item';
 
 @Pipe({
   name: 'queryItemForm',
+  standalone: false,
 })
 export class QueryItemFormPipe implements PipeTransform {
   public transform(queryItem: QueryItem): UntypedFormGroup {

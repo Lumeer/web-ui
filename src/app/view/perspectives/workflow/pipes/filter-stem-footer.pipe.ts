@@ -23,6 +23,7 @@ import {WorkflowFooterConfig, WorkflowStemConfig} from '../../../../core/store/w
 
 @Pipe({
   name: 'filterStemFooter',
+  standalone: false,
 })
 export class FilterStemFooterPipe implements PipeTransform {
   public transform(footers: WorkflowFooterConfig[], stemConfig: WorkflowStemConfig): WorkflowFooterConfig {

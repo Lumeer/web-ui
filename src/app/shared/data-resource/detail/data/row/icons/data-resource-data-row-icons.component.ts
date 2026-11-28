@@ -29,6 +29,7 @@ import {DataRow} from '../../../../../data/data-row.service';
   templateUrl: './data-resource-data-row-icons.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'lock-icon'},
+  standalone: false,
 })
 export class DataResourceDataRowIconsComponent implements OnChanges {
   @Input()

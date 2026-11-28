@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {CommonModule} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -52,11 +52,12 @@ import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
 
 @NgModule({
+  declarations: [HomeComponent, RedirectComponent, DocumentRedirectComponent],
+  exports: [HomeComponent, NotificationsModule, RedirectComponent, DocumentRedirectComponent],
   imports: [
     AppStoreModule,
     CommonModule,
     FormsModule,
-    HttpClientModule,
     RouterModule,
     SharedModule,
     GuardsModule,
@@ -72,7 +73,6 @@ import {ProjectValidators} from './validators/project.validators';
     TypeaheadModule.forRoot(),
     DataServiceModule,
   ],
-  declarations: [HomeComponent, RedirectComponent, DocumentRedirectComponent],
   providers: [
     {
       provide: ErrorHandler,
@@ -87,8 +87,8 @@ import {ProjectValidators} from './validators/project.validators';
     PusherService,
     UserNotificationsService,
     SequenceService,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  exports: [HomeComponent, NotificationsModule, RedirectComponent, DocumentRedirectComponent],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

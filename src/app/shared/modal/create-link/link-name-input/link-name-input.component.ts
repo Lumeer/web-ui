@@ -31,6 +31,7 @@ import {AbstractControl, UntypedFormGroup} from '@angular/forms';
   selector: 'link-name-input',
   templateUrl: './link-name-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkNameInputComponent implements OnChanges {
   @Input()

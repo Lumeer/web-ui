@@ -26,6 +26,7 @@ import {sortObjectsByScore} from '../../utils/common.utils';
 
 @Pipe({
   name: 'filterUsers',
+  standalone: false,
 })
 export class FilterUsersPipe implements PipeTransform {
   public transform(users: User[], text: string): DropdownOption[] {

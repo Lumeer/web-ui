@@ -24,6 +24,7 @@ import {User} from '../../../../core/store/users/user';
 
 @Pipe({
   name: 'usersAreValid',
+  standalone: false,
 })
 export class UsersAreValidPipe implements PipeTransform {
   public transform(selectedUsers: User[], definedUsers: User[], config: UserConstraintConfig): boolean {

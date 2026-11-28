@@ -22,6 +22,7 @@ import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
 
 @Pipe({
   name: 'auditLogAutomationString',
+  standalone: false,
 })
 export class AuditLogAutomationStringPipe implements PipeTransform {
   public transform(auditLog: AuditLog): string {

@@ -40,6 +40,7 @@ import {KanbanCreateResource} from '../../../../util/kanban-data';
   templateUrl: './kanban-column-footer.component.html',
   styleUrls: ['./kanban-column-footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class KanbanColumnFooterComponent implements OnChanges {
   @Input()

@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'removeSuffix',
+  standalone: false,
 })
 export class RemoveSuffixPipe implements PipeTransform {
   public transform(value: string, character: string): string {

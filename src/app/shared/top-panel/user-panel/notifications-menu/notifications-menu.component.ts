@@ -76,6 +76,7 @@ import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
   selector: 'notifications-menu',
   templateUrl: './notifications-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NotificationsMenuComponent implements OnInit, OnDestroy {
   public notifications$: Observable<UserNotification[]>;

@@ -26,6 +26,7 @@ import {AttributeSortType, ResourceAttributeSettings} from '../../../../../core/
   templateUrl: './attribute-settings.component.html',
   styleUrls: ['./attribute-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeSettingsComponent {
   @Input()

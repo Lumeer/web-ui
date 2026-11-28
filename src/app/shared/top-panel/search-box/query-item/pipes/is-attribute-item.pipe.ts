@@ -23,6 +23,7 @@ import {QueryItemType} from '../model/query-item-type';
 
 @Pipe({
   name: 'isAttributeItem',
+  standalone: false,
 })
 export class IsAttributeItemPipe implements PipeTransform {
   public transform(queryItem: QueryItem): boolean {

@@ -35,6 +35,7 @@ import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
   templateUrl: './map-panel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-column'},
+  standalone: false,
 })
 export class MapPanelComponent {
   @Input()

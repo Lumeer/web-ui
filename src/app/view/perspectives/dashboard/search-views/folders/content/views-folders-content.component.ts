@@ -47,6 +47,7 @@ import {ObjectFolders, createObjectFolder, createObjectFolders, parseObjectFolde
   styleUrls: ['./views-folders-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ViewFavoriteToggleService],
+  standalone: false,
 })
 export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

@@ -23,6 +23,7 @@ import {calculateColumnsWidth, filterLeafColumns} from '../../../../../core/stor
 
 @Pipe({
   name: 'partWidth',
+  standalone: false,
 })
 export class PartWidthPipe implements PipeTransform {
   public transform(part: TableConfigPart, showHiddenColumns: boolean = false): number {

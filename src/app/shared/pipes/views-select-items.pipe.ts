@@ -28,6 +28,7 @@ import {SelectItemModel} from '../select/select-item/select-item.model';
 
 @Pipe({
   name: 'viewsSelectItems',
+  standalone: false,
 })
 export class ViewsSelectItemsPipe implements PipeTransform {
   public transform(views: View[], collections: Collection[], byId = false): SelectItemModel[] {

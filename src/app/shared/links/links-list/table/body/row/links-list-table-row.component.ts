@@ -58,6 +58,7 @@ import {LinkRow} from '../../../model/link-row';
   styleUrls: ['./links-list-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [animateOpacityEnterLeave],
+  standalone: false,
 })
 export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy, OnChanges {
   @Input()

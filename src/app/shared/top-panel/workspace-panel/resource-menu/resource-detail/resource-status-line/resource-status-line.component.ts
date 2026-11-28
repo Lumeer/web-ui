@@ -34,6 +34,7 @@ import {selectUsersForWorkspace} from '../../../../../../core/store/users/users.
   selector: 'resource-status-line',
   templateUrl: './resource-status-line.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceStatusLineComponent implements OnChanges {
   @Input() public organization: Organization;

@@ -41,6 +41,7 @@ import {RoleGroup, TranslatedRole, translatedRolesAreSame} from '../model/role-g
   templateUrl: './roles-dropdown.component.html',
   styleUrls: ['./roles-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RolesDropdownComponent implements OnChanges {
   @Input()

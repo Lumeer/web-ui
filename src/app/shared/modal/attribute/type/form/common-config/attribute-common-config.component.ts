@@ -27,6 +27,7 @@ import {canShowAttributeHints} from '../../../../../utils/attribute.utils';
   selector: 'attribute-common-config',
   templateUrl: './attribute-common-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeCommonConfigComponent implements OnChanges {
   @Input()

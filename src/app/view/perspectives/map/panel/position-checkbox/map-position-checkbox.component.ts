@@ -36,6 +36,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './map-position-checkbox.component.html',
   styleUrls: ['./map-position-checkbox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MapPositionCheckboxComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

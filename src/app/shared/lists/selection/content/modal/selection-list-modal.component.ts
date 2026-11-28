@@ -56,6 +56,7 @@ import {
   selector: 'selection-list-modal',
   templateUrl: './selection-list-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectionListModalComponent implements OnInit, OnDestroy {
   @Input()

@@ -25,6 +25,7 @@ import {DataSuggestion} from '../data-suggestion';
 
 @Pipe({
   name: 'filterDataSuggestions',
+  standalone: false,
 })
 export class FilterDataSuggestionsPipe implements PipeTransform {
   public transform(suggestions: DataSuggestion[], text: string): DataDropdownOption[] {

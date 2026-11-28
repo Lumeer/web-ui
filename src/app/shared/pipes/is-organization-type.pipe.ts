@@ -23,6 +23,7 @@ import {ResourceType} from '../../core/model/resource-type';
 
 @Pipe({
   name: 'isOrganizationType',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

@@ -41,6 +41,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   selector: 'coordinates-data-input',
   templateUrl: './coordinates-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CoordinatesDataInputComponent implements AfterViewChecked, OnChanges {
   @Input()

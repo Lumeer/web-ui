@@ -23,6 +23,7 @@ import {SearchTasksConfig} from '../../../../../core/store/searches/search';
 
 @Pipe({
   name: 'isDocumentOpened',
+  standalone: false,
 })
 export class IsDocumentOpenedPipe implements PipeTransform {
   public transform(document: DocumentModel, config: SearchTasksConfig): boolean {

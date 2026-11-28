@@ -58,6 +58,7 @@ import {hashUserId} from './shared/utils/system.utils';
 @Component({
   selector: APP_NAME_SELECTOR,
   templateUrl: './app.component.html',
+  standalone: false,
 })
 export class AppComponent implements OnInit, AfterViewInit {
   public showPublicProjectWarning$: Observable<boolean>;

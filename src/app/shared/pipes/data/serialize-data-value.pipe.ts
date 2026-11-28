@@ -22,6 +22,7 @@ import {DataValue} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'serializeDataValue',
+  standalone: false,
 })
 export class SerializeDataValuePipe implements PipeTransform {
   public transform(dataValue: DataValue): any {

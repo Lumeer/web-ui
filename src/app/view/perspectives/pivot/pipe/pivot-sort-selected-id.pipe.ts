@@ -26,6 +26,7 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
 
 @Pipe({
   name: 'pivotSortSelectedId',
+  standalone: false,
 })
 export class PivotSortSelectedIdPipe implements PipeTransform {
   public transform(pivotAttribute: LmrPivotRowColumnAttribute, items: SelectItemModel[]): any {

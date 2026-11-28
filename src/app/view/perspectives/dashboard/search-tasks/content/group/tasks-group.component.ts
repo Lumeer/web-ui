@@ -35,6 +35,7 @@ import {TaskAttributes} from '../../model/task-attributes';
   templateUrl: './tasks-group.component.html',
   styleUrls: ['./tasks-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TasksGroupComponent {
   @Input()

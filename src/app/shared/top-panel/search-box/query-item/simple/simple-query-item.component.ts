@@ -53,6 +53,7 @@ import {QueryItemType} from '../model/query-item-type';
   templateUrl: './simple-query-item.component.html',
   styleUrls: ['../query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SimpleQueryItemComponent implements OnInit, OnChanges {
   @Input()

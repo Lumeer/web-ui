@@ -22,6 +22,7 @@ import {View} from '../../../../core/store/views/view';
 
 @Pipe({
   name: 'viewsIds',
+  standalone: false,
 })
 export class ViewsIdsPipe implements PipeTransform {
   public transform(views: View[]): string[] {

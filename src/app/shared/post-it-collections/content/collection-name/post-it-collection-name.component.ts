@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Out
   templateUrl: './post-it-collection-name.component.html',
   styleUrls: ['./post-it-collection-name.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PostItCollectionNameComponent {
   @ViewChild('collectionNameInput', {static: true}) public input: ElementRef;

@@ -28,6 +28,7 @@ import {Attribute} from '../../../../../../core/store/collections/collection';
   selector: 'links-list-header-menu',
   templateUrl: './links-list-header-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinksListHeaderMenuComponent {
   @Input()

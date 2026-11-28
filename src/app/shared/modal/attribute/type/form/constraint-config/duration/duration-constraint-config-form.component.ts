@@ -47,6 +47,7 @@ import {
   selector: 'duration-constraint-config-form',
   templateUrl: './duration-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DurationConstraintConfigFormComponent implements OnChanges {
   @Input()

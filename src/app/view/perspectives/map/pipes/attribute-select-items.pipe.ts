@@ -27,6 +27,7 @@ import {SelectItemModel} from '../../../../shared/select/select-item/select-item
 
 @Pipe({
   name: 'attributeSelectItems',
+  standalone: false,
 })
 export class AttributeSelectItemsPipe implements PipeTransform {
   public transform(selectItems: SelectItemModel[], attributes: MapAttributeModel[], index: number): SelectItemModel[] {

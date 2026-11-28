@@ -25,6 +25,7 @@ import {QueryStemQueryItem} from '../model/query-stem.query-item';
   templateUrl: './query-stem-query-item.component.html',
   styleUrls: ['../query-item.component.scss', 'query-stem-query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class QueryStemQueryItemComponent {
   @Input()

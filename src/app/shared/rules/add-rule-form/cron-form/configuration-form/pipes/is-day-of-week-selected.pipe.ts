@@ -22,6 +22,7 @@ import {bitTest} from '../../../../../utils/common.utils';
 
 @Pipe({
   name: 'isDayOfWeekSelected',
+  standalone: false,
 })
 export class IsDayOfWeekSelectedPipe implements PipeTransform {
   public transform(dayOfWeeks: number, bit: number): boolean {

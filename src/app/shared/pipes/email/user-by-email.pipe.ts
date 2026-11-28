@@ -22,6 +22,7 @@ import {User} from '../../../core/store/users/user';
 
 @Pipe({
   name: 'userByEmail',
+  standalone: false,
 })
 export class UserByEmailPipe implements PipeTransform {
   public transform(email: string, users: User[]): User {

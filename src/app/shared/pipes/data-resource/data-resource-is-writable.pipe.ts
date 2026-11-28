@@ -27,6 +27,7 @@ import {dataResourcePermissions} from '../../utils/permission.utils';
 
 @Pipe({
   name: 'dataResourceIsWritable',
+  standalone: false,
 })
 export class DataResourceIsWritablePipe implements PipeTransform {
   public transform(

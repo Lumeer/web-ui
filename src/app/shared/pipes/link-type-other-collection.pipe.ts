@@ -24,6 +24,7 @@ import {getOtherLinkedCollectionId} from '../utils/link-type.utils';
 
 @Pipe({
   name: 'linkTypeOtherCollection',
+  standalone: false,
 })
 export class LinkTypeOtherCollectionPipe implements PipeTransform {
   public transform(value: LinkType, collections: Collection[], thisCollectionId: string): Collection {

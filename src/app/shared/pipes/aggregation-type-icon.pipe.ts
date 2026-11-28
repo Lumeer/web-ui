@@ -24,6 +24,7 @@ import {dataAggregationIconMap} from '../utils/data-aggregation';
 
 @Pipe({
   name: 'aggregationTypeIcon',
+  standalone: false,
 })
 export class AggregationTypeIconPipe implements PipeTransform {
   public transform(aggregation: DataAggregationType): string {

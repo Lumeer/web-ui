@@ -38,6 +38,7 @@ import {View} from '../../../../../core/store/views/view';
   templateUrl: './table-header-collection.component.html',
   styleUrls: ['./table-header-collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHeaderCollectionComponent implements OnChanges {
   @Input()

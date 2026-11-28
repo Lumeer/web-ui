@@ -22,6 +22,7 @@ import {Permissions, Role} from '../../../../core/store/permissions/permissions'
 
 @Pipe({
   name: 'viewGroupPermissions',
+  standalone: false,
 })
 @Injectable({providedIn: 'root'})
 export class ViewGroupPermissionsPipe implements PipeTransform {

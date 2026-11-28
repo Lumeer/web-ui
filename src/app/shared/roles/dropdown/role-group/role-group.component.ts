@@ -25,6 +25,7 @@ import {RoleGroup, TranslatedRole, translatedRolesAreSame} from '../../model/rol
   templateUrl: './role-group.component.html',
   styleUrls: ['./role-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RoleGroupComponent implements OnChanges {
   @Input()

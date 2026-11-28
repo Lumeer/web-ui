@@ -22,6 +22,7 @@ import {TranslatedRole, translatedRolesAreSame} from '../model/role-group';
 
 @Pipe({
   name: 'isRoleSelected',
+  standalone: false,
 })
 export class IsRoleSelectedPipe implements PipeTransform {
   public transform(role: TranslatedRole, roles: TranslatedRole[]): boolean {

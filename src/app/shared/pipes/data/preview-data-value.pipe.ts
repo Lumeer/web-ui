@@ -22,6 +22,7 @@ import {DataValue} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'previewDataValue',
+  standalone: false,
 })
 export class PreviewDataValuePipe implements PipeTransform {
   public transform(dataValue: DataValue): string {

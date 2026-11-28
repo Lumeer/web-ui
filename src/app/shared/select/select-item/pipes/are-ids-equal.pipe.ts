@@ -22,6 +22,7 @@ import {deepObjectsEquals, isNullOrUndefined} from '@lumeer/utils';
 
 @Pipe({
   name: 'areIdsEqual',
+  standalone: false,
 })
 export class AreIdsEqualPipe implements PipeTransform {
   public transform(firstId: any, secondId: any): boolean {

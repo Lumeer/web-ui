@@ -52,6 +52,7 @@ import {ConstraintFiltersFormControl} from '../constraint-conditions-form.compon
   templateUrl: './constraint-condition-form.component.html',
   styleUrls: ['./constraint-condition-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ConstraintConditionFormComponent implements OnInit {
   @Input()

@@ -24,6 +24,7 @@ import {Router} from '@angular/router';
   templateUrl: './bookmark.component.html',
   styleUrls: ['./bookmark.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BookmarkComponent {
   @Input()

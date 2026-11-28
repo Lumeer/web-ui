@@ -29,6 +29,7 @@ import {KanbanDataColumn} from '../../../../util/kanban-data';
   templateUrl: './kanban-column-header.component.html',
   styleUrls: ['./kanban-column-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class KanbanColumnHeaderComponent {
   @Input()

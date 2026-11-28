@@ -57,6 +57,7 @@ import {DataResourceDataRowComponent} from './row/data-resource-data-row.compone
   templateUrl: './data-resource-data.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DataRowService],
+  standalone: false,
 })
 export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

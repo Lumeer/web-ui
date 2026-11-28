@@ -39,6 +39,7 @@ import {checkOrTransformPivotConfig} from '../util/pivot-util';
   templateUrl: './pivot-perspective-wrapper.component.html',
   styleUrls: ['./pivot-perspective-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PivotPerspectiveWrapperComponent implements OnChanges {
   @Input()

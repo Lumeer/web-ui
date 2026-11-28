@@ -46,6 +46,7 @@ import {View} from '../../../../../../core/store/views/view';
   selector: 'view-users',
   templateUrl: './view-users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewUsersComponent implements OnInit, OnChanges {
   @Input()

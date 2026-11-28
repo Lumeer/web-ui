@@ -25,6 +25,7 @@ import {SelectItemWithConstraintId} from '../../../../shared/select/select-const
 
 @Pipe({
   name: 'pivotHeaderRestrictedAttributes',
+  standalone: false,
 })
 export class PivotHeaderRestrictedAttributesPipe implements PipeTransform {
   public transform(

@@ -48,6 +48,7 @@ import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
   selector: 'link-type-settings',
   templateUrl: './link-type-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkTypeSettingsComponent implements OnInit, OnDestroy {
   public linkType$ = new BehaviorSubject<LinkType>(null);

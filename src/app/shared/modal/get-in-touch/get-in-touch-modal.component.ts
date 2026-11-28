@@ -34,6 +34,7 @@ import {DialogType} from '../dialog-type';
   selector: 'get-in-touch-modal',
   templateUrl: './get-in-touch-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GetInTouchModalComponent implements OnInit {
   public readonly form = new UntypedFormGroup({

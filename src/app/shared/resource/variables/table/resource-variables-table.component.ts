@@ -26,6 +26,7 @@ import {ResourceVariable} from '../../../../core/store/resource-variables/resour
   templateUrl: './resource-variables-table.component.html',
   styleUrls: ['./resource-variables-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceVariablesTableComponent {
   @Input()

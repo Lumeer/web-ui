@@ -25,6 +25,7 @@ import {LinkConstraint, LinkDataValue} from '@lumeer/data-filters';
   templateUrl: './link-collapsed-cell.component.html',
   styleUrls: ['./link-collapsed-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkCollapsedCellComponent implements OnChanges {
   @Input()

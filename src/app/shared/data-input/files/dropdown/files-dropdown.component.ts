@@ -45,6 +45,7 @@ import {FileDownloadService} from '../file-download.service';
   selector: 'files-dropdown',
   templateUrl: './files-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FilesDropdownComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input()

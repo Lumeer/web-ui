@@ -37,6 +37,7 @@ import {DialogType} from '../dialog-type';
   templateUrl: './referrals-overview-modal.component.html',
   styleUrls: ['./referrals-overview-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ReferralsOverviewModalComponent implements OnInit {
   public readonly dialogType = DialogType;

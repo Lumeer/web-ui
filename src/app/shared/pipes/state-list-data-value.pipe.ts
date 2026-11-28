@@ -22,6 +22,7 @@ import {Constraint, ConstraintData, ConstraintType, DataValue, UnknownConstraint
 
 @Pipe({
   name: 'stateListDataValue',
+  standalone: false,
 })
 // used with StateListConstraintPipe
 export class StateListDataValuePipe implements PipeTransform {

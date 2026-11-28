@@ -24,6 +24,7 @@ import {Project} from '../../../../core/store/projects/project';
 
 @Pipe({
   name: 'filterTemplates',
+  standalone: false,
 })
 export class FilterTemplatesPipe implements PipeTransform {
   public transform(templates: Project[], term: string): Project[] {

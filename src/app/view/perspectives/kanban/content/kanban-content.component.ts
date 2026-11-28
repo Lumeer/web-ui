@@ -69,6 +69,7 @@ interface Data {
   templateUrl: './kanban-content.component.html',
   styleUrls: ['./kanban-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

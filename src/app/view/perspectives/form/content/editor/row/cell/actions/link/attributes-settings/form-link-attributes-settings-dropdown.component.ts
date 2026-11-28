@@ -30,6 +30,7 @@ import {AttributesResourceData} from '../../../../../../../../../../shared/setti
   selector: 'form-link-attributes-settings-dropdown',
   templateUrl: './form-link-attributes-settings-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormLinkAttributesSettingsDropdownComponent extends DropdownDirective implements OnChanges {
   @Input()

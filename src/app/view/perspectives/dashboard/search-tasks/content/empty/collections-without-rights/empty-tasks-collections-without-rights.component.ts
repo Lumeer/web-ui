@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   selector: 'empty-tasks-collections-without-rights',
   templateUrl: './empty-tasks-collections-without-rights.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EmptyTasksCollectionsWithoutRightsComponent {
   @Input()

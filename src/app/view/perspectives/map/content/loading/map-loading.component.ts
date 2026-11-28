@@ -23,5 +23,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   templateUrl: './map-loading.component.html',
   styleUrls: ['./map-loading.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MapLoadingComponent {}

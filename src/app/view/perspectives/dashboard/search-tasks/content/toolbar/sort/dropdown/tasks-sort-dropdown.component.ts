@@ -35,6 +35,7 @@ import {SelectItemModel} from '../../../../../../../../shared/select/select-item
   templateUrl: './tasks-sort-dropdown.component.html',
   styleUrls: ['./tasks-sort-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TasksSortDropdownComponent extends DropdownDirective {
   @Input()

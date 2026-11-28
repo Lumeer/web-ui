@@ -22,6 +22,7 @@ import {Collection} from '../../core/store/collections/collection';
 
 @Pipe({
   name: 'collectionById',
+  standalone: false,
 })
 export class CollectionByIdPipe implements PipeTransform {
   public transform(collections: Collection[], collectionId: string): Collection {

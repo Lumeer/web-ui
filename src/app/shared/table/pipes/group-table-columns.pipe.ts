@@ -23,6 +23,7 @@ import {groupTableColumns} from '../model/table-utils';
 
 @Pipe({
   name: 'groupTableColumns',
+  standalone: false,
 })
 export class GroupTableColumnsPipe implements PipeTransform {
   public transform(columns: TableColumn[]): TableColumnGroup[] {

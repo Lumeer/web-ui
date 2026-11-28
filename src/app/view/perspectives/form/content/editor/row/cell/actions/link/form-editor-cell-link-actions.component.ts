@@ -44,6 +44,7 @@ import {getOtherLinkedCollectionId} from '../../../../../../../../../shared/util
   templateUrl: './form-editor-cell-link-actions.component.html',
   styleUrls: ['./form-editor-cell-link-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorCellLinkActionsComponent implements OnChanges {
   @Input()

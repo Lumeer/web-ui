@@ -23,6 +23,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 
 @Pipe({
   name: 'canCreateNewRecord',
+  standalone: false,
 })
 export class CanCreateNewRecordPipe implements PipeTransform {
   public transform(collection: Collection, permissions: AllowedPermissionsMap): boolean {

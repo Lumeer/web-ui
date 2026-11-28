@@ -22,6 +22,7 @@ import {ResourceType} from '../../core/model/resource-type';
 
 @Pipe({
   name: 'isProjectType',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

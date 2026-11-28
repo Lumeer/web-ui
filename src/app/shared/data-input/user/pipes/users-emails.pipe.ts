@@ -25,6 +25,7 @@ import {User} from '../../../../core/store/users/user';
 
 @Pipe({
   name: 'selectedValues',
+  standalone: false,
 })
 export class SelectedValuesPipe implements PipeTransform {
   public transform(users: User[], teams: Team[]): any[] {

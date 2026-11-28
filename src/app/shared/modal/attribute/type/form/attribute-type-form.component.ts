@@ -59,6 +59,7 @@ import {ViewConstraintFormControl} from './constraint-config/view/view-constrain
   selector: 'attribute-type-form',
   templateUrl: './attribute-type-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeTypeFormComponent implements OnChanges {
   @Input()

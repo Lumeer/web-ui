@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular
   templateUrl: './controls-toggle.component.html',
   styleUrls: ['./controls-toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ControlsToggleComponent {
   @Output()

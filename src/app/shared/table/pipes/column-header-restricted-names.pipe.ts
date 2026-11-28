@@ -22,6 +22,7 @@ import {TableColumnGroup} from '../model/table-column';
 
 @Pipe({
   name: 'columnHeaderRestrictedNames',
+  standalone: false,
 })
 export class ColumnHeaderRestrictedNamesPipe implements PipeTransform {
   public transform(groups: TableColumnGroup[], skipIndex?: number): string[] {

@@ -65,6 +65,7 @@ import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
   styleUrls: ['./search-perspective.component.scss'],
   host: {class: 'search-perspective'},
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   public queryParams$: Observable<Record<string, string>>;

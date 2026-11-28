@@ -53,6 +53,7 @@ import {View} from '../../../../core/store/views/view';
   styleUrls: ['./table-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'invisible-scroll-y'},
+  standalone: false,
 })
 export class TableHeaderComponent implements OnInit, OnChanges {
   @Input()

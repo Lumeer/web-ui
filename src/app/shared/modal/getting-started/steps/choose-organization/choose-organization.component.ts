@@ -33,6 +33,7 @@ import {GettingStartedService} from '../../getting-started.service';
   styleUrls: ['./choose-organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block p-4'},
+  standalone: false,
 })
 export class ChooseOrganizationComponent implements OnInit {
   public contributeOrganizations$: Observable<Organization[]>;

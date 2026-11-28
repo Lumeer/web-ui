@@ -23,6 +23,7 @@ import {QueryItem} from '../top-panel/search-box/query-item/model/query-item';
 
 @Pipe({
   name: 'queryColor',
+  standalone: false,
 })
 export class QueryColorPipe implements PipeTransform {
   public transform(queryItems: QueryItem[]): string {

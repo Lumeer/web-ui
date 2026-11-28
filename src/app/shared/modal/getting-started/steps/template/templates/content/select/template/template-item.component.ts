@@ -25,6 +25,7 @@ import {Project} from '../../../../../../../../../core/store/projects/project';
   templateUrl: './template-item.component.html',
   styleUrls: ['./template-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TemplateItemComponent {
   @Input()

@@ -24,6 +24,7 @@ import {getAttributesResourceType} from '../../../utils/resource.utils';
 
 @Pipe({
   name: 'resourcePermissions',
+  standalone: false,
 })
 export class ResourcePermissionsPipe implements PipeTransform {
   public transform(resource: AttributesResource, permissions: ResourcesPermissions): AllowedPermissions {

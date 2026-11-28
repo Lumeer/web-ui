@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'nativeDate',
+  standalone: false,
 })
 export class NativeDatePipe implements PipeTransform {
   public transform(dateObject: {

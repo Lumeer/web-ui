@@ -31,6 +31,7 @@ export interface SelectItemWithConstraintId {
   selector: 'select-item-with-constraint',
   templateUrl: './select-item-with-constraint.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectItemWithConstraintComponent {
   @Input()

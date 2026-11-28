@@ -57,6 +57,7 @@ import {ViewLinkTypePermissionsBodyComponent} from './body/view-link-type-permis
   selector: 'view-link-type-permissions-modal',
   templateUrl: './view-link-type-permissions-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewLinkTypePermissionsModalComponent implements OnInit {
   @Input()

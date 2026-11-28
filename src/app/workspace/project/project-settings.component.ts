@@ -56,6 +56,7 @@ import {Perspective} from '../../view/perspectives/perspective';
   selector: 'project-settings',
   templateUrl: './project-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;

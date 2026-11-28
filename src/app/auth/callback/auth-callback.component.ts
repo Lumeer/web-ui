@@ -39,6 +39,7 @@ import {AuthService} from '../auth.service';
       transition('void => *', [style({opacity: 0}), animate('3s 5s ease-in-out')]),
     ]),
   ],
+  standalone: false,
 })
 export class AuthCallbackComponent implements OnInit, AfterViewChecked {
   public constructor(

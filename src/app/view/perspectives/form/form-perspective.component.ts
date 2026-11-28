@@ -45,6 +45,7 @@ import {checkOrTransformFormConfig} from './form-utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block h-100'},
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class FormPerspectiveComponent extends DataPerspectiveDirective<FormConfig> implements OnInit, OnDestroy {
   @Input()

@@ -22,6 +22,7 @@ import {ChartAxisType, ChartConfig, ChartType} from '../../../../../core/store/c
 
 @Pipe({
   name: 'showAxisSelect',
+  standalone: false,
 })
 export class ShowAxisSelectPipe implements PipeTransform {
   public transform(axisType: ChartAxisType, config: ChartConfig): boolean {

@@ -23,6 +23,7 @@ import {ResourceType} from '../../core/model/resource-type';
 
 @Pipe({
   name: 'resourcePermissionType',
+  standalone: false,
 })
 export class ResourcePermissionTypePipe implements PipeTransform {
   public transform(type: ResourceType): ResourcePermissionType {

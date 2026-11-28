@@ -78,6 +78,7 @@ export type ActionButtonFiltersStatsWithData = AttributeLockFiltersStats & {
   styleUrls: ['./action-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex align-items-center'},
+  standalone: false,
 })
 export class ActionDataInputComponent implements OnChanges {
   @Input()

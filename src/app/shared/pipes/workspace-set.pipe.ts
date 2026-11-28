@@ -22,6 +22,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
 
 @Pipe({
   name: 'workspaceSet',
+  standalone: false,
 })
 export class WorkspaceSetPipe implements PipeTransform {
   public transform(workspace: Workspace): boolean {

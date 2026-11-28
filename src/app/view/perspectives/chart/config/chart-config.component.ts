@@ -27,6 +27,7 @@ import {Query} from '../../../../core/store/navigation/query/query';
   selector: 'chart-config',
   templateUrl: './chart-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChartConfigComponent {
   @Input()

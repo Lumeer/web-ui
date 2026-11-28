@@ -24,6 +24,7 @@ import {Query} from '../../core/store/navigation/query/query';
 
 @Pipe({
   name: 'perspectiveDisplayable',
+  standalone: false,
 })
 export class PerspectiveDisplayablePipe implements PipeTransform {
   public transform(query: Query, minStems: number, maxStems?: number): boolean {

@@ -27,6 +27,7 @@ import {SelectItemModel} from '../../../../../shared/select/select-item/select-i
   selector: 'calendar-stem-config',
   templateUrl: './calendar-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CalendarStemConfigComponent {
   @Input()

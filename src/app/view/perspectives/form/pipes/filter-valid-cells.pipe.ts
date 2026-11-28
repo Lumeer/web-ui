@@ -23,6 +23,7 @@ import {filterValidFormCells} from '../form-utils';
 
 @Pipe({
   name: 'filterValidCells',
+  standalone: false,
 })
 export class FilterValidCellsPipe implements PipeTransform {
   public transform(cells: FormCell[]): FormCell[] {

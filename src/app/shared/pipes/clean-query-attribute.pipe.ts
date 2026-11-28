@@ -22,6 +22,7 @@ import {QueryAttribute, cleanQueryAttribute} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'cleanQueryAttribute',
+  standalone: false,
 })
 export class CleanQueryAttributePipe implements PipeTransform {
   public transform(model: QueryAttribute): QueryAttribute {

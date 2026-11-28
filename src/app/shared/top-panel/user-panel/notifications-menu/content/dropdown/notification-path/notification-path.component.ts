@@ -35,6 +35,7 @@ import {perspectiveIconsMap} from '../../../../../../../view/perspectives/perspe
   selector: '[notification-path]',
   templateUrl: './notification-path.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NotificationPathComponent implements OnChanges {
   @Input()

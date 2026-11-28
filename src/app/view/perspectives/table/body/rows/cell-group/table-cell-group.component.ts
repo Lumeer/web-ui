@@ -66,6 +66,7 @@ import {View} from '../../../../../../core/store/views/view';
   templateUrl: './table-cell-group.component.html',
   styleUrls: ['./table-cell-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableCellGroupComponent implements OnChanges, OnInit {
   @Input()

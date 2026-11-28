@@ -51,6 +51,7 @@ import {DialogType} from '../dialog-type';
   styleUrls: ['./choose-link-document-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class ChooseLinkDocumentModalComponent implements OnInit, OnDestroy {
   @Input()

@@ -22,6 +22,7 @@ import {ResourceAttributeSettings} from '../../../../core/store/view-settings/vi
 
 @Pipe({
   name: 'countShowedAttributes',
+  standalone: false,
 })
 export class CountShowedAttributesPipe implements PipeTransform {
   public transform(settings: ResourceAttributeSettings[]): number {

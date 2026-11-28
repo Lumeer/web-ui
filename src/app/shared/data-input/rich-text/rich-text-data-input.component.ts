@@ -70,6 +70,7 @@ const modalKey = 'rich-text';
   styleUrls: ['./rich-text-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [animateOpacityEnterLeave],
+  standalone: false,
 })
 export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   @Input()

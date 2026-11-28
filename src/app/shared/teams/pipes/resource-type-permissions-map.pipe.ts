@@ -23,6 +23,7 @@ import {Permissions} from '../../../core/store/permissions/permissions';
 
 @Pipe({
   name: 'resourceTypePermissionsMap',
+  standalone: false,
 })
 export class ResourceTypePermissionsMapPipe implements PipeTransform {
   public transform(

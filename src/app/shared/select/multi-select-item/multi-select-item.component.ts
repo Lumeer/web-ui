@@ -45,6 +45,7 @@ import {SelectItemModel} from '../select-item/select-item.model';
   templateUrl: './multi-select-item.component.html',
   styleUrls: ['./multi-select-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MultiSelectItemComponent implements OnChanges, AfterViewChecked {
   @Input()

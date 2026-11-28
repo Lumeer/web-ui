@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'arrayReverse',
+  standalone: false,
 })
 export class ArrayReversePipe implements PipeTransform {
   public transform(value: any[]): any {

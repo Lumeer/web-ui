@@ -32,6 +32,7 @@ import {selectViewSettings, selectViewSettingsId} from '../../../../core/store/v
   selector: 'settings-button',
   templateUrl: './settings-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SettingsButtonComponent implements OnInit, OnDestroy {
   @Input()

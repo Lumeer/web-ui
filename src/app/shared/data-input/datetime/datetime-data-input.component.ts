@@ -48,6 +48,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
   selector: 'datetime-data-input',
   templateUrl: './datetime-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Input()

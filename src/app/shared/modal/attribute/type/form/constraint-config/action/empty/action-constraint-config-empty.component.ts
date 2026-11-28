@@ -32,6 +32,7 @@ import {Workspace} from '../../../../../../../../core/store/navigation/workspace
   selector: 'action-constraint-config-empty',
   templateUrl: './action-constraint-config-empty.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ActionConstraintConfigEmptyComponent implements OnInit {
   @Input()

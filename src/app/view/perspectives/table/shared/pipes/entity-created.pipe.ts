@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'entityCreated',
+  standalone: false,
 })
 export class EntityCreatedPipe implements PipeTransform {
   public transform(entity: {id?: string}): boolean {

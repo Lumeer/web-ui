@@ -24,6 +24,7 @@ import {WorkflowTable} from '../model/workflow-table';
 
 @Pipe({
   name: 'filterStemTables',
+  standalone: false,
 })
 export class FilterStemTablesPipe implements PipeTransform {
   public transform(tables: WorkflowTable[], stemConfig: WorkflowStemConfig): WorkflowTable[] {

@@ -47,6 +47,7 @@ import {sortResourcesByFavoriteAndLastUsed} from '../../../../shared/utils/resou
   selector: 'user-resources',
   templateUrl: './user-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserResourcesComponent implements OnInit, OnChanges {
   @Input()

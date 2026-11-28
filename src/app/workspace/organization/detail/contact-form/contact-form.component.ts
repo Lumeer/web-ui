@@ -34,6 +34,7 @@ import {Organization} from '../../../../core/store/organizations/organization';
   templateUrl: './contact-form.component.html',
   styleUrls: ['./contact-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ContactFormComponent implements OnChanges {
   @Input()

@@ -30,6 +30,7 @@ import {selectDocumentsByCollectionId} from '../../../core/store/documents/docum
   selector: 'collection-download',
   templateUrl: './collection-download.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionDownloadComponent {
   @Input()

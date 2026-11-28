@@ -25,6 +25,7 @@ import {KanbanCard} from '../util/kanban-data';
 
 @Pipe({
   name: 'kanbanPostItDraggable',
+  standalone: false,
 })
 export class KanbanPostItDraggablePipe implements PipeTransform {
   public transform(card: KanbanCard, user: User, constraintData: ConstraintData): boolean {

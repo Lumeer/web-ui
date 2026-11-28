@@ -25,6 +25,7 @@ import {View} from '../../core/store/views/view';
 
 @Pipe({
   name: 'viewControlsInfo',
+  standalone: false,
 })
 export class ViewControlsInfoPipe implements PipeTransform {
   public transform(

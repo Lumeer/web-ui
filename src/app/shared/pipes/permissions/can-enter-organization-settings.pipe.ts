@@ -23,6 +23,7 @@ import {permissionsCanManageOrganizationDetail} from '../../utils/permission.uti
 
 @Pipe({
   name: 'canEnterOrganizationSettings',
+  standalone: false,
 })
 export class CanEnterOrganizationSettingsPipe implements PipeTransform {
   public transform(permissions: AllowedPermissions): boolean {

@@ -31,6 +31,7 @@ import {AttributesResourceData} from '../attributes-settings-configuration';
   templateUrl: './attributes-settings-content.component.html',
   styleUrls: ['./attributes-settings-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributesSettingsContentComponent implements OnChanges {
   @Input()

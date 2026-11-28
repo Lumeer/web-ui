@@ -32,6 +32,7 @@ import {ChartYAxisType} from '../../data/convertor/chart-data';
   selector: 'chart-y-axis-config',
   templateUrl: './chart-y-axis-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChartYAxisConfigComponent {
   @Input()

@@ -27,6 +27,7 @@ import {generateId} from '../../../../../shared/utils/resource.utils';
   selector: 'chart-settings-config',
   templateUrl: './chart-settings-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChartSettingsConfigComponent {
   @Input()

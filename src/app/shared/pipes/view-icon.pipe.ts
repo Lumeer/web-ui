@@ -23,6 +23,7 @@ import {getViewIcon} from '../../core/store/views/view.utils';
 
 @Pipe({
   name: 'viewIcon',
+  standalone: false,
 })
 export class ViewIconPipe implements PipeTransform {
   public transform(view: View): string {

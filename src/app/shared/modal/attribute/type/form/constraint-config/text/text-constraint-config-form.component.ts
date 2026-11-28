@@ -31,6 +31,7 @@ import {TextConstraintFormControl} from './text-constraint-form-control';
   selector: 'text-constraint-config-form',
   templateUrl: './text-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TextConstraintConfigFormComponent implements OnChanges {
   @Input()

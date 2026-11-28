@@ -24,6 +24,7 @@ import {GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-ch
 
 @Pipe({
   name: 'shouldAggregateProgress',
+  standalone: false,
 })
 export class ShouldAggregateProgressPipe implements PipeTransform {
   public transform(config: GanttChartStemConfig): boolean {

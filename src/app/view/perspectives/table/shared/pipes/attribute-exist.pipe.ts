@@ -24,6 +24,7 @@ import {findAttributeByName} from '../../../../../shared/utils/attribute.utils';
 
 @Pipe({
   name: 'attributeExist',
+  standalone: false,
 })
 export class AttributeExistPipe implements PipeTransform {
   public transform(entity: Collection | LinkType, attributeName: string): boolean {

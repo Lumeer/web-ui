@@ -28,6 +28,7 @@ import {collectionAttributeToItem, linkTypeAttributeToItem} from '../axis/pipes.
 
 @Pipe({
   name: 'sortSelectItems',
+  standalone: false,
 })
 export class SortSelectItemsPipe implements PipeTransform {
   public transform(config: ChartConfig, attributesResources: AttributesResource[]): SelectItemModel[] {

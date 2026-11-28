@@ -23,6 +23,7 @@ import {LmrPivotAttribute} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotCleanAttribute',
+  standalone: false,
 })
 export class PivotCleanAttributePipe implements PipeTransform {
   public transform(attribute: LmrPivotAttribute): LmrPivotAttribute {

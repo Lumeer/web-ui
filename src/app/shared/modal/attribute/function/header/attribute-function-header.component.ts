@@ -27,6 +27,7 @@ import {findAttributeRule} from '../../../../utils/attribute.utils';
   selector: 'attribute-function-header',
   templateUrl: './attribute-function-header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeFunctionHeaderComponent implements OnChanges {
   @Input()

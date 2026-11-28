@@ -26,6 +26,7 @@ import {View} from '../../../../../core/store/views/view';
   templateUrl: './view-settings-modal-body.component.html',
   styleUrls: ['./view-settings-modal-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewSettingsModalBodyComponent {
   @Input()

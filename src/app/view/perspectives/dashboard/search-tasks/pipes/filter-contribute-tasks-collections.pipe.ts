@@ -23,6 +23,7 @@ import {Collection, CollectionPurposeType} from '../../../../../core/store/colle
 
 @Pipe({
   name: 'filterContributeTasksCollections',
+  standalone: false,
 })
 export class FilterContributeTasksCollectionsPipe implements PipeTransform {
   public transform(collections: Collection[], permissions: AllowedPermissionsMap): Collection[] {

@@ -47,6 +47,7 @@ import {View} from '../../../../../core/store/views/view';
   templateUrl: './table-header-link.component.html',
   styleUrls: ['./table-header-link.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   @Input()

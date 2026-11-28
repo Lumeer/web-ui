@@ -28,6 +28,7 @@ import {SelectItem2Model} from '../select-item2/select-item2.model';
   selector: 'select-item-with-constraint2',
   templateUrl: './select-item-with-constraint2.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectItemWithConstraint2Component {
   @Input()

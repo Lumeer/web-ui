@@ -46,6 +46,7 @@ import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} fro
   templateUrl: './table-header.component.html',
   styleUrls: ['./table-header.component.scss', '../common/table-cell.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHeaderComponent implements OnChanges {
   @Input()

@@ -31,6 +31,7 @@ import {selectCurrentUser} from '../../../core/store/users/users.state';
   templateUrl: './hint.component.html',
   styleUrls: ['./hint.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class HintComponent implements OnInit {
   @Input()

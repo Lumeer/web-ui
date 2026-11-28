@@ -29,6 +29,7 @@ import {ServiceLimits} from '../../../../../core/store/organizations/service-lim
   templateUrl: './payments-order.component.html',
   styleUrls: ['./payments-order.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PaymentsOrderComponent implements OnChanges {
   @Input()

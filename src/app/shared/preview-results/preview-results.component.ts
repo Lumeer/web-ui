@@ -58,6 +58,7 @@ import {objectChanged} from '../utils/common.utils';
   selector: 'preview-results',
   templateUrl: './preview-results.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PreviewResultsComponent implements OnInit, OnChanges {
   @Input()

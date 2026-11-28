@@ -22,6 +22,7 @@ import {columnBackgroundColor} from '../utils/color.utils';
 
 @Pipe({
   name: 'columnBackground',
+  standalone: false,
 })
 export class ColumnBackgroundPipe implements PipeTransform {
   public transform(color: string, unsaved?: boolean): any {

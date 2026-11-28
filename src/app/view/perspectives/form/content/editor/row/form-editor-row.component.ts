@@ -30,6 +30,7 @@ import {filterValidFormCells} from '../../../form-utils';
   templateUrl: './form-editor-row.component.html',
   styleUrls: ['./form-editor-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorRowComponent implements OnChanges {
   @Input()

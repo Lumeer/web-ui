@@ -37,6 +37,7 @@ import {KeyCode, keyboardEventCode} from '../../key-code';
   selector: 'user-settings-modal',
   templateUrl: './user-settings-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserSettingsModalComponent implements OnInit {
   public user$: Observable<User>;

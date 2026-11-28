@@ -24,6 +24,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 
 @Pipe({
   name: 'chartTypesToSelect',
+  standalone: false,
 })
 export class ChartTypesToSelectPipe implements PipeTransform {
   public transform(types: ChartType[]): SelectItemModel[] {

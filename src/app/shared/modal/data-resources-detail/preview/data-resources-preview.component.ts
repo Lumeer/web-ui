@@ -29,6 +29,7 @@ import {View} from '../../../../core/store/views/view';
   templateUrl: './data-resources-preview.component.html',
   styleUrls: ['./data-resources-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataResourcesPreviewComponent {
   @Input()

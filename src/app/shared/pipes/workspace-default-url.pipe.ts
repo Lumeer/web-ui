@@ -24,6 +24,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 
 @Pipe({
   name: 'workspaceDefaultUrl',
+  standalone: false,
 })
 export class WorkspaceDefaultUrlPipe implements PipeTransform {
   public transform(workspace: Workspace, user: User): any[] {

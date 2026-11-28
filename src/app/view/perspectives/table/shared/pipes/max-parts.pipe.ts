@@ -22,6 +22,7 @@ import {TableModel} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
   name: 'maxParts',
+  standalone: false,
 })
 export class MaxPartsPipe implements PipeTransform {
   public transform(table: TableModel, maxNumber: number): boolean {

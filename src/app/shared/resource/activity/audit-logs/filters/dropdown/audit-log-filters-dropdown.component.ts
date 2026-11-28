@@ -39,6 +39,7 @@ import {AuditLogFilters} from '../../model/audit-log-filters';
   templateUrl: './audit-log-filters-dropdown.component.html',
   styleUrls: ['./audit-log-filters-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AuditLogFiltersDropdownComponent extends DropdownDirective implements OnChanges {
   @Input()

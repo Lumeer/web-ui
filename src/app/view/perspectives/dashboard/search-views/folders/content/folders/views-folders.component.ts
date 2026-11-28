@@ -33,6 +33,7 @@ import {ObjectFolders} from '../util/object-folders';
   templateUrl: './views-folders.component.html',
   styleUrls: ['./views-folders.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewsFoldersComponent {
   @Input()

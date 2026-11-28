@@ -48,6 +48,7 @@ import {TableColumn} from '../../../../model/table-column';
   templateUrl: './table-header-input.component.html',
   styleUrls: ['./table-header-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
   @Input()

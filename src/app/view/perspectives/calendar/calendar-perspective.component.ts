@@ -46,6 +46,7 @@ import {checkOrTransformCalendarConfig} from './util/calendar-util';
   styleUrls: ['./calendar-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoadDataServiceProvider],
+  standalone: false,
 })
 export class CalendarPerspectiveComponent
   extends DataPerspectiveDirective<CalendarConfig>

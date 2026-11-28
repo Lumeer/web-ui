@@ -23,6 +23,7 @@ import {queryIsEmpty} from '../../core/store/navigation/query/query.util';
 
 @Pipe({
   name: 'emptyQuery',
+  standalone: false,
 })
 export class EmptyQueryPipe implements PipeTransform {
   public transform(query: Query): boolean {

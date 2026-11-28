@@ -30,6 +30,7 @@ import {SelectItemModel} from '../../../../../shared/select/select-item/select-i
   templateUrl: './map-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-column'},
+  standalone: false,
 })
 export class MapStemConfigComponent {
   @Input()

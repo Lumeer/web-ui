@@ -25,6 +25,7 @@ import {Project} from '../../../../../../../core/store/projects/project';
   templateUrl: './templates-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex flex-column mw-100 h-100'},
+  standalone: false,
 })
 export class TemplatesContentComponent {
   @Input()

@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'groupColorsByCount',
+  standalone: false,
 })
 export class GroupColorsByCountPipe implements PipeTransform {
   public transform(values: string[]): {color: string; num: number}[] {

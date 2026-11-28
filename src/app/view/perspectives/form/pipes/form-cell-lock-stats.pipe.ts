@@ -27,6 +27,7 @@ import {FormAttributeCellConfig, FormCell, FormCellType} from '../../../../core/
 
 @Pipe({
   name: 'formCellLockStats',
+  standalone: false,
 })
 export class FormCellLockStatsPipe implements PipeTransform {
   public transform(

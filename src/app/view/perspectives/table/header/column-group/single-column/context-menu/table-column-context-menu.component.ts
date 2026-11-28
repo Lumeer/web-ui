@@ -36,6 +36,7 @@ import {isMacOS} from '../../../../../../../shared/utils/system.utils';
   selector: 'table-column-context-menu',
   templateUrl: './table-column-context-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableColumnContextMenuComponent {
   @Input()

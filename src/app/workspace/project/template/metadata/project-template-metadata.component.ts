@@ -42,6 +42,7 @@ import {PublicScriptType} from './script/public-script-type';
   templateUrl: './project-template-metadata.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UpdateProjectService],
+  standalone: false,
 })
 export class ProjectTemplateMetadataComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

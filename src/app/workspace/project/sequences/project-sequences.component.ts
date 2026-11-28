@@ -31,6 +31,7 @@ import {selectAllSequencesSorted} from '../../../core/store/sequences/sequences.
   selector: 'project-sequences',
   templateUrl: './project-sequences.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectSequencesComponent implements OnInit {
   public sequences$: Observable<Sequence[]>;

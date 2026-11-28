@@ -25,6 +25,7 @@ import {DashboardTab, isDashboardTabDefault} from '../../../../../core/model/das
   templateUrl: './dashboard-tab-badge.component.html',
   styleUrls: ['./dashboard-tab-badge.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardTabBadgeComponent implements OnChanges {
   @Input()

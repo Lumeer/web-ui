@@ -47,6 +47,7 @@ import {UpdatePurposeService} from './update-purpose.service';
   templateUrl: './collection-purpose-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UpdatePurposeService],
+  standalone: false,
 })
 export class CollectionPurposeContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

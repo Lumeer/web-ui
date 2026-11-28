@@ -34,6 +34,7 @@ import {selectViewQuery} from '../../../../../core/store/views/views.state';
   templateUrl: './dashboard-tab-content.component.html',
   styleUrls: ['./dashboard-tab-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardTabContentComponent implements OnInit {
   @Input()

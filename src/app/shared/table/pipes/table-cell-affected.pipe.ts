@@ -25,6 +25,7 @@ import {isTableCellAffected} from '../model/table-utils';
 
 @Pipe({
   name: 'tableCellAffected',
+  standalone: false,
 })
 export class TableCellAffectedPipe implements PipeTransform {
   public transform(cell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {

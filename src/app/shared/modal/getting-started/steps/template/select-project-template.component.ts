@@ -34,6 +34,7 @@ import {
   selector: 'select-project-template',
   templateUrl: './select-project-template.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectProjectTemplateComponent implements OnInit {
   @Input()

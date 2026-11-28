@@ -25,6 +25,7 @@ import {Attribute} from '../../../core/store/collections/collection';
 
 @Pipe({
   name: 'dataValueByAttribute',
+  standalone: false,
 })
 export class DataValueByAttributePipe implements PipeTransform {
   public transform(dataResource: DataResource, attribute: Attribute, constraintData?: ConstraintData): DataValue {

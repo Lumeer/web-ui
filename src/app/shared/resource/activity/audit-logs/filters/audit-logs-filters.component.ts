@@ -35,6 +35,7 @@ import {AuditLogFilters, auditLogTypeFilterConstraint, auditLogUsersFilterConstr
   templateUrl: './audit-logs-filters.component.html',
   styleUrls: ['./audit-logs-filters.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AuditLogsFiltersComponent implements OnChanges {
   @Input()

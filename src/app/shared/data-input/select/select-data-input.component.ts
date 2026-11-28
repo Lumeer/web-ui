@@ -48,6 +48,7 @@ import {createSelectDataInputDropdownOptions} from './select-data-input-utils';
   templateUrl: './select-data-input.component.html',
   styleUrls: ['./select-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()

@@ -42,6 +42,7 @@ import {NewsletterToggleService} from './model/newsletter-toggle.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [shrinkOutAnimation, rotateAnimation, scaleAnimation],
   providers: [NewsletterToggleService],
+  standalone: false,
 })
 export class GetHelpComponent implements OnInit {
   public link: string;

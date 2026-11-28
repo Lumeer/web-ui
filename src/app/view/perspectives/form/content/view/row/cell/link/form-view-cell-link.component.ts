@@ -54,6 +54,7 @@ import {FormLinkSelectedData} from '../../../model/form-link-data';
   templateUrl: './form-view-cell-link.component.html',
   styleUrls: ['./form-view-cell-link.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormViewCellLinkComponent implements OnChanges, AfterViewChecked {
   @Input()

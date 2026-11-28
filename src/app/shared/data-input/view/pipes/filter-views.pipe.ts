@@ -29,6 +29,7 @@ import {sortObjectsByScore} from '../../../utils/common.utils';
 
 @Pipe({
   name: 'filterViews',
+  standalone: false,
 })
 export class FilterViewsPipe implements PipeTransform {
   public transform(views: View[], text: string, collectionsMap: Record<string, Collection>): DropdownOption[] {

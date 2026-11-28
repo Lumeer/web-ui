@@ -55,6 +55,7 @@ import {Perspective} from '../../view/perspectives/perspective';
   selector: 'collection-settings',
   templateUrl: './collection-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public readonly collectionType = ResourceType.Collection;

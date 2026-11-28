@@ -35,6 +35,7 @@ import {View} from '../../../../../../core/store/views/view';
   templateUrl: './table-empty-row.component.html',
   styleUrls: ['./table-empty-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableEmptyRowComponent implements OnChanges {
   @Input()

@@ -31,6 +31,7 @@ import {collectAttributesIdsFromFormConfig, collectLinkIdsFromFormConfig} from '
   selector: 'form-editor',
   templateUrl: './form-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorComponent implements OnChanges {
   @Input()

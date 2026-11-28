@@ -23,6 +23,7 @@ import {QueryStem} from '../../../../core/store/navigation/query/query';
 
 @Pipe({
   name: 'detailQueryStem',
+  standalone: false,
 })
 export class DetailQueryStemPipe implements PipeTransform {
   public transform(selectedCollection: Collection): QueryStem {

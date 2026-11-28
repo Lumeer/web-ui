@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   templateUrl: './rule-run-info.component.html',
   styleUrls: ['./rule-run-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RuleRunInfoComponent {
   @Input()

@@ -27,6 +27,7 @@ import {AttributeFormattingStyle, computeAttributeFormatting} from '../utils/att
 
 @Pipe({
   name: 'resourceAttributeFormattingStyle',
+  standalone: false,
 })
 export class ResourceAttributeFormattingStylePipe implements PipeTransform {
   public transform(

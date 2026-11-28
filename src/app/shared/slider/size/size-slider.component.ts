@@ -25,6 +25,7 @@ import {SizeType} from './size-type';
   selector: 'size-slider',
   templateUrl: './size-slider.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SizeSliderComponent {
   @Input()

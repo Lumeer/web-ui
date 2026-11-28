@@ -22,6 +22,7 @@ import {SizeType} from '../../../../../shared/slider/size/size-type';
 
 @Pipe({
   name: 'viewIconSize',
+  standalone: false,
 })
 export class ViewIconSizePipe implements PipeTransform {
   public transform(viewSize: SizeType): string {

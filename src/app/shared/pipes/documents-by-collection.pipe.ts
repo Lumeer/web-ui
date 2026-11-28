@@ -22,6 +22,7 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 
 @Pipe({
   name: 'documentsByCollection',
+  standalone: false,
 })
 @Injectable({
   providedIn: 'root',

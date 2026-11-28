@@ -22,6 +22,7 @@ import * as moment from 'moment';
 
 @Pipe({
   name: 'firstDayOfWeek',
+  standalone: false,
 })
 export class FirstDayOfWeekPipe implements PipeTransform {
   public transform(locale: string): number {

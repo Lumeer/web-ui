@@ -56,6 +56,7 @@ interface DayOfWeek {
   templateUrl: './cron-configuration-form.component.html',
   styleUrls: ['./cron-configuration-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CronConfigurationFormComponent implements OnInit, OnChanges {
   @Input()

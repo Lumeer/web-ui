@@ -25,6 +25,7 @@ import {PostItTag} from '../../../../shared/post-it/post-it.component';
 
 @Pipe({
   name: 'kanbanDueHoursTag',
+  standalone: false,
 })
 export class KanbanDueHoursTagPipe implements PipeTransform {
   public transform(dueHours: number): PostItTag {

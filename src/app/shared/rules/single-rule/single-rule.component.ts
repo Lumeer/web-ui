@@ -29,6 +29,7 @@ import {NotificationsAction} from '../../../core/store/notifications/notificatio
   selector: 'single-rule',
   templateUrl: './single-rule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SingleRuleComponent {
   @Input()

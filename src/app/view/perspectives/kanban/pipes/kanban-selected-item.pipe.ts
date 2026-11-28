@@ -23,6 +23,7 @@ import {SelectItemWithConstraintId} from '../../../../shared/select/select-const
 
 @Pipe({
   name: 'kanbanSelectedItem',
+  standalone: false,
 })
 export class KanbanSelectedItemPipe implements PipeTransform {
   public transform(config: KanbanStemConfig): SelectItemWithConstraintId {

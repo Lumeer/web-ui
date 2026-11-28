@@ -28,6 +28,7 @@ import {GettingStartedService} from '../../getting-started.service';
   styleUrls: ['./invite-users.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block p-4'},
+  standalone: false,
 })
 export class InviteUsersComponent {
   public items: SelectItemModel[] = [

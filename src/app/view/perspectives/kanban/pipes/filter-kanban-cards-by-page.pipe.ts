@@ -25,6 +25,7 @@ import {KanbanCard} from '../util/kanban-data';
 
 @Pipe({
   name: 'filterKanbanCardsByPage',
+  standalone: false,
 })
 export class FilterKanbanCardsByPagePipe implements PipeTransform {
   public transform(cards: KanbanCard[], viewSettings: ViewSettings, page: number, height: number): KanbanCard[] {

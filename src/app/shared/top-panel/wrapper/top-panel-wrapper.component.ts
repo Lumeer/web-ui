@@ -43,6 +43,7 @@ import {Perspective} from '../../../view/perspectives/perspective';
   templateUrl: './top-panel-wrapper.component.html',
   styleUrls: ['./top-panel-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TopPanelWrapperComponent implements OnInit {
   @Input()

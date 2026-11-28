@@ -23,5 +23,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   templateUrl: './email-verification.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block p-4'},
+  standalone: false,
 })
 export class EmailVerificationComponent {}

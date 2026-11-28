@@ -25,6 +25,7 @@ import {MenuItem} from '../../model/menu-item';
   templateUrl: './menu-row.component.html',
   styleUrls: ['./menu-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MenuRowComponent {
   @Input()

@@ -20,6 +20,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'arrayDifference',
+  standalone: false,
 })
 export class ArrayDifferencePipe implements PipeTransform {
   public transform(firstArray: any[], secondArray: any[]): any[] {

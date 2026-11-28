@@ -27,6 +27,7 @@ import {User} from '../../../core/store/users/user';
   templateUrl: './new-user.component.html',
   styleUrls: ['./new-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NewUserComponent {
   @Input()

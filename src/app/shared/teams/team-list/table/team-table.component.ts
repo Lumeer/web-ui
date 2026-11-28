@@ -31,6 +31,7 @@ import {View} from '../../../../core/store/views/view';
   templateUrl: './team-table.component.html',
   styleUrls: ['./team-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TeamTableComponent {
   @Input()

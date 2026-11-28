@@ -25,6 +25,7 @@ import {MenuItem} from '../model/menu-item';
   selector: 'lmr-static-menu',
   templateUrl: './static-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class StaticMenuComponent {
   @Input()

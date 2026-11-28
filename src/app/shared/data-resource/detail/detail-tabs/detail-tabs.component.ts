@@ -25,6 +25,7 @@ import {DetailTabType} from '../detail-tab-type';
   templateUrl: './detail-tabs.component.html',
   styleUrls: ['./detail-tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DetailTabsComponent implements OnChanges {
   @Input()

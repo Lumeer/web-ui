@@ -26,6 +26,7 @@ import {View} from '../../../../../../../../core/store/views/view';
   selector: 'form-editor-cell-actions',
   templateUrl: './form-editor-cell-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FormEditorCellActionsComponent {
   @Input()

@@ -24,6 +24,7 @@ import {SelectItemWithConstraintId} from '../../../../shared/select/select-const
 
 @Pipe({
   name: 'pivotHeaderMapAttribute',
+  standalone: false,
 })
 export class PivotHeaderMapAttributePipe implements PipeTransform {
   public transform(pivotAttribute: LmrPivotRowColumnAttribute): SelectItemWithConstraintId {

@@ -36,6 +36,7 @@ import {addressDefaultFields, addressExample} from './address-constraint.constan
   templateUrl: './address-constraint-config-form.component.html',
   styleUrls: ['./address-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AddressConstraintConfigFormComponent implements OnChanges {
   public readonly controls = AddressConstraintFormControl;

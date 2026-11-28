@@ -23,6 +23,7 @@ import {SelectDataItemModel} from './select-data-item.model';
 
 @Pipe({
   name: 'getSelectDataItem',
+  standalone: false,
 })
 export class GetSelectDataItemPipe implements PipeTransform {
   public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}

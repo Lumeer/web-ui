@@ -28,6 +28,7 @@ import {View} from '../../../../../core/store/views/view';
   selector: 'attribute-function-content',
   templateUrl: './attribute-function-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AttributeFunctionContentComponent implements OnInit {
   @Input()

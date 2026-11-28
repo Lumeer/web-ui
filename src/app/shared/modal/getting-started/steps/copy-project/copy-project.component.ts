@@ -31,6 +31,7 @@ import {GettingStartedService} from '../../getting-started.service';
   templateUrl: './copy-project.component.html',
   styleUrls: ['./copy-project.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CopyProjectComponent implements OnInit {
   public publicViewUrl$: Observable<SafeUrl>;

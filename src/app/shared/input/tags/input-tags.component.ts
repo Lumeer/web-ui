@@ -42,6 +42,7 @@ import {KeyCode} from '../../key-code';
   styleUrls: ['./input-tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block'},
+  standalone: false,
 })
 export class InputTagsComponent implements OnInit, OnChanges {
   @Input()

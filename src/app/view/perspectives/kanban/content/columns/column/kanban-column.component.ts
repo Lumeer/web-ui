@@ -48,6 +48,7 @@ import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '..
   templateUrl: './kanban-column.component.html',
   styleUrls: ['./kanban-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class KanbanColumnComponent implements OnInit {
   @Input()

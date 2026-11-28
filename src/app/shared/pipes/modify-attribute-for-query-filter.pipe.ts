@@ -23,6 +23,7 @@ import {modifyAttributeForQueryFilter} from '../utils/attribute.utils';
 
 @Pipe({
   name: 'modifyAttributeForQueryFilter',
+  standalone: false,
 })
 export class ModifyAttributeForQueryFilterPipe implements PipeTransform {
   public transform(attribute: Attribute): Attribute {

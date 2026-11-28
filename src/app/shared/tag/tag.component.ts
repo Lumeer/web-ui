@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   templateUrl: './tag.component.html',
   styleUrls: ['./tag.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TagComponent {
   @Input()

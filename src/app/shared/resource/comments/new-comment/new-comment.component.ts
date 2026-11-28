@@ -45,6 +45,7 @@ import {isMacOS} from '../../../utils/system.utils';
   templateUrl: './new-comment.component.html',
   styleUrls: ['./new-comment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NewCommentComponent implements OnInit, AfterViewChecked {
   @Input()

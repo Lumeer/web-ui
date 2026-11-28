@@ -46,6 +46,7 @@ import {QueryItemType} from '../../query-item/model/query-item-type';
   templateUrl: './search-suggestions.component.html',
   styleUrls: ['./search-suggestions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit {
   @Input()

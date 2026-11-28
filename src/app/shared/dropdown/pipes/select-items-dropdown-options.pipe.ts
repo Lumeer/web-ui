@@ -23,6 +23,7 @@ import {DropdownOption} from '../options/dropdown-option';
 
 @Pipe({
   name: 'selectItemsDropdownOptions',
+  standalone: false,
 })
 export class SelectItemsDropdownOptionsPipe implements PipeTransform {
   public transform(items: SelectItemModel[]): DropdownOption[] {

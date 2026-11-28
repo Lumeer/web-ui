@@ -79,6 +79,7 @@ import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
   selector: 'workflow-tables',
   templateUrl: './workflow-tables.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class WorkflowTablesComponent implements OnChanges {
   @Input()

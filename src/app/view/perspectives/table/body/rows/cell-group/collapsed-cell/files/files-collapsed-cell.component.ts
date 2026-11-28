@@ -40,6 +40,7 @@ import {
   templateUrl: './files-collapsed-cell.component.html',
   styleUrls: ['./files-collapsed-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FilesCollapsedCellComponent implements OnInit, OnChanges {
   @Input()

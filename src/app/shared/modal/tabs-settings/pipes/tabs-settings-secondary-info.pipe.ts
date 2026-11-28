@@ -22,6 +22,7 @@ import {View} from '../../../../core/store/views/view';
 
 @Pipe({
   name: 'tabsSettingsSecondaryInfo',
+  standalone: false,
 })
 export class TabsSettingsSecondaryInfoPipe implements PipeTransform {
   public transform(data: {currentView?: View; userDashboardView: View}): string {

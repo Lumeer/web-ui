@@ -38,6 +38,7 @@ import {View} from '../../../../../../core/store/views/view';
   templateUrl: './table-linked-rows.component.html',
   styleUrls: ['./table-linked-rows.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

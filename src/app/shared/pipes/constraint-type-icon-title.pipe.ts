@@ -24,6 +24,7 @@ import {parseSelectTranslation} from '../utils/translation.utils';
 
 @Pipe({
   name: 'constraintTypeIconTitle',
+  standalone: false,
 })
 export class ConstraintTypeIconTitlePipe implements PipeTransform {
   public transform(constraint: Constraint): string {

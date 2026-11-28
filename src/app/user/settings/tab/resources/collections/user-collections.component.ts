@@ -31,6 +31,7 @@ import {ResourceRolesData, ResourceRolesDatum, resourceRolesDataEmptyTitle} from
   selector: 'user-collections',
   templateUrl: './user-collections.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class UserCollectionsComponent implements OnChanges {
   @Input()

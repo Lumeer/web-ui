@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   templateUrl: './share-view-copy.component.html',
   styleUrls: ['./share-view-copy.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ShareViewCopyComponent {
   @Input()

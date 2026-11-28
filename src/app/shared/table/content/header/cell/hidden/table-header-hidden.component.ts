@@ -23,5 +23,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   templateUrl: './table-header-hidden.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'h-100 d-flex align-items-center justify-content-center'},
+  standalone: false,
 })
 export class TableHeaderHiddenComponent {}

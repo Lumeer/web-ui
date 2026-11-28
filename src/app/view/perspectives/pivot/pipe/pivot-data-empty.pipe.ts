@@ -22,6 +22,7 @@ import {LmrPivotData} from '@lumeer/pivot';
 
 @Pipe({
   name: 'pivotDataEmpty',
+  standalone: false,
 })
 export class PivotDataEmptyPipe implements PipeTransform {
   public transform(value: LmrPivotData): boolean {

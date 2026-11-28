@@ -52,6 +52,7 @@ import {AttributesResourceData} from '../attributes/attributes-settings-configur
   selector: 'view-settings-dropdown',
   templateUrl: './view-settings-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewSettingsDropdownComponent implements OnInit {
   @Input()

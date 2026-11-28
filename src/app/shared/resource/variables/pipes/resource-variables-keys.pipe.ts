@@ -22,6 +22,7 @@ import {ResourceVariable} from '../../../../core/store/resource-variables/resour
 
 @Pipe({
   name: 'resourceVariablesKeys',
+  standalone: false,
 })
 export class ResourceVariablesKeysPipe implements PipeTransform {
   public transform(variables: ResourceVariable[], excludeKey?: string): string[] {

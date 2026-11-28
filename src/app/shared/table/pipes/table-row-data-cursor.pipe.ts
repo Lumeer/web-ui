@@ -24,6 +24,7 @@ import {TableRow} from '../model/table-row';
 
 @Pipe({
   name: 'tableRowDataCursor',
+  standalone: false,
 })
 export class TableRowDataCursorPipe implements PipeTransform {
   public transform(row: TableRow, column: TableColumn, viewId: string): DataCursor {

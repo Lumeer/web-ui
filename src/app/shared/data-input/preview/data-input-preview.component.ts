@@ -28,6 +28,7 @@ import {CommonDataInputConfiguration, DataInputConfiguration} from '../data-inpu
   templateUrl: './data-input-preview.component.html',
   styleUrls: ['./data-input-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DataInputPreviewComponent implements OnChanges {
   @Input()

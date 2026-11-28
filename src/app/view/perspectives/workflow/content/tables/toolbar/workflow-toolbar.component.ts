@@ -44,6 +44,7 @@ import {getAttributesResourceType} from '../../../../../../shared/utils/resource
   templateUrl: './workflow-toolbar.component.html',
   styleUrls: ['./workflow-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class WorkflowToolbarComponent implements OnChanges {
   @Input()

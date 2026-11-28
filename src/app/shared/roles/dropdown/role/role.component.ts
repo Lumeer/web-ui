@@ -25,6 +25,7 @@ import {TranslatedRole} from '../../model/role-group';
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RoleComponent {
   @Input()

@@ -38,6 +38,7 @@ import {defaultTextEditorOptions} from '../../../../../../../shared/modal/text-e
   templateUrl: './dashboard-notes.component.html',
   styleUrls: ['./dashboard-notes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardNotesComponent implements OnChanges, AfterViewInit {
   @Input()

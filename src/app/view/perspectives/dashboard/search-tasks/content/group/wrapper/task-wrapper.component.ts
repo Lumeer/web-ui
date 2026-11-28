@@ -35,6 +35,7 @@ import {TaskAttributes} from '../../../model/task-attributes';
   templateUrl: './task-wrapper.component.html',
   styleUrls: ['./task-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TaskWrapperComponent implements OnChanges {
   @Input()

@@ -23,6 +23,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
   templateUrl: './progress-circle.component.svg',
   styleUrls: ['./progress-circle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProgressCircleComponent implements OnInit, OnChanges {
   @Input()

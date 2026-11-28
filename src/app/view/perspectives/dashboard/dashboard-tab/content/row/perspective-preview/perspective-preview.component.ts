@@ -34,6 +34,7 @@ import {PerspectiveConfiguration} from '../../../../../perspective-configuration
   templateUrl: './perspective-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'perspective-preview'},
+  standalone: false,
 })
 export class PerspectivePreviewComponent implements OnChanges {
   @Input()
